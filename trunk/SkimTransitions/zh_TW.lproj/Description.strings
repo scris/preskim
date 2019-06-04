@@ -1,0 +1,74 @@
+"AccelerationTransition" = "促進";
+"AccelerationTransitionDescription" = "The Accelleration filter gives a transition effect simulating a large acceleration";
+
+"BlindsTransition" = "百葉窗";
+"BlindsTransitionDescription" = "The Blinds filter gives a transition simulating closing blinds";
+
+"BlurTransition" = "模糊";
+"BlurTransitionDescription" = "The Blur filter gives a transition effect based on blurring out the old image and blurring in the new image";
+
+"BoxInTransition" = "盒子裡";
+"BoxInTransitionDescription" = "A transition filter for a box in effect";
+
+"BoxOutTransition" = "盒裝";
+"BoxOutTransitionDescription" = "A transition filter for a box out effect";
+
+"CoverTransition" = "覆蓋";
+"CoverTransitionDescription" = "The Cover filter gives a transition where the new image covers the old image by sliding in front of it";
+
+"CubeTransition" = "立方體";
+"CubeTransitionDescription" = "The Cube filter gives a transition where the image is replaced as if they are attached to the sides of a rotating cube";
+
+"FlipTransition" = "鏡射";
+"FlipTransitionDescription" = "The Flip filter gives a transition for a flip effect";
+
+"HoleTransition" = "洞";
+"HoleTransitionDescription" = "The Hole filter gives a transition effect like a hole being punched in the old image revealing the new image";
+
+"MeltdownTransition" = "崩潰";
+"MeltdownTransitionDescription" = "The Meltdown filter gives a transition for a meltdown effect";
+
+"PageTurnTransition" = "翻頁";
+"PageTurnTransitionDescription" = "The Page Turn filter gives a transition for a page turn effect";
+
+"PinchTransition" = "捏";
+"PinchTransitionDescription" = "The Pinch filter gives a transition for a pinching effect";
+
+"PixelateTransition" = "像素化";
+"PixelateTransitionDescription" = "The Pixelate filter gives a transition by pixelating the blended image";
+
+"RadarTransition" = "雷達";
+"RadarTransitionDescription" = "The Radar filter gives a transition like a radar sweeping over the image revealing the new image";
+
+"RadialSwipeTransition" = "徑向刷擦";
+"RadialSwipeTransitionDescription" = "The Radial Swipe filter gives a transition for a radial swipe effect";
+
+"RevealTransition" = "顯示";
+"RevealTransitionDescription" = "The Reveal filter gives a transition where the new image reveals the old image by sliding away from the front of it";
+
+"SinkTransition" = "水槽";
+"SinkTransitionDescription" = "The Sink filter gives a transition filter like the image being flushed through a sink";
+
+"SlideTransition" = "投影片";
+"SlideTransitionDescription" = "The Slide filter gives a transition where the new image replaces the old image by sliding sideways";
+
+"SplitInTransition" = "分裂";
+"SplitInTransitionDescription" = "The Split In filter gives a transition where the new image is revelead in the split going inwards";
+
+"SplitOutTransition" = "拆出";
+"SplitOutTransitionDescription" = "The Split Out filter gives a transition where the new image is revelead in the split going outwards";
+
+"StripsTransition" = "帶子";
+"StripsTransitionDescription" = "The Strips filter gives a transition where the old image is moved aside in strips revealing the new image";
+
+"SwapTransition" = "交換";
+"SwapTransitionDescription" = "The Swap filter gives a transition for a swap effect";
+
+"WarpFadeTransition" = "置換淡出";
+"WarpFadeTransitionDescription" = "The Warp Fade filter gives a transition for a warp and fade effect";
+
+"WarpSwitchTransition" = "切換開";
+"WarpSwitchTransitionDescription" = "The Warp Switch filter gives a transition for a warp and switch effect";
+
+"ZoomTransition" = "縮放";
+"ZoomTransitionDescription" = "The Zoom filter gives a transition for a zoom effect";

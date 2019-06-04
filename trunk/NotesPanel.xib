@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <development version="8000" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="SKNotesPanelController">
+            <connections>
+                <outlet property="window" destination="5" id="21"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application"/>
+        <window title="Notes" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="5" userLabel="Window" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES" nonactivatingPanel="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="242" y="611" width="288" height="128"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <value key="minSize" type="size" width="203" height="113"/>
+            <view key="contentView" id="6">
+                <rect key="frame" x="0.0" y="0.0" width="288" height="128"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="7">
+                        <rect key="frame" x="10" y="96" width="130" height="23"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <buttonCell key="cell" type="smallSquare" title="Text" bezelStyle="smallSquare" image="ToolbarAddTextNote" imagePosition="left" alignment="left" controlSize="small" borderStyle="border" inset="2" id="32">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="addNote:" target="-2" id="23"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" tag="1" imageHugsTitle="YES" id="8">
+                        <rect key="frame" x="10" y="67" width="130" height="23"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <buttonCell key="cell" type="smallSquare" title="Anchored" bezelStyle="smallSquare" image="ToolbarAddAnchoredNote" imagePosition="left" alignment="left" controlSize="small" borderStyle="border" tag="1" inset="2" id="33">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="addNote:" target="-2" id="24"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" tag="2" imageHugsTitle="YES" id="15">
+                        <rect key="frame" x="10" y="38" width="130" height="23"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <buttonCell key="cell" type="smallSquare" title="Circle" bezelStyle="smallSquare" image="ToolbarAddCircleNote" imagePosition="left" alignment="left" controlSize="small" borderStyle="border" tag="2" inset="2" id="34">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="addNote:" target="-2" id="25"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" tag="3" imageHugsTitle="YES" id="16">
+                        <rect key="frame" x="10" y="9" width="130" height="23"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <buttonCell key="cell" type="smallSquare" title="Box" bezelStyle="smallSquare" image="ToolbarAddSquareNote" imagePosition="left" alignment="left" controlSize="small" borderStyle="border" tag="3" inset="2" id="35">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="addNote:" target="-2" id="26"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" tag="4" imageHugsTitle="YES" id="17">
+                        <rect key="frame" x="148" y="96" width="130" height="23"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <buttonCell key="cell" type="smallSquare" title="Highlight" bezelStyle="smallSquare" image="ToolbarAddHighlightNote" imagePosition="left" alignment="left" controlSize="small" borderStyle="border" tag="4" inset="2" id="36">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="addNote:" target="-2" id="27"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" tag="5" imageHugsTitle="YES" id="18">
+                        <rect key="frame" x="148" y="67" width="130" height="23"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <buttonCell key="cell" type="smallSquare" title="Underline" bezelStyle="smallSquare" image="ToolbarAddUnderlineNote" imagePosition="left" alignment="left" controlSize="small" borderStyle="border" tag="5" inset="2" id="37">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="addNote:" target="-2" id="28"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" tag="6" imageHugsTitle="YES" id="19">
+                        <rect key="frame" x="148" y="38" width="130" height="23"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <buttonCell key="cell" type="smallSquare" title="Strike Out" bezelStyle="smallSquare" image="ToolbarAddStrikeOutNote" imagePosition="left" alignment="left" controlSize="small" borderStyle="border" tag="6" inset="2" id="38">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="addNote:" target="-2" id="29"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" tag="7" imageHugsTitle="YES" id="20">
+                        <rect key="frame" x="148" y="9" width="130" height="23"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <buttonCell key="cell" type="smallSquare" title="Line" bezelStyle="smallSquare" image="ToolbarAddLineNote" imagePosition="left" alignment="left" controlSize="small" borderStyle="border" tag="7" inset="2" id="39">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="addNote:" target="-2" id="30"/>
+                        </connections>
+                    </button>
+                </subviews>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="22"/>
+            </connections>
+        </window>
+    </objects>
+    <resources>
+        <image name="ToolbarAddAnchoredNote" width="128" height="128"/>
+        <image name="ToolbarAddCircleNote" width="128" height="128"/>
+        <image name="ToolbarAddHighlightNote" width="128" height="128"/>
+        <image name="ToolbarAddLineNote" width="128" height="128"/>
+        <image name="ToolbarAddSquareNote" width="128" height="128"/>
+        <image name="ToolbarAddStrikeOutNote" width="128" height="128"/>
+        <image name="ToolbarAddTextNote" width="128" height="128"/>
+        <image name="ToolbarAddUnderlineNote" width="128" height="128"/>
+    </resources>
+</document>

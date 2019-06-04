@@ -1,0 +1,74 @@
+"AccelerationTransition" = "Przyśpieszenie";
+"AccelerationTransitionDescription" = "The Accelleration filter gives a transition effect simulating a large acceleration";
+
+"BlindsTransition" = "Żaluzje";
+"BlindsTransitionDescription" = "The Blinds filter gives a transition simulating closing blinds";
+
+"BlurTransition" = "Plama";
+"BlurTransitionDescription" = "The Blur filter gives a transition effect based on blurring out the old image and blurring in the new image";
+
+"BoxInTransition" = "Pudełko w";
+"BoxInTransitionDescription" = "A transition filter for a box in effect";
+
+"BoxOutTransition" = "Pudełko";
+"BoxOutTransitionDescription" = "A transition filter for a box out effect";
+
+"CoverTransition" = "Pokrywa";
+"CoverTransitionDescription" = "The Cover filter gives a transition where the new image covers the old image by sliding in front of it";
+
+"CubeTransition" = "Kostka";
+"CubeTransitionDescription" = "The Cube filter gives a transition where the image is replaced as if they are attached to the sides of a rotating cube";
+
+"FlipTransition" = "Przewrót";
+"FlipTransitionDescription" = "The Flip filter gives a transition for a flip effect";
+
+"HoleTransition" = "Otwór";
+"HoleTransitionDescription" = "The Hole filter gives a transition effect like a hole being punched in the old image revealing the new image";
+
+"MeltdownTransition" = "Meltdown";
+"MeltdownTransitionDescription" = "The Meltdown filter gives a transition for a meltdown effect";
+
+"PageTurnTransition" = "Obróć stronę";
+"PageTurnTransitionDescription" = "The Page Turn filter gives a transition for a page turn effect";
+
+"PinchTransition" = "Szczypta";
+"PinchTransitionDescription" = "The Pinch filter gives a transition for a pinching effect";
+
+"PixelateTransition" = "Pikselizacja";
+"PixelateTransitionDescription" = "The Pixelate filter gives a transition by pixelating the blended image";
+
+"RadarTransition" = "Radar";
+"RadarTransitionDescription" = "The Radar filter gives a transition like a radar sweeping over the image revealing the new image";
+
+"RadialSwipeTransition" = "Ścieranie promieniowe";
+"RadialSwipeTransitionDescription" = "The Radial Swipe filter gives a transition for a radial swipe effect";
+
+"RevealTransition" = "Odsłona";
+"RevealTransitionDescription" = "The Reveal filter gives a transition where the new image reveals the old image by sliding away from the front of it";
+
+"SinkTransition" = "Zlew";
+"SinkTransitionDescription" = "The Sink filter gives a transition filter like the image being flushed through a sink";
+
+"SlideTransition" = "Wjazd";
+"SlideTransitionDescription" = "The Slide filter gives a transition where the new image replaces the old image by sliding sideways";
+
+"SplitInTransition" = "Podzielić";
+"SplitInTransitionDescription" = "The Split In filter gives a transition where the new image is revelead in the split going inwards";
+
+"SplitOutTransition" = "Podziel się";
+"SplitOutTransitionDescription" = "The Split Out filter gives a transition where the new image is revelead in the split going outwards";
+
+"StripsTransition" = "Paski";
+"StripsTransitionDescription" = "The Strips filter gives a transition where the old image is moved aside in strips revealing the new image";
+
+"SwapTransition" = "Zamiana";
+"SwapTransitionDescription" = "The Swap filter gives a transition for a swap effect";
+
+"WarpFadeTransition" = "Wypaczone przenikanie";
+"WarpFadeTransitionDescription" = "The Warp Fade filter gives a transition for a warp and fade effect";
+
+"WarpSwitchTransition" = "Wypaczona zamiana";
+"WarpSwitchTransitionDescription" = "The Warp Switch filter gives a transition for a warp and switch effect";
+
+"ZoomTransition" = "Zoom";
+"ZoomTransitionDescription" = "The Zoom filter gives a transition for a zoom effect";

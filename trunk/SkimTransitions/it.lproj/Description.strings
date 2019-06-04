@@ -1,0 +1,74 @@
+"AccelerationTransition" = "Accelerazione";
+"AccelerationTransitionDescription" = "The Accelleration filter gives a transition effect simulating a large acceleration";
+
+"BlindsTransition" = "Blinds";
+"BlindsTransitionDescription" = "The Blinds filter gives a transition simulating closing blinds";
+
+"BlurTransition" = "Blur";
+"BlurTransitionDescription" = "The Blur filter gives a transition effect based on blurring out the old image and blurring in the new image";
+
+"BoxInTransition" = "Scatola interiore";
+"BoxInTransitionDescription" = "A transition filter for a box in effect";
+
+"BoxOutTransition" = "Scatola exteriore";
+"BoxOutTransitionDescription" = "A transition filter for a box out effect";
+
+"CoverTransition" = "Copertina";
+"CoverTransitionDescription" = "The Cover filter gives a transition where the new image covers the old image by sliding in front of it";
+
+"CubeTransition" = "Cubo";
+"CubeTransitionDescription" = "The Cube filter gives a transition where the image is replaced as if they are attached to the sides of a rotating cube";
+
+"FlipTransition" = "Capovolgi";
+"FlipTransitionDescription" = "The Flip filter gives a transition for a flip effect";
+
+"HoleTransition" = "Buco";
+"HoleTransitionDescription" = "The Hole filter gives a transition effect like a hole being punched in the old image revealing the new image";
+
+"MeltdownTransition" = "Meltdown";
+"MeltdownTransitionDescription" = "The Meltdown filter gives a transition for a meltdown effect";
+
+"PageTurnTransition" = "Turno di pagina";
+"PageTurnTransitionDescription" = "The Page Turn filter gives a transition for a page turn effect";
+
+"PinchTransition" = "Pizzico";
+"PinchTransitionDescription" = "The Pinch filter gives a transition for a pinching effect";
+
+"PixelateTransition" = "Suddividi in pixel";
+"PixelateTransitionDescription" = "The Pixelate filter gives a transition by pixelating the blended image";
+
+"RadarTransition" = "Radar";
+"RadarTransitionDescription" = "The Radar filter gives a transition like a radar sweeping over the image revealing the new image";
+
+"RadialSwipeTransition" = "Colpo radiale";
+"RadialSwipeTransitionDescription" = "The Radial Swipe filter gives a transition for a radial swipe effect";
+
+"RevealTransition" = "Rivela";
+"RevealTransitionDescription" = "The Reveal filter gives a transition where the new image reveals the old image by sliding away from the front of it";
+
+"SinkTransition" = "Lavello";
+"SinkTransitionDescription" = "The Sink filter gives a transition filter like the image being flushed through a sink";
+
+"SlideTransition" = "Diapositiva";
+"SlideTransitionDescription" = "The Slide filter gives a transition where the new image replaces the old image by sliding sideways";
+
+"SplitInTransition" = "Diviso interiore";
+"SplitInTransitionDescription" = "The Split In filter gives a transition where the new image is revelead in the split going inwards";
+
+"SplitOutTransition" = "Diviso exteriore";
+"SplitOutTransitionDescription" = "The Split Out filter gives a transition where the new image is revelead in the split going outwards";
+
+"StripsTransition" = "Strisce";
+"StripsTransitionDescription" = "The Strips filter gives a transition where the old image is moved aside in strips revealing the new image";
+
+"SwapTransition" = "Scambia";
+"SwapTransitionDescription" = "The Swap filter gives a transition for a swap effect";
+
+"WarpFadeTransition" = "Curva e dissolvi";
+"WarpFadeTransitionDescription" = "The Warp Fade filter gives a transition for a warp and fade effect";
+
+"WarpSwitchTransition" = "Scambio curvato";
+"WarpSwitchTransitionDescription" = "The Warp Switch filter gives a transition for a warp and switch effect";
+
+"ZoomTransition" = "Ridimensiona";
+"ZoomTransitionDescription" = "The Zoom filter gives a transition for a zoom effect";
