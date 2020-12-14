@@ -159,7 +159,7 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
     } else if (data) {
         BOOL stale = NO;
         NSURLBookmarkResolutionOptions options = allowUI ? 0 : NSURLBookmarkResolutionWithoutUI | NSURLBookmarkResolutionWithoutMounting;
-        NSURL *fileURL = [NSURL URLByResolvingBookmarkData:data options:options relativeToURL:nil bookmarkDataIsStale:&stale error:NULL];
+        fileURL = [NSURL URLByResolvingBookmarkData:data options:options relativeToURL:nil bookmarkDataIsStale:&stale error:NULL];
         // convert back to alias handle
         if (fileURL) {
             AliasHandle handle = createAliasHandleFromURL(fileURL);
