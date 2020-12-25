@@ -109,10 +109,11 @@ NSString *SKDocumentFileURLDidChangeNotification = @"SKDocumentFileURLDidChangeN
     if (fileURL) {
         [setup setObject:[fileURL path] forKey:SKDocumentSetupFileNameKey];
         
-        SKAlias *alias = [[[SKAlias alloc] initWithURL:fileURL] autorelease];
+        SKAlias *alias = [[SKAlias alloc] initWithURL:fileURL];
         NSData *data = [alias data];
         if (data)
             [setup setObject:data forKey:[alias isBookmark] ? SKDocumentSetupBookmarkKey : SKDocumentSetupAliasKey];
+        [alias release];
     }
     
     NSWindow *window = [self mainWindow];
