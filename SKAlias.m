@@ -54,25 +54,25 @@ static inline AliasHandle createAliasHandleFromURL(NSURL *fileURL) {
 }
 
 static inline AliasHandle createAliasHandleFromData(NSData *data) {
-    CFIndex len = CFDataGetLength((CFDataRef)data);
+    NSUInteger len = [data length];
     Handle handle = NewHandle(len);
     if (handle != NULL && len > 0) {
         HLock(handle);
-        memmove((void *)*handle, (const void *)CFDataGetBytePtr((CFDataRef)data), len);
+        memmove((void *)*handle, (const void *)[data bytes], len);
         HUnlock(handle);
     }
     return (AliasHandle)handle;
 }
 
 static inline NSData *dataFromAliasHandle(AliasHandle aliasHandle) {
-    CFDataRef data = NULL;
+    NSData *data = nil;
     Handle handle = (Handle)aliasHandle;
-    CFIndex len = GetHandleSize(handle);
+    NSUInteger len = GetHandleSize(handle);
     SInt8 handleState = HGetState(handle);
     HLock(handle);
-    data = CFDataCreate(kCFAllocatorDefault, (const UInt8 *)*handle, len);
+    data = [NSData dataWithBytes:(const void *)*handle length:len];
     HSetState(handle, handleState);
-    return [(NSData *)data autorelease];
+    return data;
 }
 
 static inline NSURL *fileURLFromAliasHandle(AliasHandle aliasHandle, NSUInteger mountFlags) {
