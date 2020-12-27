@@ -82,7 +82,10 @@ NSString *SKDocumentFileURLDidChangeNotification = @"SKDocumentFileURLDidChangeN
 - (IBAction)copyURL:(id)sender {
     NSURL *fileURL = [self fileURL];
     if (fileURL) {
-        NSURL *skimURL = [NSURL URLWithString:[@"skim" stringByAppendingString:[[[fileURL filePathURL] absoluteString] substringFromIndex:4]]];
+        NSURLComponents *components = [[NSURLComponents alloc] initWithURL:fileURL resolvingAgainstBaseURL:NO];
+        [components setScheme:@"skim"];
+        NSURL *skimURL = [components URL];
+        [components release];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
         [pboard writeObjects:[NSArray arrayWithObjects:skimURL, nil]];

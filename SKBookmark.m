@@ -312,14 +312,20 @@ static Class SKBookmarkClass = Nil;
     if ([self bookmarkType] == SKBookmarkTypeSeparator)
         return nil;
     SKBookmark *bookmark = self;
-    NSMutableArray *components = [NSMutableArray array];
+    NSMutableString *path = [NSMutableString string];
     while ([bookmark parent] != nil) {
         NSString *component = [[bookmark label] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLBookmarkNameAllowedCharacterSet]];
-        [components insertObject:component atIndex:0];
+        [path replaceCharactersInRange:NSMakeRange(0, 0) withString:component];
+        [path replaceCharactersInRange:NSMakeRange(0, 0) withString:@"/"];
         bookmark = [bookmark parent];
     }
-    NSString *skimURLString = [@"skim://bookmarks/" stringByAppendingString:[components componentsJoinedByString:@"/"]];
-    return [NSURL URLWithString:skimURLString];
+    NSURLComponents *components = [[NSURLComponents alloc] init];
+    [components setScheme:@"skim"];
+    [components setHost:@"bookmarks"];
+    [components setPath:path];
+    NSURL *url = [components URL];
+    [components release];
+    return url;
 }
 
 @end
