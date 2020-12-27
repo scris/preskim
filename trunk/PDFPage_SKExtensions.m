@@ -388,8 +388,12 @@ static BOOL usesSequentialPageNumbering = NO;
     NSURL *fileURL = [[self containingDocument] fileURL];
     if (fileURL == nil)
         return nil;
-    NSString *skimURLString = [NSString stringWithFormat:@"skim%@#page=%lu", [[[fileURL filePathURL] absoluteString] substringFromIndex:4], (unsigned long)([self pageIndex] + 1)];
-    return [NSURL URLWithString:skimURLString];
+    NSURLComponents *components = [[NSURLComponents alloc] initWithURL:fileURL resolvingAgainstBaseURL:NO];
+    [components setScheme:@"skim"];
+    [components setFragment:[NSString stringWithFormat:@"page=%lu", (unsigned long)([self pageIndex] + 1)]];
+    NSURL *skimURL = [components URL];
+    [components release];
+    return skimURL;
 }
 
 static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
