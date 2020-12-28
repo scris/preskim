@@ -47,7 +47,7 @@
         NSMutableArray *urlArray = [NSMutableArray array];
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
         for (NSURL *url in [self URLsForDirectory:NSApplicationSupportDirectory inDomains:NSAllDomainsMask])
-            [urlArray addObject:[url URLByAppendingPathComponent:appName]];
+            [urlArray addObject:[url URLByAppendingPathComponent:appName isDirectory:YES]];
         applicationSupportDirectoryURLs = [urlArray copy];
     }
     return applicationSupportDirectoryURLs;
@@ -64,7 +64,7 @@
             NSURL *chewableURL = (NSURL *)CFURLCreateFromFSRef(kCFAllocatorDefault, &chewableRef);
 #pragma clang diagnostic pop
             NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
-            chewableItemsDirectoryURL = [[chewableURL URLByAppendingPathComponent:appName] copy];
+            chewableItemsDirectoryURL = [[chewableURL URLByAppendingPathComponent:appName isDirectory:YES] copy];
             if ([chewableItemsDirectoryURL checkResourceIsReachableAndReturnError:NULL] == NO)
                 [self createDirectoryAtPath:[chewableItemsDirectoryURL path] withIntermediateDirectories:NO attributes:nil error:NULL];
             [chewableURL release];
@@ -75,7 +75,7 @@
     
     do {
         CFUUIDRef uuid = CFUUIDCreate(NULL);
-        uniqueURL = [chewableItemsDirectoryURL URLByAppendingPathComponent:[(NSString *)CFUUIDCreateString(NULL, uuid) autorelease]];
+        uniqueURL = [chewableItemsDirectoryURL URLByAppendingPathComponent:[(NSString *)CFUUIDCreateString(NULL, uuid) autorelease] isDirectory:YES];
         CFRelease(uuid);
     } while ([uniqueURL checkResourceIsReachableAndReturnError:NULL]);
     

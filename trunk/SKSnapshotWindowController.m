@@ -701,7 +701,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
         NSURL *dropDestination = [pboard pasteLocationURL];
         PDFPage *page = [[[self pdfView] document] pageAtIndex:[self pageIndex]];
         NSString *filename = [NSString stringWithFormat:@"%@ %c %@", ([[[self document] displayName] stringByDeletingPathExtension] ?: @"PDF"), '-', [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [page displayLabel]]];
-        NSURL *fileURL = [[dropDestination URLByAppendingPathComponent:filename] URLByAppendingPathExtension:@"tiff"];
+        NSURL *fileURL = [[dropDestination URLByAppendingPathComponent:filename isDirectory:NO] URLByAppendingPathExtension:@"tiff"];
         fileURL = [fileURL uniqueFileURL];
         if ([[[self thumbnailWithSize:0.0] TIFFRepresentation] writeToURL:fileURL atomically:YES])
             [item setString:[fileURL absoluteString] forType:type];

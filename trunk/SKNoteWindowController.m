@@ -336,7 +336,7 @@ static NSURL *temporaryDirectoryURL = nil;
         NSString *name = [note string];
         if ([name length] == 0)
             name = @"NoteImage";
-        NSURL *fileURL = [[destination URLByAppendingPathComponent:name] URLByAppendingPathExtension:@"tiff"];
+        NSURL *fileURL = [[destination URLByAppendingPathComponent:name isDirectory:NO] URLByAppendingPathExtension:@"tiff"];
         fileURL = [fileURL uniqueFileURL];
         if ([[image TIFFRepresentation] writeToURL:fileURL atomically:YES])
             return fileURL;

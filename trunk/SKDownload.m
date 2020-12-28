@@ -421,7 +421,7 @@ static NSSet *keysAffectedByStatus = nil;
         downloadURL = [NSURL fileURLWithPath:downloadDir isDirectory:NO];
     else
         downloadURL = [[NSFileManager defaultManager] URLForDirectory:NSDownloadsDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:NULL];
-    NSURL *destinationURL = [[downloadURL URLByAppendingPathComponent:filename] uniqueFileURL];
+    NSURL *destinationURL = [[downloadURL URLByAppendingPathComponent:filename isDirectory:NO] uniqueFileURL];
     NSError *error = nil;
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([[destinationURL URLByDeletingLastPathComponent] checkResourceIsReachableAndReturnError:NULL] == NO)
