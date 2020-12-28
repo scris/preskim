@@ -157,9 +157,9 @@ static SKInfoWindowController *sharedInstance = nil;
     NSArray *tables = [NSArray arrayWithObjects:summaryTableView, attributesTableView, nil];
     NSTableView *tv;
     CGFloat width = 0.0;
-    NSTableColumn *tc = [tv tableColumnWithIdentifier:LABEL_COLUMN_ID];
-    NSCell *cell = [tc dataCell];
     for (tv in tables) {
+        NSTableColumn *tc = [tv tableColumnWithIdentifier:LABEL_COLUMN_ID];
+        NSCell *cell = [tc dataCell];
         NSUInteger row, rowMax = [tv numberOfRows];
         for (row = 0; row < rowMax; row++) {
             [cell setStringValue:[self tableView:tv objectValueForTableColumn:tc row:row]];
