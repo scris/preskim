@@ -289,7 +289,7 @@ static NSSet *keysAffectedByStatus = nil;
 - (void)cancel {
     if ([self canCancel]) {
         
-        [downloadTask cancelByProducingResumeData:^(NSData *resumeData){ [self setResumeData:resumeData]; }];
+        [downloadTask cancelByProducingResumeData:^(NSData *data){ [self setResumeData:data]; }];
         [[SKDownloadController sharedDownloadController] removeDownloadTask:downloadTask];
         SKDESTROY(downloadTask);
         [self setStatus:SKDownloadStatusCanceled];
