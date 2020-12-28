@@ -65,7 +65,7 @@
         NSMutableArray *templates = [NSMutableArray array];
         
         for (NSURL *appSupportURL in [fm applicationSupportDirectoryURLs]) {
-            NSURL *templatesURL = [appSupportURL URLByAppendingPathComponent:TEMPLATES_DIRECTORY];
+            NSURL *templatesURL = [appSupportURL URLByAppendingPathComponent:TEMPLATES_DIRECTORY isDirectory:YES];
             NSNumber *isDir = nil;
             [appSupportURL getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:NULL];
             if ([isDir boolValue]) {
@@ -92,7 +92,7 @@
     NSURL *url = nil;
     
     for (NSURL *appSupportURL in [[fm applicationSupportDirectoryURLs] arrayByAddingObject:[[NSBundle mainBundle] sharedSupportURL]]) {
-        url = [[appSupportURL URLByAppendingPathComponent:TEMPLATES_DIRECTORY] URLByAppendingPathComponent:typeName];
+        url = [[appSupportURL URLByAppendingPathComponent:TEMPLATES_DIRECTORY isDirectory:YES] URLByAppendingPathComponent:typeName isDirectory:NO];
         if ([url checkResourceIsReachableAndReturnError:NULL] == NO)
             url = nil;
         else break;

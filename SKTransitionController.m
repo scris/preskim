@@ -239,7 +239,7 @@ static BOOL hasCoreGraphicsTransitions = NO;
                @"CoreGraphics SKTransitionWarpFlip", nil]];
         }
         // get our transitions
-        NSURL *transitionsURL = [[[NSBundle mainBundle] builtInPlugInsURL] URLByAppendingPathComponent:TRANSITIONS_PLUGIN];
+        NSURL *transitionsURL = [[[NSBundle mainBundle] builtInPlugInsURL] URLByAppendingPathComponent:TRANSITIONS_PLUGIN isDirectory:YES];
         [CIPlugIn loadPlugIn:transitionsURL allowExecutableCode:YES];
         // get all the transition filters
 		[CIPlugIn loadAllPlugIns];

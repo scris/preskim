@@ -124,9 +124,11 @@ static id (*original_initWithString)(id, SEL, id) = NULL;
     NSURL *baseURL = [self URLByDeletingLastPathComponent];
     NSString *baseName = [[self lastPathComponent] stringByDeletingPathExtension];
     NSString *extension = [self pathExtension];
+    BOOL isDirectory = [[self absoluteString] hasSuffix:@"/"];
     NSInteger i = 0;
-    while ([uniqueFileURL checkResourceIsReachableAndReturnError:NULL])
-        uniqueFileURL = [baseURL URLByAppendingPathComponent:[[baseName stringByAppendingFormat:@"-%ld", (long)++i] stringByAppendingPathExtension:extension]];
+    while ([uniqueFileURL checkResourceIsReachableAndReturnError:NULL]) {
+        uniqueFileURL = [baseURL URLByAppendingPathComponent:[[baseName stringByAppendingFormat:@"-%ld", (long)++i] stringByAppendingPathExtension:extension] isDirectory:isDirectory];
+    }
     return uniqueFileURL;
 }
 

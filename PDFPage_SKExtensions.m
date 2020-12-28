@@ -312,7 +312,7 @@ static BOOL usesSequentialPageNumbering = NO;
     if ([type isEqualToString:(NSString *)kPasteboardTypeFileURLPromise]) {
         NSURL *dropDestination = [pboard pasteLocationURL];
         NSString *filename = [NSString stringWithFormat:@"%@ %c %@", ([[[self containingDocument] displayName] stringByDeletingPathExtension] ?: @"PDF"), '-', [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [self displayLabel]]];
-        NSURL *fileURL = [dropDestination URLByAppendingPathComponent:filename];
+        NSURL *fileURL = [dropDestination URLByAppendingPathComponent:filename isDirectory:NO];
         NSString *pathExt = nil;
         NSData *data = nil;
         

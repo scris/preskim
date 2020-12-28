@@ -563,7 +563,7 @@ enum {
             if ([ourExtensions containsObject:[[url pathExtension] lowercaseString]] == NO) {
                 if (tmpURL == nil)
                     tmpURL = [fm URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:fileURL create:YES error:NULL];
-                [fm copyItemAtURL:url toURL:[tmpURL URLByAppendingPathComponent:[url lastPathComponent]] error:NULL];
+                [fm copyItemAtURL:url toURL:[tmpURL URLByAppendingPathComponent:[url lastPathComponent] isDirectory:NO] error:NULL];
             }
         }
     }
@@ -602,7 +602,7 @@ enum {
             // move extra package content like version info to the new location
             NSFileManager *fm = [NSFileManager defaultManager];
             for (NSURL *url in [fm contentsOfDirectoryAtURL:tmpURL includingPropertiesForKeys:[NSArray array] options:0 error:NULL])
-                [fm moveItemAtURL:url toURL:[absoluteURL URLByAppendingPathComponent:[url lastPathComponent]] error:NULL];
+                [fm moveItemAtURL:url toURL:[absoluteURL URLByAppendingPathComponent:[url lastPathComponent] isDirectory:NO] error:NULL];
         }
     } else if ([attributes count]) {
         [attributes enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
@@ -659,7 +659,7 @@ enum {
     NSString *typeName = [self fileType];
     NSURL *tmpURL = [[NSFileManager defaultManager] URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:absoluteURL create:YES error:NULL];
     NSString *ext = [self fileNameExtensionForType:typeName saveOperation:NSSaveToOperation];
-    NSURL *tmpFileURL = [tmpURL URLByAppendingPathComponent:[[absoluteURL URLReplacingPathExtension:ext] lastPathComponent]];
+    NSURL *tmpFileURL = [tmpURL URLByAppendingPathComponent:[[absoluteURL URLReplacingPathExtension:ext] lastPathComponent] isDirectory:NO];
     BOOL didWrite = [self writeToURL:tmpFileURL ofType:typeName error:outError];
     if (didWrite) {
         if ([self canAttachNotesForType:typeName])
@@ -930,7 +930,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
             NSArray *array = nil;
             NSNumber *number = nil;
             if ([docType isEqualToString:SKPDFBundleDocumentType]) {
-                NSDictionary *info = [NSDictionary dictionaryWithContentsOfURL:[[absoluteURL URLByAppendingPathComponent:BUNDLE_DATA_FILENAME] URLByAppendingPathExtension:@"plist"]];
+                NSDictionary *info = [NSDictionary dictionaryWithContentsOfURL:[[absoluteURL URLByAppendingPathComponent:BUNDLE_DATA_FILENAME isDirectory:NO] URLByAppendingPathExtension:@"plist"]];
                 if ([info isKindOfClass:[NSDictionary class]]) {
                     dictionary = [info objectForKey:SKPresentationOptionsKey];
                     array = [info objectForKey:SKTagsKey];
@@ -1288,13 +1288,13 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         targetFileName = [[self displayName] stringByAppendingPathExtension:targetExt];
     
     NSURL *targetDirURL = [[NSFileManager defaultManager] uniqueChewableItemsDirectoryURL];
-    NSURL *targetFileURL = [targetDirURL URLByAppendingPathComponent:targetFileName];
+    NSURL *targetFileURL = [targetDirURL URLByAppendingPathComponent:targetFileName isDirectory:NO];
     NSURL *tmpURL = nil;
     NSURL *fileURL = targetFileURL;
     
     if (shouldArchive) {
         tmpURL = [[NSFileManager defaultManager] URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:targetFileURL create:YES error:NULL];
-        fileURL = [[tmpURL URLByAppendingPathComponent:targetFileName] URLReplacingPathExtension:typeExt];
+        fileURL = [[tmpURL URLByAppendingPathComponent:targetFileName isDirectory:NO] URLReplacingPathExtension:typeExt];
     }
     
     if ([self writeSafelyToURL:fileURL ofType:typeName forSaveOperation:NSAutosaveElsewhereOperation error:NULL] == NO) {

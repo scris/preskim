@@ -91,7 +91,7 @@ static void fsevents_callback(FSEventStreamRef streamRef, void *clientCallBackIn
         
         for (NSURL *folderURL in [fm applicationSupportDirectoryURLs]) {
             NSNumber *isDir = nil;
-            folderURL = [folderURL URLByAppendingPathComponent:SCRIPTS_FOLDER_NAME];
+            folderURL = [folderURL URLByAppendingPathComponent:SCRIPTS_FOLDER_NAME isDirectory:YES];
             [folderURL getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:NULL];
             if ([isDir boolValue])
                 [folders addObject:folderURL];
