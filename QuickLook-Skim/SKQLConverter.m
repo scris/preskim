@@ -1,5 +1,5 @@
 /*
- This software is Copyright (c) 2007-2020
+ This software is Copyright (c) 2007-2021
  Christiaan Hofman. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
