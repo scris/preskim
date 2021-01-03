@@ -194,22 +194,18 @@ static NSString *SKFileSizeStringForFileURL(NSURL *fileURL, unsigned long long *
     unsigned long long size, logicalSize = 0;
     BOOL isDir = NO;
     NSMutableString *string = [NSMutableString string];
-    NSNumber *number;
-
-    if ([fileURL getResourceValue:&number forKey:NSURLTotalFileSizeKey error:NULL])
-        logicalSize = [number unsignedLongLongValue];
-    if ([fileURL getResourceValue:&number forKey:NSURLTotalFileAllocatedSizeKey error:NULL])
-        size = [number unsignedLongLongValue];
-    if ([fileURL getResourceValue:&number forKey:NSURLIsDirectoryKey error:NULL])
-        isDir = [number boolValue];
+    NSDictionary *values = [fileURL resourceValuesForKeys:[NSArray arrayWithObjects:NSURLTotalFileSizeKey, NSURLTotalFileAllocatedSizeKey, NSURLIsDirectoryKey, nil] error:NULL];
+    
+    logicalSize = [[values objectForKey:NSURLTotalFileSizeKey] unsignedLongLongValue];
+    size = [[values objectForKey:NSURLTotalFileAllocatedSizeKey] unsignedLongLongValue];
+    isDir = [[values objectForKey:NSURLIsDirectoryKey] boolValue];
     
     if (isDir) {
         NSDirectoryEnumerator *dirEnum = [[NSFileManager defaultManager] enumeratorAtURL:fileURL includingPropertiesForKeys:[NSArray arrayWithObjects:NSURLTotalFileSizeKey, NSURLTotalFileAllocatedSizeKey, nil] options:0 errorHandler:NULL];
         for (NSURL *subFileURL in dirEnum) {
-            if ([subFileURL getResourceValue:&number forKey:NSURLTotalFileSizeKey error:NULL])
-                logicalSize += [number unsignedLongLongValue];
-            if ([subFileURL getResourceValue:&number forKey:NSURLTotalFileAllocatedSizeKey error:NULL])
-                size += [number unsignedLongLongValue];
+            values = [subFileURL resourceValuesForKeys:[NSArray arrayWithObjects:NSURLTotalFileSizeKey, NSURLTotalFileAllocatedSizeKey, NSURLIsDirectoryKey, nil] error:NULL];
+            logicalSize += [[values objectForKey:NSURLTotalFileSizeKey] unsignedLongLongValue];
+            size += [[values objectForKey:NSURLTotalFileAllocatedSizeKey] unsignedLongLongValue];
         }
     }
     
