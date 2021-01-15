@@ -455,7 +455,7 @@
 			<key>command</key>
 			<string>open</string>
 			<key>arguments</key>
-			<string>vscode://file&quot;%file&quot;:%line</string>
+			<string>vscode://file&quot;%urlfile&quot;:%line</string>
 		</dict>
 		<dict>
 			<key>name</key>
