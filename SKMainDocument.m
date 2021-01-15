@@ -1514,6 +1514,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
         
         replaceInShellCommand(cmdString, @"%line", [NSString stringWithFormat:@"%ld", (long)(line + 1)]);
         replaceInShellCommand(cmdString, @"%file", file);
+        replaceInShellCommand(cmdString, @"%urlfile", [file stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]);
         replaceInShellCommand(cmdString, @"%output", [[self fileURL] path]);
         
         [cmdString insertString:@"\" " atIndex:0];
