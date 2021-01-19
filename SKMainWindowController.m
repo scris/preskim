@@ -698,6 +698,10 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 }
 
 - (void)updatePageColumnWidthForTableViews:(NSArray *)tvs {
+    // this may happen for locked PDFs, nothing to do in this case
+    if ([pageLabels count] == 0)
+        return;
+    
     NSTableView *tv = [tvs firstObject];
     NSTableColumn *tableColumn = [tv tableColumnWithIdentifier:PAGE_COLUMNID];
     id cell = [tableColumn dataCell];
