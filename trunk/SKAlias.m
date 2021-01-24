@@ -174,11 +174,11 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
 }
 
 - (NSURL *)fileURL {
-    return [self fileURLAllowingUI:NO];
+    return [self fileURLAllowingUI:YES];
 }
 
 - (NSURL *)fileURLNoUI {
-    return [self fileURLAllowingUI:YES];
+    return [self fileURLAllowingUI:NO];
 }
 
 @end
