@@ -13,6 +13,7 @@
 			<array>
 				<string>net.sourceforge.skim-app.pdfd</string>
 				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>com.adobe.postscript</string>
 			</array>
 		</dict>
 	</array>
