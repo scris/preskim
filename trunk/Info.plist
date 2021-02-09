@@ -481,12 +481,17 @@
 			<string>PDF Bundle</string>
 			<key>UTTypeIconFile</key>
 			<string>PDFDDocument</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>PDFDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>net.sourceforge.skim-app.pdfd</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>com.apple.ostype</key>
-				<string>PDFD</string>
 				<key>public.filename-extension</key>
 				<array>
 					<string>pdfd</string>
@@ -502,12 +507,17 @@
 			<string>Skim Notes</string>
 			<key>UTTypeIconFile</key>
 			<string>NoteDocument</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>SkimDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>net.sourceforge.skim-app.skimnotes</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>com.apple.ostype</key>
-				<string>SKNT</string>
 				<key>public.filename-extension</key>
 				<array>
 					<string>skim</string>
@@ -527,18 +537,17 @@
 			<string>PDF</string>
 			<key>UTTypeIconFile</key>
 			<string>PDFDocument</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>PDFDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.pdf</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>com.apple.nspboard-type</key>
-				<array>
-					<string>Apple PDF pasteboard type</string>
-				</array>
-				<key>com.apple.ostype</key>
-				<array>
-					<string>PDF </string>
-				</array>
 				<key>public.filename-extension</key>
 				<array>
 					<string>pdf</string>
@@ -558,6 +567,13 @@
 			<string>PostScript</string>
 			<key>UTTypeIconFile</key>
 			<string>PSDocument</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>PDFDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.postscript</string>
 			<key>UTTypeTagSpecification</key>
@@ -582,19 +598,17 @@
 			<string>Encapsulated PostScript</string>
 			<key>UTTypeIconFile</key>
 			<string>PSDocument</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>PDFDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.encapsulated-postscript</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>com.apple.nspboard-type</key>
-				<array>
-					<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
-					<string>NSPostScriptPboardType</string>
-				</array>
-				<key>com.apple.ostype</key>
-				<array>
-					<string>EPSF</string>
-				</array>
 				<key>public.filename-extension</key>
 				<array>
 					<string>eps</string>
@@ -610,6 +624,13 @@
 			<string>DVI</string>
 			<key>UTTypeIconFile</key>
 			<string>DVIDocument</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>PDFDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.dvi</string>
 			<key>UTTypeTagSpecification</key>
@@ -629,6 +650,13 @@
 			<string>XDV</string>
 			<key>UTTypeIconFile</key>
 			<string>XDVDocument</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>PDFDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.xdv</string>
 			<key>UTTypeTagSpecification</key>
