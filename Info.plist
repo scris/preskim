@@ -9,6 +9,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PDFDocument</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>PDF</string>
 			<key>CFBundleTypeRole</key>
@@ -40,6 +42,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PDFDDocument</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>PDF Bundle</string>
 			<key>CFBundleTypeRole</key>
@@ -71,6 +75,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PSDocument</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>PostScript</string>
 			<key>CFBundleTypeRole</key>
@@ -102,6 +108,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PSDocument</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>Encapsulated PostScript</string>
 			<key>CFBundleTypeRole</key>
@@ -133,6 +141,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>DVIDocument</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>DVI</string>
 			<key>CFBundleTypeRole</key>
@@ -164,6 +174,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>XDVDocument</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>XDV</string>
 			<key>CFBundleTypeRole</key>
@@ -195,6 +207,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>NoteDocument</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>Skim Notes</string>
 			<key>CFBundleTypeRole</key>
@@ -221,6 +235,8 @@
 			<string>Notes as Text</string>
 			<key>CFBundleTypeRole</key>
 			<string>None</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.plain-text</string>
@@ -318,10 +334,10 @@
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSAppleEventsUsageDescription</key>
 	<string>Skim uses AppleScript to compse e-mail messages, open text editors, and run user AppleScripts from the menu.</string>
-	<key>NSDownloadsFolderUsageDescription</key>
-	<string>Skim places downloaded files in your Downloads folder.</string>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>Skim places downloaded files in your Downloads folder.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
