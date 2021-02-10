@@ -37,7 +37,7 @@
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 		CE0302E925D30F0400407B8A /* Glasses.icns in Resources */ = {isa = PBXBuildFile; fileRef = CE0302D625D30F0400407B8A /* Glasses.icns */; };
 		CE0302EA25D30F0400407B8A /* PDFDocumentBackground.icns in Resources */ = {isa = PBXBuildFile; fileRef = CE0302E725D30F0400407B8A /* PDFDocumentBackground.icns */; };
-		CE0302EB25D30F0400407B8A /* SkimDocumentBackground.icns in Resources */ = {isa = PBXBuildFile; fileRef = CE0302E825D30F0400407B8A /* SkimDocumentBackground.icns */; };
+		CE0302EB25D30F0400407B8A /* NoteDocumentBackground.icns in Resources */ = {isa = PBXBuildFile; fileRef = CE0302E825D30F0400407B8A /* NoteDocumentBackground.icns */; };
 		CE030C6113C07A57007A47E9 /* PDFView_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE030C6013C07A57007A47E9 /* PDFView_SKExtensions.m */; };
 		CE0463CB0B84D24300C11E4A /* SKApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0463CA0B84D24300C11E4A /* SKApplication.m */; };
 		CE05A7380E9024ED0060BB07 /* SKPresentationOptionsSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE05A7360E9024ED0060BB07 /* SKPresentationOptionsSheetController.m */; };
@@ -593,7 +593,7 @@
 		8D15AC370486D014006FF6A4 /* Skim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Skim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE0302D625D30F0400407B8A /* Glasses.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Glasses.icns; sourceTree = "<group>"; };
 		CE0302E725D30F0400407B8A /* PDFDocumentBackground.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = PDFDocumentBackground.icns; sourceTree = "<group>"; };
-		CE0302E825D30F0400407B8A /* SkimDocumentBackground.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SkimDocumentBackground.icns; sourceTree = "<group>"; };
+		CE0302E825D30F0400407B8A /* NoteDocumentBackground.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = NoteDocumentBackground.icns; sourceTree = "<group>"; };
 		CE030C5F13C07A57007A47E9 /* PDFView_SKExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFView_SKExtensions.h; sourceTree = "<group>"; };
 		CE030C6013C07A57007A47E9 /* PDFView_SKExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFView_SKExtensions.m; sourceTree = "<group>"; };
 		CE0463C90B84D24300C11E4A /* SKApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKApplication.h; sourceTree = "<group>"; };
@@ -1994,7 +1994,7 @@
 				CE0302E725D30F0400407B8A /* PDFDocumentBackground.icns */,
 				CEAC280125D4317B00D63477 /* PSDocumentBackground.icns */,
 				CEAC281225D4317B00D63477 /* DVIDocumentBackground.icns */,
-				CE0302E825D30F0400407B8A /* SkimDocumentBackground.icns */,
+				CE0302E825D30F0400407B8A /* NoteDocumentBackground.icns */,
 				CE0302D625D30F0400407B8A /* Glasses.icns */,
 				CE6DC9930D699F21003A072F /* TransitionMask.jpg */,
 				CEB735A10C4A8CD6000350F9 /* TransitionShading.tiff */,
@@ -2472,7 +2472,7 @@
 				CE19446310627483007E8770 /* BookmarksWindow.xib in Resources */,
 				CE426FB6255ED08800465569 /* ViewSettings.xib in Resources */,
 				CE19446410627483007E8770 /* ConversionProgressWindow.xib in Resources */,
-				CE0302EB25D30F0400407B8A /* SkimDocumentBackground.icns in Resources */,
+				CE0302EB25D30F0400407B8A /* NoteDocumentBackground.icns in Resources */,
 				CE19446510627483007E8770 /* MainWindow.xib in Resources */,
 				CE19446610627483007E8770 /* NotesDocument.xib in Resources */,
 				CE19446710627483007E8770 /* ProgressSheet.xib in Resources */,
