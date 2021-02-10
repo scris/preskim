@@ -510,7 +510,7 @@
 			<key>UTTypeIcons</key>
 			<dict>
 				<key>UTTypeIconBackgroundName</key>
-				<string>SkimDocumentBackground</string>
+				<string>NoteDocumentBackground</string>
 				<key>UTTypeIconBadgeName</key>
 				<string>Glasses</string>
 			</dict>
