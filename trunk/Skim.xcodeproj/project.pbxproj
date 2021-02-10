@@ -225,6 +225,8 @@
 		CEAA559E0C6DE235006BD633 /* SKDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAA559C0C6DE235006BD633 /* SKDownload.m */; };
 		CEAA67260C70A882006BD633 /* NSURL_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAA67240C70A882006BD633 /* NSURL_SKExtensions.m */; };
 		CEAA8F2F0EA2A86200C16FE4 /* SKNoteText.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAA8F2D0EA2A86200C16FE4 /* SKNoteText.m */; };
+		CEAC281325D4317B00D63477 /* PSDocumentBackground.icns in Resources */ = {isa = PBXBuildFile; fileRef = CEAC280125D4317B00D63477 /* PSDocumentBackground.icns */; };
+		CEAC281425D4317B00D63477 /* DVIDocumentBackground.icns in Resources */ = {isa = PBXBuildFile; fileRef = CEAC281225D4317B00D63477 /* DVIDocumentBackground.icns */; };
 		CEAE1C480CA1877F00849B0F /* SKSecondaryPDFView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE1C460CA1877F00849B0F /* SKSecondaryPDFView.m */; };
 		CEAF079D0C4139EB00C3ECBB /* SKStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAF079B0C4139EB00C3ECBB /* SKStatusBar.m */; };
 		CEB34A530F5C1B7E0037E086 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = CEB34A520F5C1B7E0037E086 /* dsa_pub.pem */; };
@@ -1063,6 +1065,8 @@
 		CEAA67240C70A882006BD633 /* NSURL_SKExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURL_SKExtensions.m; sourceTree = "<group>"; };
 		CEAA8F2C0EA2A86200C16FE4 /* SKNoteText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKNoteText.h; sourceTree = "<group>"; };
 		CEAA8F2D0EA2A86200C16FE4 /* SKNoteText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKNoteText.m; sourceTree = "<group>"; };
+		CEAC280125D4317B00D63477 /* PSDocumentBackground.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = PSDocumentBackground.icns; sourceTree = "<group>"; };
+		CEAC281225D4317B00D63477 /* DVIDocumentBackground.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = DVIDocumentBackground.icns; sourceTree = "<group>"; };
 		CEAE1C450CA1877F00849B0F /* SKSecondaryPDFView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKSecondaryPDFView.h; sourceTree = "<group>"; };
 		CEAE1C460CA1877F00849B0F /* SKSecondaryPDFView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKSecondaryPDFView.m; sourceTree = "<group>"; };
 		CEAF079A0C4139EB00C3ECBB /* SKStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKStatusBar.h; sourceTree = "<group>"; };
@@ -1988,6 +1992,8 @@
 				CE0A9F9B11564AE1004E6BBF /* XDVDocument.icns */,
 				CE0715890B8A3D6300733CC8 /* NoteDocument.icns */,
 				CE0302E725D30F0400407B8A /* PDFDocumentBackground.icns */,
+				CEAC280125D4317B00D63477 /* PSDocumentBackground.icns */,
+				CEAC281225D4317B00D63477 /* DVIDocumentBackground.icns */,
 				CE0302E825D30F0400407B8A /* SkimDocumentBackground.icns */,
 				CE0302D625D30F0400407B8A /* Glasses.icns */,
 				CE6DC9930D699F21003A072F /* TransitionMask.jpg */,
@@ -2452,6 +2458,7 @@
 				CE07158B0B8A3D6500733CC8 /* NoteDocument.icns in Resources */,
 				CE07158C0B8A3D6500733CC8 /* PDFDocument.icns in Resources */,
 				CE7469180B7F40B700CBF969 /* Skim.icns in Resources */,
+				CEAC281325D4317B00D63477 /* PSDocumentBackground.icns in Resources */,
 				CE41A6CC0B975E5000ECF819 /* Skim.sdef in Resources */,
 				CE4373B40BB5440E00A56987 /* PSDocument.icns in Resources */,
 				CEE229390BFB7CE9002B746B /* ReleaseNotes.rtf in Resources */,
@@ -2497,6 +2504,7 @@
 				CEF60D72114C0DA60074ACC4 /* NoteWindow.strings in Resources */,
 				CEF60D73114C0DA60074ACC4 /* NoteTypeSheet.strings in Resources */,
 				CEF60D74114C0DA60074ACC4 /* NotesPanel.strings in Resources */,
+				CEAC281425D4317B00D63477 /* DVIDocumentBackground.icns in Resources */,
 				CEF60D77114C0DA60074ACC4 /* LineInspector.strings in Resources */,
 				CEF60D79114C0DA60074ACC4 /* DownloadsWindow.strings in Resources */,
 				CEF60D7B114C0DA60074ACC4 /* BookmarksWindow.strings in Resources */,

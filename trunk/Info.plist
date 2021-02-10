@@ -570,7 +570,7 @@
 			<key>UTTypeIcons</key>
 			<dict>
 				<key>UTTypeIconBackgroundName</key>
-				<string>PDFDocumentBackground</string>
+				<string>PSDocumentBackground</string>
 				<key>UTTypeIconBadgeName</key>
 				<string>Glasses</string>
 			</dict>
@@ -601,7 +601,7 @@
 			<key>UTTypeIcons</key>
 			<dict>
 				<key>UTTypeIconBackgroundName</key>
-				<string>PDFDocumentBackground</string>
+				<string>PSDocumentBackground</string>
 				<key>UTTypeIconBadgeName</key>
 				<string>Glasses</string>
 			</dict>
@@ -627,7 +627,7 @@
 			<key>UTTypeIcons</key>
 			<dict>
 				<key>UTTypeIconBackgroundName</key>
-				<string>PDFDocumentBackground</string>
+				<string>DVIDocumentBackground</string>
 				<key>UTTypeIconBadgeName</key>
 				<string>Glasses</string>
 			</dict>
@@ -653,7 +653,7 @@
 			<key>UTTypeIcons</key>
 			<dict>
 				<key>UTTypeIconBackgroundName</key>
-				<string>PDFDocumentBackground</string>
+				<string>DVIDocumentBackground</string>
 				<key>UTTypeIconBadgeName</key>
 				<string>Glasses</string>
 			</dict>
