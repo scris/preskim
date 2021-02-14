@@ -729,6 +729,12 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         [tableColumn setMaxWidth:labelWidth];
         [tableColumn setWidth:labelWidth];
         [tv sizeToFit];
+        NSRect frame = [tv frame];
+        CGFloat width = NSWidth([[[tv enclosingScrollView] contentView] visibleRect]);
+        if (NSWidth(frame) < width) {
+            frame.size.width = width;
+            [tv setFrame:frame];
+        }
     }
 }
 
