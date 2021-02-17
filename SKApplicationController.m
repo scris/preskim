@@ -225,7 +225,7 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
                 [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title")];
                 [alert addButtonWithTitle:NSLocalizedString(@"Open", @"Button title")];
                 
-                if (NSAlertSecondButtonReturn == [alert runModal])
+                if (NSAlertFirstButtonReturn == [alert runModal])
                     previousSession = nil;
             }
             
