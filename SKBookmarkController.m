@@ -188,6 +188,12 @@ static NSUInteger maxRecentDocumentsCount = 0;
     if ([[self window] respondsToSelector:@selector(setTabbingMode:)])
         [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
     
+    if ([[self window] respondsToSelector:@selector(setToolbarStyle:)])
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        [[self window] setToolbarStyle:NSWindowToolbarStyleUnified];
+#pragma clang diagnostic pop
+    
     [self setWindowFrameAutosaveName:SKBookmarksWindowFrameAutosaveName];
     
     [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
