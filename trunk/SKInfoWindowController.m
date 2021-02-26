@@ -162,7 +162,7 @@ static SKInfoWindowController *sharedInstance = nil;
         NSCell *cell = [tc dataCell];
         NSUInteger row, rowMax = [tv numberOfRows];
         for (row = 0; row < rowMax; row++) {
-            [cell setStringValue:[self tableView:tv objectValueForTableColumn:tc row:row]];
+            [cell setStringValue:[self tableView:tv objectValueForTableColumn:tc row:row] ?: @""];
             width = fmax(width, ceil([cell cellSize].width));
         }
     }
