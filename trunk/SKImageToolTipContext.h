@@ -42,7 +42,7 @@
 
 
 @protocol SKImageToolTipContext <NSObject>
-- (NSImage *)toolTipImage;
+- (NSImage *)toolTipImageWithScale:(CGFloat)scale;
 @end
 
 

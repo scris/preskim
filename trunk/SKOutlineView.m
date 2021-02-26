@@ -349,7 +349,7 @@
                 if (item) {
                     id <SKImageToolTipContext> context = [[self delegate] outlineView:self imageContextForItem:item];
                     if (context)
-                        [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:context atPoint:NSZeroPoint];
+                        [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:context scale:1.0 atPoint:NSZeroPoint];
                 }
             }
             return;

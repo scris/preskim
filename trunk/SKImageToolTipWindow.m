@@ -100,7 +100,7 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
 - (void)showDelayed {
     NSPoint thePoint = NSEqualPoints(point, NSZeroPoint) ? [NSEvent mouseLocation] : point;
     NSRect contentRect = NSZeroRect, screenRect = [[NSScreen screenForPoint:thePoint] frame];
-    NSImage *image = [context toolTipImage];
+    NSImage *image = [context toolTipImageWithScale:scale];
     BOOL isOpaque = [[[image representations] firstObject] isOpaque];
     
     if (image) {
@@ -157,7 +157,8 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
     [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(showDelayed) object:nil];
 }
 
-- (void)showForImageContext:(id <SKImageToolTipContext>)aContext atPoint:(NSPoint)aPoint {
+- (void)showForImageContext:(id <SKImageToolTipContext>)aContext scale:(CGFloat)aScale atPoint:(NSPoint)aPoint {
+    scale = aScale;
     point = aPoint;
     
     if ([aContext isEqual:context] == NO) {

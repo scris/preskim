@@ -65,7 +65,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 
 @implementation NSAttributedString (SKImageToolTipContext)
 
-- (NSImage *)toolTipImage {
+- (NSImage *)toolTipImageWithScale:(CGFloat)scale {
     NSAttributedString *attrString = [self attributedStringByAddingControlTextColorAttribute];
     CGFloat width = [[NSUserDefaults standardUserDefaults] doubleForKey:SKToolTipWidthKey] - 2.0 * TEXT_MARGIN_X;
     CGFloat height = [[NSUserDefaults standardUserDefaults] doubleForKey:SKToolTipHeightKey] - 2.0 * TEXT_MARGIN_Y;
@@ -91,12 +91,12 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 
 
 @interface PDFDestination (SKImageToolTipContextExtension)
-- (NSImage *)toolTipImageWithOffset:(NSPoint)offset selections:(NSArray *)selections;
+- (NSImage *)toolTipImageWithOffset:(NSPoint)offset scale:(CGFloat)scale selections:(NSArray *)selections;
 @end
 
 @implementation PDFDestination (SKImageToolTipContext)
 
-- (NSImage *)toolTipImageWithOffset:(NSPoint)offset selections:(NSArray *)selections {
+- (NSImage *)toolTipImageWithOffset:(NSPoint)offset scale:(CGFloat)scale selections:(NSArray *)selections {
     static NSDictionary *labelAttributes = nil;
     static NSColor *labelColor = nil;
     if (labelAttributes == nil)
@@ -104,13 +104,20 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     if (labelColor == nil)
         labelColor = [[NSColor colorWithCalibratedWhite:0.5 alpha:0.8] retain];
     
+    BOOL isScaled = fabs(scale - 1.0) > 0.01;
     PDFPage *page = [self page];
-    NSImage *pageImage = [page thumbnailWithSize:0.0 forBox:kPDFDisplayBoxCropBox shadowBlurRadius:0.0 highlights:selections];
-    NSRect pageImageRect = {NSZeroPoint, [pageImage size]};
     NSRect bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
+    CGFloat size = isScaled ? scale * fmax(NSWidth(bounds), NSHeight(bounds)) : 0.0;
+    NSImage *pageImage = [page thumbnailWithSize:size forBox:kPDFDisplayBoxCropBox shadowBlurRadius:0.0 highlights:selections];
+    NSRect pageImageRect = {NSZeroPoint, [pageImage size]};
     NSRect sourceRect = NSZeroRect;
     PDFSelection *pageSelection = [page selectionForRect:bounds];
     NSAffineTransform *transform = [page affineTransformForBox:kPDFDisplayBoxCropBox];
+    if (isScaled) {
+        NSAffineTransform *scaleTransform = [NSAffineTransform transform];
+        [scaleTransform scaleBy:scale];
+        [transform appendTransform:scaleTransform];
+    }
     
     sourceRect.size.width = [[NSUserDefaults standardUserDefaults] doubleForKey:SKToolTipWidthKey];
     sourceRect.size.height = [[NSUserDefaults standardUserDefaults] doubleForKey:SKToolTipHeightKey];
@@ -169,8 +176,8 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     return image;
 }
 
-- (NSImage *)toolTipImage {
-    NSImage *image = [self toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) selections:nil];
+- (NSImage *)toolTipImageWithScale:(CGFloat)scale {
+    NSImage *image = [self toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:nil];
     [[[image representations] firstObject] setOpaque:YES];
     return image;
 }
@@ -180,12 +187,12 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 
 @implementation PDFSelection (SKImageToolTipContext)
 
-- (NSImage *)toolTipImage {
+- (NSImage *)toolTipImageWithScale:(CGFloat)scale {
     PDFSelection *sel = [self copy];
     [sel setColor:[NSColor searchHighlightColor]];
     NSArray *selections = [NSArray arrayWithObject:sel];
     [sel release];
-    return [[self destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) selections:selections];
+    return [[self destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections];
 }
 
 @end
@@ -193,13 +200,13 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 
 @implementation SKGroupedSearchResult (SKImageToolTipContext)
 
-- (NSImage *)toolTipImage {
+- (NSImage *)toolTipImageWithScale:(CGFloat)scale {
     NSArray *selections = [[[NSArray alloc] initWithArray:[self matches] copyItems:YES] autorelease];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
     [selections setValue:[NSColor findHighlightColor] forKey:@"color"];
 #pragma clang diagnostic pop
-    return [[[selections firstObject] destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) selections:selections];
+    return [[[selections firstObject] destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections];
 }
 
 @end
@@ -207,16 +214,16 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 
 @implementation PDFAnnotation (SKImageToolTipContext)
 
-- (NSImage *)toolTipImage {
-    
+- (NSImage *)toolTipImageWithScale:(CGFloat)scale {
+
     if ([self isLink]) {
-        NSImage *image = [[self linkDestination] toolTipImageWithOffset:NSZeroPoint selections:nil];
+        NSImage *image = [[self linkDestination] toolTipImageWithOffset:NSZeroPoint scale:scale selections:nil];
         if (image == nil) {
             NSURL *url = [self linkURL];
             if (url) {
                 NSAttributedString *attrString = toolTipAttributedString([url absoluteString]);
                 if ([attrString length])
-                    image = [attrString toolTipImage];
+                    image = [attrString toolTipImageWithScale:1.0];
             }
         }
         if (image) {
@@ -247,7 +254,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
             attrString = [attrString attributedSubstringFromRange:r];
     }
     
-    return [attrString length] ? [attrString toolTipImage] : nil;
+    return [attrString length] ? [attrString toolTipImageWithScale:1.0] : nil;
 }
 
 @end
@@ -255,7 +262,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 
 @implementation PDFPage (SKImageToolTipContext)
 
-- (NSImage *)toolTipImage {
+- (NSImage *)toolTipImageWithScale:(CGFloat)scale {
     NSImage *image = [self thumbnailWithSize:256.0 forBox:kPDFDisplayBoxCropBox shadowBlurRadius:0.0 highlights:nil];
     [[[image representations] firstObject] setOpaque:YES];
     return image;

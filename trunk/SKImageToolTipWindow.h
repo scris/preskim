@@ -44,13 +44,14 @@
 @interface SKImageToolTipWindow : SKAnimatedBorderlessWindow {
     id <SKImageToolTipContext> context;
     NSPoint point;
+    CGFloat scale;
     NSVisualEffectView *backgroundView;
 }
 
 + (id)sharedToolTipWindow;
 
 // aContext can be a PDFAnnotation, PDFDestination, or PDFPage
-- (void)showForImageContext:(id <SKImageToolTipContext>)aContext atPoint:(NSPoint)aPoint;
+- (void)showForImageContext:(id <SKImageToolTipContext>)aContext scale:(CGFloat)aScale atPoint:(NSPoint)aPoint;
 
 @property (nonatomic, readonly) id <SKImageToolTipContext> currentImageContext;
 
