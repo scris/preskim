@@ -86,7 +86,7 @@
 - (void)outlineView:(NSOutlineView *)anOutlineView pasteFromPasteboard:(NSPasteboard *)pboard;
 - (BOOL)outlineView:(NSOutlineView *)anOutlineView canPasteFromPasteboard:(NSPasteboard *)pboard;
 
-- (id <SKImageToolTipContext>)outlineView:(NSOutlineView *)anOutlineView imageContextForItem:(id)item;
+- (id <SKImageToolTipContext>)outlineView:(NSOutlineView *)anOutlineView imageContextForItem:(id)item scale:(CGFloat *)scale;
 
 - (NSArray *)outlineView:(NSOutlineView *)anOutlineView typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)aTypeSelectHelper;
 - (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelper:(SKTypeSelectHelper *)aTypeSelectHelper didFailToFindMatchForSearchString:(NSString *)searchString;

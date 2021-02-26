@@ -274,11 +274,11 @@
 #pragma mark Tracking
 
 - (BOOL)hasRowImageToolTips {
-    return [self imageToolTipLayout] == SKTableImageToolTipByRow && [[self delegate] respondsToSelector:@selector(tableView:imageContextForTableColumn:row:)];
+    return [self imageToolTipLayout] == SKTableImageToolTipByRow && [[self delegate] respondsToSelector:@selector(tableView:imageContextForTableColumn:row:scale:)];
 }
 
 - (BOOL)hasCellImageToolTips {
-    return [self imageToolTipLayout] == SKTableImageToolTipByCell && [[self delegate] respondsToSelector:@selector(tableView:imageContextForTableColumn:row:)];
+    return [self imageToolTipLayout] == SKTableImageToolTipByCell && [[self delegate] respondsToSelector:@selector(tableView:imageContextForTableColumn:row:scale:)];
 }
 
 - (void)addTrackingAreaForRowView:(NSTableRowView *)rowView {
@@ -351,15 +351,16 @@
             NSInteger row = [self rowForView:rowView];
             if (row != -1) {
                 id <SKImageToolTipContext> context = nil;
+                CGFloat scale = 1.0;
                 NSNumber *colNum = [[[theEvent trackingArea] userInfo] objectForKey:SKImageToolTipColumnKey];
                 if (colNum) {
                     NSTableColumn *tableColumn = [[self tableColumns] objectAtIndex:[colNum integerValue]];
-                    context = [[self delegate] tableView:self imageContextForTableColumn:tableColumn row:row];
+                    context = [[self delegate] tableView:self imageContextForTableColumn:tableColumn row:row scale:&scale];
                 } else {
-                    context = [[self delegate] tableView:self imageContextForTableColumn:nil row:row];
+                    context = [[self delegate] tableView:self imageContextForTableColumn:nil row:row scale:&scale];
                 }
                 if (context)
-                    [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:context scale:1.0 atPoint:NSZeroPoint];
+                    [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:context scale:scale atPoint:NSZeroPoint];
             }
             return;
         }
