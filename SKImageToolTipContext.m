@@ -107,7 +107,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     BOOL isScaled = fabs(scale - 1.0) > 0.01;
     PDFPage *page = [self page];
     NSRect bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
-    CGFloat size = isScaled ? scale * fmax(NSWidth(bounds), NSHeight(bounds)) : 0.0;
+    CGFloat size = isScaled ? ceil(scale * fmax(NSWidth(bounds), NSHeight(bounds))) : 0.0;
     NSImage *pageImage = [page thumbnailWithSize:size forBox:kPDFDisplayBoxCropBox shadowBlurRadius:0.0 highlights:selections];
     NSRect pageImageRect = {NSZeroPoint, [pageImage size]};
     NSRect sourceRect = NSZeroRect;
@@ -115,7 +115,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     NSAffineTransform *transform = [page affineTransformForBox:kPDFDisplayBoxCropBox];
     if (isScaled) {
         NSAffineTransform *scaleTransform = [NSAffineTransform transform];
-        [scaleTransform scaleBy:scale];
+        [scaleTransform scaleBy:size / fmax(NSWidth(bounds), NSHeight(bounds))];
         [transform appendTransform:scaleTransform];
     }
     
