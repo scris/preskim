@@ -189,6 +189,20 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 @end
 #endif
 
+#if SDK_BEFORE(11_0)
+typedef NS_ENUM(NSInteger, NSWindowToolbarStyle) {
+    NSWindowToolbarStyleAutomatic,
+    NSWindowToolbarStyleExpanded,
+    NSWindowToolbarStylePreference,
+    NSWindowToolbarStyleUnified,
+    NSWindowToolbarStyleUnifiedCompact
+};
+@interface NSWindow (SKBigSurExtensions)
+- (NSWindowToolbarStyle)toolbarStyle;
+- (void)setToolbarStyle:(NSWindowToolbarStyle)style;
+@end
+#endif
+
 #pragma mark -
 
 @interface SKMainWindowController (SKPrivate)
@@ -401,6 +415,11 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     [window setCollectionBehavior:[window collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
     
     [window setStyleMask:[window styleMask] | NSFullSizeContentViewWindowMask];
+    if ([window respondsToSelector:@selector(setToolbarStyle:)])
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        [window setToolbarStyle:NSWindowToolbarStyleExpanded];
+#pragma clang diagnostic pop
     [[splitView superview] setFrame:[window contentLayoutRect]];
     [window addObserver:self forKeyPath:CONTENTLAYOUTRECT_KEY options:0 context:&SKMainWindowContentLayoutRectObservationContext];
     
