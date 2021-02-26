@@ -189,20 +189,6 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 @end
 #endif
 
-#if SDK_BEFORE(11_0)
-typedef NS_ENUM(NSInteger, NSWindowToolbarStyle) {
-    NSWindowToolbarStyleAutomatic,
-    NSWindowToolbarStyleExpanded,
-    NSWindowToolbarStylePreference,
-    NSWindowToolbarStyleUnified,
-    NSWindowToolbarStyleUnifiedCompact
-};
-@interface NSWindow (SKBigSurExtensions)
-- (NSWindowToolbarStyle)toolbarStyle;
-- (void)setToolbarStyle:(NSWindowToolbarStyle)style;
-@end
-#endif
-
 #pragma mark -
 
 @interface SKMainWindowController (SKPrivate)
