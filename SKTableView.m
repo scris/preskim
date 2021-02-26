@@ -359,7 +359,7 @@
                     context = [[self delegate] tableView:self imageContextForTableColumn:nil row:row];
                 }
                 if (context)
-                    [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:context atPoint:NSZeroPoint];
+                    [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:context scale:1.0 atPoint:NSZeroPoint];
             }
             return;
         }

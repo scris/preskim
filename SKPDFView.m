@@ -2056,7 +2056,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if ([eventArea owner] == self && [eventArea isEqual:trackingArea]) {
         [[self window] setAcceptsMouseMovedEvents:YES];
     } else if ([eventArea owner] == self && (annotation = [[eventArea userInfo] objectForKey:SKAnnotationKey])) {
-        [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:annotation atPoint:NSZeroPoint];
+        [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:annotation scale:[self scaleFactor] atPoint:NSZeroPoint];
     } else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd]) {
         [super mouseEntered:theEvent];
     }
@@ -2760,7 +2760,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             NSPoint point = NSMakePoint(NSMinX(bounds) + TOOLTIP_OFFSET_FRACTION * NSWidth(bounds), NSMinY(bounds) + TOOLTIP_OFFSET_FRACTION * NSHeight(bounds));
             point = [self convertPoint:point fromPage:[annotation page]];
             point = [self convertPointToScreen:NSMakePoint(round(point.x), round(point.y))];
-            [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:annotation atPoint:point];
+            [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:annotation scale:[self scaleFactor] atPoint:point];
         } else {
             [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
         }
@@ -2808,7 +2808,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             NSPoint point = NSMakePoint(NSMinX(bounds) + TOOLTIP_OFFSET_FRACTION * NSWidth(bounds), NSMinY(bounds) + TOOLTIP_OFFSET_FRACTION * NSHeight(bounds));
             point = [self convertPoint:point fromPage:[annotation page]] ;
             point = [self convertPointToScreen:NSMakePoint(round(point.x), round(point.y))];
-            [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:annotation atPoint:point];
+            [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:annotation scale:[self scaleFactor] atPoint:point];
         } else {
             [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
         }
