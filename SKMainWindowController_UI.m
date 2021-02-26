@@ -586,13 +586,16 @@
     }
 }
 
-- (id <SKImageToolTipContext>)tableView:(NSTableView *)tv imageContextForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    if (tableColumn)
+- (id <SKImageToolTipContext>)tableView:(NSTableView *)tv imageContextForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row scale:(CGFloat *)scale {
+    if (tableColumn) {
         return nil;
-    else if ([tv isEqual:leftSideController.findTableView])
+    } else if ([tv isEqual:leftSideController.findTableView]) {
+        *scale = [[self pdfView] scaleFactor];
         return [[leftSideController.findArrayController arrangedObjects] objectAtIndex:row];
-    else if ([tv isEqual:leftSideController.groupedFindTableView])
+    } else if ([tv isEqual:leftSideController.groupedFindTableView]) {
+        *scale = [[self pdfView] scaleFactor];
         return [[leftSideController.groupedFindArrayController arrangedObjects] objectAtIndex:row];
+    }
     return nil;
 }
 
@@ -924,9 +927,11 @@
     return NO;
 }
 
-- (id <SKImageToolTipContext>)outlineView:(NSOutlineView *)ov imageContextForItem:(id)item {
-    if ([ov isEqual:leftSideController.tocOutlineView])
+- (id <SKImageToolTipContext>)outlineView:(NSOutlineView *)ov imageContextForItem:(id)item scale:(CGFloat *)scale {
+    if ([ov isEqual:leftSideController.tocOutlineView]) {
+        *scale = [[self pdfView] scaleFactor];
         return [item destination];
+    }
     return nil;
 }
 

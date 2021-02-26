@@ -98,7 +98,7 @@ typedef NS_ENUM(NSInteger, SKTableImageToolTipLayout) {
 
 - (BOOL)tableView:(NSTableView *)tableView commandSelectRow:(NSInteger)rowIndex;
 
-- (id <SKImageToolTipContext>)tableView:(NSTableView *)aTableView imageContextForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex;
+- (id <SKImageToolTipContext>)tableView:(NSTableView *)aTableView imageContextForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex  scale:(CGFloat *)scale;
 
 - (NSArray *)tableView:(NSTableView *)aTableView typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)aTypeSelectHelper;
 - (void)tableView:(NSTableView *)aTableView typeSelectHelper:(SKTypeSelectHelper *)aTypeSelectHelper didFailToFindMatchForSearchString:(NSString *)searchString;
