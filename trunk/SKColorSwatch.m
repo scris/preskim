@@ -136,8 +136,6 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     self = [super initWithFrame:frame];
     if (self) {
         colors = [[NSMutableArray alloc] initWithObjects:[NSColor whiteColor], nil];
-        action = NULL;
-        target = nil;
         autoResizes = YES;
         selects = NO;
         [self commonInit];
@@ -149,8 +147,6 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     self = [super initWithCoder:decoder];
     if (self) {
         colors = [[NSMutableArray alloc] initWithArray:[decoder decodeObjectForKey:COLORS_KEY]];
-        action = NSSelectorFromString([decoder decodeObjectForKey:ACTION_KEY]);
-        target = [decoder decodeObjectForKey:TARGET_KEY];
         autoResizes = [decoder decodeBoolForKey:AUTORESIZES_KEY];
         selects = [decoder decodeBoolForKey:SELECTS_KEY];
         [self commonInit];
@@ -161,8 +157,6 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
 - (void)encodeWithCoder:(NSCoder *)coder {
     [super encodeWithCoder:coder];
     [coder encodeObject:colors forKey:COLORS_KEY];
-    [coder encodeObject:NSStringFromSelector(action) forKey:ACTION_KEY];
-    [coder encodeConditionalObject:target forKey:TARGET_KEY];
     [coder encodeBool:autoResizes forKey:AUTORESIZES_KEY];
     [coder encodeBool:selects forKey:SELECTS_KEY];
 }
@@ -504,14 +498,6 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
 }
 
 #pragma mark Accessors
-
-- (SEL)action { return action; }
-
-- (void)setAction:(SEL)newAction { action = newAction; }
-
-- (id)target { return target; }
-
-- (void)setTarget:(id)newTarget { target = newTarget; }
 
 - (NSArray *)colors {
     return [[colors copy] autorelease];
