@@ -52,9 +52,6 @@ extern NSString *SKColorSwatchColorsChangedNotification;
     NSInteger moveIndex;
     CGFloat modifyOffset;
 
-    SEL action;
-    id target;
-    
     BOOL autoResizes;
     BOOL selects;
 }
