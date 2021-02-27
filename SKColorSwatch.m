@@ -51,8 +51,6 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
 
 #define COLORS_KEY      @"colors"
 
-#define TARGET_KEY      @"target"
-#define ACTION_KEY      @"action"
 #define AUTORESIZES_KEY @"autoResizes"
 #define SELECTS_KEY     @"selects"
 
@@ -123,11 +121,16 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     modifiedIndex = -1;
     moveIndex = -1;
     
-    NSSegmentedCell *cell = [[NSSegmentedCell alloc] init];
+    NSSegmentedCell *cell = (NSSegmentedCell *)[self cell];
+    if (NO == [[self cell] isKindOfClass:[NSSegmentedCell class]]) {
+        cell = [[[NSSegmentedCell alloc] init] autorelease];
+        [cell setAction:[[self cell] action]];
+        [cell setTarget:[[self cell] target]];
+        [cell setEnabled:[self cell] && [[self cell] isEnabled]];
+        [self setCell:cell];
+    }
     [cell setSegmentCount:1];
     [cell setSegmentStyle:NSSegmentStyleTexturedSquare];
-    [self setCell:cell];
-    [cell release];
     
     [self registerForDraggedTypes:[NSColor readableTypesForPasteboard:[NSPasteboard pasteboardWithName:NSDragPboard]]];
 }
