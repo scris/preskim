@@ -250,7 +250,7 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
 
 #pragma mark Drawing
 
-- (void)drawSwatchAtIndex:(NSInteger)i inRect:(NSRect)rect borderColor:(NSColor *)borderColor radius:(CGFloat)r disabled:(BOOL)disabled {
+- (void)drawSwatchAtIndex:(NSInteger)i inRect:(NSRect)rect borderColor:(NSColor *)borderColor disabled:(BOOL)disabled {
     if (NSWidth(rect) < 1.0)
         return;
     if (NSWidth(rect) > 2.0) {
@@ -264,7 +264,7 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
             CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], 1.0);
     }
     [borderColor setStroke];
-    [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:r yRadius:r] stroke];
+    [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:1.5 yRadius:1.5] stroke];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -309,7 +309,7 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
                 rect.origin.x += distance * modifyOffset;
             if (modifiedIndex == i && moveIndex == -1)
                 rect.size.width -= modifyOffset * distance;
-            [self drawSwatchAtIndex:i inRect:rect borderColor:(clickedIndex == i ? highlightColor : borderColor) radius:1.5 disabled:disabled];
+            [self drawSwatchAtIndex:i inRect:rect borderColor:(clickedIndex == i ? highlightColor : borderColor) disabled:disabled];
             if (((dropIndex == i && insert == NO) || selectedIndex == i) && NSWidth(rect) > 0.0) {
                 path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0];
                 [path setLineWidth:2.0];
@@ -327,7 +327,7 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     if (moveIndex != -1) {
         rect = [self frameForColorAtIndex:modifiedIndex];
         rect.origin.x += distance * modifyOffset * (moveIndex - modifiedIndex);
-        [self drawSwatchAtIndex:modifiedIndex inRect:rect borderColor:dropColor radius:1.5 disabled:disabled];
+        [self drawSwatchAtIndex:modifiedIndex inRect:rect borderColor:dropColor disabled:disabled];
     }
     
     if (dropIndex != -1 && insert) {
