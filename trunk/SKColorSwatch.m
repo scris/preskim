@@ -56,8 +56,10 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
 #define AUTORESIZES_KEY @"autoResizes"
 #define SELECTS_KEY     @"selects"
 
-#define BEZEL_HEIGHT 23.0
-#define BEZEL_INSET 1.0
+#define BEZEL_HEIGHT 22.0
+#define BEZEL_INSET_LR 1.0
+#define BEZEL_INSET_T 1.0
+#define BEZEL_INSET_B 2.0
 #define COLOR_INSET 2.0
 #define COLOR_OFFSET 3.0
 
@@ -243,7 +245,7 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
 }
 
 - (NSEdgeInsets)alignmentRectInsets {
-    return NSEdgeInsetsMake(BEZEL_INSET, BEZEL_INSET, BEZEL_INSET, BEZEL_INSET);
+    return NSEdgeInsetsMake(BEZEL_INSET_T, BEZEL_INSET_LR, BEZEL_INSET_B, BEZEL_INSET_LR);
 }
 
 #pragma mark Drawing
@@ -313,15 +315,10 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     
     [NSGraphicsContext saveGraphicsState];
     
-    CGFloat r1 = 0.0, r2 = 0.0, r3 = 0.0;
     NSColor *borderColor = [NSColor controlBackgroundColor];
     NSColor *highlightColor = [NSColor selectedControlColor];
     NSColor *dropColor = nil;
-    BOOL disabled = RUNNING_AFTER(10_13) && [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO && ([self isDescendantOf:[[self window] contentView]] == NO || [[self window] isKindOfClass:NSClassFromString(@"NSToolbarSnapshotWindow")]);;
-    NSRect bgBounds = [self backingAlignedRect:NSInsetRect(bounds, 0.5, 0.5) options:NSAlignAllEdgesOutward];
-    r1 = 3.0 + 0.5 * (NSHeight(bounds) - NSHeight(bgBounds));
-    r2 = r1 - 1.0;
-    r3 = r2 - 0.5;
+    BOOL disabled = RUNNING_AFTER(10_13) && [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO && ([self isDescendantOf:[[self window] contentView]] == NO || [[self window] isKindOfClass:NSClassFromString(@"NSToolbarSnapshotWindow")]);
     if (SKHasDarkAppearance(self)) {
         borderColor = [NSColor colorWithCalibratedWhite:0.3 alpha:1.0];
         highlightColor = [NSColor colorWithCalibratedWhite:0.55 alpha:1.0];
@@ -332,9 +329,9 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     if (dropIndex != -1)
         dropColor = disabled ? [NSColor secondarySelectedControlColor] : [NSColor alternateSelectedControlColor];
     
-    [self drawBezelInRect:bgBounds disabled:disabled];
+    [self drawBezelInRect:bounds disabled:disabled];
     
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(bounds, 1.0, 1.0) xRadius:r1 yRadius:r1];
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:4.0 yRadius:4.0];
     [path addClip];
     
     NSRect rect = [self frameForColorAtIndex:0];
@@ -347,9 +344,9 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
                 rect.origin.x += distance * modifyOffset;
             if (modifiedIndex == i && moveIndex == -1)
                 rect.size.width -= modifyOffset * distance;
-            [self drawSwatchAtIndex:i inRect:rect borderColor:(clickedIndex == i ? highlightColor : borderColor) radius:r3 disabled:disabled];
+            [self drawSwatchAtIndex:i inRect:rect borderColor:(clickedIndex == i ? highlightColor : borderColor) radius:1.5 disabled:disabled];
             if (((dropIndex == i && insert == NO) || selectedIndex == i) && NSWidth(rect) > 0.0) {
-                path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:r2 yRadius:r2];
+                path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0];
                 [path setLineWidth:2.0];
                 [((dropIndex == i && insert == NO) ? dropColor : highlightColor) setStroke];
                 [path stroke];
@@ -365,7 +362,7 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     if (moveIndex != -1) {
         rect = [self frameForColorAtIndex:modifiedIndex];
         rect.origin.x += distance * modifyOffset * (moveIndex - modifiedIndex);
-        [self drawSwatchAtIndex:modifiedIndex inRect:rect borderColor:dropColor radius:r3 disabled:disabled];
+        [self drawSwatchAtIndex:modifiedIndex inRect:rect borderColor:dropColor radius:1.5 disabled:disabled];
     }
     
     if (dropIndex != -1 && insert) {
@@ -389,10 +386,8 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     if (modifiedIndex != -1)
         return;
     NSRect rect = [self focusRingMaskBounds];
-    if (NSIsEmptyRect(rect) == NO) {
-        CGFloat r = 2.0 + 0.5 * (NSHeight(rect) - NSHeight([self backingAlignedRect:NSInsetRect(rect, 0.5, 0.5) options:NSAlignAllEdgesOutward]));
-        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:r yRadius:r] fill];
-    }
+    if (NSIsEmptyRect(rect) == NO)
+        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0] fill];
 }
 
 #pragma mark Notification handling
