@@ -122,7 +122,13 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     draggedIndex = -1;
     modifiedIndex = -1;
     moveIndex = -1;
-
+    
+    NSSegmentedCell *cell = [[NSSegmentedCell alloc] init];
+    [cell setSegmentCount:1];
+    [cell setSegmentStyle:NSSegmentStyleTexturedSquare];
+    [self setCell:cell];
+    [cell release];
+    
     [self registerForDraggedTypes:[NSColor readableTypesForPasteboard:[NSPasteboard pasteboardWithName:NSDragPboard]]];
 }
 
@@ -267,42 +273,6 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:r yRadius:r] stroke];
 }
 
-- (void)drawBezelInRect:(NSRect)rect disabled:(BOOL)disabled {
-    static const CGFloat grays[8] = {0.94, 0.98,  0.96, 0.96,  0.34, 0.37,  0.2, 0.2};
-    BOOL isDark = SKHasDarkAppearance(self);
-    NSUInteger offset = isDark ? 4 : 0;
-    if (disabled)
-        offset += 2;
-    NSColor *startColor = [NSColor colorWithCalibratedWhite:grays[offset] alpha:1.0];
-    NSColor *endColor = [NSColor colorWithCalibratedWhite:grays[offset + 1] alpha:1.0];
-    NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor] autorelease];
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:4.0 yRadius:4.0];
-    [NSGraphicsContext saveGraphicsState];
-    [startColor setFill];
-    [NSShadow setShadowWithWhite:0.0 alpha:disabled ? 1.0 : 0.6 blurRadius:0.5 yOffset:0.0];
-    [path fill];
-    if (isDark == NO && disabled == NO) {
-        [NSShadow setShadowWithWhite:0.0 alpha:0.25 blurRadius:0.75 yOffset:-0.25];
-        [path fill];
-    }
-    [NSGraphicsContext restoreGraphicsState];
-    [gradient drawInBezierPath:path angle:90.0];
-    if (isDark || disabled) {
-        [NSGraphicsContext saveGraphicsState];
-        [path addClip];
-        path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:4.0 yRadius:3.0];
-        [path appendBezierPathWithRect:[self bounds]];
-        [path setWindingRule:NSEvenOddWindingRule];
-        if (isDark)
-            [NSShadow setShadowWithWhite:1.0 alpha:0.2 blurRadius:0.5 yOffset:-0.5];
-        else
-            [NSShadow setShadowWithWhite:0.0 alpha:0.15 blurRadius:1.0 yOffset:0.0];
-        [startColor setFill];
-        [path fill];
-        [NSGraphicsContext restoreGraphicsState];
-    }
-}
-
 - (void)drawRect:(NSRect)dirtyRect {
     NSRect bounds = [self bezelFrame];
     NSInteger count = [colors count];
@@ -329,7 +299,8 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
     if (dropIndex != -1)
         dropColor = disabled ? [NSColor secondarySelectedControlColor] : [NSColor alternateSelectedControlColor];
     
-    [self drawBezelInRect:bounds disabled:disabled];
+    [(NSSegmentedCell *)[self cell] setWidth:NSWidth(bounds) forSegment:0];
+    [[self cell] drawWithFrame:[self bounds] inView:self];
     
     NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:4.0 yRadius:4.0];
     [path addClip];
