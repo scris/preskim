@@ -385,23 +385,18 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     NSPoint mouseLoc = [theEvent locationInView:self];
     NSInteger i = [self colorIndexAtPoint:mouseLoc];
     
-    if ([self isEnabled]) {
-        clickedIndex = i;
-        [[itemViews objectAtIndex:i] setHighlighted:YES];
-    }
-    
     if (i != -1) {
+        if ([self isEnabled])
+            [[itemViews objectAtIndex:i] setHighlighted:YES];
+        
         BOOL keepOn = YES;
         while (keepOn) {
             theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
             switch ([theEvent type]) {
                 case NSLeftMouseDragged:
                 {
-                    if ([self isEnabled]) {
-                        if (clickedIndex != -1)
-                            [[itemViews objectAtIndex:clickedIndex] setHighlighted:NO];
-                        clickedIndex = -1;
-                    }
+                    if ([self isEnabled])
+                        [[itemViews objectAtIndex:i] setHighlighted:NO];
                     
                     draggedIndex = i;
                     
@@ -431,9 +426,9 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
                             else
                                 [self selectColorAtIndex:i];
                         }
+                        clickedIndex = i;
                         [self sendAction:[self action] to:[self target]];
-                        if (clickedIndex != -1)
-                            [[itemViews objectAtIndex:clickedIndex] setHighlighted:NO];
+                        [[itemViews objectAtIndex:i] setHighlighted:NO];
                         clickedIndex = -1;
                     }
                     keepOn = NO;
@@ -526,8 +521,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 }
 
 - (NSColor *)color {
-    NSInteger i = clickedIndex;
-    return i == -1 ? nil : [colors objectAtIndex:i];
+    return clickedIndex == -1 ? nil : [colors objectAtIndex:clickedIndex];
 }
 
 - (void)setEnabled:(BOOL)enabled {
