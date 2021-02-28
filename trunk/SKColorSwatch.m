@@ -126,7 +126,7 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
         cell = [[[NSSegmentedCell alloc] init] autorelease];
         [cell setAction:[[self cell] action]];
         [cell setTarget:[[self cell] target]];
-        [cell setEnabled:[self cell] && [[self cell] isEnabled]];
+        [cell setEnabled:[self cell] == nil || [[self cell] isEnabled]];
         [self setCell:cell];
     }
     [cell setSegmentCount:1];
