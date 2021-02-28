@@ -69,21 +69,6 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
 
 #define BACKGROUND_WIDTH_OFFSET 6.0
 
-@interface SKAccessibilityColorSwatchElement : NSObject {
-    SKColorSwatch *parent;
-    NSInteger index;
-}
-+ (id)elementWithIndex:(NSInteger)anIndex parent:(SKColorSwatch *)aParent;
-- (id)initWithIndex:(NSInteger)anIndex parent:(SKColorSwatch *)aParent;
-@property (nonatomic, readonly) SKColorSwatch *parent;
-@property (nonatomic, readonly) NSInteger index;
-@end
-
-@interface NSColorWell (SKExtensions)
-@end
-
-#pragma mark -
-
 @interface SKColorSwatchBackgroundView : NSControl
 @property (nonatomic) CGFloat width;
 @end
@@ -111,21 +96,21 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 #pragma mark -
 
 @interface SKColorSwatch (SKAccessibilityColorSwatchElementParent)
-- (NSRect)screenRectForElementAtIndex:(NSInteger)anIndex;
-- (BOOL)isElementAtIndexFocused:(NSInteger)anIndex;
-- (void)elementAtIndex:(NSInteger)anIndex setFocused:(BOOL)focused;
-- (void)pressElementAtIndex:(NSInteger)anIndex;
+- (BOOL)isItemViewFocused:(SKColorSwatchItemView *)itemView;
+- (void)itemView:(SKColorSwatchItemView *)itemView setFocused:(BOOL)focused;
+- (void)pressItemView:(SKColorSwatchItemView *)itemView;
 @end
 
 @interface SKColorSwatch ()
 @property (nonatomic) NSInteger selectedColorIndex;
+@property (nonatomic, readonly) CGFloat fitWidth;
 - (void)setColor:(NSColor *)color atIndex:(NSInteger)i fromPanel:(BOOL)fromPanel;
 @end
 
 @implementation SKColorSwatch
 
 @synthesize colors, autoResizes, selects, clickedColorIndex=clickedIndex, selectedColorIndex=selectedIndex;
-@dynamic color;
+@dynamic color, fitWidth;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -494,13 +479,18 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (void)setColors:(NSArray *)newColors {
     NSArray *oldColors = [self colors];
+    NSUInteger i, iMax = [newColors count];
     [self deactivate];
     [colors setArray:newColors];
     if (autoResizes && [newColors count] != [oldColors count])
         [self sizeToFit];
+    if ([self window]) {
+        i = [oldColors count];
+        while (i-- > 0)
+            NSAccessibilityPostNotification([itemViews objectAtIndex:i], NSAccessibilityUIElementDestroyedNotification);
+    }
     [itemViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [itemViews removeAllObjects];
-    NSUInteger i = [newColors count], iMax = [newColors count];
     for (i = 0; i < iMax; i++) {
         SKColorSwatchItemView *itemView = [[SKColorSwatchItemView alloc] init];
         [itemView setColor:[newColors objectAtIndex:i]];
@@ -510,11 +500,8 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     }
     [self updateSubviewLayout];
     if ([self window]) {
-        i = [oldColors count];
-        while (i-- > 0)
-            NSAccessibilityPostNotification([SKAccessibilityColorSwatchElement elementWithIndex:i parent:self], NSAccessibilityUIElementDestroyedNotification);
         for (i = 0; i < iMax; i++)
-            NSAccessibilityPostNotification([SKAccessibilityColorSwatchElement elementWithIndex:i parent:self], NSAccessibilityCreatedNotification);
+            NSAccessibilityPostNotification([itemViews objectAtIndex:i], NSAccessibilityCreatedNotification);
         [self invalidateIntrinsicContentSize];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:SKColorSwatchColorsChangedNotification object:self];
@@ -607,7 +594,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         [self willChangeColors];
         [colors replaceObjectAtIndex:i withObject:color];
         [[itemViews objectAtIndex:i] setColor:color];
-        NSAccessibilityPostNotification([SKAccessibilityColorSwatchElement elementWithIndex:i parent:self], NSAccessibilityValueChangedNotification);
+        NSAccessibilityPostNotification([itemViews objectAtIndex:i], NSAccessibilityValueChangedNotification);
         [self didChangeColors];
         if (fromPanel == NO && selectedIndex == i) {
             NSColorPanel *colorPanel = [NSColorPanel sharedColorPanel];
@@ -638,7 +625,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         [self deactivate];
         [self willChangeColors];
         [colors insertObject:color atIndex:i];
-        NSAccessibilityPostNotification([SKAccessibilityColorSwatchElement elementWithIndex:i parent:self], NSAccessibilityCreatedNotification);
+        NSAccessibilityPostNotification([itemViews objectAtIndex:i], NSAccessibilityCreatedNotification);
         [self invalidateIntrinsicContentSize];
         SKColorSwatchItemView *itemView = [[SKColorSwatchItemView alloc] initWithFrame:[self frameForItemViewAtIndex:i collapsedIndex:i]];
         [itemView setColor:color];
@@ -683,7 +670,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
                     [self sizeToFit];
                     [self invalidateIntrinsicContentSize];
                     [self noteFocusRingMaskChanged];
-                    NSAccessibilityPostNotification([SKAccessibilityColorSwatchElement elementWithIndex:i parent:self], NSAccessibilityUIElementDestroyedNotification);
+                    NSAccessibilityPostNotification([itemViews objectAtIndex:i], NSAccessibilityUIElementDestroyedNotification);
                 }];
         } else {
             [self willChangeColors];
@@ -693,7 +680,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
             [self didChangeColors];
             [self invalidateIntrinsicContentSize];
             [self updateSubviewLayout];
-            NSAccessibilityPostNotification([SKAccessibilityColorSwatchElement elementWithIndex:draggedIndex parent:self], NSAccessibilityUIElementDestroyedNotification);
+            NSAccessibilityPostNotification([itemViews objectAtIndex:draggedIndex], NSAccessibilityUIElementDestroyedNotification);
         }
     }
 }
@@ -712,7 +699,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
             [self addSubview:itemView positioned:NSWindowAbove relativeTo:[itemViews objectAtIndex:to - 1]];
         [itemView release];
         [color release];
-        NSAccessibilityPostNotification([SKAccessibilityColorSwatchElement elementWithIndex:to parent:self], NSAccessibilityMovedNotification);
+        NSAccessibilityPostNotification([itemViews objectAtIndex:to], NSAccessibilityMovedNotification);
         [self noteFocusRingMaskChanged];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [self animateItemViewsCollapsing:-1 frameSize:NSZeroSize];
@@ -805,11 +792,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 }
 
 - (NSArray *)accessibilityChildren {
-    NSMutableArray *children = [NSMutableArray array];
-    NSInteger i, count = [colors count];
-    for (i = 0; i < count; i++)
-        [children addObject:[SKAccessibilityColorSwatchElement elementWithIndex:i parent:self]];
-    return NSAccessibilityUnignoredChildren(children);
+    return NSAccessibilityUnignoredChildren(itemViews);
 }
 
 - (NSArray *)accessibilityContents {
@@ -820,8 +803,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     NSPoint localPoint = [self convertPointFromScreen:point];
     NSInteger i = [self colorIndexAtPoint:localPoint];
     if (i != -1) {
-        SKAccessibilityColorSwatchElement *color = [[[SKAccessibilityColorSwatchElement alloc] initWithIndex:i parent:self] autorelease];
-        return [color accessibilityHitTest:point];
+        return NSAccessibilityUnignoredAncestor([itemViews objectAtIndex:i]);
     } else {
         return [super accessibilityHitTest:point];
     }
@@ -829,30 +811,18 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (id)accessibilityFocusedUIElement {
     if (focusedIndex != -1 && focusedIndex < (NSInteger)[colors count])
-        return NSAccessibilityUnignoredAncestor([[[SKAccessibilityColorSwatchElement alloc] initWithIndex:focusedIndex parent:self] autorelease]);
+        return NSAccessibilityUnignoredAncestor([itemViews objectAtIndex:focusedIndex]);
     else
         return NSAccessibilityUnignoredAncestor(self);
 }
 
-- (id)valueForElementAtIndex:(NSInteger)anIndex {
-    if (anIndex >= (NSInteger)[[self colors] count])
-        return nil;
-    return [[[self colors] objectAtIndex:anIndex] accessibilityValue];
+- (BOOL)isItemViewFocused:(SKColorSwatchItemView *)itemView {
+    return focusedIndex == (NSInteger)[itemViews indexOfObject:itemView];
 }
 
-- (NSRect)screenRectForElementAtIndex:(NSInteger)anIndex {
-    NSRect rect = NSZeroRect;
-    if (anIndex < (NSInteger)[[self colors] count])
-        return [self convertRectToScreen:NSInsetRect([self frameForColorAtIndex:anIndex], -1.0, -1.0)];
-    return rect;
-}
-
-- (BOOL)isElementAtIndexFocused:(NSInteger)anIndex {
-    return focusedIndex == anIndex;
-}
-
-- (void)elementAtIndex:(NSInteger)anIndex setFocused:(BOOL)focused {
-    if (focused && anIndex < (NSInteger)[[self colors] count]) {
+- (void)itemView:(SKColorSwatchItemView *)itemView setFocused:(BOOL)focused {
+    NSUInteger anIndex = [itemViews indexOfObject:itemView];
+    if (focused && anIndex < [[self colors] count]) {
         [[self window] makeFirstResponder:self];
         focusedIndex = anIndex;
         [self noteFocusRingMaskChanged];
@@ -860,90 +830,15 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     }
 }
 
-- (void)pressElementAtIndex:(NSInteger)anIndex {
-    if (anIndex < (NSInteger)[[self colors] count])
+- (void)pressItemView:(SKColorSwatchItemView *)itemView {
+    NSUInteger anIndex = [itemViews indexOfObject:itemView];
+    if (anIndex < [[self colors] count])
         [self performClickAtIndex:anIndex];
 }
 
 @end
 
 #pragma mark -
-
-@implementation SKAccessibilityColorSwatchElement
-
-@synthesize parent, index;
-
-+ (id)elementWithIndex:(NSInteger)anIndex parent:(SKColorSwatch *)aParent {
-    return [[[self alloc] initWithIndex:anIndex parent:aParent] autorelease];
-}
-
-- (id)initWithIndex:(NSInteger)anIndex parent:(SKColorSwatch *)aParent {
-    self = [super init];
-    if (self) {
-        parent = aParent;
-        index = anIndex;
-    }
-    return self;
-}
-
-- (BOOL)isEqual:(id)other {
-    if ([other isKindOfClass:[self class]] == NO)
-        return NO;
-    SKAccessibilityColorSwatchElement *otherElement = (SKAccessibilityColorSwatchElement *)other;
-    return parent == [otherElement parent] && index == [otherElement index];
-}
-
-- (NSUInteger)hash {
-    return [parent hash] + ((index + 1) >> 4);
-}
-
-- (BOOL)accessibilityElement {
-    return YES;
-}
-
-- (NSString *)accessibilityRole {
-    return NSAccessibilityColorWellRole;
-}
-
-- (NSString *)accessibilityRoleDescription {
-    return NSAccessibilityRoleDescriptionForUIElement(self);
-}
-
-- (id)accessibilityValue {
-    return [parent valueForElementAtIndex:index];
-}
-
-- (BOOL)isAccessibilityFocused {
-    return [parent isElementAtIndexFocused:index];
-}
-
-- (void)setAccessibilityFocused:(BOOL)flag {
-    [parent elementAtIndex:index setFocused:flag];
-}
-
-- (NSRect)accessibilityFrame {
-    return [parent screenRectForElementAtIndex:index];
-}
-
-- (BOOL)accessibilityPerformPress {
-    [parent pressElementAtIndex:index];
-    return YES;
-}
-
-- (BOOL)accessibilityPerformPick {
-    [parent pressElementAtIndex:index];
-    return YES;
-}
-
-- (id)accessibilityHitTest:(NSPoint)point {
-    return NSAccessibilityUnignoredAncestor(self);
-}
-
-- (id)accessibilityFocusedUIElement {
-    return NSAccessibilityUnignoredAncestor(self);
-}
-
-@end
 
 @implementation NSColorWell (SKExtensions)
 
@@ -1105,6 +1000,44 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         [path setLineWidth:2.0];
         [path stroke];
     }
+}
+
+- (BOOL)accessibilityElement {
+    return YES;
+}
+
+- (NSString *)accessibilityRole {
+    return NSAccessibilityColorWellRole;
+}
+
+- (NSString *)accessibilityRoleDescription {
+    return NSAccessibilityRoleDescriptionForUIElement(self);
+}
+
+- (id)accessibilityValue {
+    return [color accessibilityValue];
+}
+
+- (BOOL)isAccessibilityFocused {
+    return [(SKColorSwatch *)[self superview] isItemViewFocused:self];
+}
+
+- (void)setAccessibilityFocused:(BOOL)flag {
+    [(SKColorSwatch *)[self superview] itemView:self setFocused:flag];
+}
+
+- (BOOL)accessibilityPerformPress {
+    [(SKColorSwatch *)[self superview] pressItemView:self];
+    return YES;
+}
+
+- (BOOL)accessibilityPerformPick {
+    [(SKColorSwatch *)[self superview] pressItemView:self];
+    return YES;
+}
+
+- (id)accessibilityFocusedUIElement {
+    return NSAccessibilityUnignoredAncestor(self);
 }
 
 @end
