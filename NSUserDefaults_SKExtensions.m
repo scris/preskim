@@ -59,7 +59,7 @@
                 alpha = [[array objectAtIndex:1] doubleValue];
             else if ([array count] > 3)
                 alpha = [[array objectAtIndex:3] doubleValue];
-            color = [NSColor colorWithCalibratedRed:red green:green blue:blue alpha:alpha];
+            color = [NSColor colorWithSRGBRed:red green:green blue:blue alpha:alpha];
         }
     }
     return color;

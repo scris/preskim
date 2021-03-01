@@ -161,7 +161,7 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 + (NSColor *)pdfControlBackgroundColor {
     static NSColor *color = nil;
     if (color == nil) {
-        color = [[NSColor colorWithCalibratedWhite:0.95 alpha:0.95] retain];
+        color = [[NSColor colorWithGenericGamma22White:0.95 alpha:0.95] retain];
     }
     return color;
 }
@@ -174,7 +174,7 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 #pragma mark Convenience
 
 - (uint32_t)uint32HSBAValue {
-    NSColor *rgbColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    NSColor *rgbColor = [self colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
     if (rgbColor) {
         CGFloat h = 0.0, s = 0.0, b = 0.0, a = 0.0;
         [rgbColor getHue:&h saturation:&s brightness:&b alpha:&a];
@@ -221,7 +221,7 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
     [path setLineWidth:2.0];
     [path addClip];
     [self drawSwatchInRect:rect];
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.3] setStroke];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:0.3] setStroke];
     [path stroke];
 }
 
@@ -260,21 +260,21 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
             case SKScriptingColorYellow: return [NSColor yellowColor];
             case SKScriptingColorMagenta: return [NSColor magentaColor];
             case SKScriptingColorCyan: return [NSColor cyanColor];
-            case SKScriptingColorDarkRed: return [NSColor colorWithCalibratedRed:0.5 green:0.0 blue:0.0 alpha:1.0];
-            case SKScriptingColorDarkGreen: return [NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0];
-            case SKScriptingColorDarkBlue: return [NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0];
-            case SKScriptingColorBanana: return [NSColor colorWithCalibratedRed:1.0 green:1.0 blue:0.5 alpha:1.0];
-            case SKScriptingColorTurquoise: return [NSColor colorWithCalibratedRed:1.0 green:0.5 blue:1.0 alpha:1.0];
-            case SKScriptingColorViolet: return [NSColor colorWithCalibratedRed:0.5 green:1.0 blue:1.0 alpha:1.0];
+            case SKScriptingColorDarkRed: return [NSColor colorWithSRGBRed:0.5 green:0.0 blue:0.0 alpha:1.0];
+            case SKScriptingColorDarkGreen: return [NSColor colorWithSRGBRed:0.0 green:0.5 blue:0.0 alpha:1.0];
+            case SKScriptingColorDarkBlue: return [NSColor colorWithSRGBRed:0.0 green:0.0 blue:0.5 alpha:1.0];
+            case SKScriptingColorBanana: return [NSColor colorWithSRGBRed:1.0 green:1.0 blue:0.5 alpha:1.0];
+            case SKScriptingColorTurquoise: return [NSColor colorWithSRGBRed:1.0 green:0.5 blue:1.0 alpha:1.0];
+            case SKScriptingColorViolet: return [NSColor colorWithSRGBRed:0.5 green:1.0 blue:1.0 alpha:1.0];
             case SKScriptingColorOrange: return [NSColor orangeColor];
-            case SKScriptingColorDeepPink: return [NSColor colorWithCalibratedRed:1.0 green:0.0 blue:0.5 alpha:1.0];
-            case SKScriptingColorSpringGreen: return [NSColor colorWithCalibratedRed:0.0 green:1.0 blue:0.5 alpha:1.0];
-            case SKScriptingColorAqua: return [NSColor colorWithCalibratedRed:0.0 green:0.5 blue:1.0 alpha:1.0];
-            case SKScriptingColorLime: return [NSColor colorWithCalibratedRed:0.5 green:1.0 blue:0.0 alpha:1.0];
-            case SKScriptingColorDarkViolet: return [NSColor colorWithCalibratedRed:0.5 green:0.0 blue:1.0 alpha:1.0];
+            case SKScriptingColorDeepPink: return [NSColor colorWithSRGBRed:1.0 green:0.0 blue:0.5 alpha:1.0];
+            case SKScriptingColorSpringGreen: return [NSColor colorWithSRGBRed:0.0 green:1.0 blue:0.5 alpha:1.0];
+            case SKScriptingColorAqua: return [NSColor colorWithSRGBRed:0.0 green:0.5 blue:1.0 alpha:1.0];
+            case SKScriptingColorLime: return [NSColor colorWithSRGBRed:0.5 green:1.0 blue:0.0 alpha:1.0];
+            case SKScriptingColorDarkViolet: return [NSColor colorWithSRGBRed:0.5 green:0.0 blue:1.0 alpha:1.0];
             case SKScriptingColorPurple: return [NSColor purpleColor];
-            case SKScriptingColorTeal: return [NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.5 alpha:1.0];
-            case SKScriptingColorOlive: return [NSColor colorWithCalibratedRed:0.5 green:0.5 blue:0.0 alpha:1.0];
+            case SKScriptingColorTeal: return [NSColor colorWithSRGBRed:0.0 green:0.5 blue:0.5 alpha:1.0];
+            case SKScriptingColorOlive: return [NSColor colorWithSRGBRed:0.5 green:0.5 blue:0.0 alpha:1.0];
             case SKScriptingColorBrown: return [NSColor brownColor];
             case SKScriptingColorBlack: return [NSColor blackColor];
             case SKScriptingColorWhite: return [NSColor whiteColor];

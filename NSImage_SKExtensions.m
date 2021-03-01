@@ -714,7 +714,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path lineToPoint:NSMakePoint(11.5, 14.0)];
         [path stroke];
         path = [NSBezierPath bezierPath];
-        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.5] set];
+        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.5] set];
         [path moveToPoint:NSMakePoint(8.0, 8.5)];
         [path lineToPoint:NSMakePoint(10.0, 8.5)];
         [path moveToPoint:NSMakePoint(8.0, 10.5)];
@@ -731,7 +731,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path lineToPoint:NSMakePoint(15.5, 14.0)];
         [path stroke];
         path = [NSBezierPath bezierPath];
-        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.5] set];
+        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.5] set];
         [path moveToPoint:NSMakePoint(17.0, 8.5)];
         [path lineToPoint:NSMakePoint(19.0, 8.5)];
         [path moveToPoint:NSMakePoint(17.0, 10.5)];
@@ -854,7 +854,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     );
     
     MAKE_IMAGE(SKImageNameToolbarInfo, YES, 27.0, 20.0,
-        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.8] setFill];
+        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.8] setFill];
         NSFont *font = [NSFont fontWithName:@"Hoefler Text Black Italic" size:13.0] ?: [NSFont boldSystemFontOfSize:13.0];
         NSGlyph glyph = [font glyphWithName:@"i"];
         NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(5.5, 2.5, 16.0, 16.0)];
@@ -1202,7 +1202,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     
     MAKE_IMAGE(SKImageNameNotesPreferences, NO, 32.0, 32.0, 
         NSImage *clippingImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kClippingTextType)];
-        NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithCalibratedRed:1.0 green:0.935 blue:0.422 alpha:1.0] endingColor:[NSColor colorWithCalibratedRed:1.0 green:0.975 blue:0.768 alpha:1.0]] autorelease];
+        NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithSRGBRed:1.0 green:0.935 blue:0.422 alpha:1.0] endingColor:[NSColor colorWithSRGBRed:1.0 green:0.975 blue:0.768 alpha:1.0]] autorelease];
         [[NSColor blackColor] setFill];
         [NSBezierPath fillRect:NSMakeRect(2.0, 0.0, 28.0, 32.0)];
         [clippingImage drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
@@ -1214,7 +1214,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     MAKE_IMAGE(SKImageNameSyncPreferences, NO, 32.0, 32.0,
         NSImage *refreshImage = [NSImage imageNamed:NSImageNameRefreshTemplate];
         NSImage *genericDocImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericDocumentIcon)];
-        [[NSColor colorWithCalibratedRed:0.25 green:0.35 blue:0.6 alpha:1.0] set];
+        [[NSColor colorWithSRGBRed:0.25 green:0.35 blue:0.6 alpha:1.0] set];
         NSRectFill(NSMakeRect(11.0, 10.0, 10.0, 12.0));
         [refreshImage drawInRect:NSMakeRect(11.0, 10.0, 10.0, 12.0) fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
         [genericDocImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1.0];
@@ -1226,14 +1226,14 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     );
     
     MAKE_IMAGE(SKImageNameNewSeparator, NO, 32.0, 32.0, 
-        NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0] endingColor:[NSColor colorWithCalibratedWhite:0.8 alpha:1.0]] autorelease];
+        NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithGenericGamma22White:0.6 alpha:1.0] endingColor:[NSColor colorWithGenericGamma22White:0.8 alpha:1.0]] autorelease];
         NSBezierPath *path;
         [NSGraphicsContext saveGraphicsState];
         [NSShadow setShadowWithWhite:0.0 alpha:0.5 blurRadius:2.0 yOffset:-1.0];
-        [[NSColor colorWithCalibratedWhite:0.35 alpha:1.0] setFill];
+        [[NSColor colorWithGenericGamma22White:0.35 alpha:1.0] setFill];
         [NSBezierPath fillRect:NSMakeRect(2.0, 14.0, 28.0, 4.0)];
         [NSGraphicsContext restoreGraphicsState];
-        [[NSColor colorWithCalibratedWhite:0.45 alpha:1.0] setFill];
+        [[NSColor colorWithGenericGamma22White:0.45 alpha:1.0] setFill];
         [NSBezierPath fillRect:NSMakeRect(3.0, 15.0, 26.0, 3.0)];
         [gradient drawInRect:NSMakeRect(3.0, 15.0, 26.0, 2.0) angle:90.0];
         path = [NSBezierPath bezierPath];
@@ -1723,7 +1723,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         
         [path setWindingRule:NSEvenOddWindingRule];
         
-        [[NSColor colorWithCalibratedWhite:1.0 alpha:1.0] setFill];
+        [[NSColor colorWithGenericGamma22White:1.0 alpha:1.0] setFill];
         [path fill];
     );
     
@@ -1755,7 +1755,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         
         [path setWindingRule:NSEvenOddWindingRule];
         
-        [[NSColor colorWithCalibratedWhite:1.0 alpha:1.0] setFill];
+        [[NSColor colorWithGenericGamma22White:1.0 alpha:1.0] setFill];
         [path fill];
     );
     
@@ -1777,7 +1777,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
 
 
 static void drawTextNote() {
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.75] setFill];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:0.75] setFill];
     NSBezierPath *path = [NSBezierPath bezierPath];
     [path moveToPoint:NSMakePoint(5.0, 5.0)];
     [path lineToPoint:NSMakePoint(9.0, 6.5)];
@@ -1801,7 +1801,7 @@ static void drawAnchoredNote() {
     [path lineToPoint:NSMakePoint(8.5, 4.5)];
     [path closePath];
     [path stroke];
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.333] setStroke];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:0.333] setStroke];
     path = [NSBezierPath bezierPath];
     [path moveToPoint:NSMakePoint(8.0, 11.5)];
     [path lineToPoint:NSMakePoint(12.0, 11.5)];
@@ -1825,10 +1825,10 @@ static void drawSquareNote() {
 static void drawHighlightNote() {
     NSFont *font = [NSFont fontWithName:@"Helvetica" size:14.0] ?: [NSFont systemFontOfSize:14.0];
     NSGlyph glyph = [font glyphWithName:@"H"];
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.25] setFill];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:0.25] setFill];
     NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(3.0, 2.0, 15.0, 16.0)];
     [path fill];
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.75] setFill];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:0.75] setFill];
     path = [NSBezierPath bezierPath];
     [path moveToPoint:NSMakePoint(10.5 - NSMidX([font boundingRectForGlyph:glyph]), 5.0)];
     [path appendBezierPathWithGlyph:glyph inFont:font];
@@ -1838,7 +1838,7 @@ static void drawHighlightNote() {
 static void drawUnderlineNote() {
     NSFont *font = [NSFont fontWithName:@"Helvetica" size:14.0] ?: [NSFont systemFontOfSize:14.0];
     NSGlyph glyph = [font glyphWithName:@"U"];
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.75] setFill];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:0.75] setFill];
     NSBezierPath *path = [NSBezierPath bezierPath];
     [path moveToPoint:NSMakePoint(10.5 - NSMidX([font boundingRectForGlyph:glyph]), 6.0)];
     [path appendBezierPathWithGlyph:glyph inFont:font];
@@ -1853,7 +1853,7 @@ static void drawUnderlineNote() {
 static void drawStrikeOutNote() {
     NSFont *font = [NSFont fontWithName:@"Helvetica" size:14.0] ?: [NSFont systemFontOfSize:14.0];
     NSGlyph glyph = [font glyphWithName:@"S"];
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.75] setFill];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:0.75] setFill];
     NSBezierPath *path = [NSBezierPath bezierPath];
     [path moveToPoint:NSMakePoint(10.5 - NSMidX([font boundingRectForGlyph:glyph]), 5.0)];
     [path appendBezierPathWithGlyph:glyph inFont:font];
@@ -2022,7 +2022,7 @@ static void drawAddBadge() {
     [addPath appendBezierPathWithRect:NSMakeRect(18.0, 2.0, 1.0, 5.0)];
     [NSGraphicsContext saveGraphicsState];
     [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeCopy];
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.6] setFill];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:0.6] setFill];
     [addPath fill];
     [NSGraphicsContext restoreGraphicsState];
 }
@@ -2034,7 +2034,7 @@ static void drawPopoverBadge() {
     [arrowPath relativeLineToPoint:NSMakePoint(-3.0, -5.5)];
     [arrowPath setLineWidth:1.5];
     [arrowPath setLineCapStyle:NSRoundLineCapStyle];
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.5] setStroke];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:0.5] setStroke];
     [arrowPath stroke];
 }
 
@@ -2047,7 +2047,7 @@ static inline void translate(CGFloat dx, CGFloat dy) {
 static inline void drawPageBackgroundInRect(NSRect rect) {
     [NSGraphicsContext saveGraphicsState];
     [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeCopy];
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.25] setFill];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:0.25] setFill];
     [NSBezierPath fillRect:rect];
     [NSGraphicsContext restoreGraphicsState];
 }
@@ -2074,10 +2074,10 @@ static void drawAddBadgeAtPoint(NSPoint point) {
     [path closePath];
     
     [NSGraphicsContext saveGraphicsState];
-    [[NSColor colorWithCalibratedWhite:1.0 alpha:1.0] setFill];
+    [[NSColor colorWithGenericGamma22White:1.0 alpha:1.0] setFill];
     [path fill];
     [NSShadow setShadowWithWhite:0.0 alpha:0.5 blurRadius:1.0 yOffset:0.0];
-    [[NSColor colorWithCalibratedRed:0.257 green:0.351 blue:0.553 alpha:1.0] setStroke];
+    [[NSColor colorWithSRGBRed:0.257 green:0.351 blue:0.553 alpha:1.0] setStroke];
     [path stroke];
     [NSGraphicsContext restoreGraphicsState];
 }

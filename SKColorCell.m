@@ -87,7 +87,7 @@
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
-    NSColor *safeColor = [color colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    NSColor *safeColor = [color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
     [NSGraphicsContext saveGraphicsState];
     if ([self shouldFill] == NO) {
         NSRect rect = NSInsetRect(cellFrame, 1.0, 1.0);
