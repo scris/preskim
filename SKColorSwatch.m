@@ -482,14 +482,20 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     [colors setArray:newColors];
     if (autoResizes && [newColors count] != [oldColors count])
         [self sizeToFit];
-    [itemViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [itemViews removeAllObjects];
     for (i = 0; i < iMax; i++) {
-        SKColorSwatchItemView *itemView = [[SKColorSwatchItemView alloc] init];
+        SKColorSwatchItemView *itemView;
+        if (i < [itemViews count]) {
+            itemView = [itemViews objectAtIndex:i];
+        } else {
+            itemView = [[[SKColorSwatchItemView alloc] init] autorelease];
+            [self addSubview:itemView];
+            [itemViews addObject:itemView];
+        }
         [itemView setColor:[newColors objectAtIndex:i]];
-        [self addSubview:itemView];
-        [itemViews addObject:itemView];
-        [itemView release];
+    }
+    while ([itemViews count] > iMax) {
+        [[itemViews objectAtIndex:iMax] removeFromSuperview];
+        [itemViews removeObjectAtIndex:iMax];
     }
     [self updateSubviewLayout];
     [self invalidateIntrinsicContentSize];
