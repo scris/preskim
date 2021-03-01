@@ -451,7 +451,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     if (++focusedIndex >= (NSInteger)[colors count])
         focusedIndex = 0;
     [self noteFocusRingMaskChanged];
-    [self setNeedsDisplay:YES];
     NSAccessibilityPostNotification(self, NSAccessibilityFocusedUIElementChangedNotification);
 }
 
@@ -459,7 +458,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     if (--focusedIndex < 0)
         focusedIndex = [colors count] - 1;
     [self noteFocusRingMaskChanged];
-    [self setNeedsDisplay:YES];
     NSAccessibilityPostNotification(self, NSAccessibilityFocusedUIElementChangedNotification);
 }
 
@@ -813,7 +811,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         [[self window] makeFirstResponder:self];
         focusedIndex = anIndex;
         [self noteFocusRingMaskChanged];
-        [self setNeedsDisplay:YES];
     }
 }
 
