@@ -611,7 +611,8 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         [[itemView animator] setFrame:[self frameForItemViewAtIndex:i++ collapsedIndex:collapsedIndex]];
     if (NSEqualSizes(size, NSZeroSize) == NO) {
         [[(SKColorSwatchBackgroundView *)backgroundView animator] setWidth:size.width];
-        [[self animator] setFrameSize:size];
+        if (autoResizes)
+            [[self animator] setFrameSize:size];
     }
 }
 
@@ -629,19 +630,16 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
             [self addSubview:itemView positioned:NSWindowAbove relativeTo:nil];
         [itemViews insertObject:itemView atIndex:i];
         [itemView release];
-        if (autoResizes) {
-            NSSize size = [self sizeForNumberOfColors:[colors count]];
-            [self noteFocusRingMaskChanged];
-            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                    [self animateItemViewsCollapsing:-1 frameSize:size];
-                }
-                completionHandler:^{
+        NSSize size = [self sizeForNumberOfColors:[colors count]];
+        [self noteFocusRingMaskChanged];
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                [self animateItemViewsCollapsing:-1 frameSize:size];
+            }
+            completionHandler:^{
+                if (autoResizes)
                     [self sizeToFit];
-                    [self noteFocusRingMaskChanged];
-                }];
-        } else {
-            [self updateSubviewLayout];
-        }
+                [self noteFocusRingMaskChanged];
+            }];
         [self didChangeColors];
     }
 }
@@ -649,31 +647,22 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 - (void)removeColorAtIndex:(NSInteger)i {
     if (i >= 0 && i < (NSInteger)[colors count]) {
         [self deactivate];
-        if (autoResizes) {
-            NSSize size = [self sizeForNumberOfColors:[colors count] - 1];
-            [self noteFocusRingMaskChanged];
-            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                    [self animateItemViewsCollapsing:i frameSize:size];
-                }
-                completionHandler:^{
-                    [self willChangeColors];
-                    [colors removeObjectAtIndex:i];
-                    [[itemViews objectAtIndex:i] removeFromSuperview];
-                    [itemViews removeObjectAtIndex:i];
-                    [self didChangeColors];
+        NSSize size = [self sizeForNumberOfColors:[colors count] - 1];
+        [self noteFocusRingMaskChanged];
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                [self animateItemViewsCollapsing:i frameSize:size];
+            }
+            completionHandler:^{
+                [self willChangeColors];
+                [colors removeObjectAtIndex:i];
+                [[itemViews objectAtIndex:i] removeFromSuperview];
+                [itemViews removeObjectAtIndex:i];
+                [self didChangeColors];
+                if (autoResizes)
                     [self sizeToFit];
-                    [self invalidateIntrinsicContentSize];
-                    [self noteFocusRingMaskChanged];
-                }];
-        } else {
-            [self willChangeColors];
-            [colors removeObjectAtIndex:i];
-            [[itemViews objectAtIndex:i] removeFromSuperview];
-            [itemViews removeObjectAtIndex:i];
-            [self didChangeColors];
-            [self invalidateIntrinsicContentSize];
-            [self updateSubviewLayout];
-        }
+                [self invalidateIntrinsicContentSize];
+                [self noteFocusRingMaskChanged];
+            }];
     }
 }
 
