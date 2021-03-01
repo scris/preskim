@@ -58,8 +58,6 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
 
 #define COLOR_KEY       @"color"
 
-#define DROPLOCATION_KEY @"dropLocation"
-
 #define BEZEL_HEIGHT 22.0
 #define BEZEL_INSET_LR 1.0
 #define BEZEL_INSET_T 1.0
@@ -707,6 +705,18 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 #pragma mark NSDraggingDestination protocol 
 
+- (void)setDropLocation:(SKColorSwatchDropLocation)dropLocation atIndex:(NSInteger)anIndex {
+    NSInteger i, iMax = [itemViews count];
+    for (i = 0; i < iMax; i++) {
+        SKColorSwatchDropLocation location = SKColorSwatchNoDrop;
+        if (i == anIndex)
+            location = dropLocation;
+        else if (dropLocation == SKColorSwatchDropBefore && i + 1 == anIndex)
+            location = SKColorSwatchDropAfter;
+        [[itemViews objectAtIndex:i] setDropLocation:location];
+    }
+}
+
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender {
     return [self draggingUpdated:sender];
 }
@@ -719,24 +729,16 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     NSDragOperation dragOp = isCopy ? NSDragOperationCopy : NSDragOperationGeneric;
     if ([self isEnabled] == NO || i == -1 ||
         (isMove && (i == draggedIndex || i == draggedIndex + 1))) {
-        [itemViews setValue:[NSNumber numberWithInteger:SKColorSwatchNoDrop] forKey:DROPLOCATION_KEY];
+        [self setDropLocation:SKColorSwatchNoDrop atIndex:-1];
         dragOp = NSDragOperationNone;
     } else {
-        [itemViews setValue:[NSNumber numberWithInteger:SKColorSwatchNoDrop] forKey:DROPLOCATION_KEY];
-        if (isCopy || isMove) {
-            if (i < (NSInteger)[itemViews count])
-                [[itemViews objectAtIndex:i] setDropLocation:SKColorSwatchDropBefore];
-            if (i > 0)
-                [[itemViews objectAtIndex:i - 1] setDropLocation:SKColorSwatchDropAfter];
-        } else {
-            [[itemViews objectAtIndex:i] setDropLocation:SKColorSwatchDropOn];
-        }
+        [self setDropLocation:(isCopy || isMove) ? SKColorSwatchDropBefore : SKColorSwatchDropOn atIndex:i];
     }
     return dragOp;
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender {
-    [itemViews setValue:[NSNumber numberWithInteger:SKColorSwatchNoDrop] forKey:DROPLOCATION_KEY];
+    [self setDropLocation:SKColorSwatchNoDrop atIndex:-1];
 }
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender{
@@ -756,7 +758,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
             [self setColor:color atIndex:i];
     }
     
-    [itemViews setValue:[NSNumber numberWithInteger:SKColorSwatchNoDrop] forKey:DROPLOCATION_KEY];
+    [self setDropLocation:SKColorSwatchNoDrop atIndex:-1];
     
 	return YES;
 }
