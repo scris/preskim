@@ -139,7 +139,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
     if ([sender selectedTag] == 0) {
         if (i == -1)
             i = [[colorSwatch colors] count];
-        NSColor *color = [NSColor colorWithCalibratedRed:1.0 green:1.0 blue:0.5 alpha:1.0];
+        NSColor *color = [NSColor colorWithSRGBRed:1.0 green:1.0 blue:0.5 alpha:1.0];
         [colorSwatch insertColor:color atIndex:i];
         [colorSwatch selectColorAtIndex:i];
     } else {

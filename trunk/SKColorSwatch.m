@@ -294,7 +294,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     if (NSWidth(rect) > 2.0) {
         NSColor *color = [[self colors] objectAtIndex:i];
         if (disabled) {
-            color = [color colorUsingColorSpaceName:NSCalibratedWhiteColorSpace];
+            color = [color colorUsingColorSpace:[NSColorSpace genericGamma22GrayColorSpace]];
             CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], 0.5);
         }
         [color drawSwatchInRect:NSInsetRect(rect, 1.0, 1.0)];
@@ -938,7 +938,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     if (NSWidth(rect) > 2.0) {
         NSColor *aColor = color;
         if (disabled) {
-            aColor = [aColor colorUsingColorSpaceName:NSCalibratedWhiteColorSpace];
+            aColor = [aColor colorUsingColorSpace:[NSColorSpace genericGamma22GrayColorSpace]];
             CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], 0.5);
         }
         [aColor drawSwatchInRect:NSInsetRect(rect, 1.0, 1.0)];
@@ -950,7 +950,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         gray = (highlighted || selected) ? 0.55 : 0.3;
     else
         gray = (highlighted || selected) ? 0.5 : 0.7;
-    [[NSColor colorWithCalibratedWhite:gray alpha:1.0] setStroke];
+    [[NSColor colorWithGenericGamma22White:gray alpha:1.0] setStroke];
     NSBezierPath *path;
     if (selected) {
         path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0];

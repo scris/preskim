@@ -626,7 +626,7 @@ static inline PDFLineStyle SKNPDFLineStyleFromAnnotationValue(id value) {
 - (NSDictionary *)SkimNoteProperties{
     NSMutableDictionary *dict = [self genericSkimNoteProperties];
     [dict setValue:[self font] forKey:SKNPDFAnnotationFontKey];
-    if ([self respondsToSelector:@selector(fontColor)] && [[self fontColor] isEqual:[NSColor colorWithCalibratedWhite:0.0 alpha:0.0]] == NO)
+    if ([self respondsToSelector:@selector(fontColor)] && [[self fontColor] isEqual:[NSColor colorWithGenericGamma22White:0.0 alpha:0.0]] == NO)
         [dict setValue:[self fontColor] forKey:SKNPDFAnnotationFontColorKey];
     [dict setValue:[NSNumber numberWithInteger:[self alignment]] forKey:SKNPDFAnnotationAlignmentKey];
     if ([self respondsToSelector:@selector(rotation)])

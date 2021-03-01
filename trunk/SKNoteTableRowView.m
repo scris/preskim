@@ -57,7 +57,7 @@
     if (resizeIndicatorCell == nil) {
         NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(7.0, 5.0)];
         [image lockFocus];
-        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.7] setStroke];
+        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.7] setStroke];
         [NSBezierPath strokeLineFromPoint:NSMakePoint(1.0, 3.5) toPoint:NSMakePoint(7.0, 3.5)];
         [NSBezierPath strokeLineFromPoint:NSMakePoint(3.0, 1.5) toPoint:NSMakePoint(5.0, 1.5)];
         [image unlockFocus];
