@@ -172,7 +172,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         
         for (NSView *view in [self subviews]) {
             if ([view isKindOfClass:[SKColorSwatchBackgroundView class]])
-                backgroundView = [view retain];
+                backgroundView = [(SKColorSwatchBackgroundView *)view retain];
             else if ([view isKindOfClass:[SKColorSwatchItemView class]])
                 [itemViews addObject:view];
         }
@@ -289,7 +289,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     NSUInteger i, iMax = [itemViews count];
     for (i = 0; i < iMax; i++)
         [[itemViews objectAtIndex:i] setFrame:[self frameForItemViewAtIndex:i collapsedIndex:-1]];
-    [(SKColorSwatchBackgroundView *)backgroundView setWidth:[self fitWidth]];
+    [backgroundView setWidth:[self fitWidth]];
 }
 
 #pragma mark Drawing
@@ -609,7 +609,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     for (SKColorSwatchItemView *itemView in itemViews)
         [[itemView animator] setFrame:[self frameForItemViewAtIndex:i++ collapsedIndex:collapsedIndex]];
     if (NSEqualSizes(size, NSZeroSize) == NO) {
-        [[(SKColorSwatchBackgroundView *)backgroundView animator] setWidth:size.width];
+        [[backgroundView animator] setWidth:size.width];
         if (autoResizes)
             [[self animator] setFrameSize:size];
     }

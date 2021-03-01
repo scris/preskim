@@ -40,10 +40,12 @@
 
 extern NSString *SKColorSwatchColorsChangedNotification;
 
+@class SKColorSwatchBackgroundView;
+
 @interface SKColorSwatch : NSControl <NSDraggingSource> {
     NSMutableArray *colors;
     NSMutableArray *itemViews;
-    NSView *backgroundView;
+    SKColorSwatchBackgroundView *backgroundView;
     NSInteger clickedIndex;
     NSInteger selectedIndex;
     NSInteger focusedIndex;
