@@ -102,6 +102,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 @interface SKColorSwatch ()
 @property (nonatomic) NSInteger selectedColorIndex;
 @property (nonatomic, readonly) CGFloat fitWidth;
+- (NSRect)frameForItemViewAtIndex:(NSInteger)anIndex collapsedIndex:(NSInteger)collapsedInde;
 - (void)setColor:(NSColor *)color atIndex:(NSInteger)i fromPanel:(BOOL)fromPanel;
 @end
 
