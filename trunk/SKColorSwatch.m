@@ -232,27 +232,25 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (NSInteger)colorIndexAtPoint:(NSPoint)point {
     NSRect rect = [self frameForColorAtIndex:0];
-    CGFloat distance = COLOR_DISTANCE;
     NSInteger i, count = [colors count];
     
     for (i = 0; i < count; i++) {
         if (NSMouseInRect(point, rect, [self isFlipped]))
             return i;
-        rect.origin.x += distance;
+        rect.origin.x += COLOR_DISTANCE;
     }
     return -1;
 }
 
 - (NSInteger)insertionIndexAtPoint:(NSPoint)point {
     NSRect rect = [self frameForColorAtIndex:0];
-    CGFloat w = COLOR_DISTANCE;
     CGFloat x = NSMidX(rect);
     NSInteger i, count = [colors count];
     
     for (i = 0; i < count; i++) {
         if (point.x < x)
             return i;
-        x += w;
+        x += COLOR_DISTANCE;
     }
     return count;
 }
