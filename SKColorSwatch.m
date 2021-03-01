@@ -58,12 +58,12 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
 
 #define COLOR_KEY       @"color"
 
-#define BEZEL_HEIGHT 22.0
-#define BEZEL_INSET_LR 1.0
-#define BEZEL_INSET_T 1.0
-#define BEZEL_INSET_B 2.0
-#define COLOR_INSET 2.0
-#define COLOR_OFFSET 3.0
+#define BEZEL_HEIGHT    22.0
+#define BEZEL_INSET_LR  1.0
+#define BEZEL_INSET_T   1.0
+#define BEZEL_INSET_B   2.0
+#define COLOR_INSET     2.0
+#define COLOR_DISTANCE  19.0
 
 #define BACKGROUND_WIDTH_OFFSET 6.0
 
@@ -208,11 +208,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 #pragma mark Layout
 
 - (NSSize)contentSizeForNumberOfColors:(NSUInteger)count {
-    return NSMakeSize(count * (BEZEL_HEIGHT - COLOR_OFFSET) + COLOR_OFFSET, BEZEL_HEIGHT);
-}
-
-- (CGFloat)distanceBetweenColors {
-    return BEZEL_HEIGHT - COLOR_OFFSET;
+    return NSMakeSize(BEZEL_HEIGHT + (count - 1) * COLOR_DISTANCE, BEZEL_HEIGHT);
 }
 
 - (NSRect)frameForColorAtIndex:(NSInteger)anIndex {
@@ -220,7 +216,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     NSRect rect = NSMakeRect(insets.left, insets.bottom, BEZEL_HEIGHT, BEZEL_HEIGHT);
     rect = NSInsetRect(rect, COLOR_INSET, COLOR_INSET);
     if (anIndex > 0)
-        rect.origin.x += anIndex * [self distanceBetweenColors];
+        rect.origin.x += anIndex * COLOR_DISTANCE;
     return rect;
 }
 
@@ -230,13 +226,13 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         i--;
     NSRect rect = NSInsetRect([self frameForColorAtIndex:i], -1.0, -1.0);
     if (collapsedIndex == anIndex)
-        rect.size.width = 1.0;
+        rect.size.width -= COLOR_DISTANCE;
     return rect;
 }
 
 - (NSInteger)colorIndexAtPoint:(NSPoint)point {
     NSRect rect = [self frameForColorAtIndex:0];
-    CGFloat distance = [self distanceBetweenColors];
+    CGFloat distance = COLOR_DISTANCE;
     NSInteger i, count = [colors count];
     
     for (i = 0; i < count; i++) {
@@ -249,7 +245,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (NSInteger)insertionIndexAtPoint:(NSPoint)point {
     NSRect rect = [self frameForColorAtIndex:0];
-    CGFloat w = [self distanceBetweenColors];
+    CGFloat w = COLOR_DISTANCE;
     CGFloat x = NSMidX(rect);
     NSInteger i, count = [colors count];
     
