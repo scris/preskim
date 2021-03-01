@@ -484,11 +484,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     [colors setArray:newColors];
     if (autoResizes && [newColors count] != [oldColors count])
         [self sizeToFit];
-    if ([self window]) {
-        i = [oldColors count];
-        while (i-- > 0)
-            NSAccessibilityPostNotification([itemViews objectAtIndex:i], NSAccessibilityUIElementDestroyedNotification);
-    }
     [itemViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [itemViews removeAllObjects];
     for (i = 0; i < iMax; i++) {
@@ -499,11 +494,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         [itemView release];
     }
     [self updateSubviewLayout];
-    if ([self window]) {
-        for (i = 0; i < iMax; i++)
-            NSAccessibilityPostNotification([itemViews objectAtIndex:i], NSAccessibilityCreatedNotification);
-        [self invalidateIntrinsicContentSize];
-    }
+    [self invalidateIntrinsicContentSize];
     [[NSNotificationCenter defaultCenter] postNotificationName:SKColorSwatchColorsChangedNotification object:self];
 }
 
@@ -625,7 +616,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         [self deactivate];
         [self willChangeColors];
         [colors insertObject:color atIndex:i];
-        NSAccessibilityPostNotification([itemViews objectAtIndex:i], NSAccessibilityCreatedNotification);
         [self invalidateIntrinsicContentSize];
         SKColorSwatchItemView *itemView = [[SKColorSwatchItemView alloc] initWithFrame:[self frameForItemViewAtIndex:i collapsedIndex:i]];
         [itemView setColor:color];
@@ -670,7 +660,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
                     [self sizeToFit];
                     [self invalidateIntrinsicContentSize];
                     [self noteFocusRingMaskChanged];
-                    NSAccessibilityPostNotification([itemViews objectAtIndex:i], NSAccessibilityUIElementDestroyedNotification);
                 }];
         } else {
             [self willChangeColors];
@@ -680,7 +669,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
             [self didChangeColors];
             [self invalidateIntrinsicContentSize];
             [self updateSubviewLayout];
-            NSAccessibilityPostNotification([itemViews objectAtIndex:draggedIndex], NSAccessibilityUIElementDestroyedNotification);
         }
     }
 }
@@ -699,7 +687,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
             [self addSubview:itemView positioned:NSWindowAbove relativeTo:[itemViews objectAtIndex:to - 1]];
         [itemView release];
         [color release];
-        NSAccessibilityPostNotification([itemViews objectAtIndex:to], NSAccessibilityMovedNotification);
         [self noteFocusRingMaskChanged];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [self animateItemViewsCollapsing:-1 frameSize:NSZeroSize];
