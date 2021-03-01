@@ -152,7 +152,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         
         SKColorSwatchItemView *itemView = [[SKColorSwatchItemView alloc] initWithFrame:[self frameForItemViewAtIndex:0 collapsedIndex:-1]];
         [itemView setColor:[NSColor whiteColor]];
-        [self addSubview:view];
+        [self addSubview:itemView];
         itemViews = [[NSMutableArray alloc] initWithObjects:itemView, nil];
         [itemView release];
         [self commonInit];
