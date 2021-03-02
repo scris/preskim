@@ -46,6 +46,8 @@ extern NSString *SKColorSwatchColorsChangedNotification;
     NSMutableArray *colors;
     NSMutableArray *itemViews;
     SKColorSwatchBackgroundView *backgroundView;
+    CGFloat bezelHeight;
+    
     NSInteger clickedIndex;
     NSInteger selectedIndex;
     NSInteger focusedIndex;
