@@ -654,7 +654,9 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 }
 
 - (void)setPageBackgroundColor:(NSColor *)color {
-    if ([[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] isEqual:[NSColor colorWithSRGBRed:1.0 green:1.0 blue:1.0 alpha:1.0]])
+    CGFloat c[4] = {1.0, 1.0, 1.0, 1.0};
+    [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getComponents:c];
+    if (c[0] > 0.999 && c[1] > 0.999 && c[2] > 0.999 && c[3] >= 1.0)
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:SKPageBackgroundColorKey];
     else
         [[NSUserDefaults standardUserDefaults] setColor:color forKey:SKPageBackgroundColorKey];
