@@ -109,55 +109,6 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 
 #pragma mark Legacy colors
 
-+ (NSColor *)keySourceListHighlightColor {
-    static NSColor *color = nil;
-    static NSColor *graphiteColor = nil;
-    if ([NSColor currentControlTint] == NSGraphiteControlTint) {
-        if (graphiteColor == nil)
-            graphiteColor = [[NSColor colorWithCalibratedRed:0.555 green:0.555 blue:0.578 alpha:1.0] retain];
-        return graphiteColor;
-    } else {
-        if (color == nil)
-            color = [[NSColor colorWithCalibratedRed:0.251 green:0.487 blue:0.780 alpha:1.0] retain];
-        return color;
-    }
-}
-
-+ (NSColor *)mainSourceListHighlightColor {
-    static NSColor *color = nil;
-    static NSColor *graphiteColor = nil;
-    if ([NSColor currentControlTint] == NSGraphiteControlTint) {
-        if (graphiteColor == nil)
-            graphiteColor = [[NSColor colorWithCalibratedRed:0.572 green:0.627 blue:0.680 alpha:1.0] retain];
-        return graphiteColor;
-    } else {
-        if (color == nil)
-            color = [[NSColor colorWithCalibratedRed:0.556 green:0.615 blue:0.748 alpha:1.0] retain];
-        return color;
-    }
-}
-
-+ (NSColor *)disabledSourceListHighlightColor {
-    static NSColor *color = nil;
-    static NSColor *graphiteColor = nil;
-    if ([NSColor currentControlTint] == NSGraphiteControlTint) {
-        if (graphiteColor == nil)
-            graphiteColor = [[NSColor colorWithCalibratedRed:0.576 green:0.576 blue:0.576 alpha:1.0] retain];
-        return graphiteColor;
-    } else {
-        if (color == nil)
-            color = [[NSColor colorWithCalibratedRed:0.576 green:0.576 blue:0.576 alpha:1.0] retain];
-        return color;
-    }
-}
-
-+ (NSColor *)mainSourceListBackgroundColor {
-    static NSColor *color = nil;
-    if (color == nil)
-        color = [[NSColor colorWithCalibratedRed:0.839216 green:0.866667 blue:0.898039 alpha:1.0] retain];
-    return color;
-}
-
 + (NSColor *)pdfControlBackgroundColor {
     static NSColor *color = nil;
     if (color == nil) {
@@ -165,6 +116,8 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
     }
     return color;
 }
+
+#pragma mark Favorite Colors
 
 + (NSArray *)favoriteColors {
     NSValueTransformer *transformer = [NSValueTransformer arrayTransformerWithValueTransformerForName:NSUnarchiveFromDataTransformerName];
