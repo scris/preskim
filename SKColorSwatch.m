@@ -288,23 +288,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 #pragma mark Drawing
 
-- (void)drawSwatchAtIndex:(NSInteger)i inRect:(NSRect)rect borderColor:(NSColor *)borderColor disabled:(BOOL)disabled {return;
-    if (NSWidth(rect) < 1.0)
-        return;
-    if (NSWidth(rect) > 2.0) {
-        NSColor *color = [[self colors] objectAtIndex:i];
-        if (disabled) {
-            color = [color colorUsingColorSpace:[NSColorSpace genericGamma22GrayColorSpace]];
-            CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], 0.5);
-        }
-        [color drawSwatchInRect:NSInsetRect(rect, 1.0, 1.0)];
-        if (disabled)
-            CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], 1.0);
-    }
-    [borderColor setStroke];
-    [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:1.5 yRadius:1.5] stroke];
-}
-
 - (NSRect)focusRingMaskBounds {
     if (focusedIndex == -1)
         return NSZeroRect;
@@ -935,30 +918,44 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         return;
     rect = NSInsetRect(rect, 1.0, 1.0);
     BOOL disabled = RUNNING_AFTER(10_13) && [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO && ([self isDescendantOf:[[self window] contentView]] == NO || [[self window] isKindOfClass:NSClassFromString(@"NSToolbarSnapshotWindow")]);
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:1.5 yRadius:1.5];
+
     if (NSWidth(rect) > 2.0) {
+        [NSGraphicsContext saveGraphicsState];
+        
         NSColor *aColor = color;
         if (disabled) {
             aColor = [aColor colorUsingColorSpace:[NSColorSpace genericGamma22GrayColorSpace]];
             CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], 0.5);
         }
-        [aColor drawSwatchInRect:NSInsetRect(rect, 1.0, 1.0)];
-        if (disabled)
-            CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], 1.0);
+        
+        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0] addClip];
+        [aColor drawSwatchInRect:rect];
+        
+        if (SKHasDarkAppearance(self)) {
+            [[NSColor colorWithGenericGamma22White:1.0 alpha:0.25] setStroke];
+            [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationScreen];
+        } else {
+            [[NSColor colorWithGenericGamma22White:0.0 alpha:0.25] setStroke];
+            [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationMultiply];
+        }
+        [path stroke];
+        
+        [NSGraphicsContext restoreGraphicsState];
     }
-    CGFloat gray;
-    if (SKHasDarkAppearance(self))
-        gray = (highlighted || selected) ? 0.55 : 0.3;
-    else
-        gray = (highlighted || selected) ? 0.5 : 0.7;
-    [[NSColor colorWithGenericGamma22White:gray alpha:1.0] setStroke];
-    NSBezierPath *path;
-    if (selected) {
-        path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0];
-        [path setLineWidth:2.0];
-    } else {
-        path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:1.5 yRadius:1.5];
+    
+    [NSGraphicsContext saveGraphicsState];
+    [NSGraphicsContext restoreGraphicsState];
+
+    if (highlighted || selected) {
+        if (selected) {
+            path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0];
+            [path setLineWidth:2.0];
+        }
+        [[NSColor systemGrayColor] setStroke];
+        [path stroke];
     }
-    [path stroke];
+    
     if (dropLocation != SKColorSwatchNoDrop) {
         NSColor *dropColor = disabled ? [NSColor secondarySelectedControlColor] : [NSColor alternateSelectedControlColor];
         [dropColor setStroke];
