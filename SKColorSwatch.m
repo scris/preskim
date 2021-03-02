@@ -58,12 +58,10 @@ NSString *SKColorSwatchOrWellWillActivateNotification = @"SKColorSwatchOrWellWil
 
 #define COLOR_KEY       @"color"
 
-#define BEZEL_HEIGHT    22.0
-#define BEZEL_INSET_LR  1.0
-#define BEZEL_INSET_T   1.0
-#define BEZEL_INSET_B   2.0
-#define COLOR_INSET     2.0
-#define COLOR_DISTANCE  19.0
+#define BEZEL_INSET_LEFTRIGHT   1.0
+#define BEZEL_INSET_TOP         1.0
+#define BEZEL_INSET_BOTTOM      2.0
+#define COLOR_INSET             2.0
 
 #define BACKGROUND_WIDTH_OFFSET 6.0
 
@@ -130,6 +128,8 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     selectedIndex = -1;
     draggedIndex = -1;
     
+    bezelHeight = 22.0;
+    
     [self registerForDraggedTypes:[NSColor readableTypesForPasteboard:[NSPasteboard pasteboardWithName:NSDragPboard]]];
 }
 
@@ -141,6 +141,8 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         target = nil;
         autoResizes = YES;
         selects = NO;
+        
+        [self commonInit];
         
         SKColorSwatchBackgroundView *view = [[SKColorSwatchBackgroundView alloc] initWithFrame:[self bounds]];
         [view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -154,7 +156,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         [self addSubview:itemView];
         itemViews = [[NSMutableArray alloc] initWithObjects:itemView, nil];
         [itemView release];
-        [self commonInit];
     }
     return self;
 }
@@ -168,6 +169,8 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         autoResizes = [decoder decodeBoolForKey:AUTORESIZES_KEY];
         selects = [decoder decodeBoolForKey:SELECTS_KEY];
         
+        [self commonInit];
+        
         itemViews = [[NSMutableArray alloc] init];
         
         for (NSView *view in [self subviews]) {
@@ -176,8 +179,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
             else if ([view isKindOfClass:[SKColorSwatchItemView class]])
                 [itemViews addObject:view];
         }
-        
-        [self commonInit];
     }
     return self;
 }
@@ -207,16 +208,20 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 #pragma mark Layout
 
+- (CGFloat)distanceBetweenColors {
+    return bezelHeight - COLOR_INSET;
+}
+
 - (NSSize)contentSizeForNumberOfColors:(NSUInteger)count {
-    return NSMakeSize(BEZEL_HEIGHT + (count - 1) * COLOR_DISTANCE, BEZEL_HEIGHT);
+    return NSMakeSize(bezelHeight + (count - 1) * [self distanceBetweenColors], bezelHeight);
 }
 
 - (NSRect)frameForColorAtIndex:(NSInteger)anIndex {
     NSEdgeInsets insets = [self alignmentRectInsets];
-    NSRect rect = NSMakeRect(insets.left, insets.bottom, BEZEL_HEIGHT, BEZEL_HEIGHT);
+    NSRect rect = NSMakeRect(insets.left, insets.bottom, bezelHeight, bezelHeight);
     rect = NSInsetRect(rect, COLOR_INSET, COLOR_INSET);
     if (anIndex > 0)
-        rect.origin.x += anIndex * COLOR_DISTANCE;
+        rect.origin.x += anIndex * [self distanceBetweenColors];
     return rect;
 }
 
@@ -226,7 +231,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         i--;
     NSRect rect = NSInsetRect([self frameForColorAtIndex:i], -1.0, -1.0);
     if (collapsedIndex == anIndex)
-        rect.size.width -= COLOR_DISTANCE;
+        rect.size.width -= [self distanceBetweenColors];
     return rect;
 }
 
@@ -237,7 +242,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     for (i = 0; i < count; i++) {
         if (NSMouseInRect(point, rect, [self isFlipped]))
             return i;
-        rect.origin.x += COLOR_DISTANCE;
+        rect.origin.x += [self distanceBetweenColors];
     }
     return -1;
 }
@@ -250,7 +255,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     for (i = 0; i < count; i++) {
         if (point.x < x)
             return i;
-        x += COLOR_DISTANCE;
+        x += [self distanceBetweenColors];
     }
     return count;
 }
@@ -276,7 +281,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 }
 
 - (NSEdgeInsets)alignmentRectInsets {
-    return NSEdgeInsetsMake(BEZEL_INSET_T, BEZEL_INSET_LR, BEZEL_INSET_B, BEZEL_INSET_LR);
+    return NSEdgeInsetsMake(BEZEL_INSET_TOP, BEZEL_INSET_LEFTRIGHT, BEZEL_INSET_BOTTOM, BEZEL_INSET_LEFTRIGHT);
 }
 
 - (void)updateSubviewLayout {
@@ -336,8 +341,15 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (void)viewDidMoveToWindow {
     [super viewDidMoveToWindow];
-    if ([self window])
-        [self handleKeyOrMainStateChanged:nil];
+    if ([self window]) {
+        CGFloat height = [[backgroundView cell] cellSize].height - BEZEL_INSET_TOP - BEZEL_INSET_BOTTOM;
+        if (fabs(height - bezelHeight) > 0.0) {
+            bezelHeight = height;
+            [self updateSubviewLayout];
+            if (autoResizes)
+                [self sizeToFit];
+        }
+    }
 }
 
 #pragma mark Event handling and actions
