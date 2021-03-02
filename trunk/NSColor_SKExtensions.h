@@ -76,11 +76,6 @@ enum {
 
 + (void)makeHighlightColors;
 
-+ (NSColor *)keySourceListHighlightColor;
-+ (NSColor *)mainSourceListHighlightColor;
-+ (NSColor *)disabledSourceListHighlightColor;
-+ (NSColor *)mainSourceListBackgroundColor;
-
 + (NSColor *)selectionHighlightColor:(BOOL)active;
 + (NSColor *)selectionHighlightInteriorColor:(BOOL)active;
 

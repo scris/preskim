@@ -976,7 +976,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
             path = [NSBezierPath bezierPath];
             [path moveToPoint:NSMakePoint(NSMinX(rect), NSMinY(rect) - 1.0)];
             [path lineToPoint:NSMakePoint(NSMinX(rect), NSMaxY(rect) + 1.0)];
-        } else {
+        } else if (dropLocation == SKColorSwatchDropAfter) {
             path = [NSBezierPath bezierPath];
             [path moveToPoint:NSMakePoint(NSMaxX(rect), NSMinY(rect) - 1.0)];
             [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMaxY(rect) + 1.0)];
