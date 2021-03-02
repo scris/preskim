@@ -128,7 +128,7 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
         } else {
             static NSColor *backgroundColor = nil;
             if (backgroundColor == nil)
-                backgroundColor = [[NSColor colorWithSRGBRed:0.95 green:0.95 blue:0.95 alpha:1.0] retain];
+                backgroundColor = [[NSColor colorWithGenericGamma22White:0.97 alpha:1.0] retain];
             [self setBackgroundColor:backgroundColor];
         }
         

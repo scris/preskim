@@ -1202,7 +1202,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     
     MAKE_IMAGE(SKImageNameNotesPreferences, NO, 32.0, 32.0, 
         NSImage *clippingImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kClippingTextType)];
-        NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithSRGBRed:1.0 green:0.935 blue:0.422 alpha:1.0] endingColor:[NSColor colorWithSRGBRed:1.0 green:0.975 blue:0.768 alpha:1.0]] autorelease];
+        NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithSRGBRed:1.0 green:0.939 blue:0.495 alpha:1.0] endingColor:[NSColor colorWithSRGBRed:1.0 green:0.976 blue:0.810 alpha:1.0]] autorelease];
         [[NSColor blackColor] setFill];
         [NSBezierPath fillRect:NSMakeRect(2.0, 0.0, 28.0, 32.0)];
         [clippingImage drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
@@ -1214,7 +1214,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     MAKE_IMAGE(SKImageNameSyncPreferences, NO, 32.0, 32.0,
         NSImage *refreshImage = [NSImage imageNamed:NSImageNameRefreshTemplate];
         NSImage *genericDocImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericDocumentIcon)];
-        [[NSColor colorWithSRGBRed:0.25 green:0.35 blue:0.6 alpha:1.0] set];
+        [[NSColor colorWithSRGBRed:0.3 green:0.45 blue:0.65 alpha:1.0] set];
         NSRectFill(NSMakeRect(11.0, 10.0, 10.0, 12.0));
         [refreshImage drawInRect:NSMakeRect(11.0, 10.0, 10.0, 12.0) fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
         [genericDocImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1.0];
@@ -1226,14 +1226,14 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     );
     
     MAKE_IMAGE(SKImageNameNewSeparator, NO, 32.0, 32.0, 
-        NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithGenericGamma22White:0.6 alpha:1.0] endingColor:[NSColor colorWithGenericGamma22White:0.8 alpha:1.0]] autorelease];
+        NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithGenericGamma22White:0.65 alpha:1.0] endingColor:[NSColor colorWithGenericGamma22White:0.85 alpha:1.0]] autorelease];
         NSBezierPath *path;
         [NSGraphicsContext saveGraphicsState];
         [NSShadow setShadowWithWhite:0.0 alpha:0.5 blurRadius:2.0 yOffset:-1.0];
-        [[NSColor colorWithGenericGamma22White:0.35 alpha:1.0] setFill];
+        [[NSColor colorWithGenericGamma22White:0.4 alpha:1.0] setFill];
         [NSBezierPath fillRect:NSMakeRect(2.0, 14.0, 28.0, 4.0)];
         [NSGraphicsContext restoreGraphicsState];
-        [[NSColor colorWithGenericGamma22White:0.45 alpha:1.0] setFill];
+        [[NSColor colorWithGenericGamma22White:0.5 alpha:1.0] setFill];
         [NSBezierPath fillRect:NSMakeRect(3.0, 15.0, 26.0, 3.0)];
         [gradient drawInRect:NSMakeRect(3.0, 15.0, 26.0, 2.0) angle:90.0];
         path = [NSBezierPath bezierPath];
@@ -2077,7 +2077,7 @@ static void drawAddBadgeAtPoint(NSPoint point) {
     [[NSColor colorWithGenericGamma22White:1.0 alpha:1.0] setFill];
     [path fill];
     [NSShadow setShadowWithWhite:0.0 alpha:0.5 blurRadius:1.0 yOffset:0.0];
-    [[NSColor colorWithSRGBRed:0.257 green:0.351 blue:0.553 alpha:1.0] setStroke];
+    [[NSColor colorWithSRGBRed:0.323 green:0.433 blue:0.433 alpha:1.0] setStroke];
     [path stroke];
     [NSGraphicsContext restoreGraphicsState];
 }
