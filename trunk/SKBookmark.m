@@ -815,20 +815,20 @@ static Class SKBookmarkClass = Nil;
             [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:2.0 yOffset:-1.0];
             [path fill];
             [NSGraphicsContext restoreGraphicsState];
-            [[NSColor colorWithSRGBRed:0.162 green:0.304 blue:0.755 alpha:1.0] set];
+            [[NSColor colorWithSRGBRed:0.210 green:0.398 blue:0.801 alpha:1.0] set];
             NSRectFill(NSMakeRect(2.0, 13.0, 5.0, 2.0));
-            [[NSColor colorWithSRGBRed:0.894 green:0.396 blue:0.202 alpha:1.0] set];
+            [[NSColor colorWithSRGBRed:0.923 green:0.481 blue:0.259 alpha:1.0] set];
             NSRectFill(NSMakeRect(3.0, 4.0, 1.0, 1.0));
             NSRectFill(NSMakeRect(3.0, 7.0, 1.0, 1.0));
             NSRectFill(NSMakeRect(3.0, 10.0, 1.0, 1.0));
-            [[NSColor colorWithGenericGamma22White:0.6 alpha:1.0] set];
+            [[NSColor colorWithGenericGamma22White:0.65 alpha:1.0] set];
             NSRectFill(NSMakeRect(5.0, 4.0, 1.0, 1.0));
             NSRectFill(NSMakeRect(5.0, 7.0, 1.0, 1.0));
             NSRectFill(NSMakeRect(5.0, 10.0, 1.0, 1.0));
             NSUInteger i, j;
             for (i = 0; i < 7; i++) {
                 for (j = 0; j < 3; j++) {
-                    [[NSColor colorWithGenericGamma22White:0.45 + 0.1 * rand() / RAND_MAX alpha:1.0] set];
+                    [[NSColor colorWithGenericGamma22White:0.5 + 0.1 * rand() / RAND_MAX alpha:1.0] set];
                     NSRectFill(NSMakeRect(6.0 + i, 4.0 + 3.0 * j, 1.0, 1.0));
                 }
             }

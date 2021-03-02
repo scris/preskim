@@ -102,7 +102,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     if (labelAttributes == nil)
         labelAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont boldSystemFontOfSize:11.0], NSFontAttributeName, [NSColor whiteColor], NSForegroundColorAttributeName, [NSParagraphStyle defaultClippingParagraphStyle], NSParagraphStyleAttributeName, nil];
     if (labelColor == nil)
-        labelColor = [[NSColor colorWithGenericGamma22White:0.5 alpha:0.8] retain];
+        labelColor = [[NSColor colorWithGenericGamma22White:0.55 alpha:0.8] retain];
     
     BOOL isScaled = fabs(scale - 1.0) > 0.01;
     PDFPage *page = [self page];

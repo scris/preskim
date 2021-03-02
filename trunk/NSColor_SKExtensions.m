@@ -112,7 +112,7 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 + (NSColor *)pdfControlBackgroundColor {
     static NSColor *color = nil;
     if (color == nil) {
-        color = [[NSColor colorWithGenericGamma22White:0.95 alpha:0.95] retain];
+        color = [[NSColor colorWithGenericGamma22White:0.96 alpha:0.95] retain];
     }
     return color;
 }

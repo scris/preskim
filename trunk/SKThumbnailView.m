@@ -216,7 +216,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         NSRect rect = [self markRect];
         if (NSIntersectsRect(dirtyRect, rect)) {
             [NSGraphicsContext saveGraphicsState];
-            [[NSColor colorWithSRGBRed:0.581 green:0.088 blue:0.319 alpha:1.0] setFill];
+            [[NSColor colorWithSRGBRed:0.654 green:0.166 blue:0.392 alpha:1.0] setFill];
             NSBezierPath *path = [NSBezierPath bezierPath];
             [path moveToPoint:NSMakePoint(NSMinX(rect), NSMinY(rect))];
             [path lineToPoint:NSMakePoint(NSMidX(rect), NSMinY(rect) + 0.5 * NSWidth(rect))];

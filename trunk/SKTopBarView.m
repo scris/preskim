@@ -83,7 +83,7 @@
             [backgroundView setFrame:[self interiorRect]];
             [super addSubview:backgroundView];
         } else {
-            static CGFloat defaultGrays[5] = {0.85, 0.9,  0.9, 0.95,  0.75};
+            static CGFloat defaultGrays[5] = {0.85, 0.9,  0.9, 0.95,  0.8};
             backgroundColors = [[NSArray alloc] initWithObjects:[NSColor colorWithGenericGamma22White:defaultGrays[0] alpha:1.0], [NSColor colorWithGenericGamma22White:defaultGrays[1] alpha:1.0], nil];
             alternateBackgroundColors = [[NSArray alloc] initWithObjects:[NSColor colorWithGenericGamma22White:defaultGrays[2] alpha:1.0], [NSColor colorWithGenericGamma22White:defaultGrays[3] alpha:1.0], nil];
             separatorColor = [[NSColor colorWithGenericGamma22White:defaultGrays[4] alpha:1.0] retain];
