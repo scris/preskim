@@ -957,8 +957,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     }
     
     [NSGraphicsContext saveGraphicsState];
-    [NSGraphicsContext restoreGraphicsState];
-
+    
     if (highlighted || selected) {
         if (selected) {
             path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0];
@@ -985,6 +984,8 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         [path setLineWidth:2.0];
         [path stroke];
     }
+    
+    [NSGraphicsContext restoreGraphicsState];
 }
 
 - (BOOL)accessibilityElement {
