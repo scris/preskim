@@ -8,7 +8,7 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>PDFDocument</string>
+			<string>PDFDocument.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>PDF</string>
 			<key>CFBundleTypeRole</key>
@@ -39,7 +39,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>PDFDDocument</string>
+			<string>PDFDDocument.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>PDF Bundle</string>
 			<key>CFBundleTypeRole</key>
@@ -70,7 +70,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>PSDocument</string>
+			<string>PSDocument.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>PostScript</string>
 			<key>CFBundleTypeRole</key>
@@ -101,7 +101,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>PSDocument</string>
+			<string>PSDocument.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Encapsulated PostScript</string>
 			<key>CFBundleTypeRole</key>
@@ -132,7 +132,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>DVIDocument</string>
+			<string>DVIDocument.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>DVI</string>
 			<key>CFBundleTypeRole</key>
@@ -163,7 +163,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>XDVDocument</string>
+			<string>XDVDocument.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>XDV</string>
 			<key>CFBundleTypeRole</key>
@@ -194,7 +194,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>NoteDocument</string>
+			<string>NoteDocument.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Skim Notes</string>
 			<key>CFBundleTypeRole</key>
@@ -466,12 +466,7 @@
 			<key>UTTypeDescription</key>
 			<string>PDF Bundle</string>
 			<key>UTTypeIconFile</key>
-			<string>PDFDDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconText</key>
-				<string>PDFD</string>
-			</dict>
+			<string>PDFDDocument.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>net.sourceforge.skim-app.pdfd</string>
 			<key>UTTypeTagSpecification</key>
@@ -490,12 +485,7 @@
 			<key>UTTypeDescription</key>
 			<string>Skim Notes</string>
 			<key>UTTypeIconFile</key>
-			<string>NoteDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconText</key>
-				<string>SKIM</string>
-			</dict>
+			<string>NoteDocument.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>net.sourceforge.skim-app.skimnotes</string>
 			<key>UTTypeTagSpecification</key>
@@ -518,12 +508,7 @@
 			<key>UTTypeDescription</key>
 			<string>PDF</string>
 			<key>UTTypeIconFile</key>
-			<string>PDFDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconText</key>
-				<string>PDF</string>
-			</dict>
+			<string>PDFDocument.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.pdf</string>
 			<key>UTTypeTagSpecification</key>
@@ -546,12 +531,7 @@
 			<key>UTTypeDescription</key>
 			<string>PostScript</string>
 			<key>UTTypeIconFile</key>
-			<string>PSDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconText</key>
-				<string>PS</string>
-			</dict>
+			<string>PSDocument.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.postscript</string>
 			<key>UTTypeTagSpecification</key>
@@ -575,12 +555,7 @@
 			<key>UTTypeDescription</key>
 			<string>Encapsulated PostScript</string>
 			<key>UTTypeIconFile</key>
-			<string>PSDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconText</key>
-				<string>EPS</string>
-			</dict>
+			<string>PSDocument.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.encapsulated-postscript</string>
 			<key>UTTypeTagSpecification</key>
@@ -599,12 +574,7 @@
 			<key>UTTypeDescription</key>
 			<string>DVI</string>
 			<key>UTTypeIconFile</key>
-			<string>DVIDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconText</key>
-				<string>DVI</string>
-			</dict>
+			<string>DVIDocument.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.dvi</string>
 			<key>UTTypeTagSpecification</key>
@@ -623,12 +593,7 @@
 			<key>UTTypeDescription</key>
 			<string>XDV</string>
 			<key>UTTypeIconFile</key>
-			<string>XDVDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconText</key>
-				<string>XDV</string>
-			</dict>
+			<string>XDVDocument.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.xdv</string>
 			<key>UTTypeTagSpecification</key>
