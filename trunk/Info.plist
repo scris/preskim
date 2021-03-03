@@ -481,13 +481,6 @@
 			<string>PDF Bundle</string>
 			<key>UTTypeIconFile</key>
 			<string>PDFDDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconBackgroundName</key>
-				<string>PDFDocumentBackground</string>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
-			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>net.sourceforge.skim-app.pdfd</string>
 			<key>UTTypeTagSpecification</key>
@@ -507,13 +500,6 @@
 			<string>Skim Notes</string>
 			<key>UTTypeIconFile</key>
 			<string>NoteDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconBackgroundName</key>
-				<string>NoteDocumentBackground</string>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
-			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>net.sourceforge.skim-app.skimnotes</string>
 			<key>UTTypeTagSpecification</key>
@@ -537,13 +523,6 @@
 			<string>PDF</string>
 			<key>UTTypeIconFile</key>
 			<string>PDFDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconBackgroundName</key>
-				<string>PDFDocumentBackground</string>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
-			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.pdf</string>
 			<key>UTTypeTagSpecification</key>
@@ -567,13 +546,6 @@
 			<string>PostScript</string>
 			<key>UTTypeIconFile</key>
 			<string>PSDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconBackgroundName</key>
-				<string>PSDocumentBackground</string>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
-			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.postscript</string>
 			<key>UTTypeTagSpecification</key>
@@ -598,13 +570,6 @@
 			<string>Encapsulated PostScript</string>
 			<key>UTTypeIconFile</key>
 			<string>PSDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconBackgroundName</key>
-				<string>PSDocumentBackground</string>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
-			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.encapsulated-postscript</string>
 			<key>UTTypeTagSpecification</key>
@@ -624,13 +589,6 @@
 			<string>DVI</string>
 			<key>UTTypeIconFile</key>
 			<string>DVIDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconBackgroundName</key>
-				<string>DVIDocumentBackground</string>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
-			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.dvi</string>
 			<key>UTTypeTagSpecification</key>
@@ -650,13 +608,6 @@
 			<string>XDV</string>
 			<key>UTTypeIconFile</key>
 			<string>XDVDocument</string>
-			<key>UTTypeIcons</key>
-			<dict>
-				<key>UTTypeIconBackgroundName</key>
-				<string>DVIDocumentBackground</string>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
-			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.xdv</string>
 			<key>UTTypeTagSpecification</key>
