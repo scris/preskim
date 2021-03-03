@@ -9,8 +9,6 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PDFDocument</string>
-			<key>CFBundleTypeIconSystemGenerated</key>
-			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>PDF</string>
 			<key>CFBundleTypeRole</key>
@@ -42,8 +40,6 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PDFDDocument</string>
-			<key>CFBundleTypeIconSystemGenerated</key>
-			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>PDF Bundle</string>
 			<key>CFBundleTypeRole</key>
@@ -75,8 +71,6 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PSDocument</string>
-			<key>CFBundleTypeIconSystemGenerated</key>
-			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>PostScript</string>
 			<key>CFBundleTypeRole</key>
@@ -108,8 +102,6 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PSDocument</string>
-			<key>CFBundleTypeIconSystemGenerated</key>
-			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>Encapsulated PostScript</string>
 			<key>CFBundleTypeRole</key>
@@ -141,8 +133,6 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>DVIDocument</string>
-			<key>CFBundleTypeIconSystemGenerated</key>
-			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>DVI</string>
 			<key>CFBundleTypeRole</key>
@@ -174,8 +164,6 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>XDVDocument</string>
-			<key>CFBundleTypeIconSystemGenerated</key>
-			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>XDV</string>
 			<key>CFBundleTypeRole</key>
@@ -207,8 +195,6 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>NoteDocument</string>
-			<key>CFBundleTypeIconSystemGenerated</key>
-			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>Skim Notes</string>
 			<key>CFBundleTypeRole</key>
