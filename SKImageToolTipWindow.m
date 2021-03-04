@@ -52,6 +52,8 @@
 #define WINDOW_LEVEL            ((NSWindowLevel)104)
 #endif
 
+#define SKToolTipScaleKey @"SKToolTipScale"
+
 @implementation SKImageToolTipWindow
 
 @synthesize currentImageContext=context;
@@ -98,9 +100,10 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
 }
 
 - (void)showDelayed {
+    CGFloat usedScale = [[NSUserDefaults standardUserDefaults] floatForKey:SKToolTipScaleKey];
     NSPoint thePoint = NSEqualPoints(point, NSZeroPoint) ? [NSEvent mouseLocation] : point;
     NSRect contentRect = NSZeroRect, screenRect = [[NSScreen screenForPoint:thePoint] frame];
-    NSImage *image = [context toolTipImageWithScale:scale];
+    NSImage *image = [context toolTipImageWithScale:usedScale > 0.0 ? usedScale : scale];
     BOOL isOpaque = [[[image representations] firstObject] isOpaque];
     
     if (image) {
