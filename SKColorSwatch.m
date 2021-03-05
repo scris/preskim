@@ -982,7 +982,8 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
             [path lineToPoint:NSMakePoint(NSMaxX(rect) + 0.5, NSMaxY(rect) + 1.0)];
         }
         [path setLineWidth:3.0];
-        if (NSContainsRect(NSInsetRect([[self superview] bounds], 2.0, 0.0), [self frame]) == NO)
+        if ((dropLocation == SKColorSwatchDropBefore && NSMinX([[self superview] bounds]) + 2.0 >= NSMinX([self frame])) ||
+            (dropLocation == SKColorSwatchDropAfter && NSMaxX([[self superview] bounds]) - 2.0 <= NSMaxX([self frame])))
             [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, -2.0, -2.0) xRadius:4.0 yRadius:4.0] addClip];
         [path stroke];
     }
