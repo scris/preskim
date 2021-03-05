@@ -229,7 +229,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     NSInteger i = anIndex;
     if (collapsedIndex != -1 && anIndex > collapsedIndex)
         i--;
-    NSRect rect = NSInsetRect([self frameForColorAtIndex:i], -1.0, -1.0);
+    NSRect rect = NSInsetRect([self frameForColorAtIndex:i], -2.0, -2.0);
     if (collapsedIndex == anIndex)
         rect.size.width -= [self distanceBetweenColors];
     return rect;
@@ -926,9 +926,9 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 
 - (void)drawRect:(NSRect)dirtyRect {
     NSRect rect = [self bounds];
-    if (NSWidth(rect) < 3.0)
+    if (NSWidth(rect) < 5.0)
         return;
-    rect = NSInsetRect(rect, 1.0, 1.0);
+    rect = NSInsetRect(rect, 2.0, 2.0);
     BOOL disabled = RUNNING_AFTER(10_13) && [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO && ([self isDescendantOf:[[self window] contentView]] == NO || [[self window] isKindOfClass:NSClassFromString(@"NSToolbarSnapshotWindow")]);
     NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:1.5 yRadius:1.5];
 
@@ -974,14 +974,16 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
             path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0];
         } else if (dropLocation == SKColorSwatchDropBefore) {
             path = [NSBezierPath bezierPath];
-            [path moveToPoint:NSMakePoint(NSMinX(rect), NSMinY(rect) - 1.0)];
-            [path lineToPoint:NSMakePoint(NSMinX(rect), NSMaxY(rect) + 1.0)];
+            [path moveToPoint:NSMakePoint(NSMinX(rect) - 0.5, NSMinY(rect) - 1.0)];
+            [path lineToPoint:NSMakePoint(NSMinX(rect) - 0.5, NSMaxY(rect) + 1.0)];
         } else if (dropLocation == SKColorSwatchDropAfter) {
             path = [NSBezierPath bezierPath];
-            [path moveToPoint:NSMakePoint(NSMaxX(rect), NSMinY(rect) - 1.0)];
-            [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMaxY(rect) + 1.0)];
+            [path moveToPoint:NSMakePoint(NSMaxX(rect) + 0.5, NSMinY(rect) - 1.0)];
+            [path lineToPoint:NSMakePoint(NSMaxX(rect) + 0.5, NSMaxY(rect) + 1.0)];
         }
-        [path setLineWidth:2.0];
+        [path setLineWidth:3.0];
+        if (NSContainsRect(NSInsetRect([[self superview] bounds], 2.0, 0.0), [self frame]) == NO)
+            [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, -2.0, -2.0) xRadius:4.0 yRadius:4.0] addClip];
         [path stroke];
     }
     
