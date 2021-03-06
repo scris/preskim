@@ -472,7 +472,8 @@
         }
     } else if ([[aNotification object] isEqual:leftSideController.findTableView] ||
                [[aNotification object] isEqual:leftSideController.groupedFindTableView]) {
-        [self selectFindResultHighlight:NSDirectSelection];
+        if (mwcFlags.updatingFindResults == 0)
+            [self selectFindResultHighlight:NSDirectSelection];
     }
 }
 

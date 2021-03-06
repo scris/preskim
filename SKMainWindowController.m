@@ -1904,8 +1904,10 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 
 - (void)documentDidEndDocumentFind:(NSNotification *)note {
     [leftSideController applySearchTableHeader:[NSString stringWithFormat:NSLocalizedString(@"%ld Results", @"Message in search table header"), (long)[searchResults count]]];
+    mwcFlags.updatingFindResults = 1;
     [self didChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
     [self didChangeValueForKey:SEARCHRESULTS_KEY];
+    mwcFlags.updatingFindResults = 0;
     [statusBar stopAnimation:self];
     [statusBar setProgressIndicatorStyle:SKProgressIndicatorStyleNone];
 }
@@ -1914,8 +1916,10 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     NSNumber *pageIndex = [[note userInfo] objectForKey:@"PDFDocumentPageIndex"];
     [statusBar setProgressIndicatorValue:[pageIndex doubleValue] + 1.0];
     if ([pageIndex unsignedIntegerValue] % 50 == 0) {
+        mwcFlags.updatingFindResults = 1;
         [self didChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
         [self didChangeValueForKey:SEARCHRESULTS_KEY];
+        mwcFlags.updatingFindResults = 0;
         [self willChangeValueForKey:SEARCHRESULTS_KEY];
         [self willChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
     }
