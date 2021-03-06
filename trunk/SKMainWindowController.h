@@ -182,6 +182,7 @@ enum {
         unsigned int updatingThumbnailSelection:1;
         unsigned int isAnimating:1;
         unsigned int updatingNoteSelection:1;
+        unsigned int updatingFindResults:1;
         unsigned int updatingColor:1;
         unsigned int updatingFont:1;
         unsigned int updatingFontAttributes:1;
