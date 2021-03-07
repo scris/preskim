@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 
 extern NSString *SKUnarchiveColorTransformerName;
+extern NSString *SKUnarchiveColorArrayTransformerName;
 extern NSString *SKTypeImageTransformerName;
 extern NSString *SKIsZeroTransformerName;
 extern NSString *SKIsOneTransformerName;
@@ -46,6 +47,4 @@ extern NSString *SKIsTwoTransformerName;
 
 @interface NSValueTransformer (SKExtensions)
 + (void)registerCustomTransformers;
-+ (NSValueTransformer *)arrayTransformerWithValueTransformer:(NSValueTransformer *)itemValueTransformer;
-+ (NSValueTransformer *)arrayTransformerWithValueTransformerForName:(NSString *)name;
 @end

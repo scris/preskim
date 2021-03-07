@@ -83,7 +83,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
 - (void)loadView {
     [super loadView];
     
-    NSValueTransformer *transformer = [NSValueTransformer arrayTransformerWithValueTransformerForName:SKUnarchiveColorTransformerName];
+    NSValueTransformer *transformer = [NSValueTransformer valueTransformerForName:SKUnarchiveColorArrayTransformerName];
     NSDictionary *options = [NSDictionary dictionaryWithObject:transformer forKey:NSValueTransformerBindingOption];
     [colorSwatch bind:@"colors" toObject:[NSUserDefaultsController sharedUserDefaultsController] withKeyPath:[@"values." stringByAppendingString:SKSwatchColorsKey] options:options];
     [colorSwatch sizeToFit];

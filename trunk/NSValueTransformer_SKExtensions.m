@@ -41,26 +41,18 @@
 #import <SkimNotes/SkimNotes.h>
 
 NSString *SKUnarchiveColorTransformerName = @"SKUnarchiveColor";
+NSString *SKUnarchiveColorArrayTransformerName = @"SKUnarchiveArrayColor";
 NSString *SKTypeImageTransformerName = @"SKTypeImage";
 NSString *SKIsZeroTransformerName = @"SKIsZero";
 NSString *SKIsOneTransformerName = @"SKIsOne";
 NSString *SKIsTwoTransformerName = @"SKIsTwo";
 
-@interface SKOneWayArrayTransformer : NSValueTransformer {
-    NSValueTransformer *valueTransformer;
-}
-- (id)initWithValueTransformer:(NSValueTransformer *)aValueTransformer;
-- (NSArray *)transformedArray:(NSArray *)array usingSelector:(SEL)selector;
-@end
-
-#pragma mark -
-
-@interface SKTwoWayArrayTransformer : SKOneWayArrayTransformer
-@end
-
-#pragma mark -
-
 @interface SKUnarchiveColorTransformer : NSValueTransformer
+@end
+
+#pragma mark -
+
+@interface SKUnarchiveColorArrayTransformer : SKUnarchiveColorTransformer
 @end
 
 #pragma mark -
@@ -82,84 +74,11 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 
 + (void)registerCustomTransformers {
     [NSValueTransformer setValueTransformer:[[[SKUnarchiveColorTransformer alloc] init] autorelease] forName:SKUnarchiveColorTransformerName];
+    [NSValueTransformer setValueTransformer:[[[SKUnarchiveColorArrayTransformer alloc] init] autorelease] forName:SKUnarchiveColorArrayTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKTypeImageTransformer alloc] init] autorelease] forName:SKTypeImageTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:0] autorelease] forName:SKIsZeroTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:1] autorelease] forName:SKIsOneTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:2] autorelease] forName:SKIsTwoTransformerName];
-}
-
-+ (NSValueTransformer *)arrayTransformerWithValueTransformer:(NSValueTransformer *)valueTransformer {
-    if ([[valueTransformer class] allowsReverseTransformation])
-        return [[[SKTwoWayArrayTransformer alloc] initWithValueTransformer:valueTransformer] autorelease];
-    else if (valueTransformer)
-        return [[[SKOneWayArrayTransformer alloc] initWithValueTransformer:valueTransformer] autorelease];
-    else
-        return nil;
-}
-
-+ (NSValueTransformer *)arrayTransformerWithValueTransformerForName:(NSString *)name {
-    return [self arrayTransformerWithValueTransformer:[self valueTransformerForName:name]];
-}
-
-@end
-
-#pragma mark -
-
-@implementation SKOneWayArrayTransformer
-
-+ (Class)transformedValueClass {
-    return [NSArray class];
-}
-
-+ (BOOL)allowsReverseTransformation {
-    return NO;
-}
-
-- (id)initWithValueTransformer:(NSValueTransformer *)aValueTransformer {
-    self = [super init];
-    if (self) {
-        if (aValueTransformer) {
-            valueTransformer = [aValueTransformer retain];
-        } else {
-            [self release];
-            self = nil;
-        }
-    }
-    return self;
-}
-
-- (id)init {
-    return [self initWithValueTransformer:[[[NSValueTransformer alloc] init] autorelease]];
-}
-
-- (void)dealloc {
-    SKDESTROY(valueTransformer);
-    [super dealloc];
-}
-
-- (NSArray *)transformedArray:(NSArray *)array usingSelector:(SEL)selector {
-    NSMutableArray *transformedArray = [NSMutableArray arrayWithCapacity:[array count]];
-    for (id obj in array)
-        [transformedArray addObject:[valueTransformer performSelector:selector withObject:obj] ?: [NSNull null]];
-    return transformedArray;
-}
-
-- (id)transformedValue:(id)array {
-    return [self transformedArray:array usingSelector:_cmd];
-}
-
-@end
-
-#pragma mark -
-
-@implementation SKTwoWayArrayTransformer
-
-+ (BOOL)allowsReverseTransformation {
-    return YES;
-}
-
-- (id)reverseTransformedValue:(id)array {
-    return [self transformedArray:array usingSelector:_cmd];
 }
 
 @end
@@ -191,6 +110,34 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
     if ([value isKindOfClass:[NSColor class]] == NO)
         return nil;
     return [NSArchiver archivedDataWithRootObject:value];
+}
+
+@end
+
+#pragma mark -
+
+@implementation SKUnarchiveColorArrayTransformer
+
++ (Class)transformedValueClass {
+    return [NSArray class];
+}
+
++ (BOOL)allowsReverseTransformation {
+    return YES;
+}
+
+- (id)transformedValue:(id)array {
+    NSMutableArray *transformedArray = [NSMutableArray arrayWithCapacity:[array count]];
+    for (id obj in array)
+        [transformedArray addObject:[super transformedValue:obj] ?: [NSNull null]];
+    return transformedArray;
+}
+
+- (id)reverseTransformedValue:(id)array {
+    NSMutableArray *transformedArray = [NSMutableArray arrayWithCapacity:[array count]];
+    for (id obj in array)
+        [transformedArray addObject:[super reverseTransformedValue:obj] ?: [NSData data]];
+    return transformedArray;
 }
 
 @end
