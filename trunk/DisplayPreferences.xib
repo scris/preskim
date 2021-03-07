@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -162,9 +162,9 @@
                     <connections>
                         <accessibilityConnection property="link" destination="17" id="107"/>
                         <accessibilityConnection property="title" destination="14" id="59"/>
-                        <binding destination="61" name="value" keyPath="values.SKBackgroundColor" id="76">
+                        <binding destination="61" name="value" keyPath="values.SKBackgroundColor" id="Voc-wr-z1x">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                         <outlet property="nextKeyView" destination="17" id="51"/>
@@ -175,9 +175,9 @@
                     <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
                         <accessibilityConnection property="title" destination="15" id="53"/>
-                        <binding destination="61" name="value" keyPath="values.SKFullScreenBackgroundColor" id="75">
+                        <binding destination="61" name="value" keyPath="values.SKFullScreenBackgroundColor" id="bk8-ZT-keW">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -203,9 +203,9 @@
                     <connections>
                         <accessibilityConnection property="link" destination="24" id="102"/>
                         <accessibilityConnection property="title" destination="25" id="55"/>
-                        <binding destination="61" name="value" keyPath="values.SKReadingBarColor" id="79">
+                        <binding destination="61" name="value" keyPath="values.SKReadingBarColor" id="OOD-Bb-5l9">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -296,7 +296,7 @@
                     <rect key="frame" x="147" y="287" width="71" height="25"/>
                     <popUpButtonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="ixy-vI-kGX" id="VYe-A3-h8D">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
+                        <font key="font" metaFont="menu"/>
                         <menu key="menu" id="N9m-fi-zeA">
                             <items>
                                 <menuItem title="None" state="on" id="ixy-vI-kGX"/>

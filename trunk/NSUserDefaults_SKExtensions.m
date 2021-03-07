@@ -46,6 +46,10 @@
     NSData *data = [self dataForKey:key];
     if (data) {
         color = [NSUnarchiver unarchiveObjectWithData:data];
+        if (color == nil)
+            color = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if ([color isKindOfClass:[NSColor class]] == NO)
+            color = nil;
     } else {
         NSArray *array = [self arrayForKey:key];
         if ([array count]) {

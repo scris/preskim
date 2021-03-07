@@ -40,6 +40,7 @@
 #import "NSImage_SKExtensions.h"
 #import <SkimNotes/SkimNotes.h>
 
+NSString *SKUnarchiveColorTransformerName = @"SKUnarchiveColor";
 NSString *SKTypeImageTransformerName = @"SKTypeImage";
 NSString *SKIsZeroTransformerName = @"SKIsZero";
 NSString *SKIsOneTransformerName = @"SKIsOne";
@@ -55,6 +56,11 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 #pragma mark -
 
 @interface SKTwoWayArrayTransformer : SKOneWayArrayTransformer
+@end
+
+#pragma mark -
+
+@interface SKUnarchiveColorTransformer : NSValueTransformer
 @end
 
 #pragma mark -
@@ -75,6 +81,7 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 @implementation NSValueTransformer (SKExtensions)
 
 + (void)registerCustomTransformers {
+    [NSValueTransformer setValueTransformer:[[[SKUnarchiveColorTransformer alloc] init] autorelease] forName:SKUnarchiveColorTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKTypeImageTransformer alloc] init] autorelease] forName:SKTypeImageTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:0] autorelease] forName:SKIsZeroTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:1] autorelease] forName:SKIsOneTransformerName];
@@ -153,6 +160,37 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 
 - (id)reverseTransformedValue:(id)array {
     return [self transformedArray:array usingSelector:_cmd];
+}
+
+@end
+
+#pragma mark -
+
+@implementation SKUnarchiveColorTransformer
+
++ (Class)transformedValueClass {
+    return [NSColor class];
+}
+
++ (BOOL)allowsReverseTransformation {
+    return YES;
+}
+
+- (id)transformedValue:(id)value {
+    if ([value isKindOfClass:[NSData class]] == NO)
+        return nil;
+    NSColor *color = [NSUnarchiver unarchiveObjectWithData:value];
+    if (color == nil)
+        color = [NSKeyedUnarchiver unarchiveObjectWithData:value];
+    if ([color isKindOfClass:[NSColor class]] == NO)
+        return nil;
+    return color;
+}
+
+- (id)reverseTransformedValue:(id)value {
+    if ([value isKindOfClass:[NSColor class]] == NO)
+        return nil;
+    return [NSArchiver archivedDataWithRootObject:value];
 }
 
 @end

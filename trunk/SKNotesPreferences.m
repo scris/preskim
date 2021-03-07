@@ -44,6 +44,7 @@
 #import "NSGraphics_SKExtensions.h"
 #import "NSImage_SKExtensions.h"
 #import "NSShadow_SKExtensions.h"
+#import "NSValueTransformer_SKExtensions.h"
 
 #define VALUES_KEY_PATH(key) [@"values." stringByAppendingString:key]
 
@@ -85,7 +86,7 @@
     [lineLineWell bind:SKLineWellEndLineStyleKey toObject:sudc withKeyPath:VALUES_KEY_PATH(SKLineNoteEndLineStyleKey) options:nil];
     BIND_LINE_WELL(inkLineWell, Ink, SKLineWellDisplayStyleSimpleLine);
     
-    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:NSUnarchiveFromDataTransformerName, NSValueTransformerNameBindingOption, nil];
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:SKUnarchiveColorTransformerName, NSValueTransformerNameBindingOption, nil];
     [textFontWell setHasTextColor:YES];
     [textFontWell bind:@"textColor" toObject:sudc withKeyPath:VALUES_KEY_PATH(SKFreeTextNoteFontColorKey) options:options];
 }
