@@ -120,7 +120,7 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 #pragma mark Favorite Colors
 
 + (NSArray *)favoriteColors {
-    NSValueTransformer *transformer = [NSValueTransformer arrayTransformerWithValueTransformerForName:SKUnarchiveColorTransformerName];
+    NSValueTransformer *transformer = [NSValueTransformer valueTransformerForName:SKUnarchiveColorArrayTransformerName];
     return [transformer transformedValue:[[NSUserDefaults standardUserDefaults] arrayForKey:SKSwatchColorsKey]];
 }
 
