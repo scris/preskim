@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -34,9 +34,9 @@
                     <connections>
                         <accessibilityConnection property="link" destination="4" id="154"/>
                         <accessibilityConnection property="title" destination="3" id="75"/>
-                        <binding destination="84" name="value" keyPath="values.SKFreeTextNoteColor" id="86">
+                        <binding destination="84" name="value" keyPath="values.SKFreeTextNoteColor" id="blO-ar-64V">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -55,9 +55,9 @@
                     <connections>
                         <accessibilityConnection property="link" destination="21" id="155"/>
                         <accessibilityConnection property="title" destination="5" id="80"/>
-                        <binding destination="84" name="value" keyPath="values.SKAnchoredNoteColor" id="92">
+                        <binding destination="84" name="value" keyPath="values.SKAnchoredNoteColor" id="KmW-cG-rzI">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -76,9 +76,9 @@
                     <connections>
                         <accessibilityConnection property="link" destination="35" id="158"/>
                         <accessibilityConnection property="title" destination="7" id="71"/>
-                        <binding destination="84" name="value" keyPath="values.SKCircleNoteColor" id="88">
+                        <binding destination="84" name="value" keyPath="values.SKCircleNoteColor" id="hmz-QU-9Wz">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -97,9 +97,9 @@
                     <connections>
                         <accessibilityConnection property="link" destination="37" id="160"/>
                         <accessibilityConnection property="title" destination="9" id="83"/>
-                        <binding destination="84" name="value" keyPath="values.SKSquareNoteColor" id="101">
+                        <binding destination="84" name="value" keyPath="values.SKSquareNoteColor" id="YE8-cg-YNa">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -118,9 +118,9 @@
                     <connections>
                         <accessibilityConnection property="link" destination="12" id="162"/>
                         <accessibilityConnection property="title" destination="11" id="78"/>
-                        <binding destination="84" name="value" keyPath="values.SKHighlightNoteColor" id="90">
+                        <binding destination="84" name="value" keyPath="values.SKHighlightNoteColor" id="ZIX-tq-vP4">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -159,9 +159,9 @@
                     <color key="color" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
                         <accessibilityConnection property="title" destination="15" id="82"/>
-                        <binding destination="84" name="value" keyPath="values.SKStrikeOutNoteColor" id="103">
+                        <binding destination="84" name="value" keyPath="values.SKStrikeOutNoteColor" id="E9W-hU-3Cy">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -180,9 +180,9 @@
                     <connections>
                         <accessibilityConnection property="link" destination="6" id="157"/>
                         <accessibilityConnection property="title" destination="17" id="72"/>
-                        <binding destination="84" name="value" keyPath="values.SKInkNoteColor" id="105">
+                        <binding destination="84" name="value" keyPath="values.SKInkNoteColor" id="17q-Y6-ZRp">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -350,9 +350,9 @@
                     <connections>
                         <accessibilityConnection property="link" destination="10" id="161"/>
                         <accessibilityConnection property="title" destination="38" id="69"/>
-                        <binding destination="84" name="value" keyPath="values.SKSquareNoteInteriorColor" id="107">
+                        <binding destination="84" name="value" keyPath="values.SKSquareNoteInteriorColor" id="izC-Td-IAa">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -371,9 +371,9 @@
                     <connections>
                         <accessibilityConnection property="link" destination="10" id="267"/>
                         <accessibilityConnection property="title" destination="263" id="265"/>
-                        <binding destination="84" name="value" keyPath="values.SKLineNoteInteriorColor" id="272">
+                        <binding destination="84" name="value" keyPath="values.SKLineNoteInteriorColor" id="0IZ-in-jwa">
                             <dictionary key="options">
-                                <string key="NSValueTransformerName">NSUnarchiveFromData</string>
+                                <string key="NSValueTransformerName">SKUnarchiveColor</string>
                             </dictionary>
                         </binding>
                     </connections>
