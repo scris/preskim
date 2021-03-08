@@ -60,7 +60,11 @@
     #define MAC_OS_X_VERSION_10_16 101600
 #endif
 #ifndef MAC_OS_X_VERSION_11_0
-    #define MAC_OS_VERSION_11_0 110000
+#ifdef MAC_OS_VERSION_11_0
+    #define MAC_OS_X_VERSION_11_0 MAC_OS_VERSION_11_0
+    #else
+        #define MAC_OS_X_VERSION_11_0 110000
+    #endif
 #endif
 
 #if SDK_BEFORE(10_13)
@@ -98,7 +102,7 @@ static const NSAppKitVersion NSAppKitVersionNumber10_15 = 1894;
 static const NSAppKitVersion NSAppKitVersionNumber10_14 = 1671;
 static const NSAppKitVersion NSAppKitVersionNumber10_15 = 1894;
 
-#elif SDK_BEFORE(10_16)
+#elif SDK_BEFORE(11_0)
 
 static const NSAppKitVersion NSAppKitVersionNumber10_15 = 1894;
 
