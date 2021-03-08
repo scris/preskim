@@ -847,6 +847,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         [cell setSegmentStyle:NSSegmentStyleTexturedSquare];
         [cell setWidth:fmax(0.0, NSWidth(frameRect) - BACKGROUND_WIDTH_OFFSET) forSegment:0];
         [self setCell:cell];
+        [self addTrackingArea:[[[NSTrackingArea alloc] initWithRect:[self bounds] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect owner:self userInfo:nil] autorelease]];
     }
     return self;
 }
