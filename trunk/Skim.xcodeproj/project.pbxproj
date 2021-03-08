@@ -107,6 +107,7 @@
 		CE24875C112C9651006B4FA5 /* NSFont_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE24875B112C9651006B4FA5 /* NSFont_SKExtensions.m */; };
 		CE25BB6B163FFB770046A348 /* Skim.help in Resources */ = {isa = PBXBuildFile; fileRef = CE25BB43163FFB770046A348 /* Skim.help */; };
 		CE26175F16CCFC4900BDCE7C /* SKSyncDot.m in Sources */ = {isa = PBXBuildFile; fileRef = CE26175E16CCFC4900BDCE7C /* SKSyncDot.m */; };
+		CE2C9AF425F69D28009DA6E6 /* Skim.icns in Resources */ = {isa = PBXBuildFile; fileRef = CE2C9AF325F69D27009DA6E6 /* Skim.icns */; };
 		CE2DE4920B85D48F00D0DA12 /* SKThumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2DE4910B85D48F00D0DA12 /* SKThumbnail.m */; };
 		CE2DE49D0B85D4F400D0DA12 /* SKFullScreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2DE49C0B85D4F400D0DA12 /* SKFullScreenWindow.m */; };
 		CE2DE4EE0B85DB6300D0DA12 /* NSCursor_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2DE4ED0B85DB6300D0DA12 /* NSCursor_SKExtensions.m */; };
@@ -182,7 +183,6 @@
 		CE6C96B20CD925550022D69F /* SKNotesPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6C96B00CD925550022D69F /* SKNotesPanelController.m */; };
 		CE6DC7BB0D689138003A072F /* PDFDocument_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6DC7BA0D689138003A072F /* PDFDocument_SKExtensions.m */; };
 		CE6DC9940D699F21003A072F /* TransitionMask.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CE6DC9930D699F21003A072F /* TransitionMask.jpg */; };
-		CE7469180B7F40B700CBF969 /* Skim.icns in Resources */ = {isa = PBXBuildFile; fileRef = CE7469170B7F40B600CBF969 /* Skim.icns */; };
 		CE7611650EA49D1400301E45 /* SKPrintableView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7611630EA49D1400301E45 /* SKPrintableView.m */; };
 		CE792F74226D12C40005BE9F /* SKLevelIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = CE792F73226D12C40005BE9F /* SKLevelIndicator.m */; };
 		CE7A3A2D2269CBDE00F1B89B /* SKControlTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7A3A2C2269CBDE00F1B89B /* SKControlTableCellView.m */; };
@@ -814,6 +814,7 @@
 		CE26175E16CCFC4900BDCE7C /* SKSyncDot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKSyncDot.m; sourceTree = "<group>"; };
 		CE2BD8170BD4127A00A5F4DB /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = vendorsrc/andymatuschak/Sparkle/Sparkle.xcodeproj; sourceTree = "<group>"; };
 		CE2BD82A0BD4132B00A5F4DB /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE2C9AF325F69D27009DA6E6 /* Skim.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Skim.icns; sourceTree = "<group>"; };
 		CE2DE4900B85D48F00D0DA12 /* SKThumbnail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKThumbnail.h; sourceTree = "<group>"; };
 		CE2DE4910B85D48F00D0DA12 /* SKThumbnail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKThumbnail.m; sourceTree = "<group>"; };
 		CE2DE49B0B85D4F400D0DA12 /* SKFullScreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKFullScreenWindow.h; sourceTree = "<group>"; };
@@ -980,7 +981,6 @@
 		CE6DC7BA0D689138003A072F /* PDFDocument_SKExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFDocument_SKExtensions.m; sourceTree = "<group>"; };
 		CE6DC9930D699F21003A072F /* TransitionMask.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = TransitionMask.jpg; sourceTree = "<group>"; };
 		CE7311F521CBCE4800291D36 /* SKFileUpdateChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKFileUpdateChecker.h; sourceTree = "<group>"; };
-		CE7469170B7F40B600CBF969 /* Skim.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Skim.icns; sourceTree = "<group>"; };
 		CE7611620EA49D1400301E45 /* SKPrintableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKPrintableView.h; sourceTree = "<group>"; };
 		CE7611630EA49D1400301E45 /* SKPrintableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKPrintableView.m; sourceTree = "<group>"; };
 		CE792F72226D12C40005BE9F /* SKLevelIndicator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKLevelIndicator.h; sourceTree = "<group>"; };
@@ -1977,7 +1977,7 @@
 		CE5475A00B33058B00F8AFB6 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				CE7469170B7F40B600CBF969 /* Skim.icns */,
+				CE2C9AF325F69D27009DA6E6 /* Skim.icns */,
 				CE07158A0B8A3D6300733CC8 /* PDFDocument.icns */,
 				CE898F050C843A8B008A0856 /* PDFDDocument.icns */,
 				CE4373B30BB5440E00A56987 /* PSDocument.icns */,
@@ -2445,7 +2445,6 @@
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
 				CE07158B0B8A3D6500733CC8 /* NoteDocument.icns in Resources */,
 				CE07158C0B8A3D6500733CC8 /* PDFDocument.icns in Resources */,
-				CE7469180B7F40B700CBF969 /* Skim.icns in Resources */,
 				CE41A6CC0B975E5000ECF819 /* Skim.sdef in Resources */,
 				CE4373B40BB5440E00A56987 /* PSDocument.icns in Resources */,
 				CEE229390BFB7CE9002B746B /* ReleaseNotes.rtf in Resources */,
@@ -2479,6 +2478,7 @@
 				CE1CC6121143DDFD00F6B208 /* LineInspector.xib in Resources */,
 				CE1CC6B91143F05D00F6B208 /* TransitionSheet.xib in Resources */,
 				CEF60D23114C0C5C0074ACC4 /* MainMenu.xib in Resources */,
+				CE2C9AF425F69D28009DA6E6 /* Skim.icns in Resources */,
 				CEF60D6A114C0DA60074ACC4 /* TransitionSheet.strings in Resources */,
 				CEF60D6C114C0DA60074ACC4 /* ScaleSheet.strings in Resources */,
 				CEF60D6D114C0DA60074ACC4 /* ReleaseNotes.strings in Resources */,

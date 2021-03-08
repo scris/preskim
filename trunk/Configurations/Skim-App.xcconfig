@@ -7,6 +7,8 @@ PRODUCT_NAME = Skim
 PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.skim-app.skim
 WRAPPER_EXTENSION = app
 
+ASSETCATALOG_COMPILER_APPICON_NAME = Skim
+
 // causes lots of warnings about missing paths in Xcode 4
 //FRAMEWORK_SEARCH_PATHS = "$(SOURCE_ROOT)/SkimNotes/build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)" "$(SOURCE_ROOT)/vendorsrc/andymatuschak/Sparkle/build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)"
 
