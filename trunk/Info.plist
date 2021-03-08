@@ -9,6 +9,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PDFDocument.icns</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<true/>
 			<key>CFBundleTypeName</key>
 			<string>PDF</string>
 			<key>CFBundleTypeRole</key>
@@ -40,6 +42,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PDFDDocument.icns</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<true/>
 			<key>CFBundleTypeName</key>
 			<string>PDF Bundle</string>
 			<key>CFBundleTypeRole</key>
@@ -71,6 +75,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PSDocument.icns</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<true/>
 			<key>CFBundleTypeName</key>
 			<string>PostScript</string>
 			<key>CFBundleTypeRole</key>
@@ -102,6 +108,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>PSDocument.icns</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<true/>
 			<key>CFBundleTypeName</key>
 			<string>Encapsulated PostScript</string>
 			<key>CFBundleTypeRole</key>
@@ -133,6 +141,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>DVIDocument.icns</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<true/>
 			<key>CFBundleTypeName</key>
 			<string>DVI</string>
 			<key>CFBundleTypeRole</key>
@@ -164,6 +174,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>XDVDocument.icns</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<true/>
 			<key>CFBundleTypeName</key>
 			<string>XDV</string>
 			<key>CFBundleTypeRole</key>
@@ -195,6 +207,8 @@
 		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>NoteDocument.icns</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<true/>
 			<key>CFBundleTypeName</key>
 			<string>Skim Notes</string>
 			<key>CFBundleTypeRole</key>
@@ -467,6 +481,15 @@
 			<string>PDF Bundle</string>
 			<key>UTTypeIconFile</key>
 			<string>PDFDDocument.icns</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+				<key>UTTypeIconBackgroundName</key>
+				<string>PDFDocumentBackground</string>
+				<key>UTTypeIconText</key>
+				<string>PDFD</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>net.sourceforge.skim-app.pdfd</string>
 			<key>UTTypeTagSpecification</key>
@@ -486,6 +509,15 @@
 			<string>Skim Notes</string>
 			<key>UTTypeIconFile</key>
 			<string>NoteDocument.icns</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+				<key>UTTypeIconBackgroundName</key>
+				<string>NoteDocumentBackground</string>
+				<key>UTTypeIconText</key>
+				<string>SKIM</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>net.sourceforge.skim-app.skimnotes</string>
 			<key>UTTypeTagSpecification</key>
@@ -509,6 +541,15 @@
 			<string>PDF</string>
 			<key>UTTypeIconFile</key>
 			<string>PDFDocument.icns</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+				<key>UTTypeIconBackgroundName</key>
+				<string>PDFDocumentBackground</string>
+				<key>UTTypeIconText</key>
+				<string>PDF</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.pdf</string>
 			<key>UTTypeTagSpecification</key>
@@ -532,6 +573,15 @@
 			<string>PostScript</string>
 			<key>UTTypeIconFile</key>
 			<string>PSDocument.icns</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+				<key>UTTypeIconBackgroundName</key>
+				<string>PSDocumentBackground</string>
+				<key>UTTypeIconText</key>
+				<string>PS</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.postscript</string>
 			<key>UTTypeTagSpecification</key>
@@ -556,6 +606,15 @@
 			<string>Encapsulated PostScript</string>
 			<key>UTTypeIconFile</key>
 			<string>PSDocument.icns</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+				<key>UTTypeIconBackgroundName</key>
+				<string>PSDocumentBackground</string>
+				<key>UTTypeIconText</key>
+				<string>EPS</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>com.adobe.encapsulated-postscript</string>
 			<key>UTTypeTagSpecification</key>
@@ -575,6 +634,15 @@
 			<string>DVI</string>
 			<key>UTTypeIconFile</key>
 			<string>DVIDocument.icns</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+				<key>UTTypeIconBackgroundName</key>
+				<string>DVIDocumentBackground</string>
+				<key>UTTypeIconText</key>
+				<string>DVI</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.dvi</string>
 			<key>UTTypeTagSpecification</key>
@@ -594,6 +662,15 @@
 			<string>XDV</string>
 			<key>UTTypeIconFile</key>
 			<string>XDVDocument.icns</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
+				<key>UTTypeIconBackgroundName</key>
+				<string>DVIDocumentBackground</string>
+				<key>UTTypeIconText</key>
+				<string>XDV</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.xdv</string>
 			<key>UTTypeTagSpecification</key>
