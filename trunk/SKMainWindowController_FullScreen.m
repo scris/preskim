@@ -80,7 +80,6 @@
 static BOOL autoHideToolbarInFullScreen = NO;
 static BOOL collapseSidePanesInFullScreen = NO;
 
-static NSString *SKFullScreenToolbarOffsetKey = nil;
 static CGFloat fullScreenToolbarOffset = 0.0;
 
 @interface SKMainWindowController (SKFullScreenPrivate)
@@ -94,9 +93,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     autoHideToolbarInFullScreen = [sud boolForKey:SKAutoHideToolbarInFullScreenKey];
     collapseSidePanesInFullScreen = [sud boolForKey:SKCollapseSidePanesInFullScreenKey];
     
-    NSOperatingSystemVersion systemVersion = [[NSProcessInfo processInfo] operatingSystemVersion];
-    SKFullScreenToolbarOffsetKey = [[NSString alloc] initWithFormat:@"SKFullScreenToolbarOffset%ld_%ld", (long)systemVersion.majorVersion, (long)systemVersion.minorVersion];
-    fullScreenToolbarOffset = [sud doubleForKey:SKFullScreenToolbarOffsetKey];
+    fullScreenToolbarOffset = 0.0;
 }
 
 #pragma mark Side Windows
@@ -486,6 +483,8 @@ static inline CGFloat fullScreenOffset(NSWindow *window) {
         offset = NSHeight([NSWindow frameRectForContentRect:NSZeroRect styleMask:NSTitledWindowMask]);
     else if (fullScreenToolbarOffset > 0.0)
         offset = fullScreenToolbarOffset;
+    else if (RUNNING_AFTER(10_15))
+        offset = 16.0;
     else if (!RUNNING_BEFORE(10_11))
         offset = 17.0;
     else
@@ -550,8 +549,6 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
         if (toolbarItemOffset < 0.0)
             // save the offset for the next time, we may guess it wrong as it varies between OS versions
             fullScreenToolbarOffset = toolbarItemOffset - fullScreenToolbarOffset;
-        if (SKFullScreenToolbarOffsetKey)
-            [[NSUserDefaults standardUserDefaults] setDouble:fullScreenToolbarOffset forKey:SKFullScreenToolbarOffsetKey];
     }
     NSColor *backgroundColor = [PDFView defaultFullScreenBackgroundColor];
     NSDictionary *fullScreenSetup = [[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey];
