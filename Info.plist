@@ -483,10 +483,10 @@
 			<string>PDFDDocument.icns</string>
 			<key>UTTypeIcons</key>
 			<dict>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
 				<key>UTTypeIconBackgroundName</key>
 				<string>PDFDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
 				<key>UTTypeIconText</key>
 				<string>PDFD</string>
 			</dict>
@@ -511,10 +511,10 @@
 			<string>NoteDocument.icns</string>
 			<key>UTTypeIcons</key>
 			<dict>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
 				<key>UTTypeIconBackgroundName</key>
 				<string>NoteDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
 				<key>UTTypeIconText</key>
 				<string>SKIM</string>
 			</dict>
@@ -543,10 +543,10 @@
 			<string>PDFDocument.icns</string>
 			<key>UTTypeIcons</key>
 			<dict>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
 				<key>UTTypeIconBackgroundName</key>
 				<string>PDFDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
 				<key>UTTypeIconText</key>
 				<string>PDF</string>
 			</dict>
@@ -575,10 +575,10 @@
 			<string>PSDocument.icns</string>
 			<key>UTTypeIcons</key>
 			<dict>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
 				<key>UTTypeIconBackgroundName</key>
 				<string>PSDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
 				<key>UTTypeIconText</key>
 				<string>PS</string>
 			</dict>
@@ -608,10 +608,10 @@
 			<string>PSDocument.icns</string>
 			<key>UTTypeIcons</key>
 			<dict>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
 				<key>UTTypeIconBackgroundName</key>
 				<string>PSDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
 				<key>UTTypeIconText</key>
 				<string>EPS</string>
 			</dict>
@@ -636,10 +636,10 @@
 			<string>DVIDocument.icns</string>
 			<key>UTTypeIcons</key>
 			<dict>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
 				<key>UTTypeIconBackgroundName</key>
 				<string>DVIDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
 				<key>UTTypeIconText</key>
 				<string>DVI</string>
 			</dict>
@@ -664,10 +664,10 @@
 			<string>XDVDocument.icns</string>
 			<key>UTTypeIcons</key>
 			<dict>
-				<key>UTTypeIconBadgeName</key>
-				<string>Glasses</string>
 				<key>UTTypeIconBackgroundName</key>
 				<string>DVIDocumentBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>Glasses</string>
 				<key>UTTypeIconText</key>
 				<string>XDV</string>
 			</dict>
