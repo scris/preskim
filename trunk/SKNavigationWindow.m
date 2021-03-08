@@ -42,6 +42,7 @@
 #import "SKPDFView.h"
 #import "NSParagraphStyle_SKExtensions.h"
 #import "NSGeometry_SKExtensions.h"
+#import "NSGraphics_SKExtensions.h"
 #import "PDFView_SKExtensions.h"
 #import "NSShadow_SKExtensions.h"
 #import "NSView_SKExtensions.h"
@@ -90,6 +91,8 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         [self setContentView:contentView];
         [contentView release];
+        
+        SKSetHasDarkAppearance(self);
         
         NSRect rect = NSMakeRect(BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
         previousButton = [[SKNavigationButton alloc] initWithFrame:rect];
