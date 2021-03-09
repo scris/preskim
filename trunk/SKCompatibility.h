@@ -38,33 +38,44 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define SDK_BEFORE(_version) (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_ ## _version)
-#define DEPLOYMENT_BEFORE(_version) (MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_ ## _version)
+#define SDK_BEFORE(_version) (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_VERSION_ ## _version)
+#define DEPLOYMENT_BEFORE(_version) (MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_VERSION_ ## _version)
 
-#ifndef MAC_OS_X_VERSION_10_11
-    #define MAC_OS_X_VERSION_10_11 101100
+#ifdef MAC_OS_X_VERSION_10_11
+    #define MAC_OS_VERSION_10_11 MAC_OS_X_VERSION_10_11
+#else
+    #define MAC_OS_VERSION_10_11 101100
 #endif
-#ifndef MAC_OS_X_VERSION_10_12
-    #define MAC_OS_X_VERSION_10_12 101200
+#ifdef MAC_OS_X_VERSION_10_12
+    #define MAC_OS_VERSION_10_12 MAC_OS_X_VERSION_10_12
+#else
+    #define MAC_OS_VERSION_10_12 101200
 #endif
-#ifndef MAC_OS_X_VERSION_10_13
-    #define MAC_OS_X_VERSION_10_13 101300
+#ifdef MAC_OS_X_VERSION_10_13
+    #define MAC_OS_VERSION_10_13 MAC_OS_X_VERSION_10_13
+#else
+    #define MAC_OS_VERSION_10_13 101300
 #endif
-#ifndef MAC_OS_X_VERSION_10_14
-    #define MAC_OS_X_VERSION_10_14 101400
+#ifdef MAC_OS_VERSION_10_14
+    #define MAC_OS_VERSION_10_14 MAC_OS_X_VERSION_10_14
+#else
+    #define MAC_OS_VERSION_10_14 101400
 #endif
-#ifndef MAC_OS_X_VERSION_10_15
-    #define MAC_OS_X_VERSION_10_15 101500
+#ifdef MAC_OS_X_VERSION_10_15
+    #define MAC_OS_VERSION_10_15 MAC_OS_X_VERSION_10_15
+#else
+    #define MAC_OS_VERSION_10_15 101500
 #endif
-#ifndef MAC_OS_X_VERSION_10_16
-    #define MAC_OS_X_VERSION_10_16 101600
+#ifdef MAC_OS_X_VERSION_10_16
+    #define MAC_OS_VERSION_10_16 MAC_OS_X_VERSION_10_16
+#else
+    #define MAC_OS_VERSION_10_16 101600
 #endif
-#ifndef MAC_OS_X_VERSION_11_0
-#ifdef MAC_OS_VERSION_11_0
-    #define MAC_OS_X_VERSION_11_0 MAC_OS_VERSION_11_0
-    #else
-        #define MAC_OS_X_VERSION_11_0 110000
-    #endif
+#ifndef MAC_OS_VERSION_11_0
+    #define MAC_OS_X_VERSION_11_0 110000
+#endif
+#ifndef MAC_OS_VERSION_11_1
+    #define MAC_OS_X_VERSION_11_1 110100
 #endif
 
 #if SDK_BEFORE(10_13)
