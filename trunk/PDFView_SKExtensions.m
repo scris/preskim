@@ -246,7 +246,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
         original_setCurrentSelection = (void (*)(id, SEL, id))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(setCurrentSelection:), @selector(replacement_setCurrentSelection:));
     } else if (RUNNING(10_13)) {
         original_goToRect_onPage = (void (*)(id, SEL, NSRect,  id))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(goToRect:onPage:), @selector(replacement_goToRect:onPage:));
-    } else if (RUNNING(10_15)) {
+    } else if (RUNNING_AFTER(10_14)) {
         original_goToPreviousPage = (void (*)(id, SEL, id))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(goToPreviousPage:), @selector(replacement_goToPreviousPage:));
         original_goToNextPage = (void (*)(id, SEL, id))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(goToNextPage:), @selector(replacement_goToNextPage:));
         original_goToFirstPage = (void (*)(id, SEL, id))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(goToFirstPage:), @selector(replacement_goToFirstPage:));
