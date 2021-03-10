@@ -540,10 +540,9 @@
                     </connections>
                 </customView>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="36">
-                    <rect key="frame" x="143" y="274" width="50" height="22"/>
+                    <rect key="frame" x="143" y="275" width="50" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="50" id="4RV-ZC-n5Z"/>
-                        <constraint firstAttribute="height" constant="22" id="B9Y-xa-8Te"/>
                     </constraints>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="43">
                         <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="percent" usesGroupingSeparator="NO" lenient="YES" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" decimalSeparator="." groupingSeparator="," id="44">
@@ -579,7 +578,6 @@
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="38">
                     <rect key="frame" x="85" y="275" width="50" height="21"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="21" id="J3a-rg-VT9"/>
                         <constraint firstAttribute="width" constant="50" id="dgE-6k-Kfl"/>
                     </constraints>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" drawsBackground="YES" id="41">
@@ -694,11 +692,11 @@
             </subviews>
             <constraints>
                 <constraint firstItem="eAi-bX-BYI" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="146" id="40V-ef-ZtH"/>
-                <constraint firstItem="36" firstAttribute="top" secondItem="2" secondAttribute="top" constant="48" id="Guj-rP-x0o"/>
+                <constraint firstAttribute="bottom" secondItem="38" secondAttribute="bottom" constant="275" id="6OB-P3-1wa"/>
                 <constraint firstAttribute="bottom" secondItem="eAi-bX-BYI" secondAttribute="bottom" constant="16" id="JrC-Bv-iYG"/>
-                <constraint firstItem="38" firstAttribute="top" secondItem="2" secondAttribute="top" constant="48" id="LAg-OM-MeI"/>
                 <constraint firstItem="36" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="143" id="hKt-B2-zuA"/>
                 <constraint firstItem="38" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="85" id="jzZ-3O-KI1"/>
+                <constraint firstAttribute="bottom" secondItem="36" secondAttribute="bottom" constant="275" id="p3o-X8-Ske"/>
             </constraints>
             <point key="canvasLocation" x="156.5" y="154"/>
         </customView>
