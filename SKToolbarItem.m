@@ -59,8 +59,6 @@
         [(NSSegmentedControl *)view sizeToFit];
     }
     [self setView:view];
-    [self setMinSize:[view bounds].size];
-    [self setMaxSize:[view bounds].size];
 }
 
 - (void)setImageNamed:(NSString *)name {

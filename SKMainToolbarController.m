@@ -706,7 +706,8 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [colorSwatch sizeToFit];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleColorSwatchColorsChangedNotification:)
                                                          name:SKColorSwatchColorsChangedNotification object:colorSwatch];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleColorSwatchFrameChangedNotification:)
+            if (!RUNNING_AFTER(10_15))
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleColorSwatchFrameChangedNotification:)
                                                          name:NSViewFrameDidChangeNotification object:colorSwatch];
 
             menuItem = [NSMenuItem menuItemWithSubmenuAndTitle:NSLocalizedString(@"Favorite Colors", @"Toolbar item label")];
