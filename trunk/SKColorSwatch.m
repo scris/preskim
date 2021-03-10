@@ -938,7 +938,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         NSColor *aColor = color;
         if (disabled) {
             aColor = [aColor colorUsingColorSpace:[NSColorSpace genericGamma22GrayColorSpace]];
-            CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], 0.5);
+            CGContextSetAlpha([[NSGraphicsContext currentContext] CGContext], 0.5);
         }
         
         [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0] addClip];

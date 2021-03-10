@@ -98,7 +98,7 @@ static void evaluateHighlight(void *info, const CGFloat *in, CGFloat *out) {
         CGFunctionRef function = CGFunctionCreate((void *)&color, 1, domain, 4, range, &callbacks);
         CGShadingRef shading = CGShadingCreateAxial(colorSpace, CGPointMake(NSMinX(rect), 0.0), CGPointMake(NSMaxX(rect), 0.0), function, false, false);
         CGColorSpaceRelease(colorSpace);
-        CGContextDrawShading([[NSGraphicsContext currentContext] graphicsPort], shading);
+        CGContextDrawShading([[NSGraphicsContext currentContext] CGContext], shading);
         CGShadingRelease(shading);
     }
     

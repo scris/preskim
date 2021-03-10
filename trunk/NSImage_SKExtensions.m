@@ -307,13 +307,13 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     NSImage *image = [[[NSImage alloc] initWithSize:NSMakeSize(24.0, 24.0)] autorelease];;
     if (RUNNING_BEFORE(10_11)) {
         [image lockFocus];
-        CGContextDrawShading([[NSGraphicsContext currentContext] graphicsPort], shading);
+        CGContextDrawShading([[NSGraphicsContext currentContext] CGContext], shading);
         [image unlockFocus];
     } else {
         NSSize size = NSMakeSize(24.0, 24.0);
         CGFloat scale;
         void (^drawingHandler)(NSRect) = ^(NSRect rect){
-            CGContextDrawShading([[NSGraphicsContext currentContext] graphicsPort], shading);
+            CGContextDrawShading([[NSGraphicsContext currentContext] CGContext], shading);
         };
         for (scale = 1.0; scale <= 8.0; scale *= 2.0)
             [image addRepresentation:[NSBitmapImageRep imageRepWithSize:size scale:scale drawingHandler:drawingHandler]];
