@@ -148,7 +148,10 @@
                 [context setDuration:[self fadeInDuration]];
                 [[self animator] setAlphaValue:[self defaultAlphaValue]];
             }
-            completionHandler:nil];
+            completionHandler:^{
+                if ([self hasShadow])
+                    [self invalidateShadow];
+            }];
     }
     [self fadeOutAfterTimeout];
 }
