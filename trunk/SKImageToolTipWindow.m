@@ -113,7 +113,6 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
             if (isOpaque) {
                 if ([backgroundView window])
                     [self setContentView:[[[NSView alloc] init] autorelease]];
-                [self invalidateShadow];
             } else if ([backgroundView window] == nil) {
                 if (backgroundView == nil) {
                     backgroundView = [[NSVisualEffectView alloc] init];
