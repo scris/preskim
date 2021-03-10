@@ -606,7 +606,7 @@
                     </connections>
                 </segmentedControl>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="eAi-bX-BYI">
-                    <rect key="frame" x="146" y="16" width="88" height="26"/>
+                    <rect key="frame" x="146" y="16" width="88" height="24"/>
                     <subviews>
                         <textField verticalHuggingPriority="750" preferredMaxLayoutWidth="36" translatesAutoresizingMaskIntoConstraints="NO" id="jHc-Bm-dWJ">
                             <rect key="frame" x="37" y="2" width="30" height="21"/>
@@ -644,10 +644,10 @@
                     </subviews>
                     <constraints>
                         <constraint firstAttribute="width" constant="88" id="0ln-f5-t3T"/>
-                        <constraint firstAttribute="height" constant="26" id="22D-Qf-9J0"/>
                         <constraint firstAttribute="bottom" secondItem="Veq-Br-EFG" secondAttribute="bottom" constant="2" id="Aba-cd-Bpz"/>
                         <constraint firstAttribute="trailing" secondItem="jYx-ER-Exi" secondAttribute="trailing" constant="3" id="IXI-A4-r33"/>
                         <constraint firstItem="jHc-Bm-dWJ" firstAttribute="centerY" secondItem="Veq-Br-EFG" secondAttribute="centerY" id="KLi-r5-tDF"/>
+                        <constraint firstItem="Veq-Br-EFG" firstAttribute="top" secondItem="eAi-bX-BYI" secondAttribute="top" constant="2" id="OtM-xr-5G2"/>
                         <constraint firstItem="Veq-Br-EFG" firstAttribute="leading" secondItem="eAi-bX-BYI" secondAttribute="leading" constant="1" id="YhV-sE-h07"/>
                         <constraint firstItem="jHc-Bm-dWJ" firstAttribute="leading" secondItem="Veq-Br-EFG" secondAttribute="trailing" constant="5" id="tHn-hi-b0S"/>
                         <constraint firstItem="Veq-Br-EFG" firstAttribute="centerY" secondItem="jYx-ER-Exi" secondAttribute="centerY" id="u5Z-na-kEg"/>
