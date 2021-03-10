@@ -531,7 +531,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     } else {
         // Let PDFView do most of the hard work.
         [super drawPage:pdfPage];
-        [self drawPageHighlights:pdfPage toContext:[[NSGraphicsContext currentContext] graphicsPort]];
+        [self drawPageHighlights:pdfPage toContext:[[NSGraphicsContext currentContext] CGContext]];
     }
 }
 
@@ -4756,7 +4756,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 [[NSGraphicsContext currentContext] setShouldAntialias:[self shouldAntiAlias]];
                 [[NSGraphicsContext currentContext] setImageInterpolation:interpolation];
                 if ([PDFView instancesRespondToSelector:@selector(drawPage:toContext:)])
-                    [self drawPage:page toContext:[[NSGraphicsContext currentContext] graphicsPort]];
+                    [self drawPage:page toContext:[[NSGraphicsContext currentContext] CGContext]];
                 else
                     [self drawPage:page];
                 [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];

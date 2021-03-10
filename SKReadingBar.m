@@ -286,7 +286,7 @@ static inline BOOL topAbovePoint(NSRect rect, NSPoint point, NSInteger lineAngle
 }
 
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box active:(BOOL)active {
-    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
     [pdfPage transformContext:context forBox:box];
     [self drawForPage:pdfPage withBox:box inContext:context];
 }

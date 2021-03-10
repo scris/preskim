@@ -88,7 +88,7 @@ static NSTextStorage *createTextStorage()
 // assumes that the current NSGraphicsContext is the destination
 static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
 {
-    CGContextRef ctxt = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextRef ctxt = [[NSGraphicsContext currentContext] CGContext];
     
     NSTextStorage *textStorage = createTextStorage();
     [textStorage beginEditing];
