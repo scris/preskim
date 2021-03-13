@@ -825,7 +825,7 @@ enum {
 
 static BOOL isIgnorablePOSIXError(NSError *error) {
     if ([[error domain] isEqualToString:NSPOSIXErrorDomain])
-        return [error code] == ENOATTR || [error code] == ENOTSUP || [error code] == EINVAL || [error code] == EPERM || [error code] == EACCES;
+        return [error code] == ENOATTR || [error code] == ENOTSUP || [error code] == EINVAL || [error code] == EPERM || [error code] == EACCES || [error code] == ENOENT;
     else
         return NO;
 }
