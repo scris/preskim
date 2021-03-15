@@ -83,7 +83,6 @@
     NSTextField *scaleField;
     NSSegmentedControl *noteButton;
     SKColorSwatch *colorSwatch;
-    NSView *pacerView;
     NSSegmentedControl *pacerButton;
     NSTextField *pacerSpeedField;
     NSStepper *pacerSpeedStepper;
@@ -97,7 +96,6 @@
 @property (nonatomic, retain) IBOutlet NSTextField *pageNumberField, *scaleField, *pacerSpeedField;
 @property (nonatomic, retain) IBOutlet SKColorSwatch *colorSwatch;
 @property (nonatomic, retain) IBOutlet NSStepper *pacerSpeedStepper;
-@property (nonatomic, retain) IBOutlet NSView *pacerView;
 
 - (void)setupToolbar;
 
