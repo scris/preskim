@@ -70,7 +70,7 @@
             NSVisualEffectView *view = [[NSVisualEffectView alloc] init];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-            [view setMaterial:NSVisualEffectMaterialHeaderView];
+            [view setMaterial:RUNNING_AFTER(10_15) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
 #pragma clang diagnostic pop
             [view setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
             if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableSearchBarBlurringKey]) {
