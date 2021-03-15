@@ -131,7 +131,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 @implementation SKMainToolbarController
 
-@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, toolModeButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerView, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton;
+@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, toolModeButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton;
 
 - (void)dealloc {
     mainController = nil;
@@ -177,7 +177,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     SKDESTROY(pageNumberField);
     SKDESTROY(scaleField);
     SKDESTROY(colorSwatch);
-    SKDESTROY(pacerView);
     SKDESTROY(pacerButton);
     SKDESTROY(pacerSpeedField);
     SKDESTROY(pacerSpeedStepper);
@@ -756,10 +755,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             frame = [pacerSpeedStepper frame];
             frame.origin.y = ceil(NSMidY([pacerButton frame]) - 0.5 * NSHeight([pacerSpeedStepper frame]));
             [pacerSpeedStepper setFrame:frame];
-            frame = [pacerView frame];
-            frame.size.height = NSHeight([pacerButton frame]) + 1.0;
-            [pacerView setFrame:frame];
-
+            
             menuItem = [NSMenuItem menuItemWithSubmenuAndTitle:NSLocalizedString(@"Pacer", @"Toolbar item label")];
             menu = [menuItem submenu];
             [menu addItemWithTitle:NSLocalizedString(@"Start Pacer", @"Menu item title") action:@selector(togglePacer:) target:mainController tag:0];
