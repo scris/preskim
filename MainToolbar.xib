@@ -608,6 +608,9 @@
                     <subviews>
                         <textField verticalHuggingPriority="750" preferredMaxLayoutWidth="36" translatesAutoresizingMaskIntoConstraints="NO" id="jHc-Bm-dWJ">
                             <rect key="frame" x="37" y="2" width="30" height="21"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="30" id="vHA-D8-mGk"/>
+                            </constraints>
                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" drawsBackground="YES" id="9cD-jS-bcm">
                                 <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="cUi-co-kf3">
                                     <real key="minimum" value="1"/>
@@ -641,7 +644,6 @@
                         </segmentedControl>
                     </subviews>
                     <constraints>
-                        <constraint firstAttribute="width" constant="88" id="0ln-f5-t3T"/>
                         <constraint firstAttribute="bottom" secondItem="Veq-Br-EFG" secondAttribute="bottom" constant="2" id="Aba-cd-Bpz"/>
                         <constraint firstAttribute="trailing" secondItem="jYx-ER-Exi" secondAttribute="trailing" constant="3" id="IXI-A4-r33"/>
                         <constraint firstItem="jHc-Bm-dWJ" firstAttribute="centerY" secondItem="Veq-Br-EFG" secondAttribute="centerY" id="KLi-r5-tDF"/>

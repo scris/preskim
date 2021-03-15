@@ -99,6 +99,9 @@
 #define SKDocumentToolbarColorSwatchItemIdentifier @"SKDocumentToolbarColorSwatchItemIdentifier"
 #define SKDocumentToolbarShareItemIdentifier @"SKDocumentToolbarShareItemIdentifier"
 #define SKDocumentToolbarPacerItemIdentifier @"SKDocumentToolbarPacerItemIdentifier"
+#define SKDocumentToolbarPacerButtonItemIdentifier @"SKDocumentToolbarPacerButtonItemIdentifier"
+#define SKDocumentToolbarPacerSpeedFieldItemIdentifier @"SKDocumentToolbarPacerSpeedFieldItemIdentifier"
+#define SKDocumentToolbarPacerSpeedStepperItemIdentifier @"SKDocumentToolbarPacerSpeedStepperItemIdentifier"
 #define SKDocumentToolbarColorsItemIdentifier @"SKDocumentToolbarColorsItemIdentifier"
 #define SKDocumentToolbarFontsItemIdentifier @"SKDocumentToolbarFontsItemIdentifier"
 #define SKDocumentToolbarLinesItemIdentifier @"SKDocumentToolbarLinesItemIdentifier"
@@ -736,6 +739,10 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             
         } else if ([identifier isEqualToString:SKDocumentToolbarPacerItemIdentifier]) {
             
+            NSToolbarItemGroup *group = [[[NSToolbarItemGroup alloc] initWithItemIdentifier:identifier] autorelease];
+            [toolbarItems setObject:group forKey:identifier];
+            item = (id)group;
+            
             [pacerButton sizeToFit];
             NSRect frame;
             frame = [pacerButton frame];
@@ -760,13 +767,21 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [menu addItemWithTitle:NSLocalizedString(@"Faster", @"Menu item title") action:@selector(changePacerSpeed:) target:mainController tag:0];
             [menu addItemWithTitle:NSLocalizedString(@"Slower", @"Menu item title") action:@selector(changePacerSpeed:) target:mainController tag:-1];
             
-            [item setLabels:NSLocalizedString(@"Pacer", @"Toolbar item label")];
+            [item setLabel:NSLocalizedString(@"Pacer", @"Toolbar item label")];
+            [item setPaletteLabel:NSLocalizedString(@"Pacer", @"Toolbar item label")];
             [item setToolTip:NSLocalizedString(@"Pacer", @"Tool tip message")];
             [pacerButton setHelp:NSLocalizedString(@"Pacer", @"Tool tip message") forSegment:0];
             [pacerSpeedField setToolTip:NSLocalizedString(@"Pacer Speed", @"Tool tip message")];
             [pacerSpeedStepper setToolTip:NSLocalizedString(@"Pacer Speed", @"Tool tip message")];
-            [item setViewWithSizes:pacerView];
             [item setMenuFormRepresentation:menuItem];
+            
+            SKToolbarItem *item1 = [[[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerButtonItemIdentifier] autorelease];
+            [item1 setViewWithSizes:pacerButton];
+            SKToolbarItem *item2 = [[[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedFieldItemIdentifier] autorelease];
+            [item2 setViewWithSizes:pacerSpeedField];
+            SKToolbarItem *item3 = [[[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedStepperItemIdentifier] autorelease];
+            [item3 setViewWithSizes:pacerSpeedStepper];
+            [group setSubitems:[NSArray arrayWithObjects:item1, item2, item3, nil]];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarColorsItemIdentifier]) {
             
