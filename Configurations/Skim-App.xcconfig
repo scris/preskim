@@ -9,6 +9,8 @@ WRAPPER_EXTENSION = app
 
 ASSETCATALOG_COMPILER_STANDALONE_ICON_BEHAVIOR = none
 
+CODE_SIGN_IDENTITY = Skim Signing Certificate
+
 // causes lots of warnings about missing paths in Xcode 4
 //FRAMEWORK_SEARCH_PATHS = "$(SOURCE_ROOT)/SkimNotes/build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)" "$(SOURCE_ROOT)/vendorsrc/andymatuschak/Sparkle/build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)"
 
