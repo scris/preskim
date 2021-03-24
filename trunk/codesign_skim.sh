@@ -10,6 +10,8 @@ fi
 
 SKIM_BUNDLE_PATH="${!#}"
 
+SKIM_ENTITLEMENTS=$(dirname "$0")/Skim.entitlements
+
 # see https://mjtsai.com/blog/2021/02/18/code-signing-when-building-on-apple-silicon/
 CODESIGN_FLAGS="--verbose --options runtime --timestamp --force --digest-algorithm=sha1,sha256"
 
@@ -34,4 +36,4 @@ codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/skimpdf"
 LOCATION="${CONTENTS_DIR}/MacOS"
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/relaunch"
 
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${BIBDESK_BUNDLE_PATH}"
+codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --entitlements "${SKIM_ENTITLEMENTS}" "${BIBDESK_BUNDLE_PATH}"
