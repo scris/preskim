@@ -29,6 +29,9 @@ codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/Spotlight/SkimImpor
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/Spotlight/SkimImporter.mdimporter/Contents/MacOS/SkimImporter"
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/QuickLook/Skim.qlgenerator/Contents/MacOS/Skim"
 
+LOCATION="${CONTENTS_DIR}/Plugins"
+codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/SkimTransitions.plugin/Contents/MacOS/SkimTransitions"
+
 LOCATION="${CONTENTS_DIR}/SharedSupport"
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/skimnotes"
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/skimpdf"
