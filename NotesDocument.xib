@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -22,26 +22,26 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="302" y="310" width="480" height="360"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="775"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" misplaced="YES" id="6">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="48" customClass="SKScrollView">
-                        <rect key="frame" x="0.0" y="22" width="480" height="189"/>
+                        <rect key="frame" x="0.0" y="22" width="504" height="114"/>
                         <clipView key="contentView" id="C4R-aP-Zng">
-                            <rect key="frame" x="0.0" y="0.0" width="480" height="189"/>
+                            <rect key="frame" x="0.0" y="0.0" width="504" height="114"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" typeSelect="NO" autosaveName="SKNotesDocumentOutlineView" headerView="105" viewBased="YES" floatsGroupRows="NO" indentationPerLevel="16" outlineTableColumn="50" id="49" customClass="SKNoteOutlineView">
-                                    <rect key="frame" x="0.0" y="0.0" width="480" height="164"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="504" height="89"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
-                                        <tableColumn identifier="note" editable="NO" width="389" minWidth="16" maxWidth="1000" id="50">
+                                        <tableColumn identifier="note" editable="NO" width="384" minWidth="16" maxWidth="1000" id="50">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
@@ -54,11 +54,11 @@
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <prototypeCellViews>
                                                 <customView identifier="row" id="yvn-lZ-y0P" customClass="SKNoteTableRowView">
-                                                    <rect key="frame" x="1" y="1" width="389" height="17"/>
+                                                    <rect key="frame" x="11" y="1" width="389" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 </customView>
                                                 <tableCellView id="6Wp-hg-AAV">
-                                                    <rect key="frame" x="1" y="20" width="389" height="17"/>
+                                                    <rect key="frame" x="11" y="20" width="389" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textField horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="389" translatesAutoresizingMaskIntoConstraints="NO" id="ng8-52-I3N">
@@ -94,11 +94,11 @@
                                             <imageCell key="dataCell" refusesFirstResponder="YES" alignment="left" animates="YES" id="58" customClass="SKAnnotationTypeImageCell"/>
                                             <prototypeCellViews>
                                                 <tableCellView id="E1b-NS-HOF">
-                                                    <rect key="frame" x="393" y="1" width="21" height="17"/>
+                                                    <rect key="frame" x="403" y="1" width="21" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NA6-l1-CAo">
-                                                            <rect key="frame" x="0.0" y="0.0" width="21" height="17"/>
+                                                            <rect key="frame" x="0.0" y="-3" width="21" height="23"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="sVs-LE-rAz"/>
                                                             <connections>
                                                                 <binding destination="E1b-NS-HOF" name="value" keyPath="objectValue.type" id="kNb-1A-kUk">
@@ -132,11 +132,11 @@
                                             </customCell>
                                             <prototypeCellViews>
                                                 <tableCellView id="iKT-7I-wCa">
-                                                    <rect key="frame" x="417" y="1" width="16" height="17"/>
+                                                    <rect key="frame" x="427" y="1" width="16" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ECS-CW-5ke">
-                                                            <rect key="frame" x="0.0" y="0.0" width="16" height="17"/>
+                                                            <rect key="frame" x="0.0" y="-3" width="16" height="23"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="2Ol-23-qRN" customClass="SKColorCell"/>
                                                             <connections>
                                                                 <binding destination="iKT-7I-wCa" name="value" keyPath="objectValue.color" id="ihI-HE-FXc"/>
@@ -168,11 +168,11 @@
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <prototypeCellViews>
                                                 <tableCellView id="o1B-Qd-sFQ">
-                                                    <rect key="frame" x="436" y="1" width="42" height="17"/>
+                                                    <rect key="frame" x="446" y="1" width="46" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="CMB-So-gk5">
-                                                            <rect key="frame" x="-2" y="1" width="46" height="16"/>
+                                                            <rect key="frame" x="-2" y="1" width="50" height="16"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" id="hOk-U1-Iq2">
                                                                 <font key="font" metaFont="system"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -292,13 +292,13 @@
                             <rect key="frame" x="-30" y="17" width="15" height="300"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <tableHeaderView key="headerView" id="105">
-                            <rect key="frame" x="0.0" y="0.0" width="480" height="25"/>
+                        <tableHeaderView key="headerView" wantsLayer="YES" id="105">
+                            <rect key="frame" x="0.0" y="0.0" width="504" height="25"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="sbg-jM-cv9" customClass="SKStatusBar">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="22"/>
+                        <rect key="frame" x="0.0" y="0.0" width="504" height="22"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="fBR-Am-bRU"/>
                         </constraints>
@@ -330,9 +330,12 @@
                 <binding destination="-2" name="contentArray" keyPath="notes" id="59"/>
             </connections>
         </arrayController>
-        <searchField verticalHuggingPriority="750" textCompletion="NO" id="90">
+        <searchField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="90">
             <rect key="frame" x="0.0" y="0.0" width="140" height="22"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <constraints>
+                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="140" id="LzB-OS-hqA"/>
+                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="dn6-HF-5F4"/>
+            </constraints>
             <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" placeholderString="" bezelStyle="round" id="102">
                 <font key="font" metaFont="system"/>
                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -350,6 +353,6 @@
         </menu>
     </objects>
     <resources>
-        <image name="NSActionTemplate" width="14" height="14"/>
+        <image name="NSActionTemplate" width="15" height="15"/>
     </resources>
 </document>
