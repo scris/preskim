@@ -556,7 +556,7 @@ static inline NSDictionary *optionsFromFragmentAndEvent(NSString *fragment) {
             
             NSString *searchString = [[event descriptorForKeyword:keyAESearchText] stringValue];
             
-            if ([searchString length]) {
+            if ([searchString length] > 2) {
                 
                 if ([searchString length] > 2 && [searchString characterAtIndex:0] == '"' && [searchString characterAtIndex:[searchString length] - 1] == '"') {
                     //strip quotes
