@@ -913,10 +913,12 @@
     [item setLabels:NSLocalizedString(@"Search", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Search Notes", @"Tool tip message")];
     [item setView:searchField];
-    NSSize size = [searchField frame].size;
-    [item setMinSize:size];
-    size.width = 240.0;
-    [item setMaxSize:size];
+    if (!RUNNING_AFTER(10_15)) {
+        NSSize size = [searchField frame].size;
+        [item setMinSize:size];
+        size.width = 240.0;
+        [item setMaxSize:size];
+    }
     [dict setObject:item forKey:SKNotesDocumentSearchToolbarItemIdentifier];
     [item release];
     
