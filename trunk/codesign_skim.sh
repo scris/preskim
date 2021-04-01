@@ -37,4 +37,4 @@ codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/skimnotes"
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/skimpdf"
 
 LOCATION="${CONTENTS_DIR}/MacOS"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --entitlements "${SKIM_ENTITLEMENTS}" "${BIBDESK_BUNDLE_PATH}"
+codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --entitlements "${SKIM_ENTITLEMENTS}" "${SKIM_BUNDLE_PATH}"
