@@ -20,7 +20,7 @@ CONTENTS_DIR="${SKIM_BUNDLE_PATH}/Contents"
 # have to sign frameworks first
 LOCATION="${CONTENTS_DIR}/Frameworks"
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/SkimNotes.framework/Versions/A"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/MacOS/fileop"
+codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --identity "org.sparkle-project.Sparkle.Autoupdate.fileop" "${LOCATION}/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/MacOS/fileop"
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/MacOS/Autoupdate"
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/Sparkle.framework/Versions/A"
 
@@ -33,8 +33,8 @@ LOCATION="${CONTENTS_DIR}/Plugins"
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/SkimTransitions.plugin/Contents/MacOS/SkimTransitions"
 
 LOCATION="${CONTENTS_DIR}/SharedSupport"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/skimnotes"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/skimpdf"
+codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --identity "net.sourceforge.skim-app.tool.skimnotes" "${LOCATION}/skimnotes"
+codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --identity "net.sourceforge.skim-app.tool.skimpdf" "${LOCATION}/skimpdf"
 
 LOCATION="${CONTENTS_DIR}/MacOS"
 codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --entitlements "${SKIM_ENTITLEMENTS}" "${SKIM_BUNDLE_PATH}"
