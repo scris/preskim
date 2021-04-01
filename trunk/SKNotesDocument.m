@@ -925,7 +925,7 @@
     item = [[SKToolbarItem alloc] initWithItemIdentifier:SKNotesDocumentOpenPDFToolbarItemIdentifier];
     [item setLabels:NSLocalizedString(@"Open PDF", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Open Associated PDF File", @"Tool tip message")];
-    [item setImageNamed:@"PDFDocument"];
+    [item setImage:[[NSWorkspace sharedWorkspace] iconForFileType:SKPDFDocumentType]];
     [item setTarget:self];
     [item setAction:@selector(openPDF:)];
     [dict setObject:item forKey:SKNotesDocumentOpenPDFToolbarItemIdentifier];
