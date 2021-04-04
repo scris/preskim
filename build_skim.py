@@ -448,7 +448,7 @@ if __name__ == '__main__':
     
     new_version, new_version_string, minimum_system_version = read_versions()
     
-    archive_path = create_zip_of_application(new_version_string)
+    archive_path = create_dmg_of_application(new_version_string, False)
     
     # will bail if any part fails
     if username != "":
