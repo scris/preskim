@@ -130,10 +130,10 @@ def codesign(identity):
     print("codesign_skim.sh exited with status %s" % (rc))
     assert rc == 0, "code signing failed"
     
-def notarize_dmg_or_zip(dmg_or_zip_path, username, password):
+def notarize_dmg_or_zip(dmg_path, username, password):
+    """dmg_path: zip file or dmg file"""
     
-    identifier = "net.sourceforce.skim-app.skim" + os.path.splitext(dmg_or_zip_path)[1]
-    notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", identifier, "--username", username, "--password",  password, "--output-format", "xml", "--file", dmg_or_zip_path]
+    notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", "net.sourceforce.skim-app.skim.zip", "--username", username, "--password",  password, "--output-format", "xml", "--file", dmg_path]
     notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
     [output, error] = notarize_task.communicate()
     rc = notarize_task.returncode
@@ -177,7 +177,7 @@ def notarize_dmg_or_zip(dmg_or_zip_path, username, password):
             sys.stdout.write("%s\n" % (output))
                         
             log_url = output_pl["notarization-info"]["LogFileURL"]
-            Popen(["/usr/bin/open", "-g", log_url])
+            Popen(["/usr/bin/open", log_url])
             
             break
 
@@ -187,7 +187,7 @@ def create_dmg_of_application(new_version_number):
     # of date, since I sometimes want to upload multiple betas per day.
     final_dmg_name = os.path.join(BUILD_DIR, os.path.splitext(os.path.basename(BUILT_APP))[0] + "-" + new_version_number + ".dmg")
     
-    temp_dmg_path = "/tmp/Skim.dmg"
+    temp_dmg_path = os.path.join(BUILD_DIR, "Skim.dmg")
     if os.path.exists(temp_dmg_path):
         os.unlink(temp_dmg_path)
     
@@ -207,7 +207,7 @@ def create_dmg_of_application(new_version_number):
     
     return final_dmg_name
 
-def prepare_dmg_of_application(new_version_number):
+def create_prepared_dmg_of_application(new_version_number):
     
     # Create a name for the dmg based on version number, instead
     # of date, since I sometimes want to upload multiple betas per day.
@@ -217,7 +217,7 @@ def prepare_dmg_of_application(new_version_number):
     zip_dmg_name = os.path.join(SOURCE_DIR, "Skim.dmg.zip")
     
     # temporary image
-    temp_dmg_path = "/tmp/Skim.dmg"
+    temp_dmg_path = os.path.join(BUILD_DIR, "Skim.dmg")
     
     # temporary volume
     dst_volume_name = "/Volumes/Skim"
@@ -229,8 +229,6 @@ def prepare_dmg_of_application(new_version_number):
     # previous cp operation was botched
     assert not os.path.exists(dst_volume_name), "%s exists" % (dst_volume_name)
     
-    nullDevice = open("/dev/null", "w")
-    
     # remove temp image from a previous run
     if os.path.exists(temp_dmg_path):
         unlink(temp_dmg_path)
@@ -239,6 +237,7 @@ def prepare_dmg_of_application(new_version_number):
     # pass o to overwrite, or unzip waits for stdin
     # when trying to unpack the resource fork/EA
     
+    nullDevice = open("/dev/null", "w")
     cmd = ["/usr/bin/unzip", "-uo", zip_dmg_name, "-d", "/tmp"]
     x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
     rc = x.wait()
@@ -291,8 +290,6 @@ def prepare_dmg_of_application(new_version_number):
     # remove temp image
     nullDevice.close()
     os.unlink(temp_dmg_path)
-    
-    return final_dmg_name
 
 def create_zip_of_application(new_version_number):
     
