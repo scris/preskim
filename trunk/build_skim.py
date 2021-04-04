@@ -177,7 +177,7 @@ def notarize_dmg_or_zip(dmg_path, username, password):
             sys.stdout.write("%s\n" % (output))
                         
             log_url = output_pl["notarization-info"]["LogFileURL"]
-            Popen(["/usr/bin/open", log_url])
+            Popen(["/usr/bin/open", "-g", log_url])
             
             break
 
