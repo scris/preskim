@@ -187,7 +187,7 @@ def create_dmg_of_application(new_version_number, create_new):
     # of date, since I sometimes want to upload multiple betas per day.
     final_dmg_name = os.path.join(BUILD_DIR, os.path.splitext(os.path.basename(BUILT_APP))[0] + "-" + new_version_number + ".dmg")
     
-    temp_dmg_path = os.path.join(BUILD_DIR, "Skim.dmg")
+    temp_dmg_path = os.path.join(BUILD_ROOT, "Skim.dmg")
     # remove temp image from a previous run
     if os.path.exists(temp_dmg_path):
         os.unlink(temp_dmg_path)
@@ -218,7 +218,7 @@ def create_dmg_of_application(new_version_number, create_new):
         # when trying to unpack the resource fork/EA
         
         nullDevice = open("/dev/null", "w")
-        cmd = ["/usr/bin/unzip", "-uo", zip_dmg_name, "-d", "/tmp"]
+        cmd = ["/usr/bin/unzip", "-uo", zip_dmg_name, "-d", BUILD_ROOT]
         x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
         rc = x.wait()
         assert rc == 0, "failed to unzip %s" % (zip_dmg_name)
