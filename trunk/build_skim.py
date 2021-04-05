@@ -9,7 +9,7 @@
 
 #
 # SYNOPSIS
-#   build_skim.sh [-i identity] [-u username] [-p password] [-o out]
+#   build_release.sh [-i identity] [-u username] [-p password] [-o out] [-a zip|dmg|]
 #
 # OPTIONS
 #   -i --identity
@@ -19,7 +19,9 @@
 #   -p, --password
 #       Password for notarization, defaults to @keychain:AC_PASSWORD
 #   -o, --out
-#      Output directory for the final zip and appcast, defaults to the user's Desktop
+#      Output directory for the final archive and appcast, defaults to the user's Desktop
+#   -a, --archive
+#      The type of archive the app bundle is wrapped in, the prepared disk image when empty
 #
 
 #
@@ -437,9 +439,10 @@ def get_options():
     username = ""
     password = "@keychain:AC_PASSWORD"
     out = os.path.join(os.getenv("HOME"), "Desktop")
+    archive = ""
     
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "i:u:p:o:", ["identity=", "username=", "password=", "out="])
+        opts, args = getopt.getopt(sys.argv[1:], "i:u:p:o:a:", ["identity=", "username=", "password=", "out=", "archive="])
     except:
         sys.stderr.write("error reading options\n")
     
@@ -452,12 +455,14 @@ def get_options():
             password = arg
         elif opt in ["-o", "--out"]:
             out = arg
+        elif opt in ["-a", "--archive"]:
+            archive = arg
     
-    return identity, username, password, out
+    return identity, username, password, out, archive
 
 if __name__ == '__main__':
     
-    identity, username, password, out = get_options()
+    identity, username, password, out, archive = get_options()
     
     clean_and_build()
     
@@ -468,7 +473,10 @@ if __name__ == '__main__':
     
     new_version, new_version_string, minimum_system_version = read_versions()
     
-    archive_path = create_dmg_of_application(new_version_string, False)
+    if archive == "zip":
+        archive_path = create_zip_of_application(new_version_string)
+    else:
+        archive_path = create_dmg_of_application(new_version_string, archive == "dmg")
     
     # will bail if any part fails
     if username != "":
