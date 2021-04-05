@@ -13,28 +13,28 @@ SKIM_BUNDLE_PATH="${!#}"
 SKIM_ENTITLEMENTS=$(dirname "$0")/Skim.entitlements
 
 # see https://mjtsai.com/blog/2021/02/18/code-signing-when-building-on-apple-silicon/
-CODESIGN_FLAGS="--verbose --options runtime --timestamp --force --digest-algorithm=sha1,sha256"
+# and https://developer.apple.com/forums/thread/130855
+CODESIGN_FLAGS="-v --timestamp -f --digest-algorithm=sha1,sha256"
 
 CONTENTS_DIR="${SKIM_BUNDLE_PATH}/Contents"
 
 # have to sign frameworks first
 LOCATION="${CONTENTS_DIR}/Frameworks"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/SkimNotes.framework/Versions/A"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --identifier "org.sparkle-project.Sparkle.Autoupdate.fileop" "${LOCATION}/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/MacOS/fileop"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/MacOS/Autoupdate"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/Sparkle.framework/Versions/A"
+codesign ${CODESIGN_FLAGS} -s "${IDENTITY}" "${LOCATION}/SkimNotes.framework"
+codesign ${CODESIGN_FLAGS} -o runtime -s "${IDENTITY}" --identifier "org.sparkle-project.Sparkle.Autoupdate.fileop" "${LOCATION}/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/MacOS/fileop"
+codesign ${CODESIGN_FLAGS} -o runtime -s "${IDENTITY}" "${LOCATION}/Sparkle.framework/Versions/A/Resources/Autoupdate.app"
+codesign ${CODESIGN_FLAGS} -s "${IDENTITY}" "${LOCATION}/Sparkle.framework"
 
 LOCATION="${CONTENTS_DIR}/Library"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/Spotlight/SkimImporter.mdimporter/Contents/Frameworks/SkimNotesBase.framework/Versions/A"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/Spotlight/SkimImporter.mdimporter/Contents/MacOS/SkimImporter"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/QuickLook/Skim.qlgenerator/Contents/MacOS/Skim"
+codesign ${CODESIGN_FLAGS} -s "${IDENTITY}" "${LOCATION}/Spotlight/SkimImporter.mdimporter/Contents/Frameworks/SkimNotesBase.framework"
+codesign ${CODESIGN_FLAGS} -o runtime -s "${IDENTITY}" "${LOCATION}/Spotlight/SkimImporter.mdimporter/Contents/MacOS/SkimImporter"
+codesign ${CODESIGN_FLAGS} -o runtime -s "${IDENTITY}" "${LOCATION}/QuickLook/Skim.qlgenerator/Contents/MacOS/Skim"
 
 LOCATION="${CONTENTS_DIR}/Plugins"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" "${LOCATION}/SkimTransitions.plugin/Contents/MacOS/SkimTransitions"
+codesign ${CODESIGN_FLAGS} -o runtime --sign "${IDENTITY}" "${LOCATION}/SkimTransitions.plugin/Contents/MacOS/SkimTransitions"
 
 LOCATION="${CONTENTS_DIR}/SharedSupport"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --identifier "net.sourceforge.skim-app.tool.skimnotes" "${LOCATION}/skimnotes"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --identifier "net.sourceforge.skim-app.tool.skimpdf" "${LOCATION}/skimpdf"
+codesign ${CODESIGN_FLAGS} -o runtime -s "${IDENTITY}" --identifier "net.sourceforge.skim-app.tool.skimnotes" "${LOCATION}/skimnotes"
+codesign ${CODESIGN_FLAGS} -o runtime -s "${IDENTITY}" --identifier "net.sourceforge.skim-app.tool.skimpdf" "${LOCATION}/skimpdf"
 
-LOCATION="${CONTENTS_DIR}/MacOS"
-codesign ${CODESIGN_FLAGS} --sign "${IDENTITY}" --entitlements "${SKIM_ENTITLEMENTS}" "${SKIM_BUNDLE_PATH}"
+codesign ${CODESIGN_FLAGS} -o runtime -s "${IDENTITY}" --entitlements "${SKIM_ENTITLEMENTS}" "${SKIM_BUNDLE_PATH}"

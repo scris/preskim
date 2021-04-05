@@ -130,10 +130,10 @@ def codesign(identity):
     print("codesign_skim.sh exited with status %s" % (rc))
     assert rc == 0, "code signing failed"
     
-def notarize_dmg_or_zip(dmg_path, username, password):
-    """dmg_path: zip file or dmg file"""
+def notarize_dmg_or_zip(archive_path, username, password):
     
-    notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", "net.sourceforce.skim-app.skim.zip", "--username", username, "--password",  password, "--output-format", "xml", "--file", dmg_path]
+    bundle_id = "net.sourceforce.skim-app.skim" + os.path.splitext(archive_path)[1]
+    notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", bundle_id, "--username", username, "--password",  password, "--output-format", "xml", "--file", archive_path]
     notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
     [output, error] = notarize_task.communicate()
     rc = notarize_task.returncode
