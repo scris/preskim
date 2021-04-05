@@ -9,7 +9,7 @@
 
 #
 # SYNOPSIS
-#   build_release.sh [-i identity] [-u username] [-p password] [-o out] [-a zip|dmg|]
+#   build_skim.sh [-i identity] [-u username] [-p password] [-o out] [-a zip|dmg|]
 #
 # OPTIONS
 #   -i --identity
