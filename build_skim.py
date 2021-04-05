@@ -124,6 +124,8 @@ def clean_and_build():
 
 def codesign(identity):
     
+    print("codesign %s" % (BUILT_APP))
+    
     sign_cmd = [os.path.join(SOURCE_DIR, "codesign_skim.sh"), identity, BUILT_APP]
     x = Popen(sign_cmd, cwd=SOURCE_DIR)
     rc = x.wait()
@@ -131,6 +133,8 @@ def codesign(identity):
     assert rc == 0, "code signing failed"
     
 def notarize_dmg_or_zip(archive_path, username, password):
+    
+    print("notarize %s" % (archive_path))
     
     bundle_id = "net.sourceforce.skim-app.skim" + os.path.splitext(archive_path)[1]
     notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", bundle_id, "--username", username, "--password",  password, "--output-format", "xml", "--file", archive_path]
@@ -195,6 +199,8 @@ def create_dmg_of_application(new_version_number, create_new):
     nullDevice = open("/dev/null", "w")
     
     if create_new:
+        print("wrap %s in disk image" % (BUILT_APP))
+        
         cmd = ["/usr/bin/hdiutil", "create", "-fs", "HFS+", "-srcfolder", BUILT_APP, temp_dmg_path]
         x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
         rc = x.wait()
@@ -205,6 +211,8 @@ def create_dmg_of_application(new_version_number, create_new):
         
         # temporary volume
         dst_volume_name = "/Volumes/Skim"
+        
+        print("wrap %s in disk image from %s" % (BUILT_APP, zip_dmg_name))
         
         # see if this file already exists and bail
         assert not os.path.exists(final_dmg_name), "%s exists" % (final_dmg_name)
@@ -218,24 +226,28 @@ def create_dmg_of_application(new_version_number, create_new):
         # when trying to unpack the resource fork/EA
         
         nullDevice = open("/dev/null", "w")
+        print("unzipping disk image %s to %s" % (zip_dmg_name, BUILD_ROOT))
         cmd = ["/usr/bin/unzip", "-uo", zip_dmg_name, "-d", BUILD_ROOT]
         x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
         rc = x.wait()
         assert rc == 0, "failed to unzip %s" % (zip_dmg_name)
         
         # mount image
+        print("mounting disk image %s" % (temp_dmg_path))
         cmd = ["/usr/bin/hdiutil", "attach", "-nobrowse", "-noautoopen", temp_dmg_path]
         x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
         rc = x.wait()
         assert rc == 0, "failed to mount %s" % (temp_dmg_path)
         
         # use cp to copy all files
+        print("copying build product from %s to %s" % (BUILT_APP, dst_volume_name))
         cmd = ["/bin/cp", "-R", BUILT_APP, dst_volume_name]
         x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
         rc = x.wait()
         assert rc == 0, "failed to copy %s" % (BUILT_APP)
         
         # tell finder to set the icon position
+        print("moving build product in disk image")
         cmd = ["/usr/bin/osascript", "-e", """tell application "Finder" to set the position of application file "Skim.app" of disk named "Skim" to {90, 206}"""]
         x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
         rc = x.wait()
@@ -243,6 +255,7 @@ def create_dmg_of_application(new_version_number, create_new):
         
         # data is copied, so unmount the volume, we may need to wait when the volume is in use
         n_tries = 0
+        print("ejecting disk image %s" % (dst_volume_name))
         cmd = ["/usr/sbin/diskutil", "eject", dst_volume_name]
         x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
         rc = x.wait()
@@ -254,6 +267,7 @@ def create_dmg_of_application(new_version_number, create_new):
             rc = x.wait()
         
         # resize image to fit
+        print("resizing disk image %s" % (temp_dmg_path))
         cmd = ["/usr/bin/hdiutil", "resize", temp_dmg_path]
         x = Popen(cmd, stdout=PIPE, stderr=nullDevice)
         size = x.communicate()[0].split(None, 1)[0]
@@ -262,6 +276,7 @@ def create_dmg_of_application(new_version_number, create_new):
         assert rc == 0, "failed to resize  %s" % (temp_dmg_path)
     
     # convert image to read only and compress
+    print("converting disk image %s to read only disk image at %s" % (temp_dmg_path, final_dmg_name))
     cmd = ["/usr/bin/hdiutil", "convert", temp_dmg_path, "-format", "UDZO", "-imagekey", "zlib-level=9", "-o", final_dmg_name]
     x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
     rc = x.wait()
@@ -278,6 +293,7 @@ def create_zip_of_application(new_version_number):
     # of date, since I sometimes want to upload multiple betas per day.
     final_zip_name = os.path.join(BUILD_DIR, os.path.splitext(os.path.basename(BUILT_APP))[0] + "-" + new_version_number + ".zip")
     
+    print("zip %s" % (BUILT_APP))
     nullDevice = open("/dev/null", "w")
     cmd = ["/usr/bin/ditto", "-c", "-k", "--keepParent", BUILT_APP, final_zip_name]
     x = Popen(cmd)
@@ -329,6 +345,8 @@ def signature_and_size(archive_path):
     
 def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_path, outputPath):
     
+    print("create Sparkle sappcast for %s" % (archive_path))
+    
     appcastSignature, fileSize = signature_and_size(archive_path)
     download_url = "https://sourceforge.net/projects/skim/files/Skim/Skim-" + newVersionString + "/" + os.path.basename(archive_path) + "/download"
     appcastDate = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
@@ -339,32 +357,32 @@ def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_pa
     
     # creating this from a string is easier than manipulating NSXMLNodes...
     newItemString = """<?xml version="1.0" encoding="utf-8"?>
-    <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
-        <channel>
-            <item>
-                <title>Version """ + newVersionString + """</title>
-                <description>
-                <![CDATA[
-    <h1>Version ${VERSION}</h1>
-    
-    <h2>New Features</h2>
-    <ul>
-    <li></li>
-    </ul>
-    
-    <h2>Bugs Fixed</h2>
-    <ul>
-    <li></li>
-    </ul>
-                ]]>
-                </description>
-                <pubDate>""" + appcastDate + """</pubDate>
-                <sparkle:minimumSystemVersion>""" + minimumSystemVersion + """</sparkle:minimumSystemVersion>
-                <enclosure url=\"""" + download_url + """\" sparkle:version=\"""" + newVersion + """\" sparkle:shortVersionString=\"""" + newVersionString + """\" length=\"""" + fileSize + """\" type=\"""" + type + """\" sparkle:dsaSignature=\"""" + appcastSignature + """\" />
-            </item>
-        </channel>
-    </rss>
-    """
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <item>
+            <title>Version """ + newVersionString + """</title>
+            <description>
+            <![CDATA[
+<h1>Version ${VERSION}</h1>
+
+<h2>New Features</h2>
+<ul>
+<li></li>
+</ul>
+
+<h2>Bugs Fixed</h2>
+<ul>
+<li></li>
+</ul>
+            ]]>
+            </description>
+            <pubDate>""" + appcastDate + """</pubDate>
+            <sparkle:minimumSystemVersion>""" + minimumSystemVersion + """</sparkle:minimumSystemVersion>
+            <enclosure url=\"""" + download_url + """\" sparkle:version=\"""" + newVersion + """\" sparkle:shortVersionString=\"""" + newVersionString + """\" length=\"""" + fileSize + """\" type=\"""" + type + """\" sparkle:dsaSignature=\"""" + appcastSignature + """\" />
+        </item>
+    </channel>
+</rss>
+"""
     
     # read from the source directory
     appcastURL = NSURL.URLWithString_(APPCAST_URL)
@@ -445,6 +463,8 @@ if __name__ == '__main__':
     
     if identity != "":
         codesign(identity)
+    else:
+        sys.stderr.write("warning: built product will not be codesigned\n")
     
     new_version, new_version_string, minimum_system_version = read_versions()
     
@@ -468,6 +488,8 @@ if __name__ == '__main__':
             assert rc == 0, "stapler failed"
             os.unlink(archive_path)
             archive_path = create_zip_of_application(new_version_string)
+    else:
+            sys.stderr.write("warning: built product will not be notarized\n")
     
     try:
         # probably already exists
