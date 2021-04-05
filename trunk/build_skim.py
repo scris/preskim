@@ -345,7 +345,7 @@ def signature_and_size(archive_path):
     
 def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_path, outputPath):
     
-    print("create Sparkle sappcast for %s" % (archive_path))
+    print("create Sparkle appcast for %s" % (archive_path))
     
     appcastSignature, fileSize = signature_and_size(archive_path)
     download_url = "https://sourceforge.net/projects/skim/files/Skim/Skim-" + newVersionString + "/" + os.path.basename(archive_path) + "/download"
