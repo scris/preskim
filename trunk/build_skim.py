@@ -418,18 +418,20 @@ def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_pa
         assert newNodes is not None, error
         
         # insert a copy of the new node
-        parentChannel.addChild_(newNodes.lastObject().copy())
+        parentChannel.insertChild_atIndex_(newNodes.lastObject().copy(), 0)
         
         # write to user Desktop
         appcastPath = os.path.join(outputPath , "skim.xml")
         
         # write to NSData, since pretty printing didn't work with NSXMLDocument writing
         oldDoc.XMLDataWithOptions_(NSXMLNodePrettyPrint).writeToFile_atomically_(appcastPath, True)
-    
-    appcastPath = os.path.join(outputPath , "Skim-" + newVersionString + ".xml")
-    appcastFile = open(appcastPath, "w")
-    appcastFile.write(newItemString)
-    appcastFile.close()
+        
+    else:
+        
+        appcastPath = os.path.join(outputPath , "Skim-" + newVersionString + ".xml")
+        appcastFile = open(appcastPath, "w")
+        appcastFile.write(newItemString)
+        appcastFile.close()
 
 def get_options():
     
