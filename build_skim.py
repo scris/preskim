@@ -391,11 +391,11 @@ def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_pa
     
     # xml doc from the current appcast
     (oldDoc, error) = NSXMLDocument.alloc().initWithContentsOfURL_options_error_(appcastURL, NSXMLNodePreserveCDATA, None)
-    assert oldDoc is not None, error
+    assert oldDoc is not None, str(error)
     
     # xml doc from the new appcast string
     (newDoc, error) = NSXMLDocument.alloc().initWithXMLString_options_error_(newItemString, NSXMLNodePreserveCDATA, None)
-    assert newDoc is not None, error
+    assert newDoc is not None, str(error)
     
     # get an arry of the current item titles
     (oldTitles, error) = oldDoc.nodesForXPath_error_("//item/title", None)
@@ -415,7 +415,7 @@ def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_pa
         
         # now get the new node
         (newNodes, error) = newDoc.nodesForXPath_error_("//item", None)
-        assert newNodes is not None, error
+        assert newNodes is not None, str(error)
         
         # insert a copy of the new node
         parentChannel.insertChild_atIndex_(newNodes.lastObject().copy(), 0)
