@@ -425,13 +425,11 @@ def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_pa
         
         # write to NSData, since pretty printing didn't work with NSXMLDocument writing
         oldDoc.XMLDataWithOptions_(NSXMLNodePrettyPrint).writeToFile_atomically_(appcastPath, True)
-        
-    else:
-        
-        appcastPath = os.path.join(outputPath , "Skim-" + newVersionString + ".xml")
-        appcastFile = open(appcastPath, "w")
-        appcastFile.write(newItemString)
-        appcastFile.close()
+    
+    appcastPath = os.path.join(outputPath , "Skim-" + newVersionString + ".xml")
+    appcastFile = open(appcastPath, "w")
+    appcastFile.write(newItemString)
+    appcastFile.close()
 
 def get_options():
     
