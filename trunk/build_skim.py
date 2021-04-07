@@ -365,7 +365,7 @@ def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_pa
             <title>Version """ + newVersionString + """</title>
             <description>
             <![CDATA[
-<h1>Version ${VERSION}</h1>
+<h1>Version """ + newVersionString + """</h1>
 
 <h2>New Features</h2>
 <ul>
