@@ -60,15 +60,14 @@
 #
 
 import os, sys, io, getopt
+import codecs
 from subprocess import Popen, PIPE
 from stat import ST_SIZE
-import tarfile
 from time import gmtime, strftime, localtime, sleep
 import plistlib
 import tempfile
+import urllib
 from getpass import getuser
-
-from Foundation import NSXMLDocument, NSUserDefaults, NSURL, NSXMLNodePrettyPrint, NSXMLNodePreserveCDATA
 
 # determine the path based on the path of this program
 SOURCE_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -79,6 +78,7 @@ assert SOURCE_DIR.startswith("/")
 KEY_NAME = "Skim Sparkle Key"
 
 APPCAST_URL = "https://skim-app.sourceforge.io/skim.xml"
+RELNOTES_URL = "https://skim-app.sourceforge.io/relnotes.html"
 
 # create a private temporary directory
 BUILD_ROOT = os.path.join("/tmp", "Skim-%s" % (getuser()))
@@ -94,6 +94,7 @@ BUILD_DIR = os.path.join(SYMROOT, "Release")
 BUILT_APP = os.path.join(BUILD_DIR, "Skim.app")
 DERIVED_DATA_DIR = os.path.join(BUILD_ROOT, "DerivedData")
 PLIST_PATH = os.path.join(BUILT_APP, "Contents", "Info.plist")
+RELNOTES_PATH = os.path.join(BUILT_APP, "Contents", "Resources", "ReleaseNotes.rtf")
 
 def read_versions():
 
@@ -304,6 +305,57 @@ def create_zip_of_application(new_version_number):
     
     return final_zip_name 
 
+def release_notes():
+    
+    f = codecs.open(RELNOTES_PATH, "r", encoding="utf-8")
+    relNotes = f.read()
+    f.close()
+    
+    changeString = "\cf2 Changes since "
+    endLineString = "\\\n"
+    itemString = "{\\listtext\t\uc0\u8226 \t}"
+    
+    changeStart = relNotes.find(changeString)
+    if changeStart is not -1:
+        changeEnd = relNotes.find(endLineString, changeStart)
+        if changeEnd is not -1:
+            oldVersion = relNotes[changeStart + len(changeString):changeEnd]
+        else:
+            oldVersion = ""
+        prevChangeStart = relNotes.find(changeString, changeStart + len(changeString))
+        if prevChangeStart is not -1:
+            relNotes = relNotes[changeStart:prevChangeStart]
+        else:
+            relNotes = relNotes[changeStart]
+    
+    newFeatures = []
+    bugsFixed = []
+    
+    start = relNotes.find("Bugs Fixed")
+    endBugs = len(relNotes)
+    endNew = len(relNotes)
+    if start is not -1:
+        endNew = start
+        while True:
+            start = relNotes.find(itemString, start, endBugs)
+            if start is -1:
+                break
+            start = start + len(itemString)
+            end = relNotes.find(endLineString, start, endBugs)
+            bugsFixed.append(relNotes[start:end])
+    
+    start = relNotes.find("New Features")
+    if start is not -1:
+        while True:
+            start = relNotes.find(itemString, start, endNew)
+            if start is -1:
+                break
+            start = start + len(itemString)
+            end = relNotes.find(endLineString, start, endNew)
+            newFeatures.append(relNotes[start:end])
+    
+    return newFeatures, bugsFixed, oldVersion
+
 def keyFromSecureNote():
     
     # see http://www.entropy.ch/blog/Developer/2008/09/22/Sparkle-Appcast-Automation-in-Xcode.html
@@ -345,7 +397,7 @@ def signature_and_size(archive_path):
     
     return appcastSignature, fileSize
     
-def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_path, outputPath):
+def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemVersion, archive_path, outputPath):
     
     print("create Sparkle appcast for %s" % (archive_path))
     
@@ -357,26 +409,28 @@ def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_pa
     else:
         type = "application/zip"
     
-    # creating this from a string is easier than manipulating NSXMLNodes...
+    newFeatures, bugsFixed, oldVersionString = release_notes()
+    
+    relNotes = "\n<h1>Version " + newVersionString + "</h1>\n"
+    if len(newFeatures) > 0:
+        relNotes = relNotes + "\n<h2>New Features</h2>\n<ul>\n"
+        for item in newFeatures:
+            relNotes = relNotes + "<li>" + item + "</li>\n"
+        relNotes = relNotes + "</ul>\n"
+    if len(bugsFixed) > 0:
+        relNotes = relNotes + "\n<h2>Bugs Fixed</h2>\n<ul>\n"
+        for item in bugsFixed:
+            relNotes = relNotes + "<li>" + item + "</li>\n"
+        relNotes = relNotes + "</ul>\n"
+    
+    # the new item string for the appcast
     newItemString = """<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
         <item>
             <title>Version """ + newVersionString + """</title>
             <description>
-            <![CDATA[
-<h1>Version """ + newVersionString + """</h1>
-
-<h2>New Features</h2>
-<ul>
-<li></li>
-</ul>
-
-<h2>Bugs Fixed</h2>
-<ul>
-<li></li>
-</ul>
-            ]]>
+            <![CDATA[""" + relNotes + """            ]]>
             </description>
             <pubDate>""" + appcastDate + """</pubDate>
             <sparkle:minimumSystemVersion>""" + minimumSystemVersion + """</sparkle:minimumSystemVersion>
@@ -387,51 +441,72 @@ def write_appcast(newVersion, newVersionString, minimumSystemVersion, archive_pa
 """
     
     # read from the source directory
-    appcastURL = NSURL.URLWithString_(APPCAST_URL)
+    appcastString = urllib.urlopen(APPCAST_URL).read().decode("utf-8")
     
-    # xml doc from the current appcast
-    (oldDoc, error) = NSXMLDocument.alloc().initWithContentsOfURL_options_error_(appcastURL, NSXMLNodePreserveCDATA, None)
-    assert oldDoc is not None, str(error)
-    
-    # xml doc from the new appcast string
-    (newDoc, error) = NSXMLDocument.alloc().initWithXMLString_options_error_(newItemString, NSXMLNodePreserveCDATA, None)
-    assert newDoc is not None, str(error)
-    
-    # get an arry of the current item titles
-    (oldTitles, error) = oldDoc.nodesForXPath_error_("//item/title", None)
-    assert oldTitles.count > 0, "oldTitles had no elements"
-    
-    # now get the title we just created
-    (newTitles, error) = newDoc.nodesForXPath_error_("//item/title", None)
-    assert newTitles.count() is 1, "newTitles must have a single element"
-    
-    # easy test to avoid duplicating items
-    if oldTitles.containsObject_(newTitles.lastObject()) is False:
-
-        # get the parent node we'll be inserting to
-        (parentChannel, error) = oldDoc.nodesForXPath_error_("//channel", None)
-        assert parentChannel.count() is 1, "channel count must be one"
-        parentChannel = parentChannel.lastObject()
-        
-        # now get the new node
-        (newNodes, error) = newDoc.nodesForXPath_error_("//item", None)
-        assert newNodes is not None, str(error)
-        
-        # insert a copy of the new node
-        parentChannel.insertChild_atIndex_(newNodes.lastObject().copy(), 0)
-        
-        # write to user Desktop
-        appcastPath = os.path.join(outputPath , "skim.xml")
-        
-        # write to NSData, since pretty printing didn't work with NSXMLDocument writing
-        oldDoc.XMLDataWithOptions_(NSXMLNodePrettyPrint).writeToFile_atomically_(appcastPath, True)
-        
+    # find insertion point for the new item
+    insert = -1
+    start = -1
+    end = -1
+    if appcastString.find("<title>Version " + newVersionString + "</title>") is -1:
+        insert = appcastString.find("<channel>")
+        start = newItemString.find("<channel>")
+        end = newItemString.find("</item>")
+    if insert is not -1 and start is not -1 and end is not -1:
+        appcastString = appcastString[:insert+9] + newItemString[start+9:end+7] + appcastString[insert+9:]
+        appcastName = "skim.xml"
     else:
-        
-        appcastPath = os.path.join(outputPath , "Skim-" + newVersionString + ".xml")
-        appcastFile = open(appcastPath, "w")
-        appcastFile.write(newItemString)
-        appcastFile.close()
+        appcastString = newItemString
+        appcastName = "skim-" + newVersionString + ".xml"
+    
+    appcastPath = os.path.join(outputPath , "test_" + appcastName)
+    appcastFile = codecs.open(appcastPath, "w", "utf-8")
+    appcastFile.write(newItemString)
+    appcastFile.close()
+    
+    # construct the ReadMe file
+    readMe = "Release notes for Skim version " + newVersionString + "\n"
+    if len(newFeatures) > 0:
+        readMe = readMe + "\nNew Features\n"
+        for item in newFeatures:
+            readMe = readMe + "  *  " + item + "\n"
+    if len(bugsFixed) > 0:
+        readMe = readMe + "\nBugs Fixed\n"
+        for item in bugsFixed:
+            readMe = readMe + "  *  " + item + "\n"
+    
+    # write the ReadMe file
+    readMePath = os.path.join(outputPath , "ReadMe-" + newVersionString + ".txt")
+    readMeFile = codecs.open(readMePath, "w", "utf-8")
+    readMeFile.write(readMe)
+    readMeFile.close()
+    
+    # construct relnotes.html
+    newline = "\n        "
+    relNotes = "<h1>Changes since " + oldVersionString + "</h1>" + newline + newline
+    if len(newFeatures) > 0:
+        relNotes = relNotes + "<h2>New Features</h2>" + newline + newline + "<ul>" + newline
+        for item in newFeatures:
+            relNotes = relNotes + "    <li>" + item + "</li>" + newline
+        relNotes = relNotes + "</ul>" + newline + newline
+    if len(bugsFixed) > 0:
+        relNotes = relNotes + "<h2>Bugs Fixed</h2>" + newline + newline + "<ul>" + newline
+        for item in bugsFixed:
+            relNotes = relNotes + "    <li>" + item + "</li>" + newline
+        relNotes = relNotes + "</ul>" + newline + newline
+    
+    releaseNotes = urllib.urlopen(RELNOTES_URL).read().decode("utf-8")
+    
+    start = releaseNotes.find("<title>")
+    end = releaseNotes.find("</title>")
+    releaseNotes = releaseNotes[:start+7] + "Skim " + newVersionString + releaseNotes[end:]
+    start = releaseNotes.find("<h1>Changes")
+    releaseNotes = releaseNotes[:start] + relNotes + releaseNotes[start:]
+    
+    # construct relnotes.html
+    relnotesPath = os.path.join(outputPath , "relnotes.html")
+    relnotesFile = codecs.open(relnotesPath, "w", "utf-8")
+    relnotesFile.write(releaseNotes)
+    relnotesFile.close()
 
 def get_options():
     
@@ -505,7 +580,7 @@ if __name__ == '__main__':
     except Exception as e:
         assert os.path.isdir(out), "%s does not exist" % (out)
     
-    write_appcast(new_version, new_version_string, minimum_system_version, archive_path, out)
+    write_appcast_and_release_notes(new_version, new_version_string, minimum_system_version, archive_path, out)
     
     target_path = os.path.join(out, os.path.basename(archive_path))
     if (os.path.exists(target_path)):
