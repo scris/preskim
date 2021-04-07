@@ -402,7 +402,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     print("create Sparkle appcast for %s" % (archive_path))
     
     appcastSignature, fileSize = signature_and_size(archive_path)
-    download_url = "https://sourceforge.net/projects/skim/files/Skim/Skim-" + newVersionString + "/" + os.path.basename(archive_path) + "/download"
+    download_url = "https://sourceforge.net/projects/skim-app/files/Skim/Skim-" + newVersionString + "/" + os.path.basename(archive_path) + "/download"
     appcastDate = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
     if archive_path.endswith("dmg"):
         type = "application/x-apple-diskimage"
