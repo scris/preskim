@@ -427,7 +427,6 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     relNotes = "\n<h1>Version " + newVersionString + "</h1>\n"
     if len(note) > 0:
         "\n<p>\n<em><b>Note:</b> " + note + "</em>\n</p>\n"
-    
     if len(newFeatures) > 0:
         relNotes = relNotes + "\n<h2>New Features</h2>\n<ul>\n"
         for item in newFeatures:
