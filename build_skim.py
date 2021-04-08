@@ -311,7 +311,7 @@ def release_notes():
     relNotes = f.read()
     f.close()
     
-    changeString = "\cf2 Changes since "
+    changeString = "Changes since "
     endLineString = "\\\n"
     itemString = "{\\listtext\t\uc0\u8226 \t}"
     
@@ -319,14 +319,17 @@ def release_notes():
     if changeStart is not -1:
         changeEnd = relNotes.find(endLineString, changeStart)
         if changeEnd is not -1:
-            oldVersion = relNotes[changeStart + len(changeString):changeEnd]
+            changesSince = relNotes[changeStart:changeEnd]
         else:
-            oldVersion = ""
+            changesSince = ""
         prevChangeStart = relNotes.find(changeString, changeStart + len(changeString))
         if prevChangeStart is not -1:
             relNotes = relNotes[changeStart:prevChangeStart]
         else:
             relNotes = relNotes[changeStart]
+    else:
+        changesSince = ""
+        relNotes = ""
     
     newFeatures = []
     bugsFixed = []
@@ -354,7 +357,7 @@ def release_notes():
             end = relNotes.find(endLineString, start, endNew)
             newFeatures.append(relNotes[start:end])
     
-    return newFeatures, bugsFixed, oldVersion
+    return newFeatures, bugsFixed, changesSince
 
 def keyFromSecureNote():
     
@@ -409,7 +412,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     else:
         type = "application/zip"
     
-    newFeatures, bugsFixed, oldVersionString = release_notes()
+    newFeatures, bugsFixed, changesSince = release_notes()
     
     relNotes = "\n<h1>Version " + newVersionString + "</h1>\n"
     if len(newFeatures) > 0:
@@ -482,7 +485,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     
     # construct relnotes.html
     newline = "\n        "
-    relNotes = "<h1>Changes since " + oldVersionString + "</h1>" + newline + newline
+    relNotes = "<h1>" + changesSince + "</h1>" + newline + newline
     if len(newFeatures) > 0:
         relNotes = relNotes + "<h2>New Features</h2>" + newline + newline + "<ul>" + newline
         for item in newFeatures:
