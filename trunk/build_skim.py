@@ -314,8 +314,11 @@ def release_notes():
     changeString = "Changes since "
     endLineString = "\\\n"
     itemString = "{\\listtext\t\uc0\u8226 \t}"
-    noteString = "Note:\n\f4\i\b0\fs24 \cf0 "
-    
+    noteString1 = "Note:\n\f4\i\b0\fs24 \cf0 "
+    noteString2 = "NOTE:\n\f4\i\b0\fs24 \cf0 "
+    noteString3 = "Note:  "
+    noteString4 = "NOTE:  "
+
     changeStart = relNotes.find(changeString)
     if changeStart is not -1:
         changeEnd = relNotes.find(endLineString, changeStart)
@@ -361,13 +364,22 @@ def release_notes():
             newFeatures.append(relNotes[start:end])
     
     note = ""
-    start = relNotes.find(noteString, 0, endNote)
+    noteType = 0
+    start = relNotes.find(noteString1, 0, endNote)
+    if start is -1:
+        start = relNotes.find(noteString2, 0, endNote)
+    if start is -1:
+        start = relNotes.find(noteString3, 0, endNote)
+        if start is -1:
+            start = relNotes.find(noteString4, 0, endNote)
+    else:
+        noteType = 1
     if start is not -1:
         end = relNotes.find(relNotes, start, endNote)
         if end is not -1:
             note = strip(relNotes[start:end])
 
-    return newFeatures, bugsFixed, changesSince, note
+    return newFeatures, bugsFixed, changesSince, note, noteType
 
 def keyFromSecureNote():
     
@@ -422,11 +434,11 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     else:
         type = "application/zip"
     
-    newFeatures, bugsFixed, changesSince, note = release_notes()
+    newFeatures, bugsFixed, changesSince, note, noteType = release_notes()
     
     relNotes = "\n<h1>Version " + newVersionString + "</h1>\n"
-    if len(note) > 0:
-        "\n<p>\n<em><b>Note:</b> " + note + "</em>\n</p>\n"
+    if len(note) > 0 and noteType is 1:
+        "\n<p>\n<em><b>NOTE:</b> " + note + "</em>\n</p>\n"
     if len(newFeatures) > 0:
         relNotes = relNotes + "\n<h2>New Features</h2>\n<ul>\n"
         for item in newFeatures:
@@ -481,7 +493,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     # construct the ReadMe file
     readMe = "Release notes for Skim version " + newVersionString + "\n"
     if len(note) > 0:
-        readMe = readMe + "\nNote: " + note + "\n"
+        readMe = readMe + "\nNOTE: " + note + "\n"
     if len(newFeatures) > 0:
         readMe = readMe + "\nNew Features\n"
         for item in newFeatures:
@@ -501,7 +513,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     newline = "\n        "
     relNotes = "<h1>" + changesSince + "</h1>" + newline + newline
     if len(note) > 0:
-        relNotes = relNotes + "<b>Note:</b>  " + note + newline + newline
+        relNotes = relNotes + "<b>NOTE:</b>  " + note + newline + newline
     if len(newFeatures) > 0:
         relNotes = relNotes + "<h2>New Features</h2>" + newline + newline + "<ul>" + newline
         for item in newFeatures:
