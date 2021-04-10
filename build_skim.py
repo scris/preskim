@@ -78,7 +78,6 @@ assert SOURCE_DIR.startswith("/")
 KEY_NAME = "Skim Sparkle Key"
 
 APPCAST_URL = "https://skim-app.sourceforge.io/skim.xml"
-RELNOTES_URL = "https://skim-app.sourceforge.io/relnotes.html"
 
 # create a private temporary directory
 BUILD_ROOT = os.path.join("/tmp", "Skim-%s" % (getuser()))
@@ -94,7 +93,6 @@ BUILD_DIR = os.path.join(SYMROOT, "Release")
 BUILT_APP = os.path.join(BUILD_DIR, "Skim.app")
 DERIVED_DATA_DIR = os.path.join(BUILD_ROOT, "DerivedData")
 PLIST_PATH = os.path.join(BUILT_APP, "Contents", "Info.plist")
-RELNOTES_PATH = os.path.join(BUILT_APP, "Contents", "Resources", "ReleaseNotes.rtf")
 
 def read_versions():
 
@@ -364,22 +362,19 @@ def release_notes():
             newFeatures.append(relNotes[start:end])
     
     note = ""
-    noteType = 0
     start = relNotes.find(noteString1, 0, endNote)
     if start is -1:
         start = relNotes.find(noteString2, 0, endNote)
-    if start is -1:
-        start = relNotes.find(noteString3, 0, endNote)
         if start is -1:
-            start = relNotes.find(noteString4, 0, endNote)
-    else:
-        noteType = 1
+            start = relNotes.find(noteString3, 0, endNote)
+            if start is -1:
+                start = relNotes.find(noteString4, 0, endNote)
     if start is not -1:
         end = relNotes.find(relNotes, start, endNote)
-        if end is not -1:
+        if end > start:
             note = strip(relNotes[start:end])
 
-    return newFeatures, bugsFixed, changesSince, note, noteType
+    return newFeatures, bugsFixed, changesSince, note
 
 def keyFromSecureNote():
     
@@ -434,10 +429,10 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     else:
         type = "application/zip"
     
-    newFeatures, bugsFixed, changesSince, note, noteType = release_notes()
+    newFeatures, bugsFixed, changesSince, note = release_notes()
     
     relNotes = "\n<h1>Version " + newVersionString + "</h1>\n"
-    if len(note) > 0 and noteType is 1:
+    if len(note) > 0:
         "\n<p>\n<em><b>NOTE:</b> " + note + "</em>\n</p>\n"
     if len(newFeatures) > 0:
         relNotes = relNotes + "\n<h2>New Features</h2>\n<ul>\n"
@@ -508,36 +503,6 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     readMeFile = codecs.open(readMePath, "w", "utf-8")
     readMeFile.write(readMe)
     readMeFile.close()
-    
-    # construct relnotes.html
-    newline = "\n        "
-    relNotes = "<h1>" + changesSince + "</h1>" + newline + newline
-    if len(note) > 0:
-        relNotes = relNotes + "<b>NOTE:</b>  " + note + newline + newline
-    if len(newFeatures) > 0:
-        relNotes = relNotes + "<h2>New Features</h2>" + newline + newline + "<ul>" + newline
-        for item in newFeatures:
-            relNotes = relNotes + "    <li>" + item + "</li>" + newline
-        relNotes = relNotes + "</ul>" + newline + newline
-    if len(bugsFixed) > 0:
-        relNotes = relNotes + "<h2>Bugs Fixed</h2>" + newline + newline + "<ul>" + newline
-        for item in bugsFixed:
-            relNotes = relNotes + "    <li>" + item + "</li>" + newline
-        relNotes = relNotes + "</ul>" + newline + newline
-    
-    releaseNotes = urllib.urlopen(RELNOTES_URL).read().decode("utf-8")
-    
-    start = releaseNotes.find("<title>")
-    end = releaseNotes.find("</title>")
-    releaseNotes = releaseNotes[:start+7] + "Skim " + newVersionString + releaseNotes[end:]
-    start = releaseNotes.find("<h1>Changes")
-    releaseNotes = releaseNotes[:start] + relNotes + releaseNotes[start:]
-    
-    # construct relnotes.html
-    relnotesPath = os.path.join(outputPath , "relnotes.html")
-    relnotesFile = codecs.open(relnotesPath, "w", "utf-8")
-    relnotesFile.write(releaseNotes)
-    relnotesFile.close()
 
 def get_options():
     
