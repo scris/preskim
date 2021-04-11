@@ -319,18 +319,12 @@ def release_notes():
 
     changeStart = relNotes.find(changeString)
     if changeStart is not -1:
-        changeEnd = relNotes.find(endLineString, changeStart)
-        if changeEnd is not -1:
-            changesSince = relNotes[changeStart:changeEnd]
-        else:
-            changesSince = ""
         prevChangeStart = relNotes.find(changeString, changeStart + len(changeString))
         if prevChangeStart is not -1:
             relNotes = relNotes[changeStart:prevChangeStart]
         else:
             relNotes = relNotes[changeStart]
     else:
-        changesSince = ""
         relNotes = ""
     
     newFeatures = []
@@ -374,7 +368,7 @@ def release_notes():
         if end > start:
             note = strip(relNotes[start:end])
 
-    return newFeatures, bugsFixed, changesSince, note
+    return newFeatures, bugsFixed, note
 
 def keyFromSecureNote():
     
@@ -429,7 +423,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     else:
         type = "application/zip"
     
-    newFeatures, bugsFixed, changesSince, note = release_notes()
+    newFeatures, bugsFixed, note = release_notes()
     
     relNotes = "\n<h1>Version " + newVersionString + "</h1>\n"
     if len(note) > 0:
