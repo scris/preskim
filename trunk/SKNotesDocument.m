@@ -535,7 +535,7 @@
     NSTableColumn *tableColumn = [outlineView tableColumnWithIdentifier:NOTE_COLUMNID];
     id cell = [tableColumn dataCell];
     NSRect rect = NSMakeRect(0.0, 0.0, [tableColumn width] - COLUMN_INDENTATION, CGFLOAT_MAX);
-    NSRect fullRect = NSMakeRect(0.0, 0.0, NSWidth([outlineView frame]) - COLUMN_INDENTATION - [outlineView indentationPerLevel], CGFLOAT_MAX);
+    NSRect fullRect = NSMakeRect(0.0, 0.0, NSWidth([outlineView frameOfCellAtColumn:-1 row:0]) - [outlineView indentationPerLevel], CGFLOAT_MAX);
     NSMutableIndexSet *rowIndexes = nil;
     NSArray *items = [sender representedObject];
     NSInteger row;
@@ -808,7 +808,7 @@
             id cell = [tableColumn dataCell];
             [cell setObjectValue:[item objectValue]];
             if ([(PDFAnnotation *)item type] == nil) {
-                rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, fmax(10.0, NSWidth([ov frame]) - COLUMN_INDENTATION - [ov indentationPerLevel]), CGFLOAT_MAX)].height;
+                rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, fmax(10.0, NSWidth([ov frameOfCellAtColumn:-1 row:0]) - [ov indentationPerLevel]), CGFLOAT_MAX)].height;
             } else if ([tableColumn isHidden] == NO) {
                 rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, [tableColumn width] - COLUMN_INDENTATION, CGFLOAT_MAX)].height;
             }
