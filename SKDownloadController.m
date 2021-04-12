@@ -52,7 +52,6 @@
 #import "NSFileManager_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 #import "SKToolbarItem.h"
-#import "SKLocalization.h"
 #import "NSImage_SKExtensions.h"
 
 #if SDK_BEFORE(10_12)
@@ -147,10 +146,6 @@ static SKDownloadController *sharedDownloadController = nil;
 }
 
 - (void)windowDidLoad {
-    // this isn't done by the superclass because it is not part of the window
-    [clearButton localizeStringsFromTable:[self windowNibName]];
-    [clearButton sizeToFit];
-    
     [self setupToolbar];
     
     [[self window] setTitleVisibility:NSWindowTitleHidden];

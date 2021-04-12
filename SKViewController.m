@@ -37,14 +37,12 @@
  */
 
 #import "SKViewController.h"
-#import "SKLocalization.h"
 
 
 @implementation SKViewController
 
 - (void)loadView {
     [super loadView];
-    [[self view] localizeStringsFromTable:[self nibName]];
 }
 
 @end

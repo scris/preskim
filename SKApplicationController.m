@@ -67,7 +67,6 @@
 #import "PDFAnnotationFreeText_SKExtensions.h"
 #import "PDFAnnotationText_SKExtensions.h"
 #import "SKFDFParser.h"
-#import "SKLocalization.h"
 #import "SKScriptMenu.h"
 #import "NSScreen_SKExtensions.h"
 #import "NSError_SKExtensions.h"
@@ -163,8 +162,6 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 }
 
 - (void)awakeFromNib {
-    [[NSApp mainMenu] localizeStringsFromTable:@"MainMenu"];
-    
     NSMenu *menu = [[[NSApp mainMenu] itemAtIndex:VIEW_MENU_INDEX] submenu];
     for (NSMenuItem *menuItem in [menu itemArray]) {
         if ([menuItem action] == @selector(changeLeftSidePaneState:) || [menuItem action] == @selector(changeRightSidePaneState:))

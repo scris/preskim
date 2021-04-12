@@ -37,14 +37,12 @@
  */
 
 #import "SKWindowController.h"
-#import "SKLocalization.h"
 
 
 @implementation SKWindowController
 
 - (void)loadWindow {
     [super loadWindow];
-    [[self window] localizeStringsFromTable:[self windowNibName]];
 }
 
 @end
