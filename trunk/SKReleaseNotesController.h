@@ -37,10 +37,8 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKWindowController.h"
 
-
-@interface SKReleaseNotesController : SKWindowController {
+@interface SKReleaseNotesController : NSWindowController {
     NSTextView *textView;
 }
 

@@ -38,13 +38,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
-#import "SKWindowController.h"
 #import "SKDragImageView.h"
 
 
 @class PDFAnnotation, SKStatusBar, SKNoteTextView;
 
-@interface SKNoteWindowController : SKWindowController <NSWindowDelegate, SKDragImageViewDelegate, NSPasteboardItemDataProvider, NSFilePromiseProviderDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, QLPreviewItem> {
+@interface SKNoteWindowController : NSWindowController <NSWindowDelegate, SKDragImageViewDelegate, NSPasteboardItemDataProvider, NSFilePromiseProviderDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, QLPreviewItem> {
     SKNoteTextView *textView;
     NSView *topView;
     NSBox *edgeView;

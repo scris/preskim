@@ -38,7 +38,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
-#import "SKWindowController.h"
 
 extern NSString *SKLineInspectorLineAttributeDidChangeNotification;
 
@@ -53,7 +52,7 @@ typedef NS_ENUM(NSUInteger, SKLineChangeAction) {
 
 @class SKLineWell;
 
-@interface SKLineInspector : SKWindowController {
+@interface SKLineInspector : NSWindowController {
     NSSegmentedControl *styleButton;
     NSSegmentedControl *startLineStyleButton;
     NSSegmentedControl *endLineStyleButton;

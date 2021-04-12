@@ -38,11 +38,10 @@
 
 #import <Cocoa/Cocoa.h>
 #import "SKPreferenceController.h"
-#import "SKViewController.h"
 
 @class SKFontWell, SKLineWell;
 
-@interface SKNotesPreferences : SKViewController <SKPreferencePane> {
+@interface SKNotesPreferences : NSViewController <SKPreferencePane> {
     SKFontWell *textFontWell;
     SKFontWell *anchoredFontWell;
     SKLineWell *textLineWell;

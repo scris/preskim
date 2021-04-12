@@ -38,13 +38,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
-#import "SKWindowController.h"
 #import "SKOutlineView.h"
 #import "NSTouchBar_SKForwardDeclarations.h"
 
 @class SKBookmark, SKStatusBar;
 
-@interface SKBookmarkController : SKWindowController <NSWindowDelegate, NSToolbarDelegate, NSMenuDelegate, SKOutlineViewDelegate, NSOutlineViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSTouchBarDelegate> {
+@interface SKBookmarkController : NSWindowController <NSWindowDelegate, NSToolbarDelegate, NSMenuDelegate, SKOutlineViewDelegate, NSOutlineViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSTouchBarDelegate> {
     SKOutlineView *outlineView;
     SKStatusBar *statusBar;
     NSButton *newFolderButton;

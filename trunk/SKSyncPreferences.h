@@ -38,12 +38,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import "SKPreferenceController.h"
-#import "SKViewController.h"
 
 extern NSString *SKSyncTeXEditorCommandKey;
 extern NSString *SKSyncTeXEditorArgumentsKey;
 
-@interface SKSyncPreferences : SKViewController <SKPreferencePane> {
+@interface SKSyncPreferences : NSViewController <SKPreferencePane> {
     NSPopUpButton *texEditorPopUpButton;
     BOOL customTeXEditor;
 }

@@ -38,10 +38,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import "SKPreferenceController.h"
-#import "SKViewController.h"
 
 
-@interface SKGeneralPreferences : SKViewController <SKPreferencePane> {
+@interface SKGeneralPreferences : NSViewController <SKPreferencePane> {
     NSPopUpButton *updateIntervalPopUpButton;
     NSInteger updateInterval;
 }

@@ -37,10 +37,9 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKWindowController.h"
 
 
-@interface SKInfoWindowController : SKWindowController {
+@interface SKInfoWindowController : NSWindowController {
     NSTableView *summaryTableView;
     NSTableView *attributesTableView;
     NSTabView *tabView;

@@ -37,11 +37,10 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKViewController.h"
 
 @protocol SKFindControllerDelegate;
 
-@interface SKFindController : SKViewController {
+@interface SKFindController : NSViewController {
     id <SKFindControllerDelegate> delegate;
     NSSearchField *findField;
     NSTextField *messageField;
