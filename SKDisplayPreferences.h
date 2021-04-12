@@ -38,11 +38,10 @@
 
 #import <Cocoa/Cocoa.h>
 #import "SKPreferenceController.h"
-#import "SKViewController.h"
 
 @class SKColorSwatch;
 
-@interface SKDisplayPreferences : SKViewController <SKPreferencePane> {
+@interface SKDisplayPreferences : NSViewController <SKPreferencePane> {
     NSColorWell *normalColorWell;
     NSColorWell *fullScreenColorWell;
     SKColorSwatch *colorSwatch;

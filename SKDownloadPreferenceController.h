@@ -37,11 +37,10 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKWindowController.h"
 #import "NSTouchBar_SKForwardDeclarations.h"
 
 
-@interface SKDownloadPreferenceController : SKWindowController <NSTouchBarDelegate> {
+@interface SKDownloadPreferenceController : NSWindowController <NSTouchBarDelegate> {
     NSButton *doneButton;
     NSPopUpButton *downloadsFolderPopUp;
 }

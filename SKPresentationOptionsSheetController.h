@@ -37,14 +37,13 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKWindowController.h"
 #import "SKTransitionController.h"
 #import "SKTableView.h"
 #import "NSTouchBar_SKForwardDeclarations.h"
 
 @class SKMainWindowController, SKThumbnail, SKTransitionInfo, SKScroller;
 
-@interface SKPresentationOptionsSheetController : SKWindowController <NSWindowDelegate, SKTableViewDelegate, NSTableViewDataSource, NSTouchBarDelegate> {
+@interface SKPresentationOptionsSheetController : NSWindowController <NSWindowDelegate, SKTableViewDelegate, NSTableViewDataSource, NSTouchBarDelegate> {
     NSPopUpButton *notesDocumentPopUpButton;
     SKTableView *tableView;
     NSPopUpButton *stylePopUpButton;

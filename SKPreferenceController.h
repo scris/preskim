@@ -37,12 +37,11 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKWindowController.h"
 #import "NSTouchBar_SKForwardDeclarations.h"
 
 @protocol SKPreferencePane;
 
-@interface SKPreferenceController : SKWindowController <NSWindowDelegate, NSTabViewDelegate, NSToolbarDelegate, NSTouchBarDelegate> {
+@interface SKPreferenceController : NSWindowController <NSWindowDelegate, NSTabViewDelegate, NSToolbarDelegate, NSTouchBarDelegate> {
     NSButton *resetButton;
     NSButton *resetAllButton;
     NSSegmentedControl *panesButton;

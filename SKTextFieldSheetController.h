@@ -37,11 +37,10 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKWindowController.h"
 #import "NSTouchBar_SKForwardDeclarations.h"
 
 
-@interface SKTextFieldSheetController : SKWindowController <NSTouchBarDelegate> {
+@interface SKTextFieldSheetController : NSWindowController <NSTouchBarDelegate> {
     NSTextField *textField;
     NSButton *okButton;
     NSButton *cancelButton;

@@ -38,10 +38,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
-#import "SKViewController.h"
 
 
-@interface SKPrintAccessoryController : SKViewController <NSPrintPanelAccessorizing>
+@interface SKPrintAccessoryController : NSViewController <NSPrintPanelAccessorizing>
 
 @property (nonatomic) BOOL autoRotate;
 @property (nonatomic) PDFPrintScalingMode printScalingMode;

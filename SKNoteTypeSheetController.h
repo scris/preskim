@@ -37,11 +37,10 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKWindowController.h"
 
 @protocol SKNoteTypeSheetControllerDelegate;
 
-@interface SKNoteTypeSheetController : SKWindowController {
+@interface SKNoteTypeSheetController : NSWindowController {
     NSMenu *noteTypeMenu;
     id <SKNoteTypeSheetControllerDelegate> delegate;
 }

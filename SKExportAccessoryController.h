@@ -37,10 +37,9 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKViewController.h"
 
 
-@interface SKExportAccessoryController : SKViewController {
+@interface SKExportAccessoryController : NSViewController {
     NSTextField *labelField;
     BOOL hasExportOptions, allowsEmbeddedOptions;
 }

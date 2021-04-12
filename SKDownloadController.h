@@ -38,14 +38,13 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
-#import "SKWindowController.h"
 #import "SKTableView.h"
 #import "NSTouchBar_SKForwardDeclarations.h"
 
 
 @class SKDownload;
 
-@interface SKDownloadController : SKWindowController <SKTableViewDelegate, NSTableViewDataSource, NSToolbarDelegate, NSURLSessionDelegate, QLPreviewPanelDelegate, QLPreviewPanelDataSource, NSTouchBarDelegate> {
+@interface SKDownloadController : NSWindowController <SKTableViewDelegate, NSTableViewDataSource, NSToolbarDelegate, NSURLSessionDelegate, QLPreviewPanelDelegate, QLPreviewPanelDataSource, NSTouchBarDelegate> {
     SKTableView *tableView;
     NSButton *clearButton;
     NSButton *tbClearButton;

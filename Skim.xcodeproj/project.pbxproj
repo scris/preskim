@@ -275,8 +275,6 @@
 		CEECD61C12E9E30B00B9E35E /* NSError_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEECD61B12E9E30B00B9E35E /* NSError_SKExtensions.m */; };
 		CEEE7C520E7D3F2000B7B208 /* PDFAnnotationInk_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEEE7C510E7D3F2000B7B208 /* PDFAnnotationInk_SKExtensions.m */; };
 		CEF60CE3114C01CA0074ACC4 /* SKLocalization.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF60CE2114C01CA0074ACC4 /* SKLocalization.m */; };
-		CEF60CF2114C07D90074ACC4 /* SKWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF60CF1114C07D90074ACC4 /* SKWindowController.m */; };
-		CEF60CF9114C08350074ACC4 /* SKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF60CF8114C08350074ACC4 /* SKViewController.m */; };
 		CEF60D6A114C0DA60074ACC4 /* TransitionSheet.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEF60D40114C0DA60074ACC4 /* TransitionSheet.strings */; };
 		CEF60D6C114C0DA60074ACC4 /* ScaleSheet.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEF60D44114C0DA60074ACC4 /* ScaleSheet.strings */; };
 		CEF60D6D114C0DA60074ACC4 /* ReleaseNotes.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEF60D46114C0DA60074ACC4 /* ReleaseNotes.strings */; };
@@ -1159,10 +1157,6 @@
 		CEF1D626117EFB760069E249 /* applehelp.init */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = applehelp.init; sourceTree = "<group>"; };
 		CEF60CE1114C01CA0074ACC4 /* SKLocalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKLocalization.h; sourceTree = "<group>"; };
 		CEF60CE2114C01CA0074ACC4 /* SKLocalization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKLocalization.m; sourceTree = "<group>"; };
-		CEF60CF0114C07D90074ACC4 /* SKWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKWindowController.h; sourceTree = "<group>"; };
-		CEF60CF1114C07D90074ACC4 /* SKWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKWindowController.m; sourceTree = "<group>"; };
-		CEF60CF7114C08350074ACC4 /* SKViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKViewController.h; sourceTree = "<group>"; };
-		CEF60CF8114C08350074ACC4 /* SKViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKViewController.m; sourceTree = "<group>"; };
 		CEF60D41114C0DA60074ACC4 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/TransitionSheet.strings; sourceTree = "<group>"; };
 		CEF60D45114C0DA60074ACC4 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ScaleSheet.strings; sourceTree = "<group>"; };
 		CEF60D47114C0DA60074ACC4 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ReleaseNotes.strings; sourceTree = "<group>"; };
@@ -1733,12 +1727,8 @@
 				CE1CF47123FAA1D7005B5B40 /* SKThumbnailItem.m */,
 				CEB72B890C4A189D000350F9 /* SKTransitionController.h */,
 				CE1ADEBE0C4C341100071840 /* SKTransitionController.m */,
-				CEF60CF7114C08350074ACC4 /* SKViewController.h */,
-				CEF60CF8114C08350074ACC4 /* SKViewController.m */,
 				CE426FC7255EDBDE00465569 /* SKViewSettingsController.h */,
 				CE426FC8255EDBDE00465569 /* SKViewSettingsController.m */,
-				CEF60CF0114C07D90074ACC4 /* SKWindowController.h */,
-				CEF60CF1114C07D90074ACC4 /* SKWindowController.m */,
 				CEF60F26114C53B40074ACC4 /* SKGeneralPreferences.h */,
 				CEF60F27114C53B40074ACC4 /* SKGeneralPreferences.m */,
 				CEF60F2A114C53DC0074ACC4 /* SKDisplayPreferences.h */,
@@ -2813,8 +2803,6 @@
 				CE24875C112C9651006B4FA5 /* NSFont_SKExtensions.m in Sources */,
 				CEF60CE3114C01CA0074ACC4 /* SKLocalization.m in Sources */,
 				CE454B51226E33150034FD6B /* SKHighlightingTableRowView.m in Sources */,
-				CEF60CF2114C07D90074ACC4 /* SKWindowController.m in Sources */,
-				CEF60CF9114C08350074ACC4 /* SKViewController.m in Sources */,
 				CEF60F28114C53B40074ACC4 /* SKGeneralPreferences.m in Sources */,
 				CEF60F2C114C53DC0074ACC4 /* SKDisplayPreferences.m in Sources */,
 				CEF60F2F114C54090074ACC4 /* SKNotesPreferences.m in Sources */,
