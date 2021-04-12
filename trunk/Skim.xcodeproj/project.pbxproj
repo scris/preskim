@@ -2609,7 +2609,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#\n# Run the ibtool build phase\n# This takes a while to generate, so it's not worth\n# the wait for development builds.\n#\nif [ \"${BUILD_STYLE}\" = \"Debug\" -o \"${CONFIGURATION}\" = \"Debug\" ]; then\nexit 0\nfi\n#\n# Run the ibtool build phase\n#\ncd \"${SOURCE_ROOT}/Base.lproj\"\n\nfor XIB_FILE in *.xib; do\n    STRINGS_FILE=\"../en.lproj/${XIB_FILE%.xib}.strings\"\n    /usr/bin/ibtool --export-strings-file \"${STRINGS_FILE}~\" \"${XIB_FILE}\"\n    if iconv -f utf-16 -t utf-8 \"${base_strings_file}~\" | grep -q '[^[:space:]]'; then\n        /bin/rm \"${STRINGS_FILE}\"\n        /bin/mv \"${STRINGS_FILE}~\" \"${STRINGS_FILE}\"\n    else\n        /bin/rm \"${STRINGS_FILE}~\"\n    fi\ndone;\n";
+			shellScript = "#\n# Run the ibtool build phase\n# This takes a while to generate, so it's not worth\n# the wait for development builds.\n#\nif [ \"${BUILD_STYLE}\" = \"Debug\" -o \"${CONFIGURATION}\" = \"Debug\" ]; then\nexit 0\nfi\n#\n# Run the ibtool build phase\n#\ncd \"${SOURCE_ROOT}/Base.lproj\"\n\nfor XIB_FILE in *.xib; do\n    STRINGS_FILE=\"../en.lproj/${XIB_FILE%.xib}.strings\"\n    /usr/bin/ibtool --export-strings-file \"${STRINGS_FILE}\" \"${XIB_FILE}\"\ndone;\n";
 		};
 		CEF82CA50C77286200A3AD51 /* Run Script: Build Help */ = {
 			isa = PBXShellScriptBuildPhase;
