@@ -1606,6 +1606,7 @@
 				CEF60F9B114C64DB0074ACC4 /* SyncPreferences.xib */,
 			);
 			name = "XIB Files";
+			path = Base.lproj;
 			sourceTree = "<group>";
 		};
 		CE0E8638114DBB4F00E37F38 /* XIB Strings */ = {
