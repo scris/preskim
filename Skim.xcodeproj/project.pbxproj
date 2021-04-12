@@ -161,6 +161,7 @@
 		CE5BF8430C7CC24A00EBDCF7 /* SKOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5BF8410C7CC24A00EBDCF7 /* SKOutlineView.m */; };
 		CE5F43730BF8A3410069D89C /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5F42D30BF8A3400069D89C /* IOKit.framework */; };
 		CE5FA1680C909886008BE480 /* SKFDFParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5FA1660C909886008BE480 /* SKFDFParser.m */; };
+		CE61008C2624FF85007CEC88 /* NotesDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE61008B2624FF84007CEC88 /* NotesDocument.xib */; };
 		CE67BB260BC44AC9007B6929 /* ZoomValues.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE67BB240BC44AC9007B6929 /* ZoomValues.strings */; };
 		CE67C46D2624C681007D4437 /* BookmarkSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE67C46F2624C681007D4437 /* BookmarkSheet.xib */; };
 		CE67C4812624C691007D4437 /* BookmarksWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE67C4832624C691007D4437 /* BookmarksWindow.xib */; };
@@ -171,7 +172,6 @@
 		CE67C4952624C6C2007D4437 /* InfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE67C4972624C6C2007D4437 /* InfoWindow.xib */; };
 		CE67C4982624C6C8007D4437 /* LineInspector.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE67C49A2624C6C8007D4437 /* LineInspector.xib */; };
 		CE67C49C2624C6CD007D4437 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE67C49E2624C6CD007D4437 /* MainMenu.xib */; };
-		CE67C4A02624C6D7007D4437 /* NotesDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE67C4A22624C6D7007D4437 /* NotesDocument.xib */; };
 		CE67C4A32624C6DD007D4437 /* NotesPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE67C4A52624C6DD007D4437 /* NotesPanel.xib */; };
 		CE67C4A72624C6F2007D4437 /* NoteTypeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE67C4A92624C6F2007D4437 /* NoteTypeSheet.xib */; };
 		CE67C4AB2624C6F8007D4437 /* NoteWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE67C4AD2624C6F8007D4437 /* NoteWindow.xib */; };
@@ -947,6 +947,7 @@
 		CE5F42D30BF8A3400069D89C /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		CE5FA1650C909886008BE480 /* SKFDFParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKFDFParser.h; sourceTree = "<group>"; };
 		CE5FA1660C909886008BE480 /* SKFDFParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKFDFParser.m; sourceTree = "<group>"; };
+		CE61008B2624FF84007CEC88 /* NotesDocument.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotesDocument.xib; sourceTree = "<group>"; };
 		CE67BB250BC44AC9007B6929 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ZoomValues.strings; sourceTree = "<group>"; };
 		CE67BB290BC44AD5007B6929 /* nl */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/ZoomValues.strings; sourceTree = "<group>"; };
 		CE67C46E2624C681007D4437 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/BookmarkSheet.xib; sourceTree = "<group>"; };
@@ -958,7 +959,6 @@
 		CE67C4962624C6C2007D4437 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/InfoWindow.xib; sourceTree = "<group>"; };
 		CE67C4992624C6C8007D4437 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LineInspector.xib; sourceTree = "<group>"; };
 		CE67C49D2624C6CD007D4437 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		CE67C4A12624C6D7007D4437 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/NotesDocument.xib; sourceTree = "<group>"; };
 		CE67C4A42624C6DD007D4437 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/NotesPanel.xib; sourceTree = "<group>"; };
 		CE67C4A82624C6F2007D4437 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/NoteTypeSheet.xib; sourceTree = "<group>"; };
 		CE67C4AC2624C6F8007D4437 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/NoteWindow.xib; sourceTree = "<group>"; };
@@ -1576,7 +1576,7 @@
 				CE8BF068115F859A0029020F /* LeftSideView.xib */,
 				CE8BF06F115F892A0029020F /* RightSideView.xib */,
 				CEF64E351160CBAC001C10C8 /* MainToolbar.xib */,
-				CE67C4A22624C6D7007D4437 /* NotesDocument.xib */,
+				CE61008B2624FF84007CEC88 /* NotesDocument.xib */,
 				CE67C4A52624C6DD007D4437 /* NotesPanel.xib */,
 				CE67C4A92624C6F2007D4437 /* NoteTypeSheet.xib */,
 				CE67C4AD2624C6F8007D4437 /* NoteWindow.xib */,
@@ -2427,6 +2427,7 @@
 				45B113C00B329A7E00DE0660 /* LICENSE in Resources */,
 				CE67C4C62624C728007D4437 /* SpeedSheet.xib in Resources */,
 				45A3BD390B4F097D002B297F /* InitialUserDefaults.plist in Resources */,
+				CE61008C2624FF85007CEC88 /* NotesDocument.xib in Resources */,
 				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
 				CE07158B0B8A3D6500733CC8 /* NoteDocument.icns in Resources */,
@@ -2445,7 +2446,6 @@
 				CE67C4CE2624C735007D4437 /* ViewSettings.xib in Resources */,
 				CE19446410627483007E8770 /* ConversionProgressWindow.xib in Resources */,
 				CE19446510627483007E8770 /* MainWindow.xib in Resources */,
-				CE67C4A02624C6D7007D4437 /* NotesDocument.xib in Resources */,
 				CE19446710627483007E8770 /* ProgressSheet.xib in Resources */,
 				CE67C4BE2624C716007D4437 /* ReleaseNotes.xib in Resources */,
 				CE19446910627483007E8770 /* SnapshotWindow.xib in Resources */,
@@ -3159,14 +3159,6 @@
 				CE67C49D2624C6CD007D4437 /* Base */,
 			);
 			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-		CE67C4A22624C6D7007D4437 /* NotesDocument.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CE67C4A12624C6D7007D4437 /* Base */,
-			);
-			name = NotesDocument.xib;
 			sourceTree = "<group>";
 		};
 		CE67C4A52624C6DD007D4437 /* NotesPanel.xib */ = {
