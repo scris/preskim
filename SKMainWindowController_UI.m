@@ -320,7 +320,7 @@
 #define MAX_HIGHLIGHTS 5
 
 - (NSInteger)thumbnailHighlightLevelForRow:(NSInteger)row {
-    if (!RUNNING_AFTER(10_15) && [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableHistoryHighlightsKey] == NO) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableHistoryHighlightsKey] == NO) {
         NSInteger i, iMax = [lastViewedPages count];
         for (i = 0; i < iMax; i++) {
             if (row == (NSInteger)[lastViewedPages pointerAtIndex:i])
@@ -331,7 +331,7 @@
 }
 
 - (NSInteger)tocHighlightLevelForRow:(NSInteger)row {
-    if (!RUNNING_AFTER(10_15) && [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableHistoryHighlightsKey] == NO) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableHistoryHighlightsKey] == NO) {
         NSOutlineView *ov = leftSideController.tocOutlineView;
         NSInteger numRows = [ov numberOfRows];
         NSInteger firstPage = [[[ov itemAtRow:row] page] pageIndex];
