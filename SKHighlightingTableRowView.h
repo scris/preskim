@@ -41,6 +41,7 @@
 
 @interface SKHighlightingTableRowView : NSTableRowView {
     NSInteger highlightLevel;
+    NSVisualEffectView *highlightView;
 }
 @property (nonatomic) NSInteger highlightLevel;
 @end
