@@ -49,29 +49,84 @@ static BOOL supportsHighlights = YES;
 
 + (void)initialize {
     SKINITIALIZE;
-    supportsHighlights = !RUNNING_AFTER(10_15) && [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableHistoryHighlightsKey] == NO;
+    supportsHighlights = [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableHistoryHighlightsKey] == NO;
 }
 
 @synthesize highlightLevel;
 
 - (void)dealloc {
-    if (supportsHighlights && [self window]) {
+    if (supportsHighlights && !RUNNING_AFTER(10_15) && [self window]) {
         @try { [[self window] removeObserver:self forKeyPath:@"firstResponder"]; }
         @catch (id e) {}
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
+    SKDESTROY(highlightView);
     [super dealloc];
 }
 
 - (BOOL)hasHighlights {
-    return supportsHighlights && ([[self window] isKeyWindow] && [[[self window] firstResponder] isDescendantOf:[self superview]]);
+    return supportsHighlights && (RUNNING_AFTER(10_15) || ([[self window] isKeyWindow] && [[[self window] firstResponder] isDescendantOf:[self superview]]));
+}
+
+- (void)updateHighlightMask {
+    NSRect rect = [self bounds];
+    if (NSIsEmptyRect(rect) == NO) {
+        NSRect rect = [self bounds];
+        NSImage *mask = [[NSImage alloc] initWithSize:rect.size];
+        [mask lockFocus];
+        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.05 * highlightLevel] setFill];
+        [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 10.0, 0.0) xRadius:5.0 yRadius:5.0] fill];
+        [mask unlockFocus];
+        [highlightView setMaskImage:mask];
+        [mask release];
+    }
+}
+
+- (void)updateHighlightView {
+    if (RUNNING_AFTER(10_15) && [self isSelected] == NO && [self highlightLevel] > 0 && [self hasHighlights]) {
+        if (highlightView == nil) {
+            highlightView = [[NSVisualEffectView alloc] initWithFrame:[self bounds]];
+            [highlightView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+            [self addSubview:highlightView positioned:NSWindowBelow relativeTo:nil];
+            [highlightView setMaterial:NSVisualEffectMaterialSelection];
+            [highlightView setEmphasized:[self isEmphasized]];
+        }
+        [self updateHighlightMask];
+    } else if (highlightView) {
+        [highlightView removeFromSuperview];
+        SKDESTROY(highlightView);
+    }
+}
+
+- (void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+    if (highlightView) {
+        [self updateHighlightMask];
+    }
 }
 
 - (void)setHighlightLevel:(NSInteger)newHighlightLevel {
     if (highlightLevel != newHighlightLevel) {
         highlightLevel = newHighlightLevel;
-        [self setNeedsDisplay:YES];
+        if (supportsHighlights) {
+            if (RUNNING_AFTER(10_15))
+                [self updateHighlightView];
+            else
+                [self setNeedsDisplay:YES];
+        }
     }
+}
+
+- (void)setSelected:(BOOL)selected {
+    if (selected != [self isSelected]) {
+        [super setSelected:selected];
+        [self updateHighlightView];
+    }
+}
+
+- (void)setEmphasized:(BOOL)emphasized {
+    [super setEmphasized:emphasized];
+    [highlightView setEmphasized:emphasized];
 }
 
 typedef struct { CGFloat r, g, b, a; } rgba;
@@ -86,7 +141,7 @@ static void evaluateHighlight(void *info, const CGFloat *in, CGFloat *out) {
 }
 
 - (void)drawBackgroundInRect:(NSRect)dirtyRect {
-    if ([self isSelected] == NO && [self highlightLevel] > 0 && [self hasHighlights]) {
+    if (!RUNNING_AFTER(10_15) && [self isSelected] == NO && [self highlightLevel] > 0 && [self hasHighlights]) {
         NSRect rect = [[self viewAtColumn:0] frame];
         rgba color;
         [[[NSColor selectedMenuItemColor] colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&color.r green:&color.g blue:&color.b alpha:NULL];
@@ -111,7 +166,7 @@ static void evaluateHighlight(void *info, const CGFloat *in, CGFloat *out) {
 }
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow {
-    if (supportsHighlights) {
+    if (supportsHighlights && !RUNNING_AFTER(10_15)) {
         NSWindow *oldWindow = [self window];
         NSArray *names = [NSArray arrayWithObjects:NSWindowDidBecomeMainNotification, NSWindowDidResignMainNotification, NSWindowDidBecomeKeyNotification, NSWindowDidResignKeyNotification, nil];
         if (oldWindow) {
