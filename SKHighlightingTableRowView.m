@@ -49,7 +49,7 @@ static BOOL supportsHighlights = YES;
 
 + (void)initialize {
     SKINITIALIZE;
-    supportsHighlights = [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableHistoryHighlightsKey] == NO;
+    supportsHighlights = !RUNNING_AFTER(10_15) && [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableHistoryHighlightsKey] == NO;
 }
 
 @synthesize highlightLevel;
