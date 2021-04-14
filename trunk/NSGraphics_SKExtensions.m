@@ -124,7 +124,7 @@ void SKDrawResizeHandle(CGContextRef context, NSPoint point, CGFloat lineWidth, 
     SKFillStrokeResizeHandle(context, point, lineWidth);
 }
 
-void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat lineWidth, BOOL active)
+void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat lineWidth, BOOL connected, BOOL active)
 {
     SKSetColorsForResizeHandle(context, active);
     CGContextSetLineWidth(context, lineWidth);
@@ -136,6 +136,36 @@ void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat lineWidth, B
     SKFillStrokeResizeHandle(context, NSMakePoint(NSMinX(rect), NSMinY(rect)), lineWidth);
     SKFillStrokeResizeHandle(context, NSMakePoint(NSMaxX(rect), NSMaxY(rect)), lineWidth);
     SKFillStrokeResizeHandle(context, NSMakePoint(NSMaxX(rect), NSMinY(rect)), lineWidth);
+    if (connected) {
+        if (NSWidth(rect) > 14.0 * lineWidth) {
+            CGFloat minY = NSMinY(rect) + 0.5 * lineWidth;
+            CGFloat maxY = NSMaxY(rect) - 0.5 * lineWidth;
+            CGPoint points[8] = {
+                {NSMinX(rect) + 3.5 * lineWidth, maxY},
+                {NSMidX(rect) - 3.5 * lineWidth, maxY},
+                {NSMidX(rect) + 3.5 * lineWidth, maxY},
+                {NSMaxX(rect) - 3.5 * lineWidth, maxY},
+                {NSMinX(rect) + 3.5 * lineWidth, minY},
+                {NSMidX(rect) - 3.5 * lineWidth, minY},
+                {NSMidX(rect) + 3.5 * lineWidth, minY},
+                {NSMaxX(rect) - 3.5 * lineWidth, minY}};
+            CGContextStrokeLineSegments(context, points, 8);
+        }
+        if (NSHeight(rect) > 14.0 * lineWidth) {
+            CGFloat minX = NSMinX(rect) + 0.5 * lineWidth;
+            CGFloat maxX = NSMaxX(rect) - 0.5 * lineWidth;
+            CGPoint points[8] = {
+                {minX, NSMinY(rect) + 3.5 * lineWidth},
+                {minX, NSMidY(rect) - 3.5 * lineWidth},
+                {minX, NSMidY(rect) + 3.5 * lineWidth},
+                {minX, NSMaxY(rect) - 3.5 * lineWidth},
+                {maxX, NSMinY(rect) + 3.5 * lineWidth},
+                {maxX, NSMidY(rect) - 3.5 * lineWidth},
+                {maxX, NSMidY(rect) + 3.5 * lineWidth},
+                {maxX, NSMaxY(rect) - 3.5 * lineWidth}};
+            CGContextStrokeLineSegments(context, points, 8);
+        }
+    }
 }
 
 #pragma mark -
