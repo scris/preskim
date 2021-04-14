@@ -271,7 +271,7 @@ static inline void addLineTipToPath(CGMutablePathRef path, NSPoint point, CGFloa
         return;
     NSPoint origin = [self bounds].origin;
     NSPoint point = SKAddPoints(origin, [self startPoint]);
-    CGFloat delta = 4.0 * [pdfView unitWidthOnPage:[self page]];
+    CGFloat delta = [pdfView unitWidthOnPage:[self page]];
     SKDrawResizeHandle(context, point, delta, active);
     point = SKAddPoints(origin, [self endPoint]);
     SKDrawResizeHandle(context, point, delta, active);

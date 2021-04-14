@@ -110,31 +110,32 @@ void SKSetColorsForResizeHandle(CGContextRef context, BOOL active)
     CGContextSetStrokeColorWithColor(context, [color CGColor]);
 }
 
-void SKFillStrokeResizeHandle(CGContextRef context, NSPoint point, CGFloat radius)
+void SKFillStrokeResizeHandle(CGContextRef context, NSPoint point, CGFloat lineWidth)
 {
-    CGRect rect = CGRectMake(point.x - 0.875 * radius, point.y - 0.875 * radius, 1.75 * radius, 1.75 * radius);
-    CGContextSetLineWidth(context, 0.25 * radius);
+    CGRect rect = CGRectMake(point.x - 3.5 * lineWidth, point.y - 3.5 * lineWidth, 7.0 * lineWidth, 7.0 * lineWidth);
     CGContextFillEllipseInRect(context, rect);
     CGContextStrokeEllipseInRect(context, rect);
 }
 
-void SKDrawResizeHandle(CGContextRef context, NSPoint point, CGFloat radius, BOOL active)
+void SKDrawResizeHandle(CGContextRef context, NSPoint point, CGFloat lineWidth, BOOL active)
 {
     SKSetColorsForResizeHandle(context, active);
-    SKFillStrokeResizeHandle(context, point, radius);
+    CGContextSetLineWidth(context, lineWidth);
+    SKFillStrokeResizeHandle(context, point, lineWidth);
 }
 
-void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat radius, BOOL active)
+void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat lineWidth, BOOL active)
 {
     SKSetColorsForResizeHandle(context, active);
-    SKFillStrokeResizeHandle(context, NSMakePoint(NSMinX(rect), NSMidY(rect)), radius);
-    SKFillStrokeResizeHandle(context, NSMakePoint(NSMidX(rect), NSMaxY(rect)), radius);
-    SKFillStrokeResizeHandle(context, NSMakePoint(NSMidX(rect), NSMinY(rect)), radius);
-    SKFillStrokeResizeHandle(context, NSMakePoint(NSMaxX(rect), NSMidY(rect)), radius);
-    SKFillStrokeResizeHandle(context, NSMakePoint(NSMinX(rect), NSMaxY(rect)), radius);
-    SKFillStrokeResizeHandle(context, NSMakePoint(NSMinX(rect), NSMinY(rect)), radius);
-    SKFillStrokeResizeHandle(context, NSMakePoint(NSMaxX(rect), NSMaxY(rect)), radius);
-    SKFillStrokeResizeHandle(context, NSMakePoint(NSMaxX(rect), NSMinY(rect)), radius);
+    CGContextSetLineWidth(context, lineWidth);
+    SKFillStrokeResizeHandle(context, NSMakePoint(NSMinX(rect), NSMidY(rect)), lineWidth);
+    SKFillStrokeResizeHandle(context, NSMakePoint(NSMidX(rect), NSMaxY(rect)), lineWidth);
+    SKFillStrokeResizeHandle(context, NSMakePoint(NSMidX(rect), NSMinY(rect)), lineWidth);
+    SKFillStrokeResizeHandle(context, NSMakePoint(NSMaxX(rect), NSMidY(rect)), lineWidth);
+    SKFillStrokeResizeHandle(context, NSMakePoint(NSMinX(rect), NSMaxY(rect)), lineWidth);
+    SKFillStrokeResizeHandle(context, NSMakePoint(NSMinX(rect), NSMinY(rect)), lineWidth);
+    SKFillStrokeResizeHandle(context, NSMakePoint(NSMaxX(rect), NSMaxY(rect)), lineWidth);
+    SKFillStrokeResizeHandle(context, NSMakePoint(NSMaxX(rect), NSMinY(rect)), lineWidth);
 }
 
 #pragma mark -
