@@ -64,10 +64,6 @@ static BOOL supportsHighlights = YES;
     [super dealloc];
 }
 
-- (BOOL)hasHighlights {
-    return supportsHighlights && (RUNNING_AFTER(10_15) || ([[self window] isKeyWindow] && [[[self window] firstResponder] isDescendantOf:[self superview]]));
-}
-
 - (void)updateHighlightMask {
     NSRect rect = [self bounds];
     if (NSIsEmptyRect(rect) == NO) {
@@ -85,7 +81,7 @@ static BOOL supportsHighlights = YES;
 }
 
 - (void)updateHighlightView {
-    if (RUNNING_AFTER(10_15) && [self isSelected] == NO && [self highlightLevel] > 0 && [self hasHighlights]) {
+    if ([self isSelected] == NO && [self highlightLevel] > 0) {
         if (highlightView == nil) {
             highlightView = [[NSVisualEffectView alloc] initWithFrame:[self bounds]];
             [highlightView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -102,9 +98,8 @@ static BOOL supportsHighlights = YES;
 
 - (void)setFrame:(NSRect)frame {
     [super setFrame:frame];
-    if (highlightView) {
+    if (highlightView)
         [self updateHighlightMask];
-    }
 }
 
 - (void)setHighlightLevel:(NSInteger)newHighlightLevel {
@@ -122,7 +117,8 @@ static BOOL supportsHighlights = YES;
 - (void)setSelected:(BOOL)selected {
     if (selected != [self isSelected]) {
         [super setSelected:selected];
-        [self updateHighlightView];
+        if (supportsHighlights && RUNNING_AFTER(10_15))
+            [self updateHighlightView];
     }
 }
 
@@ -143,7 +139,9 @@ static void evaluateHighlight(void *info, const CGFloat *in, CGFloat *out) {
 }
 
 - (void)drawBackgroundInRect:(NSRect)dirtyRect {
-    if (!RUNNING_AFTER(10_15) && [self isSelected] == NO && [self highlightLevel] > 0 && [self hasHighlights]) {
+    if (!RUNNING_AFTER(10_15) && supportsHighlights &&
+        [self isSelected] == NO && [self highlightLevel] > 0 &&
+        ([[self window] isKeyWindow] && [[[self window] firstResponder] isDescendantOf:[self superview]])) {
         NSRect rect = [[self viewAtColumn:0] frame];
         rgba color;
         [[[NSColor selectedMenuItemColor] colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&color.r green:&color.g blue:&color.b alpha:NULL];
