@@ -459,7 +459,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (pageIndex != NSNotFound) {
         BOOL active = RUNNING_AFTER(10_14) ? pdfvFlags.inKeyWindow : (RUNNING_AFTER(10_11) || (pdfvFlags.inKeyWindow && [[[self window] firstResponder] isDescendantOf:self]));
         NSRect bounds = [pdfPage boundsForBox:[self displayBox]];
-        CGFloat radius = HANDLE_SIZE * [self unitWidthOnPage:pdfPage];
+        CGFloat lineWidth = [self unitWidthOnPage:pdfPage];
         CGColorRef color = CGColorCreateGenericGray(0.0, 0.6);
         CGContextSetFillColorWithColor(context, color);
         CGColorRelease(color);
@@ -473,7 +473,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             CGColorRelease(color);
             CGContextFillRect(context, NSRectToCGRect(rect));
         }
-        SKDrawResizeHandles(context, rect, radius, active);
+        SKDrawResizeHandles(context, rect, lineWidth, active);
     }
 }
 

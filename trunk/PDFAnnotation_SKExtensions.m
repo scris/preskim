@@ -417,7 +417,7 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
         CGContextSetStrokeColorWithColor(context, color);
         CGContextStrokeRectWithWidth(context, CGRectInset(NSRectToCGRect(rect), -0.5 * lineWidth, -0.5 * lineWidth), lineWidth);
         if ([self isResizable])
-            SKDrawResizeHandles(context, rect, 4.0 * lineWidth, active);
+            SKDrawResizeHandles(context, rect, lineWidth, active);
         CGContextRestoreGState(context);
     } else if ([self isLink]) {
         CGContextSaveGState(context);
