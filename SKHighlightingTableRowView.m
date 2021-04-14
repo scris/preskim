@@ -73,10 +73,12 @@ static BOOL supportsHighlights = YES;
     if (NSIsEmptyRect(rect) == NO) {
         NSRect rect = [self bounds];
         NSImage *mask = [[NSImage alloc] initWithSize:rect.size];
-        [mask lockFocus];
-        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.05 * highlightLevel] setFill];
-        [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 10.0, 0.0) xRadius:5.0 yRadius:5.0] fill];
-        [mask unlockFocus];
+        if (NSWidth(rect) > 20.0) {
+            [mask lockFocus];
+            [[NSColor colorWithGenericGamma22White:0.0 alpha:0.05 * highlightLevel] setFill];
+            [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 10.0, 0.0) xRadius:5.0 yRadius:5.0] fill];
+            [mask unlockFocus];
+        }
         [highlightView setMaskImage:mask];
         [mask release];
     }
