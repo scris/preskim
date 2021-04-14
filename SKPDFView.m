@@ -473,7 +473,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             CGColorRelease(color);
             CGContextFillRect(context, NSRectToCGRect(rect));
         }
-        SKDrawResizeHandles(context, rect, lineWidth, active);
+        SKDrawResizeHandles(context, rect, lineWidth, NO, active);
     }
 }
 
