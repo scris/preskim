@@ -41,7 +41,6 @@
 #import "NSResponder_SKExtensions.h"
 #import "SKStringConstants.h"
 
-static char SKFirstResponderObservationContext;
 
 @implementation SKHighlightingTableRowView
 
@@ -55,11 +54,6 @@ static BOOL supportsHighlights = YES;
 @synthesize highlightLevel;
 
 - (void)dealloc {
-    if (supportsHighlights && !RUNNING_AFTER(10_15) && [self window]) {
-        @try { [[self window] removeObserver:self forKeyPath:@"firstResponder"]; }
-        @catch (id e) {}
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-    }
     SKDESTROY(highlightView);
     [super dealloc];
 }
@@ -124,7 +118,12 @@ static BOOL supportsHighlights = YES;
 
 - (void)setEmphasized:(BOOL)emphasized {
     [super setEmphasized:emphasized];
-    [highlightView setEmphasized:emphasized];
+    if (supportsHighlights) {
+        if (RUNNING_AFTER(10_15))
+            [highlightView setEmphasized:emphasized];
+        else if ([self isSelected] == NO && [self highlightLevel] > 0)
+            [self setNeedsDisplay:YES];
+    }
 }
 
 typedef struct { CGFloat r, g, b, a; } rgba;
@@ -140,8 +139,7 @@ static void evaluateHighlight(void *info, const CGFloat *in, CGFloat *out) {
 
 - (void)drawBackgroundInRect:(NSRect)dirtyRect {
     if (!RUNNING_AFTER(10_15) && supportsHighlights &&
-        [self isSelected] == NO && [self highlightLevel] > 0 &&
-        ([[self window] isKeyWindow] && [[[self window] firstResponder] isDescendantOf:[self superview]])) {
+        [self isSelected] == NO && [self highlightLevel] > 0 && [self isEmphasized]) {
         NSRect rect = [[self viewAtColumn:0] frame];
         rgba color;
         [[[NSColor selectedMenuItemColor] colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&color.r green:&color.g blue:&color.b alpha:NULL];
@@ -158,45 +156,6 @@ static void evaluateHighlight(void *info, const CGFloat *in, CGFloat *out) {
     }
     
     [super drawBackgroundInRect:dirtyRect];
-}
-
-- (void)handleKeyOrMainStateChanged:(NSNotification *)note {
-    if (supportsHighlights)
-        [self setNeedsDisplay:YES];
-}
-
-- (void)viewWillMoveToWindow:(NSWindow *)newWindow {
-    if (supportsHighlights && !RUNNING_AFTER(10_15)) {
-        NSWindow *oldWindow = [self window];
-        NSArray *names = [NSArray arrayWithObjects:NSWindowDidBecomeMainNotification, NSWindowDidResignMainNotification, NSWindowDidBecomeKeyNotification, NSWindowDidResignKeyNotification, nil];
-        if (oldWindow) {
-            @try { [oldWindow removeObserver:self forKeyPath:@"firstResponder"]; }
-            @catch (id e) {}
-            for (NSString *name in names)
-                [[NSNotificationCenter defaultCenter] removeObserver:self name:name object:oldWindow];
-        }
-        if (newWindow) {
-            [newWindow addObserver:self forKeyPath:@"firstResponder" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:&SKFirstResponderObservationContext];
-            for (NSString *name in names)
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyOrMainStateChanged:) name:name object:newWindow];
-        }
-    }
-    [super viewWillMoveToWindow:newWindow];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == &SKFirstResponderObservationContext) {
-        if ([self highlightLevel] > 0) {
-            id new = [change objectForKey:NSKeyValueChangeNewKey];
-            id old = [change objectForKey:NSKeyValueChangeOldKey];
-            if (new == [NSNull null]) new = nil;
-            if (old == [NSNull null]) old = nil;
-            if ([new isDescendantOf:[self superview]] != [old isDescendantOf:[self superview]])
-                [self setNeedsDisplay:YES];
-        }
-    } else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
 }
 
 @end
