@@ -142,7 +142,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         backgroundStyle = newBackgroundStyle;
         [self setNeedsDisplayInRect:[self textRect]];
         if ([self isSelected])
-            [self setNeedsDisplayInRect:[self imageRect]];
+            [self setNeedsDisplayInRect:NSInsetRect([self imageRect], -SELECTION_MARGIN, -SELECTION_MARGIN)];
     }
 }
 
