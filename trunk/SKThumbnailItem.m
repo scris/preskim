@@ -90,7 +90,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 - (void)loadView {
     if (viewLoaded == NO) {
-        SKThumbnailView *view = [[SKThumbnailView alloc] init];
+        NSRect rect = NSZeroRect;
+        rect.size = [SKThumbnailView sizeForImageSize:NSMakeSize(32.0, 32.0)];
+        SKThumbnailView *view = [[SKThumbnailView alloc] initWithFrame:rect];
         if ([[self representedObject] isKindOfClass:[SKThumbnail class]])
             [view setThumbnail:[self representedObject]];
         [view setSelected:[self isSelected]];
