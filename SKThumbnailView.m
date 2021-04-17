@@ -39,6 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import "SKThumbnailView.h"
 #import "SKThumbnail.h"
 #import "SKApplication.h"
+#import "SKThumbnailItem.h"
+#import "SKOverviewView.h"
 #import "NSView_SKExtensions.h"
 #import "NSImage_SKExtensions.h"
 #import "NSBitmapImageRep_SKExtensions.h"
@@ -55,6 +57,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define IMAGE_KEY @"image"
 
+#define HIGHLIGHT_ID @"highlight"
+#define MARK_ID @"mark"
+
 static char SKThumbnailViewThumbnailObservationContext;
 
 @interface SKMarkView : NSView
@@ -62,14 +67,9 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 #pragma mark -
 
-@interface SKThumbnailView (SKPrivate)
-- (void)updateImage;
-- (void)updateBackgroundStyle;
-@end
-
 @implementation SKThumbnailView
 
-@synthesize selected, thumbnail, backgroundStyle, highlightLevel;
+@synthesize selected, thumbnail, backgroundStyle, highlightLevel, controller;
 @dynamic marked;
 
 - (void)commonInit {
@@ -115,15 +115,125 @@ static char SKThumbnailViewThumbnailObservationContext;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     @try { [thumbnail removeObserver:self forKeyPath:IMAGE_KEY]; }
     @catch (id e) {}
+    controller = nil;
     SKDESTROY(imageView);
     SKDESTROY(labelView);
     SKDESTROY(markView);
+    SKDESTROY(imageHighlightView);
+    SKDESTROY(labelHighlightView);
     SKDESTROY(thumbnail);
     [super dealloc];
 }
 
 + (NSSize)sizeForImageSize:(NSSize)size {
     return NSMakeSize(size.width + 2.0 * MARGIN, size.height + 2.0 * MARGIN + TEXT_SPACE);
+}
+
+#pragma mark Updating
+
+- (void)updateImage {
+    if ([self window] && NSIsEmptyRect([imageView visibleRect]) == NO)
+        [imageView setImage:[thumbnail image]];
+    else
+        [imageView setImage:nil];
+}
+
+- (void)updateBackgroundStyle {
+    NSBackgroundStyle style = [self backgroundStyle];
+    if ([self isSelected] && ([[self window] isKeyWindow] || [[self window] isMainWindow]))
+        style = NSBackgroundStyleDark;
+    if ([[labelView cell] backgroundStyle] != style) {
+        [[labelView cell] setBackgroundStyle:style];
+        [labelView setNeedsDisplay:YES];
+    }
+}
+
+- (NSVisualEffectView *)newHighlightView {
+    SKOverviewView *overviewView = (SKOverviewView *)[[self controller] collectionView];
+    NSVisualEffectView *highlightView = [overviewView newViewWithIdentifier:HIGHLIGHT_ID];
+    if (highlightView == nil) {
+        highlightView = [[NSVisualEffectView alloc] init];
+        [highlightView setIdentifier:HIGHLIGHT_ID];
+        [highlightView setMaterial:NSVisualEffectMaterialSelection];
+    }
+    return highlightView;
+}
+
+- (void)removeView:(id)view {
+    [view removeFromSuperview];
+    [(SKOverviewView *)[[self controller] collectionView] cacheView:view];
+}
+
+- (void)updateImageHighlightMask {
+    NSRect rect = [imageHighlightView bounds];
+    NSImage *mask = [[NSImage alloc] initWithSize:rect.size];
+    [mask lockFocus];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:1.0] setFill];
+    [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:IMAGE_SEL_RADIUS yRadius:IMAGE_SEL_RADIUS] fill];
+    [mask unlockFocus];
+    [imageHighlightView setMaskImage:mask];
+    [mask release];
+}
+
+- (void)updateImageHighlight {
+    if (RUNNING_AFTER(10_15)) {
+        if ([self isSelected]) {
+            if (imageHighlightView == nil) {
+                imageHighlightView = [self newHighlightView];
+                [imageHighlightView setEmphasized:NO];
+                [imageHighlightView setFrame:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
+                [imageHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+                [self addSubview:imageHighlightView positioned:NSWindowBelow relativeTo:nil];
+            }
+            [self updateImageHighlightMask];
+        } else if (imageHighlightView) {
+            [self removeView:imageHighlightView];
+            SKDESTROY(imageHighlightView);
+        }
+    } else {
+        [self setNeedsDisplayInRect:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
+    }
+}
+
+- (void)updateLabelHighlightMask {
+    NSRect rect = [labelHighlightView bounds];
+    CGFloat inset = fmax(0.0, floor(0.5 * (NSWidth(rect) - [[labelView cell] cellSize].width)));
+    CGFloat alpha = [self isSelected] ? 1.0 : 0.05 * [self highlightLevel];
+    NSImage *mask = [[NSImage alloc] initWithSize:rect.size];
+    [mask lockFocus];
+    [[NSColor colorWithGenericGamma22White:0.0 alpha:alpha] setFill];
+    [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, inset, 0.0) xRadius:TEXT_SEL_RADIUS yRadius:TEXT_SEL_RADIUS] fill];
+    [mask unlockFocus];
+    [labelHighlightView setMaskImage:mask];
+    [mask release];
+}
+
+- (void)updateLabelHighlight {
+    if (RUNNING_AFTER(10_15)) {
+        if ([self isSelected] || [self highlightLevel] > 0) {
+            if (labelHighlightView == nil) {
+                labelHighlightView = [self newHighlightView];
+                [labelHighlightView setEmphasized:[[self window] isKeyWindow] || [[self window] isMainWindow]];
+                [labelHighlightView setFrame:[labelView frame]];
+                [labelHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
+                [self addSubview:labelHighlightView positioned:NSWindowBelow relativeTo:nil];
+            }
+            [self updateLabelHighlightMask];
+        } else if (labelHighlightView) {
+            [self removeView:labelHighlightView];
+            SKDESTROY(labelHighlightView);
+        }
+    } else {
+        [self setNeedsDisplayInRect:[labelView frame]];
+    }
+}
+
+- (void)resizeSubviewsWithOldSize:(NSSize)oldSize {
+    [super resizeSubviewsWithOldSize:oldSize];
+    if (imageHighlightView)
+        [self updateImageHighlightMask];
+    if (labelHighlightView)
+        [self updateLabelHighlightMask];
 }
 
 #pragma mark Accessors
@@ -137,7 +247,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         [self updateImage];
         [thumbnail addObserver:self forKeyPath:IMAGE_KEY options:0 context:&SKThumbnailViewThumbnailObservationContext];
         if ([self isSelected] || [self highlightLevel] > 0)
-            [self setNeedsDisplayInRect:[labelView frame]];
+            [self updateLabelHighlight];
     }
 }
 
@@ -145,7 +255,8 @@ static char SKThumbnailViewThumbnailObservationContext;
     if (selected != newSelected) {
         selected = newSelected;
         [self updateBackgroundStyle];
-        [self setNeedsDisplay:YES];
+        [self updateImageHighlight];
+        [self updateLabelHighlight];
     }
 }
 
@@ -163,7 +274,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)setHighlightLevel:(NSInteger)newHighlightLevel {
     if (newHighlightLevel != highlightLevel) {
         highlightLevel = newHighlightLevel;
-        [self setNeedsDisplayInRect:[labelView frame]];
+        [self updateLabelHighlight];
     }
 }
 
@@ -175,13 +286,17 @@ static char SKThumbnailViewThumbnailObservationContext;
     if (newMarked) {
         if (markView == nil) {
             NSRect rect = [self bounds];
-            rect = NSMakeRect(NSMaxX(rect) - MARGIN, NSMaxY(rect) - MARGIN - 16.0, 6.0, 10.0);
-            markView = [[SKMarkView alloc] initWithFrame:rect];
-            [markView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+            markView = [(SKOverviewView *)[[self controller] collectionView] newViewWithIdentifier:MARK_ID];
+            if (markView == nil) {
+                markView = [[SKMarkView alloc] init];
+                [markView setIdentifier:MARK_ID];
+                [markView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+            }
+            [markView setFrame:NSMakeRect(NSMaxX(rect) - MARGIN, NSMaxY(rect) - MARGIN - 16.0, 6.0, 10.0)];
             [self addSubview:markView positioned:NSWindowAbove relativeTo:imageView];
         }
     } else if (markView) {
-        [markView removeFromSuperview];
+        [self removeView:markView];
         SKDESTROY(markView);
     }
 }
@@ -189,6 +304,8 @@ static char SKThumbnailViewThumbnailObservationContext;
 #pragma mark Drawing
 
 - (void)drawRect:(NSRect)dirtyRect {
+    if (RUNNING_AFTER(10_15))
+        return;
     if ([self isSelected]) {
         NSRect rect = NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN);
         if (NSIntersectsRect(dirtyRect, rect)) {
@@ -235,24 +352,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     }
 }
 
-#pragma mark Updating
-
-- (void)updateImage {
-    if ([self window] && NSIsEmptyRect([imageView visibleRect]) == NO)
-        [imageView setImage:[thumbnail image]];
-    else
-        [imageView setImage:nil];
-}
-
-- (void)updateBackgroundStyle {
-    NSBackgroundStyle style = [self backgroundStyle];
-    if ([self isSelected] && ([[self window] isKeyWindow] || [[self window] isMainWindow]))
-        style = NSBackgroundStyleDark;
-    if ([[labelView cell] backgroundStyle] != style) {
-        [[labelView cell] setBackgroundStyle:style];
-        [labelView setNeedsDisplay:YES];
-    }
-}
+#pragma mark State change observation
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if (context == &SKThumbnailViewThumbnailObservationContext)
@@ -264,7 +364,10 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)handleKeyOrMainStateChangedNotification:(NSNotification *)note {
     if ([self isSelected] || [self highlightLevel] > 0) {
         [self updateBackgroundStyle];
-        [self setNeedsDisplayInRect:[labelView frame]];
+        if (RUNNING_AFTER(10_15))
+            [labelHighlightView setEmphasized:[[self window] isKeyWindow] || [[self window] isMainWindow]];
+        else
+            [self setNeedsDisplayInRect:[labelView frame]];
     }
 }
 
@@ -302,8 +405,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollBoundsChangedNotification:) name:NSViewBoundsDidChangeNotification object:clipView];
             [self handleScrollBoundsChangedNotification:nil];
         }
-        if ([self isSelected])
-            [self updateBackgroundStyle];
+        [self handleKeyOrMainStateChangedNotification:nil];
     }
     [super viewDidMoveToWindow];
 }

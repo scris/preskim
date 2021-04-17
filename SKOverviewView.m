@@ -48,6 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 - (void)dealloc {
     SKDESTROY(typeSelectHelper);
+    SKDESTROY(cachedViews);
     [super dealloc];
 }
 
@@ -73,6 +74,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     
     if (action)
         [self tryToPerform:action with:self];
+}
+
+- (id)newViewWithIdentifier:(NSString *)identifier {
+    for (id view in cachedViews) {
+        if ([[view identifier] isEqualToString:identifier]) {
+            [view retain];
+            [cachedViews removeObject:view];
+            return view;
+        }
+    }
+    return nil;
+}
+
+- (void)cacheView:(id)view {
+    if (cachedViews == nil)
+        cachedViews = [[NSMutableArray alloc] init];
+    [cachedViews addObject:view];
 }
 
 @end

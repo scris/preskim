@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import "SKThumbnailItem.h"
 #import "SKThumbnailView.h"
 #import "SKThumbnail.h"
+#import "SKOverviewView.h"
 
 @implementation SKThumbnailItem
 
@@ -93,6 +94,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         NSRect rect = NSZeroRect;
         rect.size = [SKThumbnailView sizeForImageSize:NSMakeSize(32.0, 32.0)];
         SKThumbnailView *view = [[SKThumbnailView alloc] initWithFrame:rect];
+        [view setController:self];
         if ([[self representedObject] isKindOfClass:[SKThumbnail class]])
             [view setThumbnail:[self representedObject]];
         [view setSelected:[self isSelected]];

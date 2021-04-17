@@ -43,9 +43,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @interface SKOverviewView : NSCollectionView {
     SEL singleClickAction, doubleClickAction;
     SKTypeSelectHelper *typeSelectHelper;
+    NSMutableArray *cachedViews;
 }
 
 @property (nonatomic) SEL singleClickAction, doubleClickAction;
 @property (nonatomic, retain) SKTypeSelectHelper *typeSelectHelper;
+
+- (id)newViewWithIdentifier:(NSString *)identifier;
+- (void)cacheView:(id)view;
 
 @end
