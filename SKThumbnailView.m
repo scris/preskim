@@ -164,7 +164,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     [(SKOverviewView *)[[self controller] collectionView] cacheView:view];
 }
 
-- (void)updateImageHighlightMask {
+- (void)updateImageHighlightMask:(NSNotification *)note {
     NSRect rect = [imageHighlightView bounds];
     NSImage *mask = [[NSImage alloc] initWithSize:rect.size];
     [mask lockFocus];
@@ -184,9 +184,11 @@ static char SKThumbnailViewThumbnailObservationContext;
                 [imageHighlightView setFrame:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
                 [imageHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
                 [self addSubview:imageHighlightView positioned:NSWindowBelow relativeTo:nil];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateImageHighlightMask:) name:NSViewFrameDidChangeNotification object:imageHighlightView];
             }
-            [self updateImageHighlightMask];
+            [self updateImageHighlightMask:nil];
         } else if (imageHighlightView) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:imageHighlightView];
             [self removeView:imageHighlightView];
             SKDESTROY(imageHighlightView);
         }
@@ -195,7 +197,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     }
 }
 
-- (void)updateLabelHighlightMask {
+- (void)updateLabelHighlightMask:(NSNotification *)note {
     NSRect rect = [labelHighlightView bounds];
     CGFloat inset = fmax(0.0, floor(0.5 * (NSWidth(rect) - [[labelView cell] cellSize].width)));
     CGFloat alpha = [self isSelected] ? 1.0 : 0.05 * [self highlightLevel];
@@ -217,23 +219,17 @@ static char SKThumbnailViewThumbnailObservationContext;
                 [labelHighlightView setFrame:[labelView frame]];
                 [labelHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
                 [self addSubview:labelHighlightView positioned:NSWindowBelow relativeTo:nil];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelHighlightMask:) name:NSViewFrameDidChangeNotification object:labelHighlightView];
             }
-            [self updateLabelHighlightMask];
+            [self updateLabelHighlightMask:nil];
         } else if (labelHighlightView) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:labelHighlightView];
             [self removeView:labelHighlightView];
             SKDESTROY(labelHighlightView);
         }
     } else {
         [self setNeedsDisplayInRect:[labelView frame]];
     }
-}
-
-- (void)resizeSubviewsWithOldSize:(NSSize)oldSize {
-    [super resizeSubviewsWithOldSize:oldSize];
-    if (imageHighlightView)
-        [self updateImageHighlightMask];
-    if (labelHighlightView)
-        [self updateLabelHighlightMask];
 }
 
 #pragma mark Accessors
