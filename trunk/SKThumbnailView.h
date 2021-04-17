@@ -38,16 +38,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Cocoa/Cocoa.h>
 
-@class SKThumbnail;
+@class SKThumbnail, SKMarkView;
 
 @interface SKThumbnailView : NSView <NSDraggingSource> {
     SKThumbnail *thumbnail;
     BOOL selected;
     NSBackgroundStyle backgroundStyle;
     NSInteger highlightLevel;
-    BOOL marked;
-    NSImageCell *imageCell;
-    NSTextFieldCell *labelCell;
+    NSImageView *imageView;
+    NSTextField *labelView;
+    SKMarkView *markView;
 }
 
 @property (nonatomic, retain) SKThumbnail *thumbnail;

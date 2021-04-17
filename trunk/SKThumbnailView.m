@@ -57,15 +57,42 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 static char SKThumbnailViewThumbnailObservationContext;
 
+@interface SKMarkView : NSView
+@end
+
+#pragma mark -
+
+@interface SKThumbnailView (SKPrivate)
+- (void)updateImage;
+- (void)updateBackgroundStyle;
+@end
+
 @implementation SKThumbnailView
 
-@synthesize selected, thumbnail, backgroundStyle, highlightLevel, marked;
+@synthesize selected, thumbnail, backgroundStyle, highlightLevel;
+@dynamic marked;
 
 - (void)commonInit {
-    imageCell = [[NSImageCell alloc] initImageCell:nil];
-    [imageCell setImageScaling:NSImageScaleProportionallyUpOrDown];
-    labelCell = [[NSTextFieldCell alloc] initTextCell:@""];
-    [labelCell setAlignment:NSCenterTextAlignment];
+    NSRect bounds = [self bounds];
+    NSRect rect = NSOffsetRect(NSInsetRect(bounds, MARGIN, MARGIN + 0.5 * TEXT_SPACE), 0.0, 0.5 * TEXT_SPACE);
+    imageView = [[NSImageView alloc] initWithFrame:rect];
+    [imageView setImageScaling:NSImageScaleProportionallyUpOrDown];
+    [imageView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    [self addSubview:imageView];
+    
+    labelView = [[NSTextField alloc] init];
+    [labelView setBezeled:NO];
+    [labelView setBordered:NO];
+    [labelView setDrawsBackground:NO];
+    [labelView setEditable:NO];
+    [labelView setSelectable:NO];
+    [labelView setAlignment:NSCenterTextAlignment];
+    [labelView setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
+    rect = NSInsetRect(bounds, TEXT_MARGIN, TEXT_SPACE);
+    rect.size.height = [[labelView cell] cellSize].height;
+    rect.origin.y -= NSHeight(rect);
+    [labelView setFrame:rect];
+    [self addSubview:labelView];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -88,32 +115,15 @@ static char SKThumbnailViewThumbnailObservationContext;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     @try { [thumbnail removeObserver:self forKeyPath:IMAGE_KEY]; }
     @catch (id e) {}
-    SKDESTROY(imageCell);
-    SKDESTROY(labelCell);
+    SKDESTROY(imageView);
+    SKDESTROY(labelView);
+    SKDESTROY(markView);
     SKDESTROY(thumbnail);
     [super dealloc];
 }
 
-#pragma mark Layout
-
 + (NSSize)sizeForImageSize:(NSSize)size {
     return NSMakeSize(size.width + 2.0 * MARGIN, size.height + 2.0 * MARGIN + TEXT_SPACE);
-}
-
-- (NSRect)imageRect {
-    return NSOffsetRect(NSInsetRect([self bounds], MARGIN, MARGIN + 0.5 * TEXT_SPACE), 0.0, 0.5 * TEXT_SPACE);
-}
-
-- (NSRect)textRect {
-    NSSize textSize = [labelCell cellSize];
-    NSRect textRect = NSInsetRect([self bounds], TEXT_MARGIN, TEXT_SPACE - textSize.height);
-    textRect.size.height = textSize.height;
-    return textRect;
-}
-
-- (NSRect)markRect {
-    NSRect bounds = [self bounds];
-    return NSMakeRect(NSMaxX(bounds) - MARGIN, NSMaxY(bounds) - MARGIN - 16.0, 6.0, 10.0);
 }
 
 #pragma mark Accessors
@@ -123,16 +133,18 @@ static char SKThumbnailViewThumbnailObservationContext;
         [thumbnail removeObserver:self forKeyPath:IMAGE_KEY];
         [thumbnail release];
         thumbnail = [newThumbnail retain];
-        [labelCell setObjectValue:[thumbnail label]];
-        [imageCell setObjectValue:nil];
+        [labelView setObjectValue:[thumbnail label]];
+        [self updateImage];
         [thumbnail addObserver:self forKeyPath:IMAGE_KEY options:0 context:&SKThumbnailViewThumbnailObservationContext];
-        [self setNeedsDisplay:YES];
+        if ([self isSelected] || [self highlightLevel] > 0)
+            [self setNeedsDisplayInRect:[labelView frame]];
     }
 }
 
 - (void)setSelected:(BOOL)newSelected {
     if (selected != newSelected) {
         selected = newSelected;
+        [self updateBackgroundStyle];
         [self setNeedsDisplay:YES];
     }
 }
@@ -140,35 +152,45 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)setBackgroundStyle:(NSBackgroundStyle)newBackgroundStyle {
     if (backgroundStyle != newBackgroundStyle) {
         backgroundStyle = newBackgroundStyle;
-        [self setNeedsDisplayInRect:[self textRect]];
+        [self updateBackgroundStyle];
         if ([self isSelected])
-            [self setNeedsDisplayInRect:NSInsetRect([self imageRect], -SELECTION_MARGIN, -SELECTION_MARGIN)];
+            [self setNeedsDisplay:YES];
+        else if ([self highlightLevel] > 0)
+            [self setNeedsDisplayInRect:[labelView frame]];
     }
 }
 
 - (void)setHighlightLevel:(NSInteger)newHighlightLevel {
     if (newHighlightLevel != highlightLevel) {
         highlightLevel = newHighlightLevel;
-        [self setNeedsDisplayInRect:[self textRect]];
+        [self setNeedsDisplayInRect:[labelView frame]];
     }
 }
 
+- (BOOL)isMarked {
+    return (markView != nil);
+}
+
 - (void)setMarked:(BOOL)newMarked {
-    if (marked != newMarked) {
-        marked = newMarked;
-        [self setNeedsDisplayInRect:[self markRect]];
+    if (newMarked) {
+        if (markView == nil) {
+            NSRect rect = [self bounds];
+            rect = NSMakeRect(NSMaxX(rect) - MARGIN, NSMaxY(rect) - MARGIN - 16.0, 6.0, 10.0);
+            markView = [[SKMarkView alloc] initWithFrame:rect];
+            [markView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+            [self addSubview:markView positioned:NSWindowAbove relativeTo:imageView];
+        }
+    } else if (markView) {
+        [markView removeFromSuperview];
+        SKDESTROY(markView);
     }
 }
 
 #pragma mark Drawing
 
 - (void)drawRect:(NSRect)dirtyRect {
-    NSRect imageRect = [self imageRect];
-    NSRect textRect = [self textRect];
-    
-    [labelCell setBackgroundStyle:[self backgroundStyle]];
     if ([self isSelected]) {
-        NSRect rect = NSInsetRect(imageRect, -SELECTION_MARGIN, -SELECTION_MARGIN);
+        NSRect rect = NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN);
         if (NSIntersectsRect(dirtyRect, rect)) {
             [NSGraphicsContext saveGraphicsState];
             if ([self backgroundStyle] == NSBackgroundStyleDark)
@@ -179,24 +201,24 @@ static char SKThumbnailViewThumbnailObservationContext;
             [NSGraphicsContext restoreGraphicsState];
         }
         
-        CGFloat inset = floor(0.5 * (NSWidth(textRect) - [labelCell cellSize].width));
-        rect = NSInsetRect(textRect, inset, 0.0);
+        rect = [labelView frame];
+        CGFloat inset = floor(0.5 * (NSWidth(rect) - [[labelView cell] cellSize].width));
+        rect = NSInsetRect(rect, inset, 0.0);
         if (NSIntersectsRect(dirtyRect, rect)) {
             [NSGraphicsContext saveGraphicsState];
-            if ([[self window] isKeyWindow] || [[self window] isMainWindow]) {
+            if ([[self window] isKeyWindow] || [[self window] isMainWindow])
                 [[NSColor alternateSelectedControlColor] setFill];
-                [labelCell setBackgroundStyle:NSBackgroundStyleDark];
-            } else if ([self backgroundStyle] == NSBackgroundStyleDark) {
+            else if ([self backgroundStyle] == NSBackgroundStyleDark)
                 [[NSColor darkGrayColor] setFill];
-            } else {
+            else
                 [[NSColor secondarySelectedControlColor] setFill];
-            }
             [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:TEXT_SEL_RADIUS yRadius:TEXT_SEL_RADIUS] fill];
             [NSGraphicsContext restoreGraphicsState];
         }
     } else if ([self highlightLevel] > 0) {
-        CGFloat inset = fmax(0.0, floor(0.5 * (NSWidth(textRect) - [labelCell cellSize].width)));
-        NSRect rect = NSInsetRect(textRect, inset, 0.0);
+        NSRect rect = [labelView frame];
+        CGFloat inset = fmax(0.0, floor(0.5 * (NSWidth(rect) - [[labelView cell] cellSize].width)));
+        rect = NSInsetRect(rect, inset, 0.0);
         if (NSIntersectsRect(rect, dirtyRect)) {
             NSColor *color;
             if ([[self window] isKeyWindow] || [[self window] isMainWindow])
@@ -211,58 +233,44 @@ static char SKThumbnailViewThumbnailObservationContext;
             [NSGraphicsContext restoreGraphicsState];
         }
     }
-    
-    if ([self isMarked]) {
-        NSRect rect = [self markRect];
-        if (NSIntersectsRect(dirtyRect, rect)) {
-            [NSGraphicsContext saveGraphicsState];
-            [[NSColor colorWithSRGBRed:0.654 green:0.166 blue:0.392 alpha:1.0] setFill];
-            NSBezierPath *path = [NSBezierPath bezierPath];
-            [path moveToPoint:NSMakePoint(NSMinX(rect), NSMinY(rect))];
-            [path lineToPoint:NSMakePoint(NSMidX(rect), NSMinY(rect) + 0.5 * NSWidth(rect))];
-            [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMinY(rect))];
-            [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMaxY(rect))];
-            [path lineToPoint:NSMakePoint(NSMinX(rect), NSMaxY(rect))];
-            [path closePath];
-            [path fill];
-            [NSGraphicsContext restoreGraphicsState];
-        }
-    }
-
-    if (NSIntersectsRect(dirtyRect, imageRect)) {
-        if ([imageCell objectValue] == nil && NSIntersectsRect(imageRect, [self visibleRect]))
-            [imageCell setObjectValue:[[self thumbnail] image]];
-        
-        [imageCell drawWithFrame:imageRect inView:self];
-    }
-    
-    if (NSIntersectsRect(dirtyRect, textRect)) {
-        [labelCell drawWithFrame:textRect inView:self];
-    }
 }
 
 #pragma mark Updating
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if (context == &SKThumbnailViewThumbnailObservationContext) {
-        [imageCell setObjectValue:nil];
-        [self setNeedsDisplayInRect:[self imageRect]];
-    } else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+- (void)updateImage {
+    if ([self window] && NSIsEmptyRect([imageView visibleRect]) == NO)
+        [imageView setImage:[thumbnail image]];
+    else
+        [imageView setImage:nil];
+}
+
+- (void)updateBackgroundStyle {
+    NSBackgroundStyle style = [self backgroundStyle];
+    if ([self isSelected] && ([[self window] isKeyWindow] || [[self window] isMainWindow]))
+        style = NSBackgroundStyleDark;
+    if ([[labelView cell] backgroundStyle] != style) {
+        [[labelView cell] setBackgroundStyle:style];
+        [labelView setNeedsDisplay:YES];
     }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if (context == &SKThumbnailViewThumbnailObservationContext)
+        [self updateImage];
+    else
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (void)handleKeyOrMainStateChangedNotification:(NSNotification *)note {
-    if ([self isSelected] || [self highlightLevel] > 0)
-        [self setNeedsDisplayInRect:[self textRect]];
+    if ([self isSelected] || [self highlightLevel] > 0) {
+        [self updateBackgroundStyle];
+        [self setNeedsDisplayInRect:[labelView frame]];
+    }
 }
 
 - (void)handleScrollBoundsChangedNotification:(NSNotification *)note {
-    if ([imageCell objectValue] == nil) {
-        NSRect imageRect = [self imageRect];
-        if (NSIntersectsRect(imageRect, [self visibleRect]))
-            [self setNeedsDisplayInRect:imageRect];
-    }
+    if ([imageView image] == nil)
+        [self updateImage];
 }
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow {
@@ -294,6 +302,8 @@ static char SKThumbnailViewThumbnailObservationContext;
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollBoundsChangedNotification:) name:NSViewBoundsDidChangeNotification object:clipView];
             [self handleScrollBoundsChangedNotification:nil];
         }
+        if ([self isSelected])
+            [self updateBackgroundStyle];
     }
     [super viewDidMoveToWindow];
 }
@@ -306,11 +316,10 @@ static char SKThumbnailViewThumbnailObservationContext;
         id<NSPasteboardWriting> item = [[[self thumbnail] page] filePromise];
         
         if (item) {
-            NSRect rect = [self imageRect];
-            
-            NSImage *dragImage = [NSImage bitmapImageWithSize:rect.size scale:[self backingScale] drawingHandler:^(NSRect dstRect){
-                [imageCell drawInteriorWithFrame:dstRect inView:self];
-            }];
+            NSRect rect = [imageView frame];
+            NSBitmapImageRep *imageRep = [imageView bitmapImageRepCachingDisplayInRect:[imageView bounds]];
+            NSImage *dragImage = [[[NSImage alloc] initWithSize:rect.size] autorelease];
+            [dragImage addRepresentation:imageRep];
             
             NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:item] autorelease];
             [dragItem setDraggingFrame:rect contents:dragImage];
@@ -352,3 +361,23 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 @end
 
+#pragma mark -
+
+@implementation SKMarkView
+
+- (void)drawRect:(NSRect)dirtyRect {
+    NSRect rect = [self bounds];
+    [NSGraphicsContext saveGraphicsState];
+    [[NSColor colorWithSRGBRed:0.654 green:0.166 blue:0.392 alpha:1.0] setFill];
+    NSBezierPath *path = [NSBezierPath bezierPath];
+    [path moveToPoint:NSMakePoint(NSMinX(rect), NSMinY(rect))];
+    [path lineToPoint:NSMakePoint(NSMidX(rect), NSMinY(rect) + 0.5 * NSWidth(rect))];
+    [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMinY(rect))];
+    [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMaxY(rect))];
+    [path lineToPoint:NSMakePoint(NSMinX(rect), NSMaxY(rect))];
+    [path closePath];
+    [path fill];
+    [NSGraphicsContext restoreGraphicsState];
+}
+
+@end
