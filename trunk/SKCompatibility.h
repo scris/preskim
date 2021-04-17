@@ -186,6 +186,14 @@ enum {
 
 #endif
 
+#if SDK_BEFORE(10_12)
+
+@interface NSVisualEffectView (SKSierraDeclarations)
+@property (getter=isEmphasized) BOOL emphasized;
+@end
+
+#endif
+
 #if SDK_BEFORE(10_14)
 
 enum {
