@@ -38,7 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Cocoa/Cocoa.h>
 
-@class SKThumbnail, SKMarkView;
+@class SKThumbnail, SKMarkView, SKThumbnailItem;
 
 @interface SKThumbnailView : NSView <NSDraggingSource> {
     SKThumbnail *thumbnail;
@@ -48,6 +48,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     NSImageView *imageView;
     NSTextField *labelView;
     SKMarkView *markView;
+    NSVisualEffectView *imageHighlightView;
+    NSVisualEffectView *labelHighlightView;
+    SKThumbnailItem *controller;
 }
 
 @property (nonatomic, retain) SKThumbnail *thumbnail;
@@ -55,6 +58,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @property (nonatomic) NSBackgroundStyle backgroundStyle;
 @property (nonatomic) NSInteger highlightLevel;
 @property (nonatomic, getter=isMarked) BOOL marked;
+@property (nonatomic, assign) SKThumbnailItem *controller;
 
 + (NSSize)sizeForImageSize:(NSSize)size;
 
