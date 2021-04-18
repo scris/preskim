@@ -153,6 +153,33 @@ static char SKThumbnailViewThumbnailObservationContext;
     return highlightView;
 }
 
+- (NSImageView *)newMarkView {
+    NSImageView *markView = [(SKOverviewView *)[[self controller] collectionView] newViewWithIdentifier:MARK_ID];
+    if (markView == nil) {
+        NSRect rect = NSMakeRect(0.0, 0.0, 6.0, 10.0);
+        markView = [[NSImageView alloc] initWithFrame:rect];
+        [markView setIdentifier:MARK_ID];
+        [markView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+        static NSImage *markImage = nil;
+        if (markImage == nil) {
+            markImage = [[NSImage alloc] initWithSize:rect.size];
+            [markImage lockFocus];
+            [[NSColor colorWithSRGBRed:0.654 green:0.166 blue:0.392 alpha:1.0] setFill];
+            NSBezierPath *path = [NSBezierPath bezierPath];
+            [path moveToPoint:NSMakePoint(0.0, 0.0)];
+            [path lineToPoint:NSMakePoint(0.5 * NSWidth(rect), 0.5 * NSWidth(rect))];
+            [path lineToPoint:NSMakePoint(NSWidth(rect), 0.0)];
+            [path lineToPoint:NSMakePoint(NSWidth(rect), NSHeight(rect))];
+            [path lineToPoint:NSMakePoint(0.0, NSHeight(rect))];
+            [path closePath];
+            [path fill];
+            [markImage unlockFocus];
+        }
+        [markView setImage:markImage];
+    }
+    return markView;
+}
+
 - (void)removeView:(id)view {
     [view removeFromSuperview];
     [(SKOverviewView *)[[self controller] collectionView] cacheView:view];
@@ -281,31 +308,9 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)setMarked:(BOOL)newMarked {
     if (newMarked) {
         if (markView == nil) {
-            NSRect rect = [self bounds];
-            rect = NSMakeRect(NSMaxX(rect) - MARGIN, NSMaxY(rect) - MARGIN - 16.0, 6.0, 10.0);
-            markView = [(SKOverviewView *)[[self controller] collectionView] newViewWithIdentifier:MARK_ID];
-            if (markView == nil) {
-                markView = [[NSImageView alloc] initWithFrame:rect];
-                [markView setIdentifier:MARK_ID];
-                [markView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
-                static NSImage *markImage = nil;
-                if (markImage == nil) {
-                    markImage = [[NSImage alloc] initWithSize:rect.size];
-                    [markImage lockFocus];
-                    [[NSColor colorWithSRGBRed:0.654 green:0.166 blue:0.392 alpha:1.0] setFill];
-                    NSBezierPath *path = [NSBezierPath bezierPath];
-                    [path moveToPoint:NSMakePoint(0.0, 0.0)];
-                    [path lineToPoint:NSMakePoint(0.5 * NSWidth(rect), 0.5 * NSWidth(rect))];
-                    [path lineToPoint:NSMakePoint(NSWidth(rect), 0.0)];
-                    [path lineToPoint:NSMakePoint(NSWidth(rect), NSHeight(rect))];
-                    [path lineToPoint:NSMakePoint(0.0, NSHeight(rect))];
-                    [path closePath];
-                    [path fill];
-                    [markImage unlockFocus];
-                }
-                [markView setImage:markImage];
-            }
-            [markView setFrame:rect];
+            markView = [self newMarkView];
+            NSRect bounds = [self bounds];
+            [markView setFrameOrigin:NSMakePoint(NSMaxX(bounds) - MARGIN, NSMaxY(bounds) - MARGIN - 16.0)];
             [self addSubview:markView positioned:NSWindowAbove relativeTo:imageView];
         }
     } else if (markView) {
