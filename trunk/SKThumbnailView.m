@@ -39,7 +39,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import "SKThumbnailView.h"
 #import "SKThumbnail.h"
 #import "SKApplication.h"
-#import "SKThumbnailItem.h"
 #import "SKOverviewView.h"
 #import "NSView_SKExtensions.h"
 #import "NSImage_SKExtensions.h"
@@ -61,11 +60,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MARK_ID @"mark"
 
 static char SKThumbnailViewThumbnailObservationContext;
-
-@interface SKMarkView : NSView
-@end
-
-#pragma mark -
 
 @implementation SKThumbnailView
 
@@ -288,13 +282,30 @@ static char SKThumbnailViewThumbnailObservationContext;
     if (newMarked) {
         if (markView == nil) {
             NSRect rect = [self bounds];
+            rect = NSMakeRect(NSMaxX(rect) - MARGIN, NSMaxY(rect) - MARGIN - 16.0, 6.0, 10.0);
             markView = [(SKOverviewView *)[[self controller] collectionView] newViewWithIdentifier:MARK_ID];
             if (markView == nil) {
-                markView = [[SKMarkView alloc] init];
+                markView = [[NSImageView alloc] initWithFrame:rect];
                 [markView setIdentifier:MARK_ID];
                 [markView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+                static NSImage *markImage = nil;
+                if (markImage == nil) {
+                    markImage = [[NSImage alloc] initWithSize:rect.size];
+                    [markImage lockFocus];
+                    [[NSColor colorWithSRGBRed:0.654 green:0.166 blue:0.392 alpha:1.0] setFill];
+                    NSBezierPath *path = [NSBezierPath bezierPath];
+                    [path moveToPoint:NSMakePoint(0.0, 0.0)];
+                    [path lineToPoint:NSMakePoint(0.5 * NSWidth(rect), 0.5 * NSWidth(rect))];
+                    [path lineToPoint:NSMakePoint(NSWidth(rect), 0.0)];
+                    [path lineToPoint:NSMakePoint(NSWidth(rect), NSHeight(rect))];
+                    [path lineToPoint:NSMakePoint(0.0, NSHeight(rect))];
+                    [path closePath];
+                    [path fill];
+                    [markImage unlockFocus];
+                }
+                [markView setImage:markImage];
             }
-            [markView setFrame:NSMakeRect(NSMaxX(rect) - MARGIN, NSMaxY(rect) - MARGIN - 16.0, 6.0, 10.0)];
+            [markView setFrame:rect];
             [self addSubview:markView positioned:NSWindowAbove relativeTo:imageView];
         }
     } else if (markView) {
@@ -464,27 +475,6 @@ static char SKThumbnailViewThumbnailObservationContext;
            endedAtPoint:(NSPoint)screenPoint
               operation:(NSDragOperation)operation {
     [[session draggingPasteboard] clearContents];
-}
-
-@end
-
-#pragma mark -
-
-@implementation SKMarkView
-
-- (void)drawRect:(NSRect)dirtyRect {
-    NSRect rect = [self bounds];
-    [NSGraphicsContext saveGraphicsState];
-    [[NSColor colorWithSRGBRed:0.654 green:0.166 blue:0.392 alpha:1.0] setFill];
-    NSBezierPath *path = [NSBezierPath bezierPath];
-    [path moveToPoint:NSMakePoint(NSMinX(rect), NSMinY(rect))];
-    [path lineToPoint:NSMakePoint(NSMidX(rect), NSMinY(rect) + 0.5 * NSWidth(rect))];
-    [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMinY(rect))];
-    [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMaxY(rect))];
-    [path lineToPoint:NSMakePoint(NSMinX(rect), NSMaxY(rect))];
-    [path closePath];
-    [path fill];
-    [NSGraphicsContext restoreGraphicsState];
 }
 
 @end
