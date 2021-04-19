@@ -95,8 +95,6 @@
 
 #define STATUSBAR_HEIGHT 22.0
 
-#define COLUMN_INDENTATION 9.0
-#define COLUMN_INDENTATION_OLD 16.0
 #define EXTRA_ROW_HEIGHT 2.0
 #define DEFAULT_TEXT_ROW_HEIGHT 85.0
 
@@ -534,9 +532,9 @@
 - (void)autoSizeNoteRows:(id)sender {
     CGFloat height,rowHeight = [outlineView rowHeight];
     NSTableColumn *tableColumn = [outlineView tableColumnWithIdentifier:NOTE_COLUMNID];
+    NSUInteger column = [[outlineView tableColumns] indexOfObject:tableColumn];
     id cell = [tableColumn dataCell];
-    CGFloat indentation = RUNNING_AFTER(10_15) ? COLUMN_INDENTATION : COLUMN_INDENTATION_OLD;
-    NSRect rect = NSMakeRect(0.0, 0.0, [tableColumn width] - indentation, CGFLOAT_MAX);
+    NSRect rect = NSMakeRect(0.0, 0.0, NSWidth([outlineView frameOfCellAtColumn:column row:0]), CGFLOAT_MAX);
     NSRect fullRect = NSMakeRect(0.0, 0.0, NSWidth([outlineView frameOfCellAtColumn:-1 row:0]) - [outlineView indentationPerLevel], CGFLOAT_MAX);
     NSMutableIndexSet *rowIndexes = nil;
     NSArray *items = [sender representedObject];
@@ -807,14 +805,14 @@
     if (rowHeight <= 0.0) {
         if (ndFlags.autoResizeRows) {
             NSTableColumn *tableColumn = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
+            CGFloat width;
             id cell = [tableColumn dataCell];
             [cell setObjectValue:[item objectValue]];
-            if ([(PDFAnnotation *)item type] == nil) {
-                rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, fmax(10.0, NSWidth([ov frameOfCellAtColumn:-1 row:0]) - [ov indentationPerLevel]), CGFLOAT_MAX)].height;
-            } else if ([tableColumn isHidden] == NO) {
-                CGFloat indentation = RUNNING_AFTER(10_15) ? COLUMN_INDENTATION : COLUMN_INDENTATION_OLD;
-                rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, [tableColumn width] - indentation, CGFLOAT_MAX)].height;
-            }
+            if ([(PDFAnnotation *)item type] == nil)
+                width = fmax(10.0, NSWidth([outlineView frameOfCellAtColumn:-1 row:0]) - [ov indentationPerLevel]);
+            else
+                width = NSWidth([ov frameOfCellAtColumn:[[outlineView tableColumns] indexOfObject:tableColumn] row:0]);
+            rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
             rowHeight = fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT;
             [rowHeights setFloat:rowHeight forKey:item];
         } else {

@@ -114,8 +114,6 @@
 
 #define SNAPSHOT_HEIGHT 200.0
 
-#define COLUMN_INDENTATION 9.0
-#define COLUMN_INDENTATION_OLD 16.0
 #define EXTRA_ROW_HEIGHT 2.0
 #define DEFAULT_TEXT_ROW_HEIGHT 85.0
 #define DEFAULT_MARKUP_ROW_HEIGHT 50.0
@@ -853,14 +851,15 @@
         if (rowHeight <= 0.0) {
             if (mwcFlags.autoResizeNoteRows) {
                 NSTableColumn *tableColumn = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
+                CGFloat width;
                 id cell = [tableColumn dataCell];
                 [cell setObjectValue:[item objectValue]];
-                if ([(PDFAnnotation *)item type] == nil) {
-                    rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, fmax(10.0, NSWidth([ov frameOfCellAtColumn:-1 row:0]) - [ov indentationPerLevel]), CGFLOAT_MAX)].height;
-                } else if ([tableColumn isHidden] == NO) {
-                    CGFloat indentation = RUNNING_AFTER(10_15) ? COLUMN_INDENTATION : COLUMN_INDENTATION_OLD;
-                    rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, [tableColumn width] - indentation, CGFLOAT_MAX)].height;
-                }
+                if ([(PDFAnnotation *)item type] == nil)
+                    width = fmax(10.0, NSWidth([ov frameOfCellAtColumn:-1 row:0]) - [ov indentationPerLevel]);
+                else
+                    width = NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tableColumn] row:0]);
+                if ([(PDFAnnotation *)item type] == nil)
+                rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
                 rowHeight = fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT;
                 [rowHeights setFloat:rowHeight forKey:item];
             } else {
@@ -1108,12 +1107,13 @@
 }
 
 - (void)autoSizeNoteRows:(id)sender {
-    CGFloat height = 0.0, rowHeight = [rightSideController.noteOutlineView rowHeight];
-    NSTableColumn *tableColumn = [rightSideController.noteOutlineView tableColumnWithIdentifier:NOTE_COLUMNID];
+    NSOutlineView *ov = rightSideController.noteOutlineView;
+    CGFloat height = 0.0, rowHeight = [ov rowHeight];
+    NSTableColumn *tableColumn = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
     id cell = [tableColumn dataCell];
-    CGFloat indentation = RUNNING_AFTER(10_15) ? COLUMN_INDENTATION : COLUMN_INDENTATION_OLD;
-    NSRect rect = NSMakeRect(0.0, 0.0, [tableColumn width] - indentation, CGFLOAT_MAX);
-    NSRect fullRect = NSMakeRect(0.0, 0.0,  NSWidth([rightSideController.noteOutlineView frameOfCellAtColumn:-1 row:0]) - [rightSideController.noteOutlineView indentationPerLevel], CGFLOAT_MAX);
+    NSUInteger column = [[ov tableColumns] indexOfObject:tableColumn];
+    NSRect rect = NSMakeRect(0.0, 0.0, NSWidth([ov frameOfCellAtColumn:column row:0]), CGFLOAT_MAX);
+    NSRect fullRect = NSMakeRect(0.0, 0.0,  NSWidth([ov frameOfCellAtColumn:-1 row:0]) - [ov indentationPerLevel], CGFLOAT_MAX);
     NSMutableIndexSet *rowIndexes = nil;
     NSArray *items = [sender representedObject];
     NSInteger row;
@@ -1140,12 +1140,12 @@
             height = 0.0;
         [rowHeights setFloat:fmax(height, rowHeight) + EXTRA_ROW_HEIGHT forKey:item];
         if (rowIndexes) {
-            row = [rightSideController.noteOutlineView rowForItem:item];
+            row = [ov rowForItem:item];
             if (row != -1)
                 [rowIndexes addIndex:row];
         }
     }
-    [rightSideController.noteOutlineView noteHeightOfRowsWithIndexesChanged:rowIndexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [rightSideController.noteOutlineView numberOfRows])]];
+    [ov noteHeightOfRowsWithIndexesChanged:rowIndexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [ov numberOfRows])]];
 }
 
 - (void)resetHeightOfNoteRows:(id)sender {
