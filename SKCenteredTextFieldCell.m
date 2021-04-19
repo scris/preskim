@@ -37,10 +37,21 @@
  */
 
 #import "SKCenteredTextFieldCell.h"
+#import "NSImage_SKExtensions.h"
 
 #define TEXT_OFFSET 1.0
+#define MARKIMAGE_OFFSET 4.0
 
 @implementation SKCenteredTextFieldCell
+
+@synthesize marked;
+
+- (void)setMarked:(BOOL)flag {
+    if (flag != marked) {
+        marked = flag;
+        [[self controlView] setNeedsDisplay:YES];
+    }
+}
 
 - (NSRect)centeredFrame:(NSRect)cellFrame inView:(NSView *)view {
     CGFloat height = [self cellSizeForBounds:cellFrame].height;
@@ -53,6 +64,11 @@
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
+    if ([self isMarked]) {
+        NSImage *markImage = [NSImage markImage];
+        NSRect rect = NSMakeRect(NSMaxX(cellFrame) - markImage.size.width - MARKIMAGE_OFFSET, [controlView isFlipped] ? NSMinY(rect) + MARKIMAGE_OFFSET : NSMaxY(cellFrame) - markImage.size.height - MARKIMAGE_OFFSET, markImage.size.width, markImage.size.height);
+        [markImage drawInRect:rect];
+    }
     [super drawInteriorWithFrame:[self centeredFrame:cellFrame inView:controlView] inView:controlView];
 }
 

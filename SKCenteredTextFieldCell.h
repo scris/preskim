@@ -39,5 +39,8 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface SKCenteredTextFieldCell : NSTextFieldCell
+@interface SKCenteredTextFieldCell : NSTextFieldCell {
+    BOOL marked;
+}
+@property (nonatomic, getter=isMarked) BOOL marked;
 @end
