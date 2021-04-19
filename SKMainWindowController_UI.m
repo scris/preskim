@@ -858,7 +858,6 @@
                     width = fmax(10.0, NSWidth([ov frameOfCellAtColumn:-1 row:0]) - [ov indentationPerLevel]);
                 else
                     width = NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tableColumn] row:0]);
-                if ([(PDFAnnotation *)item type] == nil)
                 rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
                 rowHeight = fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT;
                 [rowHeights setFloat:rowHeight forKey:item];
