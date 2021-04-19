@@ -89,6 +89,7 @@
 #import "SKThumbnailItem.h"
 #import "SKOverviewView.h"
 #import "NSView_SKExtensions.h"
+#import "SKCenteredTextFieldCell.h"
 
 #define NOTES_KEY       @"notes"
 #define SNAPSHOTS_KEY   @"snapshots"
@@ -434,8 +435,12 @@
 // This makes the thumbnail tableview view based on 10.7+
 // on 10.6 this is ignored, and the cell based tableview uses the datasource methods
 - (NSView *)tableView:(NSTableView *)tv viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    if ([tv isEqual:leftSideController.thumbnailTableView] ||
-        [tv isEqual:rightSideController.snapshotTableView] ||
+    if ([tv isEqual:leftSideController.thumbnailTableView]) {
+        NSTableCellView *view = [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
+        if ([[tableColumn identifier] isEqualToString:PAGE_COLUMNID])
+             [(SKCenteredTextFieldCell *)[[view textField] cell] setMarked:(NSUInteger)row == markedPageIndex];
+        return view;
+    } else if ([tv isEqual:rightSideController.snapshotTableView] ||
         [tv isEqual:leftSideController.findTableView]) {
         return [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
     } else if ([tv isEqual:leftSideController.groupedFindTableView]) {

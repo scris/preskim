@@ -375,6 +375,25 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     return mask;
 }
 
++ (NSImage *)markImage {
+    static NSImage *markImage = nil;
+    if (markImage == nil) {
+        markImage = [[self imageWithSize:NSMakeSize(6.0, 10.0) flipped:NO drawingHandler:^(NSRect rect){
+                [[NSColor colorWithSRGBRed:0.654 green:0.166 blue:0.392 alpha:1.0] setFill];
+                NSBezierPath *path = [NSBezierPath bezierPath];
+                [path moveToPoint:NSMakePoint(NSMinX(rect), NSMinY(rect))];
+                [path lineToPoint:NSMakePoint(NSMidX(rect), NSMinY(rect) + 0.5 * NSWidth(rect))];
+                [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMinY(rect))];
+                [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMaxY(rect))];
+                [path lineToPoint:NSMakePoint(NSMinX(rect), NSMaxY(rect))];
+                [path closePath];
+                [path fill];
+                return YES;
+            }] retain];
+    }
+    return markImage;
+}
+
 + (void)makeToolbarImages {
     
     MAKE_IMAGE(SKImageNameToolbarPageUp, YES, 27.0, 19.0, 
