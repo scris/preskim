@@ -79,7 +79,7 @@
 #import "SKThumbnailItem.h"
 #import "SKFloatMapTable.h"
 #import "PDFSelection_SKExtensions.h"
-#import "SKCenteredTextFieldCell.h"
+#import "SKThumbnailPageView.h"
 
 #define STATUSBAR_HEIGHT 22.0
 
@@ -396,12 +396,12 @@ static NSArray *allMainDocumentPDFViews() {
 - (IBAction)markPage:(id)sender {
     if (markedPageIndex != NSNotFound) {
         [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:NO];
-        [(SKCenteredTextFieldCell *)[[[leftSideController.thumbnailTableView viewAtColumn:1 row:markedPageIndex makeIfNecessary:NO] textField] cell] setMarked:NO];
+        [(SKThumbnailPageView *)[[leftSideController.thumbnailTableView viewAtColumn:1 row:markedPageIndex makeIfNecessary:NO] cell] setMarked:NO];
     }
     markedPageIndex = [pdfView currentPageIndexAndPoint:&markedPagePoint rotated:NULL];
     beforeMarkedPageIndex = NSNotFound;
     [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
-    [(SKCenteredTextFieldCell *)[[[leftSideController.thumbnailTableView viewAtColumn:1 row:markedPageIndex makeIfNecessary:NO] textField] cell] setMarked:YES];
+    [(SKThumbnailPageView *)[[leftSideController.thumbnailTableView viewAtColumn:1 row:markedPageIndex makeIfNecessary:NO] textField] setMarked:YES];
 }
 
 - (IBAction)doZoomIn:(id)sender {
