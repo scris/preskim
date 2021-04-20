@@ -45,6 +45,12 @@
 
 @synthesize marked;
 
+- (id)copyWithZone:(NSZone *)aZone {
+    SKThumbnailPageCell *copy = [super copyWithZone:aZone];
+    copy->marked = marked;
+    return copy;
+}
+
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
     if ([self isMarked]) {
         NSImage *markImage = [NSImage markImage];
