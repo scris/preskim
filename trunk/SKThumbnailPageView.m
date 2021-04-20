@@ -45,7 +45,7 @@
 
 + (Class)cellClass { return [SKThumbnailPageCell class]; }
 
-- (BOOL)hasOutline {
+- (BOOL)isMarked {
     return [[self cell] respondsToSelector:_cmd] && [[self cell] isMarked];
 }
 
