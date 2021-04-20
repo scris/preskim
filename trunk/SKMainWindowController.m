@@ -1258,7 +1258,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 
 - (BOOL)leftSidePaneIsOpen {
     if ([self interactionMode] == SKPresentationMode)
-        return NO == [sideWindow isVisible];
+        return [sideWindow isVisible];
     else
         return NO == [splitView isSubviewCollapsed:leftSideContentView];
 }
