@@ -312,6 +312,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)drawRect:(NSRect)dirtyRect {
     if (RUNNING_AFTER(10_15))
         return;
+    
     if ([self isSelected]) {
         NSRect rect = NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN);
         if (NSIntersectsRect(dirtyRect, rect)) {
@@ -323,26 +324,13 @@ static char SKThumbnailViewThumbnailObservationContext;
             [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:IMAGE_SEL_RADIUS yRadius:IMAGE_SEL_RADIUS] fill];
             [NSGraphicsContext restoreGraphicsState];
         }
-        
-        rect = [labelView frame];
+    }
+    
+    if ([self isSelected] || [self highlightLevel] > 0) {
+        NSRect rect = [labelView frame];
         CGFloat inset = floor(0.5 * (NSWidth(rect) - [[labelView cell] cellSize].width));
         rect = NSInsetRect(rect, inset, 0.0);
         if (NSIntersectsRect(dirtyRect, rect)) {
-            [NSGraphicsContext saveGraphicsState];
-            if ([[self window] isKeyWindow] || [[self window] isMainWindow])
-                [[NSColor alternateSelectedControlColor] setFill];
-            else if ([self backgroundStyle] == NSBackgroundStyleDark)
-                [[NSColor darkGrayColor] setFill];
-            else
-                [[NSColor secondarySelectedControlColor] setFill];
-            [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:TEXT_SEL_RADIUS yRadius:TEXT_SEL_RADIUS] fill];
-            [NSGraphicsContext restoreGraphicsState];
-        }
-    } else if ([self highlightLevel] > 0) {
-        NSRect rect = [labelView frame];
-        CGFloat inset = fmax(0.0, floor(0.5 * (NSWidth(rect) - [[labelView cell] cellSize].width)));
-        rect = NSInsetRect(rect, inset, 0.0);
-        if (NSIntersectsRect(rect, dirtyRect)) {
             NSColor *color;
             if ([[self window] isKeyWindow] || [[self window] isMainWindow])
                 color = [NSColor alternateSelectedControlColor];
@@ -350,9 +338,11 @@ static char SKThumbnailViewThumbnailObservationContext;
                 color = [NSColor darkGrayColor];
             else
                 color = [NSColor secondarySelectedControlColor];
+            if ([self isSelected] == NO)
+                color = [color colorWithAlphaComponent:fmin(1.0, 0.05 * [self highlightLevel])];
             [NSGraphicsContext saveGraphicsState];
-            [[color colorWithAlphaComponent:fmin(1.0, 0.1 * [self highlightLevel])] setStroke];
-            [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:TEXT_SEL_RADIUS - 0.5 yRadius:TEXT_SEL_RADIUS - 0.5] stroke];
+            [color setFill];
+            [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:TEXT_SEL_RADIUS yRadius:TEXT_SEL_RADIUS] fill];
             [NSGraphicsContext restoreGraphicsState];
         }
     }
