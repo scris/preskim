@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -22,14 +22,14 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="242" y="510" width="251" height="253"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="775"/>
             <value key="minSize" type="size" width="213" height="253"/>
             <view key="contentView" id="6">
-                <rect key="frame" x="0.0" y="0.0" width="251" height="253"/>
+                <rect key="frame" x="0.0" y="0.0" width="261" height="253"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7" userLabel="Line Width:">
-                        <rect key="frame" x="20" y="148" width="64" height="14"/>
+                        <rect key="frame" x="20" y="147" width="64" height="14"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Line Width:" id="78">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -37,10 +37,7 @@
                         </textFieldCell>
                     </textField>
                     <textField toolTip="Dash pattern as numbers separated by space" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8" userLabel="Dash Pattern Text Field">
-                        <rect key="frame" x="90" y="93" width="151" height="18"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="151" id="ohh-v1-CL1"/>
-                        </constraints>
+                        <rect key="frame" x="90" y="93" width="161" height="18"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="79">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -54,7 +51,7 @@
                         </connections>
                     </textField>
                     <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Line Style Segmented Control">
-                        <rect key="frame" x="88" y="117" width="155" height="21"/>
+                        <rect key="frame" x="88" y="117" width="165" height="21"/>
                         <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="80">
                             <font key="font" metaFont="smallSystem"/>
                             <segments>
@@ -73,9 +70,9 @@
                         </connections>
                     </segmentedControl>
                     <textField toolTip="Line width" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="10" userLabel="Line Width Text Field">
-                        <rect key="frame" x="219" y="145" width="22" height="19"/>
+                        <rect key="frame" x="229" y="145" width="22" height="19"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="22" id="lZh-uz-Vbz"/>
+                            <constraint firstAttribute="width" priority="1" constant="22" id="lZh-uz-Vbz"/>
                         </constraints>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="81">
                             <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0" negativeFormat="-0" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="11">
@@ -100,7 +97,7 @@
                         </connections>
                     </textField>
                     <slider toolTip="Line width" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="12" userLabel="Line Width Slider">
-                        <rect key="frame" x="90" y="148" width="121" height="18"/>
+                        <rect key="frame" x="88" y="144" width="135" height="20"/>
                         <sliderCell key="cell" controlSize="small" alignment="left" maxValue="10" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="11" allowsTickMarkValuesOnly="YES" sliderType="linear" id="82">
                             <font key="font" size="12" name="Helvetica"/>
                         </sliderCell>
@@ -113,7 +110,7 @@
                         </connections>
                     </slider>
                     <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="13" userLabel="Start Line Style Segmented Control">
-                        <rect key="frame" x="88" y="34" width="155" height="21"/>
+                        <rect key="frame" x="88" y="34" width="165" height="21"/>
                         <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="83">
                             <font key="font" metaFont="smallSystem"/>
                             <segments>
@@ -184,10 +181,10 @@
                         </textFieldCell>
                     </textField>
                     <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="34">
-                        <rect key="frame" x="10" y="82" width="231" height="5"/>
+                        <rect key="frame" x="10" y="82" width="241" height="5"/>
                     </box>
                     <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="52" userLabel="End Line Style Segmented Control">
-                        <rect key="frame" x="88" y="8" width="155" height="21"/>
+                        <rect key="frame" x="88" y="8" width="165" height="21"/>
                         <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="90">
                             <font key="font" metaFont="smallSystem"/>
                             <segments>
@@ -206,7 +203,7 @@
                         </connections>
                     </segmentedControl>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="69" customClass="SKLineWell">
-                        <rect key="frame" x="10" y="194" width="231" height="49"/>
+                        <rect key="frame" x="10" y="194" width="241" height="49"/>
                     </customView>
                 </subviews>
                 <constraints>
@@ -266,6 +263,7 @@
                 <outlet property="delegate" destination="-2" id="37"/>
                 <outlet property="initialFirstResponder" destination="12" id="38"/>
             </connections>
+            <point key="canvasLocation" x="-147" y="115"/>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="138"/>
         <customObject id="142" customClass="SKNumberArrayFormatter"/>
