@@ -316,7 +316,7 @@
                     <rect key="frame" x="12" y="214" width="475" height="5"/>
                 </box>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="34">
-                    <rect key="frame" x="18" y="188" width="146" height="16"/>
+                    <rect key="frame" x="18" y="188" width="145" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Note lines and borders:" id="49">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -403,7 +403,7 @@
                     </textFieldCell>
                 </textField>
                 <button toolTip="Font to use for new text notes" horizontalHuggingPriority="249" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="41" customClass="SKFontWell">
-                    <rect key="frame" x="116" y="261" width="291" height="22"/>
+                    <rect key="frame" x="116" y="261" width="287" height="22"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="RQC-GG-zDW"/>
                     </constraints>
@@ -420,7 +420,7 @@
                     </connections>
                 </button>
                 <button toolTip="Font to use for new anchored notes" horizontalHuggingPriority="249" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="42" customClass="SKFontWell">
-                    <rect key="frame" x="116" y="229" width="291" height="22"/>
+                    <rect key="frame" x="116" y="229" width="287" height="22"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="Zue-kV-mJ5"/>
                     </constraints>
@@ -435,10 +435,7 @@
                     </connections>
                 </button>
                 <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="273">
-                    <rect key="frame" x="413" y="261" width="68" height="21"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="64" id="FQz-Va-Mht"/>
-                    </constraints>
+                    <rect key="frame" x="409" y="261" width="72" height="21"/>
                     <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectOne" id="274">
                         <font key="font" metaFont="message" size="11"/>
                         <segments>
@@ -459,7 +456,9 @@
                 <constraint firstItem="37" firstAttribute="top" secondItem="262" secondAttribute="top" id="0Ns-lk-dW1"/>
                 <constraint firstItem="35" firstAttribute="width" secondItem="2" secondAttribute="width" id="0lp-m4-6BY"/>
                 <constraint firstItem="8" firstAttribute="height" secondItem="2" secondAttribute="height" id="2I7-ab-3SV"/>
+                <constraint firstItem="39" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1" secondAttribute="leading" constant="32" id="2Qd-LE-TdJ"/>
                 <constraint firstItem="14" firstAttribute="centerY" secondItem="15" secondAttribute="centerY" id="31a-GO-xMK"/>
+                <constraint firstItem="40" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1" secondAttribute="leading" constant="32" id="52e-qA-s3O"/>
                 <constraint firstItem="27" firstAttribute="height" secondItem="23" secondAttribute="height" id="54Z-mb-Zgg"/>
                 <constraint firstItem="8" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="5ef-YM-Whc"/>
                 <constraint firstItem="15" firstAttribute="trailing" secondItem="11" secondAttribute="trailing" id="5iN-3U-FbC"/>
