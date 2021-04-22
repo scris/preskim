@@ -126,13 +126,6 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 #pragma mark Updating
 
-- (void)updateImage {
-    if ([self window] && NSIsEmptyRect([imageView visibleRect]) == NO)
-        [imageView setImage:[thumbnail image]];
-    else
-        [imageView setImage:nil];
-}
-
 - (void)updateBackgroundStyle {
     NSBackgroundStyle style = [self backgroundStyle];
     if ([self isSelected] && ([[self window] isKeyWindow] || [[self window] isMainWindow]))
@@ -255,8 +248,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         [thumbnail release];
         thumbnail = [newThumbnail retain];
         [labelView setObjectValue:[thumbnail label]];
-        [self updateImage];
-        [thumbnail addObserver:self forKeyPath:IMAGE_KEY options:0 context:&SKThumbnailViewThumbnailObservationContext];
+        [thumbnail addObserver:self forKeyPath:IMAGE_KEY options:NSKeyValueObservingOptionInitial context:&SKThumbnailViewThumbnailObservationContext];
         if ([self isSelected] || [self highlightLevel] > 0)
             [self updateLabelHighlight];
     }
@@ -351,10 +343,14 @@ static char SKThumbnailViewThumbnailObservationContext;
 #pragma mark State change observation
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if (context == &SKThumbnailViewThumbnailObservationContext)
-        [self updateImage];
-    else
+    if (context == &SKThumbnailViewThumbnailObservationContext) {
+        if ([self window] && NSIsEmptyRect([imageView visibleRect]) == NO)
+            [imageView setImage:[thumbnail image]];
+        else
+            [imageView setImage:nil];
+    } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (void)handleKeyOrMainStateChangedNotification:(NSNotification *)note {
@@ -371,8 +367,8 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (void)handleScrollBoundsChangedNotification:(NSNotification *)note {
-    if ([imageView image] == nil)
-        [self updateImage];
+    if ([imageView image] == nil && [self window] && NSIsEmptyRect([imageView visibleRect]) == NO)
+        [imageView setImage:[thumbnail image]];
 }
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow {
