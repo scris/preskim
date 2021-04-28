@@ -287,7 +287,7 @@
     if (animating == NO) {
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
             animate = NO;
-        if ([view translatesAutoresizingMaskIntoConstraints])
+        if ([self translatesAutoresizingMaskIntoConstraints])
             [self toggleWithoutAutoLayoutBelowView:view animate:animate];
         else
             [self toggleWithAutoLayoutBelowView:view animate:animate];
