@@ -133,7 +133,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (NSDictionary *)settings {
     if (custom == NO)
         return [NSDictionary dictionary];
-    [[self window] makeFirstResponder:nil];
+    [[self window] makeFirstResponder:[self window]];
     return [self dictionaryWithValuesForKeys:[self persistentKeys]];
 }
 
