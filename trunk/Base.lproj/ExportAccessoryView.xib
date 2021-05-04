@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -20,10 +20,10 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="Tq4-J6-s5D">
-                    <rect key="frame" x="32" y="0.0" width="273" height="118"/>
+                    <rect key="frame" x="30" y="0.0" width="278" height="118"/>
                     <subviews>
                         <button verticalHuggingPriority="750" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="jzZ-2J-7Au">
-                            <rect key="frame" x="99" y="14" width="156" height="18"/>
+                            <rect key="frame" x="98" y="14" width="160" height="18"/>
                             <buttonCell key="cell" type="radio" title="With embedded notes" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="vLk-nI-Myv">
                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
@@ -43,7 +43,7 @@
                             </connections>
                         </button>
                         <button verticalHuggingPriority="750" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="FkY-eF-M8Y">
-                            <rect key="frame" x="99" y="36" width="108" height="18"/>
+                            <rect key="frame" x="98" y="36" width="111" height="18"/>
                             <buttonCell key="cell" type="radio" title="Without notes" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="VT4-N6-I0D">
                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
@@ -70,7 +70,7 @@
                             </textFieldCell>
                         </textField>
                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ie8-eu-nzt">
-                            <rect key="frame" x="99" y="58" width="66" height="18"/>
+                            <rect key="frame" x="98" y="58" width="70" height="18"/>
                             <buttonCell key="cell" type="radio" title="Default" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="6v9-g3-Eab">
                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
@@ -97,8 +97,10 @@
                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="jzZ-2J-7Au" secondAttribute="trailing" constant="20" symbolic="YES" id="KYQ-Oo-7fs"/>
                         <constraint firstItem="Ie8-eu-nzt" firstAttribute="top" secondItem="10" secondAttribute="bottom" constant="12" id="QhH-lG-TWd"/>
                         <constraint firstItem="10" firstAttribute="leading" secondItem="Tq4-J6-s5D" secondAttribute="leading" constant="20" symbolic="YES" id="SEr-mo-hKt"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="FkY-eF-M8Y" secondAttribute="trailing" constant="20" symbolic="YES" id="cwr-zv-wum"/>
                         <constraint firstAttribute="trailing" secondItem="jzZ-2J-7Au" secondAttribute="trailing" priority="249" constant="20" symbolic="YES" id="d0I-AW-kP0"/>
                         <constraint firstItem="FkY-eF-M8Y" firstAttribute="leading" secondItem="Ie8-eu-nzt" secondAttribute="leading" id="gMf-aj-Q4f"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Ie8-eu-nzt" secondAttribute="trailing" constant="20" symbolic="YES" id="gaH-Z8-Zgz"/>
                         <constraint firstItem="jzZ-2J-7Au" firstAttribute="top" secondItem="FkY-eF-M8Y" secondAttribute="bottom" constant="6" symbolic="YES" id="sqr-Ab-Aql"/>
                         <constraint firstItem="jzZ-2J-7Au" firstAttribute="leading" secondItem="Ie8-eu-nzt" secondAttribute="leading" id="xy3-gJ-nBq"/>
                     </constraints>
