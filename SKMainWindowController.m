@@ -332,8 +332,8 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         [[NSProcessInfo processInfo] endActivity:activity];
         SKDESTROY(activity);
     }
-    [mainWindow removeObserver:self forKeyPath:CONTENTLAYOUTRECT_KEY];
-    [overviewView removeObserver:self forKeyPath:@"selectionIndexes"];
+    [mainWindow removeObserver:self forKeyPath:CONTENTLAYOUTRECT_KEY context:&SKMainWindowContentLayoutRectObservationContext];
+    [overviewView removeObserver:self forKeyPath:@"selectionIndexes" context:&SKMainWindowThumbnailSelectionObservationContext];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self stopObservingNotes:[self notes]];
     [self clearWidgets];
@@ -2269,7 +2269,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                                    SKPageBackgroundColorKey,
                                    SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
                                    SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
-                                   SKTableFontSizeKey, nil]];
+          SKTableFontSizeKey, nil] context:&SKMainWindowDefaultsObservationContext];
     }
     @catch (id e) {}
 }
@@ -2290,7 +2290,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     // Do the opposite of what's done in -startObservingNotes:.
     for (PDFAnnotation *note in oldNotes) {
         for (NSString *key in [note keysForValuesToObserveForUndo])
-            [note removeObserver:self forKeyPath:key];
+            [note removeObserver:self forKeyPath:key context:&SKPDFAnnotationPropertiesObservationContext];
     }
 }
 

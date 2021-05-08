@@ -46,8 +46,8 @@
     [self addObserver:anObserver forKeyPath:VALUES_KEY_PATH(key) options:0 context:context];
 }
 
-- (void)removeObserver:(NSObject *)anObserver forKey:(NSString *)key {
-    [self removeObserver:anObserver forKeyPath:VALUES_KEY_PATH(key)];
+- (void)removeObserver:(NSObject *)anObserver forKey:(NSString *)key context:(void *)context {
+    [self removeObserver:anObserver forKeyPath:VALUES_KEY_PATH(key) context:context];
 }
 
 - (void)addObserver:(NSObject *)anObserver forKeys:(NSArray *)keys context:(void *)context {
@@ -55,9 +55,9 @@
         [self addObserver:anObserver forKey:key context:context];
 }
 
-- (void)removeObserver:(NSObject *)anObserver forKeys:(NSArray *)keys {
+- (void)removeObserver:(NSObject *)anObserver forKeys:(NSArray *)keys context:(void *)context {
     for (NSString *key in keys)
-        [self removeObserver:anObserver forKey:key];
+        [self removeObserver:anObserver forKey:key context:context];
 }
 
 - (void)revertToInitialValueForKey:(NSString *)key {

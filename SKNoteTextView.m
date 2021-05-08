@@ -49,7 +49,7 @@ static char SKNoteTextViewDefaultsObservationContext;
 
 - (void)dealloc {
     if (usesDefaultFontSize)
-        SKENSURE_MAIN_THREAD( [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKNoteTextFontSizeKey]; );
+        SKENSURE_MAIN_THREAD( [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKNoteTextFontSizeKey context:&SKNoteTextViewDefaultsObservationContext]; );
     [super dealloc];
 }
 
@@ -61,7 +61,7 @@ static char SKNoteTextViewDefaultsObservationContext;
             [self setFont:[NSFont userFontOfSize:fontSize]];
             [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKNoteTextFontSizeKey context:&SKNoteTextViewDefaultsObservationContext];
         } else {
-            [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKNoteTextFontSizeKey];
+            [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKNoteTextFontSizeKey context:&SKNoteTextViewDefaultsObservationContext];
         }
     }
 }

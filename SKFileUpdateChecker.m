@@ -76,7 +76,7 @@ static BOOL canUpdateFromURL(NSURL *fileURL);
 }
 
 - (void)dealloc {
-    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKAutoCheckFileUpdateKey]; }
+    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKAutoCheckFileUpdateKey context:&SKFileUpdateCheckerObservationContext]; }
     @catch (id) {}
     document = nil;
     [super dealloc];
@@ -84,7 +84,7 @@ static BOOL canUpdateFromURL(NSURL *fileURL);
 
 - (void)terminate {
     [self stop];
-    @try { [document removeObserver:self forKeyPath:@"fileURL"]; }
+    @try { [document removeObserver:self forKeyPath:@"fileURL" context:&SKFileUpdateCheckerObservationContext]; }
     @catch (id) {}
     document = nil;
 }
