@@ -86,7 +86,7 @@ static char SKColorPickerDefaultsObservationContext;
 }
 
 - (void)dealloc {
-    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKSwatchColorsKey]; }
+    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKSwatchColorsKey context:&SKColorPickerDefaultsObservationContext]; }
     @catch (id e) {}
     SKDESTROY(colors);
     SKDESTROY(scrubber);

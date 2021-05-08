@@ -374,9 +374,9 @@ static char *SKTransitionPropertiesObservationContext;
 
 - (void)stopObservingTransitions:(NSArray *)infos {
     for (SKTransitionInfo *info in infos) {
-        [info removeObserver:self forKeyPath:TRANSITIONSTYLE_KEY];
-        [info removeObserver:self forKeyPath:DURATION_KEY];
-        [info removeObserver:self forKeyPath:SHOULDRESTRICT_KEY];
+        [info removeObserver:self forKeyPath:TRANSITIONSTYLE_KEY context:&SKTransitionPropertiesObservationContext];
+        [info removeObserver:self forKeyPath:DURATION_KEY context:&SKTransitionPropertiesObservationContext];
+        [info removeObserver:self forKeyPath:SHOULDRESTRICT_KEY context:&SKTransitionPropertiesObservationContext];
     }
 }
 

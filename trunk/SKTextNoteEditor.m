@@ -78,7 +78,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     if (annotation)
         SKENSURE_MAIN_THREAD(
             for (NSString *key in [[self class] keysToObserve]) {
-                @try { [annotation removeObserver:self forKeyPath:key]; }
+            @try { [annotation removeObserver:self forKeyPath:key context:&SKPDFAnnotationPropertiesObservationContext]; }
                 @catch(id e) {}
             }
         );
@@ -157,7 +157,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
 
 - (void)endEditingWithCommit:(BOOL)commit {
     for (NSString *key in [[self class] keysToObserve])
-        [annotation removeObserver:self forKeyPath:key];
+        [annotation removeObserver:self forKeyPath:key context:&SKPDFAnnotationPropertiesObservationContext];
     
     if (commit) {
         NSString *newValue = [textView string] ?: @"";

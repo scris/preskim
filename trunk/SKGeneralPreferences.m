@@ -64,8 +64,8 @@ static char SKGeneralPreferencesUpdaterObservationContext;
 
 - (void)dealloc {
     @try {
-        [[SUUpdater sharedUpdater] removeObserver:self forKeyPath:AUTOMATICALLYCHECKSFORUPDATES_KEY];
-        [[SUUpdater sharedUpdater] removeObserver:self forKeyPath:UPDATECHECKINTERVAL_KEY];
+        [[SUUpdater sharedUpdater] removeObserver:self forKeyPath:AUTOMATICALLYCHECKSFORUPDATES_KEY context:&SKGeneralPreferencesUpdaterObservationContext];
+        [[SUUpdater sharedUpdater] removeObserver:self forKeyPath:UPDATECHECKINTERVAL_KEY context:&SKGeneralPreferencesUpdaterObservationContext];
     }
     @catch(id e) {}
     SKDESTROY(updateIntervalPopUpButton);

@@ -265,11 +265,11 @@ static NSURL *temporaryDirectoryURL = nil;
         [self endPreviewPanelControl:nil];
     @try { [textView unbind:[self isNoteType] ? @"attributedString" : @"value"]; }
     @catch (id e) {}
-    [note removeObserver:self forKeyPath:SKNPDFAnnotationPageKey];
-    [note removeObserver:self forKeyPath:SKNPDFAnnotationBoundsKey];
-    [note removeObserver:self forKeyPath:SKNPDFAnnotationStringKey];
+    [note removeObserver:self forKeyPath:SKNPDFAnnotationPageKey context:&SKNoteWindowNoteObservationContext];
+    [note removeObserver:self forKeyPath:SKNPDFAnnotationBoundsKey context:&SKNoteWindowNoteObservationContext];
+    [note removeObserver:self forKeyPath:SKNPDFAnnotationStringKey context:&SKNoteWindowNoteObservationContext];
     if ([self isNoteType])
-        [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[[self class] fontKeysToObserve]];
+        [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[[self class] fontKeysToObserve] context:&SKNoteWindowDefaultsObservationContext];
     else
         [textView setUsesDefaultFontSize:NO];
     [[self window] setDelegate:nil];

@@ -108,7 +108,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    @try { [thumbnail removeObserver:self forKeyPath:IMAGE_KEY]; }
+    @try { [thumbnail removeObserver:self forKeyPath:IMAGE_KEY context:&SKThumbnailViewThumbnailObservationContext]; }
     @catch (id e) {}
     controller = nil;
     SKDESTROY(imageView);
@@ -244,7 +244,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)setThumbnail:(SKThumbnail *)newThumbnail {
     if (thumbnail != newThumbnail) {
-        [thumbnail removeObserver:self forKeyPath:IMAGE_KEY];
+        [thumbnail removeObserver:self forKeyPath:IMAGE_KEY context:&SKThumbnailViewThumbnailObservationContext];
         [thumbnail release];
         thumbnail = [newThumbnail retain];
         [labelView setObjectValue:[thumbnail label]];

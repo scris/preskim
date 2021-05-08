@@ -386,12 +386,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)cleanup {
     [[NSSpellChecker sharedSpellChecker] closeSpellDocumentWithTag:spellingTag];
-    [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[[self class] defaultKeysToObserve]];
+    [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[[self class] defaultKeysToObserve] context:&SKPDFViewDefaultsObservationContext];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [transitionController removeObserver:self forKeyPath:@"transitionStyle"];
-    [transitionController removeObserver:self forKeyPath:@"duration"];
-    [transitionController removeObserver:self forKeyPath:@"shouldRestrict"];
-    [transitionController removeObserver:self forKeyPath:@"pageTransitions"];
+    [transitionController removeObserver:self forKeyPath:@"transitionStyle" context:&SKPDFViewTransitionsObservationContext];
+    [transitionController removeObserver:self forKeyPath:@"duration" context:&SKPDFViewTransitionsObservationContext];
+    [transitionController removeObserver:self forKeyPath:@"shouldRestrict" context:&SKPDFViewTransitionsObservationContext];
+    [transitionController removeObserver:self forKeyPath:@"pageTransitions" context:&SKPDFViewTransitionsObservationContext];
     [self disableNavigation];
     [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
     [self removePDFToolTipRects];

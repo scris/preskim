@@ -350,7 +350,7 @@ static char SKFontWellFontSizeObservationContext;
     if ([bindingName isEqualToString:FONTNAME_KEY] || [bindingName isEqualToString:FONTSIZE_KEY]) {
         
         NSDictionary *info = [self infoForBinding:bindingName];
-        [[info objectForKey:NSObservedObjectKey] removeObserver:self forKeyPath:[info objectForKey:NSObservedKeyPathKey]];
+        [[info objectForKey:NSObservedObjectKey] removeObserver:self forKeyPath:[info objectForKey:NSObservedKeyPathKey] context:[bindingName isEqualToString:FONTNAME_KEY] ? &SKFontWellFontNameObservationContext : &SKFontWellFontSizeObservationContext];
 		[bindingInfo removeObjectForKey:bindingName];
     } else {
         [super unbind:bindingName];

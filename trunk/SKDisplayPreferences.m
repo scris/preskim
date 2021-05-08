@@ -64,7 +64,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
 - (void)dealloc {
     if (RUNNING_AFTER(10_13)) {
         @try {
-            [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[NSArray arrayWithObjects:SKBackgroundColorKey, SKFullScreenBackgroundColorKey, SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey, nil]];
+            [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[NSArray arrayWithObjects:SKBackgroundColorKey, SKFullScreenBackgroundColorKey, SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey, nil] context:&SKDisplayPreferencesDefaultsObservationContext];
             [colorSwatch unbind:@"colors"];
         }
         @catch(id e) {}

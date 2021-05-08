@@ -694,10 +694,10 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
 - (void)stopObservingBookmarks:(NSArray *)oldBookmarks {
     for (SKBookmark *bm in oldBookmarks) {
         if ([bm bookmarkType] != SKBookmarkTypeSeparator) {
-            [bm removeObserver:self forKeyPath:LABEL_KEY];
-            [bm removeObserver:self forKeyPath:PAGEINDEX_KEY];
+            [bm removeObserver:self forKeyPath:LABEL_KEY context:&SKBookmarkPropertiesObservationContext];
+            [bm removeObserver:self forKeyPath:PAGEINDEX_KEY context:&SKBookmarkPropertiesObservationContext];
             if ([bm bookmarkType] == SKBookmarkTypeFolder) {
-                [bm removeObserver:self forKeyPath:CHILDREN_KEY];
+                [bm removeObserver:self forKeyPath:CHILDREN_KEY context:&SKBookmarkPropertiesObservationContext];
                 [self stopObservingBookmarks:[bm children]];
             }
         }
