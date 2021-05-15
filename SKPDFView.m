@@ -453,7 +453,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             }
         }
         
-        if (hasWindow && isInside == NO)
+        if (hasWindow && isInside == NO && [[[SKImageToolTipWindow sharedToolTipWindow] currentImageContext] isKindOfClass:[PDFAnnotation class]])
             [[SKImageToolTipWindow sharedToolTipWindow] fadeOut];
     }
 }
