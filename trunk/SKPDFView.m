@@ -428,6 +428,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         NSRect visibleRect = [self visibleContentRect];
         NSView *docView = [self documentView];
         BOOL hasLinkToolTips = (toolMode == SKTextToolMode || toolMode == SKMoveToolMode || toolMode == SKNoteToolMode);
+        NSPoint mouseLoc = [docView convertPointFromScreen:[NSEvent mouseLocation]];
+        BOOL isInside = NO;
         
         for (PDFPage *page in [self visiblePages]) {
             for (PDFAnnotation *annotation in [page annotations]) {
@@ -436,7 +438,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                     if (NSIsEmptyRect(rect) == NO) {
                         rect = [self convertRect:rect toView:docView];
                         NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:annotation, SKAnnotationKey, nil];
-                        NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp owner:self userInfo:userInfo];
+                        NSTrackingAreaOptions options = NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp;
+                        if (NSPointInRect(mouseLoc, rect)) {
+                            options |= NSTrackingAssumeInside;
+                            isInside = YES;
+                        }
+                        NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:rect options:options owner:self userInfo:userInfo];
                         [docView addTrackingArea:area];
                         [area release];
                         [userInfo release];
@@ -444,6 +451,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                 }
             }
         }
+        
+        if (isInside == NO)
+            [[SKImageToolTipWindow sharedToolTipWindow] fadeOut];
     }
 }
 
