@@ -338,8 +338,7 @@ static char SKFontWellFontSizeObservationContext;
         else if ([bindingName isEqualToString:FONTSIZE_KEY])
             context = &SKFontWellFontSizeObservationContext;
         
-        [observableController addObserver:self forKeyPath:keyPath options:0 context:context];
-        [self observeValueForKeyPath:keyPath ofObject:observableController change:nil context:context];
+        [observableController addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionInitial context:context];
     } else {
         [super bind:bindingName toObject:observableController withKeyPath:keyPath options:options];
     }

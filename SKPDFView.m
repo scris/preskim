@@ -428,9 +428,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         NSRect visibleRect = [self visibleContentRect];
         NSView *docView = [self documentView];
         BOOL hasLinkToolTips = (toolMode == SKTextToolMode || toolMode == SKMoveToolMode || toolMode == SKNoteToolMode);
-        BOOL hasWindow = [[self window] isVisible];
         NSPoint mouseLoc = [docView convertPointFromScreen:[NSEvent mouseLocation]];
-        BOOL isInside = NO;
+        BOOL mouseInView = [[self window] isVisible] && NSMouseInRect(mouseLoc, [docView visibleRect], [docView isFlipped]);
+        PDFAnnotation *hoverAnnotation = nil;
         
         for (PDFPage *page in [self visiblePages]) {
             for (PDFAnnotation *annotation in [page annotations]) {
@@ -440,9 +440,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                         rect = [self convertRect:rect toView:docView];
                         NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:annotation, SKAnnotationKey, nil];
                         NSTrackingAreaOptions options = NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp;
-                        if (hasWindow && NSPointInRect(mouseLoc, rect)) {
+                        if (mouseInView && NSMouseInRect(mouseLoc, rect, [docView isFlipped])) {
                             options |= NSTrackingAssumeInside;
-                            isInside = YES;
+                            hoverAnnotation = annotation;
                         }
                         NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:rect options:options owner:self userInfo:userInfo];
                         [docView addTrackingArea:area];
@@ -453,8 +453,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             }
         }
         
-        if (hasWindow && isInside == NO && [[[SKImageToolTipWindow sharedToolTipWindow] currentImageContext] isKindOfClass:[PDFAnnotation class]])
-            [[SKImageToolTipWindow sharedToolTipWindow] fadeOut];
+        if (mouseInView && hoverAnnotation != [[SKImageToolTipWindow sharedToolTipWindow] currentImageContext]) {
+            if (hoverAnnotation)
+                [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:hoverAnnotation scale:[self scaleFactor] atPoint:NSZeroPoint];
+            else
+                [[SKImageToolTipWindow sharedToolTipWindow] fadeOut];
+        }
     }
 }
 
