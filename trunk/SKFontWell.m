@@ -176,17 +176,10 @@ static char SKFontWellFontSizeObservationContext;
     [self setNeedsDisplay:YES];
 }
 
-- (void)notifyFontBinding {
-    NSDictionary *info = [self infoForBinding:FONTNAME_KEY];
-    [[info objectForKey:NSObservedObjectKey] setValue:[self fontName] forKeyPath:[info objectForKey:NSObservedKeyPathKey]];
-    info = [self infoForBinding:FONTSIZE_KEY];
-    [[info objectForKey:NSObservedObjectKey] setValue:[NSNumber numberWithDouble:[self fontSize]] forKeyPath:[info objectForKey:NSObservedKeyPathKey]];
-}
-
-- (void)notifyTextColorBinding {
-    NSDictionary *info = [self infoForBinding:TEXTCOLOR_KEY];
+- (void)notifyBinding:(NSString *)binding {
+    NSDictionary *info = [self infoForBinding:binding];
     if (info) {
-        id value = [self textColor];
+        id value = [self valueForKey:binding];
         NSValueTransformer *valueTransformer = [[info objectForKey:NSOptionsKey] objectForKey:NSValueTransformerBindingOption];
         if (valueTransformer == nil || [valueTransformer isEqual:[NSNull null]]) {
             NSString *transformerName = [[info objectForKey:NSOptionsKey] objectForKey:NSValueTransformerNameBindingOption];
@@ -203,7 +196,7 @@ static char SKFontWellFontSizeObservationContext;
 - (void)changeFontFromFontManager:(id)sender {
     if ([self isActive]) {
         [self setFont:[sender convertFont:[self font]]];
-        [self notifyFontBinding];
+        [self notifyBinding:FONTNAME_KEY];
         [self sendAction:[self action] to:[self target]];
     }
 }
@@ -211,7 +204,7 @@ static char SKFontWellFontSizeObservationContext;
 - (void)changeAttributesFromFontManager:(id)sender {
     if ([self isActive] && [self hasTextColor]) {
         [self setTextColor:[[sender convertAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[self textColor], NSForegroundColorAttributeName, nil]] valueForKey:NSForegroundColorAttributeName]];
-        [self notifyTextColorBinding];
+        [self notifyBinding:TEXTCOLOR_KEY];
         [self sendAction:[self action] to:[self target]];
     }
 }
@@ -436,12 +429,12 @@ static char SKFontWellFontSizeObservationContext;
     
     if (droppedFont) {
         [self setFont:droppedFont];
-        [self notifyFontBinding];
+        [self notifyBinding:FONTNAME_KEY];
         [self sendAction:[self action] to:[self target]];
     }
     if (droppedColor) {
         [self setTextColor:droppedColor];
-        [self notifyTextColorBinding];
+        [self notifyBinding:TEXTCOLOR_KEY];
         [self sendAction:[self action] to:[self target]];
     }
     
