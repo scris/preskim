@@ -128,12 +128,8 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     if ([pageSelection hasCharacters]) {
         NSRect selBounds = [pageSelection boundsForPage:page];
         selBounds = SKRectFromPoints([transform transformPoint:SKBottomLeftPoint(selBounds)], [transform transformPoint:SKTopRightPoint(selBounds)]);
-        CGFloat top = ceil(fmax(NSMaxY(selBounds), NSMinY(selBounds) + NSHeight(sourceRect)));
-        CGFloat left = floor(fmin(NSMinX(selBounds), NSMaxX(selBounds) - NSWidth(sourceRect)));
-        if (top < NSMaxY(sourceRect))
-            sourceRect.origin.y = top - NSHeight(sourceRect);
-        if (left > NSMinX(sourceRect))
-            sourceRect.origin.x = left;
+        sourceRect.origin.x = fmax(floor(NSMinX(selBounds)), fmin(floor(NSMaxX(selBounds) - NSWidth(sourceRect)), NSMinX(sourceRect)));
+        sourceRect.origin.y = fmin(ceil(NSMinY(selBounds)), fmax(ceil(NSMinY(selBounds) + NSHeight(sourceRect)), NSMaxY(sourceRect))) - NSHeight(sourceRect);
     }
     
     sourceRect = SKConstrainRect(sourceRect, pageImageRect);
