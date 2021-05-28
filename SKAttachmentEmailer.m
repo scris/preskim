@@ -182,8 +182,8 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
         if (success == NO) {
             NSLog(@"Error compiling mail to script: %@", errorDict);
         } else {
-            NSAppleEventDescriptor *result = [script executeAndReturnError:&errorDict];
-            if (result == nil)
+            success = nil != [script executeAndReturnError:&errorDict];
+            if (success == NO)
                 NSLog(@"Error running mail to script: %@", errorDict);
         }
         dispatch_async(dispatch_get_main_queue(), ^{
