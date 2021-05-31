@@ -93,6 +93,7 @@ BUILD_DIR = os.path.join(SYMROOT, "Release")
 BUILT_APP = os.path.join(BUILD_DIR, "Skim.app")
 DERIVED_DATA_DIR = os.path.join(BUILD_ROOT, "DerivedData")
 PLIST_PATH = os.path.join(BUILT_APP, "Contents", "Info.plist")
+RELNOTES_PATH = os.path.join(BUILT_APP, "Contents", "Resources", "ReleaseNotes.rtf")
 
 def read_versions():
 
