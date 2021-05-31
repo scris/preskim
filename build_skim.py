@@ -473,7 +473,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
         appcastString = newItemString
         appcastName = "skim-" + newVersionString + ".xml"
     
-    appcastPath = os.path.join(outputPath , "test_" + appcastName)
+    appcastPath = os.path.join(outputPath , appcastName)
     appcastFile = codecs.open(appcastPath, "w", "utf-8")
     appcastFile.write(newItemString)
     appcastFile.close()
