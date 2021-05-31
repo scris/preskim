@@ -144,7 +144,7 @@ def notarize_dmg_or_zip(archive_path, username, password):
     [output, error] = notarize_task.communicate()
     rc = notarize_task.returncode
     print("altool --notarize-app exited with status %s" % (rc))
-    assert rc == 0, "notarization failed"
+    assert rc == 0, "notarization failed %s" (error)
     
     output_stream = io.BytesIO(output)
     output_pl = plistlib.readPlist(output_stream)
@@ -533,7 +533,7 @@ if __name__ == '__main__':
     if identity != "":
         codesign(identity)
     else:
-        sys.stderr.write("warning: built product will not be codesigned\n")
+        sys.stderr.write("\nWARNING: built product will not be codesigned\n\n")
     
     new_version, new_version_string, minimum_system_version = read_versions()
     
@@ -565,7 +565,7 @@ if __name__ == '__main__':
             os.unlink(archive_path)
             archive_path = create_zip_of_application(new_version_string)
     else:
-            sys.stderr.write("warning: built product will not be notarized\n")
+            sys.stderr.write("\nWARNING: built product will not be notarized\n\n")
     
     try:
         # probably already exists
