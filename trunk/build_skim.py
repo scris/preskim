@@ -444,9 +444,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     <channel>
         <item>
             <title>Version """ + newVersionString + """</title>
-            <description>
-            <![CDATA[""" + relNotes + """            ]]>
-            </description>
+            <description><![CDATA[""" + relNotes + """            ]]></description>
             <pubDate>""" + appcastDate + """</pubDate>
             <sparkle:minimumSystemVersion>""" + minimumSystemVersion + """</sparkle:minimumSystemVersion>
             <enclosure url=\"""" + download_url + """\" sparkle:version=\"""" + newVersion + """\" sparkle:shortVersionString=\"""" + newVersionString + """\" length=\"""" + fileSize + """\" type=\"""" + type + """\" sparkle:dsaSignature=\"""" + appcastSignature + """\" />
