@@ -181,7 +181,10 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
     
     if (isProcessing == NO) {
         [[NSNotificationCenter defaultCenter] removeObserver:self];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(typeSelectCleanTimeout:) name:NSWindowWillCloseNotification object:[NSApp keyWindow]];
+        if ([[NSApp keyWindow] isSheet])
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(typeSelectCleanTimeout:) name:NSWindowDidEndSheetNotification object:[NSApp keyWindow]];
+        else
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(typeSelectCleanTimeout:) name:NSWindowWillCloseNotification object:[NSApp keyWindow]];
         if ([editor delegate])
             [(SKTypeSelectHelper *)[editor delegate] typeSelectCleanTimeout:nil];
         [editor setDelegate:self];
