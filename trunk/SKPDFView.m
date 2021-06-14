@@ -2331,6 +2331,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (isInitial)
         bounds = annotationType == SKAnchoredNote ? SKRectFromCenterAndSize(bounds.origin, SKNPDFAnnotationNoteSize) : SKRectFromCenterAndSquareSize(bounds.origin, MIN_NOTE_SIZE);
     
+    if ([[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey] > 1)
+        text = nil;
+    
     // Create annotation and add to page.
     switch (annotationType) {
         case SKFreeTextNote:
