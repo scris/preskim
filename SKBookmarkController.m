@@ -83,6 +83,8 @@
 #define CHILDREN_KEY @"children"
 #define LABEL_KEY    @"label"
 
+#define INDENT (RUNNING_AFTER(10_15) ? 9.0 : 16.0)
+
 #define SAVE_DELAY 10.0
 
 static char SKBookmarkPropertiesObservationContext;
@@ -858,7 +860,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
         NSTableColumn *tableColumn = [ov outlineTableColumn];
         NSTableCellView *view = [ov makeViewWithIdentifier:[tableColumn identifier] owner:self];
         __block NSInteger validCount = 0;
-        NSRect frame = NSMakeRect(0.0, 0.0, [tableColumn width] - 16.0, [ov rowHeight]);
+        NSRect frame = NSMakeRect(0.0, 0.0, [tableColumn width] - INDENT, [ov rowHeight]);
         [view setFrame:frame];
         frame.origin = [draggingInfo draggingLocation];
         
@@ -968,7 +970,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
 - (NSTableRowView *)outlineView:(NSOutlineView *)ov rowViewForItem:(id)item {
     if ([item bookmarkType] == SKBookmarkTypeSeparator) {
         SKSeparatorView *view = [ov makeViewWithIdentifier:@"separator" owner:self];
-        [view setIndentation:16.0 + [ov levelForItem:item] * [ov indentationPerLevel]];
+        [view setIndentation:INDENT + [ov levelForItem:item] * [ov indentationPerLevel]];
         return view;
     }
     return nil;
