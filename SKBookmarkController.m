@@ -43,7 +43,6 @@
 #import "SKStatusBar.h"
 #import "SKToolbarItem.h"
 #import "SKStringConstants.h"
-#import "SKSeparatorView.h"
 #import "NSMenu_SKExtensions.h"
 #import "NSURL_SKExtensions.h"
 #import "NSString_SKExtensions.h"
@@ -82,6 +81,8 @@
 #define PAGEINDEX_KEY @"pageIndex"
 #define CHILDREN_KEY @"children"
 #define LABEL_KEY    @"label"
+
+#define SKImageNameSeparator @"SKSeparator"
 
 #define INDENT (RUNNING_AFTER(10_15) ? 9.0 : 16.0)
 
@@ -122,6 +123,14 @@ static NSUInteger maxRecentDocumentsCount = 0;
         maxRecentDocumentsCount = 50;
     
     SKBookmarksIdentifier = [[[[NSBundle mainBundle] bundleIdentifier] stringByAppendingString:@".bookmarks"] retain];
+    
+    static NSImage *separatorImage = nil;
+    separatorImage = [[NSImage alloc] initWithSize:NSMakeSize(2.0, 2.0)];
+    [separatorImage lockFocus];
+    [[NSColor gridColor] setFill];
+    [NSBezierPath fillRect:NSMakeRect(0.0, 0.0, 2.0, 2.0)];
+    [separatorImage unlockFocus];
+    [separatorImage setName:SKImageNameSeparator];
 }
 
 + (id)sharedBookmarkController {
@@ -826,27 +835,13 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
 
 - (id<NSPasteboardWriting>)outlineView:(NSOutlineView *)ov pasteboardWriterForItem:(id)item {
     NSPasteboardItem *pbItem = [[[NSPasteboardItem alloc] init] autorelease];
-    [pbItem setPropertyList:[NSNumber numberWithInteger:[ov rowForItem:item]] forType:SKPasteboardTypeBookmarkRow];
+    [pbItem setData:[NSData data] forType:SKPasteboardTypeBookmarkRow];
     return pbItem;
 }
 
 - (void)outlineView:(NSOutlineView *)ov draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forItems:(NSArray *)draggedItems {
     SKDESTROY(draggedBookmarks);
     draggedBookmarks = [minimumCoverForBookmarks(draggedItems) retain];
-    
-    NSArray *classes = [NSArray arrayWithObjects:[NSPasteboardItem class], nil];
-    [session enumerateDraggingItemsWithOptions:0 forView:ov classes:classes searchOptions:[NSDictionary dictionary] usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
-        NSInteger row = [[[draggingItem item] propertyListForType:SKPasteboardTypeBookmarkRow] integerValue];
-        id item = [ov itemAtRow:row];
-        if ([item bookmarkType] == SKBookmarkTypeSeparator) {
-            NSRect frame = [draggingItem draggingFrame];
-            NSImage *image = [NSImage imageWithSize:frame.size flipped:NO drawingHandler:^(NSRect rect){
-                [SKSeparatorView drawSeparatorInRect:rect];
-                return YES;
-            }];
-            [draggingItem setDraggingFrame:frame contents:image];
-        }
-    }];
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation {
@@ -953,27 +948,18 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
 #pragma mark NSOutlineView delegate methods
 
 - (NSView *)outlineView:(NSOutlineView *)ov viewForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+    NSString *identifier = [tableColumn identifier];
     if ([item bookmarkType] == SKBookmarkTypeSeparator)
-        return nil;
+        identifier = [identifier stringByAppendingString:@"Separator"];
     
-    NSString *tcID = [tableColumn identifier];
-    NSTableCellView *view = [ov makeViewWithIdentifier:tcID owner:self];
-    if ([tcID isEqualToString:FILE_COLUMNID]) {
+    NSTableCellView *view = [ov makeViewWithIdentifier:identifier owner:self];
+    if ([identifier isEqualToString:FILE_COLUMNID]) {
         if ([item bookmarkType] == SKBookmarkTypeBookmark)
             [[view textField] setTextColor:[NSColor controlTextColor]];
         else
             [[view textField] setTextColor:[NSColor disabledControlTextColor]];
     }
     return view;
-}
-
-- (NSTableRowView *)outlineView:(NSOutlineView *)ov rowViewForItem:(id)item {
-    if ([item bookmarkType] == SKBookmarkTypeSeparator) {
-        SKSeparatorView *view = [ov makeViewWithIdentifier:@"separator" owner:self];
-        [view setIndentation:INDENT + [ov levelForItem:item] * [ov indentationPerLevel]];
-        return view;
-    }
-    return nil;
 }
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
