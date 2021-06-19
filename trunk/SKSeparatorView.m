@@ -41,6 +41,7 @@
 
 #define SEPARATOR_LEFT_INDENT 4.0
 #define SEPARATOR_RIGHT_INDENT 2.0
+#define EXTRA_INDENT 10.0
 
 
 @implementation SKSeparatorView
@@ -60,7 +61,10 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
-    [[self class] drawSeparatorInRect:SKShrinkRect([self bounds], [self indentation], NSMinXEdge)];
+    NSRect rect = SKShrinkRect([self bounds], [self indentation], NSMinXEdge);
+    if (RUNNING_AFTER(10_15))
+        rect = NSInsetRect(rect, EXTRA_INDENT, 0.0);
+    [[self class] drawSeparatorInRect:rect];
 }
 
 @end
