@@ -948,11 +948,20 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
 #pragma mark NSOutlineView delegate methods
 
 - (NSView *)outlineView:(NSOutlineView *)ov viewForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
-    NSString *identifier = [tableColumn identifier];
-    if ([item bookmarkType] == SKBookmarkTypeSeparator)
-        identifier = [identifier stringByAppendingString:@"Separator"];
-    
+    BOOL isSep = ([item bookmarkType] == SKBookmarkTypeSeparator);
+    NSString *identifier = isSep ? [tableColumn identifier] : @"separator";
     NSTableCellView *view = [ov makeViewWithIdentifier:identifier owner:self];
+    if (!RUNNING_AFTER(10_15)) {
+        BOOL isLast = [[tableColumn identifier] isEqualToString:FILE_COLUMNID];
+        if (isLast || isSep) {
+            for (NSLayoutConstraint *constraint in [view constraints]) {
+                if ([constraint secondAttribute] == NSLayoutAttributeTrailing) {
+                    [constraint setConstant:isSep == NO ? 4.0 : isLast ? 2.0 : 0.0];
+                    break;
+                }
+            }
+        }
+    }
     if ([identifier isEqualToString:FILE_COLUMNID]) {
         if ([item bookmarkType] == SKBookmarkTypeBookmark)
             [[view textField] setTextColor:[NSColor controlTextColor]];
