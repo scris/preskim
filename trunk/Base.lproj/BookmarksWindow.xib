@@ -61,7 +61,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="qju-xo-PnX">
-                                                            <rect key="frame" x="2" y="-1" width="14" height="20"/>
+                                                            <rect key="frame" x="1" y="-1" width="14" height="20"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="qju-xo-PnX" secondAttribute="height" multiplier="1:1" id="qe2-MI-HiG"/>
                                                             </constraints>
@@ -71,7 +71,7 @@
                                                             </connections>
                                                         </imageView>
                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MIp-vt-jzK">
-                                                            <rect key="frame" x="18" y="1" width="122" height="15"/>
+                                                            <rect key="frame" x="17" y="1" width="123" height="15"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="left" id="A8A-xh-ahK">
                                                                 <font key="font" metaFont="cellTitle"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -87,7 +87,7 @@
                                                         <constraint firstItem="MIp-vt-jzK" firstAttribute="leading" secondItem="qju-xo-PnX" secondAttribute="trailing" constant="4" id="5cl-ql-Arv"/>
                                                         <constraint firstItem="MIp-vt-jzK" firstAttribute="height" secondItem="qju-xo-PnX" secondAttribute="height" constant="1" id="9QS-9J-Lql"/>
                                                         <constraint firstItem="MIp-vt-jzK" firstAttribute="centerY" secondItem="m5H-UD-Vea" secondAttribute="centerY" id="C2j-fx-JRW"/>
-                                                        <constraint firstItem="qju-xo-PnX" firstAttribute="leading" secondItem="m5H-UD-Vea" secondAttribute="leading" constant="2" id="YYd-sg-8vF"/>
+                                                        <constraint firstItem="qju-xo-PnX" firstAttribute="leading" secondItem="m5H-UD-Vea" secondAttribute="leading" constant="1" id="YYd-sg-8vF"/>
                                                         <constraint firstAttribute="trailing" secondItem="MIp-vt-jzK" secondAttribute="trailing" constant="4" id="fIg-if-VWz"/>
                                                         <constraint firstItem="qju-xo-PnX" firstAttribute="top" secondItem="MIp-vt-jzK" secondAttribute="top" id="xx0-VV-xZW"/>
                                                     </constraints>
@@ -96,12 +96,12 @@
                                                         <outlet property="textField" destination="MIp-vt-jzK" id="W2T-0w-yUn"/>
                                                     </connections>
                                                 </tableCellView>
-                                                <tableCellView identifier="labelSeparator" id="jut-XX-ZMA">
+                                                <tableCellView identifier="separator" id="jut-XX-ZMA">
                                                     <rect key="frame" x="10" y="19" width="142" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="JMe-Xz-Br3">
-                                                            <rect key="frame" x="3" y="8" width="139" height="2"/>
+                                                            <rect key="frame" x="0.0" y="8" width="142" height="2"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="2" id="btC-uW-ypg"/>
                                                             </constraints>
@@ -111,7 +111,7 @@
                                                     <constraints>
                                                         <constraint firstItem="JMe-Xz-Br3" firstAttribute="centerY" secondItem="jut-XX-ZMA" secondAttribute="centerY" id="1u4-E7-uV4"/>
                                                         <constraint firstAttribute="trailing" secondItem="JMe-Xz-Br3" secondAttribute="trailing" id="GzE-La-hvZ"/>
-                                                        <constraint firstItem="JMe-Xz-Br3" firstAttribute="leading" secondItem="jut-XX-ZMA" secondAttribute="leading" constant="3" id="ZaI-Oj-5ln"/>
+                                                        <constraint firstItem="JMe-Xz-Br3" firstAttribute="leading" secondItem="jut-XX-ZMA" secondAttribute="leading" id="ZaI-Oj-5ln"/>
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="imageView" destination="JMe-Xz-Br3" id="ac3-wy-CY2"/>
@@ -157,27 +157,6 @@
                                                         <outlet property="textField" destination="6t1-0g-KAf" id="pIy-gq-p5R"/>
                                                     </connections>
                                                 </tableCellView>
-                                                <tableCellView identifier="fileSeparator" id="9N5-uf-l6v">
-                                                    <rect key="frame" x="152" y="19" width="172" height="17"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <subviews>
-                                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="cGb-Y9-hBE">
-                                                            <rect key="frame" x="0.0" y="8" width="172" height="2"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="2" id="aTj-EW-cUY"/>
-                                                            </constraints>
-                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="SKSeparator" id="fJu-h0-CxD"/>
-                                                        </imageView>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="cGb-Y9-hBE" secondAttribute="trailing" id="5Ep-Pm-6h8"/>
-                                                        <constraint firstItem="cGb-Y9-hBE" firstAttribute="leading" secondItem="9N5-uf-l6v" secondAttribute="leading" id="DVp-7l-PKp"/>
-                                                        <constraint firstItem="cGb-Y9-hBE" firstAttribute="centerY" secondItem="9N5-uf-l6v" secondAttribute="centerY" id="jXc-qd-rWg"/>
-                                                    </constraints>
-                                                    <connections>
-                                                        <outlet property="imageView" destination="cGb-Y9-hBE" id="Xv4-7I-1ge"/>
-                                                    </connections>
-                                                </tableCellView>
                                             </prototypeCellViews>
                                         </tableColumn>
                                         <tableColumn identifier="page" width="54" minWidth="33" maxWidth="1000" id="60">
@@ -200,7 +179,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R1G-Hh-dwB">
-                                                            <rect key="frame" x="1" y="1" width="57" height="15"/>
+                                                            <rect key="frame" x="1" y="1" width="59" height="15"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="left" id="oW4-F9-N41">
                                                                 <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" groupingSize="0" minimumIntegerDigits="0" maximumIntegerDigits="42" id="0GM-02-c0k">
                                                                     <real key="minimum" value="1"/>
@@ -221,33 +200,12 @@
                                                         </textField>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="R1G-Hh-dwB" secondAttribute="trailing" constant="4" id="1Be-GR-W9z"/>
+                                                        <constraint firstAttribute="trailing" secondItem="R1G-Hh-dwB" secondAttribute="trailing" constant="2" id="1Be-GR-W9z"/>
                                                         <constraint firstItem="R1G-Hh-dwB" firstAttribute="centerY" secondItem="yAP-ry-sjs" secondAttribute="centerY" id="55C-aC-Qah"/>
                                                         <constraint firstItem="R1G-Hh-dwB" firstAttribute="leading" secondItem="yAP-ry-sjs" secondAttribute="leading" constant="3" id="Nu5-AV-wx4"/>
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="textField" destination="R1G-Hh-dwB" id="jEr-fc-kvv"/>
-                                                    </connections>
-                                                </tableCellView>
-                                                <tableCellView identifier="pageSeparator" id="qm8-xv-suP">
-                                                    <rect key="frame" x="324" y="19" width="60" height="17"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <subviews>
-                                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="CkB-n2-1F4">
-                                                            <rect key="frame" x="0.0" y="8" width="60" height="2"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="2" id="hQl-Bo-LRQ"/>
-                                                            </constraints>
-                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="SKSeparator" id="LkO-14-yhi"/>
-                                                        </imageView>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="CkB-n2-1F4" secondAttribute="trailing" id="AnE-9K-OWM"/>
-                                                        <constraint firstItem="CkB-n2-1F4" firstAttribute="leading" secondItem="qm8-xv-suP" secondAttribute="leading" id="a65-B3-ZtT"/>
-                                                        <constraint firstItem="CkB-n2-1F4" firstAttribute="centerY" secondItem="qm8-xv-suP" secondAttribute="centerY" id="wga-eU-b9G"/>
-                                                    </constraints>
-                                                    <connections>
-                                                        <outlet property="imageView" destination="CkB-n2-1F4" id="eRl-ef-90y"/>
                                                     </connections>
                                                 </tableCellView>
                                             </prototypeCellViews>
