@@ -955,7 +955,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
         BOOL isLast = [[tableColumn identifier] isEqualToString:FILE_COLUMNID];
         if (isLast || isSep) {
             for (NSLayoutConstraint *constraint in [view constraints]) {
-                if ([constraint secondAttribute] == NSLayoutAttributeTrailing) {
+                if ([constraint firstAttribute] == NSLayoutAttributeTrailing) {
                     [constraint setConstant:isSep == NO ? 4.0 : isLast ? 2.0 : 0.0];
                     break;
                 }
