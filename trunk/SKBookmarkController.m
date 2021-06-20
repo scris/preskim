@@ -949,7 +949,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
 
 - (NSView *)outlineView:(NSOutlineView *)ov viewForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
     BOOL isSep = ([item bookmarkType] == SKBookmarkTypeSeparator);
-    NSString *identifier = isSep ? [tableColumn identifier] : @"separator";
+    NSString *identifier = isSep ? @"separator" : [tableColumn identifier];
     NSTableCellView *view = [ov makeViewWithIdentifier:identifier owner:self];
     if (!RUNNING_AFTER(10_15)) {
         BOOL isLast = [[tableColumn identifier] isEqualToString:FILE_COLUMNID];
