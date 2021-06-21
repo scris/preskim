@@ -218,6 +218,8 @@ static NSUInteger maxRecentDocumentsCount = 0;
     
     [outlineView setSupportsQuickLook:YES];
     
+    [outlineView sizeToFit];
+    
     NSArray *sendTypes = [NSArray arrayWithObject:(NSString *)kUTTypeFileURL];
     [NSApp registerServicesMenuSendTypes:sendTypes returnTypes:[NSArray array]];
 }
