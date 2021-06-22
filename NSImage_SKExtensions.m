@@ -168,8 +168,9 @@ NSString *SKImageNameDisplayPreferences = @"DisplayPreferences";
 NSString *SKImageNameNotesPreferences = @"NotesPreferences";
 NSString *SKImageNameSyncPreferences = @"SyncPreferences";
 
-NSString *SKImageNameNewFolder = @"NewFolder";
-NSString *SKImageNameNewSeparator = @"NewSeparator";
+NSString *SKImageNameToolbarNewFolder = @"ToolbarNewFolder";
+NSString *SKImageNameToolbarNewSeparator = @"ToolbarNewSeparator";
+NSString *SKImageNameToolbarDelete = @"ToolbarDelete";
 
 NSString *SKImageNameOutlineViewAdorn = @"OutlineViewAdorn";
 NSString *SKImageNameThumbnailViewAdorn = @"ThumbnailViewAdorn";
@@ -928,6 +929,68 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path fill];
     );
     
+    MAKE_IMAGE(SKImageNameToolbarNewFolder, YES, 19.0, 17.0,
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(10.5, 12.0)];
+        [path appendBezierPathWithArcFromPoint:NSMakePoint(6.8, 12.0) toPoint:NSMakePoint(5.7, 13.1) radius:1.2];
+        [path appendBezierPathWithArcFromPoint:NSMakePoint(5.7, 13.1) toPoint:NSMakePoint(2.0, 13.1) radius:1.2];
+        [path appendBezierPathWithArcFromPoint:NSMakePoint(2.0, 13.1) toPoint:NSMakePoint(2.0, 11) radius:1.2];
+        [path appendBezierPathWithArcFromPoint:NSMakePoint(2.0, 2.5) toPoint:NSMakePoint(15.3, 2.5) radius:1.2];
+        [path appendBezierPathWithArcFromPoint:NSMakePoint(15.4, 2.5) toPoint:NSMakePoint(15.4, 12.0) radius:1.2];
+        [path lineToPoint:NSMakePoint(15.4, 7.0)];
+        [path stroke];
+        path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(2.0, 9.6)];
+        [path lineToPoint:NSMakePoint(13.5, 9.6)];
+        [path stroke];
+        path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(15.25, 15.5)];
+        [path lineToPoint:NSMakePoint(15.25, 8.0)];
+        [path moveToPoint:NSMakePoint(11.5, 11.75)];
+        [path lineToPoint:NSMakePoint(19.0, 11.75)];
+        [path setLineWidth:1.5];
+        [path stroke];
+    );
+    
+    MAKE_IMAGE(SKImageNameToolbarNewSeparator, YES, 19.0, 17.0,
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(1.0, 6.5)];
+        [path lineToPoint:NSMakePoint(18.0, 6.5)];
+        [path setLineWidth:2.0];
+        [path stroke];
+        path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(15.25, 15.5)];
+        [path lineToPoint:NSMakePoint(15.25, 8.0)];
+        [path moveToPoint:NSMakePoint(11.5, 11.75)];
+        [path lineToPoint:NSMakePoint(19.0, 11.75)];
+        [path setLineWidth:1.5];
+        [path stroke];
+    );
+    
+    MAKE_IMAGE(SKImageNameToolbarDelete, YES, 15.0, 17.0,
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(2.75, 12.25)];
+        [path appendBezierPathWithArcFromPoint:NSMakePoint(3.25, 1.5) toPoint:NSMakePoint(11.0, 1.5) radius:1.5];
+        [path appendBezierPathWithArcFromPoint:NSMakePoint(11.0, 1.5) toPoint:NSMakePoint(11.5, 12.25) radius:1.5];
+        [path lineToPoint:NSMakePoint(11.5, 12.25)];
+        [path moveToPoint:NSMakePoint(1.0, 12.25)];
+        [path lineToPoint:NSMakePoint(13.25, 12.25)];
+        [path moveToPoint:NSMakePoint(9.5, 12.25)];
+        [path appendBezierPathWithArcFromPoint:NSMakePoint(9.5, 14.75) toPoint:NSMakePoint(4.75, 14.75) radius:1.0];
+        [path appendBezierPathWithArcFromPoint:NSMakePoint(4.75, 14.75) toPoint:NSMakePoint(5.0, 12.0) radius:1];
+        [path lineToPoint:NSMakePoint(5.0, 12.0)];
+        [path stroke];
+        path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(7.125, 3.0)];
+        [path lineToPoint:NSMakePoint(7.125, 10.5)];
+        [path moveToPoint:NSMakePoint(5.25, 3.0)];
+        [path lineToPoint:NSMakePoint(5.0, 10.5)];
+        [path moveToPoint:NSMakePoint(9.0, 3.0)];
+        [path lineToPoint:NSMakePoint(9.25, 10.5)];
+        [path setLineWidth:0.8];
+        [path stroke];
+    );
+    
 #define MAKE_BADGED_IMAGES(name) \
     MAKE_IMAGE(SKImageNameToolbarAdd ## name ## Note, YES, 27.0, 19.0, \
         translate(3.0, 0.0); \
@@ -1237,37 +1300,6 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         NSRectFill(NSMakeRect(11.0, 10.0, 10.0, 12.0));
         [refreshImage drawInRect:NSMakeRect(11.0, 10.0, 10.0, 12.0) fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
         [genericDocImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1.0];
-    );
-    
-    MAKE_IMAGE(SKImageNameNewFolder, NO, 32.0, 32.0, 
-        [[[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericFolderIcon)] drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
-        drawAddBadgeAtPoint(NSMakePoint(18.0, 18.0));
-    );
-    
-    MAKE_IMAGE(SKImageNameNewSeparator, NO, 32.0, 32.0, 
-        NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithGenericGamma22White:0.65 alpha:1.0] endingColor:[NSColor colorWithGenericGamma22White:0.85 alpha:1.0]] autorelease];
-        NSBezierPath *path;
-        [NSGraphicsContext saveGraphicsState];
-        [NSShadow setShadowWithWhite:0.0 alpha:0.5 blurRadius:2.0 yOffset:-1.0];
-        [[NSColor colorWithGenericGamma22White:0.4 alpha:1.0] setFill];
-        [NSBezierPath fillRect:NSMakeRect(2.0, 14.0, 28.0, 4.0)];
-        [NSGraphicsContext restoreGraphicsState];
-        [[NSColor colorWithGenericGamma22White:0.5 alpha:1.0] setFill];
-        [NSBezierPath fillRect:NSMakeRect(3.0, 15.0, 26.0, 3.0)];
-        [gradient drawInRect:NSMakeRect(3.0, 15.0, 26.0, 2.0) angle:90.0];
-        path = [NSBezierPath bezierPath];
-        [path moveToPoint:NSMakePoint(3.0, 15.0)];
-        [path lineToPoint:NSMakePoint(3.0, 17.0)];
-        [path lineToPoint:NSMakePoint(5.0, 17.0)];
-        [path closePath];
-        [gradient drawInBezierPath:path angle:0.0];
-        path = [NSBezierPath bezierPath];
-        [path moveToPoint:NSMakePoint(29.0, 15.0)];
-        [path lineToPoint:NSMakePoint(29.0, 17.0)];
-        [path lineToPoint:NSMakePoint(27.0, 17.0)];
-        [path closePath];
-        [gradient drawInBezierPath:path angle:180.0];
-        drawAddBadgeAtPoint(NSMakePoint(18.0, 14.0));
     );
 }
 

@@ -9,7 +9,10 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SKBookmarkController">
             <connections>
+                <outlet property="deleteSegmentedControl" destination="Jci-BQ-dkU" id="NwN-Ss-P8y"/>
+                <outlet property="folderSegmentedControl" destination="eLW-Pf-nGk" id="nGT-PP-XJl"/>
                 <outlet property="outlineView" destination="57" id="83"/>
+                <outlet property="separatorSegmentedControl" destination="qu6-XS-cXD" id="n8W-2o-EbY"/>
                 <outlet property="statusBar" destination="37" id="55"/>
                 <outlet property="window" destination="5" id="19"/>
             </connections>
@@ -61,11 +64,11 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="qju-xo-PnX">
-                                                            <rect key="frame" x="1" y="-1" width="14" height="20"/>
+                                                            <rect key="frame" x="1" y="2" width="14" height="14"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="qju-xo-PnX" secondAttribute="height" multiplier="1:1" id="qe2-MI-HiG"/>
                                                             </constraints>
-                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="km8-3h-7Py"/>
+                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="km8-3h-7Py"/>
                                                             <connections>
                                                                 <binding destination="m5H-UD-Vea" name="value" keyPath="objectValue.icon" id="H0a-9o-r69"/>
                                                             </connections>
@@ -261,9 +264,50 @@
                 <outlet property="delegate" destination="-2" id="109"/>
             </connections>
         </menu>
+        <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eLW-Pf-nGk">
+            <rect key="frame" x="0.0" y="0.0" width="33" height="23"/>
+            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="momentary" id="Ui3-Ac-WIW">
+                <font key="font" metaFont="system"/>
+                <segments>
+                    <segment image="ToolbarNewFolder" imageScaling="proportionallyUpOrDown" width="27"/>
+                </segments>
+            </segmentedCell>
+            <connections>
+                <action selector="insertBookmarkFolder:" target="-2" id="NuN-WV-2Ee"/>
+            </connections>
+            <point key="canvasLocation" x="-183" y="124"/>
+        </segmentedControl>
+        <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qu6-XS-cXD">
+            <rect key="frame" x="0.0" y="0.0" width="33" height="23"/>
+            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="momentary" id="8pJ-sk-9Dc">
+                <font key="font" metaFont="system"/>
+                <segments>
+                    <segment image="ToolbarNewSeparator" imageScaling="proportionallyUpOrDown" width="27"/>
+                </segments>
+            </segmentedCell>
+            <connections>
+                <action selector="insertBookmarkSeparator:" target="-2" id="13V-ey-mDP"/>
+            </connections>
+            <point key="canvasLocation" x="-182" y="200"/>
+        </segmentedControl>
+        <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jci-BQ-dkU">
+            <rect key="frame" x="0.0" y="0.0" width="33" height="23"/>
+            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="01q-cu-5Rf">
+                <font key="font" metaFont="system"/>
+                <segments>
+                    <segment image="ToolbarDelete" imageScaling="proportionallyUpOrDown" width="27"/>
+                </segments>
+            </segmentedCell>
+            <connections>
+                <action selector="deleteBookmark:" target="-2" id="i2e-Uc-wSW"/>
+            </connections>
+            <point key="canvasLocation" x="-183" y="285"/>
+        </segmentedControl>
     </objects>
     <resources>
-        <image name="NSActionTemplate" width="15" height="15"/>
         <image name="SKSeparator" width="128" height="128"/>
+        <image name="ToolbarDelete" width="128" height="128"/>
+        <image name="ToolbarNewFolder" width="128" height="128"/>
+        <image name="ToolbarNewSeparator" width="128" height="128"/>
     </resources>
 </document>
