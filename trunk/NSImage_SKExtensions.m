@@ -214,8 +214,6 @@ static inline void drawPageBackgroundInRect(NSRect rect);
 
 static inline void drawArrowCursor();
 
-static void drawAddBadgeAtPoint(NSPoint point);
-
 static void evaluateLaserPointer(void *info, const CGFloat *in, CGFloat *out);
 
 #define MAKE_IMAGE(name, isTemplate, width, height, instructions) \
@@ -2106,31 +2104,6 @@ static inline void drawPageBackgroundInRect(NSRect rect) {
 static inline void drawArrowCursor() {
     NSImage *arrowCursor = [[NSCursor arrowCursor] image];
     [arrowCursor drawAtPoint:NSMakePoint(0.0, 42.0 - [arrowCursor size].height) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
-}
-
-static void drawAddBadgeAtPoint(NSPoint point) {
-    NSBezierPath *path = [NSBezierPath bezierPath];
-    [path moveToPoint:NSMakePoint(point.x + 2.5, point.y + 6.5)];
-    [path relativeLineToPoint:NSMakePoint(4.0, 0.0)];
-    [path relativeLineToPoint:NSMakePoint(0.0, -4.0)];
-    [path relativeLineToPoint:NSMakePoint(3.0, 0.0)];
-    [path relativeLineToPoint:NSMakePoint(0.0, 4.0)];
-    [path relativeLineToPoint:NSMakePoint(4.0, 0.0)];
-    [path relativeLineToPoint:NSMakePoint(0.0, 3.0)];
-    [path relativeLineToPoint:NSMakePoint(-4.0, 0.0)];
-    [path relativeLineToPoint:NSMakePoint(0.0, 4.0)];
-    [path relativeLineToPoint:NSMakePoint(-3.0, 0.0)];
-    [path relativeLineToPoint:NSMakePoint(0.0, -4.0)];
-    [path relativeLineToPoint:NSMakePoint(-4.0, 0.0)];
-    [path closePath];
-    
-    [NSGraphicsContext saveGraphicsState];
-    [[NSColor colorWithGenericGamma22White:1.0 alpha:1.0] setFill];
-    [path fill];
-    [NSShadow setShadowWithWhite:0.0 alpha:0.5 blurRadius:1.0 yOffset:0.0];
-    [[NSColor colorWithSRGBRed:0.323 green:0.433 blue:0.433 alpha:1.0] setStroke];
-    [path stroke];
-    [NSGraphicsContext restoreGraphicsState];
 }
 
 static void evaluateLaserPointer(void *info, const CGFloat *in, CGFloat *out) {
