@@ -46,6 +46,9 @@
 @interface SKBookmarkController : NSWindowController <NSWindowDelegate, NSToolbarDelegate, NSMenuDelegate, SKOutlineViewDelegate, NSOutlineViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSTouchBarDelegate> {
     SKOutlineView *outlineView;
     SKStatusBar *statusBar;
+    NSSegmentedControl *folderSegmentedControl;
+    NSSegmentedControl *separatorSegmentedControl;
+    NSSegmentedControl *deleteSegmentedControl;
     NSButton *newFolderButton;
     NSButton *newSeparatorButton;
     NSButton *deleteButton;
@@ -63,6 +66,9 @@
 
 @property (nonatomic, retain) IBOutlet SKOutlineView *outlineView;
 @property (nonatomic, retain) IBOutlet SKStatusBar *statusBar;
+@property (nonatomic, retain) IBOutlet NSSegmentedControl *folderSegmentedControl;
+@property (nonatomic, retain) IBOutlet NSSegmentedControl *separatorSegmentedControl;
+@property (nonatomic, retain) IBOutlet NSSegmentedControl *deleteSegmentedControl;
 @property (nonatomic, readonly) SKBookmark *bookmarkRoot;
 @property (nonatomic, readonly) SKBookmark *previousSession;
 

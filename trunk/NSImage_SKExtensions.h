@@ -164,8 +164,9 @@ extern NSString *SKImageNameDisplayPreferences;
 extern NSString *SKImageNameNotesPreferences;
 extern NSString *SKImageNameSyncPreferences;
 
-extern NSString *SKImageNameNewFolder;
-extern NSString *SKImageNameNewSeparator;
+extern NSString *SKImageNameToolbarNewFolder;
+extern NSString *SKImageNameToolbarNewSeparator;
+extern NSString *SKImageNameToolbarDelete;
 
 extern NSString *SKImageNameOutlineViewAdorn;
 extern NSString *SKImageNameThumbnailViewAdorn;

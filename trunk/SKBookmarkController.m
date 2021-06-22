@@ -109,7 +109,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items);
 
 @implementation SKBookmarkController
 
-@synthesize outlineView, statusBar, bookmarkRoot, previousSession, undoManager;
+@synthesize outlineView, statusBar, folderSegmentedControl, separatorSegmentedControl, deleteSegmentedControl, bookmarkRoot, previousSession, undoManager;
 
 static SKBookmarkController *sharedBookmarkController = nil;
 
@@ -189,6 +189,12 @@ static NSUInteger maxRecentDocumentsCount = 0;
     SKDESTROY(toolbarItems);
     SKDESTROY(outlineView);
     SKDESTROY(statusBar);
+    SKDESTROY(newFolderButton);
+    SKDESTROY(newSeparatorButton);
+    SKDESTROY(deleteButton);
+    SKDESTROY(folderSegmentedControl);
+    SKDESTROY(separatorSegmentedControl);
+    SKDESTROY(deleteSegmentedControl);
     SKDESTROY(bookmarksCache);
     [super dealloc];
 }
@@ -1108,27 +1114,23 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     item = [[SKToolbarItem alloc] initWithItemIdentifier:SKBookmarksNewFolderToolbarItemIdentifier];
     [item setLabels:NSLocalizedString(@"New Folder", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Add a New Folder", @"Tool tip message")];
-    [item setImage:[NSImage imageNamed:SKImageNameNewFolder]];
-    [item setTarget:self];
-    [item setAction:@selector(insertBookmarkFolder:)];
+    [item setViewWithSizes:folderSegmentedControl];
     [dict setObject:item forKey:SKBookmarksNewFolderToolbarItemIdentifier];
     [item release];
     
     item = [[SKToolbarItem alloc] initWithItemIdentifier:SKBookmarksNewSeparatorToolbarItemIdentifier];
     [item setLabels:NSLocalizedString(@"New Separator", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Add a New Separator", @"Tool tip message")];
-    [item setImage:[NSImage imageNamed:SKImageNameNewSeparator]];
-    [item setTarget:self];
-    [item setAction:@selector(insertBookmarkSeparator:)];
+    [item setImage:[NSImage imageNamed:SKImageNameToolbarNewSeparator]];
+    [item setViewWithSizes:separatorSegmentedControl];
     [dict setObject:item forKey:SKBookmarksNewSeparatorToolbarItemIdentifier];
     [item release];
     
     item = [[SKToolbarItem alloc] initWithItemIdentifier:SKBookmarksDeleteToolbarItemIdentifier];
     [item setLabels:NSLocalizedString(@"Delete", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Delete Selected Items", @"Tool tip message")];
-    [item setImage:[[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kToolbarDeleteIcon)]];
-    [item setTarget:self];
-    [item setAction:@selector(deleteBookmark:)];
+    [item setImage:[NSImage imageNamed:SKImageNameToolbarDelete]];
+    [item setViewWithSizes:deleteSegmentedControl];
     [dict setObject:item forKey:SKBookmarksDeleteToolbarItemIdentifier];
     [item release];
     
