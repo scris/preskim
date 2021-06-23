@@ -1163,14 +1163,6 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
 		NSToolbarCustomizeToolbarItemIdentifier, nil];
 }
 
-- (BOOL)validateToolbarItem:(NSToolbarItem *)toolbarItem {
-    if ([[[self window] toolbar] customizationPaletteIsRunning])
-        return NO;
-    else if ([[toolbarItem itemIdentifier] isEqualToString:SKBookmarksDeleteToolbarItemIdentifier])
-        return [outlineView canDelete];
-    return YES;
-}
-
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     if ([menuItem action] == @selector(toggleStatusBar:)) {
         if ([statusBar isVisible])
