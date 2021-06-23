@@ -227,12 +227,13 @@ instructions \
 [image setName:name]; \
 } while (0)
 
-#define MAKE_CURSOR_IMAGE(name, width, height, instructions) \
+#define MAKE_VECTOR_IMAGE(name, isTemplate, width, height, instructions) \
 do { \
 static NSImage *image = nil; \
-image = [[NSImage cursorImageWithSize:NSMakeSize(width, height) drawingHandler:^(NSRect dstRect){ \
+image = [[NSImage alloc] initVectorWithSize:NSMakeSize(width, height) drawingHandler:^(NSRect dstRect){ \
 instructions \
-}] retain]; \
+}]; \
+[image setTemplate:isTemplate]; \
 [image setName:name]; \
 } while (0)
 
@@ -261,8 +262,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     return image;
 }
 
-+ (NSImage *)PDFImageWithSize:(NSSize)size drawingHandler:(void (^)(NSRect dstRect))drawingHandler {
-    NSImage *image = nil;
+- (id)initPDFWithSize:(NSSize)size drawingHandler:(void (^)(NSRect dstRect))drawingHandler {
     CFMutableDataRef pdfData = CFDataCreateMutable(NULL, 0);
     CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData(pdfData);
     CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
@@ -276,20 +276,22 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     CGPDFContextEndPage(context);
     CGPDFContextClose(context);
     CGContextRelease(context);
-    image = [[[NSImage alloc] initWithData:(NSData *)pdfData] autorelease];
+    self = [self initWithData:(NSData *)pdfData];
     CFRelease(pdfData);
-    return image;
+    return self;
 }
 
-+ (NSImage *)cursorImageWithSize:(NSSize)size drawingHandler:(void (^)(NSRect dstRect))drawingHandler {
+- (id)initVectorWithSize:(NSSize)size drawingHandler:(void (^)(NSRect dstRect))drawingHandler {
     if (RUNNING_BEFORE(10_11)) {
-        NSImage *image = [[[NSImage alloc] initWithSize:size] autorelease];
-        [image lockFocus];
-        if (drawingHandler) drawingHandler((NSRect){NSZeroPoint, size});
-        [image unlockFocus];
-        return image;
+        self = [self initWithSize:size];
+        if (self) {
+            [self lockFocus];
+            if (drawingHandler) drawingHandler((NSRect){NSZeroPoint, size});
+            [self unlockFocus];
+            return self;
+        }
     }
-    return [self PDFImageWithSize:size drawingHandler:drawingHandler];
+    return [self initPDFWithSize:size drawingHandler:drawingHandler];
 }
 
 // can't draw transparent gradients in a PDF context for some reason...
@@ -325,7 +327,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     static NSMutableDictionary *stamps = nil;
     NSImage *stamp = [stamps objectForKey:type];
     if (stamp == nil) {
-        stamp = [self PDFImageWithSize:NSMakeSize(256.0, 256.0) drawingHandler:^(NSRect rect){
+        stamp = [[self alloc] initPDFWithSize:NSMakeSize(256.0, 256.0) drawingHandler:^(NSRect rect){
             NSFont *font = [NSFont fontWithName:@"Times-Bold" size:120.0] ?: [NSFont boldSystemFontOfSize:120.0];
             NSTextStorage *storage = [[[NSTextStorage alloc] initWithString:type attributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]] autorelease];
             NSLayoutManager *manager = [[[NSLayoutManager alloc] init] autorelease];
@@ -359,6 +361,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         if (stamps == nil)
             stamps = [[NSMutableDictionary alloc] init];
         [stamps setObject:stamp forKey:type];
+        [stamp release];
     }
     return stamp;
 }
@@ -927,7 +930,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path fill];
     );
     
-    MAKE_IMAGE(SKImageNameToolbarNewFolder, YES, 19.0, 17.0,
+    MAKE_VECTOR_IMAGE(SKImageNameToolbarNewFolder, YES, 19.0, 17.0,
         NSBezierPath *path = [NSBezierPath bezierPath];
         [path moveToPoint:NSMakePoint(10.5, 12.0)];
         [path appendBezierPathWithArcFromPoint:NSMakePoint(6.8, 12.0) toPoint:NSMakePoint(5.7, 13.1) radius:1.2];
@@ -950,7 +953,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path stroke];
     );
     
-    MAKE_IMAGE(SKImageNameToolbarNewSeparator, YES, 19.0, 17.0,
+    MAKE_VECTOR_IMAGE(SKImageNameToolbarNewSeparator, YES, 19.0, 17.0,
         NSBezierPath *path = [NSBezierPath bezierPath];
         [path moveToPoint:NSMakePoint(1.0, 6.5)];
         [path lineToPoint:NSMakePoint(18.0, 6.5)];
@@ -965,7 +968,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path stroke];
     );
     
-    MAKE_IMAGE(SKImageNameToolbarDelete, YES, 15.0, 17.0,
+    MAKE_VECTOR_IMAGE(SKImageNameToolbarDelete, YES, 15.0, 17.0,
         NSBezierPath *path = [NSBezierPath bezierPath];
         [path moveToPoint:NSMakePoint(2.75, 12.25)];
         [path appendBezierPathWithArcFromPoint:NSMakePoint(3.25, 1.5) toPoint:NSMakePoint(11.0, 1.5) radius:1.5];
@@ -1478,7 +1481,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
 
 + (void)makeCursorImages {
     
-    MAKE_CURSOR_IMAGE(SKImageNameResizeDiagonal45Cursor, 16.0, 16.0,
+    MAKE_VECTOR_IMAGE(SKImageNameResizeDiagonal45Cursor, NO, 16.0, 16.0,
         if (RUNNING_AFTER(10_11))
             [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
         [[NSGraphicsContext currentContext] setShouldAntialias:NO];
@@ -1533,7 +1536,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
     );
     
-    MAKE_CURSOR_IMAGE(SKImageNameResizeDiagonal135Cursor, 16.0, 16.0,
+    MAKE_VECTOR_IMAGE(SKImageNameResizeDiagonal135Cursor, NO, 16.0, 16.0,
         if (RUNNING_AFTER(10_11))
             [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
         [[NSGraphicsContext currentContext] setShouldAntialias:NO];
@@ -1588,7 +1591,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
     );
     
-    MAKE_CURSOR_IMAGE(SKImageNameZoomInCursor, 18.0, 18.0,
+    MAKE_VECTOR_IMAGE(SKImageNameZoomInCursor, NO, 18.0, 18.0,
         [[NSColor whiteColor] set];
         NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(1.0, 5.0, 13.0, 13.0)];
         [path moveToPoint:NSMakePoint(14.5, 1.5)];
@@ -1619,7 +1622,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path stroke];
     );
     
-    MAKE_CURSOR_IMAGE(SKImageNameZoomOutCursor, 18.0, 18.0,
+    MAKE_VECTOR_IMAGE(SKImageNameZoomOutCursor, NO, 18.0, 18.0,
         [[NSColor whiteColor] set];
         NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(1.0, 5.0, 13.0, 13.0)];
         [path moveToPoint:NSMakePoint(14.5, 1.5)];
@@ -1648,7 +1651,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path stroke];
     );
     
-    MAKE_CURSOR_IMAGE(SKImageNameCameraCursor, 18.0, 16.0,
+    MAKE_VECTOR_IMAGE(SKImageNameCameraCursor, NO, 18.0, 16.0,
         if (RUNNING_AFTER(10_11))
             [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
         [[NSColor whiteColor] set];
@@ -1676,7 +1679,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     
     if (NSEqualSizes(size, NSMakeSize(32.0, 32.0))) {
     
-    MAKE_CURSOR_IMAGE(SKImageNameOpenHandBarCursor, 32.0, 32.0,
+    MAKE_VECTOR_IMAGE(SKImageNameOpenHandBarCursor, NO, 32.0, 32.0,
         [[NSColor blackColor] setFill];
         [NSGraphicsContext saveGraphicsState];
         if (RUNNING_AFTER(10_11))
@@ -1686,7 +1689,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [[[NSCursor openHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     );
         
-    MAKE_CURSOR_IMAGE(SKImageNameClosedHandBarCursor, 32.0, 32.0,
+    MAKE_VECTOR_IMAGE(SKImageNameClosedHandBarCursor, NO, 32.0, 32.0,
         [[NSColor blackColor] setFill];
         [NSGraphicsContext saveGraphicsState];
         if (RUNNING_AFTER(10_11))
@@ -1698,13 +1701,13 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     
     } else {
     
-    MAKE_CURSOR_IMAGE(SKImageNameOpenHandBarCursor, size.width, size.width,
+    MAKE_VECTOR_IMAGE(SKImageNameOpenHandBarCursor, NO, size.width, size.width,
         [[NSColor blackColor] setFill];
         [NSBezierPath fillRect:NSMakeRect(0.0, 9.0 / 16.0 * size.height, size.width, 3.0 / 16.0 * size.height)];
         [[[NSCursor openHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, size.width, size.height) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     );
     
-    MAKE_CURSOR_IMAGE(SKImageNameClosedHandBarCursor, size.width, size.width,
+    MAKE_VECTOR_IMAGE(SKImageNameClosedHandBarCursor, NO, size.width, size.width,
         [[NSColor blackColor] setFill];
         [NSBezierPath fillRect:NSMakeRect(0.0, 6.0 / 16.0 * size.height, size.width, 3.0 / 16.0 * size.height)];
         [[[NSCursor closedHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, size.width, size.height) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
@@ -1713,7 +1716,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     }
     
 #define MAKE_NOTE_CURSOR_IMAGE(name) \
-    MAKE_CURSOR_IMAGE(SKImageName ## name ## NoteCursor, 24.0, 42.0, \
+    MAKE_VECTOR_IMAGE(SKImageName ## name ## NoteCursor, NO, 24.0, 42.0, \
         drawArrowCursor(); \
         translate(2.0, 2.0); \
         draw ## name ## NoteBackground(); \
