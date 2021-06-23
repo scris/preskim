@@ -988,6 +988,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
             break;
         }
     }
+    [deleteSegmentedControl setEnabled:[outlineView canDelete]];
     [deleteButton setEnabled:[outlineView canDelete]];
     [previewButton setEnabled:hasFile];
     if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible] && [[QLPreviewPanel sharedPreviewPanel] dataSource] == self)
@@ -1115,6 +1116,8 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     [item setLabels:NSLocalizedString(@"New Folder", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Add a New Folder", @"Tool tip message")];
     [item setViewWithSizes:folderSegmentedControl];
+    if (!RUNNING_AFTER(10_15))
+        [folderSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksNewFolderToolbarItemIdentifier];
     [item release];
     
@@ -1123,6 +1126,8 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     [item setToolTip:NSLocalizedString(@"Add a New Separator", @"Tool tip message")];
     [item setImage:[NSImage imageNamed:SKImageNameToolbarNewSeparator]];
     [item setViewWithSizes:separatorSegmentedControl];
+    if (!RUNNING_AFTER(10_15))
+        [separatorSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksNewSeparatorToolbarItemIdentifier];
     [item release];
     
@@ -1131,6 +1136,9 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     [item setToolTip:NSLocalizedString(@"Delete Selected Items", @"Tool tip message")];
     [item setImage:[NSImage imageNamed:SKImageNameToolbarDelete]];
     [item setViewWithSizes:deleteSegmentedControl];
+    [deleteSegmentedControl setEnabled:[outlineView canDelete]];
+    if (!RUNNING_AFTER(10_15))
+        [deleteSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksDeleteToolbarItemIdentifier];
     [item release];
     
