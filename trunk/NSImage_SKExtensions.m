@@ -875,13 +875,17 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     );
     
     MAKE_IMAGE(SKImageNameToolbarInfo, YES, 27.0, 20.0,
-        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.8] setFill];
-        NSFont *font = [NSFont fontWithName:@"Hoefler Text Black Italic" size:13.0] ?: [NSFont boldSystemFontOfSize:13.0];
-        NSGlyph glyph = [font glyphWithName:@"i"];
-        NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(5.5, 2.5, 16.0, 16.0)];
-        [[NSColor blackColor] setFill];
-        [path moveToPoint:NSMakePoint(13.5 - NSMidX([font boundingRectForGlyph:glyph]), 6.0)];
-        [path appendBezierPathWithGlyph:glyph inFont:font];
+        NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(7.5, 4.5, 12.0, 12.0)];
+        [path stroke];
+        path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(12.0, 7.4)];
+        [path lineToPoint:NSMakePoint(15.3, 7.4)];
+        [path moveToPoint:NSMakePoint(13.7, 7.4)];
+        [path lineToPoint:NSMakePoint(13.7, 11.2)];
+        [path lineToPoint:NSMakePoint(12.2, 11.2)];
+        [path setLineWidth:0.8];
+        [path stroke];
+        path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(12.7, 12.8, 1.5, 1.5)];
         [path fill];
     );
     
