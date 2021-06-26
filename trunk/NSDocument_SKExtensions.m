@@ -181,12 +181,12 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
                         [alert addButtonWithTitle:NSLocalizedString(@"Add", @"button title")];
                         [alert beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSInteger returnCode){
                             if (returnCode == NSAlertFirstButtonReturn)
-                                [bookmarks replaceBookmarksAtIndexes:[NSIndexSet indexSetWithIndex:i] withBookmarks:[NSArray arrayWithObjects:bookmark, nil] ofBookmark:folder partial:NO];
+                                [bookmarks replaceBookmarksAtIndexes:[NSIndexSet indexSetWithIndex:i] withBookmarks:[NSArray arrayWithObjects:bookmark, nil] ofBookmark:folder partial:NO animate:YES];
                             else
-                                [bookmarks insertBookmarks:[NSArray arrayWithObjects:bookmark, nil] atIndexes:[NSIndexSet indexSetWithIndex:[folder countOfChildren]] ofBookmark:folder partial:NO];
+                                [bookmarks insertBookmarks:[NSArray arrayWithObjects:bookmark, nil] atIndexes:[NSIndexSet indexSetWithIndex:[folder countOfChildren]] ofBookmark:folder partial:NO animate:YES];
                         }];
                     } else {
-                        [bookmarks insertBookmarks:[NSArray arrayWithObjects:bookmark, nil] atIndexes:[NSIndexSet indexSetWithIndex:[folder countOfChildren]] ofBookmark:folder partial:NO];
+                        [bookmarks insertBookmarks:[NSArray arrayWithObjects:bookmark, nil] atIndexes:[NSIndexSet indexSetWithIndex:[folder countOfChildren]] ofBookmark:folder partial:NO animate:YES];
                     }
                 }
             }
