@@ -1227,6 +1227,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path moveToPoint:NSMakePoint(1.0, 12.0)];
         [path lineToPoint:NSMakePoint(27.0, 12.0)];
         [path setLineWidth:2.0];
+        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.8] setStroke];
         [path stroke];
     );
     
