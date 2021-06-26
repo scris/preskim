@@ -367,6 +367,8 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [outlineView removeItemsAtIndexes:indexes inParent:OV_ITEM(parent) withAnimation:options];
     [parent removeChildrenAtIndexes:indexes];
     indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange([indexes firstIndex], [newBookmarks count])];
+    if (options != NSTableViewAnimationEffectNone)
+        options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideDown;
     [outlineView insertItemsAtIndexes:indexes inParent:OV_ITEM(parent) withAnimation:options];
     [parent insertChildren:newBookmarks atIndexes:indexes];
     if (isPartial == NO)
