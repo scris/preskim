@@ -60,6 +60,7 @@
     NSArray *draggedBookmarks;
     NSDictionary *toolbarItems;
     NSArray *bookmarksCache;
+    BOOL needsBeginUpdates;
 }
 
 + (id)sharedBookmarkController;

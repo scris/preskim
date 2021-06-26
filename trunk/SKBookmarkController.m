@@ -338,8 +338,9 @@ static NSUInteger maxRecentDocumentsCount = 0;
     NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideDown;
     if (animate == NO || [self isWindowLoaded] == NO || [[self window] isVisible] == NO || [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
         options = NSTableViewAnimationEffectNone;
-    if (isPartial == NO)
+    if (isPartial == NO || needsBeginUpdates)
         [outlineView beginUpdates];
+    needsBeginUpdates = NO;
     [outlineView insertItemsAtIndexes:indexes inParent:OV_ITEM(parent) withAnimation:options];
     [parent insertChildren:newBookmarks atIndexes:indexes];
     if (isPartial == NO)
@@ -350,8 +351,9 @@ static NSUInteger maxRecentDocumentsCount = 0;
     NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideUp;
     if (animate == NO || [self isWindowLoaded] == NO || [[self window] isVisible] == NO || [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
         options = NSTableViewAnimationEffectNone;
-    if (isPartial == NO)
+    if (isPartial == NO || needsBeginUpdates)
         [outlineView beginUpdates];
+    needsBeginUpdates = NO;
     [outlineView removeItemsAtIndexes:indexes inParent:OV_ITEM(parent) withAnimation:options];
     [parent removeChildrenAtIndexes:indexes];
     if (isPartial == NO)
@@ -362,8 +364,9 @@ static NSUInteger maxRecentDocumentsCount = 0;
     NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideUp;
     if (animate == NO || [self isWindowLoaded] == NO || [[self window] isVisible] == NO || [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
         options = NSTableViewAnimationEffectNone;
-    if (isPartial == NO)
+    if (isPartial == NO || needsBeginUpdates)
         [outlineView beginUpdates];
+    needsBeginUpdates = NO;
     [outlineView removeItemsAtIndexes:indexes inParent:OV_ITEM(parent) withAnimation:options];
     [parent removeChildrenAtIndexes:indexes];
     indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange([indexes firstIndex], [newBookmarks count])];
@@ -685,9 +688,25 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
 
 #pragma mark Undo support
 
+- (void)handleWillUndoChange:(NSNotification *)notification {
+    needsBeginUpdates = YES;
+}
+
+- (void)handleDidUndoChange:(NSNotification *)notification {
+    if (needsBeginUpdates == NO)
+        [outlineView endUpdates];
+    needsBeginUpdates = NO;
+}
+
 - (NSUndoManager *)undoManager {
-    if(undoManager == nil)
+    if(undoManager == nil) {
         undoManager = [[NSUndoManager alloc] init];
+        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+        [nc addObserver:self selector:@selector(handleWillUndoChange:) name:NSUndoManagerWillUndoChangeNotification object:undoManager];
+        [nc addObserver:self selector:@selector(handleWillUndoChange:) name:NSUndoManagerWillRedoChangeNotification object:undoManager];
+        [nc addObserver:self selector:@selector(handleDidUndoChange:) name:NSUndoManagerDidUndoChangeNotification object:undoManager];
+        [nc addObserver:self selector:@selector(handleDidUndoChange:) name:NSUndoManagerDidRedoChangeNotification object:undoManager];
+    }
     return undoManager;
 }
 
@@ -722,14 +741,12 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
 }
 
 - (void)setBookmarks:(NSArray *)newChildren atIndexes:(NSIndexSet *)indexes ofBookmark:(SKBookmark *)bookmark {
-    [outlineView beginUpdates];
     NSIndexSet *removeIndexes = indexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [bookmark countOfChildren])];
     if ([removeIndexes count] > 0)
-        [self removeBookmarksAtIndexes:removeIndexes ofBookmark:bookmark partial:YES animate:NO];
+        [self removeBookmarksAtIndexes:removeIndexes ofBookmark:bookmark partial:YES animate:YES];
     NSIndexSet *insertIndexes = indexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [newChildren count])];
     if ([insertIndexes count] > 0)
-        [self insertBookmarks:newChildren atIndexes:insertIndexes ofBookmark:bookmark partial:YES animate:NO];
-    [outlineView endUpdates];
+        [self insertBookmarks:newChildren atIndexes:insertIndexes ofBookmark:bookmark partial:YES animate:YES];
 }
 
 #pragma mark KVO
@@ -768,14 +785,14 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
                 if ([newValue count] == 0) break;
                 if ([keyPath isEqualToString:CHILDREN_KEY]) {
                     [self startObservingBookmarks:newValue];
-                    [[[self undoManager] prepareWithInvocationTarget:self] removeBookmarksAtIndexes:indexes ofBookmark:bookmark partial:NO animate:NO];
+                    [[[self undoManager] prepareWithInvocationTarget:self] removeBookmarksAtIndexes:indexes ofBookmark:bookmark partial:YES animate:YES];
                 }
                 break;
             case NSKeyValueChangeRemoval:
                 if ([oldValue count] == 0) break;
                 if ([keyPath isEqualToString:CHILDREN_KEY]) {
                     [self stopObservingBookmarks:oldValue];
-                    [[[self undoManager] prepareWithInvocationTarget:self] insertBookmarks:[[oldValue copy] autorelease] atIndexes:indexes ofBookmark:bookmark partial:NO animate:NO];
+                    [[[self undoManager] prepareWithInvocationTarget:self] insertBookmarks:[[oldValue copy] autorelease] atIndexes:indexes ofBookmark:bookmark partial:YES animate:YES];
                 }
                 break;
             case NSKeyValueChangeReplacement:
