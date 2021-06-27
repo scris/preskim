@@ -275,11 +275,11 @@ static Class SKBookmarkClass = Nil;
 }
 
 - (void)insertObject:(SKBookmark *)bookmark inBookmarksAtIndex:(NSUInteger)anIndex {
-    [[SKBookmarkController sharedBookmarkController] insertBookmarks:[NSArray arrayWithObjects:bookmark, nil] atIndexes:[NSIndexSet indexSetWithIndex:anIndex] ofBookmark:self partial:NO animate:NO];
+    [[SKBookmarkController sharedBookmarkController] insertBookmark:bookmark atIndex:anIndex ofBookmark:self animate:NO];
 }
 
 - (void)removeObjectFromBookmarksAtIndex:(NSUInteger)anIndex {
-    [[SKBookmarkController sharedBookmarkController] removeBookmarksAtIndexes:[NSIndexSet indexSetWithIndex:anIndex] ofBookmark:self partial:NO animate:NO];
+    [[SKBookmarkController sharedBookmarkController] removeBookmarkAtIndex:anIndex ofBookmark:self animate:NO];
 }
 
 - (id)newScriptingObjectOfClass:(Class)objectClass forValueForKey:(NSString *)key withContentsValue:(id)contentsValue properties:(NSDictionary *)properties {

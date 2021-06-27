@@ -86,9 +86,9 @@
 
 - (SKBookmark *)bookmarkForURL:(NSURL *)bookmarkURL;
 
-- (void)insertBookmarks:(NSArray *)newBookmarks atIndexes:(NSIndexSet *)indexes ofBookmark:(SKBookmark *)parent partial:(BOOL)isPartial animate:(BOOL)animate;
-- (void)removeBookmarksAtIndexes:(NSIndexSet *)indexes ofBookmark:(SKBookmark *)parent partial:(BOOL)isPartial animate:(BOOL)animate;
-- (void)replaceBookmarksAtIndexes:(NSIndexSet *)indexes withBookmarks:(NSArray *)newBookmarks ofBookmark:(SKBookmark *)parent partial:(BOOL)isPartial animate:(BOOL)animate;
+- (void)insertBookmark:(SKBookmark *)bookmark atIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent animate:(BOOL)animate;
+- (void)removeBookmarkAtIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent animate:(BOOL)animate;
+- (void)replaceBookmarkAtIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent withBookmark:(SKBookmark *)bookmark animate:(BOOL)animate;
 
 - (void)addRecentDocumentForURL:(NSURL *)fileURL pageIndex:(NSUInteger)pageIndex snapshots:(NSArray *)setups;
 - (NSUInteger)pageIndexForRecentDocumentAtURL:(NSURL *)fileURL;
