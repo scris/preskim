@@ -366,13 +366,13 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [bookmark release];
 }
 
-- (void)replaceBookmarks:(NSArray *)newChildren atIndexes:(NSIndexSet *)indexes ofBookmark:(SKBookmark *)bookmark animate:(BOOL)animate {
+- (void)replaceBookmarksAtIndexes:(NSIndexSet *)indexes ofBookmark:(SKBookmark *)bookmark withBookmarks:(NSArray *)newBookmarks animate:(BOOL)animate {
     NSIndexSet *removeIndexes = indexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [bookmark countOfChildren])];
     if ([removeIndexes count] > 0)
         [self removeBookmarksAtIndexes:removeIndexes ofBookmark:bookmark animate:animate];
-    NSIndexSet *insertIndexes = indexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [newChildren count])];
+    NSIndexSet *insertIndexes = indexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [newBookmarks count])];
     if ([insertIndexes count] > 0)
-        [self insertBookmarks:newChildren atIndexes:insertIndexes ofBookmark:bookmark animate:animate];
+        [self insertBookmarks:newBookmarks atIndexes:insertIndexes ofBookmark:bookmark animate:animate];
 }
 
 - (void)insertBookmark:(SKBookmark *)bookmark atIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent animate:(BOOL)animate {
@@ -389,7 +389,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (void)replaceBookmarkAtIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent withBookmark:(SKBookmark *)bookmark animate:(BOOL)animate {
     [outlineView beginUpdates];
-    [self replaceBookmarks:[NSArray arrayWithObjects:bookmark, nil] atIndexes:[NSIndexSet indexSetWithIndex:anIndex] ofBookmark:parent animate:animate];
+    [self replaceBookmarksAtIndexes:[NSIndexSet indexSetWithIndex:anIndex] ofBookmark:parent withBookmarks:[NSArray arrayWithObjects:bookmark, nil] animate:animate];
     [outlineView endUpdates];
 }
 
@@ -773,7 +773,7 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
                     [new removeObjectsInArray:oldValue];
                     [self stopObservingBookmarks:old];
                     [self startObservingBookmarks:new];
-                    [[[self undoManager] prepareWithInvocationTarget:self] replaceBookmarks:[[oldValue copy] autorelease] atIndexes:nil ofBookmark:bookmark animate:YES];
+                    [[[self undoManager] prepareWithInvocationTarget:self] replaceBookmarksAtIndexes:nil ofBookmark:bookmark withBookmarks:[[oldValue copy] autorelease] animate:YES];
                 } else if ([keyPath isEqualToString:LABEL_KEY]) {
                     [[[self undoManager] prepareWithInvocationTarget:bookmark] setLabel:oldValue];
                     [outlineView reloadTypeSelectStrings];
@@ -800,7 +800,7 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
                 if ([keyPath isEqualToString:CHILDREN_KEY]) {
                     [self stopObservingBookmarks:oldValue];
                     [self startObservingBookmarks:newValue];
-                    [[[self undoManager] prepareWithInvocationTarget:self] replaceBookmarks:[[oldValue copy] autorelease] atIndexes:indexes ofBookmark:bookmark animate:YES];
+                    [[[self undoManager] prepareWithInvocationTarget:self] replaceBookmarksAtIndexes:indexes ofBookmark:bookmark withBookmarks:[[oldValue copy] autorelease] animate:YES];
                 }
                 break;
         }
