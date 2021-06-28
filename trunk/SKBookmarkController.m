@@ -936,7 +936,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
                 if (anIndex == bookmarkIndex)
                     continue;
             }
-            [self moveBookmarkAtIndex:bookmarkIndex ofBookmark:parent toIndex:anIndex ofBookmark:item];
+            [self moveBookmarkAtIndex:bookmarkIndex ofBookmark:parent toIndex:anIndex++ ofBookmark:item];
             [movedBookmarks addObject:bookmark];
 		}
         [ov endUpdates];
