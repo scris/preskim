@@ -144,7 +144,7 @@ def notarize_dmg_or_zip(archive_path, username, password):
     [output, error] = notarize_task.communicate()
     rc = notarize_task.returncode
     print("altool --notarize-app exited with status %s" % (rc))
-    assert rc == 0, "notarization failed %s" (error)
+    assert rc == 0, "notarization failed %s" % (error)
     
     output_stream = io.BytesIO(output)
     output_pl = plistlib.readPlist(output_stream)
