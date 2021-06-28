@@ -118,7 +118,8 @@
     [noteOutlineView setIndentationPerLevel:1.0];
     
     [noteOutlineView registerForDraggedTypes:[NSColor readableTypesForPasteboard:[NSPasteboard pasteboardWithName:NSDragPboard]]];
-    
+    [noteOutlineView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:NO];
+
     [snapshotTableView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:NO];
 }
 

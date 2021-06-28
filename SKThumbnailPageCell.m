@@ -54,7 +54,7 @@
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
     if ([self isMarked]) {
         NSImage *markImage = [NSImage markImage];
-        NSRect rect = NSMakeRect(NSMaxX(cellFrame) - markImage.size.width - MARKIMAGE_OFFSET, [controlView isFlipped] ? NSMinY(rect) + MARKIMAGE_OFFSET : NSMaxY(cellFrame) - markImage.size.height - MARKIMAGE_OFFSET, markImage.size.width, markImage.size.height);
+        NSRect rect = NSMakeRect(NSMaxX(cellFrame) - markImage.size.width - MARKIMAGE_OFFSET, [controlView isFlipped] ? NSMinY(cellFrame) + MARKIMAGE_OFFSET : NSMaxY(cellFrame) - markImage.size.height - MARKIMAGE_OFFSET, markImage.size.width, markImage.size.height);
         [markImage drawInRect:rect];
     }
     [super drawWithFrame:cellFrame inView:controlView];

@@ -61,7 +61,6 @@ static BOOL supportsHighlights = YES;
 - (void)updateHighlightMask {
     NSRect rect = [self bounds];
     if (NSIsEmptyRect(rect) == NO) {
-        NSRect rect = [self bounds];
         NSImage *mask = [[NSImage alloc] initWithSize:rect.size];
         if (NSWidth(rect) > 20.0) {
             [mask lockFocus];
