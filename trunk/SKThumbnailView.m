@@ -148,17 +148,17 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (NSImageView *)newMarkView {
-    NSImageView *markView = [(SKOverviewView *)[[self controller] collectionView] newViewWithIdentifier:MARK_ID];
-    if (markView == nil) {
+    NSImageView *view = [(SKOverviewView *)[[self controller] collectionView] newViewWithIdentifier:MARK_ID];
+    if (view == nil) {
         NSImage *markImage = [NSImage markImage];
         NSRect rect = NSZeroRect;
         rect.size = markImage.size;
-        markView = [[NSImageView alloc] initWithFrame:rect];
-        [markView setIdentifier:MARK_ID];
-        [markView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
-        [markView setImage:markImage];
+        view = [[NSImageView alloc] initWithFrame:rect];
+        [view setIdentifier:MARK_ID];
+        [view setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+        [view setImage:markImage];
     }
-    return markView;
+    return view;
 }
 
 - (void)removeView:(id)view {
