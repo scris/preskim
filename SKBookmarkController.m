@@ -1026,7 +1026,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
     [ov beginUpdates];
     NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
     SKBookmark *parent = nil;
-    for (SKBookmark *item in [minimumCoverForBookmarks(items) reverseObjectEnumerator]) {
+    for (SKBookmark *item in minimumCoverForBookmarks(items)) {
         SKBookmark *itemParent = [item parent];
         NSUInteger itemIndex = [[itemParent children] indexOfObject:item];
         if (itemIndex != NSNotFound) {
