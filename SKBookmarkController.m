@@ -905,10 +905,12 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
     if (anIndex != NSOutlineViewDropOnItemIndex) {
         NSPasteboard *pboard = [info draggingPasteboard];
         if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:SKPasteboardTypeBookmarkRow, nil]] &&
-            [info draggingSource] == ov)
-            dragOp = NSDragOperationMove;
-        else if ([NSURL canReadFileURLFromPasteboard:pboard])
+            [info draggingSource] == ov) {
+            if (NO == [item isDescendantOfArray:draggedBookmarks])
+                dragOp = NSDragOperationMove;
+        } else if ([NSURL canReadFileURLFromPasteboard:pboard]) {
             dragOp = NSDragOperationEvery;
+        }
     }
     return dragOp;
 }
