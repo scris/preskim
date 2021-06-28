@@ -220,6 +220,9 @@ static NSUInteger maxRecentDocumentsCount = 0;
     
     [outlineView registerForDraggedTypes:[NSArray arrayWithObjects:SKPasteboardTypeBookmarkRow, (NSString *)kUTTypeFileURL, NSFilenamesPboardType, nil]];
     
+    [outlineView setDraggingSourceOperationMask:NSDragOperationMove forLocal:YES];
+    [outlineView setDraggingSourceOperationMask:NSDragOperationDelete forLocal:NO];
+    
     [outlineView setDoubleAction:@selector(doubleClickBookmark:)];
     
     [outlineView setSupportsQuickLook:YES];
@@ -867,7 +870,9 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
     draggedBookmarks = [minimumCoverForBookmarks(draggedItems) retain];
 }
 
-- (void)outlineView:(NSOutlineView *)outlineView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation {
+- (void)outlineView:(NSOutlineView *)ov draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation {
+    if (operation == NSDragOperationDelete && [draggedBookmarks count])
+        [self outlineView:ov deleteItems:draggedBookmarks];
     SKDESTROY(draggedBookmarks);
 }
 
