@@ -129,7 +129,7 @@ def clean_and_build():
 def codesign(identity):
     
     sign_cmd = [os.path.join(SOURCE_DIR, "codesign_skim.sh"), identity, BUILT_APP]
-    print(" ".join(signCmd))
+    print(" ".join(sign_cmd))
     x = Popen(sign_cmd, cwd=SOURCE_DIR)
     rc = x.wait()
     print("codesign_skim.sh exited with status %s" % (rc))
