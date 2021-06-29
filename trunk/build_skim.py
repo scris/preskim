@@ -144,7 +144,7 @@ def notarize_dmg_or_zip(archive_path, username, password):
     [output, error] = notarize_task.communicate()
     rc = notarize_task.returncode
     print("altool --notarize-app exited with status %s" % (rc))
-    assert rc == 0, "notarization failed %s" % (error)
+    assert rc == 0, "notarization failed\n%s" % (output)
     
     output_stream = io.BytesIO(output)
     output_pl = plistlib.readPlist(output_stream)
@@ -159,7 +159,7 @@ def notarize_dmg_or_zip(archive_path, username, password):
         sleep(20)
         
         notarize_cmd = ["xcrun", "altool", "--notarization-info", request_uuid, "--username", username, "--password",  password, "--output-format", "xml"]
-        print(" ".join(notarize_cmd))
+        #print(" ".join(notarize_cmd))
         notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
         [output, error] = notarize_task.communicate()
         rc = notarize_task.returncode
@@ -465,7 +465,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
         start = newItemString.find("<item>")
         end = newItemString.find("</item>")
     if insert != -1 and start != -1 and end != -1:
-        appcastString = appcastString[:insert] + newItemString[start:end+8] + "        " + appcastString[insert:]
+        appcastString = appcastString[:insert] + newItemString[start:end+7] + "\n        " + appcastString[insert:]
         appcastName = "skim.xml"
     else:
         appcastString = newItemString
