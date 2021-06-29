@@ -460,12 +460,12 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     insert = -1
     start = -1
     end = -1
-    if appcastString.find("<title>Version " + newVersionString + "</title>") == -1:
-        insert = appcastString.find("<channel>")
-        start = newItemString.find("<channel>")
+    if len(appcastString) > 0 and appcastString.find("<title>Version " + newVersionString + "</title>") == -1:
+        insert = appcastString.find("<item>")
+        start = newItemString.find("<item>")
         end = newItemString.find("</item>")
     if insert != -1 and start != -1 and end != -1:
-        appcastString = appcastString[:insert+9] + newItemString[start+9:end+7] + appcastString[insert+9:]
+        appcastString = appcastString[:insert] + newItemString[start:end+8] + "        " + appcastString[insert:]
         appcastName = "skim.xml"
     else:
         appcastString = newItemString
@@ -473,7 +473,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     
     appcastPath = os.path.join(outputPath , appcastName)
     appcastFile = codecs.open(appcastPath, "w", "utf-8")
-    appcastFile.write(newItemString)
+    appcastFile.write(appcastString)
     appcastFile.close()
     
     # construct the ReadMe file
