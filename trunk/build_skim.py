@@ -460,7 +460,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     insert = -1
     start = -1
     end = -1
-    if len(appcastString) > 0 and appcastString.find("<title>Version " + newVersionString + "</title>") == -1:
+    if appcastString.find("<title>Version " + newVersionString + "</title>") == -1:
         insert = appcastString.find("<item>")
         start = newItemString.find("<item>")
         end = newItemString.find("</item>")
