@@ -537,14 +537,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 }
 
 - (IBAction)deleteBookmarks:(id)sender {
-    NSArray *items = minimumCoverForBookmarks([self clickedBookmarks]);
-    [self endEditing];
-    for (SKBookmark *item in [items reverseObjectEnumerator]) {
-        SKBookmark *parent = [item parent];
-        NSUInteger itemIndex = [[parent children] indexOfObject:item];
-        if (itemIndex != NSNotFound)
-            [parent removeObjectFromChildrenAtIndex:itemIndex];
-    }
+    [self outlineView:outlineView deleteItems:[self clickedBookmarks]];
 }
 
 - (IBAction)openBookmarks:(id)sender {
