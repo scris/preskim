@@ -373,6 +373,10 @@ static NSURL *temporaryDirectoryURL = nil;
     return [noteController commitEditing];
 }
 
+- (BOOL)commitEditingAndReturnError:(NSError **)error {
+    return [noteController commitEditingAndReturnError:error];
+}
+
 - (void)commitEditingWithDelegate:(id)delegate didCommitSelector:(SEL)didCommitSelector contextInfo:(void *)contextInfo {
     return [noteController commitEditingWithDelegate:delegate didCommitSelector:didCommitSelector contextInfo:contextInfo];
 }

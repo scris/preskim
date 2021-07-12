@@ -1353,14 +1353,20 @@
 }
 
 - (BOOL)commitEditing {
+    return [self commitEditingAndReturnError:NULL];
+}
+
+- (BOOL)commitEditingAndReturnError:(NSError **)error {
     BOOL rv = [pdfView commitEditing];
     if ([rightSideController.noteOutlineView editedRow] != -1)
         rv = [[rightSideController.noteOutlineView window] makeFirstResponder:rightSideController.noteOutlineView] && rv;
+    if (rv == NO && error)
+        *error = [NSError failedToCommitErrorWithLocalizedDescription:NSLocalizedString(@"Failed to commit edits", @"Error description")];
     return rv;
 }
 
 - (void)commitEditingWithDelegate:(id)delegate didCommitSelector:(SEL)didCommitSelector contextInfo:(void *)contextInfo {
-    BOOL didCommit = [self commitEditing];
+    BOOL didCommit = [self commitEditingAndReturnError:NULL];
     if (delegate && didCommitSelector) {
         // - (void)editor:(id)editor didCommit:(BOOL)didCommit contextInfo:(void *)contextInfo
         NSInvocation *invocation = [NSInvocation invocationWithTarget:delegate selector:didCommitSelector];

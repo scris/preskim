@@ -44,7 +44,8 @@ enum {
     SKWriteFileError = 1,
     SKReadFileError = 2,
     SKReadPasteboardError = 3,
-    SKPrintDocumentError = 4
+    SKPrintDocumentError = 4,
+    SKFailedToCommitError = 5
 };
 
 @interface NSError (SKExtensions)
@@ -54,6 +55,7 @@ enum {
 + (id)readPasteboardErrorWithLocalizedDescription:(NSString *)description;
 + (id)userCancelledErrorWithUnderlyingError:(NSError *)error;
 + (id)printDocumentErrorWithLocalizedDescription:(NSString *)description;
++ (id)failedToCommitErrorWithLocalizedDescription:(NSString *)description;
 
 + (NSError *)combineErrors:(NSArray *)errors maximum:(NSUInteger)max;
 
