@@ -197,6 +197,7 @@ static char SKFontWellFontSizeObservationContext;
     if ([self isActive]) {
         [self setFont:[sender convertFont:[self font]]];
         [self notifyBinding:FONTNAME_KEY];
+        [self notifyBinding:FONTSIZE_KEY];
         [self sendAction:[self action] to:[self target]];
     }
 }
@@ -430,6 +431,7 @@ static char SKFontWellFontSizeObservationContext;
     if (droppedFont) {
         [self setFont:droppedFont];
         [self notifyBinding:FONTNAME_KEY];
+        [self notifyBinding:FONTSIZE_KEY];
         [self sendAction:[self action] to:[self target]];
     }
     if (droppedColor) {
