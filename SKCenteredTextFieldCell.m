@@ -38,26 +38,14 @@
 
 #import "SKCenteredTextFieldCell.h"
 
-#define TEXT_OFFSET 1.0
 
 @implementation SKCenteredTextFieldCell
 
-- (NSRect)centeredFrame:(NSRect)cellFrame inView:(NSView *)view {
-    CGFloat height = [self cellSizeForBounds:cellFrame].height;
-    if (height < NSHeight(cellFrame)) {
-        cellFrame.origin.y += floor(0.5 * (NSHeight(cellFrame) - height));
-        cellFrame.origin.y += [view isFlipped] ? TEXT_OFFSET : -TEXT_OFFSET;
-        cellFrame.size.height = height;
-    }
-    return cellFrame;
-}
-
-- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
-    [super drawInteriorWithFrame:[self centeredFrame:cellFrame inView:controlView] inView:controlView];
-}
-
-- (NSRect)expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView *)view {
-    return [super expansionFrameWithFrame:[self centeredFrame:cellFrame inView:view] inView:view];
+- (NSRect)drawingRectForBounds:(NSRect)rect {
+    CGFloat height = [self cellSizeForBounds:rect].height;
+    if (height < NSHeight(rect))
+        rect = NSInsetRect(rect, 0.0, 0.5 * (NSHeight(rect) - height));
+    return [super drawingRectForBounds:rect];
 }
 
 @end
