@@ -112,6 +112,7 @@ enum {
     
     NSTimer *pacerTimer;
     CGFloat pacerSpeed;
+    CGFloat pacerWaitTime;
     
     SKTransitionController *transitionController;
     
