@@ -510,7 +510,7 @@ static char SKFontWellFontSizeObservationContext;
     }
     if ([self isHighlighted]) {
         [NSGraphicsContext saveGraphicsState];
-        [[[NSColor controlTextColor] colorWithAlphaComponent:0.3] setStroke];
+        [[[NSColor textColor] colorWithAlphaComponent:0.3] setStroke];
         [NSBezierPath strokeRect:NSInsetRect(frame, 0.5, 0.5)];
         [NSGraphicsContext restoreGraphicsState];
     }

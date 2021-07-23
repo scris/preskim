@@ -266,7 +266,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     }
     if ([self isHighlighted]) {
         [NSGraphicsContext saveGraphicsState];
-        [[[NSColor controlTextColor] colorWithAlphaComponent:0.3] setStroke];
+        [[[NSColor textColor] colorWithAlphaComponent:0.3] setStroke];
         [NSBezierPath strokeRect:NSInsetRect(bounds, 0.5, 0.5)];
         [NSGraphicsContext restoreGraphicsState];
     }
@@ -274,7 +274,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     if (lineWidth > 0.0) {
         [NSGraphicsContext saveGraphicsState];
         [[NSBezierPath bezierPathWithRect:NSInsetRect(bounds, 2.0, 2.0)] addClip];
-        [[NSColor controlTextColor] setStroke];
+        [[NSColor textColor] setStroke];
         [[self path] stroke];
         [NSGraphicsContext restoreGraphicsState];
     }
@@ -304,7 +304,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
         image = [NSImage bitmapImageWithSize:bounds.size scale:scale drawingHandler:^(NSRect rect){
             [[NSColor windowBackgroundColor] setFill];
             [NSBezierPath fillRect:rect];
-            [[[NSColor controlTextColor] colorWithAlphaComponent:0.6] setStroke];
+            [[[NSColor textColor] colorWithAlphaComponent:0.6] setStroke];
             [NSBezierPath strokeRect:NSInsetRect(rect, 0.5, 0.5)];
             rect = NSInsetRect(rect, 1.0, 1.0);
             [imageRep drawInRect:rect fromRect:rect operation:NSCompositeSourceOver fraction:1.0 respectFlipped:NO hints:nil];

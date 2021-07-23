@@ -88,7 +88,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-    NSColor *borderColor = [[NSColor controlTextColor] colorWithAlphaComponent:0.2];
+    NSColor *borderColor = [[NSColor textColor] colorWithAlphaComponent:0.2];
     NSUInteger i, iMax = [colors count];
     for (i = 0; i < iMax; i++) {
         NSRect rect = [self rectAtIndex:i];
