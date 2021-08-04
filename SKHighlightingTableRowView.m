@@ -92,8 +92,8 @@ static BOOL supportsHighlights = YES;
     }
 }
 
-- (void)setFrame:(NSRect)frame {
-    [super setFrame:frame];
+- (void)resizeSubviewsWithOldSize:(NSSize)oldSize {
+    [super resizeSubviewsWithOldSize:oldSize];
     if (highlightView)
         [self updateHighlightMask];
 }
