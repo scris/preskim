@@ -84,7 +84,7 @@ static void (*original_updateTrackingAreas)(id, SEL) = NULL;
 
 // On Sierra and later menuForEvent: is forwarded to the PDFView of the PDFPage rather than the actual PDFView,
 static NSMenu *replacement_menuForEvent(id self, SEL _cmd, NSEvent *event) {
-    id view = [[self enclosingScrollView] superview];
+    id view = [self enclosingScrollView];
     while ((view = [view superview]))
         if ([view isKindOfClass:[PDFView class]])
             break;
