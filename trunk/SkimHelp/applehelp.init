@@ -7,6 +7,10 @@
 # External stylesheet:
 $CSS_LINES = "<link href=\"sty/skimhelp.css\" rel=\"stylesheet\" media=\"all\" />";
 
+# External stylesheet:
+$FAVICON_LINES = "<link rel=\"icon\" href=\"skimicon.png\" sizes=\"16x16\" "/>
+<link rel=\"icon\" href=\"skimicon_2x.png\" sizes=\"32x32\" "/>";
+
 @MISC_BUTTONS = ('Top');
 @SECTION_BUTTONS = @MISC_BUTTONS;
 @CHAPTER_BUTTONS = @MISC_BUTTONS;
@@ -159,6 +163,7 @@ $description
 <meta name="Generator" content="$Texi2HTML::THISDOC{program}" />
 $encoding
 $CSS_LINES
+$FAVICON_LINES
 $EXTRA_HEAD
 </head>
 
