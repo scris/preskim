@@ -208,7 +208,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @abstract   Returns an array of Skim notes from the data.
     @discussion This is used to write a default Skim text notes representation when not provided for writing.
     @param      data The data object to extract the notes from, either an archive or plist data.
-    @result     A string representation of the notes.
+    @result     An array of dictionaries containing Skim notes properties.
 */
 extern NSArray *SKNSkimNotesFromData(NSData *data);
 
@@ -217,7 +217,7 @@ extern NSArray *SKNSkimNotesFromData(NSData *data);
     @discussion Can return the data as archived data, or as universal plist data.
     @param      notes An array of dictionaries containing Skim note properties, as returned by the properties of a <code>PDFAnnotation</code>.
     @param      asPlist Whether to create universal plist data rather than archived data.
-    @result     A string representation of the notes.
+    @result     A data representation of the notes.
 */
 extern NSData *SKNDataFromSkimNotes(NSArray *notes, BOOL asPlist);
 
