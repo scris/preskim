@@ -89,15 +89,26 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
 #pragma clang diagnostic pop
 
 - (id)initWithAliasData:(NSData *)aliasData {
-    AliasHandle handle = aliasData ? createAliasHandleFromData(aliasData) : NULL;
-    if (handle == NULL) {
+    if (aliasData == nil) {
         [self release];
         self = nil;
     } else {
-        self = [super init];
-        if (self) {
-            aliasHandle = handle;
-            data = [aliasData retain];
+        NSData *bookmarkData = (NSData *)CFURLCreateBookmarkDataFromAliasRecord(NULL, (CFDataRef)aliasData);
+        if (bookmarkData) {
+            self = [self initWithBookmarkData:bookmarkData];
+            [bookmarkData release];
+        } else {
+            AliasHandle handle = createAliasHandleFromData(aliasData);
+            if (handle == NULL) {
+                [self release];
+                self = nil;
+            } else {
+                self = [super init];
+                if (self) {
+                    aliasHandle = handle;
+                    data = [aliasData retain];
+                }
+            }
         }
     }
     return self;
