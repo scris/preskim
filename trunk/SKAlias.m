@@ -89,43 +89,35 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
 #pragma clang diagnostic pop
 
 - (id)initWithAliasData:(NSData *)aliasData {
-    self = [super init];
-    if (self) {
-        if (aliasData)
-            aliasHandle = createAliasHandleFromData(aliasData);
-        if (aliasHandle) {
+    AliasHandle handle = aliasData ? createAliasHandleFromData(aliasData) : NULL;
+    if (handle == NULL) {
+        [self release];
+        self = nil;
+    } else {
+        self = [super init];
+        if (self) {
+            aliasHandle = handle;
             data = [aliasData retain];
-        } else {
-            [self release];
-            self = nil;
         }
     }
     return self;
 }
 
 - (id)initWithBookmarkData:(NSData *)bookmarkData {
-    self = [super init];
-    if (self) {
-        if (bookmarkData) {
+    if (bookmarkData == nil) {
+        [self release];
+        self = nil;
+    } else {
+        self = [super init];
+        if (self) {
             data = [bookmarkData retain];
-        } else {
-            [self release];
-            self = nil;
         }
     }
     return self;
 }
 
 - (id)initWithURL:(NSURL *)fileURL {
-    self = [super init];
-    if (self) {
-        aliasHandle = createAliasHandleFromURL(fileURL);
-        if (aliasHandle == nil) {
-            [self release];
-            self = nil;
-        }
-    }
-    return self;
+    return [self initWithBookmarkData:[fileURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:NULL]];
 }
 
 - (void)dealloc {
@@ -136,15 +128,14 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
 }
 
 - (NSData *)data {
-    if (aliasHandle == NULL && data)
-        // try to convert bookmark data to alias handle
+    if (aliasHandle)
+        // try to convert alias to bookmark data
         [self fileURLNoUI];
     if (aliasHandle)
         // we could return data if present when fileURLNoUI is nil
         return dataFromAliasHandle(aliasHandle) ?: data;
     else
         return data;
-    return nil;
 }
 
 - (BOOL)isBookmark {
@@ -156,19 +147,19 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
     NSURL *fileURL = nil;
     if (aliasHandle) {
         fileURL = fileURLFromAliasHandle(aliasHandle, allowUI ? 0 : kResolveAliasFileNoUI);
+        // convert to bookmark data
+        if (fileURL) {
+            NSData *bmData = [fileURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:NULL];
+            if (bmData) {
+                disposeAliasHandle(aliasHandle);
+                [data release];
+                data = [bmData retain];
+            }
+        }
     } else if (data) {
         BOOL stale = NO;
         NSURLBookmarkResolutionOptions options = allowUI ? 0 : NSURLBookmarkResolutionWithoutUI | NSURLBookmarkResolutionWithoutMounting;
         fileURL = [NSURL URLByResolvingBookmarkData:data options:options relativeToURL:nil bookmarkDataIsStale:&stale error:NULL];
-        // convert back to alias handle
-        if (fileURL) {
-            AliasHandle handle = createAliasHandleFromURL(fileURL);
-            if (handle) {
-                aliasHandle = handle;
-                [data release];
-                data = nil;
-            }
-        }
     }
     return fileURL;
 }
