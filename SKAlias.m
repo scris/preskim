@@ -145,21 +145,22 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
 - (NSURL *)fileURLAllowingUI:(BOOL)allowUI {
     // we could cache the fileURL, but it would break when moving the file while we run
     NSURL *fileURL = nil;
+    BOOL shouldUpdate = NO;
     if (aliasHandle) {
         fileURL = fileURLFromAliasHandle(aliasHandle, allowUI ? 0 : kResolveAliasFileNoUI);
-        // convert to bookmark data
-        if (fileURL) {
-            NSData *bmData = [fileURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:NULL];
-            if (bmData) {
-                disposeAliasHandle(aliasHandle);
-                [data release];
-                data = [bmData retain];
-            }
-        }
+        shouldUpdate = YES;
     } else if (data) {
-        BOOL stale = NO;
         NSURLBookmarkResolutionOptions options = allowUI ? 0 : NSURLBookmarkResolutionWithoutUI | NSURLBookmarkResolutionWithoutMounting;
-        fileURL = [NSURL URLByResolvingBookmarkData:data options:options relativeToURL:nil bookmarkDataIsStale:&stale error:NULL];
+        fileURL = [NSURL URLByResolvingBookmarkData:data options:options relativeToURL:nil bookmarkDataIsStale:&shouldUpdate error:NULL];
+    }
+    if (shouldUpdate && fileURL) {
+        NSData *bmData = [fileURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:NULL];
+        if (bmData) {
+            if (aliasHandle)
+                disposeAliasHandle(aliasHandle);
+            [data release];
+            data = [bmData retain];
+        }
     }
     return fileURL;
 }
