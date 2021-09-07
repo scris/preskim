@@ -93,20 +93,14 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
         [self release];
         self = nil;
     } else {
-        NSData *bookmarkData = (NSData *)CFURLCreateBookmarkDataFromAliasRecord(NULL, (CFDataRef)aliasData);
-        if (bookmarkData) {
-            self = [self initWithBookmarkData:bookmarkData];
-            [bookmarkData release];
-        } else {
-            AliasHandle handle = createAliasHandleFromData(aliasData);
-            if (handle == NULL) {
-                [self release];
-                self = nil;
-            } else {
-                self = [super init];
-                if (self) {
-                    aliasHandle = handle;
-                    data = [aliasData retain];
+        self = [super init];
+        if (self) {
+            data = (NSData *)CFURLCreateBookmarkDataFromAliasRecord(NULL, (CFDataRef)aliasData);
+            if (data == nil) {
+                aliasHandle = createAliasHandleFromData(aliasData);
+                if (aliasHandle == NULL) {
+                    [self release];
+                    self = nil;
                 }
             }
         }
