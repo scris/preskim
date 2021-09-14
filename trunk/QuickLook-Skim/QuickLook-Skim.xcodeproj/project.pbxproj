@@ -177,9 +177,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8D57630D048677EA00EA77CD /* Skim */ = {
+		8D57630D048677EA00EA77CD /* Quicklook-Skim */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2CA3261E0896AD4900168862 /* Build configuration list for PBXNativeTarget "Skim" */;
+			buildConfigurationList = 2CA3261E0896AD4900168862 /* Build configuration list for PBXNativeTarget "Quicklook-Skim" */;
 			buildPhases = (
 				8D57630E048677EA00EA77CD /* Headers */,
 				8D57630F048677EA00EA77CD /* Resources */,
@@ -191,7 +191,7 @@
 			);
 			dependencies = (
 			);
-			name = Skim;
+			name = "Quicklook-Skim";
 			productInstallPath = /Library/QuickLook;
 			productName = QuickLookSkim;
 			productReference = 8D576316048677EA00EA77CD /* Skim.qlgenerator */;
@@ -227,7 +227,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D57630D048677EA00EA77CD /* Skim */,
+				8D57630D048677EA00EA77CD /* Quicklook-Skim */,
 			);
 		};
 /* End PBXProject section */
@@ -344,7 +344,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2CA3261E0896AD4900168862 /* Build configuration list for PBXNativeTarget "Skim" */ = {
+		2CA3261E0896AD4900168862 /* Build configuration list for PBXNativeTarget "Quicklook-Skim" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2CA3261F0896AD4900168862 /* Debug */,
