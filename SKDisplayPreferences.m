@@ -101,7 +101,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
         
         [self updateBackgroundColors];
         
-        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[NSArray arrayWithObjects:SKBackgroundColorKey, SKFullScreenBackgroundColorKey, SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey, nil] context:&SKDisplayPreferencesDefaultsObservationContext];
+        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[NSArray arrayWithObjects:SKBackgroundColorKey, SKFullScreenBackgroundColorKey, SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey, SKSwatchColorsKey, nil] context:&SKDisplayPreferencesDefaultsObservationContext];
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKDisplayPreferencesDefaultsObservationContext];
     }
 }
@@ -152,10 +152,12 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &SKDisplayPreferencesDefaultsObservationContext) {
-        if (changingColors == NO)
+        if ([[keyPath substringFromIndex:7] isEqualToString:SKSwatchColorsKey])
+            [addRemoveColorButton setEnabled:([colorSwatch selectedColorIndex] != -1 && [[colorSwatch colors] count] > 1) forSegment:1];
+        else if (changingColors == NO)
             [self updateBackgroundColors];
     } else if (context == &SKDisplayPreferencesColorSwatchObservationContext) {
-        [addRemoveColorButton setEnabled:[colorSwatch selectedColorIndex] != -1 forSegment:1];
+        [addRemoveColorButton setEnabled:([colorSwatch selectedColorIndex] != -1 && [[colorSwatch colors] count] > 1) forSegment:1];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }

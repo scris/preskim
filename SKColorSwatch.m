@@ -684,7 +684,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 #pragma mark NSDraggingSource protocol 
 
 - (NSDragOperation)draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context {
-    return context == NSDraggingContextWithinApplication ? NSDragOperationGeneric : NSDragOperationDelete;
+    return context == NSDraggingContextWithinApplication ? NSDragOperationGeneric : [colors count] > 1 ? NSDragOperationDelete : NSDragOperationNone;
 }
 
 - (void)draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation {
