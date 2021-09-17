@@ -633,7 +633,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 }
 
 - (void)removeColorAtIndex:(NSInteger)i {
-    if (i >= 0 && i < (NSInteger)[colors count]) {
+    if (i >= 0 && i < (NSInteger)[colors count] && [colors count] > 1) {
         [self deactivate];
         NSSize size = [self sizeForNumberOfColors:[colors count] - 1];
         [self noteFocusRingMaskChanged];
