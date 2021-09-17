@@ -213,7 +213,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 }
 
 - (NSSize)contentSizeForNumberOfColors:(NSUInteger)count {
-    return NSMakeSize(bezelHeight + (count - 1) * [self distanceBetweenColors], bezelHeight);
+    return NSMakeSize(bezelHeight + ((NSInteger)count - 1) * [self distanceBetweenColors], bezelHeight);
 }
 
 - (NSRect)frameForColorAtIndex:(NSInteger)anIndex {
@@ -444,7 +444,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (void)moveLeft:(id)sender {
     if (--focusedIndex < 0)
-        focusedIndex = [colors count] - 1;
+        focusedIndex = (NSInteger)[colors count] - 1;
     [self noteFocusRingMaskChanged];
     NSAccessibilityPostNotification(self, NSAccessibilityFocusedUIElementChangedNotification);
 }
@@ -635,7 +635,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 - (void)removeColorAtIndex:(NSInteger)i {
     if (i >= 0 && i < (NSInteger)[colors count] && [colors count] > 1) {
         [self deactivate];
-        NSSize size = [self sizeForNumberOfColors:[colors count] - 1];
+        NSSize size = [self sizeForNumberOfColors:(NSInteger)[colors count] - 1];
         [self noteFocusRingMaskChanged];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [self animateItemViewsCollapsing:i frameSize:size];
