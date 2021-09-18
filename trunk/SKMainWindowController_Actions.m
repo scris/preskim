@@ -629,15 +629,14 @@ static NSArray *allMainDocumentPDFViews() {
             rect[j] = NSMakeRect(floor(NSMidX(rect[j]) - 0.5 * w), floor(NSMidY(rect[j]) - 0.5 * h), w, h);
         [rectArray addPointer:rect];
         [rectArray addPointer:rect + 1];
+        
+        [self dismissProgressSheet];
     } else {
         [rectArray addPointer:rect];
     }
     
     [self cropPagesToRects:rectArray];
     [pdfView setCurrentSelectionRect:NSZeroRect];
-	
-    if (emptySelection)
-        [self dismissProgressSheet];
 }
 
 - (IBAction)autoCropAll:(id)sender {
@@ -654,9 +653,10 @@ static NSArray *allMainDocumentPDFViews() {
         if (i && i % 10 == 0)
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
     }
-    [self cropPagesToRects:rectArray];
-	
+    
     [self dismissProgressSheet];
+    
+    [self cropPagesToRects:rectArray];
 }
 
 - (IBAction)smartAutoCropAll:(id)sender {
@@ -693,9 +693,10 @@ static NSArray *allMainDocumentPDFViews() {
         }
     }
     [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
-    [self cropPagesToRects:rectArray];
 	
     [self dismissProgressSheet];
+    
+    [self cropPagesToRects:rectArray];
 }
 
 - (IBAction)resetCrop:(id)sender {
@@ -704,22 +705,19 @@ static NSArray *allMainDocumentPDFViews() {
     PDFDocument *pdfDoc = [pdfView document];
     NSInteger i, iMax = [[pdfView document] pageCount];
     
-    [self beginProgressSheetWithMessage:[NSLocalizedString(@"Cropping Pages", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:iMax];
-    
     for (i = 0; i < iMax; i++) {
         PDFPage *page = [pdfDoc pageAtIndex:i] ;
         NSRect rect = NSRectFromCGRect(CGPDFPageGetBoxRect([page pageRef], kCGPDFCropBox));
         if (hasChanges == NO && NSEqualRects(rect, [page boundsForBox:kPDFDisplayBoxCropBox]) == NO)
             hasChanges = YES;
         [rectArray addPointer:&rect];
-        [self incrementProgressSheet];
+        //[self incrementProgressSheet];
         if (i && i % 10 == 0)
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
     }
+    
     if (hasChanges)
         [self cropPagesToRects:rectArray];
-    
-    [self dismissProgressSheet];
 }
 
 - (IBAction)autoSelectContent:(id)sender {
