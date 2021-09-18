@@ -45,14 +45,6 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-static inline AliasHandle createAliasHandleFromURL(NSURL *fileURL) {
-    AliasHandle aliasHandle = NULL;
-    FSRef fileRef;
-    if (fileURL && CFURLGetFSRef((CFURLRef)fileURL, &fileRef))
-        FSNewAlias(NULL, &fileRef, &aliasHandle);
-    return aliasHandle;
-}
-
 static inline AliasHandle createAliasHandleFromData(NSData *data) {
     NSUInteger len = [data length];
     Handle handle = NewHandle(len);
