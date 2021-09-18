@@ -90,6 +90,7 @@
 - (IBAction)cropAll:(id)sender;
 - (IBAction)autoCropAll:(id)sender;
 - (IBAction)smartAutoCropAll:(id)sender;
+- (IBAction)resetCrop:(id)sender;
 - (IBAction)autoSelectContent:(id)sender;
 - (IBAction)getInfo:(id)sender;
 - (IBAction)delete:(id)sender;

@@ -698,6 +698,30 @@ static NSArray *allMainDocumentPDFViews() {
     [self dismissProgressSheet];
 }
 
+- (IBAction)resetCrop:(id)sender {
+    NSPointerArray *rectArray = [NSPointerArray rectPointerArray];
+    BOOL hasChanges = NO;
+    PDFDocument *pdfDoc = [pdfView document];
+    NSInteger i, iMax = [[pdfView document] pageCount];
+    
+    [self beginProgressSheetWithMessage:[NSLocalizedString(@"Cropping Pages", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:iMax];
+    
+    for (i = 0; i < iMax; i++) {
+        PDFPage *page = [pdfDoc pageAtIndex:i] ;
+        NSRect rect = NSRectFromCGRect(CGPDFPageGetBoxRect([page pageRef], kCGPDFCropBox));
+        if (hasChanges == NO && NSEqualRects(rect, [page boundsForBox:kPDFDisplayBoxCropBox]) == NO)
+            hasChanges = YES;
+        [rectArray addPointer:&rect];
+        [self incrementProgressSheet];
+        if (i && i % 10 == 0)
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+    }
+    if (hasChanges)
+        [self cropPagesToRects:rectArray];
+    
+    [self dismissProgressSheet];
+}
+
 - (IBAction)autoSelectContent:(id)sender {
     [pdfView autoSelectContent:sender];
 }
