@@ -1699,7 +1699,7 @@ static NSArray *allMainDocumentPDFViews() {
         return [[self pdfDocument] isLocked] == NO && [self hasOverview] == NO;
     } else if (action == @selector(rotateRight:) || action == @selector(rotateLeft:) || action == @selector(rotateAllRight:) || action == @selector(rotateAllLeft:)) {
         return [[self pdfDocument] isLocked] == NO;
-    } else if (action == @selector(cropAll:) || action == @selector(crop:) || action == @selector(autoCropAll:) || action == @selector(smartAutoCropAll:)) {
+    } else if (action == @selector(cropAll:) || action == @selector(crop:) || action == @selector(autoCropAll:) || action == @selector(smartAutoCropAll:) || action == @selector(resetCrop:)) {
         return [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(autoSelectContent:)) {
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && [pdfView toolMode] == SKSelectToolMode;
