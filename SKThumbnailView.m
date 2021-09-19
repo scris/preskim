@@ -128,7 +128,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)updateBackgroundStyle {
     NSBackgroundStyle style = [self backgroundStyle];
-    if ([self isSelected] && ([[self window] isKeyWindow] || [[self window] isMainWindow]))
+    if ([self isSelected] && [[self window] isKeyWindow])
         style = NSBackgroundStyleDark;
     if ([[labelView cell] backgroundStyle] != style) {
         [[labelView cell] setBackgroundStyle:style];
@@ -222,7 +222,7 @@ static char SKThumbnailViewThumbnailObservationContext;
                 labelHighlightView = [self newHighlightView];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-                [labelHighlightView setEmphasized:[[self window] isKeyWindow] || [[self window] isMainWindow]];
+                [labelHighlightView setEmphasized:[[self window] isKeyWindow]];
 #pragma clang diagnostic pop
                 [labelHighlightView setFrame:[labelView frame]];
                 [labelHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
@@ -324,7 +324,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         rect = NSInsetRect(rect, inset, 0.0);
         if (NSIntersectsRect(dirtyRect, rect)) {
             NSColor *color;
-            if ([[self window] isKeyWindow] || [[self window] isMainWindow])
+            if ([[self window] isKeyWindow])
                 color = [NSColor alternateSelectedControlColor];
             else if ([self backgroundStyle] == NSBackgroundStyleDark)
                 color = [NSColor darkGrayColor];
@@ -353,13 +353,13 @@ static char SKThumbnailViewThumbnailObservationContext;
     }
 }
 
-- (void)handleKeyOrMainStateChangedNotification:(NSNotification *)note {
+- (void)handleKeyStateChangedNotification:(NSNotification *)note {
     if ([self isSelected] || [self highlightLevel] > 0) {
         [self updateBackgroundStyle];
         if (RUNNING_AFTER(10_15))
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-            [labelHighlightView setEmphasized:[[self window] isKeyWindow] || [[self window] isMainWindow]];
+            [labelHighlightView setEmphasized:[[self window] isKeyWindow]];
 #pragma clang diagnostic pop
         else
             [self setNeedsDisplayInRect:[labelView frame]];
@@ -375,8 +375,6 @@ static char SKThumbnailViewThumbnailObservationContext;
     NSWindow *oldWindow = [self window];
     if (oldWindow) {
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        [nc removeObserver:self name:NSWindowDidBecomeMainNotification object:oldWindow];
-        [nc removeObserver:self name:NSWindowDidResignMainNotification object:oldWindow];
         [nc removeObserver:self name:NSWindowDidBecomeKeyNotification object:oldWindow];
         [nc removeObserver:self name:NSWindowDidResignKeyNotification object:oldWindow];
         NSView *clipView = [[self enclosingScrollView] contentView];
@@ -385,10 +383,8 @@ static char SKThumbnailViewThumbnailObservationContext;
     }
     if (newWindow) {
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        [nc addObserver:self selector:@selector(handleKeyOrMainStateChangedNotification:) name:NSWindowDidBecomeMainNotification object:newWindow];
-        [nc addObserver:self selector:@selector(handleKeyOrMainStateChangedNotification:) name:NSWindowDidResignMainNotification object:newWindow];
-        [nc addObserver:self selector:@selector(handleKeyOrMainStateChangedNotification:) name:NSWindowDidBecomeKeyNotification object:newWindow];
-        [nc addObserver:self selector:@selector(handleKeyOrMainStateChangedNotification:) name:NSWindowDidResignKeyNotification object:newWindow];
+        [nc addObserver:self selector:@selector(handleKeyStateChangedNotification:) name:NSWindowDidBecomeKeyNotification object:newWindow];
+        [nc addObserver:self selector:@selector(handleKeyStateChangedNotification:) name:NSWindowDidResignKeyNotification object:newWindow];
     }
     [super viewWillMoveToWindow:newWindow];
 }
@@ -400,7 +396,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollBoundsChangedNotification:) name:NSViewBoundsDidChangeNotification object:clipView];
             [self handleScrollBoundsChangedNotification:nil];
         }
-        [self handleKeyOrMainStateChangedNotification:nil];
+        [self handleKeyStateChangedNotification:nil];
     }
     [super viewDidMoveToWindow];
 }
