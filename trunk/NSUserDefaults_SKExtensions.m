@@ -45,9 +45,12 @@
     NSColor *color = nil;
     NSData *data = [self dataForKey:key];
     if (data) {
-        color = [NSUnarchiver unarchiveObjectWithData:data];
-        if (color == nil)
-            color = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        @try { color = [NSUnarchiver unarchiveObjectWithData:data]; }
+        @catch (id e) {}
+        if (color == nil) {
+            @try { color = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
+            @catch (id e) {}
+        }
         if ([color isKindOfClass:[NSColor class]] == NO)
             color = nil;
     } else {
