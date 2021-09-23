@@ -98,9 +98,13 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 - (id)transformedValue:(id)value {
     if ([value isKindOfClass:[NSData class]] == NO)
         return nil;
-    NSColor *color = [NSUnarchiver unarchiveObjectWithData:value];
-    if (color == nil)
-        color = [NSKeyedUnarchiver unarchiveObjectWithData:value];
+    NSColor *color = nil;
+    @try { color = [NSUnarchiver unarchiveObjectWithData:value]; }
+    @catch (id e) {}
+    if (color == nil) {
+        @try { color = [NSKeyedUnarchiver unarchiveObjectWithData:value]; }
+        @catch (id e) {}
+    }
     if ([color isKindOfClass:[NSColor class]] == NO)
         return nil;
     return color;
