@@ -3014,7 +3014,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {
-    if ([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy) {
+    if ([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy || [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         SKSetHasDefaultAppearance([[self scrollView] verticalScroller]);
         SKSetHasDefaultAppearance([[self scrollView] horizontalScroller]);
     } else {
