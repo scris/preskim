@@ -44,7 +44,7 @@ extern void SKSetHasLightAppearance(id object);
 extern void SKSetHasDefaultAppearance(id object);
 
 extern void SKRunWithAppearance(id object, void (^code)(void));
-void SKRunWithLightAppearance(void (^code)(void));
+extern void SKRunWithLightAppearance(void (^code)(void));
 
 #pragma mark -
 
@@ -53,4 +53,8 @@ extern void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat lineW
 
 #pragma mark -
 
-void SKDrawTextFieldBezel(NSRect rect, NSView *controlView);
+extern void SKDrawTextFieldBezel(NSRect rect, NSView *controlView);
+
+#pragma mark -
+
+extern NSArray *SKColorInvertFilters(void);

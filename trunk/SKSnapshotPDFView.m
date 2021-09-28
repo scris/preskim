@@ -103,6 +103,9 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     SKSetHasLightAppearance([[self scrollView] contentView]);
     [self handleScrollerStyleChangedNotification:nil];
     
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+        [[[self scrollView] contentView] setContentFilters:SKColorInvertFilters()];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
                                                  name:NSPreferredScrollerStyleDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePDFViewFrameChangedNotification:)
@@ -265,6 +268,12 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 
 - (void)setDelegate:(id <SKSnapshotPDFViewDelegate>)newDelegate {
     [super setDelegate:newDelegate];
+}
+
+- (void)viewDidChangeEffectiveAppearance {
+    [super viewDidChangeEffectiveAppearance];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+        [[[self scrollView] contentView] setContentFilters:SKColorInvertFilters()];
 }
 
 - (void)handlePDFViewFrameChangedNotification:(NSNotification *)notification {

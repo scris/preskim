@@ -251,12 +251,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 @end
 
-#if DEPLOYMENT_BEFORE(10_14)
-@interface NSView (SKMojaveExtensions)
-- (void)viewDidChangeEffectiveAppearance;
-@end
-#endif
-
 #pragma mark -
 
 @implementation SKPDFView
@@ -351,6 +345,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     SKSetHasDefaultAppearance(self);
     SKSetHasLightAppearance([[self scrollView] contentView]);
     [self handleScrollerStyleChangedNotification:nil];
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+        [[[self scrollView] contentView] setContentFilters:SKColorInvertFilters()];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -3088,6 +3085,21 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     return NO;
 }
 
+#pragma mark Dark mode
+
+- (void)viewDidChangeEffectiveAppearance {
+    [super viewDidChangeEffectiveAppearance];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        [[[self scrollView] contentView] setContentFilters:SKColorInvertFilters()];
+        if (loupeWindow) {
+            NSView *loupeView = [loupeWindow contentView];
+            if (RUNNING_AFTER(10_13))
+                loupeView = [[loupeView subviews] firstObject] ?: loupeView;
+            [[[[loupeView layer] sublayers] firstObject] setFilters:SKColorInvertFilters()];
+        }
+    }
+}
+
 #pragma mark Menu validation
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
@@ -3242,6 +3254,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (wantsAdded)
             [[self window] addChildWindow:overlay ordered:NSWindowAbove];
     }
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+        [layer setFilters:SKColorInvertFilters()];
     return overlay;
 }
 
