@@ -90,6 +90,7 @@
 #import "SKOverviewView.h"
 #import "NSView_SKExtensions.h"
 #import "SKThumbnailPageView.h"
+#import "NSGraphics_SKExtensions.h"
 
 #define NOTES_KEY       @"notes"
 #define SNAPSHOTS_KEY   @"snapshots"
@@ -439,6 +440,8 @@
         NSTableCellView *view = [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
         if ([[tableColumn identifier] isEqualToString:PAGE_COLUMNID])
              [(SKThumbnailPageView *)[view textField] setMarked:(NSUInteger)row == markedPageIndex];
+        else if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+            [[view imageView] setContentFilters:SKColorInvertFilters()];
         return view;
     } else if ([tv isEqual:rightSideController.snapshotTableView] ||
         [tv isEqual:leftSideController.findTableView]) {
@@ -1902,6 +1905,12 @@ static NSArray *allMainDocumentPDFViews() {
     }
     [pdfView setBackgroundColor:backgroundColor];
     [secondaryPdfView setBackgroundColor:backgroundColor];
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        [leftSideController.thumbnailTableView enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row){
+            [[[rowView viewAtColumn:0] imageView] setContentFilters:SKColorInvertFilters()];
+        }];
+    }
 }
 
 - (void)handleApplicationWillTerminateNotification:(NSNotification *)notification {
