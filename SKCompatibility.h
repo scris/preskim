@@ -227,3 +227,11 @@ typedef NS_ENUM(NSInteger, NSWindowToolbarStyle) {
 
 #endif
 
+#if SDK_BEFORE(10_14)
+
+@interface NSView (SKMojaveExtensions)
+- (void)viewDidChangeEffectiveAppearance;
+@end
+
+#endif
+

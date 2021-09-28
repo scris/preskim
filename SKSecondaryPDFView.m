@@ -104,6 +104,9 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     SKSetHasLightAppearance([[self scrollView] contentView]);
     [self handleScrollerStyleChangedNotification:nil];
     
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+        [[[self scrollView] contentView] setContentFilters:SKColorInvertFilters()];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
                                                  name:NSPreferredScrollerStyleDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePageChangedNotification:)
@@ -160,6 +163,12 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     if (document && [document isLocked])
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDocumentDidUnlockNotification:) 
                                                      name:PDFDocumentDidUnlockNotification object:document];
+}
+
+- (void)viewDidChangeEffectiveAppearance {
+    [super viewDidChangeEffectiveAppearance];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+        [[[self scrollView] contentView] setContentFilters:SKColorInvertFilters()];
 }
 
 #pragma mark Popup buttons

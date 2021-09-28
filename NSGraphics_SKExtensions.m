@@ -39,6 +39,7 @@
 #import "NSGraphics_SKExtensions.h"
 #import "NSGeometry_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
+#import <Quartz/Quartz.h>
 
 
 #if SDK_BEFORE(10_14)
@@ -178,4 +179,17 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
     }
     [cell drawWithFrame:rect inView:controlView];
     [cell setControlView:nil];
+}
+
+#pragma mark -
+
+extern NSArray *SKColorInvertFilters(void) {
+    NSArray *filters;
+    if (SKHasDarkAppearance(NSApp)) {
+        filters = [NSArray arrayWithObjects:[CIFilter filterWithName:@"CIColorInvert"], [CIFilter filterWithName:@"CIHueAdjust"], nil];
+        [[filters lastObject] setValue:[NSNumber numberWithDouble:M_PI] forKey:kCIInputAngleKey];
+    } else {
+        filters = [NSArray array];
+    }
+    return filters;
 }
