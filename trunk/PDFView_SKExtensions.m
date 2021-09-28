@@ -274,6 +274,9 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 }
 
 - (NSScrollView *)scrollView {
+    // don't go through the documentView, because that may not exist,
+    // e.g. in init or when the document is locked
+    // also when -documentView is called from -initWithCoder: it may crash
     return [self descendantOfClass:[NSScrollView class]];
 }
 
