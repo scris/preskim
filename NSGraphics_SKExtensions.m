@@ -184,12 +184,8 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
 #pragma mark -
 
 extern NSArray *SKColorInvertFilters(void) {
-    NSArray *filters;
-    if (SKHasDarkAppearance(NSApp)) {
-        filters = [NSArray arrayWithObjects:[CIFilter filterWithName:@"CIColorInvert"], [CIFilter filterWithName:@"CIHueAdjust"], nil];
-        [[filters lastObject] setValue:[NSNumber numberWithDouble:M_PI] forKey:kCIInputAngleKey];
-    } else {
-        filters = [NSArray array];
-    }
-    return filters;
+    if (SKHasDarkAppearance(NSApp))
+        return [NSArray arrayWithObjects:[CIFilter filterWithName:@"CIColorInvert"], [CIFilter filterWithName:@"CIHueAdjust" keysAndValues:kCIInputAngleKey, [NSNumber numberWithDouble:M_PI], nil], nil];
+    else
+        return [NSArray array];
 }
