@@ -3090,7 +3090,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 #pragma mark Dark mode
 
 - (void)viewDidChangeEffectiveAppearance {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
     [super viewDidChangeEffectiveAppearance];
+#pragma clang diagnostic pop
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         [[self scrollView] setContentFilters:SKColorInvertFilters()];
         if (loupeWindow)

@@ -408,7 +408,10 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (void)viewDidChangeEffectiveAppearance {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
     [super viewDidChangeEffectiveAppearance];
+#pragma clang diagnostic pop
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
         [imageView setContentFilters:SKColorInvertFilters()];
 }
