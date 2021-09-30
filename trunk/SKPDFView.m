@@ -343,11 +343,13 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[[self class] defaultKeysToObserve] context:&SKPDFViewDefaultsObservationContext];
     
     SKSetHasDefaultAppearance(self);
-    SKSetHasLightAppearance([[self scrollView] contentView]);
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        SKSetHasLightAppearance([self scrollView]);
+        [[[self scrollView] self] setContentFilters:SKColorInvertFilters()];
+    } else {
+        SKSetHasLightAppearance([[self scrollView] contentView]);
+    }
     [self handleScrollerStyleChangedNotification:nil];
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        [[[self scrollView] contentView] setContentFilters:SKColorInvertFilters()];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -3090,13 +3092,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)viewDidChangeEffectiveAppearance {
     [super viewDidChangeEffectiveAppearance];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        [[[self scrollView] contentView] setContentFilters:SKColorInvertFilters()];
-        if (loupeWindow) {
-            NSView *loupeView = [loupeWindow contentView];
-            if (RUNNING_AFTER(10_13))
-                loupeView = [[loupeView subviews] firstObject] ?: loupeView;
-            [[[[loupeView layer] sublayers] firstObject] setFilters:SKColorInvertFilters()];
-        }
+        [[self scrollView] setContentFilters:SKColorInvertFilters()];
+        if (loupeWindow)
+            [[loupeWindow contentView] setContentFilters:SKColorInvertFilters()];
     }
 }
 
@@ -3247,15 +3245,17 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     NSWindow *overlay = nil;
     if (wantsAdded && [self wantsLayer]) {
         [[self layer] addSublayer:layer];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+            [layer setFilters:SKColorInvertFilters()];
     } else {
         overlay = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[self convertRectToScreen:[self bounds]]];
         [[overlay contentView] setWantsLayer:YES];
         [[[overlay contentView] layer] addSublayer:layer];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+            [[overlay contentView] setContentFilters:SKColorInvertFilters()];
         if (wantsAdded)
             [[self window] addChildWindow:overlay ordered:NSWindowAbove];
     }
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        [layer setFilters:SKColorInvertFilters()];
     return overlay;
 }
 
@@ -4846,15 +4846,18 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 #pragma clang diagnostic pop
         if (material == 0) {
             __block CGColorRef cgColor = NULL;
-            SKRunWithAppearance(NSApp, ^{
+            SKRunWithAppearance([self scrollView], ^{
                 if ([bgColor alphaComponent] < 1.0)
                     cgColor = [[[NSColor blackColor] blendedColorWithFraction:[bgColor alphaComponent] ofColor:[bgColor colorWithAlphaComponent:1.0]] CGColor];
                 if (cgColor == NULL)
                     cgColor = [bgColor CGColor] ?: CGColorGetConstantColor(kCGColorBlack);
             });
             [loupeLayer setBackgroundColor:cgColor];
-            if (hasBackgroundView)
+            if (hasBackgroundView) {
                 [loupeWindow setContentView:loupeView];
+                if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+                    [loupeView setContentFilters:SKColorInvertFilters()];
+            }
         } else if (hasBackgroundView) {
             [(NSVisualEffectView *)[loupeWindow contentView] setMaterial:material];
         } else {
@@ -4865,6 +4868,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [loupeWindow setContentView:view];
             [view addSubview:loupeView];
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+                [view setContentFilters:SKColorInvertFilters()];
+                [loupeView setContentFilters:[NSArray array]];
+            }
             [loupeView release];
             if (NSIsEmptyRect([view bounds]) == NO)
                 [view setMaskImage:[NSImage maskImageWithSize:[view bounds].size cornerRadius:LOUPE_RADIUS]];
@@ -4932,6 +4939,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             loupeWindow = [self newOverlayLayer:loupeLayer wantsAdded:NO];
             [loupeWindow setHasShadow:YES];
             [self updateLoupeBackgroundColor];
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+                SKSetHasLightAppearance(loupeWindow);
             
             [[NSNotificationCenter defaultCenter] addObserver:self
                 selector:@selector(handlePDFContentViewFrameChangedNotification:)
