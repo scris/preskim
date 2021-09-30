@@ -44,6 +44,8 @@
 #import "SKTransitionController.h"
 #import "NSBitmapImageRep_SKExtensions.h"
 #import "NSView_SKExtensions.h"
+#import "SKStringConstants.h"
+#import "NSGraphics_SKExtensions.h"
 #import <Quartz/Quartz.h>
 #import <OpenGL/OpenGL.h>
 #import <OpenGL/gl.h>
@@ -392,6 +394,13 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     CGFloat scale = CGRectGetWidth([tmpImage extent]) / NSWidth(bounds);
     CIImage *image = [tmpImage imageByCroppingToRect:CGRectIntegral(scaleRect(NSIntersectionRect(rect, bounds), scale))];
     [tmpImage release];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        NSArray *invertFilters = SKColorInvertFilters();
+        for (CIFilter *filter in invertFilters) {
+            [filter setValue:image forKey:kCIInputImageKey];
+            image = [filter outputImage];
+        }
+    }
     if (scalePtr) *scalePtr = scale;
     return image;
 }
