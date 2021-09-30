@@ -82,6 +82,12 @@ static BOOL collapseSidePanesInFullScreen = NO;
 
 static CGFloat fullScreenToolbarOffset = 0.0;
 
+#if SDK_BEFORE(10_14)
+@interface PDFView (SKMojaveDeclarations)
+- (void)enablePageShadows:(BOOL)flag;
+@end
+#endif
+
 @interface SKMainWindowController (SKFullScreenPrivate)
 - (void)applyLeftSideWidth:(CGFloat)leftSideWidth rightSideWidth:(CGFloat)rightSideWidth;
 @end
@@ -190,6 +196,11 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [pdfView setDisplayMode:kPDFDisplaySinglePage];
     [pdfView setDisplayBox:kPDFDisplayBoxCropBox];
     [pdfView setDisplaysPageBreaks:NO];
+    if ([pdfView respondsToSelector:@selector(enablePageShadows:)])
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        [pdfView enablePageShadows:NO];
+#pragma clang diagnostic pop
     [scrollView setAutohidesScrollers:YES];
     [scrollView setHasHorizontalScroller:NO];
     [scrollView setHasVerticalScroller:NO];
@@ -244,6 +255,12 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
         presentationPreview = nil;
     }
     [self removePresentationNotesNavigation];
+    
+    if ([pdfView respondsToSelector:@selector(enablePageShadows:)])
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        [pdfView enablePageShadows:YES];
+#pragma clang diagnostic pop
     
     NSScrollView *scrollView = [pdfView scrollView];
     [scrollView setHasHorizontalScroller:[[savedNormalSetup objectForKey:HASHORIZONTALSCROLLER_KEY] boolValue]];
