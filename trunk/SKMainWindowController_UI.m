@@ -443,8 +443,12 @@
         else if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
             [[view imageView] setContentFilters:SKColorInvertFilters()];
         return view;
-    } else if ([tv isEqual:rightSideController.snapshotTableView] ||
-        [tv isEqual:leftSideController.findTableView]) {
+    } else if ([tv isEqual:rightSideController.snapshotTableView]) {
+        NSTableCellView *view = [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey] && [[tableColumn identifier] isEqualToString:IMAGE_COLUMNID])
+            [[view imageView] setContentFilters:SKColorInvertFilters()];
+        return view;
+    } else if ([tv isEqual:leftSideController.findTableView]) {
         return [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
     } else if ([tv isEqual:leftSideController.groupedFindTableView]) {
         NSTableCellView *view = [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
@@ -1908,6 +1912,9 @@ static NSArray *allMainDocumentPDFViews() {
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         [leftSideController.thumbnailTableView enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row){
+            [[[rowView viewAtColumn:0] imageView] setContentFilters:SKColorInvertFilters()];
+        }];
+        [rightSideController.snapshotTableView enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row){
             [[[rowView viewAtColumn:0] imageView] setContentFilters:SKColorInvertFilters()];
         }];
     }
