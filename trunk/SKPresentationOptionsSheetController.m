@@ -53,6 +53,8 @@
 #import "NSGraphics_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "NSView_SKExtensions.h"
+#import "SKStringConstants.h"
+#import "SKApplication.h"
 
 #define PAGE_COLUMNID @"page"
 #define IMAGE_COLUMNID @"image"
@@ -150,6 +152,14 @@ static char *SKTransitionPropertiesObservationContext;
     [currentDoc release];
 }
 
+- (void)handleDarkModeChangedNotification:(NSNotification *)note {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        [tableView enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row){
+            [[[rowView viewAtColumn:0] imageView] setContentFilters:SKColorInvertFilters()];
+            [[[rowView viewAtColumn:1] imageView] setContentFilters:SKColorInvertFilters()];
+        }];
+    }}
+
 - (void)windowDidLoad {
     // add the filter names to the popup
     NSUInteger i, count = [[SKTransitionController transitionNames] count];
@@ -201,8 +211,11 @@ static char *SKTransitionPropertiesObservationContext;
     [notesDocumentPopUpButton selectItemAtIndex:docIndex > 0 ? docIndex : 0];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDocumentsDidChangeNotification:) 
                                                  name:SKDocumentDidShowNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDocumentsDidChangeNotification:) 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDocumentsDidChangeNotification:)
                                                  name:SKDocumentControllerDidRemoveDocumentNotification object:nil];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDarkModeChangedNotification:)
+                                                 name:SKDarkModeChangedNotification object:NSApp];
 }
 
 - (void)makeTransitions {
@@ -471,7 +484,12 @@ static char *SKTransitionPropertiesObservationContext;
 }
 
 - (NSView *)tableView:(NSTableView *)tv viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    return [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
+    NSString *tcID = [tableColumn identifier];
+    NSTableCellView *view = [tv makeViewWithIdentifier:tcID owner:self];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey] &&
+        ([tcID isEqualToString:IMAGE_COLUMNID] || [tcID isEqualToString:TOIMAGE_COLUMNID]))
+        [[view imageView] setContentFilters:SKColorInvertFilters()];
+    return view;
 }
 
 - (id <SKImageToolTipContext>)tableView:(NSTableView *)tv imageContextForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row  scale:(CGFloat *)scale {
