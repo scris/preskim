@@ -100,11 +100,13 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     minHistoryIndex = 0;
     
     SKSetHasDefaultAppearance(self);
-    SKSetHasLightAppearance([[self scrollView] contentView]);
-    [self handleScrollerStyleChangedNotification:nil];
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        SKSetHasLightAppearance([self scrollView]);
         [[[self scrollView] contentView] setContentFilters:SKColorInvertFilters()];
+    } else {
+        SKSetHasLightAppearance([[self scrollView] contentView]);
+    }
+    [self handleScrollerStyleChangedNotification:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
                                                  name:NSPreferredScrollerStyleDidChangeNotification object:nil];
@@ -273,7 +275,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 - (void)viewDidChangeEffectiveAppearance {
     [super viewDidChangeEffectiveAppearance];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        [[[self scrollView] contentView] setContentFilters:SKColorInvertFilters()];
+        [[self scrollView] setContentFilters:SKColorInvertFilters()];
 }
 
 - (void)handlePDFViewFrameChangedNotification:(NSNotification *)notification {
