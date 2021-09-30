@@ -84,9 +84,6 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
         context = nil;
         point = NSZeroPoint;
         
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-            [[self contentView] setContentFilters:SKColorInvertFilters()];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orderOut:) 
                                                      name:NSApplicationWillResignActiveNotification object:NSApp];
     }
@@ -117,11 +114,10 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
         
         if (RUNNING_AFTER(10_13)) {
             if (isOpaque) {
-                if ([backgroundView window]) {
+                if ([backgroundView window])
                     [self setContentView:[[[NSView alloc] init] autorelease]];
-                    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-                        [[self contentView] setContentFilters:SKColorInvertFilters()];
-                }
+                if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+                    [[self contentView] setContentFilters:SKColorInvertFilters()];
             } else {
                 if ([backgroundView window] == nil) {
                     if (backgroundView == nil) {
