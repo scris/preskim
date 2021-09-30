@@ -273,7 +273,10 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 }
 
 - (void)viewDidChangeEffectiveAppearance {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
     [super viewDidChangeEffectiveAppearance];
+#pragma clang diagnostic pop
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
         [[self scrollView] setContentFilters:SKColorInvertFilters()];
 }
