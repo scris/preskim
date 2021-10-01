@@ -47,8 +47,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import <Quartz/Quartz.h>
 #import "PDFPage_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
-#import "NSGraphics_SKExtensions.h"
-#import "SKStringConstants.h"
+#import "SKThumbnailImageView.h"
 
 #define MARGIN 8.0
 #define TEXT_MARGIN 4.0
@@ -73,13 +72,10 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)commonInit {
     NSRect bounds = [self bounds];
     NSRect rect = NSOffsetRect(NSInsetRect(bounds, MARGIN, MARGIN + 0.5 * TEXT_SPACE), 0.0, 0.5 * TEXT_SPACE);
-    imageView = [[NSImageView alloc] initWithFrame:rect];
+    imageView = [[SKThumbnailImageView alloc] initWithFrame:rect];
     [imageView setImageScaling:NSImageScaleProportionallyUpOrDown];
     [imageView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     [self addSubview:imageView];
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        [imageView setContentFilters:SKColorInvertFilters()];
     
     labelView = [[NSTextField alloc] init];
     [labelView setBezeled:NO];
@@ -405,15 +401,6 @@ static char SKThumbnailViewThumbnailObservationContext;
         [self handleKeyStateChangedNotification:nil];
     }
     [super viewDidMoveToWindow];
-}
-
-- (void)viewDidChangeEffectiveAppearance {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    [super viewDidChangeEffectiveAppearance];
-#pragma clang diagnostic pop
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        [imageView setContentFilters:SKColorInvertFilters()];
 }
 
 #pragma mark Event handling

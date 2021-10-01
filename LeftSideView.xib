@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -104,7 +103,7 @@
                                         <rect key="frame" x="11" y="1" width="132" height="32"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HAk-jf-rsO">
+                                            <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HAk-jf-rsO" customClass="SKThumbnailImageView">
                                                 <rect key="frame" x="0.0" y="0.0" width="132" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="sna-xl-MSe"/>
@@ -182,7 +181,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <clipView key="contentView" drawsBackground="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hnd-hK-VAX">
                 <rect key="frame" x="1" y="1" width="198" height="398"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="20" viewBased="YES" indentationPerLevel="14" outlineTableColumn="121" translatesAutoresizingMaskIntoConstraints="NO" id="119" customClass="SKOutlineView">
                         <rect key="frame" x="0.0" y="0.0" width="198" height="398"/>
@@ -285,7 +284,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <clipView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="VaG-cU-bQa">
                 <rect key="frame" x="1" y="1" width="198" height="398"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <tableView focusRingType="none" verticalHuggingPriority="750" misplaced="YES" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" autosaveColumns="NO" typeSelect="NO" headerView="108" viewBased="YES" translatesAutoresizingMaskIntoConstraints="NO" id="111" customClass="SKTableView">
                         <rect key="frame" x="0.0" y="0.0" width="198" height="373"/>
@@ -392,7 +391,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <clipView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="CUc-Bz-YWJ">
                 <rect key="frame" x="1" y="1" width="198" height="398"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <tableView focusRingType="none" verticalHuggingPriority="750" misplaced="YES" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" autosaveColumns="NO" typeSelect="NO" headerView="125" viewBased="YES" translatesAutoresizingMaskIntoConstraints="NO" id="128" customClass="SKTableView">
                         <rect key="frame" x="0.0" y="0.0" width="198" height="373"/>
@@ -542,6 +541,7 @@
                 <string>batchedFindResults</string>
                 <string>batchedSearchResults</string>
             </declaredKeys>
+            <classReference key="objectClass" className="PDFSelection"/>
             <connections>
                 <binding destination="90" name="contentArray" keyPath="selection.searchResults" id="160"/>
             </connections>
