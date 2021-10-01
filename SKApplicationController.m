@@ -107,8 +107,6 @@
 #define SKLineInteriorString    @"LineInterior"
 #define SKFreeTextFontString    @"FreeTextFont"
 
-static char SKApplicationObservationContext;
-
 NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 
 #if SDK_BEFORE(10_12)
@@ -186,16 +184,6 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
     [[[NSDocumentController sharedDocumentController] documents] makeObjectsPerformSelector:@selector(saveRecentDocumentInfo)];
 }
 
-#pragma mark KVO
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == &SKApplicationObservationContext) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SKDarkModeChangedNotification object:NSApp];
-    } else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-}
-
 #pragma mark NSApplication delegate
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender{
@@ -266,9 +254,6 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
                              name:SKDocumentControllerDidRemoveDocumentNotification object:nil];
     
     currentDocumentsTimer = [[NSTimer scheduledTimerWithTimeInterval:CURRENTDOCUMENTSETUP_INTERVAL target:self selector:@selector(registerCurrentDocuments:) userInfo:nil repeats:YES] retain];
-    
-    if (RUNNING_AFTER(10_13))
-        [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKApplicationObservationContext];
     
     // kHIDRemoteModeExclusiveAuto lets the HIDRemote handle activation when the app gets or loses focus
     if ([sud boolForKey:SKEnableAppleRemoteKey]) {

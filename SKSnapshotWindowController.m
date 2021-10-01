@@ -85,6 +85,7 @@ NSString *SKSnapshotCurrentSetupKey = @"currentSetup";
 #define SKSnapshotViewChangedNotification @"SKSnapshotViewChangedNotification"
 
 static char SKSnaphotWindowDefaultsObservationContext;
+static char SKSnaphotWindowAppObservationContext;
 
 @interface SKSnapshotWindowController ()
 @property (nonatomic, copy) NSString *pageLabel;
@@ -130,6 +131,8 @@ static char SKSnaphotWindowDefaultsObservationContext;
     [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
     [self updateWindowLevel];
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[NSArray arrayWithObjects:SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey, SKPageBackgroundColorKey, nil] context:&SKSnaphotWindowDefaultsObservationContext];
+    if (RUNNING_AFTER(10_13))
+        [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKSnaphotWindowAppObservationContext];
     // the window is initialially exposed. The windowDidExpose notification is useless, it has nothing to do with showing the window
     [self setHasWindow:YES];
 }
@@ -229,13 +232,13 @@ static char SKSnaphotWindowDefaultsObservationContext;
     }
 }
 
-- (void)handleDarkModeChangedNotification:(NSNotification *)notification {
-    [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
-}
-
 - (void)windowWillClose:(NSNotification *)notification {
     @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[NSArray arrayWithObjects:SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey, SKPageBackgroundColorKey, nil] context:&SKSnaphotWindowDefaultsObservationContext]; }
     @catch (id e) {}
+    if (RUNNING_AFTER(10_13)) {
+        @try { [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:&SKSnaphotWindowAppObservationContext]; }
+        @catch (id e) {}
+    }
     if ([[self delegate] respondsToSelector:@selector(snapshotControllerWillClose:)])
         [[self delegate] snapshotControllerWillClose:self];
     [self setDelegate:nil];
@@ -282,8 +285,6 @@ static char SKSnaphotWindowDefaultsObservationContext;
                                                  name:SKPDFViewDidRemoveAnnotationNotification object:nil];    
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidMoveAnnotationNotification:) 
                                                  name:SKPDFViewDidMoveAnnotationNotification object:nil];    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDarkModeChangedNotification:)
-                                                 name:SKDarkModeChangedNotification object:nil];
     if ([[self delegate] respondsToSelector:@selector(snapshotController:didFinishSetup:)])
         DISPATCH_MAIN_AFTER_SEC(SMALL_DELAY, ^{
             [[self delegate] snapshotController:self didFinishSetup:openType];
@@ -688,6 +689,8 @@ static char SKSnaphotWindowDefaultsObservationContext;
         } else if ([key isEqualToString:SKPageBackgroundColorKey]) {
             [pdfView applyDefaultPageBackgroundColor];
         }
+    } else if (context == &SKSnaphotWindowAppObservationContext) {
+        [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
