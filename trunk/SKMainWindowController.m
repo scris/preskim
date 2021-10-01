@@ -173,6 +173,8 @@ static char SKPDFAnnotationPropertiesObservationContext;
 
 static char SKMainWindowDefaultsObservationContext;
 
+static char SKMainWindowAppObservationContext;
+
 static char SKMainWindowContentLayoutRectObservationContext;
 
 static char SKMainWindowThumbnailSelectionObservationContext;
@@ -2259,6 +2261,8 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                                   SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
                                   SKTableFontSizeKey, nil]
         context:&SKMainWindowDefaultsObservationContext];
+    if (RUNNING_AFTER(10_13))
+        [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKMainWindowAppObservationContext];
 }
 
 - (void)unregisterAsObserver {
@@ -2272,6 +2276,10 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
           SKTableFontSizeKey, nil] context:&SKMainWindowDefaultsObservationContext];
     }
     @catch (id e) {}
+    if (RUNNING_AFTER(10_13)) {
+        @try { [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:&SKMainWindowAppObservationContext]; }
+        @catch (id e) {}
+    }
 }
 
 #pragma mark Undo
@@ -2368,8 +2376,24 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             [self updatePageColumnWidthForTableViews:[NSArray arrayWithObjects:leftSideController.tocOutlineView, rightSideController.noteOutlineView, leftSideController.findTableView, leftSideController.groupedFindTableView, nil]];
         }
         
-    } else if (context == &SKMainWindowContentLayoutRectObservationContext) {
+    } else if (context == &SKMainWindowAppObservationContext) {
         
+        NSColor *backgroundColor = nil;
+        switch (interactionMode) {
+            case SKNormalMode:
+                backgroundColor = [PDFView defaultBackgroundColor];
+                break;
+            case SKFullScreenMode:
+                backgroundColor = [PDFView defaultFullScreenBackgroundColor];
+                break;
+            default:
+                return;
+        }
+        [pdfView setBackgroundColor:backgroundColor];
+        [secondaryPdfView setBackgroundColor:backgroundColor];
+        
+    } else if (context == &SKMainWindowContentLayoutRectObservationContext) {
+
         NSView *view = [self hasOverview] ? overviewContentView : splitView;
         if ([[view window] isEqual:mainWindow])
             [[view superview] setFrame:[mainWindow contentLayoutRect]];

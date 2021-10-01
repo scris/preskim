@@ -1889,22 +1889,6 @@ static NSArray *allMainDocumentPDFViews() {
     [self updateRightStatus];
 }
 
-- (void)handleDarkModeChangedNotification:(NSNotification *)notification {
-    NSColor *backgroundColor = nil;
-    switch (interactionMode) {
-        case SKNormalMode:
-            backgroundColor = [PDFView defaultBackgroundColor];
-            break;
-        case SKFullScreenMode:
-            backgroundColor = [PDFView defaultFullScreenBackgroundColor];
-            break;
-        default:
-            return;
-    }
-    [pdfView setBackgroundColor:backgroundColor];
-    [secondaryPdfView setBackgroundColor:backgroundColor];
-}
-
 - (void)handleApplicationWillTerminateNotification:(NSNotification *)notification {
     if ([self interactionMode] == SKPresentationMode)
         [self exitPresentation];
@@ -2059,9 +2043,7 @@ static NSArray *allMainDocumentPDFViews() {
     // Application
     [nc addObserver:self selector:@selector(handleApplicationWillTerminateNotification:) 
                              name:SKApplicationStartsTerminatingNotification object:NSApp];
-    [nc addObserver:self selector:@selector(handleDarkModeChangedNotification:)
-                             name:SKDarkModeChangedNotification object:NSApp];
-    [nc addObserver:self selector:@selector(handleApplicationDidResignActiveNotification:) 
+    [nc addObserver:self selector:@selector(handleApplicationDidResignActiveNotification:)
                              name:NSApplicationDidResignActiveNotification object:NSApp];
     [nc addObserver:self selector:@selector(handleApplicationWillBecomeActiveNotification:) 
                              name:NSApplicationWillBecomeActiveNotification object:NSApp];
