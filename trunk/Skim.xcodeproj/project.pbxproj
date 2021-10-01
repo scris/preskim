@@ -243,6 +243,7 @@
 		CECDD2990C5B68580026AAEC /* SKCenteredTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CECDD2970C5B68580026AAEC /* SKCenteredTextFieldCell.m */; };
 		CECE6C3F2188AE9A00F6179D /* SKSelectionCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = CECE6C3E2188AE9A00F6179D /* SKSelectionCommand.m */; };
 		CECF61FF0DB258D600587D96 /* SKFontWell.m in Sources */ = {isa = PBXBuildFile; fileRef = CECF61FE0DB258D600587D96 /* SKFontWell.m */; };
+		CED4DA252707B330001E09A8 /* SKThumbnailImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CED4DA242707B330001E09A8 /* SKThumbnailImageView.m */; };
 		CED76F011A1825DE00D1ACA4 /* SKScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = CED76F001A1825DE00D1ACA4 /* SKScrollView.m */; };
 		CEDA057B2295BEBA00881DE1 /* SkimTransitions.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = CEDA056B2295BE8300881DE1 /* SkimTransitions.plugin */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CEDB6A7A228F596000F93C87 /* SKColorPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB6A78228F596000F93C87 /* SKColorPicker.m */; };
@@ -1101,6 +1102,8 @@
 		CECE6C3E2188AE9A00F6179D /* SKSelectionCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKSelectionCommand.m; sourceTree = "<group>"; };
 		CECF61FD0DB258D600587D96 /* SKFontWell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKFontWell.h; sourceTree = "<group>"; };
 		CECF61FE0DB258D600587D96 /* SKFontWell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKFontWell.m; sourceTree = "<group>"; };
+		CED4DA232707B330001E09A8 /* SKThumbnailImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKThumbnailImageView.h; sourceTree = "<group>"; };
+		CED4DA242707B330001E09A8 /* SKThumbnailImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKThumbnailImageView.m; sourceTree = "<group>"; };
 		CED76EFF1A1825DE00D1ACA4 /* SKScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKScrollView.h; sourceTree = "<group>"; };
 		CED76F001A1825DE00D1ACA4 /* SKScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKScrollView.m; sourceTree = "<group>"; };
 		CED8D40B0D744D940028E3E2 /* Skim-Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Skim-Common.xcconfig"; sourceTree = "<group>"; };
@@ -1833,6 +1836,8 @@
 				CE5BF7FF0C7CBF6300EBDCF7 /* SKTableView.m */,
 				CE40D6141677A9DC00573882 /* SKTextNoteEditor.h */,
 				CE40D6151677A9DC00573882 /* SKTextNoteEditor.m */,
+				CED4DA232707B330001E09A8 /* SKThumbnailImageView.h */,
+				CED4DA242707B330001E09A8 /* SKThumbnailImageView.m */,
 				CEF39F37262ED6B20071606F /* SKThumbnailPageCell.h */,
 				CEF39F38262ED6B20071606F /* SKThumbnailPageCell.m */,
 				CEF39F4C262ED7A40071606F /* SKThumbnailPageView.h */,
@@ -2682,6 +2687,7 @@
 				CE4972510BDE898F00D7F1D2 /* SKMainWindow.m in Sources */,
 				CE49726D0BDE8A7400D7F1D2 /* PDFSelection_SKExtensions.m in Sources */,
 				CE1DFA3D244CF04700D64C83 /* SKShareMenuController.m in Sources */,
+				CED4DA252707B330001E09A8 /* SKThumbnailImageView.m in Sources */,
 				CE49728B0BDE8B2900D7F1D2 /* SKToolbarItem.m in Sources */,
 				CE454B3E226DEB3C0034FD6B /* SKNoteTableRowView.m in Sources */,
 				CE6C03F10BEDF759007BF0B5 /* NSParagraphStyle_SKExtensions.m in Sources */,
