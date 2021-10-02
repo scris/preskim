@@ -39,14 +39,19 @@
 #import "SKThumbnailImageView.h"
 #import "SKStringConstants.h"
 #import "NSGraphics_SKExtensions.h"
+#import "NSUserDefaultsController_SKExtensions.h"
 
+static char SKThumbnailImageViewDefaultsObservationContext;
 
 @implementation SKThumbnailImageView
 
 - (void)commonInit {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        [self setWantsLayer:YES];
-        [self setContentFilters:SKColorInvertFilters()];
+    if (RUNNING_AFTER(10_13)) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+            [self setWantsLayer:YES];
+            [self setContentFilters:SKColorInvertFilters()];
+        }
+        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKThumbnailImageViewDefaultsObservationContext];
     }
 }
 
@@ -65,6 +70,13 @@
     }
     return self;
 }
+- (void)dealloc {
+    if (RUNNING_AFTER(10_13)) {
+        @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKThumbnailImageViewDefaultsObservationContext]; }
+        @catch (id e) {}
+    }
+    [super dealloc];
+}
 
 - (void)viewDidChangeEffectiveAppearance {
 #pragma clang diagnostic push
@@ -73,6 +85,19 @@
 #pragma clang diagnostic pop
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
         [self setContentFilters:SKColorInvertFilters()];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == &SKThumbnailImageViewDefaultsObservationContext) {
+        if (SKHasDarkAppearance(NSApp)) {
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+                [self setContentFilters:SKColorInvertFilters()];
+            else
+                [self setContentFilters:[NSArray array]];
+        }
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 @end

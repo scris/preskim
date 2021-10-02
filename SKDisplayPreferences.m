@@ -60,6 +60,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
 @implementation SKDisplayPreferences
 
 @synthesize normalColorWell, fullScreenColorWell, colorSwatch, addRemoveColorButton;
+@dynamic allowsDarkMode;
 
 - (void)dealloc {
     if (RUNNING_AFTER(10_13)) {
@@ -122,6 +123,10 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
 
 - (NSNumber *)objectInSizesAtIndex:(NSUInteger)anIndex {
     return [NSNumber numberWithDouble:SKDefaultFontSizes[anIndex]];
+}
+
+- (BOOL)allowsDarkMode {
+    return RUNNING_AFTER(10_13);
 }
 
 #pragma mark Actions
