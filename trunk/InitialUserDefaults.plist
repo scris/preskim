@@ -69,6 +69,8 @@
 		<true/>
 		<key>SKInterpolationQuality</key>
 		<integer>0</integer>
+		<key>SKInvertColorsInDarkMode</key>
+		<false/>
 		<key>SKReadingBarColor</key>
 		<data>BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmAQEAAYY=</data>
 		<key>SKReadingBarInvert</key>

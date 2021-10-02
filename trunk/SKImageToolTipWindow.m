@@ -118,6 +118,8 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
                     [self setContentView:[[[NSView alloc] init] autorelease]];
                 if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
                     [[self contentView] setContentFilters:SKColorInvertFilters()];
+                else
+                    [[self contentView] setContentFilters:[NSArray array]];
             } else {
                 if ([backgroundView window] == nil) {
                     if (backgroundView == nil) {

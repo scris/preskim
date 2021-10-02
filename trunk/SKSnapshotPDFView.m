@@ -51,7 +51,9 @@
 #import "NSColor_SKExtensions.h"
 #import "SKPDFView.h"
 #import "NSGraphics_SKExtensions.h"
+#import "NSUserDefaultsController_SKExtensions.h"
 
+static char SKSnapshotPDFViewDefaultsObservationContext;
 
 @interface SKSnapshotPDFView (SKPrivate)
 
@@ -121,6 +123,8 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     if ([PDFView instancesRespondToSelector:@selector(magnifyWithEvent:)] == NO || [PDFView instanceMethodForSelector:@selector(magnifyWithEvent:)] == [NSView instanceMethodForSelector:@selector(magnifyWithEvent:)])
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePDFViewScaleChangedNotification:)
                                                      name:PDFViewScaleChangedNotification object:self];
+    if (RUNNING(10_13))
+        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKSnapshotPDFViewDefaultsObservationContext];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -140,6 +144,10 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 }
 
 - (void)dealloc {
+    if (RUNNING_AFTER(10_13)) {
+        @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKSnapshotPDFViewDefaultsObservationContext]; }
+        @catch (id e) {}
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     SKDESTROY(scalePopUpButton);
     SKDESTROY(controlView);
@@ -279,6 +287,23 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 #pragma clang diagnostic pop
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
         [[self scrollView] setContentFilters:SKColorInvertFilters()];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == &SKSnapshotPDFViewDefaultsObservationContext) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+            SKSetHasLightAppearance([self scrollView]);
+            SKSetHasDefaultAppearance([[self scrollView] contentView]);
+            [[self scrollView] setContentFilters:SKColorInvertFilters()];
+        } else {
+            SKSetHasLightAppearance([[self scrollView] contentView]);
+            SKSetHasDefaultAppearance([self scrollView]);
+            [[self scrollView] setContentFilters:[NSArray array]];
+        }
+        [self handleScrollerStyleChangedNotification:nil];
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (void)handlePDFViewFrameChangedNotification:(NSNotification *)notification {

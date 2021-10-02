@@ -54,6 +54,8 @@
 @property (nonatomic, retain) IBOutlet SKColorSwatch *colorSwatch;
 @property (nonatomic, retain) IBOutlet NSSegmentedControl *addRemoveColorButton;
 
+@property (nonatomic, readonly) BOOL allowsDarkMode;
+
 - (NSUInteger)countOfSizes;
 - (NSNumber *)objectInSizesAtIndex:(NSUInteger)anIndex;
 

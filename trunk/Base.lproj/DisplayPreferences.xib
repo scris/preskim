@@ -81,7 +81,7 @@
                         <binding destination="61" name="value" keyPath="values.SKShouldAntiAlias" id="68"/>
                     </connections>
                 </button>
-                <textField toolTip="Don't render characters smaller than this size" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="10" userLabel="Greeking Threshold Text Field">
+                <textField hidden="YES" toolTip="Don't render characters smaller than this size" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="10" userLabel="Greeking Threshold Text Field">
                     <rect key="frame" x="160" y="237" width="53" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="53" id="64Q-W0-LiZ"/>
@@ -100,17 +100,36 @@
                     </textFieldCell>
                     <connections>
                         <accessibilityConnection property="title" destination="11" id="54"/>
+                        <binding destination="-2" name="hidden" keyPath="allowsDarkMode" id="GgB-L9-b8C"/>
                         <binding destination="61" name="value" keyPath="values.SKGreekingThreshold" id="67"/>
                     </connections>
                 </textField>
-                <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="11" userLabel="Greeking threshold:">
+                <textField hidden="YES" horizontalHuggingPriority="253" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="11" userLabel="Greeking threshold:">
                     <rect key="frame" x="30" y="240" width="124" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Greeking threshold:" id="41">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="hidden" keyPath="allowsDarkMode" id="mEG-yl-8Wl"/>
+                    </connections>
                 </textField>
+                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I3F-RC-rb4">
+                    <rect key="frame" x="30" y="243" width="186" height="18"/>
+                    <buttonCell key="cell" type="check" title="Invert colors in Dark Mode" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="QOQ-Is-WWs">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="-2" name="hidden" keyPath="allowsDarkMode" id="yOz-IQ-9iv">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                        <binding destination="61" name="value" keyPath="values.SKInvertColorsInDarkMode" id="XrJ-7e-odj"/>
+                    </connections>
+                </button>
                 <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kIO-8q-QfL" userLabel="Image smoothing:">
                     <rect key="frame" x="30" y="293" width="113" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Image smoothing:" id="KLe-Zv-fHm">
@@ -368,6 +387,7 @@
                 <constraint firstItem="3" firstAttribute="leading" secondItem="2" secondAttribute="trailing" constant="8" symbolic="YES" id="KZt-GL-CMo"/>
                 <constraint firstItem="zFV-1L-vhR" firstAttribute="firstBaseline" secondItem="4" secondAttribute="firstBaseline" id="L7m-s1-eUE"/>
                 <constraint firstItem="7" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="LAK-JY-7gD"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="I3F-RC-rb4" secondAttribute="trailing" constant="20" symbolic="YES" id="LAd-xE-xYc"/>
                 <constraint firstItem="17" firstAttribute="top" secondItem="16" secondAttribute="top" id="LhU-9A-Okp"/>
                 <constraint firstItem="9" firstAttribute="leading" secondItem="11" secondAttribute="leading" id="Mc7-eI-QxF"/>
                 <constraint firstItem="17" firstAttribute="centerY" secondItem="14" secondAttribute="centerY" id="Mw2-Ma-ngz"/>
@@ -412,6 +432,7 @@
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="10" secondAttribute="trailing" constant="20" symbolic="YES" id="fZW-ES-5O1"/>
                 <constraint firstItem="adG-Xp-L6g" firstAttribute="top" secondItem="23" secondAttribute="bottom" constant="12" id="g12-Fn-IgK"/>
                 <constraint firstItem="2" firstAttribute="top" secondItem="7" secondAttribute="bottom" constant="13" id="g1t-N7-zQ8"/>
+                <constraint firstItem="I3F-RC-rb4" firstAttribute="leading" secondItem="9" secondAttribute="leading" id="h10-9A-aqx"/>
                 <constraint firstItem="5" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" id="h1O-fP-a8T"/>
                 <constraint firstItem="17" firstAttribute="width" secondItem="16" secondAttribute="width" id="hQh-ss-ctw"/>
                 <constraint firstItem="5" firstAttribute="firstBaseline" secondItem="4" secondAttribute="firstBaseline" id="idH-eg-JG7"/>
@@ -425,6 +446,7 @@
                 <constraint firstItem="29" firstAttribute="leading" secondItem="28" secondAttribute="trailing" constant="8" symbolic="YES" id="pOc-te-BaV"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="9" secondAttribute="trailing" constant="20" symbolic="YES" id="pP3-RJ-I3o"/>
                 <constraint firstItem="12" firstAttribute="leading" secondItem="7" secondAttribute="leading" id="q4r-VC-Oa8"/>
+                <constraint firstItem="I3F-RC-rb4" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="6" symbolic="YES" id="qg2-Ci-EYy"/>
                 <constraint firstItem="kIO-8q-QfL" firstAttribute="leading" secondItem="11" secondAttribute="leading" id="tJt-T0-fFD"/>
                 <constraint firstItem="23" firstAttribute="leading" secondItem="16" secondAttribute="leading" id="tZx-Ca-9bc"/>
                 <constraint firstItem="23" firstAttribute="centerY" secondItem="25" secondAttribute="centerY" id="tsW-lJ-5DP"/>
