@@ -346,11 +346,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[[self class] defaultKeysToObserve] context:&SKPDFViewDefaultsObservationContext];
     
     SKSetHasDefaultAppearance(self);
+    SKSetHasLightAppearance([[self scrollView] contentView]);
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         SKSetHasLightAppearance([self scrollView]);
         [[self scrollView] setContentFilters:SKColorInvertFilters()];
-    } else {
-        SKSetHasLightAppearance([[self scrollView] contentView]);
     }
     [self handleScrollerStyleChangedNotification:nil];
 }
@@ -3019,7 +3018,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {
-    if ([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy || [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+    if ([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy) {
         SKSetHasDefaultAppearance([[self scrollView] verticalScroller]);
         SKSetHasDefaultAppearance([[self scrollView] horizontalScroller]);
     } else {
@@ -3194,22 +3193,19 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         } else if ([key isEqualToString:SKInvertColorsInDarkModeKey]) {
             if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
                 SKSetHasLightAppearance([self scrollView]);
-                SKSetHasDefaultAppearance([[self scrollView] contentView]);
                 [[[self scrollView] self] setContentFilters:SKColorInvertFilters()];
                 if (loupeWindow) {
                     SKSetHasLightAppearance(loupeWindow);
                     [[loupeWindow contentView] setContentFilters:SKColorInvertFilters()];
                 }
             } else {
-                SKSetHasLightAppearance([[self scrollView] contentView]);
                 SKSetHasDefaultAppearance([self scrollView]);
                 [[[self scrollView] self] setContentFilters:[NSArray array]];
                 if (loupeWindow) {
                     SKSetHasDefaultAppearance(loupeWindow);
                     [[loupeWindow contentView] setContentFilters:[NSArray array]];
                 }
-           }
-            [self handleScrollerStyleChangedNotification:nil];
+            }
         }
     } else if (context == &SKPDFViewTransitionsObservationContext) {
         id oldValue = [change objectForKey:NSKeyValueChangeOldKey];
