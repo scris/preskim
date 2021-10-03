@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
+#import "SKBasePDFView.h"
 #import "NSDocument_SKExtensions.h"
 
 extern NSString *SKPDFViewDisplaysAsBookChangedNotification;
@@ -100,7 +101,7 @@ enum {
 
 @class SKReadingBar, SKTransitionController, SKTypeSelectHelper, SKNavigationWindow, SKTextNoteEditor, SKSyncDot;
 
-@interface SKPDFView : PDFView {
+@interface SKPDFView : SKBasePDFView {
     SKToolMode toolMode;
     SKNoteType annotationMode;
     SKInteractionMode interactionMode;

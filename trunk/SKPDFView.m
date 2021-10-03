@@ -247,7 +247,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)handlePageChangedNotification:(NSNotification *)notification;
 - (void)handleScaleChangedNotification:(NSNotification *)notification;
 - (void)handleUndoGroupOpenedOrClosedNotification:(NSNotification *)notification;
-- (void)handleScrollerStyleChangedNotification:(NSNotification *)notification;
 
 @end
 
@@ -281,10 +280,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 + (NSArray *)defaultKeysToObserve {
-    if (RUNNING_AFTER(10_13))
-        return [NSArray arrayWithObjects:SKReadingBarColorKey, SKReadingBarInvertKey, SKInvertColorsInDarkModeKey, nil];
-    else
-        return [NSArray arrayWithObjects:SKReadingBarColorKey, SKReadingBarInvertKey, nil];
+    return [NSArray arrayWithObjects:SKReadingBarColorKey, SKReadingBarInvertKey, nil];
 }
 
 - (void)commonInitialization {
@@ -341,17 +337,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                                                  name:NSUndoManagerDidOpenUndoGroupNotification object:nil];
     [nc addObserver:self selector:@selector(handleUndoGroupOpenedOrClosedNotification:)
                                                  name:NSUndoManagerDidCloseUndoGroupNotification object:nil];
-    [nc addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
-                                                 name:NSPreferredScrollerStyleDidChangeNotification object:nil];
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[[self class] defaultKeysToObserve] context:&SKPDFViewDefaultsObservationContext];
-    
-    SKSetHasDefaultAppearance(self);
-    SKSetHasLightAppearance([[self scrollView] contentView]);
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        SKSetHasLightAppearance([self scrollView]);
-        [[self scrollView] setContentFilters:SKColorInvertFilters()];
-    }
-    [self handleScrollerStyleChangedNotification:nil];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -3017,16 +3003,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         pdfvFlags.wantsNewUndoGroup = NO;
 }
 
-- (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {
-    if ([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy) {
-        SKSetHasDefaultAppearance([[self scrollView] verticalScroller]);
-        SKSetHasDefaultAppearance([[self scrollView] horizontalScroller]);
-    } else {
-        SKSetHasLightAppearance([[self scrollView] verticalScroller]);
-        SKSetHasLightAppearance([[self scrollView] horizontalScroller]);
-    }
-}
-
 - (void)handleKeyStateChangedNotification:(NSNotification *)notification {
     pdfvFlags.inKeyWindow = [[self window] isKeyWindow];
     if (selectionPageIndex != NSNotFound) {
@@ -3096,13 +3072,25 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 #pragma clang diagnostic ignored "-Wpartial-availability"
     [super viewDidChangeEffectiveAppearance];
 #pragma clang diagnostic pop
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        [[self scrollView] setContentFilters:SKColorInvertFilters()];
-        if (loupeWindow)
+    if (loupeWindow) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
             [[loupeWindow contentView] setContentFilters:SKColorInvertFilters()];
-    }
-    if (loupeWindow)
         [self updateLoupeBackgroundColor];
+    }
+}
+
+- (void)invertColorsInDarkModeDidChange {
+    [super invertColorsInDarkModeDidChange];
+    if (loupeWindow) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+            SKSetHasLightAppearance(loupeWindow);
+            [[loupeWindow contentView] setContentFilters:SKColorInvertFilters()];
+        } else {
+            SKSetHasDefaultAppearance(loupeWindow);
+            [[loupeWindow contentView] setContentFilters:[NSArray array]];
+        }
+        [self updateLoupeBackgroundColor];
+    }
 }
 
 #pragma mark Menu validation
@@ -3191,23 +3179,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                     [self setNeedsDisplayInRect:[readingBar currentBoundsForBox:[self displayBox]] ofPage:[readingBar page]];
                 [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewReadingBarDidChangeNotification 
                     object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[readingBar page], SKPDFViewOldPageKey, [readingBar page], SKPDFViewNewPageKey, nil]];
-            }
-        } else if ([key isEqualToString:SKInvertColorsInDarkModeKey]) {
-            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-                SKSetHasLightAppearance([self scrollView]);
-                [[[self scrollView] self] setContentFilters:SKColorInvertFilters()];
-                if (loupeWindow) {
-                    SKSetHasLightAppearance(loupeWindow);
-                    [[loupeWindow contentView] setContentFilters:SKColorInvertFilters()];
-                }
-            } else {
-                SKSetHasDefaultAppearance([self scrollView]);
-                [[[self scrollView] self] setContentFilters:[NSArray array]];
-                if (loupeWindow) {
-                    SKSetHasDefaultAppearance(loupeWindow);
-                    [[loupeWindow contentView] setContentFilters:[NSArray array]];
-                    [self updateLoupeBackgroundColor];
-                }
             }
         }
     } else if (context == &SKPDFViewTransitionsObservationContext) {

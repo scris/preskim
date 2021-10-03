@@ -1,11 +1,11 @@
 //
-//  SKSnapshotPDFView.h
+//  SKBasePDFView.h
 //  Skim
 //
-//  Created by Adam Maxwell on 07/23/05.
+//  Created by Christiaan Hofman on 03/10/2021.
 /*
- This software is Copyright (c) 2005-2021
- Adam Maxwell. All rights reserved.
+ This software is Copyright (c) 2019-2021
+ Christiaan Hofman. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions
@@ -19,7 +19,7 @@
  the documentation and/or other materials provided with the
  distribution.
  
- - Neither the name of Adam Maxwell nor the names of any
+ - Neither the name of Christiaan Hofman nor the names of any
  contributors may be used to endorse or promote products derived
  from this software without specific prior written permission.
  
@@ -38,35 +38,10 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
-#import "SKBasePDFView.h"
 
-@protocol SKSnapshotPDFViewDelegate;
 
-@interface SKSnapshotPDFView : SKBasePDFView {
-    NSPopUpButton *scalePopUpButton;
-    NSView *controlView;
-    NSTrackingArea *trackingArea;
-    PDFPage *autoFitPage;
-    NSRect autoFitRect;
-    BOOL autoFits;
-    BOOL shouldAutoFit;
-    BOOL switching;
-    CGFloat startScale;
-    NSInteger minHistoryIndex;
-}
+@interface SKBasePDFView : PDFView
 
-@property (nonatomic) BOOL autoFits;
-@property (nonatomic) BOOL shouldAutoFit;
-
-- (void)resetHistory;
-
-- (id <SKSnapshotPDFViewDelegate>)delegate;
-- (void)setDelegate:(id <SKSnapshotPDFViewDelegate>)newDelegate;
+- (void)invertColorsInDarkModeDidChange;
 
 @end
-
-@protocol SKSnapshotPDFViewDelegate <PDFViewDelegate>
-@optional
-- (void)PDFView:(PDFView *)sender goToExternalDestination:(PDFDestination *)destination;
-@end
-

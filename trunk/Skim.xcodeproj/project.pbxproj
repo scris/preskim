@@ -273,6 +273,7 @@
 		CEEB32831AC30ECA00BDB4E8 /* SKScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = CEEB32821AC30ECA00BDB4E8 /* SKScroller.m */; };
 		CEEC0A0A0DCB2594003DD9B6 /* SKMainWindowController_UI.m in Sources */ = {isa = PBXBuildFile; fileRef = CEEC0A090DCB2594003DD9B6 /* SKMainWindowController_UI.m */; };
 		CEECD61C12E9E30B00B9E35E /* NSError_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEECD61B12E9E30B00B9E35E /* NSError_SKExtensions.m */; };
+		CEED148C2709EE4D00A8C4AA /* SKBasePDFView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEED148B2709EE4D00A8C4AA /* SKBasePDFView.m */; };
 		CEEE7C520E7D3F2000B7B208 /* PDFAnnotationInk_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEEE7C510E7D3F2000B7B208 /* PDFAnnotationInk_SKExtensions.m */; };
 		CEF39F39262ED6B20071606F /* SKThumbnailPageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF39F38262ED6B20071606F /* SKThumbnailPageCell.m */; };
 		CEF39F4E262ED7A40071606F /* SKThumbnailPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF39F4D262ED7A40071606F /* SKThumbnailPageView.m */; };
@@ -1153,6 +1154,8 @@
 		CEEC0A090DCB2594003DD9B6 /* SKMainWindowController_UI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKMainWindowController_UI.m; sourceTree = "<group>"; };
 		CEECD61A12E9E30B00B9E35E /* NSError_SKExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSError_SKExtensions.h; sourceTree = "<group>"; };
 		CEECD61B12E9E30B00B9E35E /* NSError_SKExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSError_SKExtensions.m; sourceTree = "<group>"; };
+		CEED148A2709EE4D00A8C4AA /* SKBasePDFView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKBasePDFView.h; sourceTree = "<group>"; };
+		CEED148B2709EE4D00A8C4AA /* SKBasePDFView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKBasePDFView.m; sourceTree = "<group>"; };
 		CEEE7C500E7D3F2000B7B208 /* PDFAnnotationInk_SKExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFAnnotationInk_SKExtensions.h; sourceTree = "<group>"; };
 		CEEE7C510E7D3F2000B7B208 /* PDFAnnotationInk_SKExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFAnnotationInk_SKExtensions.m; sourceTree = "<group>"; };
 		CEF1D626117EFB760069E249 /* applehelp.init */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = applehelp.init; sourceTree = "<group>"; };
@@ -1776,6 +1779,8 @@
 				CE199DFC0D957A16009B2055 /* SKAnnotationTypeImageCell.m */,
 				CE325590226F73810032390F /* SKAnnotationTypeImageView.h */,
 				CE325591226F73810032390F /* SKAnnotationTypeImageView.m */,
+				CEED148A2709EE4D00A8C4AA /* SKBasePDFView.h */,
+				CEED148B2709EE4D00A8C4AA /* SKBasePDFView.m */,
 				CE7A3A2B2269CBDE00F1B89B /* SKControlTableCellView.h */,
 				CE7A3A2C2269CBDE00F1B89B /* SKControlTableCellView.m */,
 				CECDD2960C5B68580026AAEC /* SKCenteredTextFieldCell.h */,
@@ -2647,6 +2652,7 @@
 				CE325592226F73810032390F /* SKAnnotationTypeImageView.m in Sources */,
 				4530DCF70B27CACE007C59F4 /* SKPDFView.m in Sources */,
 				CE546FC40B32D5DB00F8AFB6 /* SKNoteWindowController.m in Sources */,
+				CEED148C2709EE4D00A8C4AA /* SKBasePDFView.m in Sources */,
 				CE48EFB121C3DC3900249D4C /* SKDownloadsWindow.m in Sources */,
 				CEF39F4E262ED7A40071606F /* SKThumbnailPageView.m in Sources */,
 				CE54898F0B35D50E00F8AFB6 /* SKInfoWindowController.m in Sources */,

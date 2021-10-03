@@ -53,10 +53,7 @@
 #import "SKPDFView.h"
 #import "SKTopBarView.h"
 #import "NSColor_SKExtensions.h"
-#import "NSGraphics_SKExtensions.h"
-#import "NSUserDefaultsController_SKExtensions.h"
 
-static char SKSecondaryPDFViewDefaultsObservationContext;
 
 @interface SKSecondaryPDFView (SKPrivate)
 
@@ -78,7 +75,6 @@ static char SKSecondaryPDFViewDefaultsObservationContext;
 - (void)handlePageChangedNotification:(NSNotification *)notification;
 - (void)handleDocumentDidUnlockNotification:(NSNotification *)notification;
 - (void)handlePDFViewScaleChangedNotification:(NSNotification *)notification;
-- (void)handleScrollerStyleChangedNotification:(NSNotification *)notification;
 
 @end
 
@@ -102,23 +98,11 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     synchronizeZoom = NO;
     selectsText = [[NSUserDefaults standardUserDefaults] boolForKey:SKLastSecondarySelectsTextKey];
     
-    SKSetHasDefaultAppearance(self);
-    SKSetHasLightAppearance([[self scrollView] contentView]);
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        SKSetHasLightAppearance([self scrollView]);
-        [[self scrollView] setContentFilters:SKColorInvertFilters()];
-    }
-    [self handleScrollerStyleChangedNotification:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
-                                                 name:NSPreferredScrollerStyleDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePageChangedNotification:)
                                                  name:PDFViewPageChangedNotification object:self];
     if ([PDFView instancesRespondToSelector:@selector(magnifyWithEvent:)] == NO || [PDFView instanceMethodForSelector:@selector(magnifyWithEvent:)] == [NSView instanceMethodForSelector:@selector(magnifyWithEvent:)])
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePDFViewScaleChangedNotification:)
                                                      name:PDFViewScaleChangedNotification object:self];
-    if (RUNNING_AFTER(10_13))
-        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKSecondaryPDFViewDefaultsObservationContext];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -138,10 +122,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 }
 
 - (void)dealloc {
-    if (RUNNING_AFTER(10_13)) {
-        @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKSecondaryPDFViewDefaultsObservationContext]; }
-        @catch (id e) {}
-    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     SKDESTROY(synchronizedPDFView);
     SKDESTROY(scalePopUpButton);
@@ -172,29 +152,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     if (document && [document isLocked])
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDocumentDidUnlockNotification:) 
                                                      name:PDFDocumentDidUnlockNotification object:document];
-}
-
-- (void)viewDidChangeEffectiveAppearance {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    [super viewDidChangeEffectiveAppearance];
-#pragma clang diagnostic pop
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        [[self scrollView] setContentFilters:SKColorInvertFilters()];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == &SKSecondaryPDFViewDefaultsObservationContext) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-            SKSetHasLightAppearance([self scrollView]);
-            [[self scrollView] setContentFilters:SKColorInvertFilters()];
-        } else {
-            SKSetHasDefaultAppearance([self scrollView]);
-            [[self scrollView] setContentFilters:[NSArray array]];
-        }
-    } else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
 }
 
 #pragma mark Popup buttons
@@ -851,16 +808,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 - (void)handlePDFViewScaleChangedNotification:(NSNotification *)notification {
     if ([self autoScales] == NO && [self synchronizeZoom] == NO)
         [self setScaleFactor:fmax([self scaleFactor], SKMinDefaultScaleMenuFactor) adjustPopup:YES];
-}
-
-- (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {
-    if ([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy) {
-        SKSetHasDefaultAppearance([[self scrollView] verticalScroller]);
-        SKSetHasDefaultAppearance([[self scrollView] horizontalScroller]);
-    } else {
-        SKSetHasLightAppearance([[self scrollView] verticalScroller]);
-        SKSetHasLightAppearance([[self scrollView] horizontalScroller]);
-    }
 }
 
 @end
