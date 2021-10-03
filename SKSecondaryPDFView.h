@@ -38,9 +38,10 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
+#import "SKBasePDFView.h"
 
 
-@interface SKSecondaryPDFView : PDFView {
+@interface SKSecondaryPDFView : SKBasePDFView {
     NSPopUpButton *scalePopUpButton;
     NSPopUpButton *pagePopUpButton;
     NSButton *toolModeButton;
