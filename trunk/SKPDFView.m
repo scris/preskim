@@ -3101,6 +3101,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (loupeWindow)
             [[loupeWindow contentView] setContentFilters:SKColorInvertFilters()];
     }
+    if (loupeWindow)
+        [self updateLoupeBackgroundColor];
 }
 
 #pragma mark Menu validation
@@ -3204,6 +3206,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 if (loupeWindow) {
                     SKSetHasDefaultAppearance(loupeWindow);
                     [[loupeWindow contentView] setContentFilters:[NSArray array]];
+                    [self updateLoupeBackgroundColor];
                 }
             }
         }
