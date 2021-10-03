@@ -3238,6 +3238,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (NSWindow *)newOverlayLayer:(CALayer *)layer wantsAdded:(BOOL)wantsAdded {
     NSWindow *overlay = nil;
+    [layer setContentsScale:[[self layer] contentsScale]];
     if (wantsAdded && [self wantsLayer]) {
         [[self layer] addSublayer:layer];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
