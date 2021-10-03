@@ -4860,7 +4860,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 #pragma clang diagnostic ignored "-Wpartial-availability"
         if ([bgColor isEqual:[NSColor windowBackgroundColor]])
             material = NSVisualEffectMaterialWindowBackground;
-        else if ([bgColor isEqual:[NSColor controlBackgroundColor]])
+        else if ([bgColor isEqual:[NSColor controlBackgroundColor]] || [bgColor isEqual:[NSColor textBackgroundColor]])
             material = NSVisualEffectMaterialContentBackground;
         else if ([bgColor isEqual:[NSColor underPageBackgroundColor]])
             material = NSVisualEffectMaterialUnderPageBackground;
