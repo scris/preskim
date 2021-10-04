@@ -185,18 +185,13 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
 #pragma mark -
 
 extern NSArray *SKColorEffectFilters(void) {
+    NSMutableArray *filters = [NSMutableArray array];
     CGFloat sepia = [[NSUserDefaults standardUserDefaults] doubleForKey:@"SKSepiaTone"];
-    BOOL invert = SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey];
-    if (sepia > 0.0) {
-        if (sepia > 1.0)
-            sepia = 1.0;
-        if (invert)
-            return [NSArray arrayWithObjects:[CIFilter filterWithName:@"CISepiaTone" keysAndValues:@"inputIntensity", [NSNumber numberWithDouble:sepia], nil], [CIFilter filterWithName:@"CIColorInvert"], [CIFilter filterWithName:@"CIHueAdjust" keysAndValues:kCIInputAngleKey, [NSNumber numberWithDouble:M_PI], nil], nil];
-        else
-            return [NSArray arrayWithObjects:[CIFilter filterWithName:@"CISepiaTone" keysAndValues:@"inputIntensity", [NSNumber numberWithDouble:sepia], nil], nil];
-    } else if (invert) {
-        return [NSArray arrayWithObjects:[CIFilter filterWithName:@"CIColorInvert"], [CIFilter filterWithName:@"CIHueAdjust" keysAndValues:kCIInputAngleKey, [NSNumber numberWithDouble:M_PI], nil], nil];
-    } else {
-        return [NSArray array];
+    if (sepia > 0.0)
+        [filters addObject:[CIFilter filterWithName:@"CISepiaTone" keysAndValues:@"inputIntensity", [NSNumber numberWithDouble:fmin(sepia, 1.0)], nil]];
+    if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        [filters addObject:[CIFilter filterWithName:@"CIColorInvert"]];
+        [filters addObject:[CIFilter filterWithName:@"CIHueAdjust" keysAndValues:kCIInputAngleKey, [NSNumber numberWithDouble:M_PI], nil]];
     }
+    return filters;
 }
