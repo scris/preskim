@@ -72,19 +72,21 @@ static char SKBasePDFViewDefaultsObservationContext;
 
 // make sure we don't use the same method name as a superclass or a subclass
 - (void)commonBaseInitialization {
-    SKSetHasDefaultAppearance(self);
-    SKSetHasLightAppearance([[self scrollView] contentView]);
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        SKSetHasLightAppearance([self scrollView]);
-        [[self scrollView] setContentFilters:SKColorInvertFilters()];
+    if (RUNNING_AFTER(10_13)) {
+        SKSetHasDefaultAppearance(self);
+        SKSetHasLightAppearance([[self scrollView] contentView]);
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+            SKSetHasLightAppearance([self scrollView]);
+            [[self scrollView] setContentFilters:SKColorInvertFilters()];
+        }
+        [self handleScrollerStyleChangedNotification:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
+                                                     name:NSPreferredScrollerStyleDidChangeNotification object:nil];
+        
+        if (RUNNING_AFTER(10_13))
+            [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKBasePDFViewDefaultsObservationContext];
     }
-    [self handleScrollerStyleChangedNotification:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
-                                                 name:NSPreferredScrollerStyleDidChangeNotification object:nil];
-    
-    if (RUNNING_AFTER(10_13))
-        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKBasePDFViewDefaultsObservationContext];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
