@@ -3073,8 +3073,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [super viewDidChangeEffectiveAppearance];
 #pragma clang diagnostic pop
     if (loupeWindow) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-            [[loupeWindow contentView] setContentFilters:SKColorInvertFilters()];
+        [[loupeWindow contentView] setContentFilters:SKColorEffectFilters()];
         [self updateLoupeBackgroundColor];
     }
 }
@@ -3082,13 +3081,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)invertColorsInDarkModeDidChange {
     [super invertColorsInDarkModeDidChange];
     if (loupeWindow) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        [[loupeWindow contentView] setContentFilters:SKColorEffectFilters()];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
             SKSetHasLightAppearance(loupeWindow);
-            [[loupeWindow contentView] setContentFilters:SKColorInvertFilters()];
-        } else {
+        else
             SKSetHasDefaultAppearance(loupeWindow);
-            [[loupeWindow contentView] setContentFilters:[NSArray array]];
-        }
         [self updateLoupeBackgroundColor];
     }
 }
@@ -3241,14 +3238,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [layer setContentsScale:[[self layer] contentsScale]];
     if (wantsAdded && [self wantsLayer]) {
         [[self layer] addSublayer:layer];
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-            [layer setFilters:SKColorInvertFilters()];
+        [layer setFilters:SKColorEffectFilters()];
     } else {
         overlay = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[self convertRectToScreen:[self bounds]]];
         [[overlay contentView] setWantsLayer:YES];
         [[[overlay contentView] layer] addSublayer:layer];
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-            [[overlay contentView] setContentFilters:SKColorInvertFilters()];
+        [[overlay contentView] setContentFilters:SKColorEffectFilters()];
         if (wantsAdded)
             [[self window] addChildWindow:overlay ordered:NSWindowAbove];
     }
@@ -4851,8 +4846,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [loupeLayer setBackgroundColor:cgColor];
             if (hasBackgroundView) {
                 [loupeWindow setContentView:loupeView];
-                if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-                    [loupeView setContentFilters:SKColorInvertFilters()];
+                [loupeView setContentFilters:SKColorEffectFilters()];
             }
         } else if (hasBackgroundView) {
             [(NSVisualEffectView *)[loupeWindow contentView] setMaterial:material];
@@ -4864,10 +4858,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [loupeWindow setContentView:view];
             [view addSubview:loupeView];
-            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-                [view setContentFilters:SKColorInvertFilters()];
-                [loupeView setContentFilters:[NSArray array]];
-            }
+            [view setContentFilters:SKColorEffectFilters()];
+            [loupeView setContentFilters:[NSArray array]];
             [loupeView release];
             if (NSIsEmptyRect([view bounds]) == NO)
                 [view setMaskImage:[NSImage maskImageWithSize:[view bounds].size cornerRadius:LOUPE_RADIUS]];

@@ -75,10 +75,9 @@ static char SKBasePDFViewDefaultsObservationContext;
     if (RUNNING_AFTER(10_13)) {
         SKSetHasDefaultAppearance(self);
         SKSetHasLightAppearance([[self scrollView] contentView]);
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
             SKSetHasLightAppearance([self scrollView]);
-            [[self scrollView] setContentFilters:SKColorInvertFilters()];
-        }
+            [[self scrollView] setContentFilters:SKColorEffectFilters()];
         [self handleScrollerStyleChangedNotification:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
@@ -123,11 +122,10 @@ static char SKBasePDFViewDefaultsObservationContext;
 - (void)invertColorsInDarkModeDidChange {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         SKSetHasLightAppearance([self scrollView]);
-        [[self scrollView] setContentFilters:SKColorInvertFilters()];
     } else {
         SKSetHasDefaultAppearance([self scrollView]);
-        [[self scrollView] setContentFilters:[NSArray array]];
     }
+    [[self scrollView] setContentFilters:SKColorEffectFilters()];
 }
 
 - (void)viewDidChangeEffectiveAppearance {
@@ -135,8 +133,7 @@ static char SKBasePDFViewDefaultsObservationContext;
 #pragma clang diagnostic ignored "-Wpartial-availability"
     [super viewDidChangeEffectiveAppearance];
 #pragma clang diagnostic pop
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        [[self scrollView] setContentFilters:SKColorInvertFilters()];
+    [[self scrollView] setContentFilters:SKColorEffectFilters()];
 }
 
 - (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {

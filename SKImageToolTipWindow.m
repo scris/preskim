@@ -95,6 +95,8 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
             [backgroundView setState:NSVisualEffectStateActive];
             [backgroundView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [self setContentView:backgroundView];
+        } else {
+            [self setBackgroundColor:[NSColor colorWithGenericGamma22White:0.97 alpha:1.0]];
         }
 
     }
@@ -123,19 +125,7 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
     if (image) {
         [self setBackgroundImage:image];
         
-        if (RUNNING_AFTER(10_13)) {
-            if (isOpaque && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-                [[self contentView] setContentFilters:SKColorInvertFilters()];
-            else
-                [[self contentView] setContentFilters:[NSArray array]];
-        } else if (isOpaque) {
-            [self setBackgroundColor:[NSColor whiteColor]];
-        } else {
-            static NSColor *backgroundColor = nil;
-            if (backgroundColor == nil)
-                backgroundColor = [[NSColor colorWithGenericGamma22White:0.97 alpha:1.0] retain];
-            [self setBackgroundColor:backgroundColor];
-        }
+        [[self contentView] setContentFilters:isOpaque ? SKColorEffectFilters() : [NSArray array]];
         
         contentRect.size = [image size];
         contentRect.origin.x = fmin(thePoint.x, NSMaxX(screenRect) - NSWidth(contentRect));
