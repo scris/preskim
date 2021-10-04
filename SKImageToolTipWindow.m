@@ -75,8 +75,8 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
     if (self) {
         [self setHidesOnDeactivate:NO];
         [self setIgnoresMouseEvents:YES];
-        [self setOpaque:YES];
         [self setBackgroundColor:[NSColor whiteColor]];
+        [self setOpaque:YES];
         [self setHasShadow:YES];
         [self setLevel:WINDOW_LEVEL];
         [self setDefaultAlphaValue:ALPHA_VALUE];
@@ -86,6 +86,17 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orderOut:) 
                                                      name:NSApplicationWillResignActiveNotification object:NSApp];
+        if (RUNNING_AFTER(10_13)) {
+            NSVisualEffectView *backgroundView = [[[NSVisualEffectView alloc] init] autorelease];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+            [backgroundView setMaterial:NSVisualEffectMaterialToolTip];
+#pragma clang diagnostic push
+            [backgroundView setState:NSVisualEffectStateActive];
+            [backgroundView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+            [self setContentView:backgroundView];
+        }
+
     }
     return self;
 }
@@ -113,28 +124,10 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
         [self setBackgroundImage:image];
         
         if (RUNNING_AFTER(10_13)) {
-            if (isOpaque) {
-                if ([backgroundView window])
-                    [self setContentView:[[[NSView alloc] init] autorelease]];
-                if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-                    [[self contentView] setContentFilters:SKColorInvertFilters()];
-                else
-                    [[self contentView] setContentFilters:[NSArray array]];
-            } else {
-                if ([backgroundView window] == nil) {
-                    if (backgroundView == nil) {
-                        backgroundView = [[NSVisualEffectView alloc] init];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-                        [backgroundView setMaterial:NSVisualEffectMaterialToolTip];
-#pragma clang diagnostic push
-                        [backgroundView setState:NSVisualEffectStateActive];
-                        [backgroundView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-                        [self setOpaque:NO];
-                    }
-                    [self setContentView:backgroundView];
-                }
-            }
+            if (isOpaque && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+                [[self contentView] setContentFilters:SKColorInvertFilters()];
+            else
+                [[self contentView] setContentFilters:[NSArray array]];
         } else if (isOpaque) {
             [self setBackgroundColor:[NSColor whiteColor]];
         } else {

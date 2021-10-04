@@ -45,7 +45,6 @@
     id <SKImageToolTipContext> context;
     NSPoint point;
     CGFloat scale;
-    NSVisualEffectView *backgroundView;
 }
 
 + (id)sharedToolTipWindow;
