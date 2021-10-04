@@ -180,12 +180,4 @@
     [imageView setImage:newBackgroundImage];
 }
 
-- (void)setContentView:(NSView *)contentView {
-    NSArray *subviews = [[[self contentView] subviews] copy];
-    [super setContentView:contentView];
-    for (NSView *view in subviews)
-        [contentView addSubview:view];
-    [subviews release];
-}
-
 @end
