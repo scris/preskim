@@ -84,8 +84,7 @@ static char SKBasePDFViewDefaultsObservationContext;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
                                                      name:NSPreferredScrollerStyleDidChangeNotification object:nil];
         
-        if (RUNNING_AFTER(10_13))
-            [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKBasePDFViewDefaultsObservationContext];
+        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKBasePDFViewDefaultsObservationContext];
     }
 }
 
