@@ -40,6 +40,7 @@
 #import "NSGeometry_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import <Quartz/Quartz.h>
+#import "SKStringConstants.h"
 
 
 #if SDK_BEFORE(10_14)
@@ -183,9 +184,19 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
 
 #pragma mark -
 
-extern NSArray *SKColorInvertFilters(void) {
-    if (SKHasDarkAppearance(NSApp))
+extern NSArray *SKColorEffectFilters(void) {
+    CGFloat sepia = [[NSUserDefaults standardUserDefaults] doubleForKey:@"SKSepiaTone"];
+    BOOL invert = SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey];
+    if (sepia > 0.0) {
+        if (sepia > 1.0)
+            sepia = 1.0;
+        if (invert)
+            return [NSArray arrayWithObjects:[CIFilter filterWithName:@"CISepiaTone" keysAndValues:@"inputIntensity", [NSNumber numberWithDouble:sepia], nil], [CIFilter filterWithName:@"CIColorInvert"], [CIFilter filterWithName:@"CIHueAdjust" keysAndValues:kCIInputAngleKey, [NSNumber numberWithDouble:M_PI], nil], nil];
+        else
+            return [NSArray arrayWithObjects:[CIFilter filterWithName:@"CISepiaTone" keysAndValues:@"inputIntensity", [NSNumber numberWithDouble:sepia], nil], nil];
+    } else if (invert) {
         return [NSArray arrayWithObjects:[CIFilter filterWithName:@"CIColorInvert"], [CIFilter filterWithName:@"CIHueAdjust" keysAndValues:kCIInputAngleKey, [NSNumber numberWithDouble:M_PI], nil], nil];
-    else
+    } else {
         return [NSArray array];
+    }
 }

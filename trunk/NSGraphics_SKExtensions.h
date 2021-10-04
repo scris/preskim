@@ -57,4 +57,4 @@ extern void SKDrawTextFieldBezel(NSRect rect, NSView *controlView);
 
 #pragma mark -
 
-extern NSArray *SKColorInvertFilters(void);
+extern NSArray *SKColorEffectFilters(void);

@@ -46,11 +46,9 @@ static char SKThumbnailImageViewDefaultsObservationContext;
 @implementation SKThumbnailImageView
 
 - (void)commonInit {
+    [self setWantsLayer:YES];
+    [self setContentFilters:SKColorEffectFilters()];
     if (RUNNING_AFTER(10_13)) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-            [self setWantsLayer:YES];
-            [self setContentFilters:SKColorInvertFilters()];
-        }
         [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKThumbnailImageViewDefaultsObservationContext];
     }
 }
@@ -84,14 +82,14 @@ static char SKThumbnailImageViewDefaultsObservationContext;
     [super viewDidChangeEffectiveAppearance];
 #pragma clang diagnostic pop
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        [self setContentFilters:SKColorInvertFilters()];
+        [self setContentFilters:SKColorEffectFilters()];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &SKThumbnailImageViewDefaultsObservationContext) {
         if (SKHasDarkAppearance(NSApp)) {
             if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-                [self setContentFilters:SKColorInvertFilters()];
+                [self setContentFilters:SKColorEffectFilters()];
             else
                 [self setContentFilters:[NSArray array]];
         }

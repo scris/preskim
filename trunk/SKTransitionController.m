@@ -394,9 +394,9 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     CGFloat scale = CGRectGetWidth([tmpImage extent]) / NSWidth(bounds);
     CIImage *image = [tmpImage imageByCroppingToRect:CGRectIntegral(scaleRect(NSIntersectionRect(rect, bounds), scale))];
     [tmpImage release];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        NSArray *invertFilters = SKColorInvertFilters();
-        for (CIFilter *filter in invertFilters) {
+    NSArray *colorFilters = SKColorEffectFilters();
+    if ([colorFilters count] > 0) {
+        for (CIFilter *filter in colorFilters) {
             [filter setValue:image forKey:kCIInputImageKey];
             image = [filter outputImage];
         }
