@@ -142,3 +142,4 @@ extern NSString *SKDisplayNoteBoundsKey;
 extern NSString *SKDisplayPageBoundsKey;
 extern NSString *SKDisableHistoryHighlightsKey;
 extern NSString *SKInvertColorsInDarkModeKey;
+extern NSString *SKSepiaToneKey;

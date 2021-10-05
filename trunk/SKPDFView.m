@@ -3078,8 +3078,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
 }
 
-- (void)invertColorsInDarkModeDidChange {
-    [super invertColorsInDarkModeDidChange];
+- (void)colorFiltersDidChange {
+    [super colorFiltersDidChange];
     if (loupeWindow) {
         [[loupeWindow contentView] setContentFilters:SKColorEffectFilters()];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])

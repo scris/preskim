@@ -42,6 +42,6 @@
 
 @interface SKBasePDFView : PDFView
 
-- (void)invertColorsInDarkModeDidChange;
+- (void)colorFiltersDidChange;
 
 @end

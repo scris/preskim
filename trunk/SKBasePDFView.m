@@ -70,6 +70,13 @@ static char SKBasePDFViewDefaultsObservationContext;
 
 #pragma mark Dark mode and color inversion
 
+static inline NSArray *defaultKeysToObserve() {
+    if (RUNNING_AFTER(10_13))
+        return [NSArray arrayWithObjects:SKInvertColorsInDarkModeKey, SKSepiaToneKey, nil];
+    else
+        return [NSArray arrayWithObjects:SKSepiaToneKey, nil];
+}
+
 // make sure we don't use the same method name as a superclass or a subclass
 - (void)commonBaseInitialization {
     if (RUNNING_AFTER(10_13)) {
@@ -77,14 +84,15 @@ static char SKBasePDFViewDefaultsObservationContext;
         SKSetHasLightAppearance([[self scrollView] contentView]);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
             SKSetHasLightAppearance([self scrollView]);
-            [[self scrollView] setContentFilters:SKColorEffectFilters()];
         [self handleScrollerStyleChangedNotification:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
                                                      name:NSPreferredScrollerStyleDidChangeNotification object:nil];
-        
-        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKBasePDFViewDefaultsObservationContext];
     }
+    
+    [[self scrollView] setContentFilters:SKColorEffectFilters()];
+    
+    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:defaultKeysToObserve() context:&SKBasePDFViewDefaultsObservationContext];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -104,22 +112,20 @@ static char SKBasePDFViewDefaultsObservationContext;
 }
 
 - (void)dealloc {
-    if (RUNNING_AFTER(10_13)) {
-        @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKBasePDFViewDefaultsObservationContext]; }
-        @catch (id e) {}
-    }
+    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:defaultKeysToObserve() context:&SKBasePDFViewDefaultsObservationContext]; }
+    @catch (id e) {}
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &SKBasePDFViewDefaultsObservationContext)
-        [self invertColorsInDarkModeDidChange];
+        [self colorFiltersDidChange];
     else
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
-- (void)invertColorsInDarkModeDidChange {
+- (void)colorFiltersDidChange {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         SKSetHasLightAppearance([self scrollView]);
     } else {

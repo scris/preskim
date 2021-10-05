@@ -45,12 +45,17 @@ static char SKThumbnailImageViewDefaultsObservationContext;
 
 @implementation SKThumbnailImageView
 
+static inline NSArray *defaultKeysToObserve() {
+    if (RUNNING_AFTER(10_13))
+        return [NSArray arrayWithObjects:SKInvertColorsInDarkModeKey, SKSepiaToneKey, nil];
+    else
+        return [NSArray arrayWithObjects:SKSepiaToneKey, nil];
+}
+
 - (void)commonInit {
     [self setWantsLayer:YES];
     [self setContentFilters:SKColorEffectFilters()];
-    if (RUNNING_AFTER(10_13)) {
-        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKThumbnailImageViewDefaultsObservationContext];
-    }
+    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:defaultKeysToObserve() context:&SKThumbnailImageViewDefaultsObservationContext];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -69,10 +74,8 @@ static char SKThumbnailImageViewDefaultsObservationContext;
     return self;
 }
 - (void)dealloc {
-    if (RUNNING_AFTER(10_13)) {
-        @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKInvertColorsInDarkModeKey context:&SKThumbnailImageViewDefaultsObservationContext]; }
-        @catch (id e) {}
-    }
+    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:defaultKeysToObserve() context:&SKThumbnailImageViewDefaultsObservationContext]; }
+    @catch (id e) {}
     [super dealloc];
 }
 
@@ -86,16 +89,10 @@ static char SKThumbnailImageViewDefaultsObservationContext;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == &SKThumbnailImageViewDefaultsObservationContext) {
-        if (SKHasDarkAppearance(NSApp)) {
-            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-                [self setContentFilters:SKColorEffectFilters()];
-            else
-                [self setContentFilters:[NSArray array]];
-        }
-    } else {
+    if (context == &SKThumbnailImageViewDefaultsObservationContext)
+        [self setContentFilters:SKColorEffectFilters()];
+    else
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
 }
 
 @end
