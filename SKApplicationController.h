@@ -68,6 +68,7 @@
 @property (nonatomic, copy) NSColor *backgroundColor, *fullScreenBackgroundColor, *pageBackgroundColor, *defaultTextNoteFontColor;
 @property (nonatomic, copy) NSDictionary *defaultNoteColors, *defaultLineWidths, *defaultLineStyles, *defaultDashPatterns, *defaultFontNames, *defaultFontSizes;
 @property (nonatomic, copy) NSArray *favoriteColors;
+@property (nonatomic) CGFloat sepiaTone;
 @property (nonatomic) PDFLineStyle defaultStartLineStyle, defaultEndLineStyle;
 @property (nonatomic) NSTextAlignment defaultAlignment;
 @property (nonatomic) PDFTextAnnotationIconType defaultIconType;

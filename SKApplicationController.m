@@ -476,7 +476,7 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
         applicationScriptingKeys = [[NSSet alloc] initWithObjects:@"bookmarks", @"downloads", 
             @"defaultPdfViewSettings", @"defaultFullScreenPdfViewSettings", @"backgroundColor", @"fullScreenBackgroundColor", @"pageBackgroundColor", 
             @"defaultNoteColors", @"defaultLineWidths", @"defaultLineStyles", @"defaultDashPatterns", @"defaultStartLineStyle", @"defaultEndLineStyle", @"defaultFontNames", @"defaultFontSizes", @"defaultTextNoteFontColor", @"defaultAlignment", @"defaultIconType", 
-            @"favoriteColors", nil];
+            @"favoriteColors", @"sepiaTone", nil];
 	return [applicationScriptingKeys containsObject:key];
 }
 
@@ -812,6 +812,17 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 - (void)setFavoriteColors:(NSArray *)array {
     NSValueTransformer *transformer = [NSValueTransformer valueTransformerForName:SKUnarchiveColorArrayTransformerName];
     [[NSUserDefaults standardUserDefaults] setObject:[transformer reverseTransformedValue:array] forKey:SKSwatchColorsKey];
+}
+
+- (CGFloat)sepiaTone {
+    return [[NSUserDefaults standardUserDefaults] doubleForKey:SKSepiaToneKey];
+}
+
+- (void)setSepiaTone:(CGFloat)sepiaTone {
+    if (sepiaTone <= 0.0)
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:SKSepiaToneKey];
+    else
+        [[NSUserDefaults standardUserDefaults] setDouble:fmin(sepiaTone, 1.0) forKey:SKSepiaToneKey];
 }
 
 @end

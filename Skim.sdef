@@ -920,6 +920,10 @@
                 <type type="RGBA color" list="yes"/>
                 <cocoa key="favoriteColors"/>
             </property>
+            <property name="sepia tone" type="real" code="SepT"
+                description="Intensity of a sepia tone effect applied to the PDF content.">
+                <cocoa key="sepiaTone"/>
+            </property>
         </class-extension>
 
         <class-extension extends="document"

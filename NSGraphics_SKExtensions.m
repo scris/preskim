@@ -186,7 +186,7 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
 
 extern NSArray *SKColorEffectFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
-    CGFloat sepia = [[NSUserDefaults standardUserDefaults] doubleForKey:@"SKSepiaTone"];
+    CGFloat sepia = [[NSUserDefaults standardUserDefaults] doubleForKey:SKSepiaToneKey];
     if (sepia > 0.0)
         [filters addObject:[CIFilter filterWithName:@"CISepiaTone" keysAndValues:@"inputIntensity", [NSNumber numberWithDouble:fmin(sepia, 1.0)], nil]];
     if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
