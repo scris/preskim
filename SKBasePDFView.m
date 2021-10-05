@@ -49,7 +49,6 @@
 static char SKBasePDFViewDefaultsObservationContext;
 
 #if SDK_BEFORE(10_12)
-
 @interface PDFView (SKSierraDeclarations)
 - (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context;
 @end
@@ -57,7 +56,17 @@ static char SKBasePDFViewDefaultsObservationContext;
 @interface PDFAnnotation (SKSierraDeclarations)
 - (void)drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
 @end
+#endif
 
+#if SDK_BEFORE(10_13)
+typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
+    kPDFDisplayDirectionVertical = 0,
+    kPDFDisplayDirectionHorizontal = 1,
+};
+@interface PDFView (SKHighSierraDeclarations)
+@property (nonatomic) PDFDisplayDirection displayDirection;
+@property (nonatomic) BOOL displaysRTL;
+@end
 #endif
 
 @interface SKBasePDFView (BDSKPrivate)
