@@ -155,55 +155,55 @@ static inline NSArray *defaultKeysToObserve() {
 #pragma mark Bug fixes
 
 - (void)keyDown:(NSEvent *)theEvent {
-    if (RUNNING_AFTER(10_11)) {
-        [super keyDown:theEvent];
-        return;
-    }
-    
-    unichar eventChar = [theEvent firstCharacter];
-    NSUInteger modifiers = [theEvent standardModifierFlags];
-    
-    if ((eventChar == SKSpaceCharacter) && ((modifiers & ~NSShiftKeyMask) == 0)) {
-        eventChar = modifiers == NSShiftKeyMask ? NSPageUpFunctionKey : NSPageDownFunctionKey;
-        modifiers = 0;
-    }
-    
-    if ((([self displayMode] & kPDFDisplaySinglePageContinuous) == 0) &&
-        (eventChar == NSDownArrowFunctionKey || eventChar == NSUpArrowFunctionKey || eventChar == NSPageDownFunctionKey || eventChar == NSPageUpFunctionKey) &&
-        (modifiers == 0)) {
+    if (RUNNING_BEFORE(10_12)) {
         
-        NSScrollView *scrollView = [self scrollView];
-        NSClipView *clipView = [scrollView contentView];
-        NSRect clipRect = [clipView bounds];
-        BOOL flipped = [clipView isFlipped];
-        CGFloat scroll = eventChar == NSUpArrowFunctionKey || eventChar == NSDownArrowFunctionKey ? [scrollView verticalLineScroll] : NSHeight([self convertRect:clipRect fromView:clipView]) - 6.0 * [scrollView verticalPageScroll];
-        NSPoint point = [self convertPoint:clipRect.origin fromView:clipView];
-        CGFloat margin = [self convertSize:NSMakeSize(1.0, 1.0) toView:clipView].height;
+        unichar eventChar = [theEvent firstCharacter];
+        NSUInteger modifiers = [theEvent standardModifierFlags];
         
-        if (eventChar == NSDownArrowFunctionKey || eventChar == NSPageDownFunctionKey) {
-            point.y -= scroll;
-            [clipView scrollPoint:[self convertPoint:point toView:clipView]];
-            if (fabs(NSMinY(clipRect) - NSMinY([clipView bounds])) <= margin && [self canGoToNextPage]) {
-                [self goToNextPage:nil];
-                NSRect docRect = [[scrollView documentView] frame];
-                clipRect = [clipView bounds];
-                clipRect.origin.y = flipped ? NSMinY(docRect) : NSMaxY(docRect) - NSHeight(clipRect);
-                [clipView scrollPoint:clipRect.origin];
-            }
-        } else if (eventChar == NSUpArrowFunctionKey || eventChar == NSPageUpFunctionKey) {
-            point.y += scroll;
-            [clipView scrollPoint:[self convertPoint:point toView:clipView]];
-            if (fabs(NSMinY(clipRect) - NSMinY([clipView bounds])) <= margin && [self canGoToPreviousPage]) {
-                [self goToPreviousPage:nil];
-                NSRect docRect = [[scrollView documentView] frame];
-                clipRect = [clipView bounds];
-                clipRect.origin.y = flipped ? NSMaxY(docRect) - NSHeight(clipRect) : NSMinY(docRect);
-                [clipView scrollPoint:clipRect.origin];
-            }
+        if ((eventChar == SKSpaceCharacter) && ((modifiers & ~NSShiftKeyMask) == 0)) {
+            eventChar = modifiers == NSShiftKeyMask ? NSPageUpFunctionKey : NSPageDownFunctionKey;
+            modifiers = 0;
         }
-    } else {
-        [super keyDown:theEvent];
+        
+        if ((([self displayMode] & kPDFDisplaySinglePageContinuous) == 0) &&
+            (eventChar == NSDownArrowFunctionKey || eventChar == NSUpArrowFunctionKey || eventChar == NSPageDownFunctionKey || eventChar == NSPageUpFunctionKey) &&
+            (modifiers == 0)) {
+            
+            NSScrollView *scrollView = [self scrollView];
+            NSClipView *clipView = [scrollView contentView];
+            NSRect clipRect = [clipView bounds];
+            BOOL flipped = [clipView isFlipped];
+            CGFloat scroll = eventChar == NSUpArrowFunctionKey || eventChar == NSDownArrowFunctionKey ? [scrollView verticalLineScroll] : NSHeight([self convertRect:clipRect fromView:clipView]) - 6.0 * [scrollView verticalPageScroll];
+            NSPoint point = [self convertPoint:clipRect.origin fromView:clipView];
+            CGFloat margin = [self convertSize:NSMakeSize(1.0, 1.0) toView:clipView].height;
+            
+            if (eventChar == NSDownArrowFunctionKey || eventChar == NSPageDownFunctionKey) {
+                point.y -= scroll;
+                [clipView scrollPoint:[self convertPoint:point toView:clipView]];
+                if (fabs(NSMinY(clipRect) - NSMinY([clipView bounds])) <= margin && [self canGoToNextPage]) {
+                    [self goToNextPage:nil];
+                    NSRect docRect = [[scrollView documentView] frame];
+                    clipRect = [clipView bounds];
+                    clipRect.origin.y = flipped ? NSMinY(docRect) : NSMaxY(docRect) - NSHeight(clipRect);
+                    [clipView scrollPoint:clipRect.origin];
+                }
+            } else if (eventChar == NSUpArrowFunctionKey || eventChar == NSPageUpFunctionKey) {
+                point.y += scroll;
+                [clipView scrollPoint:[self convertPoint:point toView:clipView]];
+                if (fabs(NSMinY(clipRect) - NSMinY([clipView bounds])) <= margin && [self canGoToPreviousPage]) {
+                    [self goToPreviousPage:nil];
+                    NSRect docRect = [[scrollView documentView] frame];
+                    clipRect = [clipView bounds];
+                    clipRect.origin.y = flipped ? NSMaxY(docRect) - NSHeight(clipRect) : NSMinY(docRect);
+                    [clipView scrollPoint:clipRect.origin];
+                }
+            }
+            
+            return;
+        }
     }
+    
+    [super keyDown:theEvent];
 }
 
 
