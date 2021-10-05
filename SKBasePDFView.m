@@ -39,6 +39,7 @@
 #import "SKBasePDFView.h"
 #import "SKStringConstants.h"
 #import "PDFView_SKExtensions.h"
+#import "NSGeometry_SKExtensions.h"
 #import "NSGraphics_SKExtensions.h"
 #import "NSUserDefaultsController_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
