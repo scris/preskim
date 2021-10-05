@@ -228,7 +228,7 @@ static inline NSArray *defaultKeysToObserve() {
     }
 }
 
-- (void)replacement_goToRect:(NSRect)rect onPage:(PDFPage *)page {
+- (void)goToRect:(NSRect)rect onPage:(PDFPage *)page {
     if (RUNNING(10_13)) {
         NSView *docView = [self documentView];
         if ([self isPageAtIndexDisplayed:[page pageIndex]] == NO)
@@ -239,7 +239,7 @@ static inline NSArray *defaultKeysToObserve() {
     }
 }
 
-- (void)replacement_setCurrentSelection:(PDFSelection *)currentSelection {
+- (void)setCurrentSelection:(PDFSelection *)currentSelection {
     if (RUNNING(10_12) && currentSelection == nil)
         currentSelection = [[[PDFSelection alloc] initWithDocument:[self document]] autorelease];
     [super setCurrentSelection:currentSelection];
@@ -254,7 +254,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
 
 #pragma clang diagnostic pop
 
-- (void)replacement_goToPreviousPage:(id)sender {
+- (void)goToPreviousPage:(id)sender {
     if (hasHorizontalLayout(self) && [self canGoToPreviousPage]) {
         PDFDocument *doc = [self document];
         PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] - 1];
@@ -264,7 +264,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     }
 }
 
-- (void)replacement_goToNextPage:(id)sender {
+- (void)goToNextPage:(id)sender {
     if (hasHorizontalLayout(self) && [self canGoToNextPage]) {
         PDFDocument *doc = [self document];
         PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] + 1];
@@ -274,7 +274,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     }
 }
 
-- (void)replacement_goToFirstPage:(id)sender {
+- (void)goToFirstPage:(id)sender {
     if (hasHorizontalLayout(self) && [self canGoToFirstPage]) {
         PDFDocument *doc = [self document];
         PDFPage *page = [doc pageAtIndex:0];
@@ -284,7 +284,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     }
 }
 
-- (void)replacement_goToLastPage:(id)sender {
+- (void)goToLastPage:(id)sender {
     if (hasHorizontalLayout(self) && [self canGoToLastPage]) {
         PDFDocument *doc = [self document];
         PDFPage *page = [doc pageAtIndex:[doc pageCount] - 1];
@@ -294,7 +294,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     }
 }
 
-- (void)replacement_goToPage:(PDFPage *)page {
+- (void)goToPage:(PDFPage *)page {
     if (hasHorizontalLayout(self)) {
         NSRect bounds = [page boundsForBox:[self displayBox]];
         if ([self displaysPageBreaks]) {
