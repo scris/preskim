@@ -139,8 +139,13 @@ enum {
 @end
 
 @interface NSSavePanel (SKPrivateDeclarations)
-- (void)toggleOptionsView:(id)sender;
+- (void)_setAccessoryViewDisclosed:(BOOL)flag;
 @end
+#if SDK_BEFORE(10_11)
+@interface NSSavePanel (SKElCapitanDeclarations)
+- (void)setAccessoryViewDisclosed:(BOOL)flag;
+@end
+#endif
 
 @interface PDFDocument (SKPrivateDeclarations)
 - (NSString *)passwordUsedForUnlocking;
@@ -1082,8 +1087,13 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         [oPanel setAccessoryView:readNotesAccessoryView];
         [replaceNotesCheckButton setState:NSOnState];
         [readNotesAccessoryView release];
-        if ([oPanel respondsToSelector:@selector(toggleOptionsView:)])
-            [oPanel toggleOptionsView:nil];
+        if ([oPanel respondsToSelector:@selector(setAccessoryViewDisclosed:)])
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+            [oPanel setAccessoryViewDisclosed:YES];
+#pragma clang diagnostic pop
+        else if ([oPanel respondsToSelector:@selector(_setAccessoryViewDisclosed:)])
+            [oPanel _setAccessoryViewDisclosed:YES];
     }
     
     [oPanel setDirectoryURL:[fileURL URLByDeletingLastPathComponent]];
