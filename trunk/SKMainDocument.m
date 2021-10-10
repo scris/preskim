@@ -139,7 +139,7 @@ enum {
 @end
 
 @interface NSSavePanel (SKPrivateDeclarations)
-- (void)_setAccessoryViewDisclosed:(BOOL)flag;
+- (void)toggleOptionsView:(id)sender;
 @end
 #if SDK_BEFORE(10_11)
 @interface NSSavePanel (SKElCapitanDeclarations)
@@ -1092,8 +1092,8 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 #pragma clang diagnostic ignored "-Wpartial-availability"
             [oPanel setAccessoryViewDisclosed:YES];
 #pragma clang diagnostic pop
-        else if ([oPanel respondsToSelector:@selector(_setAccessoryViewDisclosed:)])
-            [oPanel _setAccessoryViewDisclosed:YES];
+        else if ([oPanel respondsToSelector:@selector(toggleOptionsView:)])
+            [oPanel toggleOptionsView:nil];
     }
     
     [oPanel setDirectoryURL:[fileURL URLByDeletingLastPathComponent]];
