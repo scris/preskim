@@ -160,6 +160,7 @@
 #define PAGEINDEX_KEY               @"pageIndex"
 #define SCROLLPOINT_KEY             @"scrollPoint"
 #define LOCKED_KEY                  @"locked"
+#define CROPBOXES_KEY               @"cropBpxes"
 
 #define PAGETRANSITIONS_KEY @"pageTransitions"
 
@@ -563,6 +564,39 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     mwcFlags.settingUpWindow = 0;
 }
 
+- (NSArray *)changedCropBoxes {
+    NSMutableArray *cropBoxes = [NSMutableArray array];
+    BOOL hasCrop = NO;
+    PDFDocument *pdfDoc = [self pdfDocument];
+    NSUInteger i, iMax = [pdfDoc pageCount];
+    for (i = 0; i < iMax; i++) {
+        PDFPage *page = [pdfDoc pageAtIndex:i];
+        NSRect bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
+        NSRect origBounds = NSRectFromCGRect(CGPDFPageGetBoxRect([page pageRef], kCGPDFCropBox));
+        if (NSEqualRects(bounds, origBounds)) {
+            [cropBoxes addObject:@""];
+        } else {
+            [cropBoxes addObject:NSStringFromRect(bounds)];
+            hasCrop = YES;
+        }
+    }
+    return hasCrop ? cropBoxes : nil;
+}
+
+- (void)applyChangedCropBoxes:(NSArray *)cropBoxes {
+    PDFDocument *pdfDoc = [self pdfDocument];
+    NSUInteger i, iMax = [pdfDoc pageCount];
+    if ([cropBoxes count] != iMax)
+        return;
+    for (i = 0; i < iMax; i++) {
+        NSString *box = [cropBoxes objectAtIndex:i];
+        if ([box isEqualToString:@""])
+            continue;
+        PDFPage *page = [pdfDoc pageAtIndex:i];
+        [page setBounds:NSRectFromString(box) forBox:kPDFDisplayBoxCropBox];
+    }
+}
+
 - (void)applyLeftSideWidth:(CGFloat)leftSideWidth rightSideWidth:(CGFloat)rightSideWidth {
     [splitView setPosition:leftSideWidth ofDividerAtIndex:0];
     [splitView setPosition:[splitView maxPossiblePositionOfDividerAtIndex:1] - [splitView dividerThickness] - rightSideWidth ofDividerAtIndex:1];
@@ -581,6 +615,8 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         NSNumber *rightWidth = [setup objectForKey:RIGHTSIDEPANEWIDTH_KEY];
         if (leftWidth && rightWidth)
             [self applyLeftSideWidth:[leftWidth doubleValue] rightSideWidth:[rightWidth doubleValue]];
+        
+        [self applyChangedCropBoxes:[setup objectForKey:CROPBOXES_KEY]];
         
         NSArray *snapshotSetups = [setup objectForKey:SNAPSHOTS_KEY];
         if ([snapshotSetups count])
@@ -608,6 +644,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     NSPoint point = NSZeroPoint;
     BOOL rotated = NO;
     NSUInteger pageIndex = [pdfView currentPageIndexAndPoint:&point rotated:&rotated];
+    NSArray *cropBoxes = [self changedCropBoxes];
     
     [setup setObject:NSStringFromRect([mainWindow frame]) forKey:MAINWINDOWFRAME_KEY];
     [setup setObject:[NSNumber numberWithDouble:[self leftSideWidth]] forKey:LEFTSIDEPANEWIDTH_KEY];
@@ -615,6 +652,8 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     [setup setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
     if (rotated == NO)
         [setup setObject:NSStringFromPoint(point) forKey:SCROLLPOINT_KEY];
+    if (cropBoxes)
+        [setup setObject:cropBoxes forKey:CROPBOXES_KEY];
     if ([snapshots count])
         [setup setObject:[snapshots valueForKey:SKSnapshotCurrentSetupKey] forKey:SNAPSHOTS_KEY];
     if ([self interactionMode] == SKNormalMode) {
@@ -1945,6 +1984,8 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         [lastViewedPages addPointer:(void *)pageIndex];
         [pdfView resetHistory];
     }
+    
+    [self applyChangedCropBoxes:[savedNormalSetup objectForKey:CROPBOXES_KEY]];
     
     NSArray *snapshotSetups = [savedNormalSetup objectForKey:SNAPSHOTS_KEY];
     if ([snapshotSetups count])
