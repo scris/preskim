@@ -139,9 +139,20 @@ static NSArray *SKNCreateArrayFromColor(NSColor *color, NSMapTable **colors) {
     if ([color isKindOfClass:[NSColor class]]) {
         NSArray *array = [*colors objectForKey:color];
         if (array == nil) {
-            CGFloat r = 0.0, g = 0.0, b = 0.0, a = 1.0;
-            [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&r green:&g blue:&b alpha:&a];
-            array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:r], [NSNumber numberWithDouble:g], [NSNumber numberWithDouble:b], [NSNumber numberWithDouble:a], nil];
+            if ([[color colorSpace] colorSpaceModel] == NSGrayColorSpaceModel) {
+                CGFloat w = 0.0, a = 1.0;
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
+                if ([NSColorSpace respondsToSelector:@selector(genericGamma22GrayColorSpace)] == NO)
+                    [[color colorUsingColorSpace:[NSColorSpace genericGrayColorSpace]] getWhite:&w alpha:&a];
+                else
+#endif
+                [[color colorUsingColorSpace:[NSColorSpace genericGamma22GrayColorSpace]] getWhite:&w alpha:&a];
+                array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:w], [NSNumber numberWithDouble:a], nil];
+            } else {
+                CGFloat r = 0.0, g = 0.0, b = 0.0, a = 1.0;
+                [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&r green:&g blue:&b alpha:&a];
+                array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:r], [NSNumber numberWithDouble:g], [NSNumber numberWithDouble:b], [NSNumber numberWithDouble:a], nil];
+            }
             if (colors == NULL)
                 *colors = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
             [*colors setObject:array forKey:color];
@@ -158,17 +169,26 @@ static NSArray *SKNCreateArrayFromColor(NSColor *color, NSMapTable **colors) {
 
 static NSColor *SKNColorFromArray(NSArray *array) {
     if (SKNIsNumberArray(array)) {
-        CGFloat c[4] = {0.0, 0.0, 0.0, 1.0};
         if ([array count] > 2) {
+            CGFloat c[4] = {0.0, 0.0, 0.0, 1.0};
             NSUInteger i;
             for (i = 0; i < MAX([array count], 4); i++)
                 c[i] = [[array objectAtIndex:i] doubleValue];
+            return [NSColor colorWithColorSpace:[NSColorSpace sRGBColorSpace] components:c count:4];
         } else if ([array count] > 0) {
-            c[0] = c[1] = c[2] = [[array objectAtIndex:0] doubleValue];
+            CGFloat c[2] = {0.0, 1.0};
+            c[0] = [[array objectAtIndex:0] doubleValue];
             if ([array count] == 2)
-                c[3] = [[array objectAtIndex:1] doubleValue];
+                c[1] = [[array objectAtIndex:1] doubleValue];
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
+            if ([NSColorSpace respondsToSelector:@selector(genericGamma22GrayColorSpace)] == NO)
+                return [NSColor colorWithColorSpace:[NSColorSpace genericGrayColorSpace] components:c count:2];
+            else
+#endif
+            return [NSColor colorWithColorSpace:[NSColorSpace genericGamma22GrayColorSpace] components:c count:2];
+        } else {
+            return [NSColor clearColor];
         }
-        return [NSColor colorWithColorSpace:[NSColorSpace sRGBColorSpace] components:c count:4];
     } else if ([array isKindOfClass:[NSColor class]]) {
         return (NSColor *)array;
     } else {
