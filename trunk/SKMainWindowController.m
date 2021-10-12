@@ -586,14 +586,12 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 - (void)applyChangedCropBoxes:(NSArray *)cropBoxes {
     PDFDocument *pdfDoc = [self pdfDocument];
     NSUInteger i, iMax = [pdfDoc pageCount];
-    if ([cropBoxes count] != iMax)
-        return;
-    for (i = 0; i < iMax; i++) {
-        NSString *box = [cropBoxes objectAtIndex:i];
-        if ([box isEqualToString:@""])
-            continue;
-        PDFPage *page = [pdfDoc pageAtIndex:i];
-        [page setBounds:NSRectFromString(box) forBox:kPDFDisplayBoxCropBox];
+    if ([cropBoxes count] == iMax) {
+        for (i = 0; i < iMax; i++) {
+            NSString *box = [cropBoxes objectAtIndex:i];
+            if ([box isEqualToString:@""] == NO)
+                [[pdfDoc pageAtIndex:i] setBounds:NSRectFromString(box) forBox:kPDFDisplayBoxCropBox];
+        }
     }
 }
 
@@ -1127,6 +1125,15 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             [pdfView setFrame:[pdfContentView bounds]];
             [self applyLeftSideWidth:leftWidth rightSideWidth:rightWidth];
         } else {
+            NSArray *cropBoxes = [savedNormalSetup objectForKey:CROPBOXES_KEY];
+            NSUInteger i, iMax = [document pageCount];
+            if ([cropBoxes count] == iMax) {
+                for (i = 0; i < iMax; i++) {
+                    NSString *box = [cropBoxes objectAtIndex:i];
+                    if ([box isEqualToString:@""] == NO)
+                        [[document pageAtIndex:i] setBounds:NSRectFromString(box) forBox:kPDFDisplayBoxCropBox];
+                }
+            }
             [pdfView setDocument:document];
         }
         [[pdfView document] setDelegate:self];
