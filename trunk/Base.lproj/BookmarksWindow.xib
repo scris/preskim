@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -26,7 +25,7 @@
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="775"/>
             <value key="minSize" type="size" width="300" height="100"/>
             <view key="contentView" id="6">
-                <rect key="frame" x="0.0" y="0.0" width="400" height="250"/>
+                <rect key="frame" x="0.0" y="0.0" width="400" height="253"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="37" customClass="SKStatusBar">
@@ -36,13 +35,17 @@
                         </constraints>
                     </customView>
                     <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="18" horizontalPageScroll="10" verticalLineScroll="18" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="56">
-                        <rect key="frame" x="0.0" y="22" width="400" height="229"/>
+                        <rect key="frame" x="0.0" y="22" width="400" height="232"/>
                         <clipView key="contentView" id="hZw-FP-8cA">
-                            <rect key="frame" x="0.0" y="0.0" width="400" height="229"/>
+                            <rect key="frame" x="0.0" y="0.0" width="400" height="232"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" typeSelect="NO" autosaveName="SKBookmarksTable" rowHeight="16" headerView="100" viewBased="YES" indentationPerLevel="16" outlineTableColumn="58" translatesAutoresizingMaskIntoConstraints="NO" id="57" customClass="SKOutlineView">
-                                    <rect key="frame" x="0.0" y="25" width="400" height="204"/>
+                                <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" typeSelect="NO" autosaveName="SKBookmarksTable" rowHeight="16" headerView="100" viewBased="YES" indentationPerLevel="16" outlineTableColumn="58" id="57" customClass="SKOutlineView">
+                                    <rect key="frame" x="0.0" y="25" width="400" height="207"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="204" placeholder="YES" id="ZIF-gY-LgS"/>
+                                    </constraints>
                                     <size key="intercellSpacing" width="0.0" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -221,10 +224,6 @@
                                     </connections>
                                 </outlineView>
                             </subviews>
-                            <constraints>
-                                <constraint firstItem="57" firstAttribute="leading" secondItem="hZw-FP-8cA" secondAttribute="leading" id="V5j-fa-jFl"/>
-                                <constraint firstItem="57" firstAttribute="top" secondItem="hZw-FP-8cA" secondAttribute="top" constant="25" id="e2t-Vt-qwa"/>
-                            </constraints>
                         </clipView>
                         <constraints>
                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="Q91-7c-M9i"/>
