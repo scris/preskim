@@ -81,6 +81,7 @@ NSString *SKImageNameToolbarMediaBox = @"ToolbarMediaBox";
 NSString *SKImageNameToolbarCropBox = @"ToolbarCropBox";
 NSString *SKImageNameToolbarLeftPane = @"ToolbarLeftPane";
 NSString *SKImageNameToolbarRightPane = @"ToolbarRightPane";
+NSString *SKImageNameToolbarSplitPDF = @"ToolbarSplitPDF";
 NSString *SKImageNameToolbarTextNoteMenu = @"ToolbarTextNoteMenu";
 NSString *SKImageNameToolbarAnchoredNoteMenu = @"ToolbarAnchoredNoteMenu";
 NSString *SKImageNameToolbarCircleNoteMenu = @"ToolbarCircleNoteMenu";
@@ -782,7 +783,15 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path stroke];
     );
     
-    MAKE_IMAGE(SKImageNameToolbarTextTool, YES, 27.0, 19.0, 
+    MAKE_IMAGE(SKImageNameToolbarSplitPDF, YES, 27.0, 17.0,
+        [[NSColor blackColor] setStroke];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(6.5, 3.5, 14.0 , 11.0) xRadius:1.0 yRadius:1.0];
+        [path moveToPoint:NSMakePoint(6.5, 7.5)];
+        [path lineToPoint:NSMakePoint(20.5, 7.5)];
+        [path stroke];
+    );
+    
+    MAKE_IMAGE(SKImageNameToolbarTextTool, YES, 27.0, 19.0,
         NSFont *font = [NSFont fontWithName:@"Helvetica" size:12.0] ?: [NSFont systemFontOfSize:12.0];
         NSGlyph glyph = [font glyphWithName:@"A"];
         [[NSColor blackColor] set];
