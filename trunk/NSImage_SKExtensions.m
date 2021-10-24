@@ -63,6 +63,7 @@ NSString *SKImageNameToolbarZoomOut = @"ToolbarZoomOut";
 NSString *SKImageNameToolbarZoomActual = @"ToolbarZoomActual";
 NSString *SKImageNameToolbarZoomToFit = @"ToolbarZoomToFit";
 NSString *SKImageNameToolbarZoomToSelection = @"ToolbarZoomToSelection";
+NSString *SKImageNameToolbarAutoScales = @"ToolbarAutoScales";
 NSString *SKImageNameToolbarRotateRight = @"ToolbarRotateRight";
 NSString *SKImageNameToolbarRotateLeft = @"ToolbarRotateLeft";
 NSString *SKImageNameToolbarCrop = @"ToolbarCrop";
@@ -559,7 +560,26 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path stroke];
     );
     
-    MAKE_IMAGE(SKImageNameToolbarRotateLeft, YES, 27.0, 21.0, 
+    MAKE_IMAGE(SKImageNameToolbarAutoScales, YES, 27.0, 19.0,
+        [[NSColor blackColor] setStroke];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithOvalInRect:NSMakeRect(6.5, 5.5, 10.0, 10.0)];
+        [path moveToPoint:NSMakePoint(15.0, 7.0)];
+        [path lineToPoint:NSMakePoint(20.0, 2.0)];
+        [path stroke];
+        path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(8.5, 11.0)];
+        [path lineToPoint:NSMakePoint(14.5, 11.0)];
+        [path lineToPoint:NSMakePoint(11.5, 14.0)];
+        [path closePath];
+        [path moveToPoint:NSMakePoint(8.5, 10.0)];
+        [path lineToPoint:NSMakePoint(14.5, 10.0)];
+        [path lineToPoint:NSMakePoint(11.5, 7.0)];
+        [path closePath];
+        [path fill];
+    );
+    
+    MAKE_IMAGE(SKImageNameToolbarRotateLeft, YES, 27.0, 21.0,
         [[NSColor blackColor] set];
         NSBezierPath *path = [NSBezierPath bezierPath];
         [path appendBezierPathWithRoundedRect:NSMakeRect(7.5, 4.5, 9.0, 7.0) xRadius:1.0 yRadius:1.0];

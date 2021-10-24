@@ -119,6 +119,7 @@ NSString *SKPDFViewDisplaysAsBookChangedNotification = @"SKPDFViewDisplaysAsBook
 NSString *SKPDFViewDisplaysPageBreaksChangedNotification = @"SKPDFViewDisplaysPageBreaksChangedNotification";
 NSString *SKPDFViewDisplaysHorizontallyChangedNotification = @"SKPDFViewDisplaysHorizontallyChangedNotification";
 NSString *SKPDFViewDisplaysRTLChangedNotification = @"SKPDFViewDisplaysRTLChangedNotification";
+NSString *SKPDFViewAutoScalesChangedNotification = @"SKPDFViewAutoScalesChangedNotification";
 NSString *SKPDFViewToolModeChangedNotification = @"SKPDFViewToolModeChangedNotification";
 NSString *SKPDFViewAnnotationModeChangedNotification = @"SKPDFViewAnnotationModeChangedNotification";
 NSString *SKPDFViewActiveAnnotationDidChangeNotification = @"SKPDFViewActiveAnnotationDidChangeNotification";
@@ -860,7 +861,14 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [super setDisplaysPageBreaks:pageBreaks];
         [self resetPDFToolTipRects];
         [editor layoutWithEvent:nil];
-		[[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDisplaysPageBreaksChangedNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDisplaysPageBreaksChangedNotification object:self];
+    }
+}
+
+- (void)setAutoScales:(BOOL)autoScales {
+    if (autoScales != [self autoScales]) {
+        [super setAutoScales:autoScales];
+        [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewAutoScalesChangedNotification object:self];
     }
 }
 

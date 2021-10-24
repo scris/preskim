@@ -59,6 +59,7 @@ extern NSString *SKImageNameToolbarZoomOut;
 extern NSString *SKImageNameToolbarZoomActual;
 extern NSString *SKImageNameToolbarZoomToFit;
 extern NSString *SKImageNameToolbarZoomToSelection;
+extern NSString *SKImageNameToolbarAutoScales;
 extern NSString *SKImageNameToolbarRotateRight;
 extern NSString *SKImageNameToolbarRotateLeft;
 extern NSString *SKImageNameToolbarCrop;
