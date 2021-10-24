@@ -1414,6 +1414,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     [self handleChangedHistoryNotification:nil];
     [self handlePageChangedNotification:nil];
     [self handleScaleChangedNotification:nil];
+    [self handleAutoScalesChangedNotification:nil];
     [self handleToolModeChangedNotification:nil];
     [self handleDisplayBoxChangedNotification:nil];
     [self handleDisplayModeChangedNotification:nil];
