@@ -53,6 +53,7 @@
     NSSegmentedControl *zoomActualButton;
     NSSegmentedControl *zoomFitButton;
     NSSegmentedControl *zoomSelectionButton;
+    NSSegmentedControl *autoScalesButton;
     NSSegmentedControl *rotateLeftButton;
     NSSegmentedControl *rotateRightButton;
     NSSegmentedControl *rotateLeftRightButton;
@@ -92,7 +93,7 @@
 }
 
 @property (nonatomic, assign) IBOutlet SKMainWindowController *mainController;
-@property (nonatomic, retain) IBOutlet NSSegmentedControl *backForwardButton, *previousNextPageButton, *previousPageButton, *nextPageButton, *previousNextFirstLastPageButton, *zoomInOutButton, *zoomInActualOutButton, *zoomActualButton, *zoomFitButton, *zoomSelectionButton, *rotateLeftButton, *rotateRightButton, *rotateLeftRightButton, *cropButton, *fullScreenButton, *presentationButton, *leftPaneButton, *rightPaneButton, *toolModeButton, *textNoteButton, *circleNoteButton, *markupNoteButton, *lineNoteButton, *singleTwoUpButton, *continuousButton, *displayModeButton, *displayDirectionButton, *displaysRTLButton, *bookModeButton, *pageBreaksButton, *displayBoxButton, *infoButton, *colorsButton, *fontsButton, *linesButton, *printButton, *customizeButton, *noteButton, *pacerButton, *shareButton;
+@property (nonatomic, retain) IBOutlet NSSegmentedControl *backForwardButton, *previousNextPageButton, *previousPageButton, *nextPageButton, *previousNextFirstLastPageButton, *zoomInOutButton, *zoomInActualOutButton, *zoomActualButton, *zoomFitButton, *zoomSelectionButton, *autoScalesButton, *rotateLeftButton, *rotateRightButton, *rotateLeftRightButton, *cropButton, *fullScreenButton, *presentationButton, *leftPaneButton, *rightPaneButton, *toolModeButton, *textNoteButton, *circleNoteButton, *markupNoteButton, *lineNoteButton, *singleTwoUpButton, *continuousButton, *displayModeButton, *displayDirectionButton, *displaysRTLButton, *bookModeButton, *pageBreaksButton, *displayBoxButton, *infoButton, *colorsButton, *fontsButton, *linesButton, *printButton, *customizeButton, *noteButton, *pacerButton, *shareButton;
 @property (nonatomic, retain) IBOutlet NSTextField *pageNumberField, *scaleField, *pacerSpeedField;
 @property (nonatomic, retain) IBOutlet SKColorSwatch *colorSwatch;
 @property (nonatomic, retain) IBOutlet NSStepper *pacerSpeedStepper;
@@ -113,6 +114,7 @@
 - (IBAction)zoomInActualOut:(id)sender;
 - (IBAction)zoomToFit:(id)sender;
 - (IBAction)zoomToSelection:(id)sender;
+- (IBAction)changeAutoScales:(id)sender;
 - (IBAction)rotateAllLeftRight:(id)sender;
 - (IBAction)cropAll:(id)sender;
 - (IBAction)toggleFullscreen:(id)sender;

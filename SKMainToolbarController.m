@@ -75,6 +75,7 @@
 #define SKDocumentToolbarZoomToFitItemIdentifier @"SKDocumentToolbarZoomToFitItemIdentifier"
 #define SKDocumentToolbarZoomInOutItemIdentifier @"SKDocumentToolbarZoomInOutItemIdentifier"
 #define SKDocumentToolbarZoomInActualOutItemIdentifier @"SKDocumentToolbarZoomInActualOutItemIdentifier"
+#define SKDocumentToolbarAutoScalesItemIdentifier @"SKDocumentToolbarAutoScalesItemIdentifier"
 #define SKDocumentToolbarRotateRightItemIdentifier @"SKDocumentToolbarRotateRightItemIdentifier"
 #define SKDocumentToolbarRotateLeftItemIdentifier @"SKDocumentToolbarRotateLeftItemIdentifier"
 #define SKDocumentToolbarRotateLeftRightItemIdentifier @"SKDocumentToolbarRotateLeftRightItemIdentifier"
@@ -131,7 +132,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 @implementation SKMainToolbarController
 
-@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, toolModeButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton;
+@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, autoScalesButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, toolModeButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton;
 
 - (void)dealloc {
     mainController = nil;
@@ -146,6 +147,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     SKDESTROY(zoomActualButton);
     SKDESTROY(zoomFitButton);
     SKDESTROY(zoomSelectionButton);
+    SKDESTROY(autoScalesButton);
     SKDESTROY(rotateLeftButton);
     SKDESTROY(rotateRightButton);
     SKDESTROY(rotateLeftRightButton);
@@ -388,6 +390,16 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [zoomInActualOutButton setHelp:NSLocalizedString(@"Zoom In", @"Tool tip message") forSegment:2];
             [zoomInActualOutButton setSegmentStyle:NSSegmentStyleSeparated];
             [item setViewWithSizes:zoomInActualOutButton];
+            [item setMenuFormRepresentation:menuItem];
+            
+        } else if ([identifier isEqualToString:SKDocumentToolbarAutoScalesItemIdentifier]) {
+            
+            menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Automatically Resize", @"Menu item title") action:@selector(toggleAutoScale:) target:mainController];
+            
+            [item setLabels:NSLocalizedString(@"Automatically Resize", @"Toolbar item label")];
+            [item setToolTip:NSLocalizedString(@"Automatically Resize", @"Tool tip message")];
+            [autoScalesButton setHelp:NSLocalizedString(@"Automatically Resize", @"Tool tip message") forSegment:0];
+            [item setViewWithSizes:autoScalesButton];
             [item setMenuFormRepresentation:menuItem];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarRotateRightItemIdentifier]) {
@@ -900,6 +912,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             SKDocumentToolbarZoomActualItemIdentifier,
             SKDocumentToolbarZoomToFitItemIdentifier,
             SKDocumentToolbarZoomToSelectionItemIdentifier,
+            SKDocumentToolbarAutoScalesItemIdentifier,
             SKDocumentToolbarScaleItemIdentifier,
             SKDocumentToolbarDisplayModeItemIdentifier,
             SKDocumentToolbarSingleTwoUpItemIdentifier,
@@ -945,6 +958,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarZoomActualItemIdentifier,
         SKDocumentToolbarZoomToFitItemIdentifier,
         SKDocumentToolbarZoomToSelectionItemIdentifier,
+        SKDocumentToolbarAutoScalesItemIdentifier,
         SKDocumentToolbarScaleItemIdentifier,
         SKDocumentToolbarDisplayModeItemIdentifier,
         SKDocumentToolbarSingleTwoUpItemIdentifier,
@@ -994,9 +1008,9 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     } else if ([identifier isEqualToString:SKDocumentToolbarZoomToSelectionItemIdentifier]) {
         return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && NSIsEmptyRect([mainController.pdfView currentSelectionRect]) == NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarZoomInOutItemIdentifier] ||
-               [identifier isEqualToString:SKDocumentToolbarZoomInActualOutItemIdentifier]) {
-        return [mainController hasOverview] == NO;
-    } else if ([identifier isEqualToString:SKDocumentToolbarScaleItemIdentifier]) {
+               [identifier isEqualToString:SKDocumentToolbarZoomInActualOutItemIdentifier] ||
+               [identifier isEqualToString:SKDocumentToolbarAutoScalesItemIdentifier] ||
+               [identifier isEqualToString:SKDocumentToolbarScaleItemIdentifier]) {
         return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarPageNumberItemIdentifier]) {
         return [mainController.pdfView.document isLocked] == NO;
@@ -1143,6 +1157,10 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 - (IBAction)zoomToSelection:(id)sender {
     [mainController doZoomToSelection:sender];
+}
+
+- (IBAction)changeAutoScales:(id)sender {
+    [mainController toggleAutoScale:sender];
 }
 
 - (IBAction)rotateAllLeftRight:(id)sender {
@@ -1305,6 +1323,12 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     [zoomInActualOutButton setEnabled:[mainController.pdfView.document isLocked] == NO forSegment:1];
     [zoomInActualOutButton setEnabled:[mainController.pdfView canZoomIn] forSegment:2];
     [zoomActualButton setEnabled:[mainController.pdfView.document isLocked] == NO];
+    
+    [autoScalesButton setSelected:[mainController.pdfView autoScales] forSegment:0];
+}
+
+- (void)handleAutoScalesChangedNotification:(NSNotification *)notification {
+    [autoScalesButton setSelected:[mainController.pdfView autoScales] forSegment:0];
 }
 
 - (void)handleToolModeChangedNotification:(NSNotification *)notification {
@@ -1366,9 +1390,11 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
                              name:PDFViewScaleChangedNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handleBookModeChangedNotification:) 
                              name:SKPDFViewDisplaysAsBookChangedNotification object:mainController.pdfView];
-    [nc addObserver:self selector:@selector(handlePageBreaksChangedNotification:) 
+    [nc addObserver:self selector:@selector(handlePageBreaksChangedNotification:)
                              name:SKPDFViewDisplaysPageBreaksChangedNotification object:mainController.pdfView];
-    [nc addObserver:self selector:@selector(handleToolModeChangedNotification:) 
+    [nc addObserver:self selector:@selector(handleAutoScalesChangedNotification:)
+                             name:SKPDFViewAutoScalesChangedNotification object:mainController.pdfView];
+    [nc addObserver:self selector:@selector(handleToolModeChangedNotification:)
                              name:SKPDFViewToolModeChangedNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handleAnnotationModeChangedNotification:) 
                              name:SKPDFViewAnnotationModeChangedNotification object:mainController.pdfView];

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SKMainToolbarController">
             <connections>
+                <outlet property="autoScalesButton" destination="RKf-GA-hdu" id="n7o-ZL-0fL"/>
                 <outlet property="backForwardButton" destination="39" id="86"/>
                 <outlet property="bookModeButton" destination="197" id="203"/>
                 <outlet property="circleNoteButton" destination="9" id="118"/>
@@ -677,6 +677,19 @@
                         <binding destination="190" name="value" keyPath="selection.pdfView.pacerSpeed" id="G0d-wg-67j"/>
                     </connections>
                 </stepper>
+                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RKf-GA-hdu">
+                    <rect key="frame" x="289" y="242" width="33" height="23"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="selectAny" id="N4Z-bP-JO7">
+                        <font key="font" metaFont="system"/>
+                        <segments>
+                            <segment image="ToolbarAutoScales" imageScaling="none" width="27"/>
+                        </segments>
+                    </segmentedCell>
+                    <connections>
+                        <action selector="changeAutoScales:" target="-2" id="N8d-E4-EoP"/>
+                    </connections>
+                </segmentedControl>
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="38" secondAttribute="bottom" constant="275" id="6OB-P3-1wa"/>
@@ -709,6 +722,7 @@
         <image name="ToolbarAddTextNote" width="128" height="128"/>
         <image name="ToolbarAddTextNoteMenu" width="128" height="128"/>
         <image name="ToolbarAddUnderlineNote" width="128" height="128"/>
+        <image name="ToolbarAutoScales" width="128" height="128"/>
         <image name="ToolbarBack" width="128" height="128"/>
         <image name="ToolbarBookMode" width="128" height="128"/>
         <image name="ToolbarColors" width="27" height="20"/>
