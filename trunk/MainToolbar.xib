@@ -47,6 +47,7 @@
                 <outlet property="scaleField" destination="36" id="89"/>
                 <outlet property="shareButton" destination="M3M-Fg-kEy" id="7xt-AV-JTR"/>
                 <outlet property="singleTwoUpButton" destination="5" id="114"/>
+                <outlet property="splitPDFButton" destination="xRt-F1-0hX" id="1rD-gU-FEJ"/>
                 <outlet property="textNoteButton" destination="10" id="117"/>
                 <outlet property="toolModeButton" destination="37" id="97"/>
                 <outlet property="view" destination="2" id="81"/>
@@ -177,7 +178,7 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="11">
-                    <rect key="frame" x="168" y="185" width="57" height="25"/>
+                    <rect key="frame" x="205" y="185" width="57" height="25"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="selectOne" id="68">
                         <font key="font" metaFont="system"/>
@@ -278,7 +279,7 @@
                         </segments>
                     </segmentedCell>
                     <connections>
-                        <action selector="toggleRightSidePane:" target="-2" id="176"/>
+                        <action selector="toggleRightSidePane:" target="-2" id="5S7-gN-VxD"/>
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="19">
@@ -338,7 +339,7 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="197">
-                    <rect key="frame" x="233" y="185" width="29" height="25"/>
+                    <rect key="frame" x="270" y="185" width="29" height="25"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="selectAny" id="198">
                         <font key="font" metaFont="system"/>
@@ -351,7 +352,7 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="200">
-                    <rect key="frame" x="270" y="185" width="29" height="25"/>
+                    <rect key="frame" x="307" y="185" width="29" height="25"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="selectAny" id="201">
                         <font key="font" metaFont="system"/>
@@ -627,7 +628,7 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ini-pe-86n">
-                    <rect key="frame" x="305.5" y="185" width="33" height="23"/>
+                    <rect key="frame" x="342.5" y="185" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="selectAny" id="Xey-L6-vuY">
                         <font key="font" metaFont="system"/>
@@ -637,6 +638,19 @@
                     </segmentedCell>
                     <connections>
                         <action selector="changePageBreaks:" target="-2" id="MXV-gO-9af"/>
+                    </connections>
+                </segmentedControl>
+                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RKf-GA-hdu">
+                    <rect key="frame" x="289" y="242" width="33" height="23"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="selectAny" id="N4Z-bP-JO7">
+                        <font key="font" metaFont="system"/>
+                        <segments>
+                            <segment image="ToolbarAutoScales" imageScaling="none" width="27"/>
+                        </segments>
+                    </segmentedCell>
+                    <connections>
+                        <action selector="changeAutoScales:" target="-2" id="N8d-E4-EoP"/>
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Veq-Br-EFG">
@@ -677,17 +691,17 @@
                         <binding destination="190" name="value" keyPath="selection.pdfView.pacerSpeed" id="G0d-wg-67j"/>
                     </connections>
                 </stepper>
-                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RKf-GA-hdu">
-                    <rect key="frame" x="289" y="242" width="33" height="23"/>
+                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xRt-F1-0hX">
+                    <rect key="frame" x="166" y="184" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="selectAny" id="N4Z-bP-JO7">
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="Kxa-rt-5yH">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarAutoScales" imageScaling="none" width="27"/>
+                            <segment image="ToolbarSplitPDF" imageScaling="none" width="27"/>
                         </segments>
                     </segmentedCell>
                     <connections>
-                        <action selector="changeAutoScales:" target="-2" id="N8d-E4-EoP"/>
+                        <action selector="toggleSplitPDF:" target="-2" id="Xd4-fe-2EM"/>
                     </connections>
                 </segmentedControl>
             </subviews>
@@ -755,6 +769,7 @@
         <image name="ToolbarShare" width="128" height="128"/>
         <image name="ToolbarSinglePage" width="128" height="128"/>
         <image name="ToolbarSinglePageContinuous" width="128" height="128"/>
+        <image name="ToolbarSplitPDF" width="128" height="128"/>
         <image name="ToolbarTextTool" width="128" height="128"/>
         <image name="ToolbarTwoUp" width="128" height="128"/>
         <image name="ToolbarTwoUpContinuous" width="128" height="128"/>

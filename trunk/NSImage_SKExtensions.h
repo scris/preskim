@@ -77,6 +77,7 @@ extern NSString *SKImageNameToolbarMediaBox;
 extern NSString *SKImageNameToolbarCropBox;
 extern NSString *SKImageNameToolbarLeftPane;
 extern NSString *SKImageNameToolbarRightPane;
+extern NSString *SKImageNameToolbarSplitPDF;
 extern NSString *SKImageNameToolbarTextNoteMenu;
 extern NSString *SKImageNameToolbarAnchoredNoteMenu;
 extern NSString *SKImageNameToolbarCircleNoteMenu;

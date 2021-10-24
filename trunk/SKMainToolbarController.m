@@ -108,6 +108,7 @@
 #define SKDocumentToolbarLinesItemIdentifier @"SKDocumentToolbarLinesItemIdentifier"
 #define SKDocumentToolbarContentsPaneItemIdentifier @"SKDocumentToolbarContentsPaneItemIdentifier"
 #define SKDocumentToolbarNotesPaneItemIdentifier @"SKDocumentToolbarNotesPaneItemIdentifier"
+#define SKDocumentToolbarSplitPDFItemIdentifier @"SKDocumentToolbarSplitPDFItemIdentifier"
 #define SKDocumentToolbarPrintItemIdentifier @"SKDocumentToolbarPrintItemIdentifier"
 #define SKDocumentToolbarCustomizeItemIdentifier @"SKDocumentToolbarCustomizeItemIdentifier"
 
@@ -132,7 +133,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 @implementation SKMainToolbarController
 
-@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, autoScalesButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, toolModeButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton;
+@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, autoScalesButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, splitPDFButton, toolModeButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton;
 
 - (void)dealloc {
     mainController = nil;
@@ -156,6 +157,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     SKDESTROY(presentationButton);
     SKDESTROY(leftPaneButton);
     SKDESTROY(rightPaneButton);
+    SKDESTROY(splitPDFButton);
     SKDESTROY(toolModeButton);
     SKDESTROY(textNoteButton);
     SKDESTROY(circleNoteButton);
@@ -846,6 +848,15 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [item setViewWithSizes:rightPaneButton];
             [item setMenuFormRepresentation:menuItem];
             
+        } else if ([identifier isEqualToString:SKDocumentToolbarSplitPDFItemIdentifier]) {
+            
+            menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Notes Pane", @"Menu item title") action:@selector(toggleSplitPDF:) target:mainController];
+            
+            [item setLabels:NSLocalizedString(@"Split PDF", @"Toolbar item label")];
+            [item setToolTip:NSLocalizedString(@"Toggle Split PDF", @"Tool tip message")];
+            [item setViewWithSizes:splitPDFButton];
+            [item setMenuFormRepresentation:menuItem];
+            
         } else if ([identifier isEqualToString:SKDocumentToolbarPrintItemIdentifier]) {
             
             menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Print", @"Menu item title") action:@selector(printDocument:) target:nil];
@@ -924,6 +935,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             SKDocumentToolbarPresentationItemIdentifier,
             SKDocumentToolbarContentsPaneItemIdentifier,
             SKDocumentToolbarNotesPaneItemIdentifier,
+            SKDocumentToolbarSplitPDFItemIdentifier,
             SKDocumentToolbarRotateRightItemIdentifier,
             SKDocumentToolbarRotateLeftItemIdentifier,
             SKDocumentToolbarRotateLeftRightItemIdentifier,
@@ -972,6 +984,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarPresentationItemIdentifier,
         SKDocumentToolbarContentsPaneItemIdentifier,
         SKDocumentToolbarNotesPaneItemIdentifier,
+        SKDocumentToolbarSplitPDFItemIdentifier,
         SKDocumentToolbarRotateRightItemIdentifier,
         SKDocumentToolbarRotateLeftItemIdentifier,
         SKDocumentToolbarRotateLeftRightItemIdentifier,
@@ -1188,6 +1201,10 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 - (IBAction)toggleRightSidePane:(id)sender {
     [mainController toggleRightSidePane:sender];
+}
+
+- (IBAction)toggleSplitPDF:(id)sender {
+    [mainController toggleSplitPDF:sender];
 }
 
 - (IBAction)changeDisplayBox:(id)sender {
