@@ -502,9 +502,7 @@ static inline CGFloat fullScreenOffset(NSWindow *window) {
         offset = fullScreenToolbarOffset;
     else if (RUNNING_AFTER(10_15))
         offset = 16.0;
-    else if (!RUNNING_BEFORE(10_11))
-        offset = 17.0;
-    else
+    else if (RUNNING_BEFORE(10_11))
         offset = 13.0;
     return offset;
 }
