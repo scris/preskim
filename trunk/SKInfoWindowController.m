@@ -160,9 +160,14 @@ static SKInfoWindowController *sharedInstance = nil;
     for (tv in tables) {
         NSTableColumn *tc = [tv tableColumnWithIdentifier:LABEL_COLUMN_ID];
         NSCell *cell = [tc dataCell];
+        NSArray *keys = [tv isEqual:summaryTableView] ? summaryKeys : attributesKeys;
         NSUInteger row, rowMax = [tv numberOfRows];
         for (row = 0; row < rowMax; row++) {
-            [cell setStringValue:[self tableView:tv objectValueForTableColumn:tc row:row] ?: @""];
+            NSString *key = [keys objectAtIndex:row];
+            id value = nil;
+            if ([key length])
+                value = [labels objectForKey:key] ?: [key stringByAppendingString:@":"];
+            [cell setStringValue:value ?: @""];
             width = fmax(width, ceil([cell cellSize].width));
         }
     }
@@ -323,7 +328,8 @@ NSString *SKSizeString(NSSize size, NSSize altSize) {
     return [keys count];
 }
 
-- (id)tableView:(NSTableView *)tv objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+- (NSView *)tableView:(NSTableView *)tv viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+    NSTableCellView *view = [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
     static NSDateFormatter *shortDateFormatter = nil;
     if(shortDateFormatter == nil) {
         shortDateFormatter = [[NSDateFormatter alloc] init];
@@ -351,12 +357,10 @@ NSString *SKSizeString(NSSize size, NSSize altSize) {
                 value = ([key isEqualToString:SKInfoPageCountKey] ? [value stringValue] : ([value boolValue] ? NSLocalizedString(@"Yes", @"") : NSLocalizedString(@"No", @"")));
         }
     }
-    return value;
-}
-
-- (void)tableView:(NSTableView *)tv willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+    [[view textField] setObjectValue:value];
     if ([tv isEqual:attributesTableView] && [[tableColumn identifier] isEqualToString:LABEL_COLUMN_ID])
-        [cell setLineBreakMode:row == [tv numberOfRows] - 1 ? NSLineBreakByWordWrapping : NSLineBreakByTruncatingTail];
+        [[view textField] setLineBreakMode:row == [tv numberOfRows] - 1 ? NSLineBreakByWordWrapping : NSLineBreakByTruncatingTail];
+    return view;
 }
 
 - (CGFloat)tableView:(NSTableView *)tv heightOfRow:(NSInteger)row {
