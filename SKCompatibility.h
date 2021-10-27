@@ -127,6 +127,16 @@ static const NSAppKitVersion NSAppKitVersionNumber10_15 = 1894;
 #define NS_OPTIONS(_type, _name) enum _name : _type _name; enum _name : _type
 #endif
 
+#if SDK_BEFORE(10_11)
+
+enum {
+    NSVisualEffectMaterialMenu = 5,
+    NSVisualEffectMaterialPopover = 6,
+    NSVisualEffectMaterialSidebar = 7,
+};
+
+#endif
+
 #if SDK_BEFORE(10_12)
 
 typedef NS_ENUM(NSInteger, NSWindowUserTabbingPreference) {
@@ -174,20 +184,6 @@ typedef NS_ENUM(NSInteger, NSWindowTabbingMode) {
 + (NSSegmentedControl *)segmentedControlWithLabels:(NSArray *)labels trackingMode:(NSSegmentSwitchTracking)trackingMode target:(id)target action:(SEL)action;
 @end
 
-#endif
-
-#if SDK_BEFORE(10_11)
-
-enum {
-    NSVisualEffectMaterialMenu = 5,
-    NSVisualEffectMaterialPopover = 6,
-    NSVisualEffectMaterialSidebar = 7,
-};
-
-#endif
-
-#if SDK_BEFORE(10_12)
-
 @interface NSVisualEffectView (SKSierraDeclarations)
 @property (getter=isEmphasized) BOOL emphasized;
 @end
@@ -208,6 +204,10 @@ enum {
     NSVisualEffectMaterialUnderPageBackground = 22
 };
 
+@interface NSView (SKMojaveExtensions)
+- (void)viewDidChangeEffectiveAppearance;
+@end
+
 #endif
 
 #if SDK_BEFORE(11_0)
@@ -225,13 +225,16 @@ typedef NS_ENUM(NSInteger, NSWindowToolbarStyle) {
 - (void)setToolbarStyle:(NSWindowToolbarStyle)style;
 @end
 
-#endif
+typedef NS_ENUM(NSInteger, NSTableViewStyle) {
+    NSTableViewStyleAutomatic,
+    NSTableViewStyleFullWidth,
+    NSTableViewStyleInset,
+    NSTableViewStyleSourceList,
+    NSTableViewStylePlain
+};
 
-#if SDK_BEFORE(10_14)
-
-@interface NSView (SKMojaveExtensions)
-- (void)viewDidChangeEffectiveAppearance;
+@interface NSTableView (BDSKBigSurDeclarations)
+@property NSTableViewStyle style;
 @end
 
 #endif
-
