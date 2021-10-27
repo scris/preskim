@@ -154,6 +154,14 @@ static SKInfoWindowController *sharedInstance = nil;
 - (void)windowDidLoad {
     [self updateForDocument:[[[NSApp mainWindow] windowController] document]];
     
+    if ([summaryTableView respondsToSelector:@selector(setStyle:)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        [summaryTableView setStyle:NSTableViewStylePlain];
+        [attributesTableView setStyle:NSTableViewStylePlain];
+#pragma clang diagnostic pop
+    }
+    
     NSArray *tables = [NSArray arrayWithObjects:summaryTableView, attributesTableView, nil];
     NSTableView *tv;
     CGFloat width = 0.0;
@@ -164,10 +172,8 @@ static SKInfoWindowController *sharedInstance = nil;
         NSUInteger row, rowMax = [tv numberOfRows];
         for (row = 0; row < rowMax; row++) {
             NSString *key = [keys objectAtIndex:row];
-            id value = nil;
-            if ([key length])
-                value = [labels objectForKey:key] ?: [key stringByAppendingString:@":"];
-            [cell setStringValue:value ?: @""];
+            if ([key length] == 0) continue;
+            [cell setStringValue:[labels objectForKey:key] ?: [key stringByAppendingString:@":"]];
             width = fmax(width, ceil([cell cellSize].width));
         }
     }
@@ -358,7 +364,7 @@ NSString *SKSizeString(NSSize size, NSSize altSize) {
         }
     }
     [[view textField] setObjectValue:value];
-    if ([tv isEqual:attributesTableView] && [[tableColumn identifier] isEqualToString:LABEL_COLUMN_ID])
+    if ([tv isEqual:attributesTableView] && [[tableColumn identifier] isEqualToString:VALUE_COLUMN_ID])
         [[view textField] setLineBreakMode:row == [tv numberOfRows] - 1 ? NSLineBreakByWordWrapping : NSLineBreakByTruncatingTail];
     return view;
 }
