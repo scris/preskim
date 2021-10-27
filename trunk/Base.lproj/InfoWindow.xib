@@ -189,7 +189,7 @@
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="3gC-qd-NeX">
-                                                                                <rect key="frame" x="0.0" y="4" width="106" height="13"/>
+                                                                                <rect key="frame" x="0.0" y="3" width="106" height="13"/>
                                                                                 <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="pak-4y-Zbc">
                                                                                     <font key="font" metaFont="system" size="10"/>
                                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -198,9 +198,9 @@
                                                                             </textField>
                                                                         </subviews>
                                                                         <constraints>
-                                                                            <constraint firstItem="3gC-qd-NeX" firstAttribute="centerY" secondItem="axu-1D-6xh" secondAttribute="centerY" id="SRM-A1-Skb"/>
                                                                             <constraint firstAttribute="trailing" secondItem="3gC-qd-NeX" secondAttribute="trailing" constant="2" id="W1C-dc-pHE"/>
                                                                             <constraint firstItem="3gC-qd-NeX" firstAttribute="leading" secondItem="axu-1D-6xh" secondAttribute="leading" constant="2" id="g1k-cD-53Y"/>
+                                                                            <constraint firstItem="3gC-qd-NeX" firstAttribute="top" secondItem="axu-1D-6xh" secondAttribute="top" constant="4" id="gHm-5p-Jjb"/>
                                                                         </constraints>
                                                                         <connections>
                                                                             <outlet property="textField" destination="3gC-qd-NeX" id="3gz-By-wgd"/>
@@ -233,8 +233,9 @@
                                                                             </textField>
                                                                         </subviews>
                                                                         <constraints>
-                                                                            <constraint firstItem="pI1-Ik-22R" firstAttribute="centerY" secondItem="8sW-K3-pqD" secondAttribute="centerY" id="2Jw-kv-IWP"/>
                                                                             <constraint firstAttribute="trailing" secondItem="pI1-Ik-22R" secondAttribute="trailing" constant="2" id="3gT-2e-yMi"/>
+                                                                            <constraint firstAttribute="bottom" secondItem="pI1-Ik-22R" secondAttribute="bottom" constant="3" id="B01-72-7S7"/>
+                                                                            <constraint firstItem="pI1-Ik-22R" firstAttribute="top" secondItem="8sW-K3-pqD" secondAttribute="top" constant="3" id="lXI-S7-QVg"/>
                                                                             <constraint firstItem="pI1-Ik-22R" firstAttribute="leading" secondItem="8sW-K3-pqD" secondAttribute="leading" constant="2" id="q54-D8-kfV"/>
                                                                         </constraints>
                                                                         <connections>
