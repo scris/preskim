@@ -21,8 +21,8 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="50" y="489" width="460" height="308"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="775"/>
-            <view key="contentView" misplaced="YES" id="6">
-                <rect key="frame" x="0.0" y="0.0" width="460" height="312"/>
+            <view key="contentView" id="6">
+                <rect key="frame" x="0.0" y="0.0" width="460" height="308"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <tabView controlSize="small" translatesAutoresizingMaskIntoConstraints="NO" id="91">
