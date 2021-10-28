@@ -21,8 +21,8 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="50" y="489" width="460" height="308"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="775"/>
-            <view key="contentView" id="6">
-                <rect key="frame" x="0.0" y="0.0" width="460" height="308"/>
+            <view key="contentView" misplaced="YES" id="6">
+                <rect key="frame" x="0.0" y="0.0" width="460" height="312"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <tabView controlSize="small" translatesAutoresizingMaskIntoConstraints="NO" id="91">
@@ -70,7 +70,7 @@
                                                                         <subviews>
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="8Gp-1R-KYh">
                                                                                 <rect key="frame" x="0.0" y="4" width="106" height="13"/>
-                                                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="dM9-pe-r2Q">
+                                                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" id="dM9-pe-r2Q">
                                                                                     <font key="font" metaFont="system" size="10"/>
                                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -190,7 +190,7 @@
                                                                         <subviews>
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="3gC-qd-NeX">
                                                                                 <rect key="frame" x="0.0" y="3" width="106" height="13"/>
-                                                                                <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="pak-4y-Zbc">
+                                                                                <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" id="pak-4y-Zbc">
                                                                                     <font key="font" metaFont="system" size="10"/>
                                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
