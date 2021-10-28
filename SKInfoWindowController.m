@@ -178,7 +178,10 @@ static SKInfoWindowController *sharedInstance = nil;
         }
     }
     for (tv in tables) {
-        [[[tv tableColumns] objectAtIndex:0] setWidth:width];
+        NSTableColumn *tc = [tv tableColumnWithIdentifier:LABEL_COLUMN_ID];
+        [tc setWidth:width];
+        [tc setResizingMask:NSTableColumnNoResizing];
+        [[tv tableColumnWithIdentifier:VALUE_COLUMN_ID] setResizingMask:NSTableColumnAutoresizingMask];
         [tv sizeToFit];
     }
     
