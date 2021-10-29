@@ -183,6 +183,7 @@ static SKInfoWindowController *sharedInstance = nil;
         [tc setResizingMask:NSTableColumnNoResizing];
         [[tv tableColumnWithIdentifier:VALUE_COLUMN_ID] setResizingMask:NSTableColumnAutoresizingMask];
         [tv sizeToFit];
+        [tv setFrameSize:[[tv enclosingScrollView] bounds].size];
     }
     
     [self setWindowFrameAutosaveName:SKInfoWindowFrameAutosaveName];
