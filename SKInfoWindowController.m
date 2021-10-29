@@ -152,7 +152,7 @@ static SKInfoWindowController *sharedInstance = nil;
 }
 
 - (void)windowDidLoad {
-    [self updateForDocument:[[[NSApp mainWindow] windowController] document]];
+    [self setWindowFrameAutosaveName:SKInfoWindowFrameAutosaveName];
     
     if ([summaryTableView respondsToSelector:@selector(setStyle:)]) {
 #pragma clang diagnostic push
@@ -183,22 +183,22 @@ static SKInfoWindowController *sharedInstance = nil;
         [tc setResizingMask:NSTableColumnNoResizing];
         [[tv tableColumnWithIdentifier:VALUE_COLUMN_ID] setResizingMask:NSTableColumnAutoresizingMask];
         [tv sizeToFit];
-        [tv setFrameSize:[[tv enclosingScrollView] bounds].size];
     }
     
-    [self setWindowFrameAutosaveName:SKInfoWindowFrameAutosaveName];
+    [self updateForDocument:[[[NSApp mainWindow] windowController] document]];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleViewFrameDidChangeNotification:) 
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver: self selector: @selector(handleViewFrameDidChangeNotification:)
                                                  name: NSViewFrameDidChangeNotification object: [attributesTableView enclosingScrollView]];
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleWindowDidBecomeMainNotification:) 
+    [nc addObserver: self selector: @selector(handleWindowDidBecomeMainNotification:)
                                                  name: NSWindowDidBecomeMainNotification object: nil];
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleWindowDidResignMainNotification:) 
+    [nc addObserver: self selector: @selector(handleWindowDidResignMainNotification:)
                                                  name: NSWindowDidResignMainNotification object: nil];
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handlePDFDocumentInfoDidChangeNotification:) 
+    [nc addObserver: self selector: @selector(handlePDFDocumentInfoDidChangeNotification:)
                                                  name: PDFDocumentDidUnlockNotification object: nil];
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handlePDFDocumentInfoDidChangeNotification:) 
+    [nc addObserver: self selector: @selector(handlePDFDocumentInfoDidChangeNotification:)
                                                  name: SKPDFPageBoundsDidChangeNotification object: nil];
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleDocumentFileURLDidChangeNotification:) 
+    [nc addObserver: self selector: @selector(handleDocumentFileURLDidChangeNotification:)
                                                  name: SKDocumentFileURLDidChangeNotification object: nil];
 }
 
