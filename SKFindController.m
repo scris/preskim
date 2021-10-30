@@ -67,37 +67,7 @@
 - (void)loadView {
     [super loadView];
     
-    SKTopBarView *topBar = (SKTopBarView *)[self view];
-    NSSize size;
-    NSPoint point;
-    CGFloat dx1 = NSWidth([doneButton frame]);
-    CGFloat dx2 = NSWidth([messageField frame]);
-    [doneButton sizeToFit];
-    [messageField sizeToFit];
-    dx1 -= NSWidth([doneButton frame]);
-    dx2 -= NSWidth([messageField frame]);
-    size = [topBar frame].size;
-    size.width -= dx1 + dx2;
-    [topBar setFrameSize:size];
-    point = [doneButton frame].origin;
-    point.x += dx1;
-    [doneButton setFrameOrigin:point];
-    point = [navigationButton frame].origin;
-    point.x += dx1;
-    [navigationButton setFrameOrigin:point];
-    point = [findField frame].origin;
-    point.x -= dx2;
-    [findField setFrameOrigin:point];
-    size = [findField frame].size;
-    size.width += dx1 + dx2;
-    [findField setFrameSize:size];
-    
-    [topBar setHasSeparator:YES];
-    [topBar setOverflowEdge:NSMinXEdge];
-    size = [topBar contentRect].size;
-    [topBar setMinSize:size];
-    size.width = 750.0;
-    [topBar setMaxSize:size];
+    [(SKTopBarView *)[self view] setHasSeparator:YES];
     
     NSMenu *menu = [NSMenu menu];
     [menu addItemWithTitle:NSLocalizedString(@"Ignore Case", @"Menu item title") action:@selector(toggleCaseInsensitiveFind:) target:self];
