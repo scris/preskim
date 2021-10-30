@@ -166,7 +166,12 @@
 	return [self superview] && [self isHidden] == NO;
 }
 
-- (void)toggleWithAutoLayoutBelowView:(NSView *)view animate:(BOOL)animate {
+- (void)toggleBelowView:(NSView *)view animate:(BOOL)animate {
+    if (animating)
+        return;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
+        animate = NO;
+    
     NSView *contentView = [view superview];
     BOOL visible = (nil == [self superview]);
     NSView *bottomView = visible ? view : self;
@@ -223,76 +228,6 @@
         [NSLayoutConstraint activateConstraints:constraints];
         [contentView layoutSubtreeIfNeeded];
     }
-}
-
-- (void)toggleWithoutAutoLayoutBelowView:(NSView *)view animate:(BOOL)animate {
-    NSView *contentView = [view superview];
-    NSRect viewFrame = [view frame];
-    NSRect statusRect = [contentView bounds];
-    CGFloat statusHeight = NSHeight([self frame]);
-    BOOL visible = (nil == [self superview]);
-    
-    statusRect.size.height = statusHeight;
-    
-    if (visible) {
-        [[view window] setContentBorderThickness:statusHeight forEdge:NSMinYEdge];
-        if ([contentView isFlipped])
-            statusRect.origin.y = NSMaxY([contentView bounds]);
-        else
-            statusRect.origin.y -= statusHeight;
-        [self setFrame:statusRect];
-        [contentView addSubview:self positioned:NSWindowBelow relativeTo:nil];
-        statusHeight = -statusHeight;
-    } else if ([contentView isFlipped]) {
-        statusRect.origin.y = NSMaxY([contentView bounds]) - statusHeight;
-    }
-    
-    viewFrame.size.height += statusHeight;
-    if ([contentView isFlipped]) {
-        statusRect.origin.y += statusHeight;
-    } else {
-        viewFrame.origin.y -= statusHeight;
-        statusRect.origin.y -= statusHeight;
-    }
-    if (animate) {
-        animating = YES;
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [context setDuration:0.5 * [context duration]];
-                [[view animator] setFrame:viewFrame];
-                [[self animator] setFrame:statusRect];
-            }
-            completionHandler:^{
-                if (visible == NO) {
-                    [[self window] setContentBorderThickness:0.0 forEdge:NSMinYEdge];
-                    [self removeFromSuperview];
-                } else {
-                    // this fixes an AppKit bug, the window does not notice that its draggable areas change
-                    [[self window] setMovableByWindowBackground:YES];
-                    [[self window] setMovableByWindowBackground:NO];
-                }
-                animating = NO;
-            }];
-    } else {
-        [view setFrame:viewFrame];
-        if (visible) {
-            [self setFrame:statusRect];
-        } else {
-            [[self window] setContentBorderThickness:0.0 forEdge:NSMinYEdge];
-            [self removeFromSuperview];
-        }
-    }
-}
-
-- (void)toggleBelowView:(NSView *)view animate:(BOOL)animate {
-    if (animating == NO) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
-            animate = NO;
-        if ([self translatesAutoresizingMaskIntoConstraints])
-            [self toggleWithoutAutoLayoutBelowView:view animate:animate];
-        else
-            [self toggleWithAutoLayoutBelowView:view animate:animate];
-    }
-
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
