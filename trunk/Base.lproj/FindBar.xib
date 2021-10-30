@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -23,9 +22,12 @@
             <rect key="frame" x="0.0" y="0.0" width="220" height="36"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
             <subviews>
-                <searchField verticalHuggingPriority="750" fixedFrame="YES" tag="1" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
+                <searchField horizontalHuggingPriority="251" verticalHuggingPriority="750" tag="1" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
                     <rect key="frame" x="77" y="7" width="32" height="22"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="500" id="WyN-YQ-969"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="32" id="bqT-Kr-B6Z"/>
+                    </constraints>
                     <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" tag="1" bezelStyle="round" sendsSearchStringImmediately="YES" sendsWholeSearchString="YES" id="4">
                         <font key="font" metaFont="message"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -41,9 +43,8 @@
                         <outlet property="delegate" destination="-2" id="36"/>
                     </connections>
                 </searchField>
-                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5">
+                <segmentedControl horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5">
                     <rect key="frame" x="116" y="8" width="45" height="20"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="roundRect" trackingMode="momentary" id="6">
                         <font key="font" metaFont="cellTitle"/>
                         <segments>
@@ -55,9 +56,8 @@
                         <action selector="find:" target="-2" id="29"/>
                     </connections>
                 </segmentedControl>
-                <button verticalHuggingPriority="750" fixedFrame="YES" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7">
+                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7">
                     <rect key="frame" x="168" y="8" width="44" height="19"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="roundRect" title="Done" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="cellTitle"/>
@@ -69,9 +69,8 @@ Gw
                         <action selector="remove:" target="-2" id="10"/>
                     </connections>
                 </button>
-                <textField hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="31">
+                <textField hidden="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="31">
                     <rect key="frame" x="6" y="10" width="65" height="16"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Not found" id="32">
                         <font key="font" metaFont="message"/>
                         <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
@@ -79,6 +78,17 @@ Gw
                     </textFieldCell>
                 </textField>
             </subviews>
+            <constraints>
+                <constraint firstItem="31" firstAttribute="leading" secondItem="1" secondAttribute="leading" priority="250" constant="8" id="3m9-eP-zWa"/>
+                <constraint firstItem="7" firstAttribute="centerY" secondItem="1" secondAttribute="centerY" id="3td-4x-qin"/>
+                <constraint firstAttribute="trailing" secondItem="7" secondAttribute="trailing" constant="8" id="5iK-qo-2kC"/>
+                <constraint firstItem="5" firstAttribute="leading" secondItem="3" secondAttribute="trailing" constant="8" symbolic="YES" id="ffh-CL-1rh"/>
+                <constraint firstItem="3" firstAttribute="leading" secondItem="31" secondAttribute="trailing" constant="8" symbolic="YES" id="fgN-mY-3m6"/>
+                <constraint firstItem="5" firstAttribute="centerY" secondItem="1" secondAttribute="centerY" id="snO-ne-pmX"/>
+                <constraint firstItem="7" firstAttribute="leading" secondItem="5" secondAttribute="trailing" constant="8" symbolic="YES" id="x7W-aL-mCY"/>
+                <constraint firstItem="31" firstAttribute="centerY" secondItem="1" secondAttribute="centerY" id="y5L-De-cl0"/>
+                <constraint firstItem="3" firstAttribute="centerY" secondItem="1" secondAttribute="centerY" id="zsv-5P-uCj"/>
+            </constraints>
             <point key="canvasLocation" x="139" y="154"/>
         </customView>
         <objectController id="18">
