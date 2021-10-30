@@ -165,11 +165,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
             [curItem setRepresentedObject:(SKDefaultScaleMenuFactors[cnt] > 0.0 ? [NSNumber numberWithDouble:SKDefaultScaleMenuFactors[cnt]] : nil)];
         }
         
-        // Make sure the popup is big enough to fit the largest cell
-        [scalePopUpButton sizeToFit];
-        [scalePopUpButton setFrameSize:NSMakeSize(NSWidth([scalePopUpButton frame]) - CONTROL_WIDTH_OFFSET, CONTROL_HEIGHT)];
-        [scalePopUpButton setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin];
-        
         // select the appropriate item, adjusting the scaleFactor if necessary
         if([self autoFits] || [self autoScales])
             [self setScaleFactor:0.0 adjustPopup:YES];
@@ -185,19 +180,21 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 		// don't let it become first responder
 		[scalePopUpButton setRefusesFirstResponder:YES];
         
-        SKTopBarView *topBar = [[SKTopBarView alloc] initWithFrame:[scalePopUpButton frame]];
-        [topBar setMinSize:[scalePopUpButton frame].size];
+        SKTopBarView *topBar = [[SKTopBarView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 0.0, CONTROL_HEIGHT)];
         if (RUNNING_BEFORE(10_14)) {
             [topBar setBackgroundColors:[NSArray arrayWithObjects:[NSColor pdfControlBackgroundColor], nil]];
             [topBar setAlternateBackgroundColors:nil];
         }
+        [scalePopUpButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [topBar addSubview:scalePopUpButton];
         
         controlView = topBar;
         [controlView setTranslatesAutoresizingMaskIntoConstraints:NO];
-        NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:NSHeight([controlView bounds])];
-        [heightConstraint setActive:YES];
         
+        [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
+             [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:CONTROL_HEIGHT],
+             [NSLayoutConstraint constraintWithItem:scalePopUpButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:5.0],
+             [NSLayoutConstraint constraintWithItem:scalePopUpButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil]];
         [self updateTrackingAreas];
     }
 }
