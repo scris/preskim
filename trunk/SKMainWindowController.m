@@ -166,8 +166,6 @@
 
 #define WINDOW_KEY @"window"
 
-#define CONTENTLAYOUTRECT_KEY @"contentLayoutRect"
-
 #define SKMainWindowFrameAutosaveName @"SKMainWindow"
 
 static char SKPDFAnnotationPropertiesObservationContext;
@@ -175,8 +173,6 @@ static char SKPDFAnnotationPropertiesObservationContext;
 static char SKMainWindowDefaultsObservationContext;
 
 static char SKMainWindowAppObservationContext;
-
-static char SKMainWindowContentLayoutRectObservationContext;
 
 static char SKMainWindowThumbnailSelectionObservationContext;
 
@@ -335,7 +331,6 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         [[NSProcessInfo processInfo] endActivity:activity];
         SKDESTROY(activity);
     }
-    [mainWindow removeObserver:self forKeyPath:CONTENTLAYOUTRECT_KEY context:&SKMainWindowContentLayoutRectObservationContext];
     [overviewView removeObserver:self forKeyPath:@"selectionIndexes" context:&SKMainWindowThumbnailSelectionObservationContext];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self stopObservingNotes:[self notes]];
@@ -409,8 +404,15 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 #pragma clang diagnostic ignored "-Wpartial-availability"
         [window setToolbarStyle:NSWindowToolbarStyleExpanded];
 #pragma clang diagnostic pop
-    [[splitView superview] setFrame:[window contentLayoutRect]];
-    [window addObserver:self forKeyPath:CONTENTLAYOUTRECT_KEY options:0 context:&SKMainWindowContentLayoutRectObservationContext];
+    NSView *view = [splitView superview];
+    NSLayoutConstraint *constraint = nil;
+    for (constraint in [[window contentView] constraints]) {
+        if ([constraint firstItem] == view && [constraint firstAttribute] == NSLayoutAttributeTop) {
+            [constraint setActive:NO];
+            [[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[window contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0] setActive:YES];
+            break;
+        }
+    }
     
     [self setWindowFrameAutosaveNameOrCascade:SKMainWindowFrameAutosaveName];
     
@@ -2440,12 +2442,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         }
         [pdfView setBackgroundColor:backgroundColor];
         [secondaryPdfView setBackgroundColor:backgroundColor];
-        
-    } else if (context == &SKMainWindowContentLayoutRectObservationContext) {
-
-        NSView *view = [self hasOverview] ? overviewContentView : splitView;
-        if ([[view window] isEqual:mainWindow])
-            [[view superview] setFrame:[mainWindow contentLayoutRect]];
         
     } else if (context == &SKMainWindowThumbnailSelectionObservationContext) {
         

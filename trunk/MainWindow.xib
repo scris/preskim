@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -29,19 +28,17 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="91" y="260" width="1000" height="600"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="775"/>
             <value key="minSize" type="size" width="250" height="130"/>
             <view key="contentView" id="6">
                 <rect key="frame" x="0.0" y="0.0" width="1000" height="600"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1555">
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="1555">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <splitView fixedFrame="YES" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1385" customClass="SKSplitView">
+                            <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1385" customClass="SKSplitView">
                                 <rect key="frame" x="0.0" y="22" width="1000" height="578"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="769">
                                         <rect key="frame" x="0.0" y="0.0" width="250" height="578"/>
@@ -83,13 +80,30 @@
                                     <outlet property="delegate" destination="-2" id="1449"/>
                                 </connections>
                             </splitView>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Zw-iS-Qai" customClass="SKStatusBar">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="2Zw-iS-Qai" customClass="SKStatusBar">
                                 <rect key="frame" x="0.0" y="0.0" width="1000" height="22"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="22" id="fGI-iF-w0D"/>
+                                </constraints>
                             </customView>
                         </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="1385" secondAttribute="trailing" id="1b5-b6-VWW"/>
+                            <constraint firstItem="1385" firstAttribute="leading" secondItem="1555" secondAttribute="leading" id="WJx-1b-PLu"/>
+                            <constraint firstAttribute="bottom" secondItem="2Zw-iS-Qai" secondAttribute="bottom" id="XKu-E1-i9h"/>
+                            <constraint firstItem="2Zw-iS-Qai" firstAttribute="leading" secondItem="1555" secondAttribute="leading" id="dBf-CM-fnL"/>
+                            <constraint firstItem="1385" firstAttribute="top" secondItem="1555" secondAttribute="top" id="jcA-bY-Dqr"/>
+                            <constraint firstAttribute="trailing" secondItem="2Zw-iS-Qai" secondAttribute="trailing" id="nue-QT-ufS"/>
+                            <constraint firstItem="2Zw-iS-Qai" firstAttribute="top" secondItem="1385" secondAttribute="bottom" id="pIq-Xm-48t"/>
+                        </constraints>
                     </customView>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="1555" secondAttribute="trailing" id="IGa-3K-I9y"/>
+                    <constraint firstItem="1555" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="SMo-Gf-RaZ"/>
+                    <constraint firstItem="1555" firstAttribute="top" secondItem="6" secondAttribute="top" id="SYV-oE-O1E"/>
+                    <constraint firstAttribute="bottom" secondItem="1555" secondAttribute="bottom" id="lPc-En-3fe"/>
+                </constraints>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="43"/>
