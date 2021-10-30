@@ -166,17 +166,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     if ([labels count] > 0) {
         for (NSString *label in labels)
             [pagePopUpButton addItemWithTitle:label];
-        
-        [pagePopUpButton sizeToFit];
-        [pagePopUpButton setFrameSize:NSMakeSize(NSWidth([pagePopUpButton frame]) - CONTROL_WIDTH_OFFSET, CONTROL_HEIGHT)];
-        
         [pagePopUpButton selectItemAtIndex:[[self currentPage] pageIndex]];
-        
-        if (controlView)
-            [(SKTopBarView *)controlView setMinSize:NSMakeSize(NSWidth([toolModeButton frame]) + NSWidth([pagePopUpButton frame]) + NSWidth([scalePopUpButton frame]), CONTROL_HEIGHT)];
-        
-        if (scalePopUpButton)
-            [scalePopUpButton setFrameOrigin:NSMakePoint(NSMaxX([pagePopUpButton frame]), 0.0)];
     }
 }
 
@@ -185,7 +175,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     if (scalePopUpButton == nil) {
 
         // create it        
-        scalePopUpButton = [[NSPopUpButton allocWithZone:[self zone]] initWithFrame:NSMakeRect(0.0, 0.0, 1.0, 1.0) pullsDown:NO];
+        scalePopUpButton = [[NSPopUpButton allocWithZone:[self zone]] initWithFrame:NSMakeRect(0.0, 0.0, CONTROL_HEIGHT, CONTROL_HEIGHT) pullsDown:NO];
         
         [[scalePopUpButton cell] setControlSize:NSSmallControlSize];
 		[scalePopUpButton setBordered:NO];
@@ -212,10 +202,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
             [self setScaleFactor:0.0 adjustPopup:YES];
         else
             [self setScaleFactor:[self scaleFactor] adjustPopup:YES];
-
-        // Make sure the popup is big enough to fit the largest cell
-        [scalePopUpButton sizeToFit];
-        [scalePopUpButton setFrameSize:NSMakeSize(NSWidth([scalePopUpButton frame]) - CONTROL_WIDTH_OFFSET, CONTROL_HEIGHT)];
         
 		// don't let it become first responder
 		[scalePopUpButton setRefusesFirstResponder:YES];
@@ -231,7 +217,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     if (pagePopUpButton == nil) {
         
         // create it        
-        pagePopUpButton = [[NSPopUpButton allocWithZone:[self zone]] initWithFrame:NSMakeRect(0.0, 0.0, 1.0, 1.0) pullsDown:NO];
+        pagePopUpButton = [[NSPopUpButton allocWithZone:[self zone]] initWithFrame:NSMakeRect(0.0, 0.0, CONTROL_HEIGHT, CONTROL_HEIGHT) pullsDown:NO];
         
         [[pagePopUpButton cell] setControlSize:NSSmallControlSize];
 		[pagePopUpButton setBordered:NO];
@@ -279,32 +265,31 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     
     if (controlView == nil) {
         
-        NSRect toolRect = [toolModeButton frame];
-        NSRect pageRect = [pagePopUpButton frame];
-        NSRect scaleRect = [scalePopUpButton frame];
-        NSRect rect = NSMakeRect(0.0, 0.0, NSWidth(toolRect) + NSWidth(pageRect) + NSWidth(scaleRect), CONTROL_HEIGHT);
-        
-        SKTopBarView *topBar = [[SKTopBarView alloc] initWithFrame:rect];
-        [topBar setMinSize:rect.size];
+        SKTopBarView *topBar = [[SKTopBarView alloc] initWithFrame:NSMakeRect(0.0, 0.0, CONTROL_HEIGHT, CONTROL_HEIGHT)];
         if (RUNNING_BEFORE(10_14)) {
             [topBar setBackgroundColors:[NSArray arrayWithObjects:[NSColor pdfControlBackgroundColor], nil]];
             [topBar setAlternateBackgroundColors:nil];
         }
         
-        NSDivideRect(rect, &toolRect, &rect, NSWidth(toolRect), NSMinXEdge);
-        NSDivideRect(rect, &pageRect, &scaleRect, NSWidth(pageRect), NSMinXEdge);
-        [toolModeButton setFrame:toolRect];
-        [pagePopUpButton setFrame:pageRect];
-        [scalePopUpButton setFrame:scaleRect];
-        [toolModeButton setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin];
-        [pagePopUpButton setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin];
-        [scalePopUpButton setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin];
+        [toolModeButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [pagePopUpButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [scalePopUpButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [topBar addSubview:toolModeButton];
         [topBar addSubview:pagePopUpButton];
         [topBar addSubview:scalePopUpButton];
         
         controlView = topBar;
         [controlView setAutoresizingMask:NSViewWidthSizable | NSViewMinYMargin];
+        
+        NSArray *constraints = [NSArray arrayWithObjects:
+             [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:CONTROL_HEIGHT],
+             [NSLayoutConstraint constraintWithItem:toolModeButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:5.0],
+             [NSLayoutConstraint constraintWithItem:toolModeButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0],
+             [NSLayoutConstraint constraintWithItem:pagePopUpButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:toolModeButton attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:5.0],
+             [NSLayoutConstraint constraintWithItem:pagePopUpButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0],
+             [NSLayoutConstraint constraintWithItem:scalePopUpButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:pagePopUpButton attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:5.0],
+             [NSLayoutConstraint constraintWithItem:scalePopUpButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil];
+        [NSLayoutConstraint activateConstraints:constraints];
         
         [self updateTrackingAreas];
         
@@ -317,7 +302,12 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     [controlView setFrame:rect];
     [controlView setAlphaValue:0.0];
     [self addSubview:controlView positioned:NSWindowAbove relativeTo:nil];
+    NSArray *constraints = [NSArray arrayWithObjects:
+        [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0], nil];
     [[controlView animator] setAlphaValue:1.0];
+    [NSLayoutConstraint activateConstraints:constraints];
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {

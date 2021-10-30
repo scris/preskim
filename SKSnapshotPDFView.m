@@ -191,10 +191,11 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
         controlView = topBar;
         [controlView setTranslatesAutoresizingMaskIntoConstraints:NO];
         
-        [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
+        NSArray *constraints = [NSArray arrayWithObjects:
              [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:CONTROL_HEIGHT],
              [NSLayoutConstraint constraintWithItem:scalePopUpButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:5.0],
-             [NSLayoutConstraint constraintWithItem:scalePopUpButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil]];
+             [NSLayoutConstraint constraintWithItem:scalePopUpButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil];
+        [NSLayoutConstraint activateConstraints:constraints];
         [self updateTrackingAreas];
     }
 }
