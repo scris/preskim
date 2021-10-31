@@ -123,70 +123,77 @@
         }
     }
     
-	NSRect viewFrame = [view frame];
-	NSView *contentView = [view superview];
-	NSRect barRect = [view frame];
-	CGFloat barHeight = NSHeight([findBar frame]);
+    NSView *contentView = [view superview];
     BOOL visible = (nil == [findBar superview]);
+    NSView *topView = visible ? view : findBar;
+    NSLayoutConstraint *topConstraint = nil;
     
-	barRect.size.height = barHeight;
-	
-	if (visible) {
-		if ([contentView isFlipped])
-            barRect.origin.y -= barHeight;
-		else
-			barRect.origin.y = NSMaxY([contentView bounds]);
-        [[self view] setFrame:barRect];
-		[contentView addSubview:findBar positioned:NSWindowBelow relativeTo:nil];
-        barHeight = -barHeight;
+    for (NSLayoutConstraint *constraint in [contentView constraints]) {
+        if ([constraint firstItem] == topView && [constraint firstAttribute] == NSLayoutAttributeTop) {
+            topConstraint = constraint;
+            break;
+        }
+    }
+    
+    CGFloat barHeight = NSHeight([findBar frame]);
+    NSMutableArray *constraints = [NSMutableArray array];
+    
+    if (visible) {
+        [contentView addSubview:findBar positioned:NSWindowBelow relativeTo:nil];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0]];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0]];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:animate ? -barHeight : 0.0]];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
+        [topConstraint setActive:NO];
+        [NSLayoutConstraint activateConstraints:constraints];
+        [contentView layoutSubtreeIfNeeded];
+        topConstraint = [constraints objectAtIndex:2];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:[findBar window]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidResignKey:) name:NSWindowDidResignKeyNotification object:[findBar window]];
         [self windowDidBecomeKey:nil];
     } else {
-		if ([contentView isFlipped])
-            barRect.origin.y -= barHeight;
-		else
-			barRect.origin.y = NSMaxY([contentView bounds]) - barHeight;
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0]];
+        
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:[findBar window]];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:[findBar window]];
         [self windowDidResignKey:nil];
         [delegate findControllerWillBeRemoved:self];
     }
-    viewFrame.size.height += barHeight;
-    if ([contentView isFlipped]) {
-        viewFrame.origin.y -= barHeight;
-        barRect.origin.y -= barHeight;
-    } else {
-        barRect.origin.y += barHeight;
-    }
+    
     [messageField setHidden:YES];
     if (visible == NO)
         [(SKTopBarView *)[self view] reflectView:nil animate:NO];
+    
     if (animate) {
         animating = YES;
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [context setDuration:0.5 * [context duration]];
-                [[view animator] setFrame:viewFrame];
-                [[findBar animator] setFrame:barRect];
-            } 
+                [[topConstraint animator] setConstant:visible ? 0.0 : -barHeight];
+            }
             completionHandler:^{
+                if (visible == NO) {
+                    [findBar removeFromSuperview];
+                    [NSLayoutConstraint activateConstraints:constraints];
+                }
                 NSWindow *window = [[self view] window];
-                if (visible)
-                    [(SKTopBarView *)[self view] reflectView:view animate:NO];
-                else
-                    [[self view] removeFromSuperview];
+                if (visible) {
+                    [(SKTopBarView *)findBar reflectView:view animate:NO];
+                } else {
+                    [findBar removeFromSuperview];
+                    [NSLayoutConstraint activateConstraints:constraints];
+                }
                 [window recalculateKeyViewLoop];
                 animating = NO;
-        }];
+            }];
     } else {
-        [view setFrame:viewFrame];
         if (visible) {
-            [findBar setFrame:barRect];
-            [(SKTopBarView *)[self view] reflectView:view animate:NO];
+            [(SKTopBarView *)findBar reflectView:view animate:NO];
         } else {
             [findBar removeFromSuperview];
+            [NSLayoutConstraint activateConstraints:constraints];
         }
+        [contentView layoutSubtreeIfNeeded];
         [[contentView window] recalculateKeyViewLoop];
     }
 }
