@@ -43,8 +43,6 @@
 #import "NSGeometry_SKExtensions.h"
 #import "SKStringConstants.h"
 
-#define TOPBAR_MIN_WIDTH 100.0
-
 #define DURATION 0.7
 
 @implementation SKSideViewController
@@ -66,7 +64,6 @@
     [super loadView];
     
     [topBar setHasSeparator:YES];
-    [topBar setMinSize:NSMakeSize(TOPBAR_MIN_WIDTH, NSHeight([topBar contentRect]))];
 }
 
 - (void)setMainController:(SKMainWindowController *)newMainController {
