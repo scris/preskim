@@ -387,7 +387,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     
     // we need to create the PDFView before setting the toolbar
     pdfView = [[SKPDFView alloc] initWithFrame:[pdfContentView bounds]];
-    [pdfView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    [pdfView setTranslatesAutoresizingMaskIntoConstraints:NO];
     
     if ([pdfView maximumScaleFactor] < 20.0 && [pdfView respondsToSelector:NSSelectorFromString(@"setMaxScaleFactor:")])
         [pdfView setValue:[NSNumber numberWithDouble:20.0] forKey:@"maxScaleFactor"];
@@ -471,17 +471,22 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         [leftSideController.button setEnabled:NO forSegment:SKSidePaneStateOutline];
     
     // Due to a bug in Leopard we should only resize and swap in the PDFView after loading the PDFDocument
-    [pdfView setFrame:[pdfContentView bounds]];
+    NSArray *constraints = [NSArray arrayWithObjects:
+        [NSLayoutConstraint constraintWithItem:pdfView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:pdfContentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:pdfContentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:pdfView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:pdfView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:pdfContentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:pdfContentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:pdfView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     if ([[pdfView document] isLocked]) {
         // PDFView has the annoying habit for the password view to force a full window display
         CGFloat leftWidth = [self leftSideWidth];
         CGFloat rightWidth = [self rightSideWidth];
         [self applyLeftSideWidth:0.0 rightSideWidth:0.0];
         [pdfContentView addSubview:pdfView];
-        [pdfView setFrame:[pdfContentView bounds]];
+        [NSLayoutConstraint activateConstraints:constraints];
         [self applyLeftSideWidth:leftWidth rightSideWidth:rightWidth];
     } else {
         [pdfContentView addSubview:pdfView];
+        [NSLayoutConstraint activateConstraints:constraints];
     }
     
     // get the initial display mode from the PDF if present and not overridden by an explicit setup
@@ -1125,7 +1130,6 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             CGFloat leftWidth = [self leftSideWidth];
             CGFloat rightWidth = [self rightSideWidth];
             [pdfView setDocument:document];
-            [pdfView setFrame:[pdfContentView bounds]];
             [self applyLeftSideWidth:leftWidth rightSideWidth:rightWidth];
         } else {
             NSArray *cropBoxes = [savedNormalSetup objectForKey:CROPBOXES_KEY];
@@ -1725,16 +1729,11 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     
     NSView *newView = [self interactionMode] == SKPresentationMode ? pdfView : splitView;
     NSView *contentView = [overviewContentView superview];
-    NSArray *constraints = nil;
-    
-    if (newView == splitView)
-        constraints = [NSArray arrayWithObjects:
-            [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
-    else
-        [newView setFrame:[overviewContentView frame]];
+    NSArray *constraints = [NSArray arrayWithObjects:
+        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     if (animate) {
         BOOL hasLayer = [contentView wantsLayer] || [contentView layer] != nil;
@@ -1744,8 +1743,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         }
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [[contentView animator] replaceSubview:overviewContentView with:newView];
-                if (constraints)
-                    [NSLayoutConstraint activateConstraints:constraints];
+                [NSLayoutConstraint activateConstraints:constraints];
             }
             completionHandler:^{
                 [touchBarController overviewChanged];
@@ -1757,8 +1755,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             }];
     } else {
         [contentView replaceSubview:overviewContentView with:newView];
-        if (constraints)
-            [NSLayoutConstraint activateConstraints:constraints];
+        [NSLayoutConstraint activateConstraints:constraints];
         [touchBarController overviewChanged];
         [[self window] makeFirstResponder:pdfView];
         if (handler)
