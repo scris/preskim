@@ -44,13 +44,11 @@
                                         <rect key="frame" x="0.0" y="0.0" width="250" height="578"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </customView>
-                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1321">
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="1321">
                                         <rect key="frame" x="251" y="0.0" width="498" height="578"/>
-                                        <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
-                                            <splitView fixedFrame="YES" dividerStyle="paneSplitter" translatesAutoresizingMaskIntoConstraints="NO" id="1314" customClass="SKSplitView">
+                                            <splitView dividerStyle="paneSplitter" translatesAutoresizingMaskIntoConstraints="NO" id="1314" customClass="SKSplitView">
                                                 <rect key="frame" x="0.0" y="0.0" width="498" height="578"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1315">
                                                         <rect key="frame" x="0.0" y="0.0" width="498" height="578"/>
@@ -65,6 +63,12 @@
                                                 </connections>
                                             </splitView>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="1314" secondAttribute="bottom" id="BwS-so-46O"/>
+                                            <constraint firstAttribute="trailing" secondItem="1314" secondAttribute="trailing" id="OE4-7n-0dl"/>
+                                            <constraint firstItem="1314" firstAttribute="top" secondItem="1321" secondAttribute="top" id="Twe-rt-5Qm"/>
+                                            <constraint firstItem="1314" firstAttribute="leading" secondItem="1321" secondAttribute="leading" id="xoo-8V-ElE"/>
+                                        </constraints>
                                     </customView>
                                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="770">
                                         <rect key="frame" x="750" y="0.0" width="250" height="578"/>
