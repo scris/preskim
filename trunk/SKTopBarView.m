@@ -48,15 +48,13 @@
 
 @implementation SKTopBarView
 
-@synthesize contentView, backgroundColors, alternateBackgroundColors, separatorColor, minSize, maxSize, overflowEdge, hasSeparator, drawsBackground;
-@dynamic contentRect, interiorRect;
+@synthesize contentView, backgroundColors, alternateBackgroundColors, separatorColor, overflowEdge, hasSeparator, drawsBackground;
+@dynamic contentRect;
 
 - (id)initWithFrame:(NSRect)frame {
     wantsSubviews = YES;
     self = [super initWithFrame:frame];
     if (self) {
-        minSize = NSZeroSize;
-        maxSize = NSMakeSize(FLT_MAX, FLT_MAX);
         hasSeparator = NO; // we start with no separator, so we can use this in IB without getting weird offsets
 		overflowEdge = NSMaxXEdge;
         drawsBackground = YES;
@@ -80,7 +78,7 @@
                 [view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
                 [backgroundView addSubview:view];
             }
-            [backgroundView setFrame:[self interiorRect]];
+            [backgroundView setFrame:[self contentRect]];
             [super addSubview:backgroundView];
         } else {
             static CGFloat defaultGrays[5] = {0.85, 0.9,  0.9, 0.95,  0.8};
@@ -105,10 +103,6 @@
         backgroundColors = [[decoder decodeObjectForKey:@"backgroundColors"] retain];
         alternateBackgroundColors = [[decoder decodeObjectForKey:@"alternateBackgroundColors"] retain];
         separatorColor = [[decoder decodeObjectForKey:@"separatorColor"] retain];
-		minSize.width = [decoder decodeDoubleForKey:@"minSize.width"];
-		minSize.height = [decoder decodeDoubleForKey:@"minSize.height"];
-		maxSize.width = [decoder decodeDoubleForKey:@"maxSize.width"];
-		maxSize.height = [decoder decodeDoubleForKey:@"maxSize.height"];
 		overflowEdge = [decoder decodeIntegerForKey:@"overflowEdge"];
         hasSeparator = [decoder decodeBoolForKey:@"hasSeparator"];
         drawsBackground = [decoder decodeBoolForKey:@"drawsBackground"];
@@ -124,10 +118,6 @@
     [coder encodeConditionalObject:backgroundView forKey:@"backgroundView"];
     [coder encodeObject:backgroundColors forKey:@"backgroundColors"];
     [coder encodeObject:alternateBackgroundColors forKey:@"alternateBackgroundColors"];
-    [coder encodeDouble:minSize.width forKey:@"minSize.width"];
-    [coder encodeDouble:minSize.height forKey:@"minSize.height"];
-    [coder encodeDouble:maxSize.width forKey:@"maxSize.width"];
-    [coder encodeDouble:maxSize.height forKey:@"maxSize.height"];
     [coder encodeInteger:overflowEdge forKey:@"overflowEdge"];
     [coder encodeBool:hasSeparator forKey:@"hasSeparator"];
     [coder encodeBool:drawsBackground forKey:@"drawsBackground"];
@@ -144,7 +134,7 @@
 }
 
 - (void)resizeSubviewsWithOldSize:(NSSize)size {
-    [backgroundView setFrame:[self interiorRect]];
+    [backgroundView setFrame:[self contentRect]];
     [contentView setFrame:[self contentRect]];
 }
 
@@ -239,7 +229,7 @@
 - (void)setHasSeparator:(BOOL)flag {
 	if (flag != hasSeparator) {
 		hasSeparator = flag;
-        [backgroundView setFrame:[self interiorRect]];
+        [backgroundView setFrame:[self contentRect]];
         [contentView setFrame:[self contentRect]];
 		[self setNeedsDisplay:YES];
 	}
@@ -272,32 +262,11 @@
     }
 }
 
-- (NSRect)interiorRect {
+- (NSRect)contentRect {
     NSRect rect = [self bounds];
     if (hasSeparator)
         rect = SKShrinkRect(rect, SEPARATOR_WIDTH, NSMinYEdge);
     return rect;
-}
-
-- (NSRect)contentRect {
-	NSRect rect = [self interiorRect];
-	if (NSWidth(rect) < minSize.width) {
-        if (overflowEdge == NSMinXEdge)
-            rect.origin.x -= minSize.width - NSWidth(rect);
-		rect.size.width = minSize.width;
-	}
-	else if (NSWidth(rect) > maxSize.width) {
-        if (overflowEdge == NSMinXEdge)
-                rect.origin.x -= maxSize.width - NSWidth(rect);
-		rect.size.width = maxSize.width;
-	}
-    if (NSHeight(rect) < minSize.height) {
-		rect.size.height = minSize.height;
-    }
-    else if (NSHeight(rect) > maxSize.height) {
-		rect.size.height = maxSize.height;
-    }
-	return rect;
 }
 
 - (void)reflectView:(NSView *)view animate:(BOOL)animate {

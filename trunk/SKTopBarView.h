@@ -44,8 +44,6 @@
     NSArray *backgroundColors;
     NSArray *alternateBackgroundColors;
     NSColor *separatorColor;
-    NSSize minSize;
-    NSSize maxSize;
     BOOL hasSeparator;
 	NSRectEdge overflowEdge;
     BOOL drawsBackground;
@@ -55,8 +53,7 @@
 @property (nonatomic, readonly) NSView *contentView;
 @property (nonatomic, copy) NSArray *backgroundColors, *alternateBackgroundColors;
 @property (nonatomic, retain) NSColor *separatorColor;
-@property (nonatomic, readonly) NSRect contentRect, interiorRect;
-@property (nonatomic) NSSize minSize, maxSize;
+@property (nonatomic, readonly) NSRect contentRect;
 @property (nonatomic) NSRectEdge overflowEdge;
 @property (nonatomic) BOOL hasSeparator, drawsBackground;
 
