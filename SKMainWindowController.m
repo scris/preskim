@@ -1640,7 +1640,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         [overviewView setBackgroundColors:[NSArray arrayWithObjects:[NSColor clearColor], nil]];
         [scrollView setDrawsBackground:NO];
         overviewContentView = [[NSVisualEffectView alloc] init];
-        [overviewContentView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+        [overviewContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [overviewContentView addSubview:scrollView];
         [scrollView release];
         [overviewView setItemPrototype:[[[SKThumbnailItem alloc] init] autorelease]];
@@ -1661,6 +1661,12 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     BOOL isPresentation = [self interactionMode] == SKPresentationMode;
     NSView *oldView = isPresentation ? pdfView : splitView;
     NSView *contentView = [oldView superview];
+    NSArray *constraints = [NSArray arrayWithObjects:
+        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
+    
     [overviewContentView setFrame:[oldView frame]];
     [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
     
@@ -1690,6 +1696,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         }
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext * context){
                 [[contentView animator] replaceSubview:oldView with:overviewContentView];
+                [NSLayoutConstraint activateConstraints:constraints];
             }
             completionHandler:^{
                 [touchBarController overviewChanged];
@@ -1698,6 +1705,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             }];
     } else {
         [contentView replaceSubview:oldView with:overviewContentView];
+        [NSLayoutConstraint activateConstraints:constraints];
     }
     [[self window] makeFirstResponder:overviewView];
     if (isPresentation)
@@ -1717,7 +1725,16 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     
     NSView *newView = [self interactionMode] == SKPresentationMode ? pdfView : splitView;
     NSView *contentView = [overviewContentView superview];
-    [newView setFrame:[overviewContentView frame]];
+    NSArray *constraints = nil;
+    
+    if (newView == splitView)
+        constraints = [NSArray arrayWithObjects:
+            [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
+    else
+        [newView setFrame:[overviewContentView frame]];
     
     if (animate) {
         BOOL hasLayer = [contentView wantsLayer] || [contentView layer] != nil;
@@ -1727,6 +1744,8 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         }
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [[contentView animator] replaceSubview:overviewContentView with:newView];
+                if (constraints)
+                    [NSLayoutConstraint activateConstraints:constraints];
             }
             completionHandler:^{
                 [touchBarController overviewChanged];
@@ -1738,6 +1757,8 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             }];
     } else {
         [contentView replaceSubview:overviewContentView with:newView];
+        if (constraints)
+            [NSLayoutConstraint activateConstraints:constraints];
         [touchBarController overviewChanged];
         [[self window] makeFirstResponder:pdfView];
         if (handler)
