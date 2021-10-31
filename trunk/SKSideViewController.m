@@ -108,14 +108,14 @@
 
     [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
     
-    if (changeButton)
-        [newButton setFrame:[oldButton frame]];
     [newView setFrame:[oldView frame]];
     
     if (animate == NO) {
         [contentView replaceSubview:oldView with:newView];
-        if (changeButton)
-            [[oldButton superview] replaceSubview:oldButton with:newButton];
+        if (changeButton) {
+            [newButton setHidden:NO];
+            [oldButton setHidden:YES];
+        }
         [[firstResponder window] makeFirstResponder:firstResponder];
         [[contentView window] recalculateKeyViewLoop];
         [[self topBar] reflectView:newView animate:NO];
@@ -146,8 +146,10 @@
                 [context setDuration:DURATION]; 
                 [[contentView animator] replaceSubview:oldView with:newView];
                 [[self topBar] reflectView:newView animate:YES];
-                if (changeButton)
-                    [[buttonView animator] replaceSubview:oldButton with:newButton];
+                if (changeButton) {
+                    [[newButton animator] setHidden:NO];
+                    [[oldButton animator] setHidden:YES];
+                }
             }
             completionHandler:^{
                 if (hasLayer == NO) {
