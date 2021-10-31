@@ -293,11 +293,17 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
 - (void)fadeInFullScreenView {
     SKFullScreenWindow *fullScreenWindow = (SKFullScreenWindow *)[self window];
     SKFullScreenWindow *fadeWindow = [[[SKFullScreenWindow alloc] initWithScreen:[fullScreenWindow screen] level:[fullScreenWindow level] isMain:NO] autorelease];
+    NSView *contentView = [fullScreenWindow contentView];
+    NSArray *constraints = [NSArray arrayWithObjects:
+        [NSLayoutConstraint constraintWithItem:pdfView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:pdfView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:pdfView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:pdfView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     [fadeWindow setFrame:[fullScreenWindow frame] display:NO];
     [fadeWindow orderWindow:NSWindowAbove relativeTo:[fullScreenWindow windowNumber]];
-    [pdfView setFrame:[[fullScreenWindow contentView] bounds]];
-    [[fullScreenWindow contentView] addSubview:pdfView];
+    [contentView addSubview:pdfView];
+    [NSLayoutConstraint activateConstraints:constraints];
     [pdfView layoutDocumentView];
     [pdfView requiresDisplay];
     [fullScreenWindow makeFirstResponder:pdfView];
@@ -433,6 +439,11 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     NSColor *backgroundColor = [PDFView defaultBackgroundColor];
     PDFPage *page = [[self pdfView] currentPage];
+    NSArray *constraints = [NSArray arrayWithObjects:
+        [NSLayoutConstraint constraintWithItem:pdfView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:pdfContentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:pdfContentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:pdfView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:pdfView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:pdfContentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:pdfContentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:pdfView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     mwcFlags.isSwitchingFullScreen = 1;
     
@@ -447,8 +458,8 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     interactionMode = SKNormalMode;
     
     // this should be done before exitPresentationMode to get a smooth transition
-    [pdfView setFrame:[pdfContentView bounds]];
     [pdfContentView addSubview:pdfView];
+    [NSLayoutConstraint activateConstraints:constraints];
     [pdfView setBackgroundColor:backgroundColor];
     [secondaryPdfView setBackgroundColor:backgroundColor];
     
