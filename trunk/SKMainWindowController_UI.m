@@ -89,7 +89,7 @@
 #import "SKThumbnailItem.h"
 #import "SKOverviewView.h"
 #import "NSView_SKExtensions.h"
-#import "SKThumbnailPageView.h"
+#import "NSImage_SKExtensions.h"
 
 #define NOTES_KEY       @"notes"
 #define SNAPSHOTS_KEY   @"snapshots"
@@ -438,7 +438,7 @@
     if ([tv isEqual:leftSideController.thumbnailTableView]) {
         NSTableCellView *view = [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
         if ([[tableColumn identifier] isEqualToString:PAGE_COLUMNID])
-             [(SKThumbnailPageView *)[view textField] setMarked:(NSUInteger)row == markedPageIndex];
+            [[view imageView] setObjectValue:(NSUInteger)row == markedPageIndex ? [NSImage markImage] : nil];
         return view;
     } else if ([tv isEqual:rightSideController.snapshotTableView]) {
         return [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
