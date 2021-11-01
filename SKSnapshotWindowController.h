@@ -71,7 +71,6 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
 @property (nonatomic, readonly, copy) NSString *pageLabel;
 @property (nonatomic, copy) NSString *string;
 @property (nonatomic, readonly) BOOL hasWindow;
-@property (nonatomic, readonly) NSDictionary *pageAndWindow;
 @property (nonatomic, readonly) NSDictionary *currentSetup;
 @property (nonatomic) BOOL forceOnTop;
 
