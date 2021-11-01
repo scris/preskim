@@ -107,15 +107,18 @@
             <point key="canvasLocation" x="267" y="154"/>
         </customView>
         <scrollView focusRingType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="98">
-            <rect key="frame" x="0.0" y="0.0" width="200" height="400"/>
+            <rect key="frame" x="0.0" y="0.0" width="200" height="399"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <clipView key="contentView" drawsBackground="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mfb-HY-gcR">
-                <rect key="frame" x="1" y="1" width="198" height="398"/>
+                <rect key="frame" x="1" y="1" width="198" height="397"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="32" viewBased="YES" translatesAutoresizingMaskIntoConstraints="NO" id="101" customClass="SKTableView">
-                        <rect key="frame" x="0.0" y="0.0" width="198" height="398"/>
+                    <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="32" viewBased="YES" id="101" customClass="SKTableView">
+                        <rect key="frame" x="0.0" y="0.0" width="198" height="397"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="397" placeholder="YES" id="2AC-Gj-7RP"/>
+                        </constraints>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -171,8 +174,8 @@
                                         <rect key="frame" x="146" y="1" width="40" height="32"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="uth-up-lE7" customClass="SKThumbnailPageView">
-                                                <rect key="frame" x="0.0" y="0.0" width="40" height="32"/>
+                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="uth-up-lE7">
+                                                <rect key="frame" x="0.0" y="9" width="40" height="15"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" id="avZ-Yh-zVv" customClass="SKThumbnailPageCell">
                                                     <font key="font" metaFont="cellTitle"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -182,14 +185,20 @@
                                                     </connections>
                                                 </textFieldCell>
                                             </textField>
+                                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LvG-Ae-Zsn">
+                                                <rect key="frame" x="36" y="28" width="0.0" height="0.0"/>
+                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="GR3-b9-RXA"/>
+                                            </imageView>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="uth-up-lE7" secondAttribute="bottom" id="VGS-hz-VtA"/>
-                                            <constraint firstItem="uth-up-lE7" firstAttribute="top" secondItem="7fi-B8-Xao" secondAttribute="top" id="ruG-ew-WxG"/>
+                                            <constraint firstItem="LvG-Ae-Zsn" firstAttribute="top" secondItem="7fi-B8-Xao" secondAttribute="top" constant="4" id="7wt-DN-bEb"/>
+                                            <constraint firstItem="uth-up-lE7" firstAttribute="centerY" secondItem="7fi-B8-Xao" secondAttribute="centerY" id="JOx-ht-5KN"/>
+                                            <constraint firstAttribute="trailing" secondItem="LvG-Ae-Zsn" secondAttribute="trailing" constant="4" id="KBb-OK-bku"/>
                                             <constraint firstAttribute="trailing" secondItem="uth-up-lE7" secondAttribute="trailing" constant="2" id="tRi-FG-4N5"/>
                                             <constraint firstItem="uth-up-lE7" firstAttribute="leading" secondItem="7fi-B8-Xao" secondAttribute="leading" constant="2" id="yku-JU-HrF"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="imageView" destination="LvG-Ae-Zsn" id="E6N-P4-FHB"/>
                                             <outlet property="textField" destination="uth-up-lE7" id="YBt-Jh-ykq"/>
                                         </connections>
                                     </tableCellView>
@@ -328,7 +337,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <clipView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="VaG-cU-bQa">
                 <rect key="frame" x="1" y="1" width="198" height="401"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" autosaveColumns="NO" typeSelect="NO" headerView="108" viewBased="YES" id="111" customClass="SKTableView">
                         <rect key="frame" x="0.0" y="0.0" width="198" height="376"/>
