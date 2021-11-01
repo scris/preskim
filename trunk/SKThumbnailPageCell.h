@@ -37,10 +37,9 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKCenteredTextFieldCell.h"
 
 
-@interface SKThumbnailPageCell : SKCenteredTextFieldCell {
+@interface SKThumbnailPageCell : NSTextFieldCell {
     BOOL marked;
 }
 

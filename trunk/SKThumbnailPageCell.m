@@ -51,6 +51,13 @@
     return copy;
 }
 
+- (NSRect)drawingRectForBounds:(NSRect)rect {
+    CGFloat height = [self cellSizeForBounds:rect].height;
+    if (height < NSHeight(rect))
+        rect = NSInsetRect(rect, 0.0, 0.5 * (NSHeight(rect) - height));
+    return [super drawingRectForBounds:rect];
+}
+
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
     if ([self isMarked]) {
         NSImage *markImage = [NSImage markImage];
