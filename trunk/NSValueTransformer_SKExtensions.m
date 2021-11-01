@@ -43,6 +43,7 @@
 NSString *SKUnarchiveColorTransformerName = @"SKUnarchiveColor";
 NSString *SKUnarchiveColorArrayTransformerName = @"SKUnarchiveArrayColor";
 NSString *SKTypeImageTransformerName = @"SKTypeImage";
+NSString *SKHasWindowImageTransformerName = @"SKHasWindowImage";
 NSString *SKIsZeroTransformerName = @"SKIsZero";
 NSString *SKIsOneTransformerName = @"SKIsOne";
 NSString *SKIsTwoTransformerName = @"SKIsTwo";
@@ -62,6 +63,11 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 
 #pragma mark -
 
+@interface SKHasWindowImageTransformer : NSValueTransformer
+@end
+
+#pragma mark -
+
 @interface SKRadioTransformer : NSValueTransformer {
     NSInteger targetValue;
 }
@@ -76,6 +82,7 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
     [NSValueTransformer setValueTransformer:[[[SKUnarchiveColorTransformer alloc] init] autorelease] forName:SKUnarchiveColorTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKUnarchiveColorArrayTransformer alloc] init] autorelease] forName:SKUnarchiveColorArrayTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKTypeImageTransformer alloc] init] autorelease] forName:SKTypeImageTransformerName];
+    [NSValueTransformer setValueTransformer:[[[SKHasWindowImageTransformer alloc] init] autorelease] forName:SKHasWindowImageTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:0] autorelease] forName:SKIsZeroTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:1] autorelease] forName:SKIsOneTransformerName];
     [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:2] autorelease] forName:SKIsTwoTransformerName];
@@ -181,6 +188,44 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
         return [NSImage imageNamed:SKImageNameInkNote];
     else
         return nil;
+}
+
+@end
+
+#pragma mark -
+
+@implementation SKHasWindowImageTransformer
+
++ (Class)transformedValueClass {
+    return [NSImage class];
+}
+
++ (BOOL)allowsReverseTransformation {
+    return NO;
+}
+
+- (id)transformedValue:(id)hasWindow {
+    if ([hasWindow boolValue]) {
+        static NSImage *windowImage = nil;
+        if (windowImage == nil) {
+            windowImage = [[NSImage imageWithSize:NSMakeSize(12.0, 12.0) flipped:NO drawingHandler:^(NSRect dstRect){
+                NSBezierPath *path = [NSBezierPath bezierPath];
+                [path moveToPoint:NSMakePoint(1.0, 2.0)];
+                [path appendBezierPathWithArcWithCenter:NSMakePoint(3.0, 10.0) radius:2.0 startAngle:180.0 endAngle:90.0 clockwise:YES];
+                [path appendBezierPathWithArcWithCenter:NSMakePoint(9.0, 10.0) radius:2.0 startAngle:90.0 endAngle:0.0 clockwise:YES];
+                [path lineToPoint:NSMakePoint(11.0, 2.0)];
+                [path closePath];
+                [path appendBezierPath:[NSBezierPath bezierPathWithRect:NSMakeRect(2.0, 3.0, 8.0, 7.0)]];
+                [path setWindingRule:NSEvenOddWindingRule];
+                [[NSColor blackColor] setFill];
+                [path fill];
+                return YES;
+            }] retain];
+            [windowImage setTemplate:YES];
+        }
+        return windowImage;
+    }
+    return nil;
 }
 
 @end

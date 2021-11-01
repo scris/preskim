@@ -41,6 +41,7 @@
 extern NSString *SKUnarchiveColorTransformerName;
 extern NSString *SKUnarchiveColorArrayTransformerName;
 extern NSString *SKTypeImageTransformerName;
+extern NSString *SKHasWindowImageTransformerName;
 extern NSString *SKIsZeroTransformerName;
 extern NSString *SKIsOneTransformerName;
 extern NSString *SKIsTwoTransformerName;

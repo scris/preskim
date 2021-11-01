@@ -49,7 +49,6 @@
 #import "NSUserDefaultsController_SKExtensions.h"
 #import "NSGeometry_SKExtensions.h"
 #import "PDFPage_SKExtensions.h"
-#import "SKSnapshotPageCell.h"
 #import "PDFAnnotation_SKExtensions.h"
 #import "PDFView_SKExtensions.h"
 #import "NSUserDefaults_SKExtensions.h"
@@ -79,7 +78,6 @@ NSString *SKSnapshotCurrentSetupKey = @"currentSetup";
 #define WINDOWFRAME_KEY     @"windowFrame"
 #define HASWINDOW_KEY       @"hasWindow"
 #define PAGELABEL_KEY       @"pageLabel"
-#define PAGEANDWINDOW_KEY   @"pageAndWindow"
 
 #define SKSnapshotWindowFrameAutosaveName @"SKSnapshotWindow"
 #define SKSnapshotViewChangedNotification @"SKSnapshotViewChangedNotification"
@@ -95,14 +93,7 @@ static char SKSnaphotWindowAppObservationContext;
 @implementation SKSnapshotWindowController
 
 @synthesize pdfView, delegate, thumbnail, pageLabel, string, hasWindow, forceOnTop;
-@dynamic bounds, pageIndex, pageAndWindow, currentSetup, thumbnailAttachment, thumbnail512Attachment, thumbnail256Attachment, thumbnail128Attachment, thumbnail64Attachment, thumbnail32Attachment;
-
-+ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
-    NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-    if ([key isEqualToString:PAGEANDWINDOW_KEY])
-        keyPaths = [keyPaths setByAddingObjectsFromSet:[NSSet setWithObjects:PAGELABEL_KEY, HASWINDOW_KEY, nil]];
-    return keyPaths;
-}
+@dynamic bounds, pageIndex, currentSetup, thumbnailAttachment, thumbnail512Attachment, thumbnail256Attachment, thumbnail128Attachment, thumbnail64Attachment, thumbnail32Attachment;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -400,10 +391,6 @@ static char SKSnaphotWindowAppObservationContext;
         pageLabel = [newPageLabel retain];
         [self synchronizeWindowTitleWithDocumentName];
     }
-}
-
-- (NSDictionary *)pageAndWindow {
-    return [NSDictionary dictionaryWithObjectsAndKeys:[self pageLabel], SKSnapshotPageCellLabelKey, [NSNumber numberWithBool:[self hasWindow]], SKSnapshotPageCellHasWindowKey, nil];
 }
 
 - (void)setForceOnTop:(BOOL)flag {
