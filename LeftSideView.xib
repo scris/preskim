@@ -176,7 +176,7 @@
                                         <subviews>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="uth-up-lE7">
                                                 <rect key="frame" x="0.0" y="9" width="40" height="15"/>
-                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" id="avZ-Yh-zVv" customClass="SKThumbnailPageCell">
+                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" id="avZ-Yh-zVv">
                                                     <font key="font" metaFont="cellTitle"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
