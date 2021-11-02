@@ -127,7 +127,14 @@ static CGFloat fullScreenToolbarOffset = 0.0;
             [sideWindow makeFirstResponder:nil];
         [leftSideController.topBar setDrawsBackground:YES];
         [leftSideController.view setFrame:[leftSideContentView bounds]];
+        
+        NSArray *constraints = [NSArray arrayWithObjects:
+            [NSLayoutConstraint constraintWithItem:leftSideController.view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:leftSideContentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:leftSideContentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:leftSideController.view attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:leftSideController.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:leftSideContentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:leftSideContentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:leftSideController.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
         [leftSideContentView addSubview:leftSideController.view];
+        [NSLayoutConstraint activateConstraints:constraints];
         
         [self setLeftSidePaneState:mwcFlags.savedLeftSidePaneState];
         

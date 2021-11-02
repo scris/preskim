@@ -375,10 +375,18 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     [pdfContentView setAutoresizesSubviews:YES];
     
     // make sure the first thing we call on the side view controllers is its view so their nib is loaded
-    [leftSideController.view setFrame:[leftSideContentView bounds]];
+    NSArray *constraints = [NSArray arrayWithObjects:
+        [NSLayoutConstraint constraintWithItem:leftSideController.view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:leftSideContentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:leftSideContentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:leftSideController.view attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:leftSideController.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:leftSideContentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:leftSideContentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:leftSideController.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:rightSideController.view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:rightSideContentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:rightSideContentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:rightSideController.view attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:rightSideController.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:rightSideContentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:rightSideContentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:rightSideController.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     [leftSideContentView addSubview:leftSideController.view];
-    [rightSideController.view setFrame:[rightSideContentView bounds]];
     [rightSideContentView addSubview:rightSideController.view];
+    [NSLayoutConstraint activateConstraints:constraints];
     
     [self updateTableFont];
     
@@ -471,7 +479,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         [leftSideController.button setEnabled:NO forSegment:SKSidePaneStateOutline];
     
     // Due to a bug in Leopard we should only resize and swap in the PDFView after loading the PDFDocument
-    NSArray *constraints = [NSArray arrayWithObjects:
+    constraints = [NSArray arrayWithObjects:
         [NSLayoutConstraint constraintWithItem:pdfView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:pdfContentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:pdfContentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:pdfView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:pdfView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:pdfContentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
