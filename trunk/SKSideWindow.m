@@ -43,6 +43,7 @@
 #import "NSShadow_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "NSGraphics_SKExtensions.h"
+#import "NSView_SKExtensions.h"
 
 #define DEFAULT_WINDOW_WIDTH    300.0
 #define DEFAULT_WINDOW_HEIGHT   400.0
@@ -101,13 +102,8 @@ static CGFloat WINDOW_OFFSET = 8.0;
         mainContentView = [[[NSView alloc] initWithFrame:contentRect] autorelease];
         [mainContentView setAutoresizingMask:NSViewMinXMargin | NSViewHeightSizable];
         [backgroundView addSubview:mainContentView];
-        NSArray *constraints = [NSArray arrayWithObjects:
-            [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:mainContentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:mainContentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:mainContentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:mainContentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
         [mainContentView addSubview:view];
-        [NSLayoutConstraint activateConstraints:constraints];
+        [view activateConstraintsToBoundsOfItem:mainContentView];
     }
     return self;
 }
