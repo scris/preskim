@@ -376,9 +376,9 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     
     // make sure the first thing we call on the side view controllers is its view so their nib is loaded
     [leftSideContentView addSubview:leftSideController.view];
-    [leftSideController.view activateConstraintsToBoundsOfItem:leftSideContentView];
+    [leftSideController.view activateConstraintsToSuperview];
     [rightSideContentView addSubview:rightSideController.view];
-    [rightSideController.view activateConstraintsToBoundsOfItem:rightSideContentView];
+    [rightSideController.view activateConstraintsToSuperview];
     
     [self updateTableFont];
     
@@ -477,11 +477,11 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         CGFloat rightWidth = [self rightSideWidth];
         [self applyLeftSideWidth:0.0 rightSideWidth:0.0];
         [pdfContentView addSubview:pdfView];
-        [pdfView activateConstraintsToBoundsOfItem:pdfContentView];
+        [pdfView activateConstraintsToSuperview];
         [self applyLeftSideWidth:leftWidth rightSideWidth:rightWidth];
     } else {
         [pdfContentView addSubview:pdfView];
-        [pdfView activateConstraintsToBoundsOfItem:pdfContentView];
+        [pdfView activateConstraintsToSuperview];
     }
     
     // get the initial display mode from the PDF if present and not overridden by an explicit setup
@@ -1690,7 +1690,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         }
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext * context){
                 [[contentView animator] replaceSubview:oldView with:overviewContentView];
-                [overviewContentView activateConstraintsToBoundsOfItem:contentView];
+                [overviewContentView activateConstraintsToSuperview];
             }
             completionHandler:^{
                 [touchBarController overviewChanged];
@@ -1699,7 +1699,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             }];
     } else {
         [contentView replaceSubview:oldView with:overviewContentView];
-        [overviewContentView activateConstraintsToBoundsOfItem:contentView];
+        [overviewContentView activateConstraintsToSuperview];
     }
     [[self window] makeFirstResponder:overviewView];
     if (isPresentation)
@@ -1728,7 +1728,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         }
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [[contentView animator] replaceSubview:overviewContentView with:newView];
-                [newView activateConstraintsToBoundsOfItem:contentView];
+                [newView activateConstraintsToSuperview];
             }
             completionHandler:^{
                 [touchBarController overviewChanged];
@@ -1740,7 +1740,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             }];
     } else {
         [contentView replaceSubview:overviewContentView with:newView];
-        [newView activateConstraintsToBoundsOfItem:contentView];
+        [newView activateConstraintsToSuperview];
         [touchBarController overviewChanged];
         [[self window] makeFirstResponder:pdfView];
         if (handler)

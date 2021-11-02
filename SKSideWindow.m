@@ -103,7 +103,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
         [mainContentView setAutoresizingMask:NSViewMinXMargin | NSViewHeightSizable];
         [backgroundView addSubview:mainContentView];
         [mainContentView addSubview:view];
-        [view activateConstraintsToBoundsOfItem:mainContentView];
+        [view activateConstraintsToSuperview];
     }
     return self;
 }
