@@ -58,4 +58,6 @@
 
 - (NSBitmapImageRep *)bitmapImageRepCachingDisplayInRect:(NSRect)rect;
 
+- (void)activateConstraintsToBoundsOfItem:(id)item;
+
 @end
