@@ -421,8 +421,9 @@
                                                 <rect key="frame" x="1" y="-1" width="0.0" height="0.0"/>
                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="rMQ-wW-cJx"/>
                                                 <connections>
-                                                    <binding destination="EU8-lX-Lad" name="value" keyPath="objectValue.hasWindow" id="cVt-gk-MFY">
+                                                    <binding destination="EU8-lX-Lad" name="value" keyPath="objectValue.hasWindow" id="xIX-4F-LrC">
                                                         <dictionary key="options">
+                                                            <bool key="NSConditionallySetsEnabled" value="NO"/>
                                                             <string key="NSValueTransformerName">SKHasWindowImage</string>
                                                         </dictionary>
                                                     </binding>
