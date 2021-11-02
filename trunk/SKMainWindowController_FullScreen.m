@@ -129,7 +129,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         [leftSideController.view setFrame:[leftSideContentView bounds]];
         
         [leftSideContentView addSubview:leftSideController.view];
-        [leftSideController.view activateConstraintsToBoundsOfItem:leftSideContentView];
+        [leftSideController.view activateConstraintsToSuperview];
         
         [self setLeftSidePaneState:mwcFlags.savedLeftSidePaneState];
         
@@ -300,7 +300,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [fadeWindow setFrame:[fullScreenWindow frame] display:NO];
     [fadeWindow orderWindow:NSWindowAbove relativeTo:[fullScreenWindow windowNumber]];
     [contentView addSubview:pdfView];
-    [pdfView activateConstraintsToBoundsOfItem:contentView];
+    [pdfView activateConstraintsToSuperview];
     [pdfView layoutDocumentView];
     [pdfView requiresDisplay];
     [fullScreenWindow makeFirstResponder:pdfView];
@@ -451,7 +451,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     // this should be done before exitPresentationMode to get a smooth transition
     [pdfContentView addSubview:pdfView];
-    [pdfView activateConstraintsToBoundsOfItem:pdfContentView];
+    [pdfView activateConstraintsToSuperview];
     [pdfView setBackgroundColor:backgroundColor];
     [secondaryPdfView setBackgroundColor:backgroundColor];
     
