@@ -1660,6 +1660,12 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     BOOL isPresentation = [self interactionMode] == SKPresentationMode;
     NSView *oldView = isPresentation ? pdfView : splitView;
     NSView *contentView = [oldView superview];
+    BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
+    NSArray *constraints = [NSArray arrayWithObjects:
+        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     [overviewContentView setFrame:[oldView frame]];
     [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
@@ -1690,7 +1696,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         }
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext * context){
                 [[contentView animator] replaceSubview:oldView with:overviewContentView];
-                [overviewContentView activateConstraintsToSuperview];
+                [NSLayoutConstraint activateConstraints:constraints];
             }
             completionHandler:^{
                 [touchBarController overviewChanged];
@@ -1699,7 +1705,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             }];
     } else {
         [contentView replaceSubview:oldView with:overviewContentView];
-        [overviewContentView activateConstraintsToSuperview];
+        [NSLayoutConstraint activateConstraints:constraints];
     }
     [[self window] makeFirstResponder:overviewView];
     if (isPresentation)
@@ -1717,8 +1723,15 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
         animate = NO;
     
-    NSView *newView = [self interactionMode] == SKPresentationMode ? pdfView : splitView;
+    BOOL isPresentation = [self interactionMode] == SKPresentationMode;
+    NSView *newView = isPresentation ? pdfView : splitView;
     NSView *contentView = [overviewContentView superview];
+    BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
+    NSArray *constraints = [NSArray arrayWithObjects:
+        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     if (animate) {
         BOOL hasLayer = [contentView wantsLayer] || [contentView layer] != nil;
@@ -1728,7 +1741,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         }
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [[contentView animator] replaceSubview:overviewContentView with:newView];
-                [newView activateConstraintsToSuperview];
+                [NSLayoutConstraint activateConstraints:constraints];
             }
             completionHandler:^{
                 [touchBarController overviewChanged];
@@ -1740,7 +1753,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             }];
     } else {
         [contentView replaceSubview:overviewContentView with:newView];
-        [newView activateConstraintsToSuperview];
+        [NSLayoutConstraint activateConstraints:constraints];
         [touchBarController overviewChanged];
         [[self window] makeFirstResponder:pdfView];
         if (handler)
