@@ -398,17 +398,17 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     // Set up the window
     [window setCollectionBehavior:[window collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
     
+    NSLayoutConstraint *constraint = [[window contentView] constraintWithFirstItem:splitView firstAttribute:NSLayoutAttributeTop];
+    if (constraint) {
+        [constraint setActive:NO];
+        [[NSLayoutConstraint constraintWithItem:splitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[window contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0] setActive:YES];
+    }
     [window setStyleMask:[window styleMask] | NSFullSizeContentViewWindowMask];
     if ([window respondsToSelector:@selector(setToolbarStyle:)])
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
         [window setToolbarStyle:NSWindowToolbarStyleExpanded];
 #pragma clang diagnostic pop
-    NSLayoutConstraint *constraint = [[window contentView] constraintWithFirstItem:splitView firstAttribute:NSLayoutAttributeTop];
-    if (constraint) {
-        [constraint setActive:NO];
-        [[NSLayoutConstraint constraintWithItem:splitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[window contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0] setActive:YES];
-    }
     
     [self setWindowFrameAutosaveNameOrCascade:SKMainWindowFrameAutosaveName];
     
