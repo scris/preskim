@@ -1662,7 +1662,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     NSArray *constraints = [NSArray arrayWithObjects:
         [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:isPresentation ? [[self window] contentLayoutGuide] : contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:isPresentation ? contentView : [[self window] contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     [overviewContentView setFrame:[oldView frame]];
@@ -1728,7 +1728,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     NSArray *constraints = [NSArray arrayWithObjects:
         [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:isPresentation ? [[self window] contentLayoutGuide] : contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:isPresentation ? contentView : [[self window] contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     if (animate) {
