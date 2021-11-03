@@ -404,12 +404,10 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 #pragma clang diagnostic ignored "-Wpartial-availability"
         [window setToolbarStyle:NSWindowToolbarStyleExpanded];
 #pragma clang diagnostic pop
-    NSView *view = [splitView superview];
-    NSLayoutConstraint *constraint = nil;
-    for (constraint in [[window contentView] constraints]) {
-        if ([constraint firstItem] == view && [constraint firstAttribute] == NSLayoutAttributeTop) {
+    for (NSLayoutConstraint *constraint in [[window contentView] constraints]) {
+        if ([constraint firstItem] == splitView && [constraint firstAttribute] == NSLayoutAttributeTop) {
             [constraint setActive:NO];
-            [[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[window contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0] setActive:YES];
+            [[NSLayoutConstraint constraintWithItem:splitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[window contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0] setActive:YES];
             break;
         }
     }
@@ -1664,7 +1662,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     NSArray *constraints = [NSArray arrayWithObjects:
         [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:isPresentation ? [[self window] contentLayoutGuide] : contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     [overviewContentView setFrame:[oldView frame]];
@@ -1730,7 +1728,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     NSArray *constraints = [NSArray arrayWithObjects:
         [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:isPresentation ? [[self window] contentLayoutGuide] : contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     if (animate) {
