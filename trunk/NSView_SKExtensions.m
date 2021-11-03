@@ -112,6 +112,22 @@
     [NSLayoutConstraint activateConstraints:constraints];
 }
 
+- (NSLayoutConstraint *)constraintWithFirstItem:(id)item firstAttribute:(NSLayoutAttribute)attribute {
+    for (NSLayoutConstraint *constraint in [self constraints]) {
+        if ([constraint firstItem] == item && [constraint firstAttribute] == attribute)
+            return constraint;
+    }
+    return nil;
+}
+
+- (NSLayoutConstraint *)constraintWithSecondItem:(id)item secondAttribute:(NSLayoutAttribute)attribute {
+    for (NSLayoutConstraint *constraint in [self constraints]) {
+        if ([constraint secondItem] == item && [constraint secondAttribute] == attribute)
+            return constraint;
+    }
+    return nil;
+}
+
 @end
 
 

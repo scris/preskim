@@ -43,6 +43,7 @@
 #import "NSGraphics_SKExtensions.h"
 #import "NSSegmentedControl_SKExtensions.h"
 #import "NSMenu_SKExtensions.h"
+#import "NSView_SKExtensions.h"
 
 
 @implementation SKFindController
@@ -126,15 +127,7 @@
     NSView *contentView = [view superview];
     BOOL visible = (nil == [findBar superview]);
     NSView *topView = visible ? view : findBar;
-    NSLayoutConstraint *topConstraint = nil;
-    
-    for (NSLayoutConstraint *constraint in [contentView constraints]) {
-        if ([constraint firstItem] == topView && [constraint firstAttribute] == NSLayoutAttributeTop) {
-            topConstraint = constraint;
-            break;
-        }
-    }
-    
+    NSLayoutConstraint *topConstraint = [contentView constraintWithFirstItem:topView firstAttribute:NSLayoutAttributeTop];
     CGFloat barHeight = NSHeight([findBar frame]);
     NSArray *constraints;
     
