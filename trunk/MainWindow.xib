@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -34,69 +34,79 @@
                 <rect key="frame" x="0.0" y="0.0" width="1000" height="600"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1385" customClass="SKSplitView">
-                        <rect key="frame" x="0.0" y="22" width="1000" height="578"/>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="1555">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="600"/>
                         <subviews>
-                            <customView fixedFrame="YES" id="769">
-                                <rect key="frame" x="0.0" y="0.0" width="250" height="578"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                            </customView>
-                            <customView id="1321">
-                                <rect key="frame" x="251" y="0.0" width="498" height="578"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1385" customClass="SKSplitView">
+                                <rect key="frame" x="0.0" y="22" width="1000" height="578"/>
                                 <subviews>
-                                    <splitView dividerStyle="paneSplitter" translatesAutoresizingMaskIntoConstraints="NO" id="1314" customClass="SKSplitView">
-                                        <rect key="frame" x="0.0" y="0.0" width="498" height="578"/>
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="769">
+                                        <rect key="frame" x="0.0" y="0.0" width="250" height="578"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                    </customView>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="1321">
+                                        <rect key="frame" x="251" y="0.0" width="498" height="578"/>
                                         <subviews>
-                                            <customView fixedFrame="YES" id="1315">
+                                            <splitView dividerStyle="paneSplitter" translatesAutoresizingMaskIntoConstraints="NO" id="1314" customClass="SKSplitView">
                                                 <rect key="frame" x="0.0" y="0.0" width="498" height="578"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                            </customView>
+                                                <subviews>
+                                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1315">
+                                                        <rect key="frame" x="0.0" y="0.0" width="498" height="578"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                    </customView>
+                                                </subviews>
+                                                <holdingPriorities>
+                                                    <real value="250"/>
+                                                </holdingPriorities>
+                                                <connections>
+                                                    <outlet property="delegate" destination="-2" id="1317"/>
+                                                </connections>
+                                            </splitView>
                                         </subviews>
-                                        <holdingPriorities>
-                                            <real value="250"/>
-                                        </holdingPriorities>
-                                        <connections>
-                                            <outlet property="delegate" destination="-2" id="1317"/>
-                                        </connections>
-                                    </splitView>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="1314" secondAttribute="bottom" id="BwS-so-46O"/>
+                                            <constraint firstAttribute="trailing" secondItem="1314" secondAttribute="trailing" id="OE4-7n-0dl"/>
+                                            <constraint firstItem="1314" firstAttribute="top" secondItem="1321" secondAttribute="top" id="Twe-rt-5Qm"/>
+                                            <constraint firstItem="1314" firstAttribute="leading" secondItem="1321" secondAttribute="leading" id="xoo-8V-ElE"/>
+                                        </constraints>
+                                    </customView>
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="770">
+                                        <rect key="frame" x="750" y="0.0" width="250" height="578"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                    </customView>
                                 </subviews>
+                                <holdingPriorities>
+                                    <real value="250"/>
+                                    <real value="250"/>
+                                    <real value="250"/>
+                                </holdingPriorities>
+                                <connections>
+                                    <outlet property="delegate" destination="-2" id="1449"/>
+                                </connections>
+                            </splitView>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="2Zw-iS-Qai" customClass="SKStatusBar">
+                                <rect key="frame" x="0.0" y="0.0" width="1000" height="22"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="1314" secondAttribute="bottom" id="BwS-so-46O"/>
-                                    <constraint firstAttribute="trailing" secondItem="1314" secondAttribute="trailing" id="OE4-7n-0dl"/>
-                                    <constraint firstItem="1314" firstAttribute="top" secondItem="1321" secondAttribute="top" id="Twe-rt-5Qm"/>
-                                    <constraint firstItem="1314" firstAttribute="leading" secondItem="1321" secondAttribute="leading" id="xoo-8V-ElE"/>
+                                    <constraint firstAttribute="height" constant="22" id="fGI-iF-w0D"/>
                                 </constraints>
                             </customView>
-                            <customView fixedFrame="YES" id="770">
-                                <rect key="frame" x="750" y="0.0" width="250" height="578"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                            </customView>
                         </subviews>
-                        <holdingPriorities>
-                            <real value="250"/>
-                            <real value="250"/>
-                            <real value="250"/>
-                        </holdingPriorities>
-                        <connections>
-                            <outlet property="delegate" destination="-2" id="1449"/>
-                        </connections>
-                    </splitView>
-                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="2Zw-iS-Qai" customClass="SKStatusBar">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="22"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="22" id="fGI-iF-w0D"/>
+                            <constraint firstAttribute="trailing" secondItem="1385" secondAttribute="trailing" id="1b5-b6-VWW"/>
+                            <constraint firstItem="1385" firstAttribute="leading" secondItem="1555" secondAttribute="leading" id="WJx-1b-PLu"/>
+                            <constraint firstAttribute="bottom" secondItem="2Zw-iS-Qai" secondAttribute="bottom" id="XKu-E1-i9h"/>
+                            <constraint firstItem="2Zw-iS-Qai" firstAttribute="leading" secondItem="1555" secondAttribute="leading" id="dBf-CM-fnL"/>
+                            <constraint firstItem="1385" firstAttribute="top" secondItem="1555" secondAttribute="top" id="jcA-bY-Dqr"/>
+                            <constraint firstAttribute="trailing" secondItem="2Zw-iS-Qai" secondAttribute="trailing" id="nue-QT-ufS"/>
+                            <constraint firstItem="2Zw-iS-Qai" firstAttribute="top" secondItem="1385" secondAttribute="bottom" id="pIq-Xm-48t"/>
                         </constraints>
                     </customView>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="2Zw-iS-Qai" secondAttribute="bottom" id="Lpk-GO-C0x"/>
-                    <constraint firstItem="2Zw-iS-Qai" firstAttribute="top" secondItem="1385" secondAttribute="bottom" id="N1d-xY-GK9"/>
-                    <constraint firstAttribute="trailing" secondItem="1385" secondAttribute="trailing" id="P20-vk-75c"/>
-                    <constraint firstAttribute="trailing" secondItem="2Zw-iS-Qai" secondAttribute="trailing" id="Rpa-Nl-KNp"/>
-                    <constraint firstItem="1385" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="cwR-tV-s3T"/>
-                    <constraint firstItem="1385" firstAttribute="top" secondItem="6" secondAttribute="top" id="kue-s7-oZq"/>
-                    <constraint firstItem="2Zw-iS-Qai" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="vlN-aY-PV4"/>
+                    <constraint firstAttribute="trailing" secondItem="1555" secondAttribute="trailing" id="IGa-3K-I9y"/>
+                    <constraint firstItem="1555" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="SMo-Gf-RaZ"/>
+                    <constraint firstItem="1555" firstAttribute="top" secondItem="6" secondAttribute="top" id="SYV-oE-O1E"/>
+                    <constraint firstAttribute="bottom" secondItem="1555" secondAttribute="bottom" id="lPc-En-3fe"/>
                 </constraints>
             </view>
             <connections>
