@@ -175,15 +175,7 @@
     NSView *contentView = [view superview];
     BOOL visible = (nil == [self superview]);
     NSView *bottomView = visible ? view : self;
-    NSLayoutConstraint *bottomConstraint = nil;
-    
-    for (NSLayoutConstraint *constraint in [contentView constraints]) {
-        if ([constraint secondItem] == bottomView && [constraint secondAttribute] == NSLayoutAttributeBottom) {
-            bottomConstraint = constraint;
-            break;
-        }
-    }
-    
+    NSLayoutConstraint *bottomConstraint = [contentView constraintWithSecondItem:bottomView secondAttribute:NSLayoutAttributeBottom];
     CGFloat statusHeight = NSHeight([self frame]);
     NSArray *constraints;
     

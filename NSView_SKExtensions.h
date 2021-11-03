@@ -60,4 +60,7 @@
 
 - (void)activateConstraintsToSuperview;
 
+- (NSLayoutConstraint *)constraintWithFirstItem:(id)item firstAttribute:(NSLayoutAttribute)attribute;
+- (NSLayoutConstraint *)constraintWithSecondItem:(id)item secondAttribute:(NSLayoutAttribute)attribute;
+
 @end

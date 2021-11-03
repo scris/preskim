@@ -980,14 +980,8 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
     NSTableCellView *view = [ov makeViewWithIdentifier:identifier owner:self];
     if (!RUNNING_AFTER(10_15)) {
         BOOL isLast = [[tableColumn identifier] isEqualToString:FILE_COLUMNID];
-        if (isLast || isSep) {
-            for (NSLayoutConstraint *constraint in [view constraints]) {
-                if ([constraint firstAttribute] == NSLayoutAttributeTrailing) {
-                    [constraint setConstant:isSep == NO ? 4.0 : isLast ? 2.0 : 0.0];
-                    break;
-                }
-            }
-        }
+        if (isLast || isSep)
+            [[view constraintWithFirstItem:view firstAttribute:NSLayoutAttributeTrailing] setConstant:isSep == NO ? 4.0 : isLast ? 2.0 : 0.0];
     }
     if ([identifier isEqualToString:FILE_COLUMNID]) {
         if ([item bookmarkType] == SKBookmarkTypeBookmark)

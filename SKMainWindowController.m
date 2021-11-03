@@ -404,12 +404,10 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 #pragma clang diagnostic ignored "-Wpartial-availability"
         [window setToolbarStyle:NSWindowToolbarStyleExpanded];
 #pragma clang diagnostic pop
-    for (NSLayoutConstraint *constraint in [[window contentView] constraints]) {
-        if ([constraint firstItem] == splitView && [constraint firstAttribute] == NSLayoutAttributeTop) {
-            [constraint setActive:NO];
-            [[NSLayoutConstraint constraintWithItem:splitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[window contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0] setActive:YES];
-            break;
-        }
+    NSLayoutConstraint *constraint = [[window contentView] constraintWithFirstItem:splitView firstAttribute:NSLayoutAttributeTop];
+    if (constraint) {
+        [constraint setActive:NO];
+        [[NSLayoutConstraint constraintWithItem:splitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[window contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0] setActive:YES];
     }
     
     [self setWindowFrameAutosaveNameOrCascade:SKMainWindowFrameAutosaveName];
