@@ -62,6 +62,7 @@
 #import "NSImage_SKExtensions.h"
 #import "NSScreen_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
+#import "SKStatusBar.h"
 
 #define MAINWINDOWFRAME_KEY         @"windowFrame"
 #define LEFTSIDEPANEWIDTH_KEY       @"leftSidePaneWidth"
@@ -413,8 +414,15 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [self fadeInFullScreenWindowOnScreen:screen];
     
     if ([self hasOverview]) {
-        [splitView setFrame:[overviewContentView frame]];
-        [[overviewContentView superview] replaceSubview:overviewContentView with:splitView];
+        NSView *contentView = [overviewContentView superview];
+        BOOL hasStatus = [statusBar isVisible];
+        NSArray *constraints = [NSArray arrayWithObjects:
+            [NSLayoutConstraint constraintWithItem:splitView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:splitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[mainWindow contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
+        [contentView replaceSubview:overviewContentView with:splitView];
+        [NSLayoutConstraint activateConstraints:constraints];
     }
     
     [self enterPresentationMode];
