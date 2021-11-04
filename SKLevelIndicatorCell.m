@@ -48,40 +48,39 @@
     if (drawDiscreteContinuous)
         [self setLevelIndicatorStyle:NSContinuousCapacityLevelIndicatorStyle];
     CGFloat cellHeight = [self cellSize].height;
-    NSGraphicsContext *context = [NSGraphicsContext currentContext];
     if (fabs(NSHeight(cellFrame) - cellHeight) <= 0.0) {
-        [context saveGraphicsState];
+        [NSGraphicsContext saveGraphicsState];
         [[NSBezierPath bezierPathWithRect:cellFrame] addClip];
         [super drawWithFrame:cellFrame inView:controlView];
-        [context restoreGraphicsState];
+        [NSGraphicsContext restoreGraphicsState];
     } else if (RUNNING_BEFORE(10_13)) {
         NSRect frame = SKCenterRectVertically(cellFrame, cellHeight, 0.0, [controlView isFlipped]);
-        [context saveGraphicsState];
+        [NSGraphicsContext saveGraphicsState];
         [[NSBezierPath bezierPathWithRect:cellFrame] addClip];
         [super drawWithFrame:frame inView:controlView];
-        [context restoreGraphicsState];
+        [NSGraphicsContext restoreGraphicsState];
     } else if (NSHeight(cellFrame) <= 2.0 * (cellHeight - EDGE_HEIGHT)) {
         NSRect topFrame, bottomFrame, frame = cellFrame;
         NSDivideRect(cellFrame, &topFrame, &bottomFrame, floor(0.5 * NSHeight(cellFrame)), NSMinYEdge);
         frame.size.height = cellHeight;
-        [context saveGraphicsState];
+        [NSGraphicsContext saveGraphicsState];
         [[NSBezierPath bezierPathWithRect:topFrame] addClip];
         [super drawWithFrame:frame inView:controlView];
-        [context restoreGraphicsState];
-        [context saveGraphicsState];
+        [NSGraphicsContext restoreGraphicsState];
+        [NSGraphicsContext saveGraphicsState];
         [[NSBezierPath bezierPathWithRect:bottomFrame] addClip];
         frame.origin.y = NSMaxY(bottomFrame) -  cellHeight;
         [super drawWithFrame:frame inView:controlView];
-        [context restoreGraphicsState];
+        [NSGraphicsContext restoreGraphicsState];
     } else {
         NSRect topFrame, bottomFrame, restFrame, frame = cellFrame, midFrame;
         NSDivideRect(cellFrame, &topFrame, &bottomFrame, cellHeight - EDGE_HEIGHT, NSMinYEdge);
         NSDivideRect(bottomFrame, &bottomFrame, &restFrame, cellHeight - EDGE_HEIGHT, NSMaxYEdge);
         frame.size.height = cellHeight;
-        [context saveGraphicsState];
+        [NSGraphicsContext saveGraphicsState];
         [[NSBezierPath bezierPathWithRect:topFrame] addClip];
         [super drawWithFrame:frame inView:controlView];
-        [context restoreGraphicsState];
+        [NSGraphicsContext restoreGraphicsState];
         do {
             NSDivideRect(restFrame, &midFrame, &restFrame, fmin(cellHeight - 2.0 * EDGE_HEIGHT, NSHeight(restFrame)), NSMinYEdge);
             [NSGraphicsContext saveGraphicsState];
@@ -91,10 +90,10 @@
             [NSGraphicsContext restoreGraphicsState];
         } while (NSHeight(restFrame) > 0.0);
         frame.origin.y = NSMaxY(bottomFrame) -  cellHeight;
-        [context saveGraphicsState];
+        [NSGraphicsContext saveGraphicsState];
         [[NSBezierPath bezierPathWithRect:bottomFrame] addClip];
         [super drawWithFrame:frame inView:controlView];
-        [context restoreGraphicsState];
+        [NSGraphicsContext restoreGraphicsState];
     }
     if (drawDiscreteContinuous)
         [self setLevelIndicatorStyle:NSDiscreteCapacityLevelIndicatorStyle];
