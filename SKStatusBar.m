@@ -382,23 +382,19 @@
             [progressIndicator retain];
             [progressIndicator removeFromSuperview];
 		}
-        [progressIndicator setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin | NSViewMaxYMargin];
 		[progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
 		[progressIndicator setControlSize:NSSmallControlSize];
 		[progressIndicator setIndeterminate:style == SKProgressIndicatorStyleIndeterminate];
 		[progressIndicator setDisplayedWhenStopped:YES];
         [progressIndicator setUsesThreadedAnimation:YES];
-		[progressIndicator sizeToFit];
+        [progressIndicator setTranslatesAutoresizingMaskIntoConstraints:NO];
 		
-		NSRect rect;
-		NSSize size = [progressIndicator frame].size;
-        if (size.width < 0.01) size.width = PROGRESSBAR_WIDTH;
-        rect = SKSliceRect(SKShrinkRect([self bounds], RIGHT_MARGIN, NSMaxXEdge), size.width, NSMaxXEdge);
-        rect.origin.y = floor(NSMidY(rect) - 0.5 * size.height) + VERTICAL_OFFSET;
-        rect.size.height = size.height;
-		[progressIndicator setFrame:rect];
-		
+        NSArray *constraints = [NSArray arrayWithObjects:
+                                [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:progressIndicator attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:RIGHT_MARGIN],
+                                [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:progressIndicator attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:VERTICAL_OFFSET], nil];
         [self addSubview:progressIndicator];
+        [NSLayoutConstraint activateConstraints:constraints];
+        
 		[progressIndicator release];
 	}
 	[[self superview] setNeedsDisplayInRect:[self frame]];
