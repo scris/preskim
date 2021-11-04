@@ -241,6 +241,12 @@ static char *SKTransitionPropertiesObservationContext;
     
     [cell release];
     
+    if ([tableView respondsToSelector:@selector(setStyle:)])
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        [tableView setStyle:NSTableViewStylePlain];
+#pragma clang diagnostic pop
+    
     NSScrollView *scrollView = [tableView enclosingScrollView];
     CGFloat width = [[[tableView tableColumns] valueForKeyPath:@"@sum.width"] doubleValue] + NSWidth([scrollView frame]) - [scrollView contentSize].width + 3.0 * [tableView intercellSpacing].width;
     [tableWidthConstraint setConstant:width];
