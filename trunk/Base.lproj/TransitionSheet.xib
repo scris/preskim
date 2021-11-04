@@ -255,7 +255,7 @@ Gw
                             <binding destination="-2" name="value" keyPath="separate" id="143"/>
                         </connections>
                     </button>
-                    <scrollView hidden="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="276">
+                    <scrollView hidden="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="276">
                         <rect key="frame" x="20" y="20" width="131" height="234"/>
                         <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Pco-4B-JYU">
                             <rect key="frame" x="1" y="1" width="129" height="232"/>
