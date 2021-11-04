@@ -527,14 +527,14 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
     if ([self isUnderlined]) {
-        NSAttributedString *attrString = [[self attributedStringValue] copy];
-        NSMutableAttributedString *mutAttrString = [attrString mutableCopy];
+        id objectValue = [[self objectValue] retain];
+        NSMutableAttributedString *mutAttrString = [[self attributedStringValue] mutableCopy];
         [mutAttrString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:NSMakeRange(0, [mutAttrString length])];
-        [self setAttributedStringValue:mutAttrString];
+        [self setObjectValue:mutAttrString];
         [mutAttrString release];
         [super drawInteriorWithFrame:cellFrame inView:controlView];
-        [self setAttributedStringValue:attrString];
-        [attrString release];
+        [self setObjectValue:objectValue];
+        [objectValue release];
     } else {
         [super drawInteriorWithFrame:cellFrame inView:controlView];
     }
