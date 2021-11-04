@@ -47,11 +47,12 @@
     BOOL drawDiscreteContinuous = ([self levelIndicatorStyle] == NSDiscreteCapacityLevelIndicatorStyle) && (NSWidth(cellFrame) + 1.0 < 3.0 * [self maxValue]);
     if (drawDiscreteContinuous)
         [self setLevelIndicatorStyle:NSContinuousCapacityLevelIndicatorStyle];
-    [NSGraphicsContext saveGraphicsState];
-    [[NSBezierPath bezierPathWithRect:cellFrame] addClip];
     CGFloat cellHeight = [self cellSize].height;
     if (fabs(NSHeight(cellFrame) - cellHeight) <= 0.0) {
+        [NSGraphicsContext saveGraphicsState];
+        [[NSBezierPath bezierPathWithRect:cellFrame] addClip];
         [super drawWithFrame:cellFrame inView:controlView];
+        [NSGraphicsContext restoreGraphicsState];
     } else if (RUNNING_BEFORE(10_13)) {
         NSRect frame = SKCenterRectVertically(cellFrame, cellHeight, 0.0, [controlView isFlipped]);
         [NSGraphicsContext saveGraphicsState];
@@ -94,7 +95,6 @@
         [super drawWithFrame:frame inView:controlView];
         [NSGraphicsContext restoreGraphicsState];
     }
-    [NSGraphicsContext restoreGraphicsState];
     if (drawDiscreteContinuous)
         [self setLevelIndicatorStyle:NSDiscreteCapacityLevelIndicatorStyle];
 }
