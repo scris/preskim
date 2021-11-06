@@ -184,6 +184,9 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
 
 #pragma mark -
 
+#define A 0.329
+#define B -0.658
+
 extern NSArray *SKColorEffectFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
     CIFilter *filter;
@@ -194,9 +197,9 @@ extern NSArray *SKColorEffectFilters(void) {
     }
     if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         // this is almost equivalent to CIColorInvert, but with white mapped to dark gray ~ controlBackgroundColor
-        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:-0.987 Y:0.0 Z:0.0], @"inputGVector", [CIVector vectorWithX:0.0 Y:-0.987 Z:0.0], @"inputBVector", [CIVector vectorWithX:0.0 Y:0.0 Z:-0.987], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
-            [filters addObject:filter];
-        if ((filter = [CIFilter filterWithName:@"CIHueAdjust" keysAndValues:kCIInputAngleKey, [NSNumber numberWithDouble:M_PI], nil]))
+        // combined with a matrix representation of CIHueAdjust with inpueAngle=M_PI
+        // CIColorInvert+CIHueAdjust would be A=1/3, B=-2/3
+        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:A Y:B Z:B], @"inputGVector", [CIVector vectorWithX:B Y:A Z:B], @"inputBVector", [CIVector vectorWithX:B Y:B Z:A], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
             [filters addObject:filter];
     }
     return filters;
