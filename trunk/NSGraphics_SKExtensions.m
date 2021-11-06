@@ -195,7 +195,6 @@ extern NSArray *SKColorEffectFilters(void) {
     if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         // this is almost equivalent to CIColorInvert, but with white mapped to dark gray ~ controlBackgroundColor
         // combined with a matrix representation of CIHueAdjust with inpueAngle=M_PI
-        // CIColorInvert+CIHueAdjust would be A=1/3, B=-2/3
         if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:0.566538 Y:-1.411410 Z:-0.142128], @"inputGVector", [CIVector vectorWithX:-0.420462 Y:-0.424410 Z:-0.142128], @"inputBVector", [CIVector vectorWithX:-0.420462 Y:-1.41141 Z:0.844872], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
             [filters addObject:filter];
     }
