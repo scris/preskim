@@ -186,13 +186,18 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
 
 extern NSArray *SKColorEffectFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
+    CIFilter *filter;
     CGFloat sepia = [[NSUserDefaults standardUserDefaults] doubleForKey:SKSepiaToneKey];
-    if (sepia > 0.0)
-        [filters addObject:[CIFilter filterWithName:@"CISepiaTone" keysAndValues:@"inputIntensity", [NSNumber numberWithDouble:fmin(sepia, 1.0)], nil]];
+    if (sepia > 0.0) {
+        if ((filter = [CIFilter filterWithName:@"CISepiaTone" keysAndValues:@"inputIntensity", [NSNumber numberWithDouble:fmin(sepia, 1.0)], nil]))
+            [filters addObject:filter];
+    }
     if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         // this is almost equivalent to CIColorInvert, but with white mapped to dark gray ~ controlBackgroundColor
-        [filters addObject:[CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:-0.987 Y:0.0 Z:0.0], @"inputGVector", [CIVector vectorWithX:0.0 Y:-0.987 Z:0.0], @"inputBVector", [CIVector vectorWithX:0.0 Y:0.0 Z:-0.987], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]];
-        [filters addObject:[CIFilter filterWithName:@"CIHueAdjust" keysAndValues:kCIInputAngleKey, [NSNumber numberWithDouble:M_PI], nil]];
+        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:-0.987 Y:0.0 Z:0.0], @"inputGVector", [CIVector vectorWithX:0.0 Y:-0.987 Z:0.0], @"inputBVector", [CIVector vectorWithX:0.0 Y:0.0 Z:-0.987], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
+            [filters addObject:filter];
+        if ((filter = [CIFilter filterWithName:@"CIHueAdjust" keysAndValues:kCIInputAngleKey, [NSNumber numberWithDouble:M_PI], nil]))
+            [filters addObject:filter];
     }
     return filters;
 }
