@@ -46,7 +46,14 @@ NSString *SKGroupedSearchResultCountKey = @"count";
 @implementation SKGroupedSearchResult
 
 @synthesize page, maxCount, matches;
-@dynamic pageIndex, count;
+@dynamic pageIndex, count, label;
+
++ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
+    NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
+    if ([key isEqualToString:@"label"])
+        keyPaths = [keyPaths setByAddingObjectsFromSet:[NSSet setWithObjects:SKGroupedSearchResultCountKey, nil]];
+    return keyPaths;
+}
 
 + (id)groupedSearchResultWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount {
     return [[[self alloc] initWithPage:aPage maxCount:aMaxCount] autorelease];
@@ -74,6 +81,10 @@ NSString *SKGroupedSearchResultCountKey = @"count";
 
 - (NSUInteger)count {
     return [matches count];
+}
+
+- (NSString *)label {
+    return [self count] == 1 ? NSLocalizedString(@"1 Result", @"") : [NSString stringWithFormat:NSLocalizedString(@"%ld Results", @""), (long)[self count]];
 }
 
 - (void)addMatch:(PDFSelection *)match {
