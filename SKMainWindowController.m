@@ -1968,7 +1968,12 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 }
 
 - (void)documentDidEndDocumentFind:(NSNotification *)note {
-    [leftSideController applySearchTableHeader:[NSString stringWithFormat:NSLocalizedString(@"%ld Results", @"Message in search table header"), (long)[searchResults count]]];
+    NSString *header = nil;
+    if ([searchResults count] == 1)
+        header = NSLocalizedString(@"1 Result", @"Message in search table header");
+    else
+        header = [NSString stringWithFormat:NSLocalizedString(@"%ld Results", @"Message in search table header"), (long)[searchResults count]];
+    [leftSideController applySearchTableHeader:header];
     mwcFlags.updatingFindResults = 1;
     [self didChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
     [self didChangeValueForKey:SEARCHRESULTS_KEY];
