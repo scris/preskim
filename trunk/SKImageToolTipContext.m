@@ -91,12 +91,12 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 
 
 @interface PDFDestination (SKImageToolTipContextExtension)
-- (NSImage *)toolTipImageWithOffset:(NSPoint)offset scale:(CGFloat)scale selections:(NSArray *)selections;
+- (NSImage *)toolTipImageWithOffset:(NSPoint)offset scale:(CGFloat)scale selections:(NSArray *)selections label:(NSString *)label;
 @end
 
 @implementation PDFDestination (SKImageToolTipContext)
 
-- (NSImage *)toolTipImageWithOffset:(NSPoint)offset scale:(CGFloat)scale selections:(NSArray *)selections {
+- (NSImage *)toolTipImageWithOffset:(NSPoint)offset scale:(CGFloat)scale selections:(NSArray *)selections label:(NSString *)label {
     static NSDictionary *labelAttributes = nil;
     static NSColor *labelColor = nil;
     if (labelAttributes == nil)
@@ -137,7 +137,9 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     NSRect targetRect = sourceRect;
     targetRect.origin = NSZeroPoint;
     
-    NSAttributedString *labelString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @"Tool tip label format"), [page displayLabel]] attributes:labelAttributes];
+    if (label == nil)
+        label = [NSString stringWithFormat:NSLocalizedString(@"Page %@", @"Tool tip label format"), [page displayLabel]];
+    NSAttributedString *labelString = [[NSAttributedString alloc] initWithString:label attributes:labelAttributes];
     NSRect labelRect = [labelString boundingRectWithSize:NSZeroSize options:NSStringDrawingUsesLineFragmentOrigin];
     
     labelRect.size.width = floor(NSWidth(labelRect));
@@ -173,7 +175,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 }
 
 - (NSImage *)toolTipImageWithScale:(CGFloat)scale {
-    NSImage *image = [self toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:nil];
+    NSImage *image = [self toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:nil label:nil];
     [[[image representations] firstObject] setOpaque:YES];
     return image;
 }
@@ -188,7 +190,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     [sel setColor:[NSColor searchHighlightColor]];
     NSArray *selections = [NSArray arrayWithObject:sel];
     [sel release];
-    return [[self destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections];
+    return [[self destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections label:nil];
 }
 
 @end
@@ -202,7 +204,8 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 #pragma clang diagnostic ignored "-Wpartial-availability"
     [selections setValue:[NSColor findHighlightColor] forKey:@"color"];
 #pragma clang diagnostic pop
-    return [[[selections firstObject] destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections];
+    NSString *label = [NSString stringWithFormat:NSLocalizedString(@"%ld Results", @""), (long)[self count]];
+    return [[[selections firstObject] destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections label:label];
 }
 
 @end
@@ -213,7 +216,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 - (NSImage *)toolTipImageWithScale:(CGFloat)scale {
 
     if ([self isLink]) {
-        NSImage *image = [[self linkDestination] toolTipImageWithOffset:NSZeroPoint scale:scale selections:nil];
+        NSImage *image = [[self linkDestination] toolTipImageWithOffset:NSZeroPoint scale:scale selections:nil label:nil];
         if (image == nil) {
             NSURL *url = [self linkURL];
             if (url) {
