@@ -473,8 +473,8 @@
                                         <rect key="frame" x="11" y="1" width="117" height="18"/>
                                         <subviews>
                                             <levelIndicator horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="zvD-nR-1Ml" customClass="SKLevelIndicator">
-                                                <rect key="frame" x="0.0" y="0.0" width="117" height="18"/>
-                                                <levelIndicatorCell key="cell" alignment="left" maxValue="1" id="FRk-Gm-SMW" customClass="SKLevelIndicatorCell"/>
+                                                <rect key="frame" x="0.0" y="2" width="117" height="16"/>
+                                                <levelIndicatorCell key="cell" alignment="left" maxValue="1" levelIndicatorStyle="relevancy" id="FRk-Gm-SMW" customClass="SKLevelIndicatorCell"/>
                                                 <connections>
                                                     <binding destination="9a8-cx-9oD" name="value" keyPath="objectValue.count" previousBinding="kWL-Vz-uBg" id="68o-25-wdJ"/>
                                                     <binding destination="9a8-cx-9oD" name="maxValue" keyPath="objectValue.maxCount" id="kWL-Vz-uBg"/>
