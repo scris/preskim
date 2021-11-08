@@ -171,13 +171,13 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     
     [labelString release];
     
+    [[[image representations] firstObject] setOpaque:YES];
+    
     return image;
 }
 
 - (NSImage *)toolTipImageWithScale:(CGFloat)scale {
-    NSImage *image = [self toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:nil label:nil];
-    [[[image representations] firstObject] setOpaque:YES];
-    return image;
+    return [self toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:nil label:nil];
 }
 
 @end
