@@ -478,6 +478,7 @@
                                                 <connections>
                                                     <binding destination="9a8-cx-9oD" name="value" keyPath="objectValue.count" previousBinding="kWL-Vz-uBg" id="68o-25-wdJ"/>
                                                     <binding destination="9a8-cx-9oD" name="maxValue" keyPath="objectValue.maxCount" id="kWL-Vz-uBg"/>
+                                                    <binding destination="9a8-cx-9oD" name="toolTip" keyPath="objectValue.label" id="bi6-PT-g2z"/>
                                                 </connections>
                                             </levelIndicator>
                                         </subviews>

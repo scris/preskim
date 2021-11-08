@@ -51,6 +51,7 @@ extern NSString *SKGroupedSearchResultCountKey;
 @property (nonatomic, readonly) NSUInteger pageIndex;
 @property (nonatomic, readonly) NSUInteger count;
 @property (nonatomic) NSUInteger maxCount;
+@property (nonatomic, readonly) NSString *label;
 @property (nonatomic, readonly) NSArray *matches;
 
 + (id)groupedSearchResultWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount;
