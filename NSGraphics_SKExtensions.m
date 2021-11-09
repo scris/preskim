@@ -184,6 +184,10 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
 
 #pragma mark -
 
+#define LR 0.3086 * 1.987
+#define LG 0.6094 * 1.987
+#define LB 0.0820 * 1.987
+
 extern NSArray *SKColorEffectFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
     CIFilter *filter;
@@ -193,9 +197,10 @@ extern NSArray *SKColorEffectFilters(void) {
             [filters addObject:filter];
     }
     if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        // this is almost equivalent to CIColorInvert, but with white mapped to dark gray ~ controlBackgroundColor
-        // combined with a matrix representation of CIHueAdjust with inpueAngle=M_PI
-        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:0.566538 Y:-1.411410 Z:-0.142128], @"inputGVector", [CIVector vectorWithX:-0.420462 Y:-0.424410 Z:-0.142128], @"inputBVector", [CIVector vectorWithX:-0.420462 Y:-1.41141 Z:0.844872], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
+        // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
+        // Inverts a linear luminocity/brightness for weights 0.3086, 0.6094, 0.0820
+        //  see https://wiki.preterhuman.net/Matrix_Operations_for_Image_Processingand https://beesbuzz.biz/code/16-hsv-color-transforms
+        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-LR Y:-LG Z:-LB], @"inputGVector", [CIVector vectorWithX:-LR Y:1.0-LG Z:-LB], @"inputBVector", [CIVector vectorWithX:-LR Y:-LG Z:1.0-LB], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
             [filters addObject:filter];
     }
     return filters;
