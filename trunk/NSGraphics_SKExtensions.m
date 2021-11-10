@@ -184,9 +184,9 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
 
 #pragma mark -
 
-#define LR 0.3086 * 1.987
-#define LG 0.6094 * 1.987
-#define LB 0.0820 * 1.987
+#define LR 0.2126 * 1.987
+#define LG 0.7152 * 1.987
+#define LB 0.0722 * 1.987
 
 extern NSArray *SKColorEffectFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
