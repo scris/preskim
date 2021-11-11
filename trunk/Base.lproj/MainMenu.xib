@@ -860,12 +860,14 @@
                             <menuItem isSeparatorItem="YES" id="292">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Go To Marked Page" keyEquivalent="{" id="925">
+                            <menuItem title="Go To Marked Page" id="925">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="goToMarkedPage:" target="-1" id="929"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Mark Page" keyEquivalent="}" id="927">
+                            <menuItem title="Mark Page" id="927">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="markPage:" target="-1" id="930"/>
                                 </connections>
