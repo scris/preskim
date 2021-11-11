@@ -198,8 +198,8 @@ extern NSArray *SKColorEffectFilters(void) {
     }
     if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
-        // Inverts a linear luminocity/brightness for weights 0.3086, 0.6094, 0.0820
-        //  see https://wiki.preterhuman.net/Matrix_Operations_for_Image_Processingand https://beesbuzz.biz/code/16-hsv-color-transforms
+        // Inverts a linear luminocity with weights from the CIE standards
+        // see https://wiki.preterhuman.net/Matrix_Operations_for_Image_Processingand https://beesbuzz.biz/code/16-hsv-color-transforms
         if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-LR Y:-LG Z:-LB], @"inputGVector", [CIVector vectorWithX:-LR Y:1.0-LG Z:-LB], @"inputBVector", [CIVector vectorWithX:-LR Y:-LG Z:1.0-LB], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
             [filters addObject:filter];
     }
