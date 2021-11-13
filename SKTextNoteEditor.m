@@ -87,6 +87,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     pdfView = nil;
     SKDESTROY(annotation);
     SKDESTROY(textView);
+    SKDESTROY(undoManager);
     [super dealloc];
 }
 
