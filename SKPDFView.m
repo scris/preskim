@@ -76,7 +76,6 @@
 #import "NSPointerArray_SKExtensions.h"
 #import "NSImage_SKExtensions.h"
 #import "NSShadow_SKExtensions.h"
-#import "SKSnapshotWindowController.h"
 #import "PDFAnnotationLine_SKExtensions.h"
 #import "NSScroller_SKExtensions.h"
 #import "SKColorMenuView.h"
