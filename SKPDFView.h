@@ -149,7 +149,6 @@ enum {
     
     struct _pdfvFlags {
         unsigned int hideNotes:1;
-        unsigned int zooming:1;
         unsigned int wantsNewUndoGroup:1;
         unsigned int cursorHidden:1;
         unsigned int useArrowCursorInPresentation:1;
