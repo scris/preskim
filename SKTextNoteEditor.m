@@ -233,6 +233,11 @@ static char SKPDFAnnotationPropertiesObservationContext;
     return NO;
 }
 
+- (void)textDidBeginEditing:(NSNotification *)notification {
+    if ([pdfView respondsToSelector:@selector(textNoteEditorDidBeginEditing:)])
+        [pdfView textNoteEditorDidBeginEditing:self];
+}
+
 - (void)textDidEndEditing:(NSNotification *)notification {
     [self endEditingWithCommit:YES];
 }

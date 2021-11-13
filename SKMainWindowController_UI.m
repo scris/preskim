@@ -260,7 +260,7 @@
         }
         if ([[pdfView document] isFinding])
             [[pdfView document] cancelFindString];
-        if ((mwcFlags.isEditingPDF || mwcFlags.isEditingTable) && [self commitEditing] == NO)
+        if ((mwcFlags.isEditingPDF || mwcFlags.isEditingTable || [pdfView isEditing]) && [self commitEditing] == NO)
             [self discardEditing];
         [rightSideController.noteOutlineView enumerateAvailableRowViewsUsingBlock:^(SKNoteTableRowView *rowView, NSInteger row){ [[rowView rowCellView] setObjectValue:nil]; }];
         [self cleanup]; // clean up everything
@@ -1329,7 +1329,7 @@
 }
 
 - (void)setDocument:(NSDocument *)document {
-    if ([self document] && document == nil && (mwcFlags.isEditingPDF || mwcFlags.isEditingTable)) {
+    if ([self document] && document == nil && (mwcFlags.isEditingPDF || mwcFlags.isEditingTable || [pdfView isEditing])) {
         if ([self commitEditing] == NO)
             [self discardEditing];
         if (mwcFlags.isEditingPDF || mwcFlags.isEditingTable)

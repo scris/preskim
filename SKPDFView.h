@@ -164,6 +164,7 @@ enum {
 @property (nonatomic) SKNoteType annotationMode;
 @property (nonatomic) SKInteractionMode interactionMode;
 @property (nonatomic, retain) PDFAnnotation *activeAnnotation;
+@property (nonatomic, readonly, getter=isEditing) BOOL editing;
 @property (nonatomic, readonly, getter=isZooming) BOOL zooming;
 @property (nonatomic) NSRect currentSelectionRect;
 @property (nonatomic, retain) PDFPage *currentSelectionPage;

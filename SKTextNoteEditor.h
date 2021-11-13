@@ -59,5 +59,6 @@
 @end
 
 @interface PDFView (SKTextNoteEditor)
+- (void)textNoteEditorDidBeginEditing:(SKTextNoteEditor *)textNoteEditor;
 - (void)textNoteEditorDidEndEditing:(SKTextNoteEditor *)textNoteEditor;
 @end

@@ -257,7 +257,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 @synthesize toolMode, annotationMode, interactionMode, activeAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, highlightAnnotation;
 @synthesize currentMagnification=magnification, zooming;
-@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, needsRewind;
+@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, needsRewind, editing;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -697,6 +697,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:wasAnnotation, SKPDFViewAnnotationKey, nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewActiveAnnotationDidChangeNotification object:self userInfo:userInfo];
     }
+}
+
+- (BOOL)isEditing {
+    return editor != nil;
 }
 
 - (void)setDisplayMode:(PDFDisplayMode)mode {
@@ -2702,7 +2706,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [editor layoutWithEvent:theEvent];
     
     [self setNeedsDisplayForAnnotation:activeAnnotation];
-    
+}
+
+- (void)textNoteEditorDidBeginEditing:(SKTextNoteEditor *)textNoteEditor {
     if ([[self delegate] respondsToSelector:@selector(PDFViewDidBeginEditing:)])
         [[self delegate] PDFViewDidBeginEditing:self];
 }
