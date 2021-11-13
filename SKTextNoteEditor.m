@@ -43,6 +43,7 @@
 #import "NSView_SKExtensions.h"
 #import "NSGraphics_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
+#import "SKTextUndoManager.h"
 #import <SkimNotes/SkimNotes.h>
 
 static char SKPDFAnnotationPropertiesObservationContext;
@@ -132,6 +133,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     [textView setVerticallyResizable:YES];
     [textView setAutoresizingMask:NSViewWidthSizable];
     [textView setUsesFontPanel:NO];
+    [textView setAllowsUndo:YES];
     [textView setDelegate:self];
     [textView setString:[annotation string] ?: @""];
     [textView setFont:[annotation font]];
@@ -234,6 +236,12 @@ static char SKPDFAnnotationPropertiesObservationContext;
     [self endEditingWithCommit:YES];
 }
 
+- (NSUndoManager *)undoManagerForTextView:(NSTextView *)view {
+    if (undoManager == nil)
+        undoManager = [[SKTextUndoManager alloc] initWithNextUndoManager:[pdfView undoManager]];
+    return undoManager;
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &SKPDFAnnotationPropertiesObservationContext) {
         if ([keyPath isEqualToString:SKNPDFAnnotationBoundsKey]) {
@@ -247,7 +255,12 @@ static char SKPDFAnnotationPropertiesObservationContext;
             [textView setAlignment:[annotation alignment]];
             [self updateParagraphStyle];
         } else if ([keyPath isEqualToString:SKNPDFAnnotationStringKey]) {
-            [textView setString:[annotation string] ?: @""];
+            NSString *string = [annotation string] ?: @"";
+            if ([string isEqualToString:[textView string] ?: @""] == NO) {
+                [textView setString:string];
+                // the local undo stack is invalid now, and doing it undo safe leads to a weird stack
+                [undoManager removeAllActions];
+            }
         } else if ([keyPath isEqualToString:SKNPDFAnnotationColorKey] || [keyPath isEqualToString:SKNPDFAnnotationBorderKey]) {
             [self setNeedsDisplay:YES];
         }
