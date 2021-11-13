@@ -324,12 +324,6 @@ static NSURL *temporaryDirectoryURL = nil;
     [pdfView setActiveAnnotation:note];
 }
 
-- (NSUndoManager *)undoManagerForTextView:(NSTextView *)aTextView {
-    if (textViewUndoManager == nil)
-        textViewUndoManager = [[NSUndoManager alloc] init];
-    return textViewUndoManager;
-}
-
 - (NSURL *)writeImageToDestination:(NSURL *)destination {
     NSImage *image = [self isNoteType] ? [(SKNPDFAnnotationNote *)note image] : nil;
     if (image) {
@@ -344,9 +338,21 @@ static NSURL *temporaryDirectoryURL = nil;
     return nil;
 }
 
-- (void)controlTextDidChange:(NSNotification *)notification {
+#pragma mark NSTextViewDelegate and NSTextDelegate protocol
+
+- (NSUndoManager *)undoManagerForTextView:(NSTextView *)aTextView {
+    if (textViewUndoManager == nil)
+        textViewUndoManager = [[NSUndoManager alloc] init];
+    return textViewUndoManager;
+}
+
+- (void)textDidChange:(NSNotification *)notification {
     if (RUNNING_AFTER(10_13))
         [[textView textStorage] addTextColorAttribute];
+}
+
+- (void)textDidEndEditing:(NSNotification *)notification {
+    [textViewUndoManager removeAllActions];
 }
 
 #pragma mark NSEditorRegistration and NSEditor protocol
