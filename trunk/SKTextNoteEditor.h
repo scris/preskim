@@ -44,6 +44,7 @@
     NSTextView *textView;
     PDFView *pdfView;
     PDFAnnotationFreeText *annotation;
+    NSUndoManager *undoManager;
 }
 
 - (id)initWithPDFView:(PDFView *)aPDFView annotation:(PDFAnnotationFreeText *)anAnnotation;
