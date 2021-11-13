@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -27,7 +26,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="212" y="304" width="340" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="775"/>
             <value key="minSize" type="size" width="160" height="160"/>
             <view key="contentView" id="8">
                 <rect key="frame" x="0.0" y="0.0" width="340" height="270"/>
@@ -68,7 +67,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="340" height="22"/>
                         <subviews>
                             <button imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="96">
-                                <rect key="frame" x="241" y="2" width="86" height="18"/>
+                                <rect key="frame" x="240" y="3" width="85" height="16"/>
                                 <buttonCell key="cell" type="check" title="Keep on top" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="238">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="message" size="11"/>
@@ -90,10 +89,7 @@
                         <rect key="frame" x="0.0" y="186" width="340" height="84"/>
                         <subviews>
                             <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="106">
-                                <rect key="frame" x="8" y="28" width="35" height="16"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="31" id="iRF-SO-0ke"/>
-                                </constraints>
+                                <rect key="frame" x="8" y="29" width="34" height="16"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Icon:" id="242">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -101,10 +97,10 @@
                                 </textFieldCell>
                             </textField>
                             <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="101">
-                                <rect key="frame" x="47" y="22" width="214" height="25"/>
+                                <rect key="frame" x="45" y="22" width="217" height="25"/>
                                 <popUpButtonCell key="cell" type="push" title="Comment" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="104" id="241">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
+                                    <font key="font" metaFont="menu"/>
                                     <menu key="menu" id="102">
                                         <items>
                                             <menuItem title="Comment" state="on" id="104"/>
