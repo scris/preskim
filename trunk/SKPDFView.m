@@ -293,7 +293,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     spellingTag = [NSSpellChecker uniqueSpellDocumentTag];
     
     pdfvFlags.hideNotes = 0;
-    pdfvFlags.zooming = 0;
     pdfvFlags.wantsNewUndoGroup = 0;
     pdfvFlags.cursorHidden = 0;
     pdfvFlags.useArrowCursorInPresentation = [[NSUserDefaults standardUserDefaults] boolForKey:SKUseArrowCursorInPresentationKey];
