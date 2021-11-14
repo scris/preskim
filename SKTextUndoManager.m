@@ -55,11 +55,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 - (NSString *)redoMenuItemTitle {
-    return [super canRedo] ? [super redoMenuItemTitle] : [nextUndoManager redoMenuItemTitle];
+    return [super canRedo] || nextUndoManager == nil ? [super redoMenuItemTitle] : [nextUndoManager redoMenuItemTitle];
 }
 
 - (NSString *)undoMenuItemTitle {
-    return [super canUndo] ? [super undoMenuItemTitle] : [nextUndoManager undoMenuItemTitle];
+    return [super canUndo] || nextUndoManager == nil ? [super undoMenuItemTitle] : [nextUndoManager undoMenuItemTitle];
 }
 
 - (BOOL)canRedo {
