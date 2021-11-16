@@ -118,7 +118,6 @@ NSString *SKReadMissingNotesFromSkimFileOptionKey = @"SKReadMissingNotesFromSkim
 NSString *SKReadNonMissingNotesFromSkimFileOptionKey = @"SKReadNonMissingNotesFromSkimFileOption";
 NSString *SKSavePasswordOptionKey = @"SKSavePasswordOption";
 NSString *SKBlankAllScreensInFullScreenKey = @"SKBlankAllScreensInFullScreen";
-NSString *SKFullScreenNavigationOptionKey = @"SKFullScreenNavigationOption";
 NSString *SKPresentationNavigationOptionKey = @"SKPresentationNavigationOption";
 NSString *SKAutoHidePresentationContentsKey = @"SKAutoHidePresentationContents";
 NSString *SKUseNormalLevelForPresentationKey = @"SKUseNormalLevelForPresentation";

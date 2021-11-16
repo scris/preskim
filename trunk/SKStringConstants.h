@@ -117,7 +117,6 @@ extern NSString *SKReadMissingNotesFromSkimFileOptionKey;
 extern NSString *SKReadNonMissingNotesFromSkimFileOptionKey;
 extern NSString *SKSavePasswordOptionKey;
 extern NSString *SKBlankAllScreensInFullScreenKey;
-extern NSString *SKFullScreenNavigationOptionKey;
 extern NSString *SKPresentationNavigationOptionKey;
 extern NSString *SKAutoHidePresentationContentsKey;
 extern NSString *SKUseNormalLevelForPresentationKey;
