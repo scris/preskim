@@ -38,6 +38,7 @@
 
 #import "SKLevelIndicatorCell.h"
 #import "NSGeometry_SKExtensions.h"
+#import "NSGraphics_SKExtensions.h"
 
 #define EDGE_HEIGHT 4.0
 
@@ -97,6 +98,16 @@
     }
     if (drawDiscreteContinuous)
         [self setLevelIndicatorStyle:NSDiscreteCapacityLevelIndicatorStyle];
+}
+
+- (void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle {
+    if ([self levelIndicatorStyle] == NSLevelIndicatorStyleRelevancy && [[self controlView] isKindOfClass:[NSLevelIndicator class]]) {
+        if (backgroundStyle == NSBackgroundStyleDark)
+            SKSetHasDarkAppearance([self controlView]);
+        else
+            SKSetHasDefaultAppearance([self controlView]);
+    }
+    [super setBackgroundStyle:backgroundStyle];
 }
 
 @end
