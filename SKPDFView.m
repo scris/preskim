@@ -3200,7 +3200,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 #pragma mark FullScreen navigation and autohide
 
 - (void)enableNavigation {
-    navigationMode = [[NSUserDefaults standardUserDefaults] integerForKey:interactionMode == SKPresentationMode ? SKPresentationNavigationOptionKey : SKFullScreenNavigationOptionKey];
+    navigationMode = [[NSUserDefaults standardUserDefaults] integerForKey:SKPresentationNavigationOptionKey];
     
     if (navigationMode != SKNavigationNone)
         navWindow = [[SKNavigationWindow alloc] initWithPDFView:self];
