@@ -1701,7 +1701,7 @@ static NSArray *allMainDocumentPDFViews() {
     } else if (action == @selector(cropAll:) || action == @selector(crop:) || action == @selector(autoCropAll:) || action == @selector(smartAutoCropAll:)) {
         return [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(resetCrop:)) {
-        return mwcFlags.hasCropped == 1 && [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO;
+        return mwcFlags.hasCropped && [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(autoSelectContent:)) {
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && [pdfView toolMode] == SKSelectToolMode;
     } else if (action == @selector(takeSnapshot:)) {
