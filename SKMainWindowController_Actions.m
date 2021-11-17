@@ -717,6 +717,8 @@ static NSArray *allMainDocumentPDFViews() {
     
     if (hasChanges)
         [self cropPagesToRects:rectArray];
+    
+    mwcFlags.hasCropped = 0;
 }
 
 - (IBAction)autoSelectContent:(id)sender {

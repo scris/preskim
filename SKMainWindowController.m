@@ -2100,8 +2100,8 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 - (void)handlePageBoundsDidChangeNotification:(NSNotification *)notification {
     NSDictionary *info = [notification userInfo];
     PDFPage *page = [info objectForKey:SKPDFPagePageKey];
-    NSString *action = [info objectForKey:SKPDFPageActionKey];
-    BOOL displayChanged = [action isEqualToString:SKPDFPageActionCrop] == NO || [pdfView displayBox] == kPDFDisplayBoxCropBox;
+    BOOL isCrop = [[info objectForKey:SKPDFPageActionKey] isEqualToString:SKPDFPageActionCrop];
+    BOOL displayChanged = isCrop == NO || [pdfView displayBox] == kPDFDisplayBoxCropBox;
         
     if (displayChanged)
         [pdfView layoutDocumentView];
@@ -2127,7 +2127,8 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayPageBoundsKey])
         [self updateRightStatus];
     
-    mwcFlags.hasCropped = 1;
+    if (isCrop)
+        mwcFlags.hasCropped = 1;
 }
 
 - (void)handleDocumentBeginWrite:(NSNotification *)notification {
