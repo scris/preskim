@@ -710,9 +710,6 @@ static NSArray *allMainDocumentPDFViews() {
         if (hasChanges == NO && NSEqualRects(rect, [page boundsForBox:kPDFDisplayBoxCropBox]) == NO)
             hasChanges = YES;
         [rectArray addPointer:&rect];
-        //[self incrementProgressSheet];
-        if (i && i % 10 == 0)
-            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
     }
     
     if (hasChanges)
