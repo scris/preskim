@@ -1128,16 +1128,16 @@
                                     <action selector="smartAutoCropAll:" target="-1" id="787"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Reset Crop" alternate="YES" keyEquivalent="K" id="3CO-Cw-8Fj">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="resetCrop:" target="-1" id="Tk5-g7-0Xj"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="Crop Page" keyEquivalent="k" id="764">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="crop:" target="-1" id="769"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Reset Crop" keyEquivalent="K" id="3CO-Cw-8Fj">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="resetCrop:" target="-1" id="Tk5-g7-0Xj"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="774">
