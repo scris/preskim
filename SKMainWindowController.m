@@ -590,6 +590,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             if ([box isEqualToString:@""] == NO)
                 [[pdfDoc pageAtIndex:i] setBounds:NSRectFromString(box) forBox:kPDFDisplayBoxCropBox];
         }
+        mwcFlags.hasCropped = 1;
     }
 }
 
@@ -2125,6 +2126,8 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayPageBoundsKey])
         [self updateRightStatus];
+    
+    mwcFlags.hasCropped = 1;
 }
 
 - (void)handleDocumentBeginWrite:(NSNotification *)notification {

@@ -193,6 +193,7 @@ enum {
         unsigned int isSwitchingFullScreen:1;
         unsigned int wantsPresentation:1;
         unsigned int recentInfoNeedsUpdate:1;
+        unsigned int hasCropped:1;
     } mwcFlags;
 }
 
