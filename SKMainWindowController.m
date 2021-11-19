@@ -514,8 +514,10 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     }
     
     // We can fit only after the PDF has been loaded
-    if (windowSizeOption == SKWindowOptionFit && hasWindowSetup == NO)
+    if (windowSizeOption == SKWindowOptionFit && hasWindowSetup == NO) {
+        [[pdfSplitView superview] layoutSubtreeIfNeeded];
         [self performFit:self];
+    }
     
     // Open snapshots?
     NSArray *snapshotSetups = nil;
