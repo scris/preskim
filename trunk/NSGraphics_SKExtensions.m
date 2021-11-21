@@ -184,9 +184,9 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
 
 #pragma mark -
 
-#define LR 0.2126 * 1.987
-#define LG 0.7152 * 1.987
-#define LB 0.0722 * 1.987
+#define LR 0.2126 * 1.9337
+#define LG 0.7152 * 1.9337
+#define LB 0.0722 * 1.9337
 
 extern NSArray *SKColorEffectFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
@@ -200,7 +200,11 @@ extern NSArray *SKColorEffectFilters(void) {
         // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
         // Inverts a linear luminocity with weights from the CIE standards
         // see https://wiki.preterhuman.net/Matrix_Operations_for_Image_Processingand https://beesbuzz.biz/code/16-hsv-color-transforms
+        if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", [NSNumber numberWithDouble:0.625], nil]))
+            [filters addObject:filter];
         if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-LR Y:-LG Z:-LB], @"inputGVector", [CIVector vectorWithX:-LR Y:1.0-LG Z:-LB], @"inputBVector", [CIVector vectorWithX:-LR Y:-LG Z:1.0-LB], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
+            [filters addObject:filter];
+        if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", [NSNumber numberWithDouble:1.6], nil]))
             [filters addObject:filter];
     }
     return filters;
