@@ -79,6 +79,7 @@
 #import "PDFAnnotationLine_SKExtensions.h"
 #import "NSScroller_SKExtensions.h"
 #import "SKColorMenuView.h"
+#import "SKMainWindowController_Actions.h"
 
 #define ANNOTATION_MODE_COUNT 9
 #define TOOL_MODE_COUNT 5
