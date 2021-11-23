@@ -116,7 +116,7 @@ inline static NSString *romanNumeralForDigit(NSUInteger digit, NSString *i, NSSt
     if ([descriptor descriptorType] != typeObjectSpecifier || [[descriptor descriptorForKeyword:keyAEDesiredClass] typeCodeValue]!= 'Line')
         return nil;
     NSInteger i = [[descriptor descriptorForKeyword:keyAEKeyData] int32Value];
-    return [NSNumber numberWithInt:MAX(0, i - 1)];
+    return [NSNumber numberWithInteger:MAX(0, i - 1)];
 }
 
 - (NSAppleEventDescriptor *)scriptingTexLineDescriptor {
