@@ -9,7 +9,7 @@
 
 #
 # SYNOPSIS
-#   build_skim.sh [-i identity] [-u username] [-p password] [-o out] [-a zip|dmg|]
+#   build_skim.sh [-i identity] [-u username] [-p password] [-o out] [-a zip|dmg|] [-t]
 #
 # OPTIONS
 #   -i --identity
@@ -22,6 +22,8 @@
 #      Output directory for the final archive and appcast, defaults to the user's Desktop
 #   -a, --archive
 #      The type of archive the app bundle is wrapped in, the prepared disk image when empty
+#   -t, --test
+#      Prepare a test version, don't create appcast and release notes
 #
 
 #
@@ -502,9 +504,10 @@ def get_options():
     password = "@keychain:AC_PASSWORD"
     out = os.path.join(os.getenv("HOME"), "Desktop")
     archive = ""
+    test = False
     
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "i:u:p:o:a:", ["identity=", "username=", "password=", "out=", "archive="])
+        opts, args = getopt.getopt(sys.argv[1:], "i:u:p:o:a:t", ["identity=", "username=", "password=", "out=", "archive=", "test"])
     except:
         sys.stderr.write("error reading options\n")
     
@@ -519,12 +522,14 @@ def get_options():
             out = arg
         elif opt in ["-a", "--archive"]:
             archive = arg
+        elif opt in ["-t", "--test"]:
+            test = True
     
-    return identity, username, password, out, archive
+    return identity, username, password, out, archive, test
 
 if __name__ == '__main__':
     
-    identity, username, password, out, archive = get_options()
+    identity, username, password, out, archive, test = get_options()
     
     clean_and_build()
     
@@ -571,7 +576,8 @@ if __name__ == '__main__':
     except Exception as e:
         assert os.path.isdir(out), "%s does not exist" % (out)
     
-    write_appcast_and_release_notes(new_version, new_version_string, minimum_system_version, archive_path, out)
+    if not test:
+        write_appcast_and_release_notes(new_version, new_version_string, minimum_system_version, archive_path, out)
     
     target_path = os.path.join(out, os.path.basename(archive_path))
     if (os.path.exists(target_path)):
