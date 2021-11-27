@@ -40,10 +40,10 @@ shopt -s extglob
 /usr/bin/osascript << EOF
   set theLine to $line as integer
   set theFile to POSIX file "$file"
-  set thePath to POSIX path of (theFile as alias)
   tell application "Skim"
     if $revert then
       try
+        set thePath to POSIX path of (theFile as alias)
         set theDocs to get documents whose path is thePath
         if (count of theDocs) > 0 then revert theDocs
       end try
