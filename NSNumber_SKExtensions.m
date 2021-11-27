@@ -112,6 +112,23 @@ inline static NSString *romanNumeralForDigit(NSUInteger digit, NSString *i, NSSt
     return string;
 }
 
++ (NSNumber *)scriptingTexLineWithDescriptor:(NSAppleEventDescriptor *)descriptor {
+    if ([descriptor descriptorType] != typeObjectSpecifier || [[descriptor descriptorForKeyword:keyAEDesiredClass] typeCodeValue]!= 'Line')
+        return nil;
+    NSInteger i = [[descriptor descriptorForKeyword:keyAEKeyData] int32Value];
+    return [NSNumber numberWithInteger:MAX(0, i - 1)];
+}
+
+- (NSAppleEventDescriptor *)scriptingTexLineDescriptor {
+    NSScriptClassDescription *containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
+    return [[[[NSIndexSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"texLines" index:[self integerValue]] autorelease] descriptor];
+    AEDesc desc;
+    if (noErr == CreateObjSpecifier('Line', (AEDesc *)[[NSAppleEventDescriptor nullDescriptor] aeDesc], formAbsolutePosition, (AEDesc *)[[NSAppleEventDescriptor descriptorWithInt32:[self intValue] + 1] aeDesc], YES, &desc)) {
+        return [[[NSAppleEventDescriptor alloc] initWithAEDescNoCopy:&desc] autorelease];
+    }
+    return nil;
+}
+
 @end
 
 @implementation NSObject (SKExtensions)
