@@ -856,6 +856,10 @@
                 description="The downloads.">
                 <cocoa key="downloads" insert-at-beginning="no"/>
             </element>
+            <element type="TeX line" access="r" hidden="yes"
+                description="TeX lines.">
+                <cocoa key="texLines"/>
+            </element>
             <element type="rich text format" access="r" hidden="yes"
                 description="Rich text formats.">
                 <cocoa key="richTextFormat"/>
