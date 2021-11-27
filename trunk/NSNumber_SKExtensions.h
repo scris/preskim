@@ -48,7 +48,11 @@
 - (NSString *)alphaCounterValue;
 - (NSString *)greekCounterValue;
 
-+ (NSNumber *)scriptingTexLineWithDescriptor:(NSAppleEventDescriptor *)descriptor;
-- (NSAppleEventDescriptor *)scriptingTexLineDescriptor;
+@end
+
+@interface NSObject (SKExtensions)
+
+- (NSUInteger)countOfTexLines;
+- (id)objectInTexLinesAtIndex:(NSUInteger)idx;
 
 @end

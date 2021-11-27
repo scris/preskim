@@ -836,6 +836,15 @@
             </direct-parameter>
         </command>
 
+        <class-extension extends="item" hidden="yes"
+            description="A scriptable object.">
+            <cocoa class="NSObject"/>
+            <element type="TeX line" access="r"
+                description="TeX lines.">
+                <cocoa key="texLines"/>
+            </element>
+        </class-extension>
+
         <class-extension extends="application"
             description="Skim's top level scripting object.">
             <cocoa class="SKApplication"/>
@@ -1326,6 +1335,11 @@
             <type type="point" list="yes"/>
         </class>
 
+        <class name="TeX line" plural="TeX lines" code="Line">
+            <cocoa class="NSNumber"/>
+            <type type="integer"/>
+        </class>
+
         <record-type name="PDF view settings" code="VSet">
             <property name="scale factor" code="SclF" type="real"
                 description="The scale factor of the PDF.">
@@ -1611,10 +1625,6 @@
 
         <value-type name="TIFF picture" code="TIFF">
             <cocoa class="NSData"/>
-        </value-type>
-
-        <value-type name="TeX line" code="Line">
-            <cocoa class="NSNumber"/>
         </value-type>
 
         <enumeration name="standard color" code="ClrE" inline="0">
