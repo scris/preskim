@@ -134,7 +134,7 @@ inline static NSString *romanNumeralForDigit(NSUInteger digit, NSString *i, NSSt
 @implementation NSObject (SKExtensions)
 
 - (NSUInteger)countOfTexLines {
-    return NSNotFound;
+    return INT_MAX;
 }
 
 - (id)objectInTexLinesAtIndex:(NSUInteger)idx {
