@@ -1339,7 +1339,8 @@
             <type type="point" list="yes"/>
         </class>
 
-        <class name="TeX line" plural="TeX lines" code="Line">
+        <class name="TeX line" plural="TeX lines" code="Line"
+            description="A line in a TeX source file.">
             <cocoa class="NSNumber"/>
             <type type="integer"/>
         </class>
