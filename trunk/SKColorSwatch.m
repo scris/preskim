@@ -301,8 +301,10 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (void)drawFocusRingMask {
     NSRect rect = [self focusRingMaskBounds];
-    if (NSIsEmptyRect(rect) == NO)
-        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0] fill];
+    if (NSIsEmptyRect(rect) == NO) {
+        CGFloat r = RUNNING_AFTER(10_15) ? 4.0 : 2.0;
+        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:r yRadius:r] fill];
+    }
 }
 
 #pragma mark Notification handling
@@ -374,12 +376,13 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
                     draggedIndex = i;
                     
                     NSColor *color = [colors objectAtIndex:i];
+                    CGFloat r = RUNNING_AFTER(10_15) ? 3.5 : 1.5;
                     
                     NSImage *image = [NSImage bitmapImageWithSize:NSMakeSize(12.0, 12.0) scale:[self backingScale] drawingHandler:^(NSRect rect){
                         [color drawSwatchInRect:NSInsetRect(rect, 1.0, 1.0)];
                         [[NSColor blackColor] set];
                         [NSBezierPath setDefaultLineWidth:1.0];
-                        [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:1.5 yRadius:1.5] stroke];
+                        [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:r yRadius:r] stroke];
                     }];
                     
                     NSRect rect = SKRectFromCenterAndSquareSize([theEvent locationInView:self], 12.0);
@@ -929,8 +932,9 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     if (NSWidth(rect) < 5.0)
         return;
     rect = NSInsetRect(rect, 2.0, 2.0);
+    CGFloat r = RUNNING_AFTER(10_15) ? 4.0 : 2.0;
     BOOL disabled = RUNNING_AFTER(10_13) && [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO && ([self isDescendantOf:[[self window] contentView]] == NO || [[self window] isKindOfClass:NSClassFromString(@"NSToolbarSnapshotWindow")]);
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:1.5 yRadius:1.5];
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:r - 0.5 yRadius:r - 0.5];
 
     if (NSWidth(rect) > 2.0) {
         [NSGraphicsContext saveGraphicsState];
@@ -941,7 +945,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
             CGContextSetAlpha([[NSGraphicsContext currentContext] CGContext], 0.5);
         }
         
-        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0] addClip];
+        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:r yRadius:r] addClip];
         [aColor drawSwatchInRect:rect];
         
         if (SKHasDarkAppearance(self)) {
@@ -960,7 +964,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     
     if (highlighted || selected) {
         if (selected) {
-            path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0];
+            path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:r yRadius:r];
             [path setLineWidth:2.0];
         }
         [[NSColor systemGrayColor] setStroke];
@@ -971,7 +975,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         NSColor *dropColor = disabled ? [NSColor secondarySelectedControlColor] : [NSColor alternateSelectedControlColor];
         [dropColor setStroke];
         if (dropLocation == SKColorSwatchDropOn) {
-            path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:2.0 yRadius:2.0];
+            path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:r yRadius:r];
         } else if (dropLocation == SKColorSwatchDropBefore) {
             path = [NSBezierPath bezierPath];
             [path moveToPoint:NSMakePoint(NSMinX(rect) - 0.5, NSMinY(rect) - 1.0)];
@@ -984,7 +988,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         [path setLineWidth:3.0];
         if ((dropLocation == SKColorSwatchDropBefore && NSMinX([[self superview] bounds]) + 2.0 >= NSMinX([self frame])) ||
             (dropLocation == SKColorSwatchDropAfter && NSMaxX([[self superview] bounds]) - 2.0 <= NSMaxX([self frame])))
-            [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, -2.0, -2.0) xRadius:4.0 yRadius:4.0] addClip];
+            [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, -2.0, -2.0) xRadius:r + 2.0 yRadius:r + 2.0] addClip];
         [path stroke];
     }
     
