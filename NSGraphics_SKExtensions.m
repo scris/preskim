@@ -155,8 +155,8 @@ void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat lineWidth, B
     SKFillStrokeResizeHandle(context, NSMakePoint(NSMaxX(rect), NSMinY(rect)), lineWidth);
     if (connected) {
         if (NSWidth(rect) > 14.0 * lineWidth) {
-            CGFloat minY = NSMinY(rect) + 0.5 * lineWidth;
-            CGFloat maxY = NSMaxY(rect) - 0.5 * lineWidth;
+            CGFloat minY = NSMinY(rect) - 0.5 * lineWidth;
+            CGFloat maxY = NSMaxY(rect) + 0.5 * lineWidth;
             CGPoint points[8] = {
                 {NSMinX(rect) + 3.5 * lineWidth, maxY},
                 {NSMidX(rect) - 3.5 * lineWidth, maxY},
@@ -169,8 +169,8 @@ void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat lineWidth, B
             CGContextStrokeLineSegments(context, points, 8);
         }
         if (NSHeight(rect) > 14.0 * lineWidth) {
-            CGFloat minX = NSMinX(rect) + 0.5 * lineWidth;
-            CGFloat maxX = NSMaxX(rect) - 0.5 * lineWidth;
+            CGFloat minX = NSMinX(rect) - 0.5 * lineWidth;
+            CGFloat maxX = NSMaxX(rect) + 0.5 * lineWidth;
             CGPoint points[8] = {
                 {minX, NSMinY(rect) + 3.5 * lineWidth},
                 {minX, NSMidY(rect) - 3.5 * lineWidth},
@@ -212,7 +212,7 @@ extern NSArray *SKColorEffectFilters(void) {
             [filters addObject:filter];
     }
     if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        // this maps the white page background to 45/255, or 30/255 with high contrast
+        // map the white page background to 45/255, or 30/255 with high contrast
         CGFloat f = SKHasHighContrastDarkAppearance(NSApp) ? 1.9337 : 1.8972;
         // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
         // Inverts a linear luminocity with weights from the CIE standards
