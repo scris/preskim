@@ -69,6 +69,21 @@ BOOL SKHasDarkAppearance(id object) {
     return NO;
 }
 
+BOOL SKHasHighContrastDarkAppearance(id object) {
+    if (RUNNING_AFTER(10_13)) {
+        id appearance = nil;
+        if (object == nil)
+            appearance = [NSAppearance currentAppearance];
+        else if ([object respondsToSelector:@selector(effectiveAppearance)])
+            appearance = [(id<NSAppearanceCustomization>)object effectiveAppearance];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        return [[appearance bestMatchFromAppearancesWithNames:[NSArray arrayWithObjects:@"NSAppearanceNameDarkAqua", @"NSAppearanceNameAccessibilityDarkAqua", nil]] isEqualToString:@"NSAppearanceNameAccessibilityDarkAqua"];
+#pragma clang diagnostic pop
+    }
+    return NO;
+}
+
 void SKSetHasDarkAppearance(id object) {
     if (RUNNING_AFTER(10_13) && [object respondsToSelector:@selector(setAppearance:)])
         [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:@"NSAppearanceNameDarkAqua"]];
@@ -184,9 +199,9 @@ void SKDrawTextFieldBezel(NSRect rect, NSView *controlView) {
 
 #pragma mark -
 
-#define LR 0.2126 * 1.9337
-#define LG 0.7152 * 1.9337
-#define LB 0.0722 * 1.9337
+#define LR 0.2126
+#define LG 0.7152
+#define LB 0.0722
 
 extern NSArray *SKColorEffectFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
@@ -197,12 +212,14 @@ extern NSArray *SKColorEffectFilters(void) {
             [filters addObject:filter];
     }
     if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        // this maps the white page background to 45/255, or 30/255 with high contrast
+        CGFloat f = SKHasHighContrastDarkAppearance(NSApp) ? 1.9337 : 1.8972;
         // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
         // Inverts a linear luminocity with weights from the CIE standards
         // see https://wiki.preterhuman.net/Matrix_Operations_for_Image_Processingand https://beesbuzz.biz/code/16-hsv-color-transforms
         if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", [NSNumber numberWithDouble:0.625], nil]))
             [filters addObject:filter];
-        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-LR Y:-LG Z:-LB], @"inputGVector", [CIVector vectorWithX:-LR Y:1.0-LG Z:-LB], @"inputBVector", [CIVector vectorWithX:-LR Y:-LG Z:1.0-LB], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
+        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-LR*f Y:-LG*f Z:-LB*f], @"inputGVector", [CIVector vectorWithX:-LR*f Y:1.0-LG*f Z:-LB*f], @"inputBVector", [CIVector vectorWithX:-LR*f Y:-LG*f Z:1.0-LB*f], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
             [filters addObject:filter];
         if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", [NSNumber numberWithDouble:1.6], nil]))
             [filters addObject:filter];
