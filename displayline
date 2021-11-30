@@ -30,11 +30,11 @@ done
 line=$1
 file="$2"
 shopt -s extglob
-[[ $# -gt 2 ]] && source="$3" || source=""
+[[ $# -gt 2 ]] && src="$3" || src=""
 
 # expand relative paths
 [[ "${file:0:1}" == "/" ]] || file="${PWD}/${file}"
-[[ "${source}" == "" || "${source:0:1}" == "/" ]] || source="${PWD}/${source}"
+[[ "${src}" == "" || "${src:0:1}" == "/" ]] || src="${PWD}/${src}"
 
 # run AppleScript
 /usr/bin/osascript << EOF
@@ -49,10 +49,10 @@ shopt -s extglob
       end try
     end if
     open theFile
-    if "$source" is "" then
+    if "$src" is "" then
       tell front document to go to TeX line theLine showing reading bar $bar
     else
-      set theSource to POSIX file "$source"
+      set theSource to POSIX file "$src"
       tell front document to go to TeX line theLine from theSource showing reading bar $bar
     end if
   if $activate then activate
