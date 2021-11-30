@@ -15,19 +15,19 @@ Options:
 fi
 
 # get arguments
-revert=false
-bar=false
-activate=true
+revert="false"
+showing_bar=""
+activate="activate"
 zerobased=
 while [[ "${1:0:1}" == "-" ]]; do
   if [[ "$1" == "-r" || "$1" == "-revert" ]]; then
-    revert=true
+    revert="true"
   elif [[ "$1" == "-b" || "$1" == "-readingbar" ]]; then
-    bar=true
+    showing_bar="with showing reading bar"
   elif [[ "$1" == "-g" || "$1" == "-background" ]]; then
-    activate=false
+    activate=""
   elif [[ "$1" == "-z" || "$1" == "-zerobased" ]]; then
-    zerobased=1
+    zerobased="1"
   fi
   shift
 done
@@ -40,11 +40,12 @@ shopt -s extglob
 [[ "${file:0:1}" == "/" ]] || file="${PWD}/${file}"
 [[ "${src}" == "" || "${src:0:1}" == "/" ]] || src="${PWD}/${src}"
 
-[[ -z $zerobased ]] || (( line+=1 ))
+[[ "${src}" == "" ]] && from_source="" || from_source="from POSIX file \"$src\""
+
+[[ -z ${zerobased} ]] || (( line+=1 ))
 
 # run AppleScript
 /usr/bin/osascript << EOF
-  set theLine to $line as integer
   set theFile to POSIX file "$file"
   tell application "Skim"
     if $revert then
@@ -55,12 +56,7 @@ shopt -s extglob
       end try
     end if
     open theFile
-    if "$src" is "" then
-      tell front document to go to TeX line theLine showing reading bar $bar
-    else
-      set theSource to POSIX file "$src"
-      tell front document to go to TeX line theLine from theSource showing reading bar $bar
-    end if
-  if $activate then activate
+    tell front document to go to TeX line $line $from_source $showing_bar
+    $activate
   end tell
 EOF
