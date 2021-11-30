@@ -2,14 +2,15 @@
 
 # displayline (Skim)
 #
-# Usage: displayline [-r] [-b] [-g] LINE PDFFILE [TEXSOURCEFILE]
+# Usage: displayline [-r] [-b] [-g] [-z] LINE PDFFILE [TEXSOURCEFILE]
 
 if [[ $# -eq 0 || "$1" == "-h" || "$1" == "-help" ]]; then
-  echo "Usage: displayline [-r] [-b] [-g] LINE PDFFILE [TEXSOURCEFILE]
+  echo "Usage: displayline [-r] [-b] [-g] [-z] LINE PDFFILE [TEXSOURCEFILE]
 Options:
 -r, -revert      Revert the file from disk if it was open
 -b, -readingbar  Indicate the line using the reading bar
--g, -background  Do not bring Skim to the foreground"
+-g, -background  Do not bring Skim to the foreground
+-z, -zerobased   LINE is zero-based rather than one-based"
   exit 0
 fi
 
@@ -17,6 +18,7 @@ fi
 revert=false
 bar=false
 activate=true
+zerobased=
 while [[ "${1:0:1}" == "-" ]]; do
   if [[ "$1" == "-r" || "$1" == "-revert" ]]; then
     revert=true
@@ -24,6 +26,8 @@ while [[ "${1:0:1}" == "-" ]]; do
     bar=true
   elif [[ "$1" == "-g" || "$1" == "-background" ]]; then
     activate=false
+  elif [[ "$1" == "-z" || "$1" == "-zerobased" ]]; then
+    zerobased=1
   fi
   shift
 done
@@ -35,6 +39,8 @@ shopt -s extglob
 # expand relative paths
 [[ "${file:0:1}" == "/" ]] || file="${PWD}/${file}"
 [[ "${src}" == "" || "${src:0:1}" == "/" ]] || src="${PWD}/${src}"
+
+[[ -z $zerobased ]] || (( line+=1 ))
 
 # run AppleScript
 /usr/bin/osascript << EOF
