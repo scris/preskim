@@ -255,6 +255,13 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 
 - (id)scriptingRgbaColorDescriptor;
 {
+    if ([self isEqual:[NSColor underPageBackgroundColor]])
+        return [NSAppleEventDescriptor descriptorWithEnumCode:SKScriptingColorUnderPageBackground];
+    else if ([self isEqual:[NSColor windowBackgroundColor]])
+        return [NSAppleEventDescriptor descriptorWithEnumCode:SKScriptingColorWindowBackground];
+    else if ([self isEqual:[NSColor controlBackgroundColor]])
+        return [NSAppleEventDescriptor descriptorWithEnumCode:SKScriptingColorControlBackground];
+    
     CGFloat red, green, blue, alpha;
     [[self colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getRed:&red green:&green blue:&blue alpha:&alpha];
     
