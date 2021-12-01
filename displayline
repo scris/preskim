@@ -15,19 +15,24 @@ Options:
 fi
 
 # get arguments
-revert="false"
+revert=""
 showing_bar=""
 activate="activate"
 zerobased=
+from_source=""
 while [[ "${1:0:1}" == "-" ]]; do
   if [[ "$1" == "-r" || "$1" == "-revert" ]]; then
-    revert="true"
+    revert="    try
+      set thePath to POSIX path of (theFile as alias)
+      set theDocs to get documents whose path is thePath
+      if (count of theDocs) > 0 then revert theDocs
+    end try"
   elif [[ "$1" == "-b" || "$1" == "-readingbar" ]]; then
     showing_bar="with showing reading bar"
   elif [[ "$1" == "-g" || "$1" == "-background" ]]; then
     activate=""
   elif [[ "$1" == "-z" || "$1" == "-zerobased" ]]; then
-    zerobased="1"
+    zerobased=1
   fi
   shift
 done
@@ -40,7 +45,7 @@ shopt -s extglob
 [[ "${file:0:1}" == "/" ]] || file="${PWD}/${file}"
 [[ "${src}" == "" || "${src:0:1}" == "/" ]] || src="${PWD}/${src}"
 
-[[ "${src}" == "" ]] && from_source="" || from_source="from POSIX file \"$src\""
+[[ "${src}" == "" ]] || from_source="from POSIX file \"$src\""
 
 [[ -z ${zerobased} ]] || (( line+=1 ))
 
@@ -48,15 +53,9 @@ shopt -s extglob
 /usr/bin/osascript << EOF
   set theFile to POSIX file "$file"
   tell application "Skim"
-    if $revert then
-      try
-        set thePath to POSIX path of (theFile as alias)
-        set theDocs to get documents whose path is thePath
-        if (count of theDocs) > 0 then revert theDocs
-      end try
-    end if
+    $revert
     open theFile
-    tell front document to go to TeX line $line $from_source $showing_bar
+    go document 1 to TeX line $line $from_source $showing_bar
     $activate
   end tell
 EOF
