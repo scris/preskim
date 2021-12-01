@@ -22,7 +22,7 @@ zerobased=
 from_source=""
 while [[ "${1:0:1}" == "-" ]]; do
   if [[ "$1" == "-r" || "$1" == "-revert" ]]; then
-    revert="    try
+    revert="try
       set thePath to POSIX path of (theFile as alias)
       set theDocs to get documents whose path is thePath
       if (count of theDocs) > 0 then revert theDocs
@@ -50,7 +50,7 @@ shopt -s extglob
 [[ -z ${zerobased} ]] || (( line+=1 ))
 
 # run AppleScript
-/usr/bin/osascript << EOF
+cat << EOF
   set theFile to POSIX file "$file"
   tell application "Skim"
     $revert
