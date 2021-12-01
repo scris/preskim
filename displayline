@@ -50,7 +50,7 @@ shopt -s extglob
 [[ -z ${zerobased} ]] || (( line+=1 ))
 
 # run AppleScript
-cat << EOF
+/usr/bin/osascript << EOF
   set theFile to POSIX file "$file"
   tell application "Skim"
     $revert
