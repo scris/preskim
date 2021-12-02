@@ -55,7 +55,7 @@ shopt -s extglob
   tell application "Skim"
     ${revert}
     open theFile
-    go document 1 to TeX line ${line} ${from_source} ${reading_bar}}
+    go document 1 to TeX line ${line} ${from_source} ${reading_bar}
     $activate
   end tell
 EOF
