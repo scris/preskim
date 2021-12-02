@@ -45,17 +45,17 @@ shopt -s extglob
 [[ "${file:0:1}" == "/" ]] || file="${PWD}/${file}"
 [[ -z "${src}" || "${src:0:1}" == "/" ]] || src="${PWD}/${src}"
 
-[[ -z "${src}" ]] || from_source="from POSIX file \"$src\""
+[[ -z "${src}" ]] || from_source="from POSIX file \"${src}\""
 
 [[ -z ${zerobased} ]] || (( line+=1 ))
 
 # run AppleScript
 /usr/bin/osascript << EOF
-  set theFile to POSIX file "$file"
+  set theFile to POSIX file "${file}"
   tell application "Skim"
-    $revert
+    ${revert}
     open theFile
-    go document 1 to TeX line $line $from_source $reading_bar
+    go document 1 to TeX line ${line} ${from_source} ${reading_bar}}
     $activate
   end tell
 EOF
