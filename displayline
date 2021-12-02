@@ -15,11 +15,11 @@ Options:
 fi
 
 # get arguments
-revert=""
-showing_bar=""
+revert=
+reading_bar=
 activate="activate"
 zerobased=
-from_source=""
+from_source=
 while [[ "${1:0:1}" == "-" ]]; do
   if [[ "$1" == "-r" || "$1" == "-revert" ]]; then
     revert="try
@@ -28,9 +28,9 @@ while [[ "${1:0:1}" == "-" ]]; do
       if (count of theDocs) > 0 then revert theDocs
     end try"
   elif [[ "$1" == "-b" || "$1" == "-readingbar" ]]; then
-    showing_bar="with showing reading bar"
+    reading_bar="with showing reading bar"
   elif [[ "$1" == "-g" || "$1" == "-background" ]]; then
-    activate=""
+    activate=
   elif [[ "$1" == "-z" || "$1" == "-zerobased" ]]; then
     zerobased=1
   fi
@@ -39,13 +39,13 @@ done
 line=$1
 file="$2"
 shopt -s extglob
-[[ $# -gt 2 ]] && src="$3" || src=""
+[[ $# -gt 2 ]] && src="$3" || src=
 
 # expand relative paths
 [[ "${file:0:1}" == "/" ]] || file="${PWD}/${file}"
-[[ "${src}" == "" || "${src:0:1}" == "/" ]] || src="${PWD}/${src}"
+[[ -z "${src}" || "${src:0:1}" == "/" ]] || src="${PWD}/${src}"
 
-[[ "${src}" == "" ]] || from_source="from POSIX file \"$src\""
+[[ -z "${src}" ]] || from_source="from POSIX file \"$src\""
 
 [[ -z ${zerobased} ]] || (( line+=1 ))
 
@@ -55,7 +55,7 @@ shopt -s extglob
   tell application "Skim"
     $revert
     open theFile
-    go document 1 to TeX line $line $from_source $showing_bar
+    go document 1 to TeX line $line $from_source $reading_bar
     $activate
   end tell
 EOF
