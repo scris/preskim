@@ -79,6 +79,7 @@
 #import "NSView_SKExtensions.h"
 #import "SKColorList.h"
 #import "NSCharacterSet_SKExtensions.h"
+#import "SKNotePrefs.h"
 
 #define WEBSITE_URL @"https://skim-app.sourceforge.io/"
 #define WIKI_URL    @"https://sourceforge.net/p/skim-app/wiki/"
@@ -122,7 +123,7 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 @implementation SKApplicationController
 
 @synthesize noteColumnsMenu, noteTypeMenu, colorList;
-@dynamic defaultPdfViewSettings, defaultFullScreenPdfViewSettings, backgroundColor, fullScreenBackgroundColor, pageBackgroundColor, defaultNoteColors, defaultLineWidths, defaultLineStyles, defaultDashPatterns, defaultStartLineStyle, defaultEndLineStyle, defaultFontNames, defaultFontSizes, defaultTextNoteFontColor, defaultAlignment, defaultIconType, favoriteColors;
+@dynamic defaultPdfViewSettings, defaultFullScreenPdfViewSettings, backgroundColor, fullScreenBackgroundColor, pageBackgroundColor, sepiaTone, favoriteColors;
 
 + (void)initialize{
     SKINITIALIZE;
@@ -473,10 +474,9 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
     static NSSet *applicationScriptingKeys = nil;
     if (applicationScriptingKeys == nil)
-        applicationScriptingKeys = [[NSSet alloc] initWithObjects:@"bookmarks", @"downloads", 
-            @"defaultPdfViewSettings", @"defaultFullScreenPdfViewSettings", @"backgroundColor", @"fullScreenBackgroundColor", @"pageBackgroundColor", 
-            @"defaultNoteColors", @"defaultLineWidths", @"defaultLineStyles", @"defaultDashPatterns", @"defaultStartLineStyle", @"defaultEndLineStyle", @"defaultFontNames", @"defaultFontSizes", @"defaultTextNoteFontColor", @"defaultAlignment", @"defaultIconType", 
-            @"favoriteColors", @"sepiaTone", nil];
+        applicationScriptingKeys = [[NSSet alloc] initWithObjects:@"bookmarks", @"downloads", @"notePreferences", 
+            @"defaultPdfViewSettings", @"defaultFullScreenPdfViewSettings", @"backgroundColor", @"fullScreenBackgroundColor", @"pageBackgroundColor", @"sepiaTone",
+            @"favoriteColors", nil];
 	return [applicationScriptingKeys containsObject:key];
 }
 
@@ -527,6 +527,10 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
     SKDownload *download = [[[SKDownloadController sharedDownloadController] downloads] objectAtIndex:anIndex];
     if ([download canRemove])
         [[SKDownloadController sharedDownloadController] removeObjectFromDownloads:download];
+}
+
+- (SKNotePrefs *)valueInNotePreferencesWithName:(NSString *)name {
+    return [[[SKNotePrefs alloc] initWithType:name] autorelease];
 }
 
 - (NSDictionary *)defaultPdfViewSettings {
@@ -603,217 +607,6 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
         [[NSUserDefaults standardUserDefaults] setColor:color forKey:SKPageBackgroundColorKey];
 }
 
-- (NSDictionary *)defaultNoteColors {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    return [NSDictionary dictionaryWithObjectsAndKeys: 
-        [sud colorForKey:SKFreeTextNoteColorKey], SKNFreeTextString, 
-        [sud colorForKey:SKAnchoredNoteColorKey], SKNNoteString, 
-        [sud colorForKey:SKCircleNoteColorKey], SKNCircleString, 
-        [sud colorForKey:SKSquareNoteColorKey], SKNSquareString, 
-        [sud colorForKey:SKHighlightNoteColorKey], SKNHighlightString, 
-        [sud colorForKey:SKUnderlineNoteColorKey], SKNUnderlineString, 
-        [sud colorForKey:SKStrikeOutNoteColorKey], SKNStrikeOutString, 
-        [sud colorForKey:SKLineNoteColorKey], SKNLineString, 
-        [sud colorForKey:SKInkNoteColorKey], SKNInkString, 
-        [sud colorForKey:SKCircleNoteInteriorColorKey], SKCircleInteriorString, 
-        [sud colorForKey:SKSquareNoteInteriorColorKey], SKSquareInteriorString, 
-        [sud colorForKey:SKLineNoteInteriorColorKey], SKLineInteriorString, 
-        [sud colorForKey:SKFreeTextNoteFontColorKey], SKFreeTextFontString, 
-        nil];
-}
-
-- (void)setDefaultNoteColors:(NSDictionary *)colorDict {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    NSColor *color;
-    if ((color = [colorDict objectForKey:SKNFreeTextString]))
-        [sud setColor:color forKey:SKFreeTextNoteColorKey];
-    if ((color = [colorDict objectForKey:SKNNoteString]))
-        [sud setColor:color forKey:SKAnchoredNoteColorKey];
-    if ((color = [colorDict objectForKey:SKNCircleString]))
-        [sud setColor:color forKey:SKCircleNoteColorKey];
-    if ((color = [colorDict objectForKey:SKNSquareString]))
-        [sud setColor:color forKey:SKSquareNoteColorKey];
-    if ((color = [colorDict objectForKey:SKNHighlightString]))
-        [sud setColor:color forKey:SKHighlightNoteColorKey];
-    if ((color = [colorDict objectForKey:SKNUnderlineString]))
-        [sud setColor:color forKey:SKUnderlineNoteColorKey];
-    if ((color = [colorDict objectForKey:SKNStrikeOutString]))
-        [sud setColor:color forKey:SKStrikeOutNoteColorKey];
-    if ((color = [colorDict objectForKey:SKNLineString]))
-        [sud setColor:color forKey:SKLineNoteColorKey];
-    if ((color = [colorDict objectForKey:SKNInkString]))
-        [sud setColor:color forKey:SKInkNoteColorKey];
-    if ((color = [colorDict objectForKey:SKCircleInteriorString]))
-        [sud setColor:color forKey:SKCircleNoteInteriorColorKey];
-    if ((color = [colorDict objectForKey:SKSquareInteriorString]))
-        [sud setColor:color forKey:SKSquareNoteInteriorColorKey];
-    if ((color = [colorDict objectForKey:SKLineInteriorString]))
-        [sud setColor:color forKey:SKLineNoteInteriorColorKey];
-    if ((color = [colorDict objectForKey:SKFreeTextFontString]))
-        [sud setColor:color forKey:SKFreeTextNoteFontColorKey];
-}
-
-- (NSDictionary *)defaultLineWidths {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    return [NSDictionary dictionaryWithObjectsAndKeys: 
-        [NSNumber numberWithDouble:[sud doubleForKey:SKFreeTextNoteLineWidthKey]], SKNFreeTextString, 
-        [NSNumber numberWithDouble:[sud doubleForKey:SKCircleNoteLineWidthKey]], SKNCircleString, 
-        [NSNumber numberWithDouble:[sud doubleForKey:SKSquareNoteLineWidthKey]], SKNSquareString, 
-        [NSNumber numberWithDouble:[sud doubleForKey:SKLineNoteLineWidthKey]], SKNLineString, 
-        [NSNumber numberWithDouble:[sud doubleForKey:SKInkNoteLineWidthKey]], SKNInkString, 
-        nil];
-}
-
-- (void)setDefaultLineWidths:(NSDictionary *)dict {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    NSNumber *number;
-    if ((number = [dict objectForKey:SKNFreeTextString]))
-        [sud setDouble:[number doubleValue] forKey:SKFreeTextNoteLineWidthKey];
-    if ((number = [dict objectForKey:SKNCircleString]))
-        [sud setDouble:[number doubleValue] forKey:SKCircleNoteLineWidthKey];
-    if ((number = [dict objectForKey:SKNSquareString]))
-        [sud setDouble:[number doubleValue] forKey:SKSquareNoteLineWidthKey];
-    if ((number = [dict objectForKey:SKNLineString]))
-        [sud setDouble:[number doubleValue] forKey:SKLineNoteLineWidthKey];
-    if ((number = [dict objectForKey:SKNInkString]))
-        [sud setDouble:[number doubleValue] forKey:SKInkNoteLineWidthKey];
-}
-
-- (NSDictionary *)defaultLineStyles {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    return [NSDictionary dictionaryWithObjectsAndKeys: 
-        [NSNumber numberWithInteger:[sud integerForKey:SKFreeTextNoteLineStyleKey]], SKNFreeTextString, 
-        [NSNumber numberWithInteger:[sud integerForKey:SKCircleNoteLineStyleKey]], SKNCircleString, 
-        [NSNumber numberWithInteger:[sud integerForKey:SKSquareNoteLineStyleKey]], SKNSquareString, 
-        [NSNumber numberWithInteger:[sud integerForKey:SKLineNoteLineStyleKey]], SKNLineString,
-        [NSNumber numberWithInteger:[sud integerForKey:SKInkNoteLineStyleKey]], SKNInkString,
-        nil];
-}
-
-- (void)setDefaultLineStyles:(NSDictionary *)dict {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    NSNumber *number;
-    if ((number = [dict objectForKey:SKNFreeTextString]))
-        [sud setInteger:[number integerValue] forKey:SKFreeTextNoteLineStyleKey];
-    if ((number = [dict objectForKey:SKNCircleString]))
-        [sud setInteger:[number integerValue] forKey:SKCircleNoteLineStyleKey];
-    if ((number = [dict objectForKey:SKNSquareString]))
-        [sud setInteger:[number integerValue] forKey:SKSquareNoteLineStyleKey];
-    if ((number = [dict objectForKey:SKNLineString]))
-        [sud setInteger:[number integerValue] forKey:SKLineNoteLineStyleKey];
-    if ((number = [dict objectForKey:SKNInkString]))
-        [sud setInteger:[number integerValue] forKey:SKInkNoteLineStyleKey];
-}
-
-- (NSDictionary *)defaultDashPatterns {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    return [NSDictionary dictionaryWithObjectsAndKeys: 
-        [sud arrayForKey:SKFreeTextNoteDashPatternKey], SKNFreeTextString, 
-        [sud arrayForKey:SKCircleNoteDashPatternKey], SKNCircleString, 
-        [sud arrayForKey:SKSquareNoteDashPatternKey], SKNSquareString, 
-        [sud arrayForKey:SKLineNoteDashPatternKey], SKNLineString,
-        [sud arrayForKey:SKInkNoteDashPatternKey], SKNInkString,
-        nil];
-}
-
-- (void)setDefaultDashPatterns:(NSDictionary *)dict {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    NSArray *array;
-    if ((array = [dict objectForKey:SKNFreeTextString]))
-        [sud setObject:array forKey:SKFreeTextNoteDashPatternKey];
-    if ((array = [dict objectForKey:SKNCircleString]))
-        [sud setObject:array forKey:SKCircleNoteDashPatternKey];
-    if ((array = [dict objectForKey:SKNSquareString]))
-        [sud setObject:array forKey:SKSquareNoteDashPatternKey];
-    if ((array = [dict objectForKey:SKNLineString]))
-        [sud setObject:array forKey:SKLineNoteDashPatternKey];
-    if ((array = [dict objectForKey:SKNInkString]))
-        [sud setObject:array forKey:SKInkNoteDashPatternKey];
-}
-
-- (NSDictionary *)defaultFontNames {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    return [NSDictionary dictionaryWithObjectsAndKeys: 
-        [sud stringForKey:SKFreeTextNoteFontNameKey], SKNFreeTextString, 
-        [sud stringForKey:SKAnchoredNoteFontNameKey], SKNNoteString, 
-        nil];
-}
-
-- (void)setDefaultFontNames:(NSDictionary *)fontNameDict {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    NSString *fontName;
-    if ((fontName = [fontNameDict objectForKey:SKNFreeTextString]))
-        [sud setObject:fontName forKey:SKFreeTextNoteFontNameKey];
-    if ((fontName = [fontNameDict objectForKey:SKNNoteString]))
-        [sud setObject:fontName forKey:SKAnchoredNoteFontNameKey];
-}
-
-- (NSDictionary *)defaultFontSizes {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    return [NSDictionary dictionaryWithObjectsAndKeys: 
-        [sud objectForKey:SKFreeTextNoteFontSizeKey], SKNFreeTextString, 
-        [sud objectForKey:SKAnchoredNoteFontSizeKey], SKNNoteString, 
-        nil];
-}
-
-- (void)setDefaultFontSizes:(NSDictionary *)fontSizeDict {
-    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    NSNumber *fontSize;
-    if ((fontSize = [fontSizeDict objectForKey:SKNFreeTextString]))
-        [sud setObject:fontSize forKey:SKFreeTextNoteFontSizeKey];
-    if ((fontSize = [fontSizeDict objectForKey:SKNNoteString]))
-        [sud setObject:fontSize forKey:SKAnchoredNoteFontSizeKey];
-}
-
-- (NSColor *)defaultTextNoteFontColor {
-    return [[NSUserDefaults standardUserDefaults] colorForKey:SKFreeTextNoteFontColorKey];
-}
-
-- (void)setDefaultTextNoteFontColor:(NSColor *)color {
-    [[NSUserDefaults standardUserDefaults] setColor:color forKey:SKFreeTextNoteFontColorKey];
-}
-
-- (PDFLineStyle)defaultStartLineStyle {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:SKLineNoteStartLineStyleKey];
-}
-
-- (void)setDefaultStartLineStyle:(PDFLineStyle)style {
-    [[NSUserDefaults standardUserDefaults] setInteger:style forKey:SKLineNoteStartLineStyleKey];
-}
-
-- (PDFLineStyle)defaultEndLineStyle {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:SKLineNoteEndLineStyleKey];
-}
-
-- (void)setDefaultEndLineStyle:(PDFLineStyle)style {
-    [[NSUserDefaults standardUserDefaults] setInteger:style forKey:SKLineNoteEndLineStyleKey];
-}
-
-- (NSTextAlignment)defaultAlignment {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:SKFreeTextNoteAlignmentKey];
-}
-
-- (void)setDefaultAlignment:(NSTextAlignment)alignment {
-    [[NSUserDefaults standardUserDefaults] setInteger:alignment forKey:SKFreeTextNoteAlignmentKey];
-}
-
-- (PDFTextAnnotationIconType)defaultIconType {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:SKAnchoredNoteIconTypeKey];
-}
-
-- (void)setDefaultIconType:(PDFTextAnnotationIconType)type {
-    [[NSUserDefaults standardUserDefaults] setInteger:type forKey:SKAnchoredNoteIconTypeKey];
-}
-
-- (NSArray *)favoriteColors {
-    return [NSColor favoriteColors];
-}
-
-- (void)setFavoriteColors:(NSArray *)array {
-    NSValueTransformer *transformer = [NSValueTransformer valueTransformerForName:SKUnarchiveColorArrayTransformerName];
-    [[NSUserDefaults standardUserDefaults] setObject:[transformer reverseTransformedValue:array] forKey:SKSwatchColorsKey];
-}
-
 - (CGFloat)sepiaTone {
     return [[NSUserDefaults standardUserDefaults] doubleForKey:SKSepiaToneKey];
 }
@@ -823,6 +616,15 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:SKSepiaToneKey];
     else
         [[NSUserDefaults standardUserDefaults] setDouble:fmin(sepiaTone, 1.0) forKey:SKSepiaToneKey];
+}
+
+- (NSArray *)favoriteColors {
+    return [NSColor favoriteColors];
+}
+
+- (void)setFavoriteColors:(NSArray *)array {
+    NSValueTransformer *transformer = [NSValueTransformer valueTransformerForName:SKUnarchiveColorArrayTransformerName];
+    [[NSUserDefaults standardUserDefaults] setObject:[transformer reverseTransformedValue:array] forKey:SKSwatchColorsKey];
 }
 
 @end
