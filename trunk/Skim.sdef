@@ -1213,7 +1213,7 @@
         </class>
 
         <class name="note preferences" plural="note preferences" code="NPrf" inherits="note"
-            description="An object containing preference values for a note type. Inherits its properties from the note class.">
+            description="An object containing preference values for a note type. Only note properties for which default values exist for the note type are valid.">
             <cocoa class="SKNotePrefs"/>
             <property name="name" code="pnam" type="text" access="r" hidden="yes"
                 description="Name of the note preferences.">
