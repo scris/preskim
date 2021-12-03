@@ -46,6 +46,7 @@
 @synthesize type;
 @dynamic scriptingColor, scriptingInteriorColor, lineWidth, scriptingBorderStyle, dashPattern, scriptingStartLineStyle, scriptingEndLineStyle, fontName, fontSize, scriptingFontColor, scriptingAlignment, scriptingIconType, scriptingProperties;
 
+static NSDictionary *alternateTypes = nil;
 static NSDictionary *colorKeys = nil;
 static NSDictionary *interiorColorKeys = nil;
 static NSDictionary *lineWidthKeys = nil;
@@ -55,6 +56,7 @@ static NSDictionary *propertyKeys = nil;
 
 + (void)initialize {
     SKINITIALIZE;
+    alternateTypes = [[NSDictionary alloc] initWithObjectsAndKeys:SKNFreeTextString, @"text note", SKNNoteString, @"anchored note", SKNCircleString, @"circle note", SKNSquareString, @"square note", SKNHighlightString, @"highlight note", SKNUnderlineString, @"underline note", SKNStrikeOutString, @"strike out note", SKNLineString, @"line note", SKNInkString, @"freehand note", nil];
     colorKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKFreeTextNoteColorKey, SKNFreeTextString, SKAnchoredNoteColorKey, SKNNoteString, SKCircleNoteColorKey, SKNCircleString, SKSquareNoteColorKey, SKNSquareString, SKHighlightNoteColorKey, SKNHighlightString, SKUnderlineNoteColorKey, SKNUnderlineString, SKStrikeOutNoteColorKey, SKNStrikeOutString, SKLineNoteColorKey, SKNLineString, SKInkNoteColorKey, SKNInkString, nil];
     interiorColorKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKCircleNoteInteriorColorKey, SKNCircleString, SKSquareNoteInteriorColorKey, SKNSquareString, SKLineNoteInteriorColorKey, SKNLineString, nil];
     lineWidthKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKFreeTextNoteLineWidthKey, SKNFreeTextString, SKCircleNoteLineWidthKey, SKNCircleString, SKSquareNoteLineWidthKey, SKNSquareString, SKLineNoteLineWidthKey, SKNLineString, SKInkNoteLineWidthKey, SKNInkString, nil];
@@ -80,7 +82,9 @@ static NSDictionary *propertyKeys = nil;
 }
 
 - (id)initWithType:(NSString *)aType {
-    if (aType == nil || [propertyKeys objectForKey:aType] == nil) {
+    if (aType && [propertyKeys objectForKey:aType] == nil)
+        aType = [alternateTypes objectForKey:aType];
+    if (aType == nil) {
         [self release];
         self = nil;
     } else {
