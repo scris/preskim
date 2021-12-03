@@ -515,7 +515,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     
     // We can fit only after the PDF has been loaded
     if (windowSizeOption == SKWindowOptionFit && hasWindowSetup == NO) {
-        [[pdfSplitView superview] layoutSubtreeIfNeeded];
+        [[window contentView] layoutSubtreeIfNeeded];
         [self performFit:self];
     }
     
