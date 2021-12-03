@@ -836,6 +836,18 @@
             </direct-parameter>
         </command>
 
+        <command name="preferences for" code="SKIMPref"
+            description="Get preferences for a note type.">
+            <cocoa class="SKPreferencesCommand"/>
+            <direct-parameter type="note type"
+                description="The note type for which to get the preferences.">
+            </direct-parameter>
+            <result
+                description="The preferences for the note type.">
+                <type type="note preferences"/>
+            </result>
+        </command>
+
         <class-extension extends="item" hidden="yes"
             description="A scriptable object.">
             <cocoa class="NSObject"/>
@@ -855,6 +867,10 @@
             <element type="download"
                 description="The downloads.">
                 <cocoa key="downloads" insert-at-beginning="no"/>
+            </element>
+            <element type="note preferences" access="r"
+                description="Note preferences.">
+                <cocoa key="notePreferences"/>
             </element>
             <element type="TeX line" access="r" hidden="yes"
                 description="TeX lines.">
@@ -884,58 +900,14 @@
                 description="The default page background color.">
                 <cocoa key="pageBackgroundColor"/>
             </property>
-            <property name="default note colors" type="note colors" code="DNtC"
-                description="The default colors used for new notes.">
-                <cocoa key="defaultNoteColors"/>
-            </property>
-            <property name="default note line widths" type="note line widths" code="DNtW"
-                description="The default line width used for new notes.">
-                <cocoa key="defaultLineWidths"/>
-            </property>
-            <property name="default note line styles" type="note line styles" code="DNtS"
-                description="The default line styles used for new notes.">
-                <cocoa key="defaultLineStyles"/>
-            </property>
-            <property name="default note dash patterns" type="note dash patterns" code="DNtD"
-                description="The default dash patterns used for new notes.">
-                <cocoa key="defaultDashPatterns"/>
-            </property>
-            <property name="default note start line style" type="line ending style" code="DNSL"
-                description="The default start line style used for new lines.">
-                <cocoa key="defaultStartLineStyle"/>
-            </property>
-            <property name="default note end line style" type="line ending style" code="DNEL"
-                description="The default end line style used for new lines.">
-                <cocoa key="defaultEndLineStyle"/>
-            </property>
-            <property name="default note font names" type="note font names" code="DNFN"
-                description="The default font names used for new notes.">
-                <cocoa key="defaultFontNames"/>
-            </property>
-            <property name="default note font sizes" type="note font sizes" code="DNFS"
-                description="The default font sizes used for new notes.">
-                <cocoa key="defaultFontSizes"/>
-            </property>
-            <property name="default text note font color" type="RGBA color" code="DNFC"
-                description="The default font color used for new text notes.">
-                <cocoa key="defaultTextNoteFontColor"/>
-            </property>
-            <property name="default text note alignment" type="text alignment" code="DNAl"
-                description="The default alignment used for new text notes.">
-                <cocoa key="defaultAlignment"/>
-            </property>
-            <property name="default note icon type" type="icon type" code="DNtI"
-                description="The default icon type used for new anchored notes.">
-                <cocoa key="defaultIconType"/>
+            <property name="sepia tone" type="real" code="SepT"
+                description="Intensity of a sepia tone effect applied to the PDF content.">
+                <cocoa key="sepiaTone"/>
             </property>
             <property name="favorite colors" code="FavC"
                 description="List of favorite colors.">
                 <type type="RGBA color" list="yes"/>
                 <cocoa key="favoriteColors"/>
-            </property>
-            <property name="sepia tone" type="real" code="SepT"
-                description="Intensity of a sepia tone effect applied to the PDF content.">
-                <cocoa key="sepiaTone"/>
             </property>
         </class-extension>
 
@@ -1239,7 +1211,16 @@
                 <cocoa method=""/>
             </responds-to>
         </class>
-        
+
+        <class name="note preferences" plural="note preferences" code="NPrf" inherits="note"
+            description="An object containing preference values for a note type. Inherits its properties from the note class.">
+            <cocoa class="SKNotePrefs"/>
+            <property name="name" code="pnam" type="text" access="r" hidden="yes"
+                description="Name of the note preferences.">
+                <cocoa key="type"/>
+            </property>
+        </class>
+
         <class name="outline" plural="outlines" code="Outl"
             description="An outline item in the table of contents.">
             <cocoa class="PDFOutline"/>
@@ -1470,157 +1451,6 @@
             <property name="rating" code="Rate" type="real" access="r"
                 description="Open Meta rating.">
                 <cocoa key="Rating"/>
-            </property>
-        </record-type>
-
-        <record-type name="note colors" code="NClr">
-            <property name="text note color" code="CTxt" type="RGBA color"
-                description="Default text note color.">
-                <cocoa key="FreeText"/>
-            </property>
-            <property name="anchored note color" code="CAnc" type="RGBA color"
-                description="Default anchored note color.">
-                <cocoa key="Note"/>
-            </property>
-            <property name="circle note color" code="CCir" type="RGBA color"
-                description="Default circle color.">
-                <cocoa key="Circle"/>
-            </property>
-            <property name="box note color" code="CSqu" type="RGBA color"
-                description="Default box color.">
-                <cocoa key="Square"/>
-            </property>
-            <property name="highlight note color" code="CHil" type="RGBA color"
-                description="Default highlight color.">
-                <cocoa key="Highlight"/>
-            </property>
-            <property name="underline note color" code="CUnd" type="RGBA color"
-                description="Default underline highlight color.">
-                <cocoa key="Underline"/>
-            </property>
-            <property name="strike out note color" code="CStr" type="RGBA color"
-                description="Default strike out highlight color.">
-                <cocoa key="StrikeOut"/>
-            </property>
-            <property name="line note color" code="CLin" type="RGBA color"
-                description="Default line color.">
-                <cocoa key="Line"/>
-            </property>
-            <property name="freehand note color" code="CInk" type="RGBA color"
-                description="Default freehand color.">
-                <cocoa key="Ink"/>
-            </property>
-            <property name="circle note interior color" code="CCiI" type="RGBA color"
-                description="Default circle fill color.">
-                <cocoa key="CircleInterior"/>
-            </property>
-            <property name="box note interior color" code="CSqI" type="RGBA color"
-                description="Default box fill color.">
-                <cocoa key="SquareInterior"/>
-            </property>
-            <property name="line note interior color" code="CLiI" type="RGBA color"
-                description="Default line fill color.">
-                <cocoa key="LineInterior"/>
-            </property>
-            <property name="text note font color" code="CTxF" type="RGBA color"
-                description="Default text note font color.">
-                <cocoa key="FreeTextFont"/>
-            </property>
-        </record-type>
-
-        <record-type name="note line widths" code="NLWd">
-            <property name="text note line width" code="WTxt" type="real"
-                description="Default text note line width.">
-                <cocoa key="FreeText"/>
-            </property>
-            <property name="circle note line width" code="WCir" type="real"
-                description="Default circle line width.">
-                <cocoa key="Circle"/>
-            </property>
-            <property name="box note line width" code="WSqu" type="real"
-                description="Default box line width.">
-                <cocoa key="Square"/>
-            </property>
-            <property name="line note line width" code="WLin" type="real"
-                description="Default line line width.">
-                <cocoa key="Line"/>
-            </property>
-            <property name="freehand note line width" code="WInk" type="real"
-                description="Default freehand line width.">
-                <cocoa key="Ink"/>
-            </property>
-        </record-type>
-
-        <record-type name="note line styles" code="NLSt">
-            <property name="text note line style" code="STxt" type="note line style"
-                description="Default text note line width.">
-                <cocoa key="FreeText"/>
-            </property>
-            <property name="circle note line style" code="SCir" type="note line style"
-                description="Default circle line width.">
-                <cocoa key="Circle"/>
-            </property>
-            <property name="box note line style" code="SSqu" type="note line style"
-                description="Default box line width.">
-                <cocoa key="Square"/>
-            </property>
-            <property name="line note line style" code="SLin" type="note line style"
-                description="Default line line width.">
-                <cocoa key="Line"/>
-            </property>
-            <property name="freehand note line style" code="SInk" type="note line style"
-                description="Default freehand line width.">
-                <cocoa key="Ink"/>
-            </property>
-        </record-type>
-
-        <record-type name="note dash patterns" code="NDsh">
-            <property name="text note dash pattern" code="DTxt"
-                description="Default text note dash pattern.">
-                <type type="real" list="yes"/>
-                <cocoa key="FreeText"/>
-            </property>
-            <property name="circle note dash pattern" code="DCir"
-                description="Default circle dash pattern.">
-                <type type="real" list="yes"/>
-                <cocoa key="Circle"/>
-            </property>
-            <property name="box note dash pattern" code="DSqu"
-                description="Default box dash pattern.">
-                <type type="real" list="yes"/>
-                <cocoa key="Square"/>
-            </property>
-            <property name="line note dash pattern" code="DLin"
-                description="Default line dash pattern.">
-                <type type="real" list="yes"/>
-                <cocoa key="Line"/>
-            </property>
-            <property name="freehand note dash pattern" code="DInk"
-                description="Default freehand dash pattern.">
-                <type type="real" list="yes"/>
-                <cocoa key="Ink"/>
-            </property>
-        </record-type>
-
-        <record-type name="note font names" code="NDFN">
-            <property name="text note font name" code="FNTx" type="text"
-                description="Default text note font name.">
-                <cocoa key="FreeText"/>
-            </property>
-            <property name="anchored note font name" code="FNAn" type="text"
-                description="Default anchored note font name.">
-                <cocoa key="Note"/>
-            </property>
-        </record-type>
-
-        <record-type name="note font sizes" code="NDFS">
-            <property name="text note font size" code="FSTx" type="integer"
-                description="Default text note font size.">
-                <cocoa key="FreeText"/>
-            </property>
-            <property name="anchored note font size" code="FSAn" type="integer"
-                description="Default anchored note font size.">
-                <cocoa key="Note"/>
             </property>
         </record-type>
 
