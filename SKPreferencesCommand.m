@@ -38,13 +38,19 @@
 
 #import "SKPreferencesCommand.h"
 #import "SKNotePrefs.h"
+#import "SKDisplayPrefs.h"
 
 @implementation SKPreferencesCommand
 
 - (id)performDefaultImplementation {
     id dPO = [self directParameter];
-    if ([dPO isKindOfClass:[NSString class]])
+    if ([dPO isKindOfClass:[NSString class]]) {
         return [[[SKNotePrefs alloc] initWithType:dPO] autorelease];
+    } else if ([dPO isKindOfClass:[NSNumber class]]) {
+        NSInteger mode = [dPO integerValue];
+        if (mode == 0 || mode == 1)
+            return [[[SKDisplayPrefs alloc] initForFullScreen:mode] autorelease];
+    }
     return nil;
 }
 

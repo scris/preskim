@@ -41,12 +41,13 @@
 #import <SkimNotes/SkimNotes.h>
 #import "NSUserDefaults_SKExtensions.h"
 
+
 @implementation SKNotePrefs
 
 @synthesize type;
-@dynamic scriptingColor, scriptingInteriorColor, lineWidth, scriptingBorderStyle, dashPattern, scriptingStartLineStyle, scriptingEndLineStyle, fontName, fontSize, scriptingFontColor, scriptingAlignment, scriptingIconType, scriptingProperties;
+@dynamic name, scriptingColor, scriptingInteriorColor, lineWidth, scriptingBorderStyle, dashPattern, scriptingStartLineStyle, scriptingEndLineStyle, fontName, fontSize, scriptingFontColor, scriptingAlignment, scriptingIconType, scriptingProperties;
 
-static NSDictionary *alternateTypes = nil;
+static NSDictionary *alternateTypeNames = nil;
 static NSDictionary *colorKeys = nil;
 static NSDictionary *interiorColorKeys = nil;
 static NSDictionary *lineWidthKeys = nil;
@@ -56,34 +57,34 @@ static NSDictionary *propertyKeys = nil;
 
 + (void)initialize {
     SKINITIALIZE;
-    alternateTypes = [[NSDictionary alloc] initWithObjectsAndKeys:SKNFreeTextString, @"text note", SKNNoteString, @"anchored note", SKNCircleString, @"circle note", SKNSquareString, @"square note", SKNHighlightString, @"highlight note", SKNUnderlineString, @"underline note", SKNStrikeOutString, @"strike out note", SKNLineString, @"line note", SKNInkString, @"freehand note", nil];
+    alternateTypeNames = [[NSDictionary alloc] initWithObjectsAndKeys:SKNFreeTextString, @"text note", SKNNoteString, @"anchored note", SKNCircleString, @"circle note", SKNSquareString, @"square note", SKNHighlightString, @"highlight note", SKNUnderlineString, @"underline note", SKNStrikeOutString, @"strike out note", SKNLineString, @"line note", SKNInkString, @"freehand note", nil];
     colorKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKFreeTextNoteColorKey, SKNFreeTextString, SKAnchoredNoteColorKey, SKNNoteString, SKCircleNoteColorKey, SKNCircleString, SKSquareNoteColorKey, SKNSquareString, SKHighlightNoteColorKey, SKNHighlightString, SKUnderlineNoteColorKey, SKNUnderlineString, SKStrikeOutNoteColorKey, SKNStrikeOutString, SKLineNoteColorKey, SKNLineString, SKInkNoteColorKey, SKNInkString, nil];
     interiorColorKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKCircleNoteInteriorColorKey, SKNCircleString, SKSquareNoteInteriorColorKey, SKNSquareString, SKLineNoteInteriorColorKey, SKNLineString, nil];
     lineWidthKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKFreeTextNoteLineWidthKey, SKNFreeTextString, SKCircleNoteLineWidthKey, SKNCircleString, SKSquareNoteLineWidthKey, SKNSquareString, SKLineNoteLineWidthKey, SKNLineString, SKInkNoteLineWidthKey, SKNInkString, nil];
     lineStyleKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKFreeTextNoteLineStyleKey, SKNFreeTextString, SKCircleNoteLineStyleKey, SKNCircleString, SKSquareNoteLineStyleKey, SKNSquareString, SKLineNoteLineStyleKey, SKNLineString, SKInkNoteLineStyleKey, SKNInkString, nil];
     dashPatternKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKFreeTextNoteDashPatternKey, SKNFreeTextString, SKCircleNoteDashPatternKey, SKNCircleString, SKSquareNoteDashPatternKey, SKNSquareString, SKLineNoteDashPatternKey, SKNLineString, SKInkNoteDashPatternKey, SKNInkString, nil];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    NSArray *array = [NSArray arrayWithObjects:@"scriptingColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", @"fontName", @"fontSize", @"scriptingFontColor", @"scriptingAlignment", nil];
+    NSArray *array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", @"fontName", @"fontSize", @"scriptingFontColor", @"scriptingAlignment", nil];
     [dict setObject:array forKey:SKNFreeTextString];
-    array = [NSArray arrayWithObjects:@"scriptingColor", @"fontName", @"fontSize", @"scriptingIconType", nil];
+    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"fontName", @"fontSize", @"scriptingIconType", nil];
     [dict setObject:array forKey:SKNNoteString];
-    array = [NSArray arrayWithObjects:@"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", nil];
+    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", nil];
     [dict setObject:array forKey:SKNCircleString];
     [dict setObject:array forKey:SKNSquareString];
     array = [NSArray arrayWithObjects:@"scriptingColor", nil];
     [dict setObject:array forKey:SKNHighlightString];
     [dict setObject:array forKey:SKNUnderlineString];
     [dict setObject:array forKey:SKNStrikeOutString];
-    array = [NSArray arrayWithObjects:@"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", @"scriptingStartLineStyle", @"scriptingEndLineStyle", nil];
+    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", @"scriptingStartLineStyle", @"scriptingEndLineStyle", nil];
     [dict setObject:array forKey:SKNLineString];
-    array = [NSArray arrayWithObjects:@"scriptingColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", nil];
+    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", nil];
     [dict setObject:array forKey:SKNInkString];
     propertyKeys = [dict copy];
 }
 
 - (id)initWithType:(NSString *)aType {
     if (aType && [propertyKeys objectForKey:aType] == nil)
-        aType = [alternateTypes objectForKey:aType];
+        aType = [alternateTypeNames objectForKey:aType];
     if (aType == nil) {
         [self release];
         self = nil;
@@ -104,6 +105,10 @@ static NSDictionary *propertyKeys = nil;
 - (NSScriptObjectSpecifier *)objectSpecifier {
     NSScriptClassDescription *containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
     return [[[NSNameSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"notePreferences" name:[self type]] autorelease];
+}
+
+- (NSString *)name {
+    return type;
 }
 
 - (NSColor *)scriptingColor {

@@ -80,6 +80,7 @@
 #import "SKColorList.h"
 #import "NSCharacterSet_SKExtensions.h"
 #import "SKNotePrefs.h"
+#import "SKDisplayPrefs.h"
 
 #define WEBSITE_URL @"https://skim-app.sourceforge.io/"
 #define WIKI_URL    @"https://sourceforge.net/p/skim-app/wiki/"
@@ -123,7 +124,7 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 @implementation SKApplicationController
 
 @synthesize noteColumnsMenu, noteTypeMenu, colorList;
-@dynamic defaultPdfViewSettings, defaultFullScreenPdfViewSettings, backgroundColor, fullScreenBackgroundColor, pageBackgroundColor, sepiaTone, favoriteColors;
+@dynamic pageBackgroundColor, favoriteColors;
 
 + (void)initialize{
     SKINITIALIZE;
@@ -474,9 +475,7 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
     static NSSet *applicationScriptingKeys = nil;
     if (applicationScriptingKeys == nil)
-        applicationScriptingKeys = [[NSSet alloc] initWithObjects:@"bookmarks", @"downloads", @"notePreferences", 
-            @"defaultPdfViewSettings", @"defaultFullScreenPdfViewSettings", @"backgroundColor", @"fullScreenBackgroundColor", @"pageBackgroundColor", @"sepiaTone",
-            @"favoriteColors", nil];
+        applicationScriptingKeys = [[NSSet alloc] initWithObjects:@"bookmarks", @"downloads", @"notePreferences", @"displayPreferences", @"pageBackgroundColor", @"favoriteColors", nil];
 	return [applicationScriptingKeys containsObject:key];
 }
 
@@ -533,65 +532,8 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
     return [[[SKNotePrefs alloc] initWithType:name] autorelease];
 }
 
-- (NSDictionary *)defaultPdfViewSettings {
-    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultPDFDisplaySettingsKey];
-}
-
-- (void)setDefaultPdfViewSettings:(NSDictionary *)settings {
-    if (settings == nil)
-        return;
-    NSMutableDictionary *setup = [NSMutableDictionary dictionary];
-    [setup addEntriesFromDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultPDFDisplaySettingsKey]];
-    [setup addEntriesFromDictionary:settings];
-    [[NSUserDefaults standardUserDefaults] setObject:setup forKey:SKDefaultPDFDisplaySettingsKey];
-}
-
-- (NSDictionary *)defaultFullScreenPdfViewSettings {
-    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey];
-}
-
-- (void)setDefaultFullScreenPdfViewSettings:(NSDictionary *)settings {
-    if (settings == nil)
-        return;
-    NSMutableDictionary *setup = [NSMutableDictionary dictionary];
-    if ([settings count]) {
-        [setup addEntriesFromDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultPDFDisplaySettingsKey]];
-        [setup addEntriesFromDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey]];
-        [setup addEntriesFromDictionary:settings];
-    }
-    [[NSUserDefaults standardUserDefaults] setObject:setup forKey:SKDefaultFullScreenPDFDisplaySettingsKey];
-}
-
-- (NSColor *)backgroundColor {
-    NSColor *backgroundColor = nil;
-    if (SKHasDarkAppearance(NSApp))
-        backgroundColor = [[NSUserDefaults standardUserDefaults] colorForKey:SKDarkBackgroundColorKey];
-    if (backgroundColor == nil)
-        backgroundColor = [[NSUserDefaults standardUserDefaults] colorForKey:SKBackgroundColorKey];
-    return backgroundColor;
-}
-
-- (void)setBackgroundColor:(NSColor *)color {
-    if (SKHasDarkAppearance(NSApp))
-        [[NSUserDefaults standardUserDefaults] setColor:color forKey:SKDarkBackgroundColorKey];
-    else
-        [[NSUserDefaults standardUserDefaults] setColor:color forKey:SKBackgroundColorKey];
-}
-
-- (NSColor *)fullScreenBackgroundColor {
-    NSColor *backgroundColor = nil;
-    if (SKHasDarkAppearance(NSApp))
-        backgroundColor = [[NSUserDefaults standardUserDefaults] colorForKey:SKDarkFullScreenBackgroundColorKey];
-    if (backgroundColor == nil)
-        backgroundColor = [[NSUserDefaults standardUserDefaults] colorForKey:SKFullScreenBackgroundColorKey];
-    return backgroundColor;
-}
-
-- (void)setFullScreenBackgroundColor:(NSColor *)color {
-    if (SKHasDarkAppearance(NSApp))
-        [[NSUserDefaults standardUserDefaults] setColor:color forKey:SKDarkFullScreenBackgroundColorKey];
-    else
-        [[NSUserDefaults standardUserDefaults] setColor:color forKey:SKFullScreenBackgroundColorKey];
+- (SKDisplayPrefs *)valueInDisplayPreferencesWithName:(NSString *)name {
+    return [[[SKDisplayPrefs alloc] initWithName:name] autorelease];
 }
 
 - (NSColor *)pageBackgroundColor {
@@ -605,17 +547,6 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:SKPageBackgroundColorKey];
     else
         [[NSUserDefaults standardUserDefaults] setColor:color forKey:SKPageBackgroundColorKey];
-}
-
-- (CGFloat)sepiaTone {
-    return [[NSUserDefaults standardUserDefaults] doubleForKey:SKSepiaToneKey];
-}
-
-- (void)setSepiaTone:(CGFloat)sepiaTone {
-    if (sepiaTone <= 0.0)
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:SKSepiaToneKey];
-    else
-        [[NSUserDefaults standardUserDefaults] setDouble:fmin(sepiaTone, 1.0) forKey:SKSepiaToneKey];
 }
 
 - (NSArray *)favoriteColors {
