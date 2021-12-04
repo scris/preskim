@@ -77,9 +77,9 @@
     return [[NSUserDefaults standardUserDefaults] dictionaryForKey:fullScreen ? SKDefaultFullScreenPDFDisplaySettingsKey : SKDefaultPDFDisplaySettingsKey];
 }
 
-- (void)setDefaultPdfViewSettings:(NSDictionary *)settings {
+- (void)setPdfViewSettings:(NSDictionary *)settings {
     if (settings == nil)
-        return;
+        settings = [NSDictionary dictionary];
     NSMutableDictionary *setup = [NSMutableDictionary dictionary];
     if (fullScreen == NO || [settings count] > 0) {
         [setup addEntriesFromDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultPDFDisplaySettingsKey]];
