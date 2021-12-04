@@ -1215,9 +1215,11 @@
                 description="Name of the note preferences.">
                 <cocoa key="name"/>
             </property>
-            <property name="view settings" type="PDF view settings" code="vSet"
-                description="The initial PDF view settings. An empty record for full screen mode indicates that the settings for normal mode are used.">
+            <property name="view settings" code="vSet"
+                description="The initial PDF view settings. An empty record or missing value for full screen mode indicates that the settings for normal mode are used.">
                 <cocoa key="pdfViewSettings"/>
+                <type type="PDF view settings"/>
+                <type type="missing value"/>
             </property>
             <property name="background color" type="RGBA color" code="NBgC"
                 description="The background color behind the pages.">
