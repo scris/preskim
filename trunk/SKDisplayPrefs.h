@@ -1,8 +1,8 @@
 //
-//  SKNotePrefs.h
+//  SKDisplayPrefs.h
 //  Skim
 //
-//  Created by Christiaan Hofman on 03/12/2021.
+//  Created by Christiaan Hofman on 04/12/2021.
 /*
  This software is Copyright (c) 2021
  Christiaan Hofman. All rights reserved.
@@ -37,28 +37,18 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
 
 
-@interface SKNotePrefs : NSObject {
-    NSString *type;
+@interface SKDisplayPrefs : NSObject {
+    BOOL fullScreen;
 }
 
 @property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSString *type;
-@property (nonatomic, retain) NSColor *scriptingColor;
-@property (nonatomic, retain) NSColor *scriptingInteriorColor;
-@property (nonatomic) CGFloat lineWidth;
-@property (nonatomic) PDFBorderStyle scriptingBorderStyle;
-@property (nonatomic, retain) NSArray *dashPattern;
-@property (nonatomic) PDFLineStyle scriptingStartLineStyle, scriptingEndLineStyle;
-@property (nonatomic, retain) NSString *fontName;
-@property (nonatomic) CGFloat fontSize;
-@property (nonatomic, retain) NSColor *scriptingFontColor;
-@property (nonatomic) NSTextAlignment scriptingAlignment;
-@property (nonatomic) PDFTextAnnotationIconType scriptingIconType;
-@property (nonatomic, retain) NSDictionary *scriptingProperties;
+@property (nonatomic, retain) NSDictionary *pdfViewSettings;
+@property (nonatomic, retain) NSColor *backgroundColor;
+@property (nonatomic) CGFloat sepiaTone;
 
-- (id)initWithType:(NSString *)aType;
+- (id)initForFullScreen:(BOOL)isFullScreen;
+- (id)initWithName:(NSString *)name;
 
 @end

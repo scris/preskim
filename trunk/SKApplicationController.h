@@ -64,10 +64,8 @@
 
 @property (nonatomic, readonly) NSColorList *colorList;
 
-@property (nonatomic, copy) NSDictionary *defaultPdfViewSettings, *defaultFullScreenPdfViewSettings;
-@property (nonatomic, copy) NSColor *backgroundColor, *fullScreenBackgroundColor, *pageBackgroundColor;
+@property (nonatomic, copy) NSColor *pageBackgroundColor;
 @property (nonatomic, copy) NSArray *favoriteColors;
-@property (nonatomic) CGFloat sepiaTone;
 @property (nonatomic) PDFLineStyle defaultStartLineStyle, defaultEndLineStyle;
 @property (nonatomic) NSTextAlignment defaultAlignment;
 @property (nonatomic) PDFTextAnnotationIconType defaultIconType;

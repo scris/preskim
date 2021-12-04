@@ -837,14 +837,17 @@
         </command>
 
         <command name="preferences for" code="SKIMPref"
-            description="Get preferences for a note type.">
+            description="Get preferences for a note type, or for normal or full screen display.">
             <cocoa class="SKPreferencesCommand"/>
-            <direct-parameter type="note type"
-                description="The note type for which to get the preferences.">
+            <direct-parameter
+                description="The note type or interaction mode for which to get the preferences.">
+                <type type="note type"/>
+                <type type="interaction mode type"/>
             </direct-parameter>
             <result
-                description="The preferences for the note type.">
+                description="The preferences for the note type or PDF display.">
                 <type type="note preferences"/>
+                <type type="PDF display preferences"/>
             </result>
         </command>
 
@@ -869,8 +872,12 @@
                 <cocoa key="downloads" insert-at-beginning="no"/>
             </element>
             <element type="note preferences" access="r"
-                description="Note preferences.">
+                description="Preferences for note properties.">
                 <cocoa key="notePreferences"/>
+            </element>
+            <element type="PDF display preferences" access="r"
+                description="Preferences for the display parameters of the PDF.">
+                <cocoa key="displayPreferences"/>
             </element>
             <element type="TeX line" access="r" hidden="yes"
                 description="TeX lines.">
@@ -880,29 +887,9 @@
                 description="Rich text formats.">
                 <cocoa key="richTextFormat"/>
             </element>
-            <property name="default view settings" type="PDF view settings" code="DVSt"
-                description="The default PDF view settings for normal mode.">
-                <cocoa key="defaultPdfViewSettings"/>
-            </property>
-            <property name="default full screen view settings" type="PDF view settings" code="DFVS"
-                description="The default PDF view settings for full screen mode. An empty dictionary indicates that default view settings for normal mode are used.">
-                <cocoa key="defaultFullScreenPdfViewSettings"/>
-            </property>
-            <property name="background color" type="RGBA color" code="NBgC"
-                description="The default background color in normal mode.">
-                <cocoa key="backgroundColor"/>
-            </property>
-            <property name="full screen background color" type="RGBA color" code="FBgC"
-                description="The default background color in full screen mode.">
-                <cocoa key="fullScreenBackgroundColor"/>
-            </property>
-            <property name="page background color" type="RGBA color" code="PBgC"
+            <property name="page background color" type="RGBA color" code="PBgC" hidden="yes"
                 description="The default page background color.">
                 <cocoa key="pageBackgroundColor"/>
-            </property>
-            <property name="sepia tone" type="real" code="SepT"
-                description="Intensity of a sepia tone effect applied to the PDF content.">
-                <cocoa key="sepiaTone"/>
             </property>
             <property name="favorite colors" code="FavC"
                 description="List of favorite colors.">
@@ -1217,7 +1204,28 @@
             <cocoa class="SKNotePrefs"/>
             <property name="name" code="pnam" type="text" access="r" hidden="yes"
                 description="Name of the note preferences.">
-                <cocoa key="type"/>
+                <cocoa key="name"/>
+            </property>
+        </class>
+
+        <class name="PDF display preferences" plural="PDF display preferences" code="DPrf"
+            description="An object containing preference values for PDF display for a given interaction mode.">
+            <cocoa class="SKDisplayPrefs"/>
+            <property name="name" code="pnam" type="text" access="r" hidden="yes"
+                description="Name of the note preferences.">
+                <cocoa key="name"/>
+            </property>
+            <property name="view settings" type="PDF view settings" code="vSet"
+                description="The initial PDF view settings. An empty record for full screen mode indicates that the settings for normal mode are used.">
+                <cocoa key="pdfViewSettings"/>
+            </property>
+            <property name="background color" type="RGBA color" code="NBgC"
+                description="The background color behind the pages.">
+                <cocoa key="backgroundColor"/>
+            </property>
+            <property name="sepia tone" type="real" code="SepT"
+                description="Intensity of a sepia tone effect applied to the PDF content. The same for normal and full screen mode.">
+                <cocoa key="sepiaTone"/>
             </property>
         </class>
 

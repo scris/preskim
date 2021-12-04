@@ -74,6 +74,7 @@
 		CE19641516E811D40027E2CF /* SKSnapshotWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = CE19641416E811D40027E2CF /* SKSnapshotWindow.m */; };
 		CE1991E0256C70CD00FC4E25 /* SKRecentDocumentInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1991DF256C70CD00FC4E25 /* SKRecentDocumentInfo.m */; };
 		CE199DFD0D957A16009B2055 /* SKAnnotationTypeImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE199DFC0D957A16009B2055 /* SKAnnotationTypeImageCell.m */; };
+		CE19E7A9275B7BC1007EBD8B /* SKDisplayPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = CE19E7A8275B7BC1007EBD8B /* SKDisplayPrefs.m */; };
 		CE1ADEBF0C4C341100071840 /* SKTransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1ADEBE0C4C341100071840 /* SKTransitionController.m */; };
 		CE1C77B6123FB41E00C73F1A /* SKNoteTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1C77B5123FB41E00C73F1A /* SKNoteTextView.m */; };
 		CE1CF47223FAA1D7005B5B40 /* SKThumbnailItem.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1CF47123FAA1D7005B5B40 /* SKThumbnailItem.m */; };
@@ -756,6 +757,8 @@
 		CE1991DF256C70CD00FC4E25 /* SKRecentDocumentInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKRecentDocumentInfo.m; sourceTree = "<group>"; };
 		CE199DFB0D957A16009B2055 /* SKAnnotationTypeImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKAnnotationTypeImageCell.h; sourceTree = "<group>"; };
 		CE199DFC0D957A16009B2055 /* SKAnnotationTypeImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKAnnotationTypeImageCell.m; sourceTree = "<group>"; };
+		CE19E7A7275B7BC1007EBD8B /* SKDisplayPrefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKDisplayPrefs.h; sourceTree = "<group>"; };
+		CE19E7A8275B7BC1007EBD8B /* SKDisplayPrefs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKDisplayPrefs.m; sourceTree = "<group>"; };
 		CE1ADB170C4BC6DE00071840 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		CE1ADEBE0C4C341100071840 /* SKTransitionController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SKTransitionController.m; sourceTree = "<group>"; };
 		CE1C77B4123FB41E00C73F1A /* SKNoteTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKNoteTextView.h; sourceTree = "<group>"; };
@@ -1853,6 +1856,8 @@
 				CEBD52EB0C9C0AE500FBF6A4 /* SKBookmark.m */,
 				CE05DA9F2524C32200BB9288 /* SKColorList.h */,
 				CE05DAA02524C32200BB9288 /* SKColorList.m */,
+				CE19E7A7275B7BC1007EBD8B /* SKDisplayPrefs.h */,
+				CE19E7A8275B7BC1007EBD8B /* SKDisplayPrefs.m */,
 				CEAA559B0C6DE235006BD633 /* SKDownload.h */,
 				CEAA559C0C6DE235006BD633 /* SKDownload.m */,
 				CEA3DF6C106BDAC1002FB3DB /* SKFloatMapTable.h */,
@@ -2776,6 +2781,7 @@
 				CE7611650EA49D1400301E45 /* SKPrintableView.m in Sources */,
 				CEE0F5EB0EBB3DEC000A7A8C /* SKLevelIndicatorCell.m in Sources */,
 				CE0A3C8E0EBF3AAA00526C74 /* NSResponder_SKExtensions.m in Sources */,
+				CE19E7A9275B7BC1007EBD8B /* SKDisplayPrefs.m in Sources */,
 				CE32531F0F4723EA0021BADD /* SKMainWindowController_Actions.m in Sources */,
 				CEE7E76524426BFF0034690E /* PDFAnnotationTextWidget_SKExtensions.m in Sources */,
 				CE9B804A1030642400EA8774 /* SKTransitionInfo.m in Sources */,
