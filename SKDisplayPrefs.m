@@ -92,20 +92,18 @@
 
 - (NSColor *)backgroundColor {
     NSColor *backgroundColor = nil;
-    NSString *key = fullScreen ? SKDarkFullScreenBackgroundColorKey : SKDarkBackgroundColorKey;
     if (SKHasDarkAppearance(NSApp))
-        backgroundColor = [[NSUserDefaults standardUserDefaults] colorForKey:key];
+        backgroundColor = [[NSUserDefaults standardUserDefaults] colorForKey:fullScreen ? SKDarkFullScreenBackgroundColorKey : SKDarkBackgroundColorKey];
     if (backgroundColor == nil)
-        backgroundColor = [[NSUserDefaults standardUserDefaults] colorForKey:key];
+        backgroundColor = [[NSUserDefaults standardUserDefaults] colorForKey:fullScreen ? SKFullScreenBackgroundColorKey : SKBackgroundColorKey];
     return backgroundColor;
 }
 
 - (void)setBackgroundColor:(NSColor *)color {
-    NSString *key = fullScreen ? SKDarkFullScreenBackgroundColorKey : SKDarkBackgroundColorKey;
     if (SKHasDarkAppearance(NSApp))
-        [[NSUserDefaults standardUserDefaults] setColor:color forKey:key];
+        [[NSUserDefaults standardUserDefaults] setColor:color forKey:fullScreen ? SKDarkFullScreenBackgroundColorKey : SKDarkBackgroundColorKey];
     else
-        [[NSUserDefaults standardUserDefaults] setColor:color forKey:key];
+        [[NSUserDefaults standardUserDefaults] setColor:color forKey:fullScreen ? SKFullScreenBackgroundColorKey : SKBackgroundColorKey];
 }
 
 - (CGFloat)sepiaTone {
