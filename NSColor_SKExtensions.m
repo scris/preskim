@@ -190,6 +190,7 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 #pragma mark Scripting
 
 + (id)scriptingRgbaColorWithDescriptor:(NSAppleEventDescriptor *)descriptor {
+    NSLog(@"%@",descriptor);
     if ([descriptor descriptorType] == typeAEList) {
         CGFloat red = 0.0, green = 0.0, blue = 0.0, alpha = 0.0;
         if ([descriptor numberOfItems] > 0)
@@ -249,6 +250,16 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
         // Cocoa Scripting defines coercions from string to color for some standard color names
         NSColor *color = string ? [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:string toClass:[NSColor class]] : nil;
         // We should check the return value, because NSScriptCoercionHandler returns the input when it fails rather than nil, stupid
+        if ([color isKindOfClass:[NSString class]]) {
+            if ([string isEqualToString:@"under page background"])
+                color = [NSColor underPageBackgroundColor];
+            else if ([string isEqualToString:@"window background"])
+                color = [NSColor windowBackgroundColor];
+            else if ([string isEqualToString:@"control background"])
+                color = [NSColor controlBackgroundColor];
+            else
+                color = nil;
+        }
         return [color isKindOfClass:[NSColor class]] ? color : nil;
     }
 }
