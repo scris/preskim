@@ -81,6 +81,7 @@
 #import "NSCharacterSet_SKExtensions.h"
 #import "SKNotePrefs.h"
 #import "SKDisplayPrefs.h"
+#import "NSData_SKExtensions.h"
 
 #define WEBSITE_URL @"https://skim-app.sourceforge.io/"
 #define WIKI_URL    @"https://sourceforge.net/p/skim-app/wiki/"
@@ -475,7 +476,7 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
     static NSSet *applicationScriptingKeys = nil;
     if (applicationScriptingKeys == nil)
-        applicationScriptingKeys = [[NSSet alloc] initWithObjects:@"bookmarks", @"downloads", @"notePreferences", @"displayPreferences", @"pageBackgroundColor", @"favoriteColors", nil];
+        applicationScriptingKeys = [[NSSet alloc] initWithObjects:@"bookmarks", @"downloads", @"notePreferences", @"displayPreferences", @"richTextFormat", @"pageBackgroundColor", @"favoriteColors", nil];
 	return [applicationScriptingKeys containsObject:key];
 }
 
@@ -534,6 +535,11 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 
 - (SKDisplayPrefs *)valueInDisplayPreferencesWithName:(NSString *)name {
     return [[[SKDisplayPrefs alloc] initWithName:name] autorelease];
+}
+
+- (NSAttributedString *)valueInRichTextFormatWithName:(NSString *)name {log_method();
+    NSData *data = [[[NSData alloc] initWithHexString:name] autorelease];
+    return data ? [[[NSAttributedString alloc] initWithData:data options:[NSDictionary dictionary] documentAttributes:NULL error:NULL] autorelease] : nil;
 }
 
 - (NSColor *)pageBackgroundColor {

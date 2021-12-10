@@ -74,8 +74,3 @@
 - (void)setScriptingRTF:(id)data;
 
 @end
-
-
-@interface NSApplication (SKRichTextFormat)
-- (NSAttributedString *)valueInRichTextFormatWithName:(NSString *)name;
-@end
