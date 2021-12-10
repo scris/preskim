@@ -537,7 +537,7 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
     return [[[SKDisplayPrefs alloc] initWithName:name] autorelease];
 }
 
-- (NSAttributedString *)valueInRichTextFormatWithName:(NSString *)name {log_method();
+- (NSAttributedString *)valueInRichTextFormatWithName:(NSString *)name {
     NSData *data = [[[NSData alloc] initWithHexString:name] autorelease];
     return data ? [[[NSAttributedString alloc] initWithData:data options:[NSDictionary dictionary] documentAttributes:NULL error:NULL] autorelease] : nil;
 }
