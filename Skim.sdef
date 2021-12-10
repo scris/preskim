@@ -624,6 +624,22 @@
             </result>
         </command>
 
+        <command name="get preferences for" code="SKIMPref"
+            description="Get preferences for a note type, or for normal or full screen display.">
+            <synonym name="preferences for"/>
+            <cocoa class="SKPreferencesCommand"/>
+            <direct-parameter
+                description="The note type or interaction mode for which to get the preferences.">
+                <type type="note type"/>
+                <type type="interaction mode type"/>
+            </direct-parameter>
+            <result
+                description="The preferences for the note type or PDF display.">
+                <type type="note preferences"/>
+                <type type="PDF display preferences"/>
+            </result>
+        </command>
+
         <command name="grab" code="SKIMGrab"
             description="Grab a picture from a page.">
             <direct-parameter type="page"
@@ -677,21 +693,6 @@
             <direct-parameter type="note"
                 description="The note to edit.">
             </direct-parameter>
-        </command>
-
-        <command name="preferences for" code="SKIMPref"
-            description="Get preferences for a note type, or for normal or full screen display.">
-            <cocoa class="SKPreferencesCommand"/>
-            <direct-parameter
-                description="The note type or interaction mode for which to get the preferences.">
-                <type type="note type"/>
-                <type type="interaction mode type"/>
-            </direct-parameter>
-            <result
-                description="The preferences for the note type or PDF display.">
-                <type type="note preferences"/>
-                <type type="PDF display preferences"/>
-            </result>
         </command>
 
         <class-extension extends="item" hidden="yes"
