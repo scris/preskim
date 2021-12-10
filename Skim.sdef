@@ -328,184 +328,28 @@
 			</responds-to>
         </class>
 
-        <class name="character" code="cha "
+        <class name="character" code="cha " inherits="rich text"
             description="This subdivides the text into characters.">
             <cocoa class="NSTextStorage"/>
             <type type="text"/>
-            <property name="color" code="colr" type="RGBA color"
-                description="The color of the first character.">
-                <cocoa key="foregroundColor"/>
-            </property>
-            <property name="font" code="font" type="text"
-                description="The name of the font of the first character.">
-                <cocoa key="fontName"/>
-            </property>
-            <property name="size" code="ptsz" type="integer"
-                description="The size in points of the first character.">
-                <cocoa key="fontSize"/>
-            </property>
-            <property name="RTF" code="RTF " type="RTF"
-                description="The raw RTF data.">
-                <cocoa key="scriptingRTF"/>
-            </property>
-            <element type="character"/>
-            <element type="paragraph"/>
-            <element type="word"/>
-            <element type="attribute run"/>
-            <element type="attachment"/>
-			<responds-to name="select" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="join" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get bounds for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get text for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get index for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get pages for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
         </class>
 
-        <class name="paragraph" code="cpar"
+        <class name="paragraph" code="cpar" inherits="rich text"
             description="This subdivides the text into paragraphs.">
             <cocoa class="NSTextStorage"/>
             <type type="text"/>
-            <property name="color" code="colr" type="RGBA color"
-                description="The color of the first character.">
-                <cocoa key="foregroundColor"/>
-            </property>
-            <property name="font" code="font" type="text"
-                description="The name of the font of the first character.">
-                <cocoa key="fontName"/>
-            </property>
-            <property name="size" code="ptsz" type="integer"
-                description="The size in points of the first character.">
-                <cocoa key="fontSize"/>
-            </property>
-            <property name="RTF" code="RTF " type="RTF"
-                description="The raw RTF data.">
-                <cocoa key="scriptingRTF"/>
-            </property>
-            <element type="character"/>
-            <element type="paragraph"/>
-            <element type="word"/>
-            <element type="attribute run"/>
-            <element type="attachment"/>
-			<responds-to name="select" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="join" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get bounds for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get text for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get index for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get pages for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
         </class>
 
-        <class name="word" code="cwor"
+        <class name="word" code="cwor" inherits="rich text"
             description="This subdivides the text into words.">
             <cocoa class="NSTextStorage"/>
             <type type="text"/>
-            <property name="color" code="colr" type="RGBA color"
-                description="The color of the first character.">
-                <cocoa key="foregroundColor"/>
-            </property>
-            <property name="font" code="font" type="text"
-                description="The name of the font of the first character.">
-                <cocoa key="fontName"/>
-            </property>
-            <property name="size" code="ptsz" type="integer"
-                description="The size in points of the first character.">
-                <cocoa key="fontSize"/>
-            </property>
-            <property name="RTF" code="RTF " type="RTF"
-                description="The raw RTF data.">
-                <cocoa key="scriptingRTF"/>
-            </property>
-            <element type="character"/>
-            <element type="paragraph"/>
-            <element type="word"/>
-            <element type="attribute run"/>
-            <element type="attachment"/>
-			<responds-to name="select" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="join" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get bounds for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get text for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get index for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get pages for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
         </class>
 
-        <class name="attribute run" code="catr"
+        <class name="attribute run" code="catr" inherits="rich text"
             description="This subdivides the text into chunks that all have the same attributes.">
             <cocoa class="NSTextStorage"/>
             <type type="text"/>
-            <property name="color" code="colr" type="RGBA color"
-                description="The color of the first character.">
-                <cocoa key="foregroundColor"/>
-            </property>
-            <property name="font" code="font" type="text"
-                description="The name of the font of the first character.">
-                <cocoa key="fontName"/>
-            </property>
-            <property name="size" code="ptsz" type="integer"
-                description="The size in points of the first character.">
-                <cocoa key="fontSize"/>
-            </property>
-            <property name="RTF" code="RTF " type="RTF"
-                description="The raw RTF data.">
-                <cocoa key="scriptingRTF"/>
-            </property>
-            <element type="character"/>
-            <element type="paragraph"/>
-            <element type="word"/>
-            <element type="attribute run"/>
-            <element type="attachment"/>
-			<responds-to name="select" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="join" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get bounds for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get text for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get index for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get pages for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
         </class>
 
         <class name="attachment" code="atts" inherits="rich text"
