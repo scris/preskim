@@ -355,6 +355,10 @@
         <class name="attachment" code="atts" inherits="rich text"
             description="Represents an inline text attachment. This class is used mainly for make commands.">
             <cocoa class="NSAttachmentTextStorage"/>
+            <property name="file" code="file" type="file"
+                description="The file for the attachment">
+                <cocoa key="url"/>
+            </property>
             <property name="file name" code="atfn" type="text"
                 description="The path to the file for the attachment">
                 <cocoa key="filename"/>
