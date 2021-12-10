@@ -398,7 +398,6 @@
             <direct-parameter
                 description="The character range(s) or note(s) to select.">
                 <type type="specifier" list="yes"/>
-                <type type="specifier"/>
             </direct-parameter>
 			<parameter name="animating" code="Anim" type="boolean" optional="yes"
 				description="Animate when selecting?"> 
@@ -417,7 +416,6 @@
                 <type type="outline"/>
                 <type type="TeX line"/>
                 <type type="specifier" list="yes"/>
-                <type type="specifier"/>
                 <cocoa key="To"/>
             </parameter>
 			<parameter name="from" code="from" type="file" optional="yes" 
@@ -469,7 +467,6 @@
             <parameter name="from" code="from" optional="yes"
                 description="The selection to search from.">
                 <type type="specifier" list="yes"/>
-                <type type="specifier"/>
                 <cocoa key="From"/>
             </parameter>
             <parameter name="backward search" code="Back" type="boolean" optional="yes"
@@ -492,13 +489,11 @@
             <direct-parameter
                 description="The selection to add to.">
                 <type type="specifier" list="yes"/>
-                <type type="specifier"/>
             </direct-parameter>
             <parameter name="to" code="to  " optional="yes"
                 description="The selection to add.">
                 <cocoa key="To"/>
                 <type type="specifier" list="yes"/>
-                <type type="specifier"/>
             </parameter>
             <parameter name="continuous selection" type="boolean" code="conI" optional="yes"
                 description="Join to a continuous selection?">
@@ -531,7 +526,6 @@
             <direct-parameter
                 description="The document, page, note, or selection.">
                 <type type="specifier" list="yes"/>
-                <type type="specifier"/>
             </direct-parameter>
             <parameter name="on" type="page" code="on  " optional="yes"
                 description="The page on which to get the bounds.">
@@ -552,7 +546,6 @@
             <direct-parameter
                 description="The document, page, note, selection, or raw RTF data.">
                 <type type="specifier" list="yes"/>
-                <type type="specifier"/>
                 <type type="RTF"/>
             </direct-parameter>
             <parameter name="on" type="page" code="on  " optional="yes"
@@ -577,7 +570,6 @@
             <direct-parameter
                 description="The document, page, note, or selection.">
                 <type type="specifier" list="yes"/>
-                <type type="specifier"/>
             </direct-parameter>
             <parameter name="on" type="page" code="on  " optional="yes"
                 description="The page on which to get the index.">
@@ -598,7 +590,6 @@
             <direct-parameter
                 description="The document, page, note, or selection.">
                 <type type="specifier" list="yes"/>
-                <type type="specifier"/>
             </direct-parameter>
             <result
                 description="The list of pages for the object.">
