@@ -526,6 +526,7 @@
             <direct-parameter
                 description="The document, page, note, or selection.">
                 <type type="specifier" list="yes"/>
+                <type type="specifier"/>
             </direct-parameter>
             <parameter name="on" type="page" code="on  " optional="yes"
                 description="The page on which to get the bounds.">
@@ -546,6 +547,7 @@
             <direct-parameter
                 description="The document, page, note, selection, or raw RTF data.">
                 <type type="specifier" list="yes"/>
+                <type type="specifier"/>
                 <type type="RTF"/>
             </direct-parameter>
             <parameter name="on" type="page" code="on  " optional="yes"
@@ -570,6 +572,7 @@
             <direct-parameter
                 description="The document, page, note, or selection.">
                 <type type="specifier" list="yes"/>
+                <type type="specifier"/>
             </direct-parameter>
             <parameter name="on" type="page" code="on  " optional="yes"
                 description="The page on which to get the index.">
@@ -590,6 +593,7 @@
             <direct-parameter
                 description="The document, page, note, or selection.">
                 <type type="specifier" list="yes"/>
+                <type type="specifier"/>
             </direct-parameter>
             <result
                 description="The list of pages for the object.">
