@@ -541,13 +541,10 @@ static NSArray *characterRangesAndContainersForSpecifier(NSScriptObjectSpecifier
         }
     }
     
-    PDFSelection *selection = nil;
-    if ([selections count]) {
-        selection = [selections objectAtIndex:0];
-        if ([selections count] > 1) {
-            [selections removeObjectAtIndex:0];
-            [selection addSelections:selections];
-        }
+    PDFSelection *selection = [selections firstObject];
+    if ([selections count] > 1) {
+        [selections removeObjectAtIndex:0];
+        [selection addSelections:selections];
     }
     return selection;
 }
