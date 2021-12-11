@@ -308,24 +308,6 @@
             <element type="word"/>
             <element type="attribute run"/>
             <element type="attachment"/>
-			<responds-to name="select" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="join" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get bounds for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get text for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get index for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get pages for" hidden="yes">
-				<cocoa method=""/>
-			</responds-to>
         </class>
 
         <class name="character" code="cha " inherits="rich text"
@@ -363,19 +345,6 @@
                 description="The path to the file for the attachment">
                 <cocoa key="filename"/>
             </property>
-        </class>
-
-        <class name="rich text format" plural="rich text formats" code="RTFt" hidden="yes"
-            description="Rich text format, encoding rich text.">
-            <cocoa class="NSAttributedString"/>
-            <property name="name" code="pnam" type="text" access="r"
-                description="The name for the rich text format.">
-                <cocoa key="scriptingName"/>
-            </property>
-            <contents name="rich text" code="ricT" type="rich text" access="r"
-                description="The rich text representation of the rich text format.">
-                <cocoa key="scriptingRichText"/>
-            </contents>
         </class>
 
     </suite>
@@ -702,6 +671,29 @@
                 description="TeX lines.">
                 <cocoa key="texLines"/>
             </element>
+        </class-extension>
+
+        <class-extension extends="rich text" hidden="yes"
+            description="Rich (styled) text">
+            <cocoa class="NSTextStorage"/>
+            <responds-to name="select">
+                <cocoa method=""/>
+            </responds-to>
+            <responds-to name="join">
+                <cocoa method=""/>
+            </responds-to>
+            <responds-to name="get bounds for">
+                <cocoa method=""/>
+            </responds-to>
+            <responds-to name="get text for">
+                <cocoa method=""/>
+            </responds-to>
+            <responds-to name="get index for">
+                <cocoa method=""/>
+            </responds-to>
+            <responds-to name="get pages for">
+                <cocoa method=""/>
+            </responds-to>
         </class-extension>
 
         <class-extension extends="application"
@@ -1166,6 +1158,19 @@
                 description="The current status of the download. Set this to cancel or resume a download.">
                 <cocoa key="scriptingStatus"/>
             </property>
+        </class>
+
+        <class name="rich text format" plural="rich text formats" code="RTFt" hidden="yes"
+            description="Rich text format, encoding rich text.">
+            <cocoa class="NSAttributedString"/>
+            <property name="name" code="pnam" type="text" access="r"
+                description="The name for the rich text format.">
+                <cocoa key="scriptingName"/>
+            </property>
+            <contents name="rich text" code="ricT" type="rich text" access="r"
+                description="The rich text representation of the rich text format.">
+                <cocoa key="scriptingRichText"/>
+            </contents>
         </class>
 
         <class name="point list" plural="point lists" code="PtLi"
