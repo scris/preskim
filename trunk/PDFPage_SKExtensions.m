@@ -684,12 +684,11 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
         [props removeObjectForKey:SKNPDFAnnotationTypeKey];
         if (type == nil && contentsValue)
             type = SKNHighlightString;
-        
         if ([[self document] allowsNotes] == NO) {
             [[NSScriptCommand currentCommand] setScriptErrorNumber:NSReceiversCantHandleCommandScriptError];
             [[NSScriptCommand currentCommand] setScriptErrorString:@"PDF does not support notes."];
         } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNUnderlineString ]) {
-            id selSpec = contentsValue ?: [properties objectForKey:SKPDFAnnotationSelectionSpecifierKey];
+            id selSpec = contentsValue ?: [[[[NSScriptCommand currentCommand] arguments] objectForKey:@"KeyDictionary"] objectForKey:SKPDFAnnotationSelectionSpecifierKey];
             PDFSelection *selection;
             NSInteger markupType = 0;
             [props removeObjectForKey:SKPDFAnnotationSelectionSpecifierKey];
