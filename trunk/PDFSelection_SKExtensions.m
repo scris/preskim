@@ -459,18 +459,17 @@ static NSArray *characterRangesAndContainersForSpecifier(NSScriptObjectSpecifier
 + (id)selectionWithSpecifier:(id)specifier onPage:(PDFPage *)aPage {
     if (specifier == nil || [specifier isEqual:[NSNull null]])
         return nil;
-    if ([specifier isKindOfClass:[NSArray class]] == NO)
+    if ([specifier isKindOfClass:[NSPropertySpecifier class]] &&
+        [[[specifier containerClassDescription] toManyRelationshipKeys] containsObject:[specifier key]] == NO &&
+        [[[specifier keyClassDescription] className] isEqualToString:RICH_TEXT_CLASSNAME] == NO) {
+        // this allows to use selection properties directly
+        specifier = [specifier objectsByEvaluatingSpecifier];
+        if (specifier == nil)
+            return nil;
+        else if ([specifier isKindOfClass:[NSArray class]] == NO)
+            specifier = [NSArray arrayWithObject:specifier];
+    } else if ([specifier isKindOfClass:[NSArray class]] == NO) {
         specifier = [NSArray arrayWithObject:specifier];
-    if ([specifier count] == 1) {
-        NSScriptObjectSpecifier *spec = [specifier objectAtIndex:0];
-        if ([spec isKindOfClass:[NSPropertySpecifier class]] &&
-            [[[spec containerClassDescription] toManyRelationshipKeys] containsObject:[spec key]] == NO &&
-            [[[spec keyClassDescription] className] isEqualToString:RICH_TEXT_CLASSNAME] == NO) {
-            // this allows to use selection properties directly
-            specifier = [spec objectsByEvaluatingSpecifier];
-            if ([specifier isKindOfClass:[NSArray class]] == NO)
-                specifier = [NSArray arrayWithObject:specifier];
-        }
     }
     
     NSMutableArray *selections = [NSMutableArray array];
