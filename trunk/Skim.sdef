@@ -473,20 +473,6 @@
                 <type type="specifier" list="yes"/>
             </result>
         </command>
-        
-        <command name="show TeX file" code="SKIMSTeX"
-            description="Show the LaTeX source file.">
-            <direct-parameter type="document"
-                description="The document to show the TeX source for."/>
-            <parameter name="from" code="from" type="point" optional="yes"
-                description="The point from the page to show the TeX line for.">
-                <cocoa key="Point"/>
-            </parameter>
-            <parameter name="at" code="at  " type="page" optional="yes"
-                description="The page to show the TeX line for.">
-                <cocoa key="Page"/>
-            </parameter>
-        </command>
 
         <command name="get bounds for" code="SKIMBnds"
             description="Get the bounds of a page, note, or selection.">
@@ -658,10 +644,20 @@
         </command>
         
         <command name="edit" code="SKIMEdit"
-            description="Edit a note.">
+            description="Edit a note or show a TeX file for a document.">
             <direct-parameter type="note"
-                description="The note to edit.">
+                description="The note or document to edit.">
+                <type type="note"/>
+                <type type="document"/>
             </direct-parameter>
+            <parameter name="from" code="from" type="point" optional="yes"
+                description="The point from the page to show the TeX file for.">
+                <cocoa key="Point"/>
+            </parameter>
+            <parameter name="at" code="at  " type="page" optional="yes"
+                description="The page to show the TeX file for.">
+                <cocoa key="Page"/>
+            </parameter>
         </command>
 
         <class-extension extends="item" hidden="yes"
@@ -822,8 +818,8 @@
             <responds-to name="find">
                 <cocoa method="handleFindScriptCommand:"/>
             </responds-to>
-            <responds-to name="show TeX file">
-                <cocoa method="handleShowTeXScriptCommand:"/>
+            <responds-to name="edit">
+                <cocoa method="handleEditScriptCommand:"/>
             </responds-to>
 			<responds-to name="get bounds for">
 				<cocoa method=""/>

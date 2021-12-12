@@ -105,7 +105,7 @@ extern NSString *SKSkimFileDidSaveNotification;
 - (void)handleRevertScriptCommand:(NSScriptCommand *)command;
 - (void)handleGoToScriptCommand:(NSScriptCommand *)command;
 - (id)handleFindScriptCommand:(NSScriptCommand *)command;
-- (void)handleShowTeXScriptCommand:(NSScriptCommand *)command;
+- (void)handleEditScriptCommand:(NSScriptCommand *)command;
 - (void)handleConvertNotesScriptCommand:(NSScriptCommand *)command;
 - (void)handleReadNotesScriptCommand:(NSScriptCommand *)command;
 
