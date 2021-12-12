@@ -2060,7 +2060,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     return specifier ?: [NSArray array];
 }
 
-- (void)handleShowTeXScriptCommand:(NSScriptCommand *)command {
+- (void)handleEditScriptCommand:(NSScriptCommand *)command {
 	NSDictionary *args = [command evaluatedArguments];
     id page = [args objectForKey:@"Page"];
     id pointData = [args objectForKey:@"Point"];
