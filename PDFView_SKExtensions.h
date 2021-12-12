@@ -47,8 +47,6 @@
 @property (nonatomic, readonly) CGFloat minimumScaleFactor;
 @property (nonatomic, readonly) CGFloat maximumScaleFactor;
 
-+ (NSColor *)defaultPageBackgroundColor;
-
 - (BOOL)isPageAtIndexDisplayed:(NSUInteger)pageIndex;
 
 - (void)setNeedsDisplayInRect:(NSRect)rect ofPage:(PDFPage *)page;
@@ -70,9 +68,6 @@
 
 + (NSColor *)defaultBackgroundColor;
 + (NSColor *)defaultFullScreenBackgroundColor;
-+ (NSColor *)defaultPageBackgroundColor;
-
-- (void)applyDefaultPageBackgroundColor;
 
 @end
 
@@ -80,6 +75,4 @@
 @interface PDFView (SKPrivateDeclarations)
 - (NSInteger)currentHistoryIndex;
 - (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard types:(NSArray *)types;
-- (NSColor *)pageColor;
-- (void)setPageColor:(NSColor *)color;
 @end

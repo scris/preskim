@@ -279,17 +279,6 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     return RUNNING_AFTER(10_11) ? rect : [self convertRect:[self backingAlignedRect:[self convertRect:rect fromPage:page] options:NSAlignAllEdgesOutward] toPage:page];
 }
 
-+ (NSColor *)defaultPageBackgroundColor {
-    if ([self instancesRespondToSelector:@selector(setPageColor:)] && RUNNING_BEFORE(10_12))
-        return [[NSUserDefaults standardUserDefaults] colorForKey:SKPageBackgroundColorKey] ?: [NSColor whiteColor];
-    return [NSColor whiteColor];
-}
-
-- (void)applyDefaultPageBackgroundColor {
-    if ([self respondsToSelector:@selector(setPageColor:)] && RUNNING_BEFORE(10_12))
-        [self setPageColor:[[self class] defaultPageBackgroundColor]];
-}
-
 static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *darkBackgroundColorKey) {
     NSColor *color = nil;
     if (SKHasDarkAppearance(NSApp))

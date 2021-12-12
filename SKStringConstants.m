@@ -47,7 +47,6 @@ NSString *SKBackgroundColorKey = @"SKBackgroundColor";
 NSString *SKFullScreenBackgroundColorKey = @"SKFullScreenBackgroundColor";
 NSString *SKDarkBackgroundColorKey = @"SKDarkBackgroundColor";
 NSString *SKDarkFullScreenBackgroundColorKey = @"SKDarkFullScreenBackgroundColor";
-NSString *SKPageBackgroundColorKey = @"SKPageBackgroundColor";
 NSString *SKLastOpenFileNamesKey = @"SKLastOpenFileNames";
 NSString *SKOpenContentsPaneOnlyForTOCKey = @"SKOpenContentsPaneOnlyForTOC";
 NSString *SKInitialWindowSizeOptionKey = @"SKInitialWindowSizeOption";

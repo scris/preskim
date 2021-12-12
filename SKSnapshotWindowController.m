@@ -121,7 +121,7 @@ static char SKSnaphotWindowAppObservationContext;
         [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
     [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
     [self updateWindowLevel];
-    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[NSArray arrayWithObjects:SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey, SKPageBackgroundColorKey, nil] context:&SKSnaphotWindowDefaultsObservationContext];
+    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[NSArray arrayWithObjects:SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey, nil] context:&SKSnaphotWindowDefaultsObservationContext];
     if (RUNNING_AFTER(10_13))
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKSnaphotWindowAppObservationContext];
     // the window is initialially exposed. The windowDidExpose notification is useless, it has nothing to do with showing the window
@@ -224,7 +224,7 @@ static char SKSnaphotWindowAppObservationContext;
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[NSArray arrayWithObjects:SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey, SKPageBackgroundColorKey, nil] context:&SKSnaphotWindowDefaultsObservationContext]; }
+    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[NSArray arrayWithObjects:SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey, nil] context:&SKSnaphotWindowDefaultsObservationContext]; }
     @catch (id e) {}
     if (RUNNING_AFTER(10_13)) {
         @try { [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:&SKSnaphotWindowAppObservationContext]; }
@@ -298,7 +298,6 @@ static char SKSnaphotWindowAppObservationContext;
     [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
     [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
     [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
-    [pdfView applyDefaultPageBackgroundColor];
     [pdfView setDocument:pdfDocument];
     
     PDFPage *page = [pdfDocument pageAtIndex:pageNum];
@@ -510,7 +509,7 @@ static char SKSnaphotWindowAppObservationContext;
     [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
     [transform concat];
     [NSGraphicsContext saveGraphicsState];
-    [[PDFView defaultPageBackgroundColor] set];
+    [[NSColor whiteColor] set];
     if (shadowBlurRadius > 0.0)
         [NSShadow setShadowWithWhite:0.0 alpha:0.5 blurRadius:shadowBlurRadius yOffset:shadowOffset];
     NSRectFill(bounds);
@@ -673,8 +672,6 @@ static char SKSnaphotWindowAppObservationContext;
             [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
         } else if ([key isEqualToString:SKBackgroundColorKey] || [key isEqualToString:SKDarkBackgroundColorKey]) {
             [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
-        } else if ([key isEqualToString:SKPageBackgroundColorKey]) {
-            [pdfView applyDefaultPageBackgroundColor];
         }
     } else if (context == &SKSnaphotWindowAppObservationContext) {
         [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];

@@ -125,7 +125,7 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 @implementation SKApplicationController
 
 @synthesize noteColumnsMenu, noteTypeMenu, colorList;
-@dynamic pageBackgroundColor, favoriteColors;
+@dynamic favoriteColors;
 
 + (void)initialize{
     SKINITIALIZE;
@@ -476,7 +476,7 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
     static NSSet *applicationScriptingKeys = nil;
     if (applicationScriptingKeys == nil)
-        applicationScriptingKeys = [[NSSet alloc] initWithObjects:@"bookmarks", @"downloads", @"notePreferences", @"displayPreferences", @"richTextFormat", @"pageBackgroundColor", @"favoriteColors", nil];
+        applicationScriptingKeys = [[NSSet alloc] initWithObjects:@"bookmarks", @"downloads", @"notePreferences", @"displayPreferences", @"richTextFormat", @"favoriteColors", nil];
 	return [applicationScriptingKeys containsObject:key];
 }
 
@@ -540,19 +540,6 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 - (NSAttributedString *)valueInRichTextFormatWithName:(NSString *)name {
     NSData *data = [[[NSData alloc] initWithHexString:name] autorelease];
     return data ? [[[NSAttributedString alloc] initWithData:data options:[NSDictionary dictionary] documentAttributes:NULL error:NULL] autorelease] : nil;
-}
-
-- (NSColor *)pageBackgroundColor {
-    return [[NSUserDefaults standardUserDefaults] colorForKey:SKPageBackgroundColorKey] ?: [NSColor whiteColor];
-}
-
-- (void)setPageBackgroundColor:(NSColor *)color {
-    CGFloat c[4] = {1.0, 1.0, 1.0, 1.0};
-    [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getComponents:c];
-    if (c[0] > 0.999 && c[1] > 0.999 && c[2] > 0.999 && c[3] >= 1.0)
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:SKPageBackgroundColorKey];
-    else
-        [[NSUserDefaults standardUserDefaults] setColor:color forKey:SKPageBackgroundColorKey];
 }
 
 - (NSArray *)favoriteColors {

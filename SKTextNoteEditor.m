@@ -282,7 +282,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     [NSGraphicsContext saveGraphicsState];
     
     if ((RUNNING(10_13) || RUNNING(10_14)) && (color == nil || [color alphaComponent] < 1.0)) {
-        [[PDFView defaultPageBackgroundColor] setFill];
+        [[NSColor whiteColor] setFill];
         [NSBezierPath fillRect:bounds];
     }
     
