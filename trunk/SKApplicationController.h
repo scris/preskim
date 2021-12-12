@@ -64,7 +64,6 @@
 
 @property (nonatomic, readonly) NSColorList *colorList;
 
-@property (nonatomic, copy) NSColor *pageBackgroundColor;
 @property (nonatomic, copy) NSArray *favoriteColors;
 @property (nonatomic) PDFLineStyle defaultStartLineStyle, defaultEndLineStyle;
 @property (nonatomic) NSTextAlignment defaultAlignment;

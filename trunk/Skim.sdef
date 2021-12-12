@@ -719,10 +719,6 @@
                 description="Rich text formats.">
                 <cocoa key="richTextFormat"/>
             </element>
-            <property name="page background color" type="RGBA color" code="PBgC" hidden="yes"
-                description="The default page background color.">
-                <cocoa key="pageBackgroundColor"/>
-            </property>
             <property name="favorite colors" code="FavC"
                 description="List of favorite colors.">
                 <type type="RGBA color" list="yes"/>

@@ -436,7 +436,6 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     [pdfView setInterpolationQuality:[sud integerForKey:SKInterpolationQualityKey]];
     [pdfView setGreekingThreshold:[sud floatForKey:SKGreekingThresholdKey]];
     [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
-    [pdfView applyDefaultPageBackgroundColor];
     
     [self applyPDFSettings:hasWindowSetup ? savedNormalSetup : [sud dictionaryForKey:SKDefaultPDFDisplaySettingsKey] rewind:NO];
     
@@ -2332,8 +2331,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:
         [NSArray arrayWithObjects:SKBackgroundColorKey, SKFullScreenBackgroundColorKey,
                                   SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,
-                                  SKPageBackgroundColorKey, 
-                                  SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey, 
+                                  SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
                                   SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
                                   SKTableFontSizeKey, nil]
         context:&SKMainWindowDefaultsObservationContext];
@@ -2346,7 +2344,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:
          [NSArray arrayWithObjects:SKBackgroundColorKey, SKFullScreenBackgroundColorKey,
                                    SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,
-                                   SKPageBackgroundColorKey,
                                    SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
                                    SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
           SKTableFontSizeKey, nil] context:&SKMainWindowDefaultsObservationContext];
@@ -2422,11 +2419,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                 [pdfView setBackgroundColor:color];
                 [secondaryPdfView setBackgroundColor:color];
             }
-        } else if ([key isEqualToString:SKPageBackgroundColorKey]) {
-            [pdfView applyDefaultPageBackgroundColor];
-            [secondaryPdfView applyDefaultPageBackgroundColor];
-            [self allThumbnailsNeedUpdate];
-            [self allSnapshotsNeedUpdate];
         } else if ([key isEqualToString:SKThumbnailSizeKey]) {
             [self resetThumbnailSizeIfNeeded];
             [leftSideController.thumbnailTableView noteHeightOfRowsChangedAnimating:YES];

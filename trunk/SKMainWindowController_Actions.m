@@ -1115,7 +1115,6 @@ static NSArray *allMainDocumentPDFViews() {
             [secondaryPdfView setSynchronizedPDFView:pdfView];
             [secondaryPdfView setBackgroundColor:[pdfView backgroundColor]];
             [[secondaryPdfView scrollView] setDrawsBackground:[[pdfView scrollView] drawsBackground]];
-            [secondaryPdfView applyDefaultPageBackgroundColor];
             [secondaryPdfView setDisplaysPageBreaks:NO];
             [secondaryPdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
             [secondaryPdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
