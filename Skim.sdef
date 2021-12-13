@@ -515,8 +515,7 @@
             </parameter>
             <result description="The (rich) text of the object.">
                 <type type="text"/>
-                <type type="specifier" hidden="yes"/>
-                <type type="rich text"/>
+                <type type="specifier"/>
             </result>
         </command>
 
@@ -638,8 +637,7 @@
             <result
                 description="The text or rich text generated using the template.">
                 <type type="text"/>
-                <type type="specifier" hidden="yes"/>
-                <type type="rich text"/>
+                <type type="specifier"/>
             </result>
         </command>
         
