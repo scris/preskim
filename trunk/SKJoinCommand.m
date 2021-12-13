@@ -45,7 +45,7 @@
 
 - (id)performDefaultImplementation {
     id dP = [self directParameter];
-	NSDictionary *args = [self evaluatedArguments];
+	NSDictionary *args = [self arguments];
     id other = [args objectForKey:@"To"];
     BOOL continuous = [[args objectForKey:@"Continuous"] boolValue];
     PDFSelection *selection = [PDFSelection selectionWithSpecifier:dP];
@@ -63,7 +63,7 @@
             NSUInteger firstIndex = [selection safeIndexOfFirstCharacterOnPage:firstPage];
             NSUInteger lastIndex = [selection safeIndexOfLastCharacterOnPage:lastPage];
             if (firstIndex != NSNotFound && lastIndex != NSNotFound)
-                selection = [[firstPage document] selectionFromPage:firstPage atCharacterIndex:firstIndex toPage:lastPage atCharacterIndex:lastIndex - 1];
+                selection = [[firstPage document] selectionFromPage:firstPage atCharacterIndex:firstIndex toPage:lastPage atCharacterIndex:lastIndex];
         }
     }
     return selection ? [selection objectSpecifier] : [NSArray array];
