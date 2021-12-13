@@ -689,13 +689,13 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
             [[NSScriptCommand currentCommand] setScriptErrorString:@"PDF does not support notes."];
         } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNUnderlineString ]) {
             id selSpec = contentsValue ?: [[[[NSScriptCommand currentCommand] arguments] objectForKey:@"KeyDictionary"] objectForKey:SKPDFAnnotationSelectionSpecifierKey];
-            PDFSelection *selection;
+            PDFSelection *selection = [selSpec isKindOfClass:[PDFSelection class]] ? selSpec : selSpec ? [PDFSelection selectionWithSpecifier:selSpec] : nil;
             NSInteger markupType = 0;
             [props removeObjectForKey:SKPDFAnnotationSelectionSpecifierKey];
             if (selSpec == nil) {
                 [[NSScriptCommand currentCommand] setScriptErrorNumber:NSRequiredArgumentsMissingScriptError]; 
                 [[NSScriptCommand currentCommand] setScriptErrorString:@"New markup notes need a selection."];
-            } else if ((selection = [PDFSelection selectionWithSpecifier:selSpec])) {
+            } else if (selection) {
                 if ([type isEqualToString:SKNHighlightString])
                     markupType = kPDFMarkupTypeHighlight;
                 else if ([type isEqualToString:SKNUnderlineString])

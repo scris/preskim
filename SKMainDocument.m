@@ -1867,11 +1867,12 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     if ([key isEqualToString:@"notes"]) {
         PDFAnnotation *annotation = nil;
         id selSpec = contentsValue ?: [[[[NSScriptCommand currentCommand] arguments] objectForKey:@"KeyDictionary"] objectForKey:SKPDFAnnotationSelectionSpecifierKey];
-        PDFPage *page = selSpec ? [[PDFSelection selectionWithSpecifier:selSpec] safeFirstPage] : nil;
+        PDFSelection *sel = selSpec ? [PDFSelection selectionWithSpecifier:selSpec] : nil;
+        PDFPage *page = [sel safeFirstPage];
         if (page == nil || [page document] != [self pdfDocument]) {
             [[NSScriptCommand currentCommand] setScriptErrorNumber:NSReceiversCantHandleCommandScriptError]; 
         } else {
-            annotation = [page newScriptingObjectOfClass:class forValueForKey:key withContentsValue:contentsValue properties:properties];
+            annotation = [page newScriptingObjectOfClass:class forValueForKey:key withContentsValue:sel ?: contentsValue properties:properties];
             if ([annotation respondsToSelector:@selector(setPage:)])
                 [annotation performSelector:@selector(setPage:) withObject:page];
         }
