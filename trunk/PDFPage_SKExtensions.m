@@ -707,7 +707,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
                     [props setValue:[selection cleanedString] forKey:SKPDFAnnotationScriptingTextContentsKey];
             }
         } else if ([type isEqualToString:SKNInkString]) {
-            NSArray *pointLists = [properties objectForKey:SKPDFAnnotationScriptingPointListsKey];
+            NSArray *pointLists = [[[properties objectForKey:SKPDFAnnotationScriptingPointListsKey] retain] autorelease];
             [props removeObjectForKey:SKPDFAnnotationScriptingPointListsKey];
             if ([pointLists isKindOfClass:[NSArray class]] == NO) {
                 [[NSScriptCommand currentCommand] setScriptErrorNumber:NSRequiredArgumentsMissingScriptError]; 
