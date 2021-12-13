@@ -45,9 +45,8 @@
 
 - (id)performDefaultImplementation {
     id dP = [self directParameter];
-	NSDictionary *args = [self arguments];
-    id other = [args objectForKey:@"To"];
-    BOOL continuous = [[args objectForKey:@"Continuous"] boolValue];
+    id other = [[self arguments] objectForKey:@"To"];
+    BOOL continuous = [[[self evaluatedArguments] objectForKey:@"Continuous"] boolValue];
     PDFSelection *selection = [PDFSelection selectionWithSpecifier:dP];
     PDFSelection *otherSelection = other ? [PDFSelection selectionWithSpecifier:other] : nil;
     
