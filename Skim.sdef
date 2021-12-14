@@ -643,7 +643,7 @@
         
         <command name="edit" code="SKIMEdit"
             description="Edit a note or show a TeX file for a document.">
-            <direct-parameter type="note"
+            <direct-parameter
                 description="The note or document to edit.">
                 <type type="note"/>
                 <type type="document"/>
