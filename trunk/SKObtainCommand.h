@@ -1,10 +1,10 @@
 //
-//  SKPagesCommand.h
+//  SKObtainCommand.h
 //  Skim
 //
-//  Created by Christiaan Hofman on 6/4/08.
+//  Created by Christiaan Hofman on 16/12/2021.
 /*
- This software is Copyright (c) 2008-2021
+ This software is Copyright (c) 2021
  Christiaan Hofman. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -39,5 +39,5 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface SKPagesCommand : NSScriptCommand
+@interface SKObtainCommand : NSScriptCommand
 @end
