@@ -43,11 +43,11 @@
 @implementation SKPreferencesCommand
 
 - (id)performDefaultImplementation {
-    id dPO = [self directParameter];
-    if ([dPO isKindOfClass:[NSString class]]) {
-        return [[[SKNotePrefs alloc] initWithType:dPO] autorelease];
-    } else if ([dPO isKindOfClass:[NSNumber class]]) {
-        NSInteger mode = [dPO integerValue];
+    id type = [[self evaluatedArguments] objectForKey:@"Type"];
+    if ([type isKindOfClass:[NSString class]]) {
+        return [[[SKNotePrefs alloc] initWithType:type] autorelease];
+    } else if ([type isKindOfClass:[NSNumber class]]) {
+        NSInteger mode = [type integerValue];
         if (mode == 0 || mode == 1)
             return [[[SKDisplayPrefs alloc] initForFullScreen:mode] autorelease];
     }

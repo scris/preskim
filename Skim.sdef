@@ -474,84 +474,25 @@
             </result>
         </command>
 
-        <command name="get bounds for" code="SKIMBnds"
-            description="Get the bounds of a page, note, or selection.">
-            <synonym name="bounds for"/>
-            <cocoa class="SKBoundsCommand"/>
-            <direct-parameter
-                description="The document, page, note, or selection.">
-                <type type="specifier" list="yes"/>
-                <type type="specifier"/>
-            </direct-parameter>
-            <parameter name="on" type="page" code="on  " optional="yes"
-                description="The page on which to get the bounds.">
-                <cocoa key="Page"/>
-            </parameter>
-            <parameter name="for" type="PDF display box" code="for " optional="yes"
-                description="The display box for which to take the bounds.">
-                <cocoa key="Box"/>
-            </parameter>
-            <result type="rectangle"
-                description="The bounds of the object."/>
-        </command>
-
-        <command name="get text for" code="SKIMText"
-            description="Get the text of a document, page, note, selection, or raw RTF data.">
-            <synonym name="text for"/>
-            <cocoa class="SKTextCommand"/>
-            <direct-parameter
-                description="The document, page, note, selection, or raw RTF data.">
-                <type type="specifier" list="yes"/>
-                <type type="specifier"/>
-                <type type="RTF"/>
-            </direct-parameter>
-            <parameter name="on" type="page" code="on  " optional="yes"
-                description="The page on which to get the text.">
-                <cocoa key="Page"/>
-            </parameter>
-            <parameter name="as" type="type" code="rtyp" optional="yes"
-                description="The type of object to return, rich text or a text type. The default is rich text.">
+        <command name="obtain" code="SKIMObtn"
+            description="Get properties for a selection or raw RTF data.">
+            <cocoa class="SKObtainCommand"/>
+            <direct-parameter type="type"
+                description="The type of object to return. Can be (rich) text, RTF, rectangle, integer, or page.">
                 <cocoa key="Type"/>
-            </parameter>
-            <result description="The (rich) text of the object.">
-                <type type="text"/>
-                <type type="specifier"/>
-            </result>
-        </command>
-
-        <command name="get index for" code="SKIMIndx"
-            description="Get the index of a document, page, note, or selection.">
-            <cocoa class="SKIndexCommand"/>
-            <synonym name="index for"/>
-            <direct-parameter
-                description="The document, page, note, or selection.">
-                <type type="specifier" list="yes"/>
-                <type type="specifier"/>
             </direct-parameter>
+            <parameter name="for" code="for "
+                description="The selection or raw RTF data.">
+                <type type="specifier" list="yes"/>
+                <type type="RTF"/>
+                <cocoa key="Object"/>
+            </parameter>
             <parameter name="on" type="page" code="on  " optional="yes"
-                description="The page on which to get the index.">
+                description="Restrict the selection to a portion on a page.">
                 <cocoa key="Page"/>
             </parameter>
-            <parameter name="last" type="boolean" code="Last" optional="yes"
-                description="Gets the index of the last character of a selection.">
-                <cocoa key="Last"/>
-            </parameter>
-            <result type="integer"
-                description="The index for the object. Returns 0 if no index was found."/>
-        </command>
-
-        <command name="get pages for" code="SKIMPags"
-            description="Get the pages of a document, page, note, or selection.">
-            <cocoa class="SKPagesCommand"/>
-            <synonym name="pages for"/>
-            <direct-parameter
-                description="The document, page, note, or selection.">
-                <type type="specifier" list="yes"/>
-                <type type="specifier"/>
-            </direct-parameter>
-            <result
-                description="The list of pages for the object.">
-                <type type="page" list="yes"/>
+            <result type="any"
+                description="The value(s) of the type to return. Returns a list for integer, and may return a list for page.">
             </result>
         </command>
 
@@ -578,15 +519,16 @@
             </result>
         </command>
 
-        <command name="get preferences for" code="SKIMPref"
+        <command name="preferences" code="SKIMPref"
             description="Get preferences for a note type, or for normal or full screen display.">
-            <synonym name="preferences for"/>
+            <synonym name="get preferences"/>
             <cocoa class="SKPreferencesCommand"/>
-            <direct-parameter
+            <parameter name="for" code="for "
                 description="The note type or interaction mode for which to get the preferences.">
                 <type type="note type"/>
                 <type type="interaction mode type"/>
-            </direct-parameter>
+                <cocoa key="Type"/>
+            </parameter>
             <result
                 description="The preferences for the note type or PDF display.">
                 <type type="note preferences"/>
@@ -674,18 +616,6 @@
                 <cocoa method=""/>
             </responds-to>
             <responds-to name="join">
-                <cocoa method=""/>
-            </responds-to>
-            <responds-to name="get bounds for">
-                <cocoa method=""/>
-            </responds-to>
-            <responds-to name="get text for">
-                <cocoa method=""/>
-            </responds-to>
-            <responds-to name="get index for">
-                <cocoa method=""/>
-            </responds-to>
-            <responds-to name="get pages for">
                 <cocoa method=""/>
             </responds-to>
         </class-extension>
@@ -815,18 +745,6 @@
             <responds-to name="edit">
                 <cocoa method="handleEditScriptCommand:"/>
             </responds-to>
-			<responds-to name="get bounds for">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get text for">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get index for">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get pages for">
-				<cocoa method=""/>
-			</responds-to>
 			<responds-to name="format">
 				<cocoa method=""/>
 			</responds-to>
@@ -880,18 +798,6 @@
                 description="The rotation of the page. Must be one of 0, 90, 180, or 270.">
                 <cocoa key="rotationAngle"/>
             </property>
-			<responds-to name="get bounds for">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get text for">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get index for">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get pages for">
-				<cocoa method=""/>
-			</responds-to>
 			<responds-to name="grab">
 				<cocoa method="handleGrabScriptCommand:"/>
 			</responds-to>
@@ -1002,18 +908,6 @@
                 <type type="point list" list="yes"/>
                 <cocoa key="scriptingPointLists"/>
             </property>
-			<responds-to name="get bounds for">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get text for">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get index for">
-				<cocoa method=""/>
-			</responds-to>
-			<responds-to name="get pages for">
-				<cocoa method=""/>
-			</responds-to>
             <responds-to name="format">
                 <cocoa method=""/>
             </responds-to>
