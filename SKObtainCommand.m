@@ -108,7 +108,7 @@
         } else {
             desc = [NSAppleEventDescriptor listDescriptor];
             NSInteger i = 0;
-            for (PDFPage *page in pages)
+            for (page in pages)
                 [desc insertDescriptor:[[page objectSpecifier] descriptor] atIndex:++i];
         }
     }
