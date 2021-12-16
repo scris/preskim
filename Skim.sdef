@@ -479,7 +479,6 @@
             <cocoa class="SKObtainCommand"/>
             <direct-parameter type="type"
                 description="The type of object to return. Can be (rich) text, RTF, rectangle, integer, or page.">
-                <cocoa key="Type"/>
             </direct-parameter>
             <parameter name="for" code="for "
                 description="The selection or raw RTF data.">
