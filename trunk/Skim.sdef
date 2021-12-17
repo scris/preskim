@@ -478,8 +478,7 @@
             description="Get properties for a selection or raw RTF data.">
             <cocoa class="SKObtainCommand"/>
             <direct-parameter type="type"
-                description="The type of object to return. Can be (rich) text, RTF, rectangle, integer, or page.">
-            </direct-parameter>
+                description="The type of object to return. Can be (rich) text, RTF, rectangle, integer, or page."/>
             <parameter name="for" code="for "
                 description="The selection or raw RTF data.">
                 <type type="specifier" list="yes"/>
