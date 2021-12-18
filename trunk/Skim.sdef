@@ -497,7 +497,6 @@
         <command name="get selection for" code="SKIMSele"
             description="Get the selection inside a rectangle or between two points.">
             <cocoa class="SKSelectionCommand"/>
-            <synonym name="selection for"/>
             <direct-parameter
                 description="The rectangle or start point for the selection.">
                 <type type="rectangle"/>
@@ -519,7 +518,6 @@
 
         <command name="preferences" code="SKIMPref"
             description="Get preferences for a note type, or for normal or full screen display.">
-            <synonym name="get preferences"/>
             <cocoa class="SKPreferencesCommand"/>
             <parameter name="for" code="for "
                 description="The note type or interaction mode for which to get the preferences.">
