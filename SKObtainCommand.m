@@ -61,7 +61,7 @@
         type = cText;
     } else if (type == typeRichText || type == 'cha ' || type == 'cpar' || type == 'cwor' || type == 'catr' || type == typeStyledText) {
         type = typeRichText;
-    } else if (type == typeSInt32 || type == typeUInt32 || type == typeSInt16 || type == typeUInt16 || type == typeSInt64 || type == typeUInt64) {
+    } else if (type == typeSInt32 || type == typeUInt32 || type == typeSInt16 || type == typeUInt16 || type == typeSInt64 || type == typeUInt64 || type == 'nmbr') {
         type = typeSInt32;
     } else if (type == typeQDRectangle || type == typeRectangle) {
         type = typeQDRectangle;
