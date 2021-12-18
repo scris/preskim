@@ -1236,8 +1236,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (IBAction)changeDisplaysRTL:(id)sender {
-    BOOL horizontally = [sender selectedTag] == 1;
-    [mainController.pdfView setDisplaysRightToLeftAndRewind:horizontally];
+    [mainController.pdfView setDisplaysRightToLeftAndRewind:NO == [mainController.pdfView displaysRightToLeft]];
 }
 
 - (IBAction)changeBookMode:(id)sender {
