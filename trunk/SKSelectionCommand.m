@@ -62,9 +62,9 @@
     }
     
     if (point)
-        return [[page selectionFromPoint:[rectOrPoint pointValueAsQDPoint] toPoint:[point pointValueAsQDPoint]] objectSpecifier];
+        return [[page selectionFromPoint:[rectOrPoint pointValueAsQDPoint] toPoint:[point pointValueAsQDPoint]] objectSpecifiers];
     else
-        return [[page selectionForRect:[rectOrPoint rectValueAsQDRect]] objectSpecifier];
+        return [[page selectionForRect:[rectOrPoint rectValueAsQDRect]] objectSpecifiers];
 }
 
 @end
