@@ -65,7 +65,7 @@
                 selection = [[firstPage document] selectionFromPage:firstPage atCharacterIndex:firstIndex toPage:lastPage atCharacterIndex:lastIndex];
         }
     }
-    return selection ? [selection objectSpecifier] : [NSArray array];
+    return selection ? [selection objectSpecifiers] : [NSArray array];
 }
 
 @end

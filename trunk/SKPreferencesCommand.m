@@ -43,7 +43,7 @@
 @implementation SKPreferencesCommand
 
 - (id)performDefaultImplementation {
-    id type = [[self evaluatedArguments] objectForKey:@"Type"];
+    id type = [[self evaluatedArguments] objectForKey:@"Type"] ?: [self directParameter];
     if ([type isKindOfClass:[NSString class]]) {
         return [[[SKNotePrefs alloc] initWithType:type] autorelease];
     } else if ([type isKindOfClass:[NSNumber class]]) {

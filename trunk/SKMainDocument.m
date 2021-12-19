@@ -1759,7 +1759,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 
 - (id)selectionSpecifier {
     PDFSelection *sel = [[self pdfView] currentSelection];
-    return [sel hasCharacters] ? [sel objectSpecifier] : [NSArray array];
+    return [sel hasCharacters] ? [sel objectSpecifiers] : [NSArray array];
 }
 
 - (void)setSelectionSpecifier:(id)specifier {
@@ -2056,7 +2056,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
             options |= NSCaseInsensitiveSearch;
         
         if ((selection = [[self pdfDocument] findString:text fromSelection:selection withOptions:options]))
-            specifier = [selection objectSpecifier];
+            specifier = [selection objectSpecifiers];
     }
     
     return specifier ?: [NSArray array];

@@ -428,7 +428,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
 
 - (id)selectionSpecifier {
     PDFSelection *sel = [self selection];
-    return [sel hasCharacters] ? [sel objectSpecifier] : [NSArray array];
+    return [sel hasCharacters] ? [sel objectSpecifiers] : [NSArray array];
 }
 
 - (NSArray *)scriptingPointLists {
