@@ -47,8 +47,8 @@
 - (id)performDefaultImplementation {
     id receiver = [self evaluatedReceivers];
     NSDictionary *args = [self evaluatedArguments];
-    id template = [args objectForKey:@"template"];
-    id file = [args objectForKey:@"to"];
+    id template = [args objectForKey:@"Template"];
+    id file = [args objectForKey:@"File"];
     NSAttributedString *attrString = nil;
     NSString *string = nil;
     NSDictionary *docAttrs = nil;

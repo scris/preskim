@@ -566,11 +566,11 @@
                 <type type="file"/>
                 <type type="text"/>
                 <type type="rich text"/>
-                <cocoa key="template"/>
+                <cocoa key="Template"/>
             </parameter>
             <parameter name="to" type="file" code="to  " optional="yes"
                 description="The file to write the resulting text to.">
-                <cocoa key="to"/>
+                <cocoa key="File"/>
             </parameter>
             <result
                 description="The text or rich text generated using the template.">
