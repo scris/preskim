@@ -71,7 +71,7 @@ static NSDictionary *propertyKeys = nil;
     array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", nil];
     [dict setObject:array forKey:SKNCircleString];
     [dict setObject:array forKey:SKNSquareString];
-    array = [NSArray arrayWithObjects:@"scriptingColor", nil];
+    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", nil];
     [dict setObject:array forKey:SKNHighlightString];
     [dict setObject:array forKey:SKNUnderlineString];
     [dict setObject:array forKey:SKNStrikeOutString];
