@@ -587,7 +587,7 @@ static inline NSRange addSpecifierWithCharacterRangeAndPageOrAppendRange(NSMutab
     return range;
 }
 
-- (id)objectSpecifier {
+- (id)objectSpecifiers {
     NSMutableArray *ranges = [NSMutableArray array];
     for (PDFPage *page in [self pages]) {
         __block NSRange range = NSMakeRange(0, 0);

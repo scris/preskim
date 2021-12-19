@@ -62,6 +62,6 @@
 
 + (id)selectionWithSpecifier:(id)specifier;
 + (id)selectionWithSpecifier:(id)specifier onPage:(PDFPage *)aPage;
-- (id)objectSpecifier;
+- (id)objectSpecifiers;
 
 @end
