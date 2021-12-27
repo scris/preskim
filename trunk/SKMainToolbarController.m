@@ -1348,21 +1348,22 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (void)handleTemporaryToolModeChangedNotification:(NSNotification *)notification {
-    SKTemporaryToolMode mode = [mainController.pdfView temporaryToolMode];
     SKToolMode toolMode = [mainController.pdfView toolMode];
     NSString *name = nil;
-    if (mode == SKNoToolMode) {
-        switch (toolMode) {
-            case SKTextToolMode : name = SKImageNameToolbarTextTool; break;
-            case SKMoveToolMode : name = SKImageNameToolbarMoveTool; break;
-            case SKMagnifyToolMode : name = SKImageNameToolbarMagnifyTool; break;
-            case SKSelectToolMode : name = SKImageNameToolbarSelectTool; break;
-            case SKNoteToolMode : name = noteToolImageNames[mainController.pdfView.annotationMode]; break;
-        }
-    } else if (mode == SKZoomToolMode) {
-        name = SKImageNameToolbarZoomIn;
-    } else {
-        name = noteToolImageNames[mode];
+    switch ([mainController.pdfView temporaryToolMode]) {
+        case SKZoomToolMode :      name = SKImageNameToolbarZoomIn;           break;
+        case SKHighlightToolMode : name = SKImageNameToolbarAddHighlightNote; break;
+        case SKUnderlineToolMode : name = SKImageNameToolbarAddUnderlineNote; break;
+        case SKStrikeOutToolMode : name = SKImageNameToolbarAddStrikeOutNote; break;
+        case SKNoToolMode:
+            switch (toolMode) {
+                case SKTextToolMode :    name = SKImageNameToolbarTextTool;    break;
+                case SKMoveToolMode :    name = SKImageNameToolbarMoveTool;    break;
+                case SKMagnifyToolMode : name = SKImageNameToolbarMagnifyTool; break;
+                case SKSelectToolMode :  name = SKImageNameToolbarSelectTool;  break;
+                case SKNoteToolMode :    name = noteToolImageNames[mainController.pdfView.annotationMode]; break;
+            }
+            break;
     }
     [toolModeButton setImage:[NSImage imageNamed:name] forSegment:toolMode];
 }
