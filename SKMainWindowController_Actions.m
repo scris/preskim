@@ -420,11 +420,15 @@ static NSArray *allMainDocumentPDFViews() {
 }
 
 - (IBAction)doZoomToSelection:(id)sender {
-    NSRect selRect = [pdfView currentSelectionRect];
-    PDFPage *page = [pdfView currentPage];
-    if (NSIsEmptyRect(selRect) == NO && page)
-        [pdfView zoomToRect:selRect onPage:page];
-    else NSBeep();
+    if ([pdfView toolMode] == SKSelectToolMode) {
+        NSRect selRect = [pdfView currentSelectionRect];
+        PDFPage *page = [pdfView currentPage];
+        if (NSIsEmptyRect(selRect) == NO && page)
+            [pdfView zoomToRect:selRect onPage:page];
+        else NSBeep();
+    } else {
+        [pdfView setTemporaryToolMode:SKZoomToolMode];
+    }
 }
 
 - (IBAction)doZoomToFit:(id)sender {

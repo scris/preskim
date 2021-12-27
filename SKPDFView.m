@@ -119,6 +119,7 @@ NSString *SKPDFViewDisplaysHorizontallyChangedNotification = @"SKPDFViewDisplays
 NSString *SKPDFViewDisplaysRTLChangedNotification = @"SKPDFViewDisplaysRTLChangedNotification";
 NSString *SKPDFViewAutoScalesChangedNotification = @"SKPDFViewAutoScalesChangedNotification";
 NSString *SKPDFViewToolModeChangedNotification = @"SKPDFViewToolModeChangedNotification";
+NSString *SKPDFViewTemporaryToolModeChangedNotification = @"SKPDFViewTemporaryToolModeChangedNotification";
 NSString *SKPDFViewAnnotationModeChangedNotification = @"SKPDFViewAnnotationModeChangedNotification";
 NSString *SKPDFViewActiveAnnotationDidChangeNotification = @"SKPDFViewActiveAnnotationDidChangeNotification";
 NSString *SKPDFViewDidAddAnnotationNotification = @"SKPDFViewDidAddAnnotationNotification";
@@ -254,7 +255,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 @implementation SKPDFView
 
-@synthesize toolMode, annotationMode, interactionMode, activeAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, highlightAnnotation;
+@synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, activeAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, highlightAnnotation;
 @synthesize currentMagnification=magnification, zooming;
 @dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, needsRewind, editing;
 
@@ -601,6 +602,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setToolMode:(SKToolMode)newToolMode {
     if (toolMode != newToolMode) {
+        [self setTemporaryToolMode:SKNoToolMode];
         if (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) {
             if (newToolMode != SKTextToolMode) {
                 if (newToolMode != SKNoteToolMode && activeAnnotation)
@@ -639,8 +641,16 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
+- (void)setTemporaryToolMode:(SKTemporaryToolMode)newTemporaryToolMode {
+    if (temporaryToolMode != newTemporaryToolMode) {
+        temporaryToolMode = newTemporaryToolMode;
+        [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewTemporaryToolModeChangedNotification object:self];
+    }
+}
+
 - (void)setInteractionMode:(SKInteractionMode)newInteractionMode {
     if (interactionMode != newInteractionMode) {
+        [self setTemporaryToolMode:SKNoToolMode];
         if (interactionMode == SKPresentationMode) {
             pdfvFlags.cursorHidden = NO;
             [NSCursor setHiddenUntilMouseMoves:NO];
@@ -1697,6 +1707,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 	NSUInteger modifiers = [theEvent standardModifierFlags];
     PDFAreaOfInterest area = [self areaOfInterestForMouse:theEvent];
     PDFAnnotation *wasActiveAnnotation = activeAnnotation;
+    SKTemporaryToolMode tempToolMode = temporaryToolMode;
+    
+    [self setTemporaryToolMode:SKNoToolMode];
     
     if ([[self document] isLocked]) {
         [super mouseDown:theEvent];
@@ -1747,8 +1760,20 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self updateMagnifyWithEvent:nil];
     } else if ((area & kPDFPageArea) == 0) {
         [self doDragWithEvent:theEvent];
+    } else if (tempToolMode == SKZoomToolMode && modifiers == 0) {
+        BOOL wantsLoupe = [self hideLoupeWindow];
+        [self doMarqueeZoomWithEvent:theEvent];
+        if (wantsLoupe)
+            [self updateMagnifyWithEvent:nil];
+    } else if (tempToolMode != SKNoToolMode && (modifiers & NSCommandKeyMask) == 0) {
+        [self setActiveAnnotation:nil];
+        [super mouseDown:theEvent];
+        if ([[self currentSelection] hasCharacters]) {
+            [self addAnnotationWithType:(SKNoteType)tempToolMode];
+            [self setCurrentSelection:nil];
+        }
     } else if (toolMode == SKMoveToolMode) {
-        [self setCurrentSelection:nil];                
+        [self setCurrentSelection:nil];
         if ((area & kPDFLinkArea))
             [super mouseDown:theEvent];
         else
@@ -2580,7 +2605,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)addAnnotationWithType:(SKNoteType)annotationType {
-    [self addAnnotationWithType:annotationType context:nil];
+    if ((toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && annotationType >= SKHighlightNote && annotationType <= SKStrikeOutNote && [[self currentSelection] hasCharacters] == NO) {
+        [self setTemporaryToolMode:(SKTemporaryToolMode)annotationType];
+    } else {
+        [self addAnnotationWithType:annotationType context:nil];
+    }
 }
 
 - (void)addAnnotationForContext:(id)sender {
@@ -3036,6 +3065,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
     if (activeAnnotation)
         [self setNeedsDisplayForAnnotation:activeAnnotation];
+    [self setTemporaryToolMode:SKNoToolMode];
 }
 
 #pragma mark Key and window changes
@@ -3053,6 +3083,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(showNavWindow) object:nil];
         [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(doAutoHide) object:nil];
     }
+    
+    [self setTemporaryToolMode:SKNoToolMode];
     
     if (RUNNING_BEFORE(10_12) || RUNNING_AFTER(10_14)) {
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -5214,8 +5246,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         area &= (kPDFPageArea | kPDFLinkArea);
     } else if ((modifiers == NSCommandKeyMask || modifiers == (NSCommandKeyMask | NSShiftKeyMask) || modifiers == (NSCommandKeyMask | NSAlternateKeyMask))) {
         area = (area & kPDFPageArea) | SKSpecialToolArea;
+    } else if ((modifiers & NSCommandKeyMask) == 0 && temporaryToolMode != SKNoToolMode) {
+        area = (area & kPDFPageArea) | SKSpecialToolArea;
     } else {
-        
+
         SKRectEdges resizeHandle = SKNoEdgeMask;
         PDFPage *page = [self pageAndPoint:&p forEvent:theEvent nearest:YES];
         

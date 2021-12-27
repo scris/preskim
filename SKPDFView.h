@@ -49,6 +49,7 @@ extern NSString *SKPDFViewAutoScalesChangedNotification;
 extern NSString *SKPDFViewToolModeChangedNotification;
 extern NSString *SKPDFViewToolModeChangedNotification;
 extern NSString *SKPDFViewAnnotationModeChangedNotification;
+extern NSString *SKPDFViewTemporaryToolModeChangedNotification;
 extern NSString *SKPDFViewActiveAnnotationDidChangeNotification;
 extern NSString *SKPDFViewDidAddAnnotationNotification;
 extern NSString *SKPDFViewDidRemoveAnnotationNotification;
@@ -84,6 +85,14 @@ typedef NS_ENUM(NSInteger, SKNoteType) {
     SKInkNote
 };
 
+typedef NS_ENUM(NSInteger, SKTemporaryToolMode) {
+    SKNoToolMode,
+    SKZoomToolMode,
+    SKHighlightToolMode = SKHighlightNote,
+    SKUnderlineToolMode = SKUnderlineNote,
+    SKStrikeOutToolMode = SKStrikeOutNote
+};
+
 enum {
     SKDragArea = 1 << 16,
     SKResizeUpDownArea = 1 << 17,
@@ -104,6 +113,7 @@ enum {
 
 @interface SKPDFView : SKBasePDFView {
     SKToolMode toolMode;
+    SKTemporaryToolMode temporaryToolMode;
     SKNoteType annotationMode;
     SKInteractionMode interactionMode;
     
@@ -161,6 +171,7 @@ enum {
 @property (nonatomic) BOOL displaysRightToLeft;
 @property (nonatomic) SKToolMode toolMode;
 @property (nonatomic) SKNoteType annotationMode;
+@property (nonatomic) SKTemporaryToolMode temporaryToolMode;
 @property (nonatomic) SKInteractionMode interactionMode;
 @property (nonatomic, retain) PDFAnnotation *activeAnnotation;
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;
