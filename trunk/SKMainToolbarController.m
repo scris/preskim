@@ -1019,7 +1019,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     } else if ([identifier isEqualToString:SKDocumentToolbarZoomToFitItemIdentifier]) {
         return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && [mainController.pdfView autoScales] == NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarZoomToSelectionItemIdentifier]) {
-        return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && NSIsEmptyRect([mainController.pdfView currentSelectionRect]) == NO;
+        return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && (NSIsEmptyRect([mainController.pdfView currentSelectionRect]) == NO || [mainController.pdfView toolMode] != SKSelectToolMode);
     } else if ([identifier isEqualToString:SKDocumentToolbarZoomInOutItemIdentifier] ||
                [identifier isEqualToString:SKDocumentToolbarZoomInActualOutItemIdentifier] ||
                [identifier isEqualToString:SKDocumentToolbarAutoScalesItemIdentifier] ||
@@ -1040,14 +1040,10 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     } else if ([identifier isEqualToString:SKDocumentToolbarNewTextNoteItemIdentifier] || [identifier isEqualToString:SKDocumentToolbarNewCircleNoteItemIdentifier] || [identifier isEqualToString:SKDocumentToolbarNewLineItemIdentifier]) {
         return ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController hasOverview] == NO && [mainController.pdfView hideNotes] == NO && [mainController.pdfView.document allowsNotes];
     } else if ([identifier isEqualToString:SKDocumentToolbarNewMarkupItemIdentifier]) {
-        return ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController hasOverview] == NO && [mainController.pdfView hideNotes] == NO && [mainController.pdfView.document allowsNotes] && [[mainController.pdfView currentSelection] hasCharacters];
+        return ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController hasOverview] == NO && [mainController.pdfView hideNotes] == NO && [mainController.pdfView.document allowsNotes];
     } else if ([identifier isEqualToString:SKDocumentToolbarNewLineItemIdentifier]) {
         return ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController hasOverview] == NO && [mainController.pdfView hideNotes] == NO && [mainController.pdfView.document allowsNotes] && [[mainController.pdfView currentSelection] hasCharacters];
     } else if ([identifier isEqualToString:SKDocumentToolbarNewNoteItemIdentifier]) {
-        BOOL enabled = ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController hasOverview] == NO && [mainController.pdfView hideNotes] == NO && [[mainController.pdfView currentSelection] hasCharacters];
-        [noteButton setEnabled:enabled forSegment:SKHighlightNote];
-        [noteButton setEnabled:enabled forSegment:SKUnderlineNote];
-        [noteButton setEnabled:enabled forSegment:SKStrikeOutNote];
         return ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController hasOverview] == NO && [mainController.pdfView hideNotes] == NO && [mainController.pdfView.document allowsNotes];
     } else if ([identifier isEqualToString:SKDocumentToolbarFullScreenItemIdentifier]) {
         return [mainController canEnterFullscreen] || [mainController canExitFullscreen];
@@ -1075,7 +1071,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         return [mainController interactionMode] != SKPresentationMode && [mainController hasOverview] == NO && [mainController.pdfView.document allowsNotes] && ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController.pdfView hideNotes] == NO;
     } else if (action == @selector(createNewMarkupNote:)) {
         [menuItem setState:[[markupNoteButton cell] tagForSegment:0] == [menuItem tag] ? NSOnState : NSOffState];
-        return [mainController interactionMode] != SKPresentationMode && [mainController hasOverview] == NO && [mainController.pdfView.document allowsNotes] && ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController.pdfView hideNotes] == NO && [[mainController.pdfView currentSelection] hasCharacters];
+        return [mainController interactionMode] != SKPresentationMode && [mainController hasOverview] == NO && [mainController.pdfView.document allowsNotes] && ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController.pdfView hideNotes] == NO;
     } else if (action == @selector(toggleFullScreen:)) {
         return [mainController canEnterFullscreen] || [mainController canExitFullscreen];
     } else if (action == @selector(togglePresentation:)) {
@@ -1351,6 +1347,26 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     [toolModeButton selectSegmentWithTag:[mainController.pdfView toolMode]];
 }
 
+- (void)handleTemporaryToolModeChangedNotification:(NSNotification *)notification {
+    SKTemporaryToolMode mode = [mainController.pdfView temporaryToolMode];
+    SKToolMode toolMode = [mainController.pdfView toolMode];
+    NSString *name = nil;
+    if (mode == SKNoToolMode) {
+        switch (toolMode) {
+            case SKTextToolMode : name = SKImageNameToolbarTextTool; break;
+            case SKMoveToolMode : name = SKImageNameToolbarMoveTool; break;
+            case SKMagnifyToolMode : name = SKImageNameToolbarMagnifyTool; break;
+            case SKSelectToolMode : name = SKImageNameToolbarSelectTool; break;
+            case SKNoteToolMode : name = noteToolImageNames[mainController.pdfView.annotationMode]; break;
+        }
+    } else if (mode == SKZoomToolMode) {
+        name = SKImageNameToolbarZoomIn;
+    } else {
+        name = noteToolImageNames[mode];
+    }
+    [toolModeButton setImage:[NSImage imageNamed:name] forSegment:toolMode];
+}
+
 - (void)handleDisplayBoxChangedNotification:(NSNotification *)notification {
     [displayBoxButton selectSegmentWithTag:[mainController.pdfView displayBox]];
 }
@@ -1414,6 +1430,8 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
                              name:SKPDFViewToolModeChangedNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handleAnnotationModeChangedNotification:) 
                              name:SKPDFViewAnnotationModeChangedNotification object:mainController.pdfView];
+    [nc addObserver:self selector:@selector(handleTemporaryToolModeChangedNotification:)
+                             name:SKPDFViewTemporaryToolModeChangedNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handlePacerStartedOrStoppedNotification:)
                              name:SKPDFViewPacerStartedOrStoppedNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handleDisplayModeChangedNotification:)

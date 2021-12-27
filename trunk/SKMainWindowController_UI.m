@@ -314,6 +314,13 @@
     return nil;
 }
 
+- (void)windowWillSendEvent:(NSEvent *)event {
+    [[SKImageToolTipWindow sharedToolTipWindow] orderOut:nil];
+    
+    if ([pdfView temporaryToolMode] != SKNoToolMode && [pdfView window] && ([event type] != NSLeftMouseDown || NO == NSPointInRect([event locationInView:pdfView], [pdfView bounds])))
+        [pdfView setTemporaryToolMode:SKNoToolMode];
+}
+
 #pragma mark Page history highlights
 
 #define MAX_HIGHLIGHTS 5
@@ -1598,8 +1605,7 @@ static NSArray *allMainDocumentPDFViews() {
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     SEL action = [menuItem action];
     if (action == @selector(createNewNote:)) {
-        BOOL isMarkup = [menuItem tag] == SKHighlightNote || [menuItem tag] == SKUnderlineNote || [menuItem tag] == SKStrikeOutNote;
-        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] allowsNotes] && ([pdfView toolMode] == SKTextToolMode || [pdfView toolMode] == SKNoteToolMode) && [pdfView hideNotes] == NO && (isMarkup == NO || [[pdfView currentSelection] hasCharacters]);
+        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] allowsNotes] && ([pdfView toolMode] == SKTextToolMode || [pdfView toolMode] == SKNoteToolMode) && [pdfView hideNotes] == NO;
     } else if (action == @selector(editNote:)) {
         PDFAnnotation *annotation = [pdfView activeAnnotation];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && ([annotation isEditable]);
@@ -1679,7 +1685,7 @@ static NSArray *allMainDocumentPDFViews() {
     } else if (action == @selector(doZoomToPhysicalSize:)) {
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && ([pdfView autoScales] || fabs([pdfView physicalScaleFactor] - 1.0 ) > 0.01);
     } else if (action == @selector(doZoomToSelection:)) {
-        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && NSIsEmptyRect([pdfView currentSelectionRect]) == NO;
+        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && (NSIsEmptyRect([pdfView currentSelectionRect]) == NO || [pdfView toolMode] != SKSelectToolMode);
     } else if (action == @selector(doZoomToFit:)) {
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && [pdfView autoScales] == NO;
     } else if (action == @selector(alternateZoomToFit:)) {

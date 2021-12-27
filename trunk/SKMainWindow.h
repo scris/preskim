@@ -39,8 +39,18 @@
 #import <Cocoa/Cocoa.h>
 
 
+@protocol SKMainWindowDelegate <NSWindowDelegate>
+@optional
+- (void)windowWillSendEvent:(NSEvent *)event;
+@end
+
 @interface SKMainWindow : NSWindow {
     BOOL disableConstrainedFrame;
 }
+
 @property (nonatomic) BOOL disableConstrainedFrame;
+
+- (id<SKMainWindowDelegate>)delegate;
+- (void)setDelegate:(id<SKMainWindowDelegate>)newDelegate;
+
 @end

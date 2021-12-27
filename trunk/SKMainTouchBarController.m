@@ -82,7 +82,6 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
 - (void)handlePageChangedNotification:(NSNotification *)notification;
 - (void)handleToolModeChangedNotification:(NSNotification *)notification;
 - (void)handleAnnotationModeChangedNotification:(NSNotification *)notification;
-- (void)handleSelectionChangedNotification:(NSNotification *)notification;
 
 @end
 
@@ -248,7 +247,6 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
                 noteButton = [[NSSegmentedControl segmentedControlWithImages:images trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(createNewNote:)] retain];
 #pragma clang diagnostic pop
                 [self handleToolModeChangedNotification:nil];
-                [self handleSelectionChangedNotification:nil];
                 [self interactionModeChanged];
             }
             item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
@@ -431,13 +429,6 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
         [annotationModeButton selectSegmentWithTag:[mainController.pdfView annotationMode]];
 }
 
-- (void)handleSelectionChangedNotification:(NSNotification *)notification {
-    BOOL enabled = ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController.pdfView hideNotes] == NO && [[mainController.pdfView currentSelection] hasCharacters];
-    [noteButton setEnabled:enabled forSegment:SKHighlightNote];
-    [noteButton setEnabled:enabled forSegment:SKUnderlineNote];
-    [noteButton setEnabled:enabled forSegment:SKStrikeOutNote];
-}
-
 - (void)interactionModeChanged {
     SKInteractionMode mode = [mainController interactionMode];
     
@@ -472,8 +463,6 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
                name:SKPDFViewToolModeChangedNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handleAnnotationModeChangedNotification:)
                name:SKPDFViewAnnotationModeChangedNotification object:mainController.pdfView];
-    [nc addObserver:self selector:@selector(handleSelectionChangedNotification:)
-               name:SKPDFViewCurrentSelectionChangedNotification object:mainController.pdfView];
 }
 
 @end

@@ -47,7 +47,8 @@
 
 - (void)sendEvent:(NSEvent *)theEvent {
     if ([theEvent type] == NSLeftMouseDown || [theEvent type] == NSRightMouseDown || [theEvent type] == NSKeyDown) {
-        [[SKImageToolTipWindow sharedToolTipWindow] orderOut:nil];
+        if ([[self delegate] respondsToSelector:@selector(windowWillSendEvent:)])
+            [[self delegate] windowWillSendEvent:theEvent];
     } else if ([theEvent type] == NSScrollWheel && ([theEvent modifierFlags] & NSAlternateKeyMask)) {
         NSResponder *target = (NSResponder *)[[self contentView] hitTest:[theEvent locationInWindow]] ?: (NSResponder *)self;
         while (target && [target respondsToSelector:@selector(magnifyWheel:)] == NO)
@@ -77,6 +78,14 @@
 
 - (NSRect)constrainFrameRect:(NSRect)frameRect toScreen:(NSScreen *)screen {
     return [self disableConstrainedFrame] ? frameRect : [super constrainFrameRect:frameRect toScreen:screen];
+}
+
+- (id<SKMainWindowDelegate>)delegate {
+    return (id<SKMainWindowDelegate>)[super delegate];
+}
+
+- (void)setDelegate:(id<SKMainWindowDelegate>)newDelegate {
+    [super setDelegate:newDelegate];
 }
 
 @end
