@@ -240,6 +240,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)showHelpMenu;
 
 - (void)updateMagnifyWithEvent:(NSEvent *)theEvent;
+- (void)hideLoupeWindow;
 - (void)updateLoupeBackgroundColor;
 - (void)removeLoupeWindow;
 
@@ -1722,16 +1723,28 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self performSelectorOnce:@selector(doAutoHideCursor) afterDelay:AUTO_HIDE_DELAY];
         }
     } else if (modifiers == NSCommandKeyMask) {
+        BOOL wantsLoupe = [self hideLoupeWindow];
         [self doSelectSnapshotWithEvent:theEvent];
+        if (wantsLoupe)
+            [self updateMagnifyWithEvent:nil];
     } else if (modifiers == (NSCommandKeyMask | NSShiftKeyMask)) {
+        BOOL wantsLoupe = [self hideLoupeWindow];
         [self doPdfsyncWithEvent:theEvent];
+        if (wantsLoupe)
+            [self updateMagnifyWithEvent:nil];
     } else if (modifiers == (NSCommandKeyMask | NSAlternateKeyMask)) {
+        BOOL wantsLoupe = [self hideLoupeWindow];
         [self doMarqueeZoomWithEvent:theEvent];
+        if (wantsLoupe)
+            [self updateMagnifyWithEvent:nil];
     } else if ((area & SKReadingBarArea) && (area & kPDFLinkArea) == 0) {
+        BOOL wantsLoupe = [self hideLoupeWindow];
         if ((area & (SKResizeUpDownArea | SKResizeLeftRightArea)))
             [self doResizeReadingBarWithEvent:theEvent];
         else
             [self doDragReadingBarWithEvent:theEvent];
+        if (wantsLoupe)
+            [self updateMagnifyWithEvent:nil];
     } else if ((area & kPDFPageArea) == 0) {
         [self doDragWithEvent:theEvent];
     } else if (toolMode == SKMoveToolMode) {
@@ -4822,6 +4835,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
         
     }
+}
+
+- (BOOL)hideLoupeWindow {
+    if ([loupeWindow parentWindow] == nil)
+        return NO;
+    [self updateMagnifyWithEvent:[NSEvent mouseEventWithType:NSLeftMouseDown location:NSMakePoint(-1.0, -1.0) modifierFlags:0 timestamp:0 windowNumber:[[self window] windowNumber] context:nil eventNumber:0 clickCount:1 pressure:0.0]];
+    return YES;
 }
 
 - (void)updateLoupeBackgroundColor {
