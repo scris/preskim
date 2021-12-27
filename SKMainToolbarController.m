@@ -1351,7 +1351,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     SKToolMode toolMode = [mainController.pdfView toolMode];
     NSString *name = nil;
     switch ([mainController.pdfView temporaryToolMode]) {
-        case SKZoomToolMode :      name = SKImageNameToolbarZoomIn;           break;
+        case SKZoomToolMode :      name = SKImageNameToolbarZoomToSelection;  break;
         case SKHighlightToolMode : name = SKImageNameToolbarAddHighlightNote; break;
         case SKUnderlineToolMode : name = SKImageNameToolbarAddUnderlineNote; break;
         case SKStrikeOutToolMode : name = SKImageNameToolbarAddStrikeOutNote; break;
