@@ -240,7 +240,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)showHelpMenu;
 
 - (void)updateMagnifyWithEvent:(NSEvent *)theEvent;
-- (void)hideLoupeWindow;
+- (BOOL)hideLoupeWindow;
 - (void)updateLoupeBackgroundColor;
 - (void)removeLoupeWindow;
 
