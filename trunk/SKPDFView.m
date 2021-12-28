@@ -1762,26 +1762,25 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self updateMagnifyWithEvent:nil];
     } else if ((area & kPDFPageArea) == 0) {
         [self doDragWithEvent:theEvent];
-    } else if (temporaryToolMode == SKZoomToolMode && (modifiers & NSCommandKeyMask) == 0) {
-        BOOL wantsLoupe = [self hideLoupeWindow];
-        [self doMarqueeZoomWithEvent:theEvent];
-        [self setTemporaryToolMode:SKNoToolMode];
-        if (wantsLoupe)
-            [self updateMagnifyWithEvent:nil];
-    } else if (temporaryToolMode == SKSnapshotToolMode && (modifiers & NSCommandKeyMask) == 0) {
-        BOOL wantsLoupe = [self hideLoupeWindow];
-        [self doSelectSnapshotWithEvent:theEvent];
-        [self setTemporaryToolMode:SKNoToolMode];
-        if (wantsLoupe)
-            [self updateMagnifyWithEvent:nil];
     } else if (temporaryToolMode != SKNoToolMode && (modifiers & NSCommandKeyMask) == 0) {
-        [self setActiveAnnotation:nil];
-        [super mouseDown:theEvent];
-        if ([[self currentSelection] hasCharacters]) {
-            [self addAnnotationWithType:(SKNoteType)temporaryToolMode];
-            [self setCurrentSelection:nil];
+        BOOL wantsLoupe = [self hideLoupeWindow];
+        if (temporaryToolMode == SKZoomToolMode) {
+            [self doMarqueeZoomWithEvent:theEvent];
+        } else if (temporaryToolMode == SKSnapshotToolMode) {
+            [self doSelectSnapshotWithEvent:theEvent];
+        } else if (temporaryToolMode == SKInkToolMode) {
+            [self doDrawFreehandNoteWithEvent:theEvent];
+        } else {
+            [self setActiveAnnotation:nil];
+            [super mouseDown:theEvent];
+            if ([[self currentSelection] hasCharacters]) {
+                [self addAnnotationWithType:(SKNoteType)temporaryToolMode];
+                [self setCurrentSelection:nil];
+            }
         }
         [self setTemporaryToolMode:SKNoToolMode];
+        if (wantsLoupe)
+            [self updateMagnifyWithEvent:nil];
     } else if (toolMode == SKMoveToolMode) {
         [self setCurrentSelection:nil];
         if ((area & kPDFLinkArea))
@@ -2615,7 +2614,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)addAnnotationWithType:(SKNoteType)annotationType {
-    if ((toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && annotationType >= SKHighlightNote && annotationType <= SKStrikeOutNote && [[self currentSelection] hasCharacters] == NO) {
+    if ((toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && (annotationType == SKInkNote || (annotationType >= SKHighlightNote && annotationType <= SKStrikeOutNote && [[self currentSelection] hasCharacters] == NO))) {
         [self setTemporaryToolMode:(SKTemporaryToolMode)annotationType];
     } else {
         [self addAnnotationWithType:annotationType context:nil];

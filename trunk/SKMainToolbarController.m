@@ -1356,6 +1356,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         case SKHighlightToolMode : name = SKImageNameToolbarAddHighlightNote; break;
         case SKUnderlineToolMode : name = SKImageNameToolbarAddUnderlineNote; break;
         case SKStrikeOutToolMode : name = SKImageNameToolbarAddStrikeOutNote; break;
+        case SKInkToolMode :       name = SKImageNameToolbarAddInkNote;       break;
         case SKNoToolMode:
             switch (toolMode) {
                 case SKTextToolMode :    name = SKImageNameToolbarTextTool;    break;
