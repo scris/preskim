@@ -47,8 +47,8 @@
 
 - (void)sendEvent:(NSEvent *)theEvent {
     if ([theEvent type] == NSLeftMouseDown || [theEvent type] == NSRightMouseDown || [theEvent type] == NSKeyDown) {
-        if ([[self delegate] respondsToSelector:@selector(windowWillSendEvent:)])
-            [[self delegate] windowWillSendEvent:theEvent];
+        if ([[self delegate] respondsToSelector:@selector(window:willSendEvent:)])
+            [[self delegate] window:self willSendEvent:theEvent];
     } else if ([theEvent type] == NSScrollWheel && ([theEvent modifierFlags] & NSAlternateKeyMask)) {
         NSResponder *target = (NSResponder *)[[self contentView] hitTest:[theEvent locationInWindow]] ?: (NSResponder *)self;
         while (target && [target respondsToSelector:@selector(magnifyWheel:)] == NO)

@@ -41,7 +41,7 @@
 
 @protocol SKMainWindowDelegate <NSWindowDelegate>
 @optional
-- (void)windowWillSendEvent:(NSEvent *)event;
+- (void)window:(NSWindow *)sender willSendEvent:(NSEvent *)event;
 @end
 
 @interface SKMainWindow : NSWindow {

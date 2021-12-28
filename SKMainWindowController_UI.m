@@ -314,11 +314,18 @@
     return nil;
 }
 
-- (void)windowWillSendEvent:(NSEvent *)event {
+- (void)window:(NSWindow *)sender willSendEvent:(NSEvent *)event {
     [[SKImageToolTipWindow sharedToolTipWindow] orderOut:nil];
     
-    if ([pdfView temporaryToolMode] != SKNoToolMode && [pdfView window] && ([event type] != NSLeftMouseDown || NO == NSPointInRect([event locationInView:pdfView], [pdfView bounds])))
-        [pdfView setTemporaryToolMode:SKNoToolMode];
+    if ([pdfView temporaryToolMode] != SKNoToolMode && [pdfView window] == sender) {
+        if ([event type] == NSLeftMouseDown) {
+            NSView *view = [pdfView hitTest:[event locationInView:pdfView]];
+            if ([view isDescendantOf:[pdfView documentView]] == NO || [view isKindOfClass:[NSTextView class]])
+                [pdfView setTemporaryToolMode:SKNoToolMode];
+        } else {
+            [pdfView setTemporaryToolMode:SKNoToolMode];
+        }
+    }
 }
 
 #pragma mark Page history highlights
