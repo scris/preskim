@@ -5218,9 +5218,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [menu popUpMenuPositioningItem:nil atLocation:point inView:self];
 }
 
-- (NSCursor *)cursorForNoteToolMode {
+- (NSCursor *)cursorForNoteType:(SKNoteType)noteType {
     if (useToolModeCursors) {
-        switch (annotationMode) {
+        switch (noteType) {
             case SKFreeTextNote:  return [NSCursor textNoteCursor];
             case SKAnchoredNote:  return [NSCursor anchoredNoteCursor];
             case SKCircleNote:    return [NSCursor circleNoteCursor];
@@ -5306,7 +5306,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     else if (interactionMode == SKPresentationMode)
         [pdfvFlags.cursorHidden ? [NSCursor emptyCursor] : pdfvFlags.useArrowCursorInPresentation ? [NSCursor arrowCursor] : [NSCursor laserPointerCursorWithColor:laserPointerColor] set];
     else if ((area & SKSpecialToolArea))
-        [[NSCursor arrowCursor] set];
+        [(temporaryToolMode == SKNoToolMode ? [NSCursor arrowCursor] : temporaryToolMode == SKZoomToolMode ? [NSCursor zoomInCursor] : [self cursorForNoteType:(SKNoteType)temporaryToolMode]) set];
     else if ((area & SKDragArea))
         [[NSCursor openHandCursor] set];
     else if ((area & SKResizeUpDownArea))
@@ -5322,7 +5322,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     else if (area == kPDFTextFieldArea)
         [[NSCursor IBeamCursor] set];
     else if (toolMode == SKNoteToolMode && (area & kPDFPageArea))
-        [[self cursorForNoteToolMode] set];
+        [[self cursorForNoteType:annotationMode] set];
     else if (toolMode == SKSelectToolMode && (area & kPDFPageArea))
         [[NSCursor crosshairCursor] set];
     else if (toolMode == SKMagnifyToolMode && (area & kPDFPageArea))
