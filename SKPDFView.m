@@ -1768,6 +1768,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self setTemporaryToolMode:SKNoToolMode];
         if (wantsLoupe)
             [self updateMagnifyWithEvent:nil];
+    } else if (temporaryToolMode == SKSnapshotToolMode && (modifiers & NSCommandKeyMask) == 0) {
+        BOOL wantsLoupe = [self hideLoupeWindow];
+        [self doSelectSnapshotWithEvent:theEvent];
+        [self setTemporaryToolMode:SKNoToolMode];
+        if (wantsLoupe)
+            [self updateMagnifyWithEvent:nil];
     } else if (temporaryToolMode != SKNoToolMode && (modifiers & NSCommandKeyMask) == 0) {
         [self setActiveAnnotation:nil];
         [super mouseDown:theEvent];
@@ -2981,8 +2987,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         autoFits = YES;
 	}
     if (NSIsEmptyRect(rect)) {
+        
+        if ([sender representedObject] == nil) {
+            [self setTemporaryToolMode:SKSnapshotToolMode];
+            return;
+        }
+        
         // the represented object should be the location for the menu event
-        point = [sender representedObject] ? [[sender representedObject] pointValue] : [self convertPoint:[[self window] mouseLocationOutsideOfEventStream] fromView:nil];
+        point = [[sender representedObject] pointValue];
         page = [self pageForPoint:point nearest:NO];
         if (page == nil) {
             // Get the center
@@ -5238,6 +5250,16 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     return [NSCursor arrowCursor];
 }
 
+- (NSCursor *)cursorForTemporaryToolMode {
+    switch (temporaryToolMode) {
+        case SKNoToolMode:       return [NSCursor arrowCursor];
+        case SKZoomToolMode:     return [NSCursor zoomInCursor];
+        case SKSnapshotToolMode: return [NSCursor cameraCursor];
+        default:                 return [self cursorForNoteType:(SKNoteType)temporaryToolMode];
+    }
+    return [NSCursor arrowCursor];
+}
+
 - (PDFAreaOfInterest)areaOfInterestForMouse:(NSEvent *)theEvent {
     PDFAreaOfInterest area = [super areaOfInterestForMouse:theEvent];
     NSPoint p = [theEvent locationInWindow];
@@ -5251,7 +5273,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     } else if ((modifiers == NSCommandKeyMask || modifiers == (NSCommandKeyMask | NSShiftKeyMask) || modifiers == (NSCommandKeyMask | NSAlternateKeyMask))) {
         area = (area & kPDFPageArea) | SKSpecialToolArea;
     } else if ((modifiers & NSCommandKeyMask) == 0 && temporaryToolMode != SKNoToolMode) {
-        area = (area & kPDFPageArea) | SKSpecialToolArea;
+        area = (area & kPDFPageArea) | SKTemporaryToolArea;
     } else {
 
         SKRectEdges resizeHandle = SKNoEdgeMask;
@@ -5308,7 +5330,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     else if (interactionMode == SKPresentationMode)
         [pdfvFlags.cursorHidden ? [NSCursor emptyCursor] : pdfvFlags.useArrowCursorInPresentation ? [NSCursor arrowCursor] : [NSCursor laserPointerCursorWithColor:laserPointerColor] set];
     else if ((area & SKSpecialToolArea))
-        [(temporaryToolMode == SKNoToolMode ? [NSCursor arrowCursor] : temporaryToolMode == SKZoomToolMode ? [NSCursor zoomInCursor] : [self cursorForNoteType:(SKNoteType)temporaryToolMode]) set];
+        [[NSCursor arrowCursor] set];
+    else if ((area & SKTemporaryToolArea))
+        [[self cursorForTemporaryToolMode] set];
     else if ((area & SKDragArea))
         [[NSCursor openHandCursor] set];
     else if ((area & SKResizeUpDownArea))
