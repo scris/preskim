@@ -113,6 +113,7 @@ NSString *SKImageNameToolbarTextTool = @"ToolbarTextTool";
 NSString *SKImageNameToolbarMoveTool = @"ToolbarMoveTool";
 NSString *SKImageNameToolbarMagnifyTool = @"ToolbarMagnifyTool";
 NSString *SKImageNameToolbarSelectTool = @"ToolbarSelectTool";
+NSString *SKImageNameToolbarSnapshotTool = @"ToolbarSnapshotTool";
 NSString *SKImageNameToolbarShare = @"ToolbarShare";
 NSString *SKImageNameToolbarPlay = @"ToolbarPlay";
 NSString *SKImageNameToolbarPause = @"ToolbarPause";
@@ -864,6 +865,21 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path moveToPoint:NSMakePoint(7.5, 8.0)];
         [path lineToPoint:NSMakePoint(7.5, 11.0)];
         [path stroke];
+    );
+    
+    MAKE_IMAGE(SKImageNameToolbarSnapshotTool, YES, 27.0, 19.0,
+        [[NSColor blackColor] set];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(6.0, 4.0, 15.0, 10.0)];
+        [path appendBezierPathWithOvalInRect:NSMakeRect(10.5, 10.0, 6.0, 6.0)];
+        [path fill];
+        [NSGraphicsContext saveGraphicsState];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeClear];
+        [[NSBezierPath bezierPathWithOvalInRect:NSMakeRect(9.8, 5.8, 7.4, 7.4)] stroke];
+        path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(13.5, 9.5) radius:1.8 startAngle:45.0 endAngle:225.0];
+        [path closePath];
+        [path fill];
+        [NSGraphicsContext restoreGraphicsState];
     );
     
     MAKE_IMAGE(SKImageNameToolbarShare, YES, 27.0, 19.0,

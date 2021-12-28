@@ -87,6 +87,7 @@ typedef NS_ENUM(NSInteger, SKNoteType) {
 typedef NS_ENUM(NSInteger, SKTemporaryToolMode) {
     SKNoToolMode,
     SKZoomToolMode,
+    SKSnapshotToolMode,
     SKHighlightToolMode = SKHighlightNote,
     SKUnderlineToolMode = SKUnderlineNote,
     SKStrikeOutToolMode = SKStrikeOutNote
@@ -99,7 +100,8 @@ enum {
     SKResizeDiagonal45Area = 1 << 19,
     SKResizeDiagonal135Area = 1 << 20,
     SKReadingBarArea = 1 << 21,
-    SKSpecialToolArea = 1 << 22
+    SKSpecialToolArea = 1 << 22,
+    SKTemporaryToolArea = 1 << 23
 };
 
 enum {
