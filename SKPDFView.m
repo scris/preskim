@@ -1705,19 +1705,22 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 	NSUInteger modifiers = [theEvent standardModifierFlags];
     PDFAreaOfInterest area = [self areaOfInterestForMouse:theEvent];
     PDFAnnotation *wasActiveAnnotation = activeAnnotation;
-    SKTemporaryToolMode tempToolMode = temporaryToolMode;
     
-    [self setTemporaryToolMode:SKNoToolMode];
+    if ((modifiers & NSCommandKeyMask) != 0)
+        [self setTemporaryToolMode:SKNoToolMode];
     
     if ([[self document] isLocked]) {
+        [self setTemporaryToolMode:SKNoToolMode];
         [super mouseDown:theEvent];
     } else if (interactionMode == SKPresentationMode) {
+        [self setTemporaryToolMode:SKNoToolMode];
         BOOL didHideMouse = pdfvFlags.cursorHidden;
         if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_TABLET_EVENT(theEvent, NSPenPointingDevice)) {
             [[NSCursor arrowCursor] set];
             [self doDrawFreehandNoteWithEvent:theEvent];
             [self setActiveAnnotation:nil];
         } else if ((area & kPDFLinkArea)) {
+            [self setTemporaryToolMode:SKNoToolMode];
             [super mouseDown:theEvent];
         } else if ([[self window] styleMask] != NSBorderlessWindowMask && [NSApp willDragMouse]) {
             [[NSCursor closedHandCursor] set];
@@ -1749,6 +1752,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if (wantsLoupe)
             [self updateMagnifyWithEvent:nil];
     } else if ((area & SKReadingBarArea) && (area & kPDFLinkArea) == 0) {
+        [self setTemporaryToolMode:SKNoToolMode];
         BOOL wantsLoupe = [self hideLoupeWindow];
         if ((area & (SKResizeUpDownArea | SKResizeLeftRightArea)))
             [self doResizeReadingBarWithEvent:theEvent];
@@ -1758,20 +1762,18 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self updateMagnifyWithEvent:nil];
     } else if ((area & kPDFPageArea) == 0) {
         [self doDragWithEvent:theEvent];
-    } else if (tempToolMode == SKZoomToolMode && (modifiers & NSCommandKeyMask) == 0) {
+    } else if (temporaryToolMode == SKZoomToolMode && (modifiers & NSCommandKeyMask) == 0) {
         BOOL wantsLoupe = [self hideLoupeWindow];
-        [self setTemporaryToolMode:tempToolMode];
         [self doMarqueeZoomWithEvent:theEvent];
         [self setTemporaryToolMode:SKNoToolMode];
         if (wantsLoupe)
             [self updateMagnifyWithEvent:nil];
-    } else if (tempToolMode != SKNoToolMode && (modifiers & NSCommandKeyMask) == 0) {
+    } else if (temporaryToolMode != SKNoToolMode && (modifiers & NSCommandKeyMask) == 0) {
         [self setActiveAnnotation:nil];
-        [self setTemporaryToolMode:tempToolMode];
         [super mouseDown:theEvent];
         [self setTemporaryToolMode:SKNoToolMode];
         if ([[self currentSelection] hasCharacters]) {
-            [self addAnnotationWithType:(SKNoteType)tempToolMode];
+            [self addAnnotationWithType:(SKNoteType)temporaryToolMode];
             [self setCurrentSelection:nil];
         }
     } else if (toolMode == SKMoveToolMode) {
