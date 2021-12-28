@@ -90,7 +90,8 @@ typedef NS_ENUM(NSInteger, SKTemporaryToolMode) {
     SKSnapshotToolMode,
     SKHighlightToolMode = SKHighlightNote,
     SKUnderlineToolMode = SKUnderlineNote,
-    SKStrikeOutToolMode = SKStrikeOutNote
+    SKStrikeOutToolMode = SKStrikeOutNote,
+    SKInkToolMode = SKInkNote
 };
 
 enum {
