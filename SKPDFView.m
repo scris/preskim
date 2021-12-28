@@ -884,7 +884,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (void)setCurrentSelection:(PDFSelection *)selection {
-    if (toolMode == SKNoteToolMode && annotationMode == SKHighlightNote)
+    if ((toolMode == SKNoteToolMode && annotationMode == SKHighlightNote) || temporaryToolMode == SKHighlightToolMode)
         [selection setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKHighlightNoteColorKey]];
     [super setCurrentSelection:selection];
 }
@@ -1760,12 +1760,16 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self doDragWithEvent:theEvent];
     } else if (tempToolMode == SKZoomToolMode && modifiers == 0) {
         BOOL wantsLoupe = [self hideLoupeWindow];
+        [self setTemporaryToolMode:tempToolMode];
         [self doMarqueeZoomWithEvent:theEvent];
+        [self setTemporaryToolMode:SKNoToolMode];
         if (wantsLoupe)
             [self updateMagnifyWithEvent:nil];
     } else if (tempToolMode != SKNoToolMode && (modifiers & NSCommandKeyMask) == 0) {
         [self setActiveAnnotation:nil];
+        [self setTemporaryToolMode:tempToolMode];
         [super mouseDown:theEvent];
+        [self setTemporaryToolMode:SKNoToolMode];
         if ([[self currentSelection] hasCharacters]) {
             [self addAnnotationWithType:(SKNoteType)tempToolMode];
             [self setCurrentSelection:nil];
