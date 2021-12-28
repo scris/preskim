@@ -1771,11 +1771,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     } else if (temporaryToolMode != SKNoToolMode && (modifiers & NSCommandKeyMask) == 0) {
         [self setActiveAnnotation:nil];
         [super mouseDown:theEvent];
-        [self setTemporaryToolMode:SKNoToolMode];
         if ([[self currentSelection] hasCharacters]) {
             [self addAnnotationWithType:(SKNoteType)temporaryToolMode];
             [self setCurrentSelection:nil];
         }
+        [self setTemporaryToolMode:SKNoToolMode];
     } else if (toolMode == SKMoveToolMode) {
         [self setCurrentSelection:nil];
         if ((area & kPDFLinkArea))
