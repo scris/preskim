@@ -1758,7 +1758,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self updateMagnifyWithEvent:nil];
     } else if ((area & kPDFPageArea) == 0) {
         [self doDragWithEvent:theEvent];
-    } else if (tempToolMode == SKZoomToolMode && modifiers == 0) {
+    } else if (tempToolMode == SKZoomToolMode && (modifiers & NSCommandKeyMask) == 0) {
         BOOL wantsLoupe = [self hideLoupeWindow];
         [self setTemporaryToolMode:tempToolMode];
         [self doMarqueeZoomWithEvent:theEvent];
