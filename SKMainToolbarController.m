@@ -1042,7 +1042,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     } else if ([identifier isEqualToString:SKDocumentToolbarNewMarkupItemIdentifier]) {
         return ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController hasOverview] == NO && [mainController.pdfView hideNotes] == NO && [mainController.pdfView.document allowsNotes];
     } else if ([identifier isEqualToString:SKDocumentToolbarNewLineItemIdentifier]) {
-        return ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController hasOverview] == NO && [mainController.pdfView hideNotes] == NO && [mainController.pdfView.document allowsNotes] && [[mainController.pdfView currentSelection] hasCharacters];
+        return ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController hasOverview] == NO && [mainController.pdfView hideNotes] == NO && [mainController.pdfView.document allowsNotes];
     } else if ([identifier isEqualToString:SKDocumentToolbarNewNoteItemIdentifier]) {
         return ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController hasOverview] == NO && [mainController.pdfView hideNotes] == NO && [mainController.pdfView.document allowsNotes];
     } else if ([identifier isEqualToString:SKDocumentToolbarFullScreenItemIdentifier]) {
