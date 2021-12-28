@@ -128,7 +128,6 @@ NSString *SKPDFViewDidMoveAnnotationNotification = @"SKPDFViewDidMoveAnnotationN
 NSString *SKPDFViewReadingBarDidChangeNotification = @"SKPDFViewReadingBarDidChangeNotification";
 NSString *SKPDFViewSelectionChangedNotification = @"SKPDFViewSelectionChangedNotification";
 NSString *SKPDFViewMagnificationChangedNotification = @"SKPDFViewMagnificationChangedNotification";
-NSString *SKPDFViewCurrentSelectionChangedNotification = @"SKPDFViewCurrentSelectionChangedNotification";
 NSString *SKPDFViewPacerStartedOrStoppedNotification = @"SKPDFViewPacerStartedOrStoppedNotification";
 
 NSString *SKPDFViewAnnotationKey = @"annotation";
@@ -888,7 +887,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (toolMode == SKNoteToolMode && annotationMode == SKHighlightNote)
         [selection setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKHighlightNoteColorKey]];
     [super setCurrentSelection:selection];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewCurrentSelectionChangedNotification object:self];
 }
 
 - (NSRect)currentSelectionRect {
