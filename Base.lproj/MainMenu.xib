@@ -554,9 +554,6 @@
                                     <action selector="createNewNote:" target="-1" id="737"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="735">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
                             <menuItem title="New Freehand" tag="8" keyEquivalent="i" id="lca-f6-0U6">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
