@@ -134,6 +134,7 @@
 - (void)createNewTextNote:(id)sender;
 - (void)createNewCircleNote:(id)sender;
 - (void)createNewMarkupNote:(id)sender;
+- (void)createNewLineNote:(id)sender;
 - (IBAction)createNewNote:(id)sender;
 - (IBAction)changeToolMode:(id)sender;
 - (IBAction)selectColor:(id)sender;

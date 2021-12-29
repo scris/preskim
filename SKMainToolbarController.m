@@ -519,11 +519,18 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             
         } else if ([identifier isEqualToString:SKDocumentToolbarNewLineItemIdentifier]) {
             
-            menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Add Line", @"Toolbar item label") action:@selector(createNewNote:) target:mainController tag:SKLineNote];
+            menu = [NSMenu menu];
+            [menu addItemWithTitle:NSLocalizedString(@"Line", @"Menu item title") imageNamed:SKImageNameToolbarAddLineNote action:@selector(createNewLineNote:) target:self tag:SKLineNote];
+            [menu addItemWithTitle:NSLocalizedString(@"Freehand", @"Menu item title") imageNamed:SKImageNameToolbarAddInkNote action:@selector(createNewLineNote:) target:self tag:SKInkNote];
+            [lineNoteButton setMenu:menu forSegment:0];
+            
+            menuItem = [NSMenuItem menuItemWithSubmenuAndTitle:NSLocalizedString(@"Add Line", @"Toolbar item label")];
+            menu = [menuItem submenu];
+            [menu addItemWithTitle:NSLocalizedString(@"Line", @"Menu item title") imageNamed:SKImageNameToolbarAddLineNote action:@selector(createNewNote:) target:mainController tag:SKLineNote];
+            [menu addItemWithTitle:NSLocalizedString(@"Freehand", @"Menu item title") imageNamed:SKImageNameToolbarAddInkNote action:@selector(createNewNote:) target:mainController tag:SKInkNote];
             
             [item setLabels:NSLocalizedString(@"Add Line", @"Toolbar item label")];
             [item setToolTip:NSLocalizedString(@"Add New Line", @"Tool tip message")];
-            [item setTag:SKLineNote];
             [item setViewWithSizes:lineNoteButton];
             [item setMenuFormRepresentation:menuItem];
             
@@ -1265,6 +1272,10 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 - (void)createNewMarkupNote:(id)sender {
     [self createNewNoteWithType:[sender tag] forButton:markupNoteButton];
+}
+
+- (void)createNewLineNote:(id)sender {
+    [self createNewNoteWithType:[sender tag] forButton:lineNoteButton];
 }
 
 - (IBAction)createNewNote:(id)sender {

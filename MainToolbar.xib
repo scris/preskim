@@ -126,12 +126,12 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7">
-                    <rect key="frame" x="132" y="101" width="29" height="25"/>
+                    <rect key="frame" x="130" y="101" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="72">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarAddLineNote" imageScaling="none" width="27" tag="7"/>
+                            <segment image="ToolbarAddLineNoteMenu" imageScaling="none" width="27" tag="7"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -139,7 +139,7 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8">
-                    <rect key="frame" x="94" y="101" width="29" height="25"/>
+                    <rect key="frame" x="92" y="101" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="71">
                         <font key="font" metaFont="system"/>
@@ -735,6 +735,7 @@
         <image name="ToolbarAddHighlightNoteMenu" width="128" height="128"/>
         <image name="ToolbarAddInkNote" width="128" height="128"/>
         <image name="ToolbarAddLineNote" width="128" height="128"/>
+        <image name="ToolbarAddLineNoteMenu" width="128" height="128"/>
         <image name="ToolbarAddSquareNote" width="128" height="128"/>
         <image name="ToolbarAddStrikeOutNote" width="128" height="128"/>
         <image name="ToolbarAddTextNote" width="128" height="128"/>
