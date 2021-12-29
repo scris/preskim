@@ -3304,8 +3304,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 #pragma mark Event handling
 
-- (NSWindow *)newOverlayLayer:(CALayer *)layer wantsAdded:(BOOL)wantsAdded {
+- (NSWindow *)newOverlayLayer:(CALayer *)layer {
     NSWindow *overlay = nil;
+    BOOL wantsAdded = [layer isKindOfClass:[CAShapeLayer class]];
     [layer setContentsScale:[[self layer] contentsScale]];
     if (wantsAdded && [self wantsLayer]) {
         [[self layer] addSublayer:layer];
@@ -4216,7 +4217,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
     }
     
-    overlay = [self newOverlayLayer:layer wantsAdded:YES];
+    overlay = [self newOverlayLayer:layer];
     
     // don't coalesce mouse event from mouse while drawing,
     // but not from tablets because those fire very rapidly and lead to serious delays
@@ -4662,7 +4663,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [layer setMasksToBounds:YES];
     [layer setZPosition:1.0];
     
-    overlay = [self newOverlayLayer:layer wantsAdded:YES];
+    overlay = [self newOverlayLayer:layer];
     
 	while (YES) {
 		theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
@@ -5002,7 +5003,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 CGColorRelease(borderColor);
             }
             
-            loupeWindow = [self newOverlayLayer:loupeLayer wantsAdded:NO];
+            loupeWindow = [self newOverlayLayer:loupeLayer];
             [loupeWindow setHasShadow:YES];
             [self updateLoupeBackgroundColor];
             if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
@@ -5072,7 +5073,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [layer setMasksToBounds:YES];
     [layer setZPosition:1.0];
     
-    overlay = [self newOverlayLayer:layer wantsAdded:YES];
+    overlay = [self newOverlayLayer:layer];
     
     while (YES) {
         theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
