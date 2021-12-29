@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -513,7 +513,7 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="34">
-                    <rect key="frame" x="20" y="73" width="225" height="25"/>
+                    <rect key="frame" x="19" y="73" width="289" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="45">
                         <font key="font" metaFont="system"/>
@@ -526,6 +526,9 @@
                             <segment image="ToolbarAddUnderlineNote" imageScaling="none" width="27" tag="5"/>
                             <segment image="ToolbarAddStrikeOutNote" imageScaling="none" width="27" tag="6"/>
                             <segment image="ToolbarAddLineNote" imageScaling="none" width="27" tag="7"/>
+                            <segment image="ToolbarAddInkNote" imageScaling="none" width="27" tag="8">
+                                <nil key="label"/>
+                            </segment>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -730,6 +733,7 @@
         <image name="ToolbarAddCircleNoteMenu" width="128" height="128"/>
         <image name="ToolbarAddHighlightNote" width="128" height="128"/>
         <image name="ToolbarAddHighlightNoteMenu" width="128" height="128"/>
+        <image name="ToolbarAddInkNote" width="128" height="128"/>
         <image name="ToolbarAddLineNote" width="128" height="128"/>
         <image name="ToolbarAddSquareNote" width="128" height="128"/>
         <image name="ToolbarAddStrikeOutNote" width="128" height="128"/>
