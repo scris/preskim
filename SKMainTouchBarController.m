@@ -241,7 +241,8 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
                                    [NSImage imageNamed:SKImageNameTouchBarAddHighlightNote],
                                    [NSImage imageNamed:SKImageNameTouchBarAddUnderlineNote],
                                    [NSImage imageNamed:SKImageNameTouchBarAddStrikeOutNote],
-                                   [NSImage imageNamed:SKImageNameTouchBarAddLineNote], nil];
+                                   [NSImage imageNamed:SKImageNameTouchBarAddLineNote],
+                                   [NSImage imageNamed:SKImageNameTouchBarAddInkNote], nil];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
                 noteButton = [[NSSegmentedControl segmentedControlWithImages:images trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(createNewNote:)] retain];
