@@ -3082,8 +3082,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (activeAnnotation)
             [self setNeedsDisplayForAnnotation:activeAnnotation];
     }
-    if (notification)
+    if ([[notification name] isEqualToString:NSWindowDidResignKeyNotification])
         [self setTemporaryToolMode:SKNoToolMode];
+}
+
+- (void)handleMainStateChangedNotification:(NSNotification *)notification {
+    [self setTemporaryToolMode:SKNoToolMode];
 }
 
 #pragma mark Key and window changes
@@ -3109,11 +3113,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (oldWindow) {
         [nc removeObserver:self name:NSWindowDidBecomeKeyNotification object:oldWindow];
         [nc removeObserver:self name:NSWindowDidResignKeyNotification object:oldWindow];
+        [nc removeObserver:self name:NSWindowDidResignMainNotification object:oldWindow];
     }
     if (newWindow) {
         pdfvFlags.inKeyWindow = [newWindow isKeyWindow];
         [nc addObserver:self selector:@selector(handleKeyStateChangedNotification:) name:NSWindowDidBecomeKeyNotification object:newWindow];
         [nc addObserver:self selector:@selector(handleKeyStateChangedNotification:) name:NSWindowDidResignKeyNotification object:newWindow];
+        [nc addObserver:self selector:@selector(handleMainStateChangedNotification:) name:NSWindowDidResignMainNotification object:newWindow];
     }
     
     [super viewWillMoveToWindow:newWindow];
