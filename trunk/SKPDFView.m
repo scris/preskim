@@ -3073,14 +3073,17 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)handleKeyStateChangedNotification:(NSNotification *)notification {
     pdfvFlags.inKeyWindow = [[self window] isKeyWindow];
-    if (selectionPageIndex != NSNotFound) {
-        CGFloat margin = HANDLE_SIZE / [self scaleFactor];
-        for (PDFPage *page in [self displayedPages])
-            [self setNeedsDisplayInRect:NSInsetRect(selectionRect, -margin, -margin) ofPage:page];
+    if (RUNNING_BEFORE(10_12) || RUNNING_AFTER(10_14)) {
+        if (selectionPageIndex != NSNotFound) {
+            CGFloat margin = HANDLE_SIZE / [self scaleFactor];
+            for (PDFPage *page in [self displayedPages])
+                [self setNeedsDisplayInRect:NSInsetRect(selectionRect, -margin, -margin) ofPage:page];
+        }
+        if (activeAnnotation)
+            [self setNeedsDisplayForAnnotation:activeAnnotation];
     }
-    if (activeAnnotation)
-        [self setNeedsDisplayForAnnotation:activeAnnotation];
-    [self setTemporaryToolMode:SKNoToolMode];
+    if (notification)
+        [self setTemporaryToolMode:SKNoToolMode];
 }
 
 #pragma mark Key and window changes
@@ -3101,18 +3104,16 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
     [self setTemporaryToolMode:SKNoToolMode];
     
-    if (RUNNING_BEFORE(10_12) || RUNNING_AFTER(10_14)) {
-        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        NSWindow *oldWindow = [self window];
-        if (oldWindow) {
-            [nc removeObserver:self name:NSWindowDidBecomeKeyNotification object:oldWindow];
-            [nc removeObserver:self name:NSWindowDidResignKeyNotification object:oldWindow];
-        }
-        if (newWindow) {
-            pdfvFlags.inKeyWindow = [newWindow isKeyWindow];
-            [nc addObserver:self selector:@selector(handleKeyStateChangedNotification:) name:NSWindowDidBecomeKeyNotification object:newWindow];
-            [nc addObserver:self selector:@selector(handleKeyStateChangedNotification:) name:NSWindowDidResignKeyNotification object:newWindow];
-        }
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    NSWindow *oldWindow = [self window];
+    if (oldWindow) {
+        [nc removeObserver:self name:NSWindowDidBecomeKeyNotification object:oldWindow];
+        [nc removeObserver:self name:NSWindowDidResignKeyNotification object:oldWindow];
+    }
+    if (newWindow) {
+        pdfvFlags.inKeyWindow = [newWindow isKeyWindow];
+        [nc addObserver:self selector:@selector(handleKeyStateChangedNotification:) name:NSWindowDidBecomeKeyNotification object:newWindow];
+        [nc addObserver:self selector:@selector(handleKeyStateChangedNotification:) name:NSWindowDidResignKeyNotification object:newWindow];
     }
     
     [super viewWillMoveToWindow:newWindow];
