@@ -8,8 +8,8 @@
 $CSS_LINES = "<link href=\"sty/skimhelp.css\" rel=\"stylesheet\" media=\"all\" />";
 
 # External stylesheet:
-$FAVICON_LINES = "<link rel=\"icon\" href=\"skimicon.png\" sizes=\"16x16\" />
-<link rel=\"icon\" href=\"skimicon_2x.png\" sizes=\"32x32\" />";
+$FAVICON_LINES = "<link rel=\"icon\" href=\"gfx/skimicon.png\" sizes=\"16x16\" />
+<link rel=\"icon\" href=\"gfx/skimicon_2x.png\" sizes=\"32x32\" />";
 
 @MISC_BUTTONS = ('Top');
 @SECTION_BUTTONS = @MISC_BUTTONS;
