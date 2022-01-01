@@ -4648,18 +4648,17 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [self performSelector:@selector(setCursorForMouse:) withObject:theEvent afterDelay:0];
 }
 
-- (void)doSelectSnapshotWithEvent:(NSEvent *)theEvent {
+
+- (NSRect)doSelectRectWithEvent:(NSEvent *)theEvent didDrag:(BOOL *)didDrag {
     NSPoint mouseLoc = [theEvent locationInWindow];
-	NSPoint startPoint = [[self documentView] convertPoint:mouseLoc fromView:nil];
-	NSPoint	currentPoint;
+    NSPoint startPoint = [[self documentView] convertPoint:mouseLoc fromView:nil];
+    NSPoint currentPoint;
     NSRect selRect = {startPoint, NSZeroSize};
     BOOL dragged = NO;
     CAShapeLayer *layer = nil;
     NSWindow *overlay = nil;
     NSWindow *window = [self window];
     
-    [[NSCursor cameraCursor] set];
-	
     CGRect layerRect = NSRectToCGRect([self visibleContentRect]);
     layer = [CAShapeLayer layer];
     [layer setStrokeColor:CGColorGetConstantColor(kCGColorBlack)];
@@ -4672,8 +4671,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
     overlay = [self newOverlayLayer:layer];
     
-	while (YES) {
-		theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
+    while (YES) {
+        theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
         
         if ([theEvent type] == NSLeftMouseUp)
             break;
@@ -4706,6 +4705,18 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [self removeLayer:layer overlay:overlay];
     [overlay release];
 
+    [self setCursorForMouse:theEvent];
+    
+    *didDrag = dragged;
+    return selRect;
+}
+
+- (void)doSelectSnapshotWithEvent:(NSEvent *)theEvent {
+    [[NSCursor cameraCursor] set];
+    
+    BOOL dragged = NO;
+    NSRect selRect = [self doSelectRectWithEvent:theEvent didDrag:&dragged];
+    
 	[self setCursorForMouse:theEvent];
     
     NSPoint point = [self convertPoint:SKCenterPoint(selRect) fromView:[self documentView]];
@@ -5059,62 +5070,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)doMarqueeZoomWithEvent:(NSEvent *)theEvent {
-    NSPoint mouseLoc = [theEvent locationInWindow];
-    NSPoint startPoint = [[self documentView] convertPoint:mouseLoc fromView:nil];
-    NSPoint	currentPoint;
-    NSRect selRect = {startPoint, NSZeroSize};
-    BOOL dragged = NO;
-    CAShapeLayer *layer = nil;
-    NSWindow *overlay = nil;
-    NSWindow *window = [self window];
-    
     [[NSCursor zoomInCursor] set];
     
-    CGRect layerRect = NSRectToCGRect([self visibleContentRect]);
-    layer = [CAShapeLayer layer];
-    [layer setStrokeColor:CGColorGetConstantColor(kCGColorBlack)];
-    [layer setFillColor:NULL];
-    [layer setLineWidth:1.0];
-    [layer setFrame:layerRect];
-    [layer setBounds:layerRect];
-    [layer setMasksToBounds:YES];
-    [layer setZPosition:1.0];
-    
-    overlay = [self newOverlayLayer:layer];
-    
-    while (YES) {
-        theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
-        
-        if ([theEvent type] == NSLeftMouseUp)
-            break;
-        
-        if ([theEvent type] == NSLeftMouseDragged) {
-            // change mouseLoc
-            [[[self scrollView] contentView] autoscroll:theEvent];
-            mouseLoc = [theEvent locationInWindow];
-            dragged = YES;
-        }
-        
-        // dragging or flags changed
-        
-        currentPoint = [[self documentView] convertPoint:mouseLoc fromView:nil];
-        
-        // center around startPoint when holding down the Shift key
-        if (([theEvent modifierFlags] & NSShiftKeyMask))
-            selRect = SKRectFromCenterAndPoint(startPoint, currentPoint);
-        else
-            selRect = SKRectFromPoints(startPoint, currentPoint);
-        
-        // intersect with the bounds, project on the bounds if necessary and allow zero width or height
-        selRect = SKIntersectionRect(selRect, [[self documentView] bounds]);
-        
-        CGPathRef path = CGPathCreateWithRect(NSRectToCGRect(NSInsetRect(NSIntegralRect([self convertRect:selRect fromView:[self documentView]]), 0.5, 0.5)), NULL);
-        [layer setPath:path];
-        CGPathRelease(path);
-    }
-    
-    [self removeLayer:layer overlay:overlay];
-    [overlay release];
+    BOOL dragged = NO;
+    NSRect selRect = [self doSelectRectWithEvent:theEvent didDrag:&dragged];
     
     [self setCursorForMouse:theEvent];
     
