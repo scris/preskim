@@ -84,7 +84,7 @@
 #define ANNOTATION_MODE_COUNT 9
 #define TOOL_MODE_COUNT 5
 
-#define ANNOTATION_MODE_IS_MARKUP (annotationMode == SKHighlightNote || annotationMode == SKUnderlineNote || annotationMode == SKStrikeOutNote)
+#define IS_MARKUP(noteType) (noteType == SKHighlightNote || noteType == SKUnderlineNote || noteType == SKStrikeOutNote)
 
 #define READINGBAR_RESIZE_EDGE_HEIGHT 3.0
 #define NAVIGATION_BOTTOM_EDGE_HEIGHT 5.0
@@ -1808,7 +1808,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         } else {
             [self doDragMouseWithEvent:theEvent];
         }
-    } else if (toolMode == SKNoteToolMode && pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && ANNOTATION_MODE_IS_MARKUP == NO) {
+    } else if (toolMode == SKNoteToolMode && pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_MARKUP(annotationMode) == NO) {
         if (annotationMode == SKInkNote) {
             [self doDrawFreehandNoteWithEvent:theEvent];
         } else {
@@ -1821,7 +1821,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     } else if ([self doDragTextWithEvent:theEvent] == NO) {
         [self setActiveAnnotation:nil];
         [super mouseDown:theEvent];
-        if ((toolMode == SKNoteToolMode && pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && ANNOTATION_MODE_IS_MARKUP) && [[self currentSelection] hasCharacters]) {
+        if ((toolMode == SKNoteToolMode && pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_MARKUP(annotationMode)) && [[self currentSelection] hasCharacters]) {
             [self addAnnotationWithType:annotationMode];
             [self setCurrentSelection:nil];
         }
@@ -2475,7 +2475,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 	NSRect bounds = NSZeroRect;
     PDFSelection *selection = [context isKindOfClass:[PDFSelection class]] ? context : nil;
     BOOL noSelection = selection == nil;
-    BOOL isMarkup = (annotationType == SKHighlightNote || annotationType == SKUnderlineNote || annotationType == SKStrikeOutNote);
+    BOOL isMarkup = IS_MARKUP(annotationType);
     
     if (noSelection)
         selection = [self currentSelection];
@@ -4109,7 +4109,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             if ([annotation isSkimNote] && [annotation hitTest:point] && [self isEditingAnnotation:annotation] == NO) {
                 newActiveAnnotation = annotation;
                 break;
-            } else if ([annotation shouldDisplay] && NSPointInRect(point, [annotation bounds]) && (toolMode == SKTextToolMode || ANNOTATION_MODE_IS_MARKUP) && linkAnnotation == nil) {
+            } else if ([annotation shouldDisplay] && NSPointInRect(point, [annotation bounds]) && (toolMode == SKTextToolMode || IS_MARKUP(annotationMode)) && linkAnnotation == nil) {
                 if ([annotation isLink])
                     linkAnnotation = annotation;
                 else
@@ -5316,7 +5316,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 if ([[activeAnnotation page] isEqual:page] && [activeAnnotation isMovable] && 
                     ((resizeHandle = [activeAnnotation resizeHandleForPoint:p scaleFactor:[self scaleFactor]]) || [activeAnnotation hitTest:p]))
                     area |= SKAreaOfInterestForResizeHandle(resizeHandle, page);
-                else if ((toolMode == SKTextToolMode || pdfvFlags.hideNotes || ANNOTATION_MODE_IS_MARKUP) && area == kPDFPageArea && modifiers == 0 &&
+                else if ((toolMode == SKTextToolMode || pdfvFlags.hideNotes || IS_MARKUP(annotationMode)) && area == kPDFPageArea && modifiers == 0 &&
                          [[page selectionForRect:SKRectFromCenterAndSize(p, TEXT_SELECT_MARGIN_SIZE)] hasCharacters] == NO)
                     area |= SKDragArea;
             }
