@@ -3311,33 +3311,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 #pragma mark Event handling
 
-- (NSWindow *)newOverlayLayer:(CALayer *)layer {
-    NSWindow *overlay = nil;
-    BOOL wantsAdded = [layer isKindOfClass:[CAShapeLayer class]];
-    [layer setContentsScale:[[self layer] contentsScale]];
-    if (wantsAdded && [self wantsLayer]) {
-        [[self layer] addSublayer:layer];
-        [layer setFilters:SKColorEffectFilters()];
-    } else {
-        overlay = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[self convertRectToScreen:[self bounds]]];
-        [[overlay contentView] setWantsLayer:YES];
-        [[[overlay contentView] layer] addSublayer:layer];
-        [[overlay contentView] setContentFilters:SKColorEffectFilters()];
-        if (wantsAdded)
-            [[self window] addChildWindow:overlay ordered:NSWindowAbove];
-    }
-    return overlay;
-}
-
-- (void)removeLayer:(CALayer *)layer overlay:(NSWindow *)overlay {
-    if (overlay) {
-        [[self window] removeChildWindow:overlay];
-        [overlay orderOut:nil];
-    } else {
-        [layer removeFromSuperlayer];
-    }
-}
-
 - (void)doMoveActiveAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta {
     NSRect bounds = [activeAnnotation bounds];
     NSRect newBounds = bounds;
@@ -4188,8 +4161,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     BOOL wantsBreak = isOption;
     NSBezierPath *bezierPath = nil;
     CAShapeLayer *layer = nil;
-    NSWindow *overlay = nil;
-    
     NSRect boxBounds = NSIntersectionRect([page boundsForBox:[self displayBox]], [self convertRect:[self visibleContentRect] toPage:page]);
     CGAffineTransform t = CGAffineTransformRotate(CGAffineTransformMakeScale([self scaleFactor], [self scaleFactor]), -M_PI_2 * [page rotation] / 90.0);
     layer = [CAShapeLayer layer];
@@ -4224,7 +4195,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
     }
     
-    overlay = [self newOverlayLayer:layer];
+    [layer setContentsScale:[[self layer] contentsScale]];
+    [[self layer] addSublayer:layer];
+    [layer setFilters:SKColorEffectFilters()];
     
     // don't coalesce mouse event from mouse while drawing,
     // but not from tablets because those fire very rapidly and lead to serious delays
@@ -4275,8 +4248,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
     }
     
-    [self removeLayer:layer overlay:overlay];
-    [overlay release];
+    [layer removeFromSuperlayer];
     
     [NSEvent setMouseCoalescingEnabled:wasMouseCoalescingEnabled];
     
@@ -4656,9 +4628,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     NSRect selRect = {startPoint, NSZeroSize};
     BOOL dragged = NO;
     CAShapeLayer *layer = nil;
-    NSWindow *overlay = nil;
     NSWindow *window = [self window];
-    
     CGRect layerRect = NSRectToCGRect([self visibleContentRect]);
     layer = [CAShapeLayer layer];
     [layer setStrokeColor:CGColorGetConstantColor(kCGColorBlack)];
@@ -4669,8 +4639,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [layer setMasksToBounds:YES];
     [layer setZPosition:1.0];
     
-    overlay = [self newOverlayLayer:layer];
-    
+    [layer setContentsScale:[[self layer] contentsScale]];
+    [[self layer] addSublayer:layer];
+    [layer setFilters:SKColorEffectFilters()];
+        
     while (YES) {
         theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
         
@@ -4702,8 +4674,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         CGPathRelease(path);
     }
     
-    [self removeLayer:layer overlay:overlay];
-    [overlay release];
+    [layer removeFromSuperlayer];
 
     [self setCursorForMouse:theEvent];
     
@@ -5021,7 +4992,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 CGColorRelease(borderColor);
             }
             
-            loupeWindow = [self newOverlayLayer:loupeLayer];
+            loupeWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[self convertRectToScreen:[self bounds]]];
+            [[loupeWindow contentView] setWantsLayer:YES];
+            [[[loupeWindow contentView] layer] addSublayer:loupeLayer];
+            [loupeLayer setContentsScale:[[[loupeWindow contentView] layer] contentsScale]];
+            [[loupeWindow contentView] setContentFilters:SKColorEffectFilters()];
             [loupeWindow setHasShadow:YES];
             [self updateLoupeBackgroundColor];
             if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
