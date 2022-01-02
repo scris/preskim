@@ -144,6 +144,8 @@ enum {
     
     SKSyncDot *syncDot;
     
+    CAShapeLayer *rectLayer;
+    
     NSWindow *loupeWindow;
     NSInteger loupeLevel;
     CGFloat magnification;

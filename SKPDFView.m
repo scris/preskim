@@ -196,7 +196,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 @interface SKPDFView ()
 @property (retain) SKReadingBar *readingBar;
 @property (retain) SKSyncDot *syncDot;
-@property (retain) PDFAnnotation *highlightAnnotation;
 @end
 
 @interface SKPDFView (Private)
@@ -254,7 +253,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 @implementation SKPDFView
 
-@synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, activeAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, highlightAnnotation;
+@synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, activeAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot;
 @synthesize currentMagnification=magnification, zooming;
 @dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, needsRewind, editing;
 
@@ -366,6 +365,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     SKDESTROY(readingBar);
     SKDESTROY(editor);
     SKDESTROY(highlightAnnotation);
+    SKDESTROY(rectLayer);
     SKDESTROY(rewindPage);
     [super dealloc];
 }
@@ -478,19 +478,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
-- (void)drawDragHighlightInContext:(CGContextRef)context {
-    PDFAnnotation *annotation = [self highlightAnnotation];
-    if (annotation) {
-        PDFPage *page = [annotation page];
-        CGFloat width = [self unitWidthOnPage:page];
-        CGContextSaveGState(context);
-        CGContextSetStrokeColorWithColor(context, CGColorGetConstantColor(kCGColorBlack));
-        NSRect rect = [self backingAlignedRect:[annotation bounds] onPage:page];
-        CGContextStrokeRectWithWidth(context, CGRectInset(NSRectToCGRect(rect), 0.5 * width, 0.5 * width), width);
-        CGContextRestoreGState(context);
-    }
-}
-
 - (void)drawPageHighlights:(PDFPage *)pdfPage toContext:(CGContextRef)context {
     CGContextSaveGState(context);
     
@@ -509,8 +496,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
     
     [self drawSelectionForPage:pdfPage inContext:context];
-    
-    [self drawDragHighlightInContext:context];
     
     SKSyncDot *aSyncDot = [self syncDot];
     if ([[aSyncDot page] isEqual:pdfPage])
@@ -534,6 +519,24 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [super drawPage:pdfPage];
         [self drawPageHighlights:pdfPage toContext:[[NSGraphicsContext currentContext] CGContext]];
     }
+}
+
+- (void)makeRectLayer {
+    if (rectLayer) {
+        [rectLayer removeFromSuperlayer];
+        [rectLayer release];
+    }
+    rectLayer = [[CAShapeLayer alloc] init];
+    [rectLayer setStrokeColor:CGColorGetConstantColor(kCGColorBlack)];
+    [rectLayer setFillColor:NULL];
+    [rectLayer setLineWidth:1.0];
+    [rectLayer setFrame:NSRectToCGRect([self visibleContentRect])];
+    [rectLayer setBounds:[rectLayer frame]];
+    [rectLayer setMasksToBounds:YES];
+    [rectLayer setZPosition:1.0];
+    [rectLayer setContentsScale:[[self layer] contentsScale]];
+    [rectLayer setFilters:SKColorEffectFilters()];
+    [[self layer] addSublayer:rectLayer];
 }
 
 #pragma mark Accessors
@@ -956,6 +959,25 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [transitionController addObserver:self forKeyPath:@"pageTransitions" options:options context:&SKPDFViewTransitionsObservationContext];
     }
     return transitionController;
+}
+
+- (void)setHighlightAnnotation:(PDFAnnotation *)annotation {
+    if (annotation != highlightAnnotation) {
+        [highlightAnnotation release];
+        highlightAnnotation = [annotation retain];
+        if (highlightAnnotation) {
+            if (rectLayer == nil)
+                [self makeRectLayer];
+            
+            NSRect rect = [self backingAlignedRect:[self convertRect:[highlightAnnotation bounds] fromPage:[highlightAnnotation page]] options:NSAlignAllEdgesOutward];
+            CGPathRef path = CGPathCreateWithRect(CGRectInset(NSRectToCGRect(rect), -0.5, -0.5), NULL);
+            [rectLayer setPath:path];
+            CGPathRelease(path);
+        } else if (rectLayer) {
+            [rectLayer removeFromSuperlayer];
+            SKDESTROY(rectLayer);
+        }
+    }
 }
 
 #pragma mark Reading bar
@@ -2231,21 +2253,14 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                 annotation = [annotations objectAtIndex:i];
                 if ([annotation isSkimNote] && [annotation hitTest:location] &&
                     ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypeColor, nil]] || [annotation hasBorder])) {
-                    if ([annotation isEqual:highlightAnnotation] == NO) {
-                        if (highlightAnnotation)
-                            [self setNeedsDisplayForAnnotation:highlightAnnotation];
-                        [self setHighlightAnnotation:annotation];
-                        [self setNeedsDisplayForAnnotation:highlightAnnotation];
-                    }
+                    [self setHighlightAnnotation:annotation];
                     dragOp = NSDragOperationGeneric;
                     break;
                 }
             }
         }
-        if (dragOp == NSDragOperationNone && highlightAnnotation) {
-            [self setNeedsDisplayForAnnotation:highlightAnnotation];
+        if (dragOp == NSDragOperationNone)
             [self setHighlightAnnotation:nil];
-        }
     } else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd]) {
         dragOp = [super draggingUpdated:sender];
     }
@@ -2254,14 +2269,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender {
     NSPasteboard *pboard = [sender draggingPasteboard];
-    if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypeColor, SKPasteboardTypeLineStyle, nil]]) {
-        if (highlightAnnotation) {
-            [self setNeedsDisplayForAnnotation:highlightAnnotation];
-            [self setHighlightAnnotation:nil];
-        }
-    } else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd]) {
+    if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypeColor, SKPasteboardTypeLineStyle, nil]])
+        [self setHighlightAnnotation:nil];
+    else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd])
         [super draggingExited:sender];
-    }
 }
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender {
@@ -2291,7 +2302,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                 }
                 performedDrag = YES;
             }
-            [self setNeedsDisplayForAnnotation:highlightAnnotation];
             [self setHighlightAnnotation:nil];
         }
     } else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd]) {
@@ -4627,22 +4637,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     NSPoint currentPoint;
     NSRect selRect = {startPoint, NSZeroSize};
     BOOL dragged = NO;
-    CAShapeLayer *layer = nil;
     NSWindow *window = [self window];
-    CGRect layerRect = NSRectToCGRect([self visibleContentRect]);
-    layer = [CAShapeLayer layer];
-    [layer setStrokeColor:CGColorGetConstantColor(kCGColorBlack)];
-    [layer setFillColor:NULL];
-    [layer setLineWidth:1.0];
-    [layer setFrame:layerRect];
-    [layer setBounds:layerRect];
-    [layer setMasksToBounds:YES];
-    [layer setZPosition:1.0];
     
-    [layer setContentsScale:[[self layer] contentsScale]];
-    [[self layer] addSublayer:layer];
-    [layer setFilters:SKColorEffectFilters()];
-        
+    [self makeRectLayer];
+    
     while (YES) {
         theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
         
@@ -4670,11 +4668,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         selRect = SKIntersectionRect(selRect, [[self documentView] bounds]);
         
         CGPathRef path = CGPathCreateWithRect(NSRectToCGRect(NSInsetRect(NSIntegralRect([self convertRect:selRect fromView:[self documentView]]), 0.5, 0.5)), NULL);
-        [layer setPath:path];
+        [rectLayer setPath:path];
         CGPathRelease(path);
     }
     
-    [layer removeFromSuperlayer];
+    [rectLayer removeFromSuperlayer];
+    SKDESTROY(rectLayer);
 
     [self setCursorForMouse:theEvent];
     
