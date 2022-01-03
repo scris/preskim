@@ -141,7 +141,7 @@ def notarize_archive(archive_path, password):
     
     notarize_cmd = ["xcrun", "notarytool", "submit", "--keychain-profile", password, "--wait", archive_path]
     print(" ".join(notarize_cmd))
-    x = Popen(buildCmd, cwd=SOURCE_DIR)
+    x = Popen(notarize_cmd, cwd=SOURCE_DIR)
     rc = x.wait()
     print("notarytool exited with status %s" % (rc))
     assert rc == 0, "notarization failed"
