@@ -9,15 +9,13 @@
 
 #
 # SYNOPSIS
-#   build_skim.sh [-i identity] [-u username] [-p password] [-o out] [-a zip|dmg|] [-t]
+#   build_skim.sh [-s sign_id] [-n notarize_password] [-o out] [-a zip|dmg|] [-t]
 #
 # OPTIONS
-#   -i --identity
+#   -s --sign
 #       Codesign identity, not codesigned when empty
-#   -u, --username
-#       Username for notarization using altool, not notarized when this and password are empty
-#   -p, --password
-#       Keychain profile for notarytool or password for notarization using altool
+#   -n, --notarize
+#       Keychain profile name for notarization, not notarized when empty
 #   -o, --out
 #      Output directory for the final archive and appcast, defaults to the user's Desktop
 #   -a, --archive
@@ -115,18 +113,15 @@ def clean_and_build():
     # clean and rebuild the Xcode project
     buildCmd = ["/usr/bin/xcodebuild", "clean", "-configuration", "Release", "-target", "Skim", "-scheme", "Skim", "-derivedDataPath", DERIVED_DATA_DIR, "SYMROOT=" + SYMROOT]
     print(" ".join(buildCmd))
-    nullDevice = open("/dev/null", "w")
     x = Popen(buildCmd, cwd=SOURCE_DIR)
     rc = x.wait()
     print("xcodebuild clean exited with status %s" % (rc))
 
     buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "Skim", "-scheme", "Skim", "-derivedDataPath", DERIVED_DATA_DIR, "SYMROOT=" + SYMROOT, "CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO"]
     print(" ".join(buildCmd))
-    nullDevice = open("/dev/null", "w")
-    x = Popen(buildCmd, cwd=SOURCE_DIR)#, stdout=nullDevice, stderr=nullDevice)
+    x = Popen(buildCmd, cwd=SOURCE_DIR)
     rc = x.wait()
     assert rc == 0, "xcodebuild failed"
-    nullDevice.close()
 
 def codesign(identity):
     
@@ -145,59 +140,6 @@ def notarize_archive(archive_path, password):
     rc = x.wait()
     print("notarytool exited with status %s" % (rc))
     assert rc == 0, "notarization failed"
-
-def notarize_dmg_or_zip(archive_path, username, password):
-    
-    bundle_id = "net.sourceforce.skim-app.skim" + os.path.splitext(archive_path)[1]
-    notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", bundle_id, "--username", username, "--password",  password, "--output-format", "xml", "--file", archive_path]
-    print(" ".join(notarize_cmd))
-    notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
-    [output, error] = notarize_task.communicate()
-    rc = notarize_task.returncode
-    print("altool --notarize-app exited with status %s" % (rc))
-    assert rc == 0, "notarization failed\n%s" % (output)
-    
-    output_stream = io.BytesIO(output)
-    output_pl = plistlib.readPlist(output_stream)
-    output_stream.close()
-    sys.stderr.write("%s\n" % (output))
-    assert "notarization-upload" in output_pl, "missing notarization-upload key in reply %s" % (output)
-    
-    request_uuid = output_pl["notarization-upload"]["RequestUUID"]
-    
-    while True:
-    
-        sleep(20)
-        
-        notarize_cmd = ["xcrun", "altool", "--notarization-info", request_uuid, "--username", username, "--password",  password, "--output-format", "xml"]
-        #print(" ".join(notarize_cmd))
-        notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
-        [output, error] = notarize_task.communicate()
-        rc = notarize_task.returncode
-        assert rc == 0, "status request failed"
-        
-        output_stream = io.BytesIO(output)
-        output_pl = plistlib.readPlist(output_stream)
-        assert "notarization-info" in output_pl, "missing notarization-upload key in reply %s" % (output)
-        status = output_pl["notarization-info"]["Status"]
-            
-        if status == "invalid":
-            # open the URL
-            log_url = output_pl["notarization-info"]["LogFileURL"]
-            Popen(["/usr/bin/open", log_url])
-            break
-        elif status == "in progress":
-            sys.stderr.write("notarization status not available yet for %s\n" % (request_uuid))
-            continue
-        else:
-            # staple?
-            sys.stderr.write("notarization succeeded\n")
-            sys.stdout.write("%s\n" % (output))
-                        
-            log_url = output_pl["notarization-info"]["LogFileURL"]
-            Popen(["/usr/bin/open", "-g", log_url])
-            
-            break
 
 def create_dmg_of_application(new_version_number, create_new):
     
@@ -508,25 +450,22 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
 
 def get_options():
     
-    identity = ""
-    username = ""
-    password = ""
+    sign = ""
+    notarize = ""
     out = os.path.join(os.getenv("HOME"), "Desktop")
     archive = ""
     test = False
     
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "i:u:p:o:a:t", ["identity=", "username=", "password=", "out=", "archive=", "test"])
+        opts, args = getopt.getopt(sys.argv[1:], "s:n:o:a:t", ["sign=", "notarize=", "out=", "archive=", "test"])
     except:
         sys.stderr.write("error reading options\n")
     
     for opt, arg in opts:
-        if opt in ["-i", "--identity"]:
-            identity = arg
-        elif opt in ["-u", "--username"]:
-            username = arg
-        elif opt in ["-p", "--password"]:
-            password = arg
+        if opt in ["-s", "--sign"]:
+            sign = arg
+        elif opt in ["-n", "--notarize"]:
+            notarize = arg
         elif opt in ["-o", "--out"]:
             out = arg
         elif opt in ["-a", "--archive"]:
@@ -534,19 +473,16 @@ def get_options():
         elif opt in ["-t", "--test"]:
             test = True
     
-    if username != "" and password == "":
-        password = "@keychain:AC_PASSWORD"
-    
-    return identity, username, password, out, archive, test
+    return sign, notarize, out, archive, test
 
 if __name__ == '__main__':
     
-    identity, username, password, out, archive, test = get_options()
+    sign_id, notarize_password, out, archive, test = get_options()
     
     clean_and_build()
     
-    if identity != "":
-        codesign(identity)
+    if sign_id != "":
+        codesign(sign_id)
     else:
         sys.stderr.write("\nWARNING: built product will not be codesigned\n\n")
     
@@ -558,12 +494,9 @@ if __name__ == '__main__':
         archive_path = create_dmg_of_application(new_version_string, archive == "dmg")
     
     # will bail if any part fails
-    if password != "":
+    if notarize_password != "":
         
-        if username == "":
-            notarize_archive(archive_path, password)
-        else:
-            notarize_dmg_or_zip(archive_path, username, password)
+        notarize_archive(archive_path, notarize_password)
         
         if archive_path.endswith("dmg"):
             # xcrun stapler staple Skim-1.4.dmg
