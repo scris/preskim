@@ -15,9 +15,9 @@
 #   -i --identity
 #       Codesign identity, not codesigned when empty
 #   -u, --username
-#       Username for notarization, not notarized when empty
+#       Username for notarization using altool, not notarized when this and password are empty
 #   -p, --password
-#       Password for notarization, defaults to @keychain:AC_PASSWORD
+#       Keychain profile for notarytool or password for notarization using altool
 #   -o, --out
 #      Output directory for the final archive and appcast, defaults to the user's Desktop
 #   -a, --archive
@@ -136,7 +136,16 @@ def codesign(identity):
     rc = x.wait()
     print("codesign_skim.sh exited with status %s" % (rc))
     assert rc == 0, "code signing failed"
+
+def notarize_archive(archive_path, password):
     
+    notarize_cmd = ["xcrun", "notarytool", "submit", "--keychain-profile", password, "--wait", archive_path]
+    print(" ".join(notarize_cmd))
+    x = Popen(buildCmd, cwd=SOURCE_DIR)
+    rc = x.wait()
+    print("notarytool exited with status %s" % (rc))
+    assert rc == 0, "notarization failed"
+
 def notarize_dmg_or_zip(archive_path, username, password):
     
     bundle_id = "net.sourceforce.skim-app.skim" + os.path.splitext(archive_path)[1]
@@ -501,7 +510,7 @@ def get_options():
     
     identity = ""
     username = ""
-    password = "@keychain:AC_PASSWORD"
+    password = ""
     out = os.path.join(os.getenv("HOME"), "Desktop")
     archive = ""
     test = False
@@ -525,6 +534,9 @@ def get_options():
         elif opt in ["-t", "--test"]:
             test = True
     
+    if username != "" and password == "":
+        password = "@keychain:AC_PASSWORD"
+    
     return identity, username, password, out, archive, test
 
 if __name__ == '__main__':
@@ -546,8 +558,12 @@ if __name__ == '__main__':
         archive_path = create_dmg_of_application(new_version_string, archive == "dmg")
     
     # will bail if any part fails
-    if username != "":
-        notarize_dmg_or_zip(archive_path, username, password)
+    if password != "":
+        
+        if username == "":
+            notarize_archive(archive_path, password)
+        else:
+            notarize_dmg_or_zip(archive_path, username, password)
         
         if archive_path.endswith("dmg"):
             # xcrun stapler staple Skim-1.4.dmg
