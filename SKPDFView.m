@@ -175,9 +175,6 @@ enum {
 @interface PDFView (SKSierraDeclarations)
 - (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context;
 @end
-@interface PDFAnnotation (SKPrivateDeclarations)
-- (void)drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
-@end
 #endif
 
 #if SDK_BEFORE(10_13)
