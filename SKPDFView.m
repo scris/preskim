@@ -487,7 +487,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
     
     if ([[annotation page] isEqual:pdfPage])
-        [annotation drawSelectionHighlightForView:self inContext:context active:[self drawsActiveSelections]];
+        [annotation drawSelectionHighlightForView:self inContext:context];
     
     [self drawSelectionForPage:pdfPage inContext:context];
     
