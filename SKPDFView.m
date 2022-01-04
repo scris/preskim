@@ -438,7 +438,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 #pragma mark Drawing
 
-- (BOOL)drawActiveResizeHandles {
+- (BOOL)drawsActiveSelections {
     if (RUNNING_AFTER(10_14))
         return pdfvFlags.inKeyWindow;
     else if (RUNNING_AFTER(10_11))
@@ -470,7 +470,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             CGColorRelease(color);
             CGContextFillRect(context, NSRectToCGRect(rect));
         }
-        SKDrawResizeHandles(context, rect, lineWidth, NO, [self drawActiveResizeHandles]);
+        SKDrawResizeHandles(context, rect, lineWidth, NO, [self drawsActiveSelections]);
     }
 }
 
@@ -487,7 +487,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
     
     if ([[annotation page] isEqual:pdfPage])
-        [annotation drawSelectionHighlightForView:self inContext:context active:[self drawActiveResizeHandles]];
+        [annotation drawSelectionHighlightForView:self inContext:context active:[self drawsActiveSelections]];
     
     [self drawSelectionForPage:pdfPage inContext:context];
     
