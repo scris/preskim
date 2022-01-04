@@ -438,6 +438,15 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 #pragma mark Drawing
 
+- (BOOL)drawActiveResizeHandles {
+    if (RUNNING_AFTER(10_14))
+        return pdfvFlags.inKeyWindow;
+    else if (RUNNING_AFTER(10_11))
+        return YES;
+    else
+        return (pdfvFlags.inKeyWindow && [[[self window] firstResponder] isDescendantOf:self]);
+}
+
 - (void)drawSelectionForPage:(PDFPage *)pdfPage inContext:(CGContextRef)context {
     NSRect rect;
     NSUInteger pageIndex;
@@ -446,7 +455,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         rect = selectionRect;
     }
     if (pageIndex != NSNotFound) {
-        BOOL active = RUNNING_AFTER(10_14) ? pdfvFlags.inKeyWindow : (RUNNING_AFTER(10_11) || (pdfvFlags.inKeyWindow && [[[self window] firstResponder] isDescendantOf:self]));
         NSRect bounds = [pdfPage boundsForBox:[self displayBox]];
         CGFloat lineWidth = [self unitWidthOnPage:pdfPage];
         CGColorRef color = CGColorCreateGenericGray(0.0, 0.6);
@@ -462,7 +470,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             CGColorRelease(color);
             CGContextFillRect(context, NSRectToCGRect(rect));
         }
-        SKDrawResizeHandles(context, rect, lineWidth, NO, active);
+        SKDrawResizeHandles(context, rect, lineWidth, NO, [self drawActiveResizeHandles]);
     }
 }
 
@@ -478,10 +486,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         annotation = [[activeAnnotation retain] autorelease];
     }
     
-    if ([[annotation page] isEqual:pdfPage]) {
-        BOOL active = RUNNING_AFTER(10_14) ? pdfvFlags.inKeyWindow : (RUNNING_AFTER(10_11) || (pdfvFlags.inKeyWindow && [[[self window] firstResponder] isDescendantOf:self]));
-        [annotation drawSelectionHighlightForView:self inContext:context active:active];
-    }
+    if ([[annotation page] isEqual:pdfPage])
+        [annotation drawSelectionHighlightForView:self inContext:context active:[self drawActiveResizeHandles]];
     
     [self drawSelectionForPage:pdfPage inContext:context];
     
