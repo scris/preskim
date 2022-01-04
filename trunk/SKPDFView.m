@@ -5295,7 +5295,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)setDelegate:(id <SKPDFViewDelegate>)newDelegate {
-    if (newDelegate) {
+    if ([self delegate] && newDelegate == nil)
+        [self cleanup];
+    [super setDelegate:newDelegate];
+    if ([self delegate]) {
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
         NSUndoManager *undoManager = [self undoManager];
         [nc addObserver:self selector:@selector(handleUndoGroupOpenedOrClosedNotification:)
@@ -5303,9 +5306,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [nc addObserver:self selector:@selector(handleUndoGroupOpenedOrClosedNotification:)
                                                      name:NSUndoManagerDidCloseUndoGroupNotification object:undoManager];
     }
-    if ([self delegate] && newDelegate == nil)
-        [self cleanup];
-    [super setDelegate:newDelegate];
 }
 
 - (NSString *)currentColorDefaultKeyForAlternate:(BOOL)isAlt {
