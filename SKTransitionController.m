@@ -325,6 +325,35 @@ static BOOL hasCoreGraphicsTransitions = NO;
     return transitionStyle != SKNoTransition || pageTransitions != nil;
 }
 
+- (void)setTransitionStyle:(SKTransitionStyle)newTransitionStyle {
+    if (transitionStyle != newTransitionStyle) {
+        [[[view undoManager] prepareWithInvocationTarget:self] setTransitionStyle:transitionStyle];
+        transitionStyle = newTransitionStyle;
+    }
+}
+
+- (void)setDuration:(CGFloat)newDuration {
+    if (fabs(duration - newDuration) > 0.0) {
+        [[[view undoManager] prepareWithInvocationTarget:self] setDuration:duration];
+        duration = newDuration;
+    }
+}
+
+- (void)setShouldRestrict:(BOOL)newShouldRestrict {
+    if (shouldRestrict != newShouldRestrict) {
+        [[[view undoManager] prepareWithInvocationTarget:self] setShouldRestrict:shouldRestrict];
+        shouldRestrict = newShouldRestrict;
+    }
+}
+
+- (void)setPageTransitions:(NSArray *)newPageTransitions {
+    if (newPageTransitions != pageTransitions) {
+        [[[view undoManager] prepareWithInvocationTarget:self] setPageTransitions:pageTransitions];
+        [pageTransitions release];
+        pageTransitions = [newPageTransitions copy];
+    }
+}
+
 static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     return CGRectMake(scale * NSMinX(rect), scale * NSMinY(rect), scale * NSWidth(rect), scale * NSHeight(rect));
 }
