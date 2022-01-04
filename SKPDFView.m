@@ -327,10 +327,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                                                  name:PDFViewPageChangedNotification object:self];
     [nc addObserver:self selector:@selector(handleScaleChangedNotification:)
                                                  name:PDFViewScaleChangedNotification object:self];
-    [nc addObserver:self selector:@selector(handleUndoGroupOpenedOrClosedNotification:)
-                                                 name:NSUndoManagerDidOpenUndoGroupNotification object:nil];
-    [nc addObserver:self selector:@selector(handleUndoGroupOpenedOrClosedNotification:)
-                                                 name:NSUndoManagerDidCloseUndoGroupNotification object:nil];
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[[self class] defaultKeysToObserve] context:&SKPDFViewDefaultsObservationContext];
 }
 
@@ -3069,8 +3065,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)handleUndoGroupOpenedOrClosedNotification:(NSNotification *)notification {
-    if ([notification object] == [self undoManager])
-        pdfvFlags.wantsNewUndoGroup = NO;
+    pdfvFlags.wantsNewUndoGroup = NO;
 }
 
 - (void)handleKeyStateChangedNotification:(NSNotification *)notification {
@@ -5300,6 +5295,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)setDelegate:(id <SKPDFViewDelegate>)newDelegate {
+    if (newDelegate) {
+        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+        NSUndoManager *undoManager = [self undoManager];
+        [nc addObserver:self selector:@selector(handleUndoGroupOpenedOrClosedNotification:)
+                                                     name:NSUndoManagerDidOpenUndoGroupNotification object:undoManager];
+        [nc addObserver:self selector:@selector(handleUndoGroupOpenedOrClosedNotification:)
+                                                     name:NSUndoManagerDidCloseUndoGroupNotification object:undoManager];
+    }
     if ([self delegate] && newDelegate == nil)
         [self cleanup];
     [super setDelegate:newDelegate];
