@@ -511,12 +511,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (void)drawPage:(PDFPage *)pdfPage {
-    if ([PDFView instancesRespondToSelector:@selector(drawPage:toContext:)]) {
-        // on 10.12 this should be called from drawPage:toContext:
-        [super drawPage:pdfPage];
-    } else {
-        // Let PDFView do most of the hard work.
-        [super drawPage:pdfPage];
+    // Let PDFView do most of the hard work.
+    [super drawPage:pdfPage];
+    if ([PDFView instancesRespondToSelector:@selector(drawPage:toContext:)] == NO) {
+        // on 10.12+ this should be called from drawPage:toContext:
         [self drawPageHighlights:pdfPage toContext:[[NSGraphicsContext currentContext] CGContext]];
     }
 }
