@@ -66,6 +66,8 @@
 - (CGFloat)unitWidthOnPage:(PDFPage *)page;
 - (NSRect)backingAlignedRect:(NSRect)rect onPage:(PDFPage *)page;
 
+@property (nonatomic, readonly) BOOL drawsActiveSelections;
+
 + (NSColor *)defaultBackgroundColor;
 + (NSColor *)defaultFullScreenBackgroundColor;
 

@@ -327,7 +327,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
     return bounds;
 }
 
-- (void)drawSelectionHighlightForView:(PDFView *)pdfView inContext:(CGContextRef)context active:(BOOL)active {
+- (void)drawSelectionHighlightForView:(PDFView *)pdfView inContext:(CGContextRef)context {
     if (NSIsEmptyRect([self bounds]))
         return;
     
@@ -335,7 +335,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
     NSUInteger i, iMax = [lines count];
     PDFPage *page = [self page];
     CGFloat lineWidth = [pdfView unitWidthOnPage:page];
-    CGColorRef color = [[NSColor selectionHighlightColor:active] CGColor];
+    CGColorRef color = [[NSColor selectionHighlightColor:[pdfView drawsActiveSelections]] CGColor];
     
     CGContextSaveGState(context);
     CGContextSetStrokeColorWithColor(context, color);

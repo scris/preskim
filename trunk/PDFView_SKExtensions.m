@@ -50,6 +50,7 @@
 #import "SKApplication.h"
 #import "NSView_SKExtensions.h"
 #import "NSImage_SKExtensions.h"
+#import "NSResponder_SKExtensions.h"
 
 
 #if SDK_BEFORE(10_13)
@@ -70,7 +71,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 @implementation PDFView (SKExtensions)
 
-@dynamic physicalScaleFactor, scrollView, displayedPages, minimumScaleFactor, maximumScaleFactor;
+@dynamic physicalScaleFactor, scrollView, displayedPages, minimumScaleFactor, maximumScaleFactor, drawsActiveSelections;
 
 static inline CGFloat physicalScaleFactorForView(NSView *view) {
     NSScreen *screen = [[view window] screen];
@@ -277,6 +278,15 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 - (NSRect)backingAlignedRect:(NSRect)rect onPage:(PDFPage *)page {
     // this is called from drawing methods that on 10.12+ may run on a background thread
     return RUNNING_AFTER(10_11) ? rect : [self convertRect:[self backingAlignedRect:[self convertRect:rect fromPage:page] options:NSAlignAllEdgesOutward] toPage:page];
+}
+
+- (BOOL)drawsActiveSelections {
+    if (RUNNING_AFTER(10_14))
+        return [[self window] isKeyWindow];
+    else if (RUNNING_AFTER(10_11))
+        return YES;
+    else
+        return ([[self window] isKeyWindow] && [[[self window] firstResponder] isDescendantOf:self]);
 }
 
 static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *darkBackgroundColorKey) {
