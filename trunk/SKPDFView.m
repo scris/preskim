@@ -586,6 +586,13 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self updateMagnifyWithEvent:nil];
 }
 
+- (NSUndoManager *)undoManager {
+    NSUndoManager *undoManager = [super undoManager];
+    if (undoManager == nil && [[self delegate] respondsToSelector:@selector(document)])
+        undoManager = [[(NSWindowController *)[self delegate] document] undoManager];
+    return undoManager;
+}
+
 - (void)setBackgroundColor:(NSColor *)newBackgroundColor {
     [super setBackgroundColor:newBackgroundColor];
     [self updateLoupeBackgroundColor];
@@ -2160,7 +2167,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     NSUndoManager *undoManager = [self undoManager];
     [[undoManager prepareWithInvocationTarget:self] rotatePageAtIndex:idx by:-rotation];
     [undoManager setActionName:NSLocalizedString(@"Rotate Page", @"Undo action name")];
-    [[[[self window] windowController] document] undoableActionIsDiscardable];
+    NSDocument *doc = [[self delegate] respondsToSelector:@selector(document)] ? [(NSWindowController *)[self delegate] document] : [[[self window] windowController] document];
+    [doc undoableActionIsDiscardable];
     
     PDFPage *page = [[self document] pageAtIndex:idx];
     [page setRotation:[page rotation] + rotation];
