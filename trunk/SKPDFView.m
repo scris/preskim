@@ -152,7 +152,6 @@ NSString *SKPDFViewNewPageKey = @"newPage";
 #define SKAnnotationKey @"SKAnnotation"
 
 static char SKPDFViewDefaultsObservationContext;
-static char SKPDFViewTransitionsObservationContext;
 
 static NSUInteger moveReadingBarModifiers = NSAlternateKeyMask;
 static NSUInteger resizeReadingBarModifiers = NSAlternateKeyMask | NSShiftKeyMask;
@@ -371,10 +370,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [[NSSpellChecker sharedSpellChecker] closeSpellDocumentWithTag:spellingTag];
     [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[[self class] defaultKeysToObserve] context:&SKPDFViewDefaultsObservationContext];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [transitionController removeObserver:self forKeyPath:@"transitionStyle" context:&SKPDFViewTransitionsObservationContext];
-    [transitionController removeObserver:self forKeyPath:@"duration" context:&SKPDFViewTransitionsObservationContext];
-    [transitionController removeObserver:self forKeyPath:@"shouldRestrict" context:&SKPDFViewTransitionsObservationContext];
-    [transitionController removeObserver:self forKeyPath:@"pageTransitions" context:&SKPDFViewTransitionsObservationContext];
     [self disableNavigation];
     [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
     [self removePDFToolTipRects];
@@ -952,14 +947,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (SKTransitionController * )transitionController {
-    if (transitionController == nil) {
+    if (transitionController == nil)
         transitionController = [[SKTransitionController alloc] initForView:self];
-        NSKeyValueObservingOptions options = (NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld);
-        [transitionController addObserver:self forKeyPath:@"transitionStyle" options:options context:&SKPDFViewTransitionsObservationContext];
-        [transitionController addObserver:self forKeyPath:@"duration" options:options context:&SKPDFViewTransitionsObservationContext];
-        [transitionController addObserver:self forKeyPath:@"shouldRestrict" options:options context:&SKPDFViewTransitionsObservationContext];
-        [transitionController addObserver:self forKeyPath:@"pageTransitions" options:options context:&SKPDFViewTransitionsObservationContext];
-    }
     return transitionController;
 }
 
@@ -3252,10 +3241,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 #pragma mark KVO
 
-- (void)setTransitionControllerValue:(id)value forKey:(NSString *)key {
-    [transitionController setValue:value forKey:key];
-}
-
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &SKPDFViewDefaultsObservationContext) {
         NSString *key = [keyPath substringFromIndex:7];
@@ -3269,10 +3254,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                     object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[readingBar page], SKPDFViewOldPageKey, [readingBar page], SKPDFViewNewPageKey, nil]];
             }
         }
-    } else if (context == &SKPDFViewTransitionsObservationContext) {
-        id oldValue = [change objectForKey:NSKeyValueChangeOldKey];
-        if ([oldValue isEqual:[NSNull null]]) oldValue = nil;
-        [[[self undoManager] prepareWithInvocationTarget:self] setTransitionControllerValue:oldValue forKey:keyPath];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
