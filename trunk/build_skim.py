@@ -493,9 +493,8 @@ if __name__ == '__main__':
     else:
         archive_path = create_dmg_of_application(new_version_string, archive == "dmg")
     
-    # will bail if any part fails
     if notarize_password != "":
-        
+        # will bail if any part fails
         notarize_archive(archive_path, notarize_password)
         
         if archive_path.endswith("dmg"):
