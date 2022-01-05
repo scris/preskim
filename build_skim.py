@@ -9,7 +9,7 @@
 
 #
 # SYNOPSIS
-#   build_skim.sh [-s sign_id] [-n notarize_password] [-o out] [-a zip|dmg|] [-t]
+#   build_skim.sh [-s sign_id] [-n notarize_password] [-o out] [-a zip|dmg|] [-v version] [-t]
 #
 # OPTIONS
 #   -s --sign
@@ -20,6 +20,8 @@
 #      Output directory for the final archive and appcast, defaults to the user's Desktop
 #   -a, --archive
 #      The type of archive the app bundle is wrapped in, the prepared disk image when empty
+#   -v, --version
+#      The new short version string, also bumps the version when this is passed
 #   -t, --test
 #      Prepare a test version, don't create appcast and release notes
 #
@@ -95,8 +97,24 @@ DERIVED_DATA_DIR = os.path.join(BUILD_ROOT, "DerivedData")
 PLIST_PATH = os.path.join(BUILT_APP, "Contents", "Info.plist")
 RELNOTES_PATH = os.path.join(BUILT_APP, "Contents", "Resources", "ReleaseNotes.rtf")
 
-def read_versions():
+def bump_versions(newVersion):
+    
+    # bump the version number
+    bumpCmd = ["/usr/bin/agvtool", "bump"]
+    print(" ".join(bumpCmd))
+    x = Popen(bumpCmd, cwd=SOURCE_DIR)
+    rc = x.wait()
+    assert rc == 0, "agvtool bump failed"
+    
+    # change CFBundleVersion and rewrite the Info.plist
+    infoPlist = plistlib.readPlist(PLIST_PATH)
+    assert infoPlist is not None, "unable to read Info.plist"
+    infoPlist["CFBundleShortVersionString"] = newVersion
+    minimumSystemVersion = infoPlist["LSMinimumSystemVersion"]
+    plistlib.writePlist(infoPlist, PLIST_PATH)
 
+def read_versions():
+    
     # read CFBundleVersion, CFBundleShortVersionString, LSMinimumSystemVersion and from Info.plist
     infoPlist = plistlib.readPlist(PLIST_PATH)
     assert infoPlist is not None, "unable to read Info.plist"
@@ -454,10 +472,11 @@ def get_options():
     notarize = ""
     out = os.path.join(os.getenv("HOME"), "Desktop")
     archive = ""
+    version = ""
     test = False
     
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "s:n:o:a:t", ["sign=", "notarize=", "out=", "archive=", "test"])
+        opts, args = getopt.getopt(sys.argv[1:], "s:n:o:a:v:t", ["sign=", "notarize=", "out=", "archive=", "version=", "test"])
     except:
         sys.stderr.write("error reading options\n")
     
@@ -470,14 +489,19 @@ def get_options():
             out = arg
         elif opt in ["-a", "--archive"]:
             archive = arg
+        elif opt in ["-v", "--version"]:
+            version = arg
         elif opt in ["-t", "--test"]:
             test = True
     
-    return sign, notarize, out, archive, test
+    return sign, notarize, out, archive, version, test
 
 if __name__ == '__main__':
     
-    sign_id, notarize_password, out, archive, test = get_options()
+    sign_id, notarize_password, out, archive, version, test = get_options()
+    
+    if version != "":
+        bump_versions(version)
     
     clean_and_build()
     
