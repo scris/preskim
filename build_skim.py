@@ -94,6 +94,7 @@ SYMROOT = os.path.join(BUILD_ROOT, "Products")
 BUILD_DIR = os.path.join(SYMROOT, "Release")
 BUILT_APP = os.path.join(BUILD_DIR, "Skim.app")
 DERIVED_DATA_DIR = os.path.join(BUILD_ROOT, "DerivedData")
+SOURCE_PLIST_PATH = os.path.join(SOURCE_DIR, "Info.plist")
 PLIST_PATH = os.path.join(BUILT_APP, "Contents", "Info.plist")
 RELNOTES_PATH = os.path.join(BUILT_APP, "Contents", "Resources", "ReleaseNotes.rtf")
 
@@ -107,7 +108,7 @@ def bump_versions(newVersion):
     assert rc == 0, "agvtool bump failed"
     
     # change CFBundleVersion and rewrite the Info.plist
-    infoPlist = plistlib.readPlist(PLIST_PATH)
+    infoPlist = plistlib.readPlist(SOURCE_PLIST_PATH)
     assert infoPlist is not None, "unable to read Info.plist"
     infoPlist["CFBundleShortVersionString"] = newVersion
     minimumSystemVersion = infoPlist["LSMinimumSystemVersion"]
