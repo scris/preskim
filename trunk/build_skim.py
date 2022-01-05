@@ -110,8 +110,11 @@ def bump_versions(newVersion):
     # change CFBundleVersion and rewrite the Info.plist
     infoPlist = plistlib.readPlist(SOURCE_PLIST_PATH)
     assert infoPlist is not None, "unable to read Info.plist"
+    if newVersion == "+":
+        oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
+        oldVersion[-1] = str(int(oldVersion[-1]) + 1)
+        newVersion = ".".join(oldVersion)
     infoPlist["CFBundleShortVersionString"] = newVersion
-    minimumSystemVersion = infoPlist["LSMinimumSystemVersion"]
     plistlib.writePlist(infoPlist, PLIST_PATH)
 
 def read_versions():
