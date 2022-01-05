@@ -130,7 +130,7 @@ def bump_versions(newVersion):
         newVersion = ".".join(oldVersion)
     else if newVersion == "+++":
         oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
-        oldVersion = [str(int(oldVersion[0]) + 1), '0']
+        oldVersion = [str(int(oldVersion[0]) + 1), "0"]
         newVersion = ".".join(oldVersion)
     infoPlist["CFBundleShortVersionString"] = newVersion
     plistlib.writePlist(infoPlist, SOURCE_PLIST_PATH)
