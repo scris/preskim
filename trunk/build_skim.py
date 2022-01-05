@@ -122,7 +122,7 @@ def bump_versions(newVersion):
     elif newVersion == "++":
         oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
         if len(oldVersion) > 2:
-            oldVersion = oldVersion[:-2] + [str(int(oldVersion[-2) + 1)]
+            oldVersion = oldVersion[:-2] + [str(int(oldVersion[-2]) + 1)]
         elif len(oldVersion) == 2:
             oldVersion[-1] = str(int(oldVersion[-1]) + 1)
         else:
