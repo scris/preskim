@@ -112,7 +112,23 @@ def bump_versions(newVersion):
     assert infoPlist is not None, "unable to read Info.plist"
     if newVersion == "+":
         oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
-        oldVersion[-1] = str(int(oldVersion[-1]) + 1)
+        if len(oldVersion) > 2:
+            oldVersion[-1] = str(int(oldVersion[-1]) + 1)
+        else:
+            oldVersion.append("1")
+        newVersion = ".".join(oldVersion)
+    else if newVersion == "++":
+        oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
+        if len(oldVersion) > 2:
+            oldVersion = oldVersion[:-2] + [str(int(oldVersion[-2) + 1)]
+        else if len(oldVersion) == 2:
+            oldVersion[-1] = str(int(oldVersion[-1]) + 1)
+        else:
+            oldVersion.append("1")
+        newVersion = ".".join(oldVersion)
+    else if newVersion == "+++":
+        oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
+        oldVersion = [str(int(oldVersion[0]) + 1), '0']
         newVersion = ".".join(oldVersion)
     infoPlist["CFBundleShortVersionString"] = newVersion
     plistlib.writePlist(infoPlist, PLIST_PATH)
