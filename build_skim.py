@@ -114,8 +114,10 @@ def bump_versions(newVersion):
         oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
         if len(oldVersion) > 2:
             oldVersion[-1] = str(int(oldVersion[-1]) + 1)
-        else:
+        else if len(oldVersion) == 2:
             oldVersion.append("1")
+        else:
+            oldVersion = oldVersion + ["0", "1"]
         newVersion = ".".join(oldVersion)
     else if newVersion == "++":
         oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
@@ -131,7 +133,7 @@ def bump_versions(newVersion):
         oldVersion = [str(int(oldVersion[0]) + 1), '0']
         newVersion = ".".join(oldVersion)
     infoPlist["CFBundleShortVersionString"] = newVersion
-    plistlib.writePlist(infoPlist, PLIST_PATH)
+    plistlib.writePlist(infoPlist, SOURCE_PLIST_PATH)
 
 def read_versions():
     
