@@ -134,6 +134,7 @@ def bump_versions(newVersion):
         newVersion = ".".join(oldVersion)
     infoPlist["CFBundleShortVersionString"] = newVersion
     plistlib.writePlist(infoPlist, SOURCE_PLIST_PATH)
+    print("version string updated to %s" % (newVersion))
 
 def read_versions():
     
