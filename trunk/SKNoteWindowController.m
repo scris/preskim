@@ -197,6 +197,9 @@ static NSURL *temporaryDirectoryURL = nil;
     
     [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
     
+    if (RUNNING_AFTER(10_13))
+        [textView setDrawsBackground:NO];
+    
     if ([self isNoteType]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
