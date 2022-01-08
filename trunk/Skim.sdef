@@ -402,7 +402,7 @@
         </command>
 
         <command name="convert notes" code="SKIMConv"
-            description="Convert in a document PDF annotations to Skim notes.">
+            description="Convert PDF annotations in a document to Skim notes.">
             <direct-parameter type="document"
                 description="The document(s) for which to convert notes."/>
             <parameter name="waiting" code="Wait" type="boolean" optional="yes"
@@ -412,7 +412,7 @@
         </command>
 
         <command name="read notes" code="SKIMRNot"
-            description="Read notes from a Skim document and ad them to the PDF document.">
+            description="Read notes from a Skim document and add them to the PDF document.">
             <direct-parameter type="document"
                 description="The document(s) for which to read notes."/>
 			<parameter name="from" code="from" type="file" 
