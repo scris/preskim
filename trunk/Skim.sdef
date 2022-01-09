@@ -557,9 +557,7 @@
             <cocoa class="SKFormatCommand"/>
             <direct-parameter
                 description="The object to format using a template.">
-                <type type="document"/>
-                <type type="page"/>
-                <type type="note"/>
+                <type type="specifier"/>
             </direct-parameter>
             <parameter name="using template" code="Tmpl"
                 description="The template to use as a file, text, or rich text.">
@@ -603,6 +601,9 @@
                 description="TeX lines.">
                 <cocoa key="texLines"/>
             </element>
+            <responds-to name="format">
+                <cocoa method=""/>
+            </responds-to>
         </class-extension>
 
         <class-extension extends="rich text" hidden="yes"
@@ -741,9 +742,6 @@
             <responds-to name="edit">
                 <cocoa method="handleEditScriptCommand:"/>
             </responds-to>
-			<responds-to name="format">
-				<cocoa method=""/>
-			</responds-to>
         </class-extension>
 
         <class-extension extends="window"
@@ -796,9 +794,6 @@
             </property>
 			<responds-to name="grab">
 				<cocoa method="handleGrabScriptCommand:"/>
-			</responds-to>
-			<responds-to name="format">
-				<cocoa method=""/>
 			</responds-to>
         </class>
 
@@ -904,9 +899,6 @@
                 <type type="point list" list="yes"/>
                 <cocoa key="scriptingPointLists"/>
             </property>
-            <responds-to name="format">
-                <cocoa method=""/>
-            </responds-to>
             <responds-to name="edit">
                 <cocoa method="handleEditScriptCommand:"/>
             </responds-to>
