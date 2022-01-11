@@ -508,7 +508,7 @@ static char *SKTransitionPropertiesObservationContext;
 
 - (void)tableView:(NSTableView *)tv deleteRowsWithIndexes:(NSIndexSet *)rowIndexes {
     NSArray *selTransitions = [transitions objectsAtIndexes:rowIndexes];
-    NSDictionary *empty = [NSDictionary dictionaryWithObjectsAndKeys:@"", SKStyleNameKey, [NSNumber numberWithDouble:1.0], SKDurationKey, [NSNumber numberWithBool:NO], SKShouldRestrictKey, nil];
+    NSDictionary *empty = [[[[SKTransitionInfo alloc] init] autorelease] properties];
     [selTransitions setValue:empty forKey:PROPERTIES_KEY];
 }
 

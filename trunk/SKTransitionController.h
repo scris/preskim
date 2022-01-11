@@ -37,17 +37,8 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "SKTransitionInfo.h"
 
-extern NSString *SKStyleNameKey;
-extern NSString *SKDurationKey;
-extern NSString *SKShouldRestrictKey;
-
-// this corresponds to the CGSTransitionType enum
-typedef NS_ENUM(NSUInteger, SKTransitionStyle) {
-	SKNoTransition
-};
-
-@class CIImage, SKTransitionInfo;
 @protocol SKTransitionView;
 
 @interface SKTransitionController : NSObject {
