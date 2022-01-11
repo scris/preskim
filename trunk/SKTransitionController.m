@@ -328,6 +328,7 @@ static BOOL hasCoreGraphicsTransitions = NO;
 - (void)setTransition:(SKTransitionInfo *)newTransition {
     if (transition != newTransition) {
         [[[view undoManager] prepareWithInvocationTarget:self] setTransition:transition];
+        [transition release];
         transition = [newTransition retain];
     }
 }
