@@ -42,7 +42,6 @@
 */
 
 #import "SKTransitionController.h"
-#import "SKTransitionInfo.h"
 #import "NSBitmapImageRep_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 #import "SKStringConstants.h"
@@ -52,10 +51,6 @@
 #import <OpenGL/gl.h>
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
-
-NSString *SKStyleNameKey = @"styleName";
-NSString *SKDurationKey = @"duration";
-NSString *SKShouldRestrictKey = @"shouldRestrict";
 
 #define kCIInputBacksideImageKey @"inputBacksideImage"
 

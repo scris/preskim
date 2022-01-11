@@ -38,6 +38,11 @@
 
 #import "SKTransitionInfo.h"
 #import "SKThumbnail.h"
+#import "SKTransitionController.h"
+
+#define SKStyleNameKey      @"styleName"
+#define SKDurationKey       @"duration"
+#define SKShouldRestrictKey @"shouldRestrict"
 
 NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.transition";
 

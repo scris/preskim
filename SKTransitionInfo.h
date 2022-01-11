@@ -37,9 +37,13 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKTransitionController.h"
 
 extern NSString *SKPasteboardTypeTransition;
+
+// further values are defined at runtime by SKTransitionController
+typedef NS_ENUM(NSUInteger, SKTransitionStyle) {
+    SKNoTransition
+};
 
 @interface SKTransitionInfo : NSObject <NSPasteboardReading, NSPasteboardWriting> {
     SKTransitionStyle transitionStyle;
