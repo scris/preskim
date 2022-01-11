@@ -42,6 +42,7 @@
 */
 
 #import "SKTransitionController.h"
+#import "SKTransitionInfo.h"
 #import "NSBitmapImageRep_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 #import "SKStringConstants.h"
@@ -174,7 +175,7 @@ static SKTransitionStyle SKCoreImageTransition = 1;
 
 @implementation SKTransitionController
 
-@synthesize view, transitionStyle, duration, shouldRestrict, pageTransitions;
+@synthesize view, transition, pageTransitions;
 @dynamic hasTransition;
 
 static NSDictionary *oldStyleNames = nil;
@@ -306,9 +307,7 @@ static BOOL hasCoreGraphicsTransitions = NO;
     if (self) {
         view = aView; // don't retain as it may retain us
         
-        transitionStyle = SKNoTransition;
-        duration = 1.0;
-        shouldRestrict = YES;
+        transition = [[SKTransitionInfo alloc] init];
     }
     return self;
 }
@@ -317,32 +316,19 @@ static BOOL hasCoreGraphicsTransitions = NO;
     view = nil;
     SKDESTROY(transitionView);
     SKDESTROY(window);
+    SKDESTROY(transition);
     SKDESTROY(pageTransitions);
     [super dealloc];
 }
 
 - (BOOL)hasTransition {
-    return transitionStyle != SKNoTransition || pageTransitions != nil;
+    return [transition transitionStyle] != SKNoTransition || pageTransitions != nil;
 }
 
-- (void)setTransitionStyle:(SKTransitionStyle)newTransitionStyle {
-    if (transitionStyle != newTransitionStyle) {
-        [[[view undoManager] prepareWithInvocationTarget:self] setTransitionStyle:transitionStyle];
-        transitionStyle = newTransitionStyle;
-    }
-}
-
-- (void)setDuration:(CGFloat)newDuration {
-    if (fabs(duration - newDuration) > 0.0) {
-        [[[view undoManager] prepareWithInvocationTarget:self] setDuration:duration];
-        duration = newDuration;
-    }
-}
-
-- (void)setShouldRestrict:(BOOL)newShouldRestrict {
-    if (shouldRestrict != newShouldRestrict) {
-        [[[view undoManager] prepareWithInvocationTarget:self] setShouldRestrict:shouldRestrict];
-        shouldRestrict = newShouldRestrict;
+- (void)setTransition:(SKTransitionInfo *)newTransition {
+    if (transition != newTransition) {
+        [[[view undoManager] prepareWithInvocationTarget:self] setTransition:transition];
+        transition = [newTransition retain];
     }
 }
 
@@ -359,8 +345,8 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 }
 
 // rect and bounds are in pixels
-- (CIFilter *)transitionFilterForStyle:(SKTransitionStyle)style rect:(CGRect)rect bounds:(CGRect)bounds restricted:(BOOL)restricted forward:(BOOL)forward initialImage:(CIImage *)initialImage finalImage:(CIImage *)finalImage {
-    NSString *filterName = [[self class] nameForStyle:style];
+- (CIFilter *)transitionFilterForTransition:(SKTransitionInfo *)info rect:(CGRect)rect bounds:(CGRect)bounds forward:(BOOL)forward initialImage:(CIImage *)initialImage finalImage:(CIImage *)finalImage {
+    NSString *filterName = [[self class] nameForStyle:[info transitionStyle]];
     CIFilter *transitionFilter = [CIFilter filterWithName:filterName];
     
     [transitionFilter setDefaults];
@@ -368,7 +354,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     for (NSString *key in [transitionFilter inputKeys]) {
         id value = nil;
         if ([key isEqualToString:kCIInputExtentKey]) {
-            CGRect extent = restricted ? rect : bounds;
+            CGRect extent = [info shouldRestrict] ? rect : bounds;
             value = [CIVector vectorWithX:CGRectGetMinX(extent) Y:CGRectGetMinY(extent) Z:CGRectGetWidth(extent) W:CGRectGetHeight(extent)];
         } else if ([key isEqualToString:kCIInputAngleKey]) {
             CGFloat angle = forward ? 0.0 : M_PI;
@@ -494,24 +480,15 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         return;
     }
     
-    SKTransitionStyle currentTransitionStyle = transitionStyle;
-    CGFloat currentDuration = duration;
-    BOOL currentShouldRestrict = shouldRestrict;
+    SKTransitionInfo *currentTransition = transition;
     BOOL currentForward = (toIndex >= fromIndex);
     
     NSUInteger idx = MIN(fromIndex, toIndex);
     if (fromIndex != NSNotFound && toIndex != NSNotFound && idx < [pageTransitions count]) {
-        NSDictionary *info = [pageTransitions objectAtIndex:idx];
-        id value;
-        if ((value = [info objectForKey:SKStyleNameKey]))
-            currentTransitionStyle = [[self class] styleForName:value];
-        if ((value = [info objectForKey:SKDurationKey]) && [value respondsToSelector:@selector(doubleValue)])
-            currentDuration = [value doubleValue];
-        if ((value = [info objectForKey:SKShouldRestrictKey]) && [value respondsToSelector:@selector(boolValue)])
-            currentShouldRestrict = [value boolValue];
+        currentTransition = [[[SKTransitionInfo alloc] initWithProperties:[pageTransitions objectAtIndex:idx]] autorelease];
     }
     
-    if ([SKTransitionController isCoreImageTransition:currentTransitionStyle]) {
+    if ([SKTransitionController isCoreImageTransition:[currentTransition transitionStyle]]) {
         
         animating = YES;
         
@@ -528,13 +505,12 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         CIImage *finalImage = [self currentImageForRect:toRect scale:&imageScale];
         CGRect cgRect = CGRectIntegral(scaleRect(NSIntersectionRect(NSUnionRect(rect, toRect), bounds), imageScale));
         CGRect cgBounds = scaleRect(bounds, imageScale);
-        CIFilter *transitionFilter = [self transitionFilterForStyle:currentTransitionStyle
-                                                               rect:cgRect
-                                                             bounds:cgBounds
-                                                         restricted:currentShouldRestrict
-                                                            forward:currentForward
-                                                       initialImage:initialImage
-                                                         finalImage:finalImage];
+        CIFilter *transitionFilter = [self transitionFilterForTransition:currentTransition
+                                                                    rect:cgRect
+                                                                  bounds:cgBounds
+                                                                 forward:currentForward
+                                                            initialImage:initialImage
+                                                              finalImage:finalImage];
         [self showTransitionViewForRect:bounds image:initialImage extent:cgBounds];
         
         // Update the view and its window, so it shows the correct state when it is shown.
@@ -545,20 +521,20 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         
         [transitionView setFilter:transitionFilter];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [context setDuration:currentDuration];
+                [context setDuration:[currentTransition duration]];
                 [[transitionView animator] setProgress:1.0];
             } completionHandler:^{
                 [self removeTransitionView];
                 animating = NO;
             }];
         
-    } else if ([SKTransitionController isCoreGraphicsTransition:currentTransitionStyle]) {
+    } else if ([SKTransitionController isCoreGraphicsTransition:[currentTransition transitionStyle]]) {
         
         animating = YES;
         
         NSWindow *viewWindow = [view window];
         CIImage *initialImage = nil;
-        if (currentShouldRestrict)
+        if ([currentTransition shouldRestrict])
             initialImage = [self currentImageForRect:rect scale:NULL];
         
         // We don't want the window to draw the next state before the animation is run
@@ -568,7 +544,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         
         CIImage *finalImage = nil;
         
-        if (currentShouldRestrict) {
+        if ([currentTransition shouldRestrict]) {
             CGFloat imageScale = 1.0;
             
             finalImage = [self currentImageForRect:toRect scale:&imageScale];
@@ -583,10 +559,10 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         CGSTransitionSpec spec;
         // specify our specifications
         spec.unknown1 = 0;
-        spec.type =  currentTransitionStyle;
+        spec.type =  [currentTransition transitionStyle];
         spec.option = currentForward ? CGSLeft : CGSRight;
         spec.backColour = NULL;
-        spec.wid = [(currentShouldRestrict ? window : viewWindow) windowNumber];
+        spec.wid = [([currentTransition shouldRestrict] ? window : viewWindow) windowNumber];
         
         // Let's get a connection
         CGSConnection cgs = _CGSDefaultConnection_func();
@@ -594,7 +570,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         // Create a transition
         CGSNewTransition_func(cgs, &spec, &handle);
         
-        if (currentShouldRestrict) {
+        if ([currentTransition shouldRestrict]) {
             [(SKTransitionView *)[window contentView] setImage:finalImage];
             [[window contentView] display];
         }
@@ -605,12 +581,12 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         [viewWindow enableFlushWindow];
         [viewWindow flushWindow];
         
-        CGSInvokeTransition_func(cgs, handle, currentDuration);
+        CGSInvokeTransition_func(cgs, handle, [currentTransition duration]);
         
-        DISPATCH_MAIN_AFTER_SEC(currentDuration, ^{
+        DISPATCH_MAIN_AFTER_SEC([currentTransition duration], ^{
             CGSReleaseTransition_func(cgs, handle);
             
-            if (currentShouldRestrict)
+            if ([currentTransition shouldRestrict])
                 [self removeTransitionWindow];
             
             animating = NO;
