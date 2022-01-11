@@ -47,7 +47,7 @@ typedef NS_ENUM(NSUInteger, SKTransitionStyle) {
 	SKNoTransition
 };
 
-@class CIImage;
+@class CIImage, SKTransitionInfo;
 @protocol SKTransitionView;
 
 @interface SKTransitionController : NSObject {
@@ -56,17 +56,12 @@ typedef NS_ENUM(NSUInteger, SKTransitionStyle) {
     NSView *view;
     BOOL animating;
     
-    SKTransitionStyle transitionStyle;
-    CGFloat duration;
-    BOOL shouldRestrict;
-    
+    SKTransitionInfo *transition;
     NSArray *pageTransitions;
 }
 
 @property (nonatomic, assign) NSView *view;
-@property (nonatomic) SKTransitionStyle transitionStyle;
-@property (nonatomic) CGFloat duration;
-@property (nonatomic) BOOL shouldRestrict;
+@property (nonatomic, retain) SKTransitionInfo *transition;
 @property (nonatomic, copy) NSArray *pageTransitions;
 @property (nonatomic) BOOL hasTransition;
 

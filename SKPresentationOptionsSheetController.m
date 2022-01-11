@@ -172,9 +172,10 @@ static char *SKTransitionPropertiesObservationContext;
     [[notesDocumentPopUpButton itemAtIndex:2] setRepresentedObject:[controller document]];
 
     SKTransitionController *transitionController = [[controller pdfView] transitionController];
-    [transition setTransitionStyle:[transitionController transitionStyle]];
-    [transition setDuration:[transitionController duration]];
-    [transition setShouldRestrict:[transitionController shouldRestrict]];
+    SKTransitionInfo *info = [transitionController transition];
+    [transition setTransitionStyle:[info transitionStyle]];
+    [transition setDuration:[info duration]];
+    [transition setShouldRestrict:[info shouldRestrict]];
     [self startObservingTransitions:[NSArray arrayWithObject:transition]];
     
     // collapse the table, it is already hidden
@@ -222,12 +223,11 @@ static char *SKTransitionPropertiesObservationContext;
     
     for (SKThumbnail *next in [controller thumbnails]) {
         if (tn) {
-            SKTransitionInfo *info = [[SKTransitionInfo alloc] init];
+            SKLabeledTransitionInfo *info = [[SKLabeledTransitionInfo alloc] initWithProperties:([ptEnum nextObject] ?: dictionary)];
             [info setThumbnail:tn];
             [info setToThumbnail:next];
-            [info setProperties:([ptEnum nextObject] ?: dictionary)];
             [array addObject:info];
-            [cell setStringValue:[info label]];
+            [cell setStringValue:[info label] ?: @""];
             labelWidth = fmax(labelWidth, [cell cellSize].width);
             [info release];
         }
@@ -266,10 +266,7 @@ static char *SKTransitionPropertiesObservationContext;
         // don't make changes when nothing was changed
         if ([undoManager canUndo]) {
             SKTransitionController *transitionController = [[controller pdfView] transitionController];
-            [transitionController setTransitionStyle:[transition transitionStyle]];
-            [transitionController setDuration:[transition duration]];
-            [transitionController setShouldRestrict:[transition shouldRestrict]];
-            [transitionController setPageTransitions:[self pageTransitions]];
+            [transitionController setTransition:transition];
             [[controller undoManager] setActionName:NSLocalizedString(@"Change Transitions", @"Undo action name")];
         }
         [controller setPresentationNotesDocument:[self notesDocument]];

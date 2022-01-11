@@ -43,15 +43,8 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
 
 @implementation SKTransitionInfo
 
-@synthesize transitionStyle, duration, shouldRestrict, thumbnail, toThumbnail;
-@dynamic properties, label, title, transitionName;
-
-+ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
-    NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-    if ([key isEqualToString:@"transitionName"])
-        keyPaths = [keyPaths setByAddingObjectsFromSet:[NSSet setWithObjects:@"transitionStyle", nil]];
-    return keyPaths;
-}
+@synthesize transitionStyle, duration, shouldRestrict;
+@dynamic properties, label, title;
 
 - (id)init {
     self = [super init];
@@ -59,16 +52,14 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
         transitionStyle = SKNoTransition;
         duration = 1.0;
         shouldRestrict = YES;
-        thumbnail = nil;
-        toThumbnail = nil;
     }
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(thumbnail);
-    SKDESTROY(toThumbnail);
-    [super dealloc];
+- (id)initWithProperties:(NSDictionary *)properies {
+    self = [self init];
+    [self setProperties:properies];
+    return self;
 }
 
 + (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
@@ -92,14 +83,11 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
 }
 
 - (id)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type {
-    self = [self init];
-    if (self) {
-        if ([type isEqualToString:SKPasteboardTypeTransition]) {
-            [self setProperties:propertyList];
-        } else {
-            [self release];
-            self = nil;
-        }
+    if ([type isEqualToString:SKPasteboardTypeTransition]) {
+        self = [self initWithProperties:propertyList];
+    } else {
+        [self release];
+        self = nil;
     }
     return self;
 }
@@ -122,17 +110,43 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
     if ((value = [dictionary objectForKey:SKDurationKey]))
         [self setDuration:[value doubleValue]];
     if ((value = [dictionary objectForKey:SKShouldRestrictKey]))
-        [self setShouldRestrict:[value doubleValue]];
+        [self setShouldRestrict:[value boolValue]];
+}
+
+- (NSString *)label {
+    return nil;
+}
+
+- (NSString *)title {
+    return NSLocalizedString(@"Page Transition", @"Box title");
+}
+
+@end
+
+#pragma mark -
+
+@implementation SKLabeledTransitionInfo
+
+@synthesize thumbnail, toThumbnail;
+@dynamic transitionName;
+
++ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
+    NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
+    if ([key isEqualToString:@"transitionName"])
+        keyPaths = [keyPaths setByAddingObjectsFromSet:[NSSet setWithObjects:@"transitionStyle", nil]];
+    return keyPaths;
+}
+
+- (void)dealloc {
+    SKDESTROY(thumbnail);
+    SKDESTROY(toThumbnail);
+    [super dealloc];
 }
 
 - (NSString *)label {
     if ([self thumbnail] && [self toThumbnail])
         return [NSString stringWithFormat:@"%@\u2192%@", [[self thumbnail] label], [[self toThumbnail] label]];
     return nil;
-}
-
-- (NSString *)title {
-    return NSLocalizedString(@"Page Transition", @"Box title");
 }
 
 - (NSString *)transitionName {

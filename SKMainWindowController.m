@@ -75,6 +75,7 @@
 #import "SKLineInspector.h"
 #import "SKStatusBar.h"
 #import "SKTransitionController.h"
+#import "SKTransitionInfo.h"
 #import "SKPresentationOptionsSheetController.h"
 #import "SKTypeSelectHelper.h"
 #import "NSGeometry_SKExtensions.h"
@@ -1504,15 +1505,11 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 
 - (NSDictionary *)presentationOptions {
     SKTransitionController *transitions = [pdfView transitionController];
-    SKTransitionStyle style = [transitions transitionStyle];
-    NSString *styleName = [SKTransitionController nameForStyle:style];
+    SKTransitionInfo *transition = [transitions transition];
     NSArray *pageTransitions = [transitions pageTransitions];
     NSMutableDictionary *options = nil;
-    if ([styleName length] || [pageTransitions count]) {
-        options = [NSMutableDictionary dictionary];
-        [options setValue:(styleName ?: @"") forKey:SKStyleNameKey];
-        [options setValue:[NSNumber numberWithDouble:[transitions duration]] forKey:SKDurationKey];
-        [options setValue:[NSNumber numberWithBool:[transitions shouldRestrict]] forKey:SKShouldRestrictKey];
+    if ([transition transitionStyle] != SKNoTransition || [pageTransitions count]) {
+        options = [NSMutableDictionary dictionaryWithDictionary:[transition properties]];
         [options setValue:pageTransitions forKey:PAGETRANSITIONS_KEY];
     }
     return options;
@@ -1520,17 +1517,8 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 
 - (void)setPresentationOptions:(NSDictionary *)dictionary {
     SKTransitionController *transitions = [pdfView transitionController];
-    NSString *styleName = [dictionary objectForKey:SKStyleNameKey];
-    NSNumber *duration = [dictionary objectForKey:SKDurationKey];
-    NSNumber *shouldRestrict = [dictionary objectForKey:SKShouldRestrictKey];
-    NSArray *pageTransitions = [dictionary objectForKey:PAGETRANSITIONS_KEY];
-    if (styleName)
-        [transitions setTransitionStyle:[SKTransitionController styleForName:styleName]];
-    if (duration)
-        [transitions setDuration:[duration doubleValue]];
-    if (shouldRestrict)
-        [transitions setShouldRestrict:[shouldRestrict boolValue]];
-    [transitions setPageTransitions:pageTransitions];
+    [transitions setTransition:[[[SKTransitionInfo alloc] initWithProperties:dictionary] autorelease]];
+    [transitions setPageTransitions:[dictionary objectForKey:PAGETRANSITIONS_KEY]];
 }
 
 - (void)setPresentationNotesDocument:(NSDocument *)newDocument {
