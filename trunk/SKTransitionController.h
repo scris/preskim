@@ -64,7 +64,6 @@
 + (NSString *)localizedNameForStyle:(SKTransitionStyle)style;
 
 + (BOOL)isCoreGraphicsTransition:(SKTransitionStyle)style;
-+ (BOOL)isCoreImageTransition:(SKTransitionStyle)style;
 
 - (void)animateForRect:(NSRect)rect from:(NSUInteger)fromIndex to:(NSUInteger)toIndex change:(NSRect (^)(void))change;
 
