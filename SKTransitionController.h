@@ -66,8 +66,6 @@
 + (BOOL)isCoreGraphicsTransition:(SKTransitionStyle)style;
 + (BOOL)isCoreImageTransition:(SKTransitionStyle)style;
 
-- (id)initForView:(NSView *)aView;
-
 - (void)animateForRect:(NSRect)rect from:(NSUInteger)fromIndex to:(NSUInteger)toIndex change:(NSRect (^)(void))change;
 
 @end

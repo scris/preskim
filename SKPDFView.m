@@ -949,8 +949,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (SKTransitionController * )transitionController {
-    if (transitionController == nil)
-        transitionController = [[SKTransitionController alloc] initForView:self];
+    if (transitionController == nil) {
+        transitionController = [[SKTransitionController alloc] init];
+        [transitionController setView:self];
+    }
     return transitionController;
 }
 

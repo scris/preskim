@@ -297,11 +297,9 @@ static BOOL hasCoreGraphicsTransitions = NO;
     return style >= SKCoreImageTransition;
 }
 
-- (id)initForView:(NSView *)aView {
+- (id)init {
     self = [super init];
     if (self) {
-        view = aView; // don't retain as it may retain us
-        
         transition = [[SKTransitionInfo alloc] init];
     }
     return self;
