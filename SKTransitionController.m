@@ -268,8 +268,6 @@ static BOOL hasCoreGraphicsTransitions = NO;
 + (NSString *)localizedNameForStyle:(SKTransitionStyle)style {
     if (style == SKNoTransition) {
         return NSLocalizedString(@"No Transition", @"Transition name");
-    } else if ([self isCoreImageTransition:style]) {
-        return [CIFilter localizedNameForFilterName:[self nameForStyle:style]];
     } else if ([self isCoreGraphicsTransition:style]) {
         static NSArray *localizedCoreGraphicsNames = nil;
         if (localizedCoreGraphicsNames == nil)
@@ -285,16 +283,14 @@ static BOOL hasCoreGraphicsTransitions = NO;
                   NSLocalizedString(@"Warp Switch", @"Transition name"),
                   NSLocalizedString(@"Flip", @"Transition name"), nil];
         return [[localizedCoreGraphicsNames objectAtIndex:style] stringByAppendingString:@"*"];
-    };
+    } else {
+        return [CIFilter localizedNameForFilterName:[self nameForStyle:style]];
+    }
     return @"";
 }
 
 + (BOOL)isCoreGraphicsTransition:(SKTransitionStyle)style {
     return hasCoreGraphicsTransitions && style > SKNoTransition && style < SKCoreImageTransition;
-}
-
-+ (BOOL)isCoreImageTransition:(SKTransitionStyle)style {
-    return style >= SKCoreImageTransition;
 }
 
 - (void)dealloc {
@@ -474,45 +470,9 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         currentTransition = [[[SKTransitionInfo alloc] initWithProperties:[pageTransitions objectAtIndex:idx]] autorelease];
     }
     
-    if ([SKTransitionController isCoreImageTransition:[currentTransition transitionStyle]]) {
+    if ([currentTransition transitionStyle] == SKNoTransition) {
         
-        animating = YES;
-        
-        NSWindow *viewWindow = [view window];
-        CIImage *initialImage = [self currentImageForRect:rect scale:NULL];
-        
-        // We don't want the window to draw the next state before the animation is run
-        [viewWindow disableFlushWindow];
-        
-        NSRect toRect = change();
-
-        NSRect bounds = [view bounds];
-        CGFloat imageScale = 1.0;
-        CIImage *finalImage = [self currentImageForRect:toRect scale:&imageScale];
-        CGRect cgRect = CGRectIntegral(scaleRect(NSIntersectionRect(NSUnionRect(rect, toRect), bounds), imageScale));
-        CGRect cgBounds = scaleRect(bounds, imageScale);
-        CIFilter *transitionFilter = [self transitionFilterForTransition:currentTransition
-                                                                    rect:cgRect
-                                                                  bounds:cgBounds
-                                                                 forward:currentForward
-                                                            initialImage:initialImage
-                                                              finalImage:finalImage];
-        [self showTransitionViewForRect:bounds image:initialImage extent:cgBounds];
-        
-        // Update the view and its window, so it shows the correct state when it is shown.
-        [view display];
-        // Remember we disabled flushing in the previous method, we need to balance that.
-        [viewWindow enableFlushWindow];
-        [viewWindow flushWindow];
-        
-        [transitionView setFilter:transitionFilter];
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [context setDuration:[currentTransition duration]];
-                [[transitionView animator] setProgress:1.0];
-            } completionHandler:^{
-                [self removeTransitionView];
-                animating = NO;
-            }];
+        change();
         
     } else if ([SKTransitionController isCoreGraphicsTransition:[currentTransition transitionStyle]]) {
         
@@ -579,7 +539,45 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         });
         
     } else {
-        change();
+        
+        animating = YES;
+        
+        NSWindow *viewWindow = [view window];
+        CIImage *initialImage = [self currentImageForRect:rect scale:NULL];
+        
+        // We don't want the window to draw the next state before the animation is run
+        [viewWindow disableFlushWindow];
+        
+        NSRect toRect = change();
+
+        NSRect bounds = [view bounds];
+        CGFloat imageScale = 1.0;
+        CIImage *finalImage = [self currentImageForRect:toRect scale:&imageScale];
+        CGRect cgRect = CGRectIntegral(scaleRect(NSIntersectionRect(NSUnionRect(rect, toRect), bounds), imageScale));
+        CGRect cgBounds = scaleRect(bounds, imageScale);
+        CIFilter *transitionFilter = [self transitionFilterForTransition:currentTransition
+                                                                    rect:cgRect
+                                                                  bounds:cgBounds
+                                                                 forward:currentForward
+                                                            initialImage:initialImage
+                                                              finalImage:finalImage];
+        [self showTransitionViewForRect:bounds image:initialImage extent:cgBounds];
+        
+        // Update the view and its window, so it shows the correct state when it is shown.
+        [view display];
+        // Remember we disabled flushing in the previous method, we need to balance that.
+        [viewWindow enableFlushWindow];
+        [viewWindow flushWindow];
+        
+        [transitionView setFilter:transitionFilter];
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                [context setDuration:[currentTransition duration]];
+                [[transitionView animator] setProgress:1.0];
+            } completionHandler:^{
+                [self removeTransitionView];
+                animating = NO;
+            }];
+        
     }
 }
 
