@@ -463,12 +463,9 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     }
     
     SKTransitionInfo *currentTransition = transition;
-    BOOL currentForward = (toIndex >= fromIndex);
-    
     NSUInteger idx = MIN(fromIndex, toIndex);
-    if (fromIndex != NSNotFound && toIndex != NSNotFound && idx < [pageTransitions count]) {
+    if (fromIndex != NSNotFound && toIndex != NSNotFound && idx < [pageTransitions count])
         currentTransition = [[[SKTransitionInfo alloc] initWithProperties:[pageTransitions objectAtIndex:idx]] autorelease];
-    }
     
     if ([currentTransition transitionStyle] == SKNoTransition) {
         
@@ -506,7 +503,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         // specify our specifications
         spec.unknown1 = 0;
         spec.type =  [currentTransition transitionStyle];
-        spec.option = currentForward ? CGSLeft : CGSRight;
+        spec.option = toIndex >= fromIndex ? CGSLeft : CGSRight;
         spec.backColour = NULL;
         spec.wid = [([currentTransition shouldRestrict] ? window : viewWindow) windowNumber];
         
@@ -558,7 +555,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         CIFilter *transitionFilter = [self transitionFilterForTransition:currentTransition
                                                                     rect:cgRect
                                                                   bounds:cgBounds
-                                                                 forward:currentForward
+                                                                 forward:toIndex >= fromIndex
                                                             initialImage:initialImage
                                                               finalImage:finalImage];
         [self showTransitionViewForRect:bounds image:initialImage extent:cgBounds];
