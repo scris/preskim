@@ -173,9 +173,11 @@ static char *SKTransitionPropertiesObservationContext;
 
     SKTransitionController *transitionController = [[controller pdfView] transitionController];
     SKTransitionInfo *info = [transitionController transition];
-    [transition setTransitionStyle:[info transitionStyle]];
-    [transition setDuration:[info duration]];
-    [transition setShouldRestrict:[info shouldRestrict]];
+    if (info) {
+        [transition setTransitionStyle:[info transitionStyle]];
+        [transition setDuration:[info duration]];
+        [transition setShouldRestrict:[info shouldRestrict]];
+    }
     [self startObservingTransitions:[NSArray arrayWithObject:transition]];
     
     // collapse the table, it is already hidden

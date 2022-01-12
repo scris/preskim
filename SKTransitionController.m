@@ -297,14 +297,6 @@ static BOOL hasCoreGraphicsTransitions = NO;
     return style >= SKCoreImageTransition;
 }
 
-- (id)init {
-    self = [super init];
-    if (self) {
-        transition = [[SKTransitionInfo alloc] init];
-    }
-    return self;
-}
-
 - (void)dealloc {
     view = nil;
     SKDESTROY(transitionView);
