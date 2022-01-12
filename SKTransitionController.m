@@ -174,7 +174,6 @@ static SKTransitionStyle SKCoreImageTransition = 1;
 @dynamic hasTransition;
 
 static NSDictionary *oldStyleNames = nil;
-static BOOL hasCoreGraphicsTransitions = NO;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -213,7 +212,6 @@ static BOOL hasCoreGraphicsTransitions = NO;
             LOAD_FUNCTION(CGSInvokeTransition, bundle) &&
             LOAD_FUNCTION(CGSReleaseTransition, bundle)) {
             SKCoreImageTransition = SKTransitionFlip + 1;
-            hasCoreGraphicsTransitions = YES;
         }
     }
 }
@@ -224,7 +222,7 @@ static BOOL hasCoreGraphicsTransitions = NO;
     if (transitionNames == nil) {
         NSMutableArray *names = [NSMutableArray arrayWithObjects:
             @"", nil];
-        if (hasCoreGraphicsTransitions) {
+        if (SKCoreImageTransition > 1) {
             [names addObjectsFromArray:[NSArray arrayWithObjects:
                @"CoreGraphics SKTransitionFade",
                @"CoreGraphics SKTransitionZoom",
