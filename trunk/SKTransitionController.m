@@ -218,6 +218,10 @@ static BOOL hasCoreGraphicsTransitions = NO;
     }
 }
 
+static inline BOOL SKIsCoreGraphicsTransition(SKTransitionStyle style) {
+    return hasCoreGraphicsTransitions && style > SKNoTransition && style < SKCoreImageTransition;
+}
+
 + (NSArray *)transitionNames {
     static NSArray *transitionNames = nil;
     
@@ -268,7 +272,7 @@ static BOOL hasCoreGraphicsTransitions = NO;
 + (NSString *)localizedNameForStyle:(SKTransitionStyle)style {
     if (style == SKNoTransition) {
         return NSLocalizedString(@"No Transition", @"Transition name");
-    } else if ([self isCoreGraphicsTransition:style]) {
+    } else if (SKIsCoreGraphicsTransition(style)) {
         static NSArray *localizedCoreGraphicsNames = nil;
         if (localizedCoreGraphicsNames == nil)
             localizedCoreGraphicsNames = [[NSArray alloc] initWithObjects:@"",
@@ -287,10 +291,6 @@ static BOOL hasCoreGraphicsTransitions = NO;
         return [CIFilter localizedNameForFilterName:[self nameForStyle:style]];
     }
     return @"";
-}
-
-+ (BOOL)isCoreGraphicsTransition:(SKTransitionStyle)style {
-    return hasCoreGraphicsTransitions && style > SKNoTransition && style < SKCoreImageTransition;
 }
 
 - (void)dealloc {
@@ -474,7 +474,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         
         change();
         
-    } else if ([SKTransitionController isCoreGraphicsTransition:[currentTransition transitionStyle]]) {
+    } else if (SKIsCoreGraphicsTransition([currentTransition transitionStyle])) {
         
         animating = YES;
         
