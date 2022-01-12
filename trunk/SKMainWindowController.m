@@ -1509,7 +1509,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     NSArray *pageTransitions = [transitions pageTransitions];
     NSMutableDictionary *options = nil;
     if ([transition transitionStyle] != SKNoTransition || [pageTransitions count]) {
-        options = [NSMutableDictionary dictionaryWithDictionary:[transition properties]];
+        options = [NSMutableDictionary dictionaryWithDictionary:[(transition ?: [[[SKTransitionInfo alloc] init] autorelease]) properties]];
         [options setValue:pageTransitions forKey:PAGETRANSITIONS_KEY];
     }
     return options;
