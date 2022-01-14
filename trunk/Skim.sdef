@@ -554,7 +554,6 @@
 
         <command name="format" code="SKIMFrmt"
             description="Format an object using a template.">
-            <cocoa class="SKFormatCommand"/>
             <direct-parameter
                 description="The object to format using a template.">
                 <type type="specifier"/>
@@ -602,7 +601,7 @@
                 <cocoa key="texLines"/>
             </element>
             <responds-to name="format">
-                <cocoa method=""/>
+                <cocoa method="handleFormatScriptCommand:"/>
             </responds-to>
         </class-extension>
 
