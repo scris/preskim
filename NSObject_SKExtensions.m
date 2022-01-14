@@ -36,7 +36,7 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SKFormatCommand.h"
+#import "NSObject_SKExtensions.h"
 #import "SKTemplateParser.h"
 #import "SKTemplateManager.h"
 #import "NSAttributedString_SKExtensions.h"
