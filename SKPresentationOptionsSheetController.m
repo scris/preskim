@@ -391,7 +391,6 @@ static char *SKTransitionPropertiesObservationContext;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &SKTransitionPropertiesObservationContext) {
-        SKTransitionInfo *info = (SKTransitionInfo *)object;
         id newValue = [change objectForKey:NSKeyValueChangeNewKey];
         id oldValue = [change objectForKey:NSKeyValueChangeOldKey];
         
@@ -399,7 +398,7 @@ static char *SKTransitionPropertiesObservationContext;
         if ([oldValue isEqual:[NSNull null]]) oldValue = nil;
         
         if ((newValue || oldValue) && [newValue isEqual:oldValue] == NO)
-            [[[self undoManager] prepareWithInvocationTarget:self] setValue:oldValue forKey:keyPath ofTransition:info];
+            [[[self undoManager] prepareWithInvocationTarget:self] setValue:oldValue forKey:keyPath ofTransition:object];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
