@@ -1,5 +1,5 @@
 //
-//  SKFormatCommand.m
+//  NSObject_SKExtensions.m
 //  Skim
 //
 //  Created by Christiaan Hofman on 8/19/09.
@@ -42,11 +42,18 @@
 #import "NSAttributedString_SKExtensions.h"
 
 
-@implementation SKFormatCommand
+@implementation NSObject (SKExtensions)
 
-- (id)performDefaultImplementation {
-    id receiver = [self evaluatedReceivers];
-    NSDictionary *args = [self evaluatedArguments];
+- (NSUInteger)countOfTexLines {
+    return INT_MAX;
+}
+
+- (id)objectInTexLinesAtIndex:(NSUInteger)idx {
+    return [NSNumber numberWithUnsignedInteger:idx];
+}
+
+- (id)handleFormatScriptCommand:(NSScriptCommand *)comand {
+    NSDictionary *args = [comand evaluatedArguments];
     id template = [args objectForKey:@"Template"];
     id file = [args objectForKey:@"File"];
     NSAttributedString *attrString = nil;
@@ -55,24 +62,24 @@
     id text = nil;
     
     if (template == nil)
-		[self setScriptErrorNumber:NSRequiredArgumentsMissingScriptError]; 
+		[comand setScriptErrorNumber:NSRequiredArgumentsMissingScriptError];
     else if ([template isKindOfClass:[NSString class]])
         string = template;
     else if ([template isKindOfClass:[NSAttributedString class]])
         attrString = template;
     else if ([template isKindOfClass:[NSURL class]] == NO)
-		[self setScriptErrorNumber:NSArgumentsWrongScriptError]; 
+		[comand setScriptErrorNumber:NSArgumentsWrongScriptError];
     else if ([[SKTemplateManager sharedManager] isRichTextTemplateType:[template path]])
         attrString = [[[NSAttributedString alloc] initWithURL:template options:[NSDictionary dictionary] documentAttributes:&docAttrs error:NULL] autorelease];
     else
         string = [NSString stringWithContentsOfURL:template encoding:NSUTF8StringEncoding error:NULL];
     
     if (string) {
-        text = [SKTemplateParser stringByParsingTemplateString:string usingObject:receiver];
+        text = [SKTemplateParser stringByParsingTemplateString:string usingObject:self];
         if (file)
             [text writeToURL:file atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     } else if (attrString) {
-        NSAttributedString *attrText = [SKTemplateParser attributedStringByParsingTemplateAttributedString:attrString usingObject:receiver];
+        NSAttributedString *attrText = [SKTemplateParser attributedStringByParsingTemplateAttributedString:attrString usingObject:self];
         if (attrText) {
             text = [attrText richTextSpecifier];
             if (file) {

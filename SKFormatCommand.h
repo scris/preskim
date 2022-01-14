@@ -1,5 +1,5 @@
 //
-//  SKFormatCommand.h
+//  NSObject_SKExtensions.h
 //  Skim
 //
 //  Created by Christiaan Hofman on 8/19/09.
@@ -39,5 +39,12 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface SKFormatCommand : NSScriptCommand
+
+@interface NSObject (SKExtensions)
+
+- (NSUInteger)countOfTexLines;
+- (id)objectInTexLinesAtIndex:(NSUInteger)idx;
+
+- (id)handleFormatScriptCommand:(NSScriptCommand *)command;
+
 @end

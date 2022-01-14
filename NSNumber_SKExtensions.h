@@ -49,10 +49,3 @@
 - (NSString *)greekCounterValue;
 
 @end
-
-@interface NSObject (SKExtensions)
-
-- (NSUInteger)countOfTexLines;
-- (id)objectInTexLinesAtIndex:(NSUInteger)idx;
-
-@end

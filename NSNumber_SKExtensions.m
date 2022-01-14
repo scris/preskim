@@ -125,15 +125,3 @@ inline static NSString *romanNumeralForDigit(NSUInteger digit, NSString *i, NSSt
 }
 
 @end
-
-@implementation NSObject (SKExtensions)
-
-- (NSUInteger)countOfTexLines {
-    return INT_MAX;
-}
-
-- (id)objectInTexLinesAtIndex:(NSUInteger)idx {
-    return [NSNumber numberWithUnsignedInteger:idx];
-}
-
-@end
