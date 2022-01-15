@@ -465,6 +465,14 @@
 			<key>arguments</key>
 			<string>&quot;%file&quot; -n %line</string>
 		</dict>
+		<dict>
+			<key>name</key>
+			<string>Nova</string>
+			<key>command</key>
+			<string>nova</string>
+			<key>arguments</key>
+			<string>open &quot;%file&quot; -l %line</string>
+		</dict>
 	</array>
 </dict>
 </plist>
