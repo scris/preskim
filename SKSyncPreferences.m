@@ -62,7 +62,16 @@ static NSArray *TeXEditors = nil;
     SKINITIALIZE;
     
     NSURL *initialUserDefaultsURL = [[NSBundle mainBundle] URLForResource:INITIALUSERDEFAULTS_KEY withExtension:@"plist"];
-    TeXEditors = [[[NSDictionary dictionaryWithContentsOfURL:initialUserDefaultsURL] objectForKey:TEXEDITORS_KEY] copy];
+    NSMutableArray *editors = [NSMutableArray array];
+    NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+    NSInteger i = 0;
+    for (NSDictionary *editor in [[NSDictionary dictionaryWithContentsOfURL:initialUserDefaultsURL] objectForKey:TEXEDITORS_KEY]) {
+        if ([ws fullPathForApplication:[editor objectForKey:NAME_KEY]])
+            [editors insertObject:editor atIndex:i++];
+        else
+            [editors addObject:editor];
+    }
+    TeXEditors = [editors copy];
 }
 
 - (void)dealloc {
