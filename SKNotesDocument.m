@@ -823,9 +823,11 @@ static CGFloat noteColumnWidthOffset = 0.0;
                         width += [tc width] + [outlineView intercellSpacing].width;
                 }
                 width -= [outlineView intercellSpacing].width + [outlineView indentationPerLevel];
-                if ([tableColumn isHidden] == NO)
+                if ([tableColumn isHidden] == NO && tableColumn == [[ov tableColumns] firstObject])
                     width -= noteColumnWidthOffset;
                 width = fmax(10.0, width);
+            } else if ([tableColumn isHidden]) {
+                width = CGFLOAT_MAX;
             } else {
                 width = NSWidth([ov frameOfCellAtColumn:[[outlineView tableColumns] indexOfObject:tableColumn] row:0]);
             }

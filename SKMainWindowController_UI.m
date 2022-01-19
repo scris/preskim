@@ -883,9 +883,11 @@ static CGFloat noteColumnWidthOffset = 0.0;
                             width += [tc width] + [ov intercellSpacing].width;
                     }
                     width -= [ov intercellSpacing].width + [ov indentationPerLevel];
-                    if ([tableColumn isHidden] == NO)
+                    if ([tableColumn isHidden] == NO && tableColumn == [[ov tableColumns] firstObject])
                         width -= noteColumnWidthOffset;
                     width = fmax(10.0, width);
+                } else if ([tableColumn isHidden]) {
+                    width = CGFLOAT_MAX;
                 } else {
                     width = [tableColumn width] - noteColumnWidthOffset;
                 }
