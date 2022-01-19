@@ -119,6 +119,8 @@
 #define DEFAULT_TEXT_ROW_HEIGHT 85.0
 #define DEFAULT_MARKUP_ROW_HEIGHT 50.0
 
+static CGFloat noteColumnWidthOffset = 0.0;
+
 @interface SKMainWindowController (SKPrivateMain)
 
 - (void)cleanup;
@@ -869,13 +871,21 @@
         if (rowHeight <= 0.0) {
             if (mwcFlags.autoResizeNoteRows) {
                 NSTableColumn *tableColumn = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
-                CGFloat width;
+                CGFloat width = 0.0;
                 id cell = [tableColumn dataCell];
                 [cell setObjectValue:[item objectValue]];
-                if ([(PDFAnnotation *)item type] == nil)
-                    width = fmax(10.0, NSWidth([ov frameOfCellAtColumn:-1 row:0]) - [ov indentationPerLevel]);
-                else
-                    width = NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tableColumn] row:0]);
+                if ([(PDFAnnotation *)item type] == nil) {
+                    for (NSTableColumn *tc in [ov tableColumns]) {
+                        if ([tc isHidden] == NO)
+                            width += [tc width] + [ov intercellSpacing].width;
+                    }
+                    width -= [ov intercellSpacing].width + [ov indentationPerLevel];
+                    if ([tableColumn isHidden] == NO)
+                        width -= noteColumnWidthOffset;
+                    width = fmax(10.0, width);
+                } else {
+                    width = [tableColumn width] - noteColumnWidthOffset;
+                }
                 rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
                 rowHeight = fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT;
                 [rowHeights setFloat:rowHeight forKey:item];
@@ -1177,6 +1187,12 @@
 }
 
 - (void)toggleAutoResizeNoteRows:(id)sender {
+    if (noteColumnWidthOffset <= 0.0 && mwcFlags.autoResizeNoteRows == 0) {
+        NSOutlineView *ov = rightSideController.noteOutlineView;
+        NSTableColumn *tc = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
+        if ([tc isHidden] == NO)
+            noteColumnWidthOffset = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
+    }
     mwcFlags.autoResizeNoteRows = (0 == mwcFlags.autoResizeNoteRows);
     if (mwcFlags.autoResizeNoteRows) {
         [rowHeights removeAllFloats];
