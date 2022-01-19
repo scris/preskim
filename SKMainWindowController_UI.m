@@ -860,6 +860,8 @@ static CGFloat noteColumnWidthOffset = 0.0;
     if (mwcFlags.autoResizeNoteRows &&
         [ov isEqual:rightSideController.noteOutlineView] &&
         [[tableColumn identifier] isEqualToString:NOTE_COLUMNID]) {
+        if (noteColumnWidthOffset <= 0.0 && [tableColumn isHidden] == NO)
+            noteColumnWidthOffset = [tableColumn width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tableColumn] row:0]);
         [rowHeights removeAllFloats];
         [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
     }
@@ -874,6 +876,7 @@ static CGFloat noteColumnWidthOffset = 0.0;
                 CGFloat width = 0.0;
                 id cell = [tableColumn dataCell];
                 [cell setObjectValue:[item objectValue]];
+                // don't use cellFrameAtRow:column: as this needs the row height which we are calculating
                 if ([(PDFAnnotation *)item type] == nil) {
                     for (NSTableColumn *tc in [ov tableColumns]) {
                         if ([tc isHidden] == NO)
@@ -1188,6 +1191,8 @@ static CGFloat noteColumnWidthOffset = 0.0;
 
 - (void)toggleAutoResizeNoteRows:(id)sender {
     if (noteColumnWidthOffset <= 0.0 && mwcFlags.autoResizeNoteRows == 0) {
+        // calculate the difference between the cell width and the column width for the putline column
+        // which depends on the style and the OS version
         NSOutlineView *ov = rightSideController.noteOutlineView;
         NSTableColumn *tc = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
         if ([tc isHidden] == NO)
