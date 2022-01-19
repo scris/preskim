@@ -860,7 +860,7 @@ static CGFloat noteColumnWidthOffset = 0.0;
     if (mwcFlags.autoResizeNoteRows &&
         [ov isEqual:rightSideController.noteOutlineView] &&
         [[tableColumn identifier] isEqualToString:NOTE_COLUMNID]) {
-        if (noteColumnWidthOffset <= 0.0 && [tableColumn isHidden] == NO)
+        if (noteColumnWidthOffset <= 0.0 && [tableColumn isHidden] == NO && [ov numberOfRows] > 0)
             noteColumnWidthOffset = [tableColumn width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tableColumn] row:0]);
         [rowHeights removeAllFloats];
         [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
@@ -1195,7 +1195,7 @@ static CGFloat noteColumnWidthOffset = 0.0;
         // which depends on the style and the OS version
         NSOutlineView *ov = rightSideController.noteOutlineView;
         NSTableColumn *tc = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
-        if ([tc isHidden] == NO)
+        if ([tc isHidden] == NO && [ov numberOfRows] > 0)
             noteColumnWidthOffset = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
     }
     mwcFlags.autoResizeNoteRows = (0 == mwcFlags.autoResizeNoteRows);

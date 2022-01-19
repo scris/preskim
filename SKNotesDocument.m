@@ -584,7 +584,7 @@ static CGFloat noteColumnWidthOffset = 0.0;
 }
 
 - (void)toggleAutoResizeNoteRows:(id)sender {
-    if (noteColumnWidthOffset <= 0.0 && ndFlags.autoResizeRows == 0) {
+    if (noteColumnWidthOffset <= 0.0 && ndFlags.autoResizeRows == 0 && [outlineView numberOfRows] > 0) {
         NSTableColumn *tc = [outlineView tableColumnWithIdentifier:NOTE_COLUMNID];
         if ([tc isHidden] == NO)
             noteColumnWidthOffset = [tc width] - NSWidth([outlineView frameOfCellAtColumn:[[outlineView tableColumns] indexOfObject:tc] row:0]);
@@ -764,7 +764,7 @@ static CGFloat noteColumnWidthOffset = 0.0;
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {
     if (ndFlags.autoResizeRows &&
         [[tableColumn identifier] isEqualToString:NOTE_COLUMNID]) {
-        if (noteColumnWidthOffset <= 0.0 && [tableColumn isHidden] == NO)
+        if (noteColumnWidthOffset <= 0.0 && [tableColumn isHidden] == NO && [outlineView numberOfRows] > 0)
             noteColumnWidthOffset = [tableColumn width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tableColumn] row:0]);
         [rowHeights removeAllFloats];
         [outlineView noteHeightOfRowsChangedAnimating:NO];
