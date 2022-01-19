@@ -98,6 +98,8 @@
 #define EXTRA_ROW_HEIGHT 2.0
 #define DEFAULT_TEXT_ROW_HEIGHT 85.0
 
+static CGFloat noteColumnWidthOffset = 0.0;
+
 @implementation SKNotesDocument
 
 @synthesize outlineView, statusBar, arrayController, searchField, notes, pdfDocument, sourceFileURL;
@@ -582,6 +584,11 @@
 }
 
 - (void)toggleAutoResizeNoteRows:(id)sender {
+    if (noteColumnWidthOffset <= 0.0 && ndFlags.autoResizeRows == 0) {
+        NSTableColumn *tc = [outlineView tableColumnWithIdentifier:NOTE_COLUMNID];
+        if ([tc isHidden] == NO)
+            noteColumnWidthOffset = [tc width] - NSWidth([outlineView frameOfCellAtColumn:[[outlineView tableColumns] indexOfObject:tc] row:0]);
+    }
     ndFlags.autoResizeRows = (0 == ndFlags.autoResizeRows);
     if (ndFlags.autoResizeRows) {
         [rowHeights removeAllFloats];
@@ -805,13 +812,21 @@
     if (rowHeight <= 0.0) {
         if (ndFlags.autoResizeRows) {
             NSTableColumn *tableColumn = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
-            CGFloat width;
+            CGFloat width = 0.0;
             id cell = [tableColumn dataCell];
             [cell setObjectValue:[item objectValue]];
-            if ([(PDFAnnotation *)item type] == nil)
-                width = fmax(10.0, NSWidth([outlineView frameOfCellAtColumn:-1 row:0]) - [ov indentationPerLevel]);
-            else
+            if ([(PDFAnnotation *)item type] == nil) {
+                for (NSTableColumn *tc in [outlineView tableColumns]) {
+                    if ([tc isHidden] == NO)
+                        width += [tc width] + [outlineView intercellSpacing].width;
+                }
+                width -= [outlineView intercellSpacing].width + [outlineView indentationPerLevel];
+                if ([tableColumn isHidden] == NO)
+                    width -= noteColumnWidthOffset;
+                width = fmax(10.0, width);
+            } else {
                 width = NSWidth([ov frameOfCellAtColumn:[[outlineView tableColumns] indexOfObject:tableColumn] row:0]);
+            }
             rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
             rowHeight = fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT;
             [rowHeights setFloat:rowHeight forKey:item];
