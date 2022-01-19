@@ -764,6 +764,8 @@ static CGFloat noteColumnWidthOffset = 0.0;
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {
     if (ndFlags.autoResizeRows &&
         [[tableColumn identifier] isEqualToString:NOTE_COLUMNID]) {
+        if (noteColumnWidthOffset <= 0.0 && [tableColumn isHidden] == NO)
+            noteColumnWidthOffset = [tableColumn width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tableColumn] row:0]);
         [rowHeights removeAllFloats];
         [outlineView noteHeightOfRowsChangedAnimating:NO];
     }
