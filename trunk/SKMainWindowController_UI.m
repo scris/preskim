@@ -851,19 +851,23 @@ static CGFloat noteColumnWidthOffset = 0.0;
 }
 
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
-    if (mwcFlags.autoResizeNoteRows && [[notification object] isEqual:rightSideController.noteOutlineView] && [[[[notification userInfo] objectForKey:@"NSTableColumn"] identifier] isEqualToString:NOTE_COLUMNID] &&
+    if (mwcFlags.autoResizeNoteRows && [[notification object] isEqual:rightSideController.noteOutlineView] &&
         [(SKScrollView *)[rightSideController.noteOutlineView enclosingScrollView] isResizingSubviews] == NO) {
-        [rowHeights removeAllFloats];
-        [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
+        NSTableColumn *tc = [[notification userInfo] objectForKey:@"NSTableColumn"];
+        if ([[tc identifier] isEqualToString:NOTE_COLUMNID] || tc == [[notification object] lastVisibleTableColumn]) {
+            [rowHeights removeAllFloats];
+            [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
+        }
     }
 }
 
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {
-    if (mwcFlags.autoResizeNoteRows &&
-        [ov isEqual:rightSideController.noteOutlineView] &&
-        [[tableColumn identifier] isEqualToString:NOTE_COLUMNID]) {
-        if (noteColumnWidthOffset <= 0.0 && [tableColumn isHidden] == NO && [ov numberOfRows] > 0)
-            noteColumnWidthOffset = [tableColumn width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tableColumn] row:0]);
+    if (mwcFlags.autoResizeNoteRows && [ov isEqual:rightSideController.noteOutlineView]) {
+        if (noteColumnWidthOffset <= 0.0 && [ov numberOfRows] > 0) {
+            NSTableColumn *tc = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
+            if ([tc isHidden] == NO)
+                noteColumnWidthOffset = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
+        }
         [rowHeights removeAllFloats];
         [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
     }
