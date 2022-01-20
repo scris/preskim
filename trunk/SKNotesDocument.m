@@ -826,12 +826,11 @@ static CGFloat noteColumnWidthOffset = 0.0;
                 if ([tableColumn isHidden] == NO && tableColumn == [[ov tableColumns] firstObject])
                     width -= noteColumnWidthOffset;
                 width = fmax(10.0, width);
-            } else if ([tableColumn isHidden]) {
-                width = CGFLOAT_MAX;
-            } else {
+            } else if ([tableColumn isHidden] == NO) {
                 width = NSWidth([ov frameOfCellAtColumn:[[outlineView tableColumns] indexOfObject:tableColumn] row:0]);
             }
-            rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
+            if (width > 0.0)
+                rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
             rowHeight = fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT;
             [rowHeights setFloat:rowHeight forKey:item];
         } else {
