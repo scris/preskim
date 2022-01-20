@@ -121,6 +121,8 @@
 
 static CGFloat noteColumnWidthOffset = 0.0;
 
+#define NOTE_COLUMN_WIDTH_OFFSET (noteColumnWidthOffset > 0.0 ? noteColumnWidthOffset : RUNNING_AFTER(10_15) ? 9.0 : 16.0)
+
 @interface SKMainWindowController (SKPrivateMain)
 
 - (void)cleanup;
@@ -885,10 +887,10 @@ static CGFloat noteColumnWidthOffset = 0.0;
                     }
                     width -= spacing + [ov indentationPerLevel];
                     if ([tableColumn isHidden] == NO && tableColumn == [[ov tableColumns] firstObject])
-                        width -= noteColumnWidthOffset;
+                        width -= NOTE_COLUMN_WIDTH_OFFSET;
                     width = fmax(10.0, width);
                 } else if ([tableColumn isHidden] == NO) {
-                    width = [tableColumn width] - noteColumnWidthOffset;
+                    width = [tableColumn width] - NOTE_COLUMN_WIDTH_OFFSET;
                 }
                 if (width > 0.0)
                     rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;

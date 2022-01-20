@@ -100,6 +100,8 @@
 
 static CGFloat noteColumnWidthOffset = 0.0;
 
+#define NOTE_COLUMN_WIDTH_OFFSET (noteColumnWidthOffset > 0.0 ? noteColumnWidthOffset : RUNNING_AFTER(10_15) ? 9.0 : 16.0)
+
 @implementation SKNotesDocument
 
 @synthesize outlineView, statusBar, arrayController, searchField, notes, pdfDocument, sourceFileURL;
@@ -825,10 +827,10 @@ static CGFloat noteColumnWidthOffset = 0.0;
                 }
                 width -= spacing + [outlineView indentationPerLevel];
                 if ([tableColumn isHidden] == NO && tableColumn == [[ov tableColumns] firstObject])
-                    width -= noteColumnWidthOffset;
+                    width -= NOTE_COLUMN_WIDTH_OFFSET;
                 width = fmax(10.0, width);
             } else if ([tableColumn isHidden] == NO) {
-                width = NSWidth([ov frameOfCellAtColumn:[[outlineView tableColumns] indexOfObject:tableColumn] row:0]);
+                width = [tableColumn width] - NOTE_COLUMN_WIDTH_OFFSET;
             }
             if (width > 0.0)
                 rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
