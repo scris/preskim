@@ -878,11 +878,12 @@ static CGFloat noteColumnWidthOffset = 0.0;
                 [cell setObjectValue:[item objectValue]];
                 // don't use cellFrameAtRow:column: as this needs the row height which we are calculating
                 if ([(PDFAnnotation *)item type] == nil) {
+                    CGFloat spacing = [ov intercellSpacing].width;
                     for (NSTableColumn *tc in [ov tableColumns]) {
                         if ([tc isHidden] == NO)
-                            width += [tc width] + [ov intercellSpacing].width;
+                            width += [tc width] + spacing;
                     }
-                    width -= [ov intercellSpacing].width + [ov indentationPerLevel];
+                    width -= spacing + [ov indentationPerLevel];
                     if ([tableColumn isHidden] == NO && tableColumn == [[ov tableColumns] firstObject])
                         width -= noteColumnWidthOffset;
                     width = fmax(10.0, width);

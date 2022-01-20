@@ -818,11 +818,12 @@ static CGFloat noteColumnWidthOffset = 0.0;
             id cell = [tableColumn dataCell];
             [cell setObjectValue:[item objectValue]];
             if ([(PDFAnnotation *)item type] == nil) {
+                CGFloat spacing = [outlineView intercellSpacing].width;
                 for (NSTableColumn *tc in [outlineView tableColumns]) {
                     if ([tc isHidden] == NO)
-                        width += [tc width] + [outlineView intercellSpacing].width;
+                        width += [tc width] + spacing;
                 }
-                width -= [outlineView intercellSpacing].width + [outlineView indentationPerLevel];
+                width -= spacing + [outlineView indentationPerLevel];
                 if ([tableColumn isHidden] == NO && tableColumn == [[ov tableColumns] firstObject])
                     width -= noteColumnWidthOffset;
                 width = fmax(10.0, width);
