@@ -757,17 +757,22 @@ static CGFloat noteColumnWidthOffset = 0.0;
 }
 
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
-    if (ndFlags.autoResizeRows && [[[[notification userInfo] objectForKey:@"NSTableColumn"] identifier] isEqualToString:NOTE_COLUMNID] && [(SKScrollView *)[[notification object] enclosingScrollView] isResizingSubviews] == NO) {
-        [rowHeights removeAllFloats];
-        [outlineView noteHeightOfRowsChangedAnimating:NO];
+    if (ndFlags.autoResizeRows && [(SKScrollView *)[[notification object] enclosingScrollView] isResizingSubviews] == NO) {
+        NSTableColumn *tc = [[notification userInfo] objectForKey:@"NSTableColumn"];
+        if ([[tc identifier] isEqualToString:NOTE_COLUMNID] || tc == [outlineView lastVisibleTableColumn]) {
+            [rowHeights removeAllFloats];
+            [outlineView noteHeightOfRowsChangedAnimating:NO];
+        }
     }
 }
 
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {
-    if (ndFlags.autoResizeRows &&
-        [[tableColumn identifier] isEqualToString:NOTE_COLUMNID]) {
-        if (noteColumnWidthOffset <= 0.0 && [tableColumn isHidden] == NO && [outlineView numberOfRows] > 0)
-            noteColumnWidthOffset = [tableColumn width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tableColumn] row:0]);
+    if (ndFlags.autoResizeRows) {
+        if (noteColumnWidthOffset <= 0.0 && [outlineView numberOfRows] > 0) {
+            NSTableColumn *tc = [outlineView tableColumnWithIdentifier:NOTE_COLUMNID];
+            if ([tc isHidden] == NO)
+                noteColumnWidthOffset = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
+        }
         [rowHeights removeAllFloats];
         [outlineView noteHeightOfRowsChangedAnimating:NO];
     }
