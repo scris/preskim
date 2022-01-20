@@ -774,7 +774,7 @@ static CGFloat noteColumnWidthOffset = 0.0;
                 noteColumnWidthOffset = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
         }
         [rowHeights removeAllFloats];
-        [outlineView noteHeightOfRowsChangedAnimating:NO];
+        [outlineView noteHeightOfRowsChangedAnimating:YES];
     }
 }
 
