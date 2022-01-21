@@ -48,6 +48,7 @@
 - (id <SKNoteOutlineViewDelegate>)delegate;
 - (void)setDelegate:(id <SKNoteOutlineViewDelegate>)newDelegate;
 
+@property (nonatomic, readonly) NSTableColumn *firstVisibleTableColumn;
 @property (nonatomic, readonly) NSTableColumn *lastVisibleTableColumn;
 
 @end

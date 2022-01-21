@@ -61,7 +61,7 @@
 
 @implementation SKNoteOutlineView
 
-@dynamic lastVisibleTableColumn;
+@dynamic firstVisibleTableColumn, lastVisibleTableColumn;
 
 static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     if ([identifier isEqualToString:NOTE_COLUMNID])
@@ -174,10 +174,16 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     return [super frameOfCellAtColumn:column row:row];
 }
 
+- (NSTableColumn *)firstVisibleTableColumn {
+    for (NSTableColumn *tc in [self tableColumns]) {
+        if ([tc isHidden] == NO)
+            return tc;
+    }
+    return nil;
+}
+
 - (NSTableColumn *)lastVisibleTableColumn {
-    NSEnumerator *columnEnum = [[self tableColumns] reverseObjectEnumerator];
-    NSTableColumn *tc;
-    while ((tc = [columnEnum nextObject])) {
+    for (NSTableColumn *tc in [[self tableColumns] reverseObjectEnumerator]) {
         if ([tc isHidden] == NO)
             return tc;
     }
