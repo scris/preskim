@@ -90,6 +90,7 @@
 #import "SKOverviewView.h"
 #import "NSView_SKExtensions.h"
 #import "NSImage_SKExtensions.h"
+#import "NSObject_SKExtensions.h"
 
 #define NOTES_KEY       @"notes"
 #define SNAPSHOTS_KEY   @"snapshots"
@@ -852,15 +853,15 @@ static CGFloat noteColumnWidthOffset = 0.0;
     }
 }
 
+- (void)autoResizeNoteRows {
+    [rowHeights removeAllFloats];
+    [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:YES];
+}
+
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
     if (mwcFlags.autoResizeNoteRows && [[notification object] isEqual:rightSideController.noteOutlineView] &&
-        [(SKScrollView *)[rightSideController.noteOutlineView enclosingScrollView] isResizingSubviews] == NO) {
-        NSTableColumn *tc = [[notification userInfo] objectForKey:@"NSTableColumn"];
-        if ([[tc identifier] isEqualToString:NOTE_COLUMNID] || tc == [[notification object] lastVisibleTableColumn]) {
-            [rowHeights removeAllFloats];
-            [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
-        }
-    }
+        [(SKScrollView *)[rightSideController.noteOutlineView enclosingScrollView] isResizingSubviews] == NO)
+        [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
 }
 
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {

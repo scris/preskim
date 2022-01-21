@@ -72,6 +72,7 @@
 #import "NSInvocation_SKExtensions.h"
 #import "PDFDocument_SKExtensions.h"
 #import "SKNoteTableRowView.h"
+#import "NSObject_SKExtensions.h"
 
 #define SKNotesDocumentWindowFrameAutosaveName @"SKNotesDocumentWindow"
 
@@ -758,14 +759,14 @@ static CGFloat noteColumnWidthOffset = 0.0;
     [ov reloadData];
 }
 
+- (void)autoResizeNoteRows {
+    [rowHeights removeAllFloats];
+    [outlineView noteHeightOfRowsChangedAnimating:YES];
+}
+
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
-    if (ndFlags.autoResizeRows && [(SKScrollView *)[[notification object] enclosingScrollView] isResizingSubviews] == NO) {
-        NSTableColumn *tc = [[notification userInfo] objectForKey:@"NSTableColumn"];
-        if ([[tc identifier] isEqualToString:NOTE_COLUMNID] || tc == [outlineView lastVisibleTableColumn]) {
-            [rowHeights removeAllFloats];
-            [outlineView noteHeightOfRowsChangedAnimating:NO];
-        }
-    }
+    if (ndFlags.autoResizeRows && [(SKScrollView *)[[notification object] enclosingScrollView] isResizingSubviews] == NO)
+        [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
 }
 
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {
