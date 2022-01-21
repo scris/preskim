@@ -769,6 +769,25 @@ static CGFloat noteColumnWidthOffset = 0.0;
         [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
 }
 
+- (void)outlineViewColumnDidMove:(NSNotification *)notification {
+    NSInteger oldColumn = [[[notification userInfo] objectForKey:@"NSOldColumn"] integerValue];
+    NSInteger newColumn = [[[notification userInfo] objectForKey:@"NSNewColumn"] integerValue];
+    if (oldColumn == 0 || newColumn == 0) {
+        BOOL noteColumnIsFirst = [[[outlineView firstVisibleTableColumn] identifier] isEqualToString:NOTE_COLUMNID];
+        [outlineView enumerateAvailableRowViewsUsingBlock:^(SKNoteTableRowView *rowView, NSInteger row){
+            NSTableCellView *rowCellView = [rowView rowCellView];
+            if (rowCellView) {
+                NSRect frame = [outlineView convertRect:[outlineView frameOfCellAtColumn:-1 row:row] toView:rowView];
+                if (noteColumnIsFirst)
+                    frame = SKShrinkRect(frame, -[outlineView indentationPerLevel], NSMinXEdge);
+                [rowCellView setFrame:frame];
+            }
+        }];
+        if (ndFlags.autoResizeRows)
+            [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
+    }
+}
+
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {
     if (ndFlags.autoResizeRows) {
         if (noteColumnWidthOffset <= 0.0 && [outlineView numberOfRows] > 0) {
