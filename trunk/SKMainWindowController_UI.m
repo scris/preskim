@@ -896,7 +896,6 @@ static CGFloat noteColumnWidthOffset = 0.0;
                 [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
         }
     }
-    
 }
 
 - (CGFloat)outlineView:(NSOutlineView *)ov heightOfRowByItem:(id)item {
