@@ -44,6 +44,11 @@
 
 @implementation NSObject (SKExtensions)
 
+- (void)performSelectorOnce:(SEL)aSelector afterDelay:(NSTimeInterval)delay {
+    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:aSelector object:nil];
+    [self performSelector:aSelector withObject:nil afterDelay:delay];
+}
+
 - (NSUInteger)countOfTexLines {
     return INT_MAX;
 }

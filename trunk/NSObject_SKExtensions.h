@@ -42,6 +42,8 @@
 
 @interface NSObject (SKExtensions)
 
+- (void)performSelectorOnce:(SEL)aSelector afterDelay:(NSTimeInterval)delay;
+
 - (NSUInteger)countOfTexLines;
 - (id)objectInTexLinesAtIndex:(NSUInteger)idx;
 

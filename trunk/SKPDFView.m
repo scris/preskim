@@ -80,6 +80,7 @@
 #import "NSScroller_SKExtensions.h"
 #import "SKColorMenuView.h"
 #import "SKMainWindowController_Actions.h"
+#import "NSObject_SKExtensions.h"
 
 #define ANNOTATION_MODE_COUNT 9
 #define TOOL_MODE_COUNT 5
@@ -209,7 +210,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)doAutoHide;
 - (void)showNavWindow;
-- (void)performSelectorOnce:(SEL)aSelector afterDelay:(NSTimeInterval)delay;
 
 - (void)doMoveActiveAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta;
 - (void)doResizeActiveAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta;
@@ -3299,11 +3299,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if ([navWindow isVisible] == NO && NSPointInRect([[self window] mouseLocationOutsideOfEventStream], SKSliceRect([[[self window] contentView] frame], NAVIGATION_BOTTOM_EDGE_HEIGHT, NSMinYEdge))) {
         [navWindow showForWindow:[self window]];
     }
-}
-
-- (void)performSelectorOnce:(SEL)aSelector afterDelay:(NSTimeInterval)delay {
-    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:aSelector object:nil];
-    [self performSelector:aSelector withObject:nil afterDelay:delay];
 }
 
 #pragma mark Event handling
