@@ -233,7 +233,7 @@ typedef NS_ENUM(NSInteger, NSTableViewStyle) {
     NSTableViewStylePlain
 };
 
-@interface NSTableView (BDSKBigSurDeclarations)
+@interface NSTableView (SKBigSurDeclarations)
 @property NSTableViewStyle style;
 @end
 
