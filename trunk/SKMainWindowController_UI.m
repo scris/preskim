@@ -886,13 +886,8 @@ static CGFloat noteColumnWidthOffset = 0.0;
                 [cell setObjectValue:[item objectValue]];
                 // don't use cellFrameAtRow:column: as this needs the row height which we are calculating
                 if ([(PDFAnnotation *)item type] == nil) {
-                    CGFloat spacing = [ov intercellSpacing].width;
-                    for (NSTableColumn *tc in [ov tableColumns]) {
-                        if ([tc isHidden] == NO)
-                            width += [tc width] + spacing;
-                    }
-                    width -= spacing;
-                    if ([tableColumn isHidden] == NO && tableColumn == [[ov tableColumns] firstObject])
+                    width = [(SKNoteOutlineView *)ov visibleColumnsWidth];
+                    if (tableColumn == [(SKNoteOutlineView *)ov firstVisibleTableColumn])
                         width -= NOTE_COLUMN_WIDTH_OFFSET;
                     width = fmax(10.0, width);
                 } else if ([tableColumn isHidden] == NO) {

@@ -50,6 +50,7 @@
 
 @property (nonatomic, readonly) NSTableColumn *firstVisibleTableColumn;
 @property (nonatomic, readonly) NSTableColumn *lastVisibleTableColumn;
+@property (nonatomic, readonly) CGFloat visibleColumnsWidth;
 
 @end
 

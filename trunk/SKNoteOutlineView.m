@@ -61,7 +61,7 @@
 
 @implementation SKNoteOutlineView
 
-@dynamic firstVisibleTableColumn, lastVisibleTableColumn;
+@dynamic firstVisibleTableColumn, lastVisibleTableColumn, visibleColumnsWidth;
 
 static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     if ([identifier isEqualToString:NOTE_COLUMNID])
@@ -188,6 +188,16 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
             return tc;
     }
     return nil;
+}
+
+- (CGFloat)visibleColumnsWidth {
+    CGFloat spacing = [self intercellSpacing].width;
+    CGFloat width = -spacing;
+    for (NSTableColumn *tc in [self tableColumns]) {
+        if ([tc isHidden] == NO)
+            width += [tc width] + spacing;
+    }
+    return width;
 }
 
 #pragma mark Delegate
