@@ -876,6 +876,29 @@ static CGFloat noteColumnWidthOffset = 0.0;
     }
 }
 
+- (void)outlineViewColumnDidMove:(NSNotification *)notification {
+    if ([[notification object] isEqual:rightSideController.noteOutlineView]) {
+        NSInteger oldColumn = [[[notification userInfo] objectForKey:@"NSOldColumn"] integerValue];
+        NSInteger newColumn = [[[notification userInfo] objectForKey:@"NSNewColumn"] integerValue];
+        if (oldColumn == 0 || newColumn == 0) {
+            SKNoteOutlineView *ov = [notification object];
+            BOOL noteColumnIsFirst = [[[ov firstVisibleTableColumn] identifier] isEqualToString:NOTE_COLUMNID];
+            [ov enumerateAvailableRowViewsUsingBlock:^(SKNoteTableRowView *rowView, NSInteger row){
+                NSTableCellView *rowCellView = [rowView rowCellView];
+                if (rowCellView) {
+                    NSRect frame = [ov convertRect:[ov frameOfCellAtColumn:-1 row:row] toView:rowView];
+                    if (noteColumnIsFirst)
+                        frame = SKShrinkRect(frame, -[ov indentationPerLevel], NSMinXEdge);
+                    [rowCellView setFrame:frame];
+                }
+            }];
+            if (mwcFlags.autoResizeNoteRows)
+                [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
+        }
+    }
+    
+}
+
 - (CGFloat)outlineView:(NSOutlineView *)ov heightOfRowByItem:(id)item {
     if ([ov isEqual:rightSideController.noteOutlineView]) {
         CGFloat rowHeight = [rowHeights floatForKey:item];
