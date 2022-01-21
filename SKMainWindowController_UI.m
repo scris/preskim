@@ -760,6 +760,8 @@ static CGFloat noteColumnWidthOffset = 0.0;
         id item = [ov itemAtRow:row];
         if ([(PDFAnnotation *)item type] == nil) {
             NSRect frame = [ov convertRect:[ov frameOfCellAtColumn:-1 row:row] toView:rowView];
+            if ([[[(SKNoteOutlineView *)ov firstVisibleTableColumn] identifier] isEqualToString:NOTE_COLUMNID])
+                frame = SKShrinkRect(frame, -[ov indentationPerLevel], NSMinXEdge);
             NSTableCellView *view = [ov makeViewWithIdentifier:NOTE_COLUMNID owner:self];
             [view setObjectValue:item];
             [[view textField] setEditable:NO];
@@ -889,7 +891,7 @@ static CGFloat noteColumnWidthOffset = 0.0;
                         if ([tc isHidden] == NO)
                             width += [tc width] + spacing;
                     }
-                    width -= spacing + [ov indentationPerLevel];
+                    width -= spacing;
                     if ([tableColumn isHidden] == NO && tableColumn == [[ov tableColumns] firstObject])
                         width -= NOTE_COLUMN_WIDTH_OFFSET;
                     width = fmax(10.0, width);
@@ -1151,7 +1153,7 @@ static CGFloat noteColumnWidthOffset = 0.0;
     id cell = [tableColumn dataCell];
     NSUInteger column = [[ov tableColumns] indexOfObject:tableColumn];
     NSRect rect = NSMakeRect(0.0, 0.0, NSWidth([ov frameOfCellAtColumn:column row:0]), CGFLOAT_MAX);
-    NSRect fullRect = NSMakeRect(0.0, 0.0,  NSWidth([ov frameOfCellAtColumn:-1 row:0]) - [ov indentationPerLevel], CGFLOAT_MAX);
+    NSRect fullRect = NSMakeRect(0.0, 0.0,  NSWidth([ov frameOfCellAtColumn:-1 row:0]), CGFLOAT_MAX);
     NSMutableIndexSet *rowIndexes = nil;
     NSArray *items = [sender representedObject];
     NSInteger row;
