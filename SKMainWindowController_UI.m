@@ -120,9 +120,9 @@
 #define DEFAULT_TEXT_ROW_HEIGHT 85.0
 #define DEFAULT_MARKUP_ROW_HEIGHT 50.0
 
-static CGFloat noteColumnWidthOffset = 0.0;
+static CGFloat outlineIndentation = 0.0;
 
-#define NOTE_COLUMN_WIDTH_OFFSET (noteColumnWidthOffset > 0.0 ? noteColumnWidthOffset : RUNNING_AFTER(10_15) ? 9.0 : 16.0)
+#define OUTLINE_INDENTATION (outlineIndentation > 0.0 ? outlineIndentation : RUNNING_AFTER(10_15) ? 9.0 : 16.0)
 
 @interface SKMainWindowController (SKPrivateMain)
 
@@ -761,7 +761,7 @@ static CGFloat noteColumnWidthOffset = 0.0;
         id item = [ov itemAtRow:row];
         if ([(PDFAnnotation *)item type] == nil) {
             NSRect frame = [ov convertRect:[ov frameOfCellAtColumn:-1 row:row] toView:rowView];
-            if ([[[(SKNoteOutlineView *)ov firstVisibleTableColumn] identifier] isEqualToString:NOTE_COLUMNID])
+            if ([(SKNoteOutlineView *)ov outlineColumnIsFirst])
                 frame = SKShrinkRect(frame, -[ov indentationPerLevel], NSMinXEdge);
             NSTableCellView *view = [ov makeViewWithIdentifier:NOTE_COLUMNID owner:self];
             [view setObjectValue:item];
@@ -866,10 +866,10 @@ static CGFloat noteColumnWidthOffset = 0.0;
 
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {
     if (mwcFlags.autoResizeNoteRows && [ov isEqual:rightSideController.noteOutlineView]) {
-        if (noteColumnWidthOffset <= 0.0 && [ov numberOfRows] > 0) {
-            NSTableColumn *tc = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
+        if (outlineIndentation <= 0.0 && [ov numberOfRows] > 0) {
+            NSTableColumn *tc = [ov outlineTableColumn];
             if ([tc isHidden] == NO)
-                noteColumnWidthOffset = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
+                outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
         }
         [rowHeights removeAllFloats];
         [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:YES];
@@ -882,12 +882,12 @@ static CGFloat noteColumnWidthOffset = 0.0;
         NSInteger newColumn = [[[notification userInfo] objectForKey:@"NSNewColumn"] integerValue];
         if (oldColumn == 0 || newColumn == 0) {
             SKNoteOutlineView *ov = [notification object];
-            BOOL noteColumnIsFirst = [[[ov firstVisibleTableColumn] identifier] isEqualToString:NOTE_COLUMNID];
+            BOOL outlineColumnIsFirst = [ov outlineColumnIsFirst];
             [ov enumerateAvailableRowViewsUsingBlock:^(SKNoteTableRowView *rowView, NSInteger row){
                 NSTableCellView *rowCellView = [rowView rowCellView];
                 if (rowCellView) {
                     NSRect frame = [ov convertRect:[ov frameOfCellAtColumn:-1 row:row] toView:rowView];
-                    if (noteColumnIsFirst)
+                    if (outlineColumnIsFirst)
                         frame = SKShrinkRect(frame, -[ov indentationPerLevel], NSMinXEdge);
                     [rowCellView setFrame:frame];
                 }
@@ -903,18 +903,18 @@ static CGFloat noteColumnWidthOffset = 0.0;
         CGFloat rowHeight = [rowHeights floatForKey:item];
         if (rowHeight <= 0.0) {
             if (mwcFlags.autoResizeNoteRows) {
-                NSTableColumn *tableColumn = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
+                NSTableColumn *tableColumn = [ov outlineTableColumn];
                 CGFloat width = 0.0;
                 id cell = [tableColumn dataCell];
                 [cell setObjectValue:[item objectValue]];
                 // don't use cellFrameAtRow:column: as this needs the row height which we are calculating
                 if ([(PDFAnnotation *)item type] == nil) {
                     width = [(SKNoteOutlineView *)ov visibleColumnsWidth];
-                    if (tableColumn == [(SKNoteOutlineView *)ov firstVisibleTableColumn])
-                        width -= NOTE_COLUMN_WIDTH_OFFSET;
+                    if ([(SKNoteOutlineView *)ov outlineColumnIsFirst])
+                        width -= OUTLINE_INDENTATION;
                     width = fmax(10.0, width);
                 } else if ([tableColumn isHidden] == NO) {
-                    width = [tableColumn width] - NOTE_COLUMN_WIDTH_OFFSET;
+                    width = [tableColumn width] - OUTLINE_INDENTATION;
                 }
                 if (width > 0.0)
                     rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
@@ -1167,7 +1167,7 @@ static CGFloat noteColumnWidthOffset = 0.0;
 - (void)autoSizeNoteRows:(id)sender {
     NSOutlineView *ov = rightSideController.noteOutlineView;
     CGFloat height = 0.0, rowHeight = [ov rowHeight];
-    NSTableColumn *tableColumn = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
+    NSTableColumn *tableColumn = [ov outlineTableColumn];
     id cell = [tableColumn dataCell];
     NSUInteger column = [[ov tableColumns] indexOfObject:tableColumn];
     NSRect rect = NSMakeRect(0.0, 0.0, NSWidth([ov frameOfCellAtColumn:column row:0]), CGFLOAT_MAX);
@@ -1218,13 +1218,13 @@ static CGFloat noteColumnWidthOffset = 0.0;
 }
 
 - (void)toggleAutoResizeNoteRows:(id)sender {
-    if (noteColumnWidthOffset <= 0.0 && mwcFlags.autoResizeNoteRows == 0) {
+    if (outlineIndentation <= 0.0 && mwcFlags.autoResizeNoteRows == 0) {
         // calculate the difference between the cell width and the column width for the putline column
         // which depends on the style and the OS version
         NSOutlineView *ov = rightSideController.noteOutlineView;
-        NSTableColumn *tc = [ov tableColumnWithIdentifier:NOTE_COLUMNID];
+        NSTableColumn *tc = [ov outlineTableColumn];
         if ([tc isHidden] == NO && [ov numberOfRows] > 0)
-            noteColumnWidthOffset = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
+            outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
     }
     mwcFlags.autoResizeNoteRows = (0 == mwcFlags.autoResizeNoteRows);
     if (mwcFlags.autoResizeNoteRows) {

@@ -61,7 +61,7 @@
 
 @implementation SKNoteOutlineView
 
-@dynamic firstVisibleTableColumn, lastVisibleTableColumn, visibleColumnsWidth;
+@dynamic outlineColumnIsFirst, visibleColumnsWidth;
 
 static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     if ([identifier isEqualToString:NOTE_COLUMNID])
@@ -174,20 +174,12 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     return [super frameOfCellAtColumn:column row:row];
 }
 
-- (NSTableColumn *)firstVisibleTableColumn {
+- (BOOL)outlineColumnIsFirst {
     for (NSTableColumn *tc in [self tableColumns]) {
         if ([tc isHidden] == NO)
-            return tc;
+            return tc == [self outlineTableColumn];
     }
-    return nil;
-}
-
-- (NSTableColumn *)lastVisibleTableColumn {
-    for (NSTableColumn *tc in [[self tableColumns] reverseObjectEnumerator]) {
-        if ([tc isHidden] == NO)
-            return tc;
-    }
-    return nil;
+    return NO;
 }
 
 - (CGFloat)visibleColumnsWidth {
