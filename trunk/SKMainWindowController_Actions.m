@@ -100,6 +100,7 @@
 - (void)updateLineInspector;
 - (void)updateNoteFilterPredicate;
 - (void)updateSnapshotFilterPredicate;
+- (void)autoResizeNoteRows;
 @end
 
 @implementation SKMainWindowController (Actions)
@@ -1045,12 +1046,8 @@ static NSArray *allMainDocumentPDFViews() {
                 lastRightSidePaneWidth = floor(0.5 * NSWidth([centerContentView frame]));
             position -= lastRightSidePaneWidth + [splitView dividerThickness];
             [splitView setPosition:position ofDividerAtIndex:1 animate:sender != nil];
-            if (mwcFlags.autoResizeNoteRows && [splitView isAnimating]) {
-               [splitView enqueueOperation:^{
-                   [rowHeights removeAllFloats];
-                   [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:YES];
-               }];
-            }
+            if (mwcFlags.autoResizeNoteRows && [splitView isAnimating])
+               [splitView enqueueOperation:^{ [self autoResizeNoteRows]; }];
         }
     }
 }
