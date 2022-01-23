@@ -853,7 +853,7 @@ static CGFloat outlineIndentation = 0.0;
     }
 }
 
-- (void)autoResizeNoteRows {
+- (void)resetNoteRowHeights {
     [rowHeights removeAllFloats];
     [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:YES];
 }
@@ -861,7 +861,7 @@ static CGFloat outlineIndentation = 0.0;
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
     if (mwcFlags.autoResizeNoteRows && [[notification object] isEqual:rightSideController.noteOutlineView] &&
         [(SKScrollView *)[rightSideController.noteOutlineView enclosingScrollView] isResizingSubviews] == NO)
-        [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
+        [self performSelectorOnce:@selector(resetNoteRowHeights) afterDelay:0.0];
 }
 
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {
@@ -871,7 +871,7 @@ static CGFloat outlineIndentation = 0.0;
             if ([tc isHidden] == NO)
                 outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
         }
-        [self autoResizeNoteRows];
+        [self resetNoteRowHeights];
     }
 }
 
@@ -892,7 +892,7 @@ static CGFloat outlineIndentation = 0.0;
                 }
             }];
             if (mwcFlags.autoResizeNoteRows)
-                [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
+                [self performSelectorOnce:@selector(resetNoteRowHeights) afterDelay:0.0];
         }
     }
 }
@@ -1208,7 +1208,7 @@ static CGFloat outlineIndentation = 0.0;
 - (void)resetHeightOfNoteRows:(id)sender {
     NSArray *items = [sender representedObject];
     if (items == nil) {
-        [self autoResizeNoteRows];
+        [self resetNoteRowHeights];
     } else {
         SKNoteOutlineView *ov = rightSideController.noteOutlineView;
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
@@ -1233,7 +1233,7 @@ static CGFloat outlineIndentation = 0.0;
     }
     mwcFlags.autoResizeNoteRows = (0 == mwcFlags.autoResizeNoteRows);
     if (mwcFlags.autoResizeNoteRows)
-        [self autoResizeNoteRows];
+        [self resetNoteRowHeights];
     else
         [self autoSizeNoteRows:nil];
 }
