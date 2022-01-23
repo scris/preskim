@@ -575,15 +575,25 @@ static CGFloat outlineIndentation = 0.0;
     [outlineView noteHeightOfRowsWithIndexesChanged:rowIndexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfRows])]];
 }
 
+- (void)autoResizeNoteRows {
+    [rowHeights removeAllFloats];
+    [outlineView noteHeightOfRowsChangedAnimating:YES];
+}
+
 - (void)resetHeightOfNoteRows:(id)sender {
     NSArray *items = [sender representedObject];
     if (items == nil) {
-        [rowHeights removeAllFloats];
+        [self autoResizeNoteRows];
     } else {
-        for (id item in items)
+        NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
+        for (id item in items) {
             [rowHeights removeFloatForKey:item];
+            NSInteger row = [outlineView rowForItem:item];
+            if (row != -1)
+                [indexes addIndex:row];
+        }
+        [outlineView noteHeightOfRowsWithIndexesChanged:indexes];
     }
-    [outlineView noteHeightOfRowsChangedAnimating:YES];
 }
 
 - (void)toggleAutoResizeNoteRows:(id)sender {
@@ -593,12 +603,10 @@ static CGFloat outlineIndentation = 0.0;
             outlineIndentation = [tc width] - NSWidth([outlineView frameOfCellAtColumn:[[outlineView tableColumns] indexOfObject:tc] row:0]);
     }
     ndFlags.autoResizeRows = (0 == ndFlags.autoResizeRows);
-    if (ndFlags.autoResizeRows) {
-        [rowHeights removeAllFloats];
-        [outlineView noteHeightOfRowsChangedAnimating:YES];
-    } else {
+    if (ndFlags.autoResizeRows)
+        [self autoResizeNoteRows];
+    else
         [self autoSizeNoteRows:nil];
-    }
 }
 
 - (IBAction)toggleCaseInsensitiveSearch:(id)sender {
@@ -759,11 +767,6 @@ static CGFloat outlineIndentation = 0.0;
     [ov reloadData];
 }
 
-- (void)autoResizeNoteRows {
-    [rowHeights removeAllFloats];
-    [outlineView noteHeightOfRowsChangedAnimating:YES];
-}
-
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
     if (ndFlags.autoResizeRows && [(SKScrollView *)[[notification object] enclosingScrollView] isResizingSubviews] == NO)
         [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
@@ -795,8 +798,7 @@ static CGFloat outlineIndentation = 0.0;
             if ([tc isHidden] == NO)
                 outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
         }
-        [rowHeights removeAllFloats];
-        [outlineView noteHeightOfRowsChangedAnimating:YES];
+        [self autoResizeNoteRows];
     }
 }
 

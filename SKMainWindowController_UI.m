@@ -871,8 +871,7 @@ static CGFloat outlineIndentation = 0.0;
             if ([tc isHidden] == NO)
                 outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
         }
-        [rowHeights removeAllFloats];
-        [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:YES];
+        [self autoResizeNoteRows];
     }
 }
 
@@ -1209,12 +1208,18 @@ static CGFloat outlineIndentation = 0.0;
 - (void)resetHeightOfNoteRows:(id)sender {
     NSArray *items = [sender representedObject];
     if (items == nil) {
-        [rowHeights removeAllFloats];
+        [self autoResizeNoteRows];
     } else {
-        for (id item in items)
+        SKNoteOutlineView *ov = rightSideController.noteOutlineView;
+        NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
+        for (id item in items) {
             [rowHeights removeFloatForKey:item];
+            NSInteger row = [ov rowForItem:item];
+            if (row != -1)
+                [indexes addIndex:row];
+        }
+        [ov noteHeightOfRowsWithIndexesChanged:indexes];
     }
-    [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:YES];
 }
 
 - (void)toggleAutoResizeNoteRows:(id)sender {
@@ -1227,12 +1232,10 @@ static CGFloat outlineIndentation = 0.0;
             outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
     }
     mwcFlags.autoResizeNoteRows = (0 == mwcFlags.autoResizeNoteRows);
-    if (mwcFlags.autoResizeNoteRows) {
-        [rowHeights removeAllFloats];
-        [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:YES];
-    } else {
+    if (mwcFlags.autoResizeNoteRows)
+        [self autoResizeNoteRows];
+    else
         [self autoSizeNoteRows:nil];
-    }
 }
 
 - (void)menuNeedsUpdate:(NSMenu *)menu {
