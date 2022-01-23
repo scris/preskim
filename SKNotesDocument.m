@@ -575,7 +575,7 @@ static CGFloat outlineIndentation = 0.0;
     [outlineView noteHeightOfRowsWithIndexesChanged:rowIndexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfRows])]];
 }
 
-- (void)autoResizeNoteRows {
+- (void)resetRowHeights {
     [rowHeights removeAllFloats];
     [outlineView noteHeightOfRowsChangedAnimating:YES];
 }
@@ -583,7 +583,7 @@ static CGFloat outlineIndentation = 0.0;
 - (void)resetHeightOfNoteRows:(id)sender {
     NSArray *items = [sender representedObject];
     if (items == nil) {
-        [self autoResizeNoteRows];
+        [self  resetRowHeights];
     } else {
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
@@ -604,7 +604,7 @@ static CGFloat outlineIndentation = 0.0;
     }
     ndFlags.autoResizeRows = (0 == ndFlags.autoResizeRows);
     if (ndFlags.autoResizeRows)
-        [self autoResizeNoteRows];
+        [self  resetRowHeights];
     else
         [self autoSizeNoteRows:nil];
 }
@@ -769,7 +769,7 @@ static CGFloat outlineIndentation = 0.0;
 
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
     if (ndFlags.autoResizeRows && [(SKScrollView *)[[notification object] enclosingScrollView] isResizingSubviews] == NO)
-        [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
+        [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
 }
 
 - (void)outlineViewColumnDidMove:(NSNotification *)notification {
@@ -787,7 +787,7 @@ static CGFloat outlineIndentation = 0.0;
             }
         }];
         if (ndFlags.autoResizeRows)
-            [self performSelectorOnce:@selector(autoResizeNoteRows) afterDelay:0.0];
+            [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
     }
 }
 
@@ -798,7 +798,7 @@ static CGFloat outlineIndentation = 0.0;
             if ([tc isHidden] == NO)
                 outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
         }
-        [self autoResizeNoteRows];
+        [self  resetRowHeights];
     }
 }
 
