@@ -871,7 +871,7 @@ static CGFloat outlineIndentation = 0.0;
             if ([tc isHidden] == NO)
                 outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
         }
-        [self resetNoteRowHeights];
+        [self performSelectorOnce:@selector(resetNoteRowHeights) afterDelay:0.0];
     }
 }
 
