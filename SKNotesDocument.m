@@ -370,6 +370,8 @@ static CGFloat outlineIndentation = 0.0;
         }
         [self didChangeValueForKey:PAGES_KEY];
         
+        [rowHeights removeAllFloats];
+        
         [self willChangeValueForKey:NOTES_KEY];
         [notes autorelease];
         notes = [newNotes copy];
