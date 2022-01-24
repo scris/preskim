@@ -41,8 +41,6 @@
 
 @implementation SKFloatMapTable
 
-@dynamic count;
-
 - (id)init {
     self = [super init];
     if (self) {
@@ -53,6 +51,7 @@
 
 - (void)dealloc {
     NSFreeMapTable(table);
+    table = nil;
     [super dealloc];
 }
 
@@ -62,14 +61,6 @@
         [desc appendFormat:@"%@ -> %f; ", key, *(CGFloat *)NSMapGet(table, key)];
     [desc appendString:@"}"];
     return desc;
-}
-
-- (NSUInteger)count {
-    return NSCountMapTable(table);
-}
-
-- (BOOL)hasKey:(id)key {
-    return NULL != NSMapGet(table, key);
 }
 
 - (CGFloat)floatForKey:(id)key {
