@@ -77,7 +77,6 @@
 #import "SKNoteTextView.h"
 #import "SKMainTouchBarController.h"
 #import "SKThumbnailItem.h"
-#import "SKFloatMapTable.h"
 #import "PDFSelection_SKExtensions.h"
 
 #define STATUSBAR_HEIGHT 22.0

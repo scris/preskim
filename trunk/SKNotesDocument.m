@@ -61,7 +61,6 @@
 #import "SKPrintableView.h"
 #import "SKPDFView.h"
 #import "NSPointerArray_SKExtensions.h"
-#import "SKFloatMapTable.h"
 #import "SKScrollView.h"
 #import "NSColor_SKExtensions.h"
 #import "NSString_SKExtensions.h"
@@ -113,7 +112,7 @@ static CGFloat outlineIndentation = 0.0;
     if (self) {
         notes = [[NSArray alloc] init];
         pdfDocument = nil;
-        rowHeights = [[SKFloatMapTable alloc] init];
+        rowHeights = NSCreateMapTable(NSObjectMapKeyCallBacks, NSIntegerMapValueCallBacks, 0);
         windowRect = NSZeroRect;
         memset(&ndFlags, 0, sizeof(ndFlags));
         ndFlags.caseInsensitiveSearch = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveNoteSearchKey];
@@ -212,7 +211,7 @@ static CGFloat outlineIndentation = 0.0;
 
 - (void)windowDidResize:(NSNotification *)notification {
     if (ndFlags.autoResizeRows) {
-        [rowHeights removeAllFloats];
+        NSResetMapTable(rowHeights);
         [outlineView noteHeightOfRowsChangedAnimating:NO];
     }
 }
@@ -370,7 +369,7 @@ static CGFloat outlineIndentation = 0.0;
         }
         [self didChangeValueForKey:PAGES_KEY];
         
-        [rowHeights removeAllFloats];
+        NSResetMapTable(rowHeights);
         
         [self willChangeValueForKey:NOTES_KEY];
         [notes autorelease];
@@ -567,7 +566,7 @@ static CGFloat outlineIndentation = 0.0;
             height = [cell cellSizeForBounds:fullRect].height;
         else
             height = 0.0;
-        [rowHeights setFloat:fmax(height, rowHeight) + EXTRA_ROW_HEIGHT forKey:item];
+        NSMapInsert(rowHeights, item, (NSInteger)round(fmax(height, rowHeight) + EXTRA_ROW_HEIGHT));
         if (rowIndexes) {
             row = [outlineView rowForItem:item];
             if (row != -1)
@@ -578,7 +577,7 @@ static CGFloat outlineIndentation = 0.0;
 }
 
 - (void)resetRowHeights {
-    [rowHeights removeAllFloats];
+    NSResetMapTable(rowHeights);
     [outlineView noteHeightOfRowsChangedAnimating:YES];
 }
 
@@ -589,7 +588,7 @@ static CGFloat outlineIndentation = 0.0;
     } else {
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
-            [rowHeights removeFloatForKey:item];
+            NSMapRemove(rowHeights, item);
             NSInteger row = [outlineView rowForItem:item];
             if (row != -1)
                 [indexes addIndex:row];
@@ -843,7 +842,7 @@ static CGFloat outlineIndentation = 0.0;
 }
 
 - (CGFloat)outlineView:(NSOutlineView *)ov heightOfRowByItem:(id)item {
-    CGFloat rowHeight = [rowHeights floatForKey:item];
+    CGFloat rowHeight = (NSInteger)NSMapGet(rowHeights, item);
     if (rowHeight <= 0.0) {
         if (ndFlags.autoResizeRows) {
             NSTableColumn *tableColumn = [ov outlineTableColumn];
@@ -860,8 +859,8 @@ static CGFloat outlineIndentation = 0.0;
             }
             if (width > 0.0)
                 rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
-            rowHeight = fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT;
-            [rowHeights setFloat:rowHeight forKey:item];
+            rowHeight = round(fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT);
+            NSMapInsert(rowHeights, item, (NSInteger)rowHeight);
         } else {
             rowHeight = [(PDFAnnotation *)item type] ? [ov rowHeight] + EXTRA_ROW_HEIGHT : DEFAULT_TEXT_ROW_HEIGHT;
         }
@@ -870,7 +869,7 @@ static CGFloat outlineIndentation = 0.0;
 }
 
 - (void)outlineView:(NSOutlineView *)ov setHeight:(CGFloat)newHeight ofRowByItem:(id)item {
-    [rowHeights setFloat:newHeight forKey:item];
+    NSMapInsert(rowHeights, item, (NSInteger)round(newHeight));
 }
 
 - (NSArray *)outlineView:(NSOutlineView *)ov typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)typeSelectHelper {

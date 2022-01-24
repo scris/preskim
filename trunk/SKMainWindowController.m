@@ -92,7 +92,6 @@
 #import "NSResponder_SKExtensions.h"
 #import "PDFOutline_SKExtensions.h"
 #import "NSPointerArray_SKExtensions.h"
-#import "SKFloatMapTable.h"
 #import "SKColorCell.h"
 #import "PDFDocument_SKExtensions.h"
 #import "SKPDFPage.h"
@@ -261,7 +260,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         dirtySnapshots = [[NSMutableArray alloc] init];
         pageLabels = [[NSMutableArray alloc] init];
         lastViewedPages = [[NSPointerArray alloc] initWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality];
-        rowHeights = [[SKFloatMapTable alloc] init];
+        rowHeights = NSCreateMapTable(NSObjectMapKeyCallBacks, NSIntegerMapValueCallBacks, 0);
         savedNormalSetup = [[NSMutableDictionary alloc] init];
         mwcFlags.leftSidePaneState = SKSidePaneStateThumbnail;
         mwcFlags.rightSidePaneState = SKSidePaneStateNote;
@@ -1359,8 +1358,8 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     [[self windowControllerForNote:note] close];
     
     if ([note hasNoteText])
-        [rowHeights removeFloatForKey:[note noteText]];
-    [rowHeights removeFloatForKey:note];
+        NSMapRemove(rowHeights, [note noteText]);
+    NSMapRemove(rowHeights, note);
     
     // Stop observing the removed notes
     [self stopObservingNotes:[NSArray arrayWithObject:note]];
@@ -1377,7 +1376,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         }
         [wcs release];
         
-        [rowHeights removeAllFloats];
+        NSResetMapTable(rowHeights);
         
         [self stopObservingNotes:notes];
 
@@ -2556,9 +2555,9 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             
             if (mwcFlags.autoResizeNoteRows) {
                 if ([keyPath isEqualToString:SKNPDFAnnotationStringKey])
-                    [rowHeights removeFloatForKey:note];
+                    NSMapRemove(rowHeights, note);
                 if ([keyPath isEqualToString:SKNPDFAnnotationTextKey])
-                    [rowHeights removeFloatForKey:[note noteText]];
+                    NSMapRemove(rowHeights, [note noteText]);
             }
             if ([self notesNeedReloadForKey:keyPath]) {
                 [rightSideController.noteArrayController rearrangeObjects];

@@ -42,7 +42,7 @@
 #import "SKNoteTypeSheetController.h"
 #import "NSDocument_SKExtensions.h"
 
-@class SKNoteOutlineView, SKStatusBar, SKFloatMapTable;
+@class SKNoteOutlineView, SKStatusBar;
 
 @interface SKNotesDocument : NSDocument <NSWindowDelegate, NSToolbarDelegate, SKNoteOutlineViewDelegate, NSOutlineViewDataSource, SKNoteTypeSheetControllerDelegate> {
     SKNoteOutlineView *outlineView;
@@ -54,7 +54,7 @@
     NSArray *widgets;
     PDFDocument *pdfDocument;
     NSURL *sourceFileURL;
-    SKFloatMapTable *rowHeights;
+    NSMapTable *rowHeights;
     SKNoteTypeSheetController *noteTypeSheetController;
     NSRect windowRect;
     struct _ndFlags {

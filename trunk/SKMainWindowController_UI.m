@@ -68,7 +68,6 @@
 #import "SKFieldEditor.h"
 #import "PDFOutline_SKExtensions.h"
 #import "SKDocumentController.h"
-#import "SKFloatMapTable.h"
 #import "SKFindController.h"
 #import "NSColor_SKExtensions.h"
 #import "SKSplitView.h"
@@ -854,7 +853,7 @@ static CGFloat outlineIndentation = 0.0;
 }
 
 - (void)resetNoteRowHeights {
-    [rowHeights removeAllFloats];
+    NSResetMapTable(rowHeights);
     [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:YES];
 }
 
@@ -899,7 +898,7 @@ static CGFloat outlineIndentation = 0.0;
 
 - (CGFloat)outlineView:(NSOutlineView *)ov heightOfRowByItem:(id)item {
     if ([ov isEqual:rightSideController.noteOutlineView]) {
-        CGFloat rowHeight = [rowHeights floatForKey:item];
+        CGFloat rowHeight = (NSInteger)NSMapGet(rowHeights, item);
         if (rowHeight <= 0.0) {
             if (mwcFlags.autoResizeNoteRows) {
                 NSTableColumn *tableColumn = [ov outlineTableColumn];
@@ -917,8 +916,8 @@ static CGFloat outlineIndentation = 0.0;
                 }
                 if (width > 0.0)
                     rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
-                rowHeight = fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT;
-                [rowHeights setFloat:rowHeight forKey:item];
+                rowHeight = round(fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT);
+                NSMapInsert(rowHeights, item, (NSInteger)rowHeight);
             } else {
                 rowHeight = [(PDFAnnotation *)item type] ? [ov rowHeight] + EXTRA_ROW_HEIGHT : ([[(SKNoteText *)item note] isNote] ? DEFAULT_TEXT_ROW_HEIGHT : DEFAULT_MARKUP_ROW_HEIGHT);
             }
@@ -929,7 +928,7 @@ static CGFloat outlineIndentation = 0.0;
 }
 
 - (void)outlineView:(NSOutlineView *)ov setHeight:(CGFloat)newHeight ofRowByItem:(id)item {
-    [rowHeights setFloat:newHeight forKey:item];
+    NSMapInsert(rowHeights, item, (NSInteger)round(newHeight));
 }
 
 - (NSArray *)noteItems:(NSArray *)items {
@@ -1195,7 +1194,7 @@ static CGFloat outlineIndentation = 0.0;
             height = [cell cellSizeForBounds:rect].height;
         else
             height = 0.0;
-        [rowHeights setFloat:fmax(height, rowHeight) + EXTRA_ROW_HEIGHT forKey:item];
+        NSMapInsert(rowHeights, item, (NSInteger)round(fmax(height, rowHeight) + EXTRA_ROW_HEIGHT));
         if (rowIndexes) {
             row = [ov rowForItem:item];
             if (row != -1)
@@ -1213,7 +1212,7 @@ static CGFloat outlineIndentation = 0.0;
         SKNoteOutlineView *ov = rightSideController.noteOutlineView;
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
-            [rowHeights removeFloatForKey:item];
+            NSMapRemove(rowHeights, item);
             NSInteger row = [ov rowForItem:item];
             if (row != -1)
                 [indexes addIndex:row];
@@ -2087,7 +2086,7 @@ static NSArray *allMainDocumentPDFViews() {
 
 - (void)handleNoteViewFrameDidChangeNotification:(NSNotification *)notification {
     if (mwcFlags.autoResizeNoteRows && [splitView isAnimating] == NO) {
-        [rowHeights removeAllFloats];
+        NSResetMapTable(rowHeights);
         [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
     }
 }
