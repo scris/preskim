@@ -65,7 +65,7 @@ enum {
     SKWindowOptionFit
 };
 
-@class PDFAnnotation, PDFSelection, SKGroupedSearchResult, SKFloatMapTable;
+@class PDFAnnotation, PDFSelection, SKGroupedSearchResult;
 @class SKPDFView, SKSecondaryPDFView, SKStatusBar, SKFindController, SKSplitView, SKFieldEditor, SKOverviewView, SKSideWindow;
 @class SKLeftSideViewController, SKRightSideViewController, SKMainToolbarController, SKMainTouchBarController, SKProgressController, SKPresentationOptionsSheetController, SKNoteTypeSheetController, SKSnapshotWindowController;
 
@@ -108,7 +108,7 @@ enum {
     
     SKNoteTypeSheetController           *noteTypeSheetController;
     NSMutableArray                      *notes;
-    SKFloatMapTable                     *rowHeights;
+    NSMapTable                          *rowHeights;
     
     NSMapTable                          *widgets;
     NSMapTable                          *widgetValues;
