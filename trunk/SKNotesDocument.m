@@ -98,10 +98,6 @@
 #define EXTRA_ROW_HEIGHT 2.0
 #define DEFAULT_TEXT_ROW_HEIGHT 85.0
 
-static CGFloat outlineIndentation = 0.0;
-
-#define OUTLINE_INDENTATION (outlineIndentation > 0.0 ? outlineIndentation : RUNNING_AFTER(10_15) ? 9.0 : 16.0)
-
 @implementation SKNotesDocument
 
 @synthesize outlineView, statusBar, arrayController, searchField, notes, pdfDocument, sourceFileURL;
@@ -598,11 +594,6 @@ static CGFloat outlineIndentation = 0.0;
 }
 
 - (void)toggleAutoResizeNoteRows:(id)sender {
-    if (outlineIndentation <= 0.0 && ndFlags.autoResizeRows == 0 && [outlineView numberOfRows] > 0) {
-        NSTableColumn *tc = [outlineView outlineTableColumn];
-        if ([tc isHidden] == NO)
-            outlineIndentation = [tc width] - NSWidth([outlineView frameOfCellAtColumn:[[outlineView tableColumns] indexOfObject:tc] row:0]);
-    }
     ndFlags.autoResizeRows = (0 == ndFlags.autoResizeRows);
     if (ndFlags.autoResizeRows)
         [self  resetRowHeights];
@@ -793,14 +784,8 @@ static CGFloat outlineIndentation = 0.0;
 }
 
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {
-    if (ndFlags.autoResizeRows) {
-        if (outlineIndentation <= 0.0 && [outlineView numberOfRows] > 0) {
-            NSTableColumn *tc = [outlineView outlineTableColumn];
-            if ([tc isHidden] == NO)
-                outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
-        }
+    if (ndFlags.autoResizeRows)
         [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
-    }
 }
 
 - (void)outlineView:(NSOutlineView *)ov copyItems:(NSArray *)items  {
@@ -852,10 +837,10 @@ static CGFloat outlineIndentation = 0.0;
             if ([(PDFAnnotation *)item type] == nil) {
                 width = [outlineView visibleColumnsWidth];
                 if ([outlineView outlineColumnIsFirst])
-                    width -= OUTLINE_INDENTATION;
+                    width -= [outlineView outlineIndentation];
                 width = fmax(10.0, width);
             } else if ([tableColumn isHidden] == NO) {
-                width = [tableColumn width] - OUTLINE_INDENTATION;
+                width = [tableColumn width] - [outlineView outlineIndentation];
             }
             if (width > 0.0)
                 rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;

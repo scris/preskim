@@ -119,10 +119,6 @@
 #define DEFAULT_TEXT_ROW_HEIGHT 85.0
 #define DEFAULT_MARKUP_ROW_HEIGHT 50.0
 
-static CGFloat outlineIndentation = 0.0;
-
-#define OUTLINE_INDENTATION (outlineIndentation > 0.0 ? outlineIndentation : RUNNING_AFTER(10_15) ? 9.0 : 16.0)
-
 @interface SKMainWindowController (SKPrivateMain)
 
 - (void)cleanup;
@@ -864,14 +860,8 @@ static CGFloat outlineIndentation = 0.0;
 }
 
 - (void)outlineView:(NSOutlineView *)ov didChangeHiddenOfTableColumn:(NSTableColumn *)tableColumn {
-    if (mwcFlags.autoResizeNoteRows && [ov isEqual:rightSideController.noteOutlineView]) {
-        if (outlineIndentation <= 0.0 && [ov numberOfRows] > 0) {
-            NSTableColumn *tc = [ov outlineTableColumn];
-            if ([tc isHidden] == NO)
-                outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
-        }
+    if (mwcFlags.autoResizeNoteRows && [ov isEqual:rightSideController.noteOutlineView])
         [self performSelectorOnce:@selector(resetNoteRowHeights) afterDelay:0.0];
-    }
 }
 
 - (void)outlineViewColumnDidMove:(NSNotification *)notification {
@@ -909,10 +899,10 @@ static CGFloat outlineIndentation = 0.0;
                 if ([(PDFAnnotation *)item type] == nil) {
                     width = [(SKNoteOutlineView *)ov visibleColumnsWidth];
                     if ([(SKNoteOutlineView *)ov outlineColumnIsFirst])
-                        width -= OUTLINE_INDENTATION;
+                        width -= [(SKNoteOutlineView *)ov outlineIndentation];
                     width = fmax(10.0, width);
                 } else if ([tableColumn isHidden] == NO) {
-                    width = [tableColumn width] - OUTLINE_INDENTATION;
+                    width = [tableColumn width] - [(SKNoteOutlineView *)ov outlineIndentation];
                 }
                 if (width > 0.0)
                     rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
@@ -1222,14 +1212,6 @@ static CGFloat outlineIndentation = 0.0;
 }
 
 - (void)toggleAutoResizeNoteRows:(id)sender {
-    if (outlineIndentation <= 0.0 && mwcFlags.autoResizeNoteRows == 0) {
-        // calculate the difference between the cell width and the column width for the putline column
-        // which depends on the style and the OS version
-        NSOutlineView *ov = rightSideController.noteOutlineView;
-        NSTableColumn *tc = [ov outlineTableColumn];
-        if ([tc isHidden] == NO && [ov numberOfRows] > 0)
-            outlineIndentation = [tc width] - NSWidth([ov frameOfCellAtColumn:[[ov tableColumns] indexOfObject:tc] row:0]);
-    }
     mwcFlags.autoResizeNoteRows = (0 == mwcFlags.autoResizeNoteRows);
     if (mwcFlags.autoResizeNoteRows)
         [self resetNoteRowHeights];
