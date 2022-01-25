@@ -61,7 +61,7 @@
 
 @implementation SKNoteOutlineView
 
-@dynamic outlineColumnIsFirst, visibleColumnsWidth;
+@dynamic outlineColumnIsFirst, visibleColumnsWidth, outlineIndentation;
 
 static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     if ([identifier isEqualToString:NOTE_COLUMNID])
@@ -190,6 +190,20 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
             width += [tc width] + spacing;
     }
     return width;
+}
+
+- (CGFloat)outlineIndentation {
+    if ([self respondsToSelector:@selector(style)] == NO)
+        return 16.0;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+    else if ([self style] == NSTableViewStylePlain)
+#pragma clang diagnostic pop
+        return 18.0;
+    else if ([self outlineColumnIsFirst])
+        return 9.0;
+    else
+        return 15.0 - floor(0.5 * [self intercellSpacing].width);
 }
 
 #pragma mark Delegate
