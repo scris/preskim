@@ -756,8 +756,6 @@
         id item = [ov itemAtRow:row];
         if ([(PDFAnnotation *)item type] == nil) {
             NSRect frame = [ov convertRect:[ov frameOfCellAtColumn:-1 row:row] toView:rowView];
-            if ([(SKNoteOutlineView *)ov outlineColumnIsFirst])
-                frame = SKShrinkRect(frame, -[ov indentationPerLevel], NSMinXEdge);
             NSTableCellView *view = [ov makeViewWithIdentifier:NOTE_COLUMNID owner:self];
             [view setObjectValue:item];
             [[view textField] setEditable:NO];
@@ -870,13 +868,10 @@
         NSInteger newColumn = [[[notification userInfo] objectForKey:@"NSNewColumn"] integerValue];
         if (oldColumn == 0 || newColumn == 0) {
             SKNoteOutlineView *ov = [notification object];
-            BOOL outlineColumnIsFirst = [ov outlineColumnIsFirst];
             [ov enumerateAvailableRowViewsUsingBlock:^(SKNoteTableRowView *rowView, NSInteger row){
                 NSTableCellView *rowCellView = [rowView rowCellView];
                 if (rowCellView) {
                     NSRect frame = [ov convertRect:[ov frameOfCellAtColumn:-1 row:row] toView:rowView];
-                    if (outlineColumnIsFirst)
-                        frame = SKShrinkRect(frame, -[ov indentationPerLevel], NSMinXEdge);
                     [rowCellView setFrame:frame];
                 }
             }];
@@ -896,14 +891,10 @@
                 id cell = [tableColumn dataCell];
                 [cell setObjectValue:[item objectValue]];
                 // don't use cellFrameAtRow:column: as this needs the row height which we are calculating
-                if ([(PDFAnnotation *)item type] == nil) {
-                    width = [(SKNoteOutlineView *)ov visibleColumnsWidth];
-                    if ([(SKNoteOutlineView *)ov outlineColumnIsFirst])
-                        width -= [(SKNoteOutlineView *)ov outlineIndentation];
-                    width = fmax(10.0, width);
-                } else if ([tableColumn isHidden] == NO) {
+                if ([(PDFAnnotation *)item type] == nil)
+                    width = fmax(10.0, [(SKNoteOutlineView *)ov fullWidthCellWidth]);
+                else if ([tableColumn isHidden] == NO)
                     width = [tableColumn width] - [(SKNoteOutlineView *)ov outlineIndentation];
-                }
                 if (width > 0.0)
                     rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
                 rowHeight = round(fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT);

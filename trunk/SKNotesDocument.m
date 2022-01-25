@@ -698,8 +698,6 @@
     id item = [ov itemAtRow:row];
     if ([(PDFAnnotation *)item type] == nil) {
         NSRect frame = [outlineView convertRect:[outlineView frameOfCellAtColumn:-1 row:row] toView:rowView];
-        if ([outlineView outlineColumnIsFirst])
-            frame = SKShrinkRect(frame, -[ov indentationPerLevel], NSMinXEdge);
         NSTableCellView *view = [ov makeViewWithIdentifier:NOTE_COLUMNID owner:self];
         [view setObjectValue:item];
         [view setFrame:frame];
@@ -768,13 +766,10 @@
     NSInteger oldColumn = [[[notification userInfo] objectForKey:@"NSOldColumn"] integerValue];
     NSInteger newColumn = [[[notification userInfo] objectForKey:@"NSNewColumn"] integerValue];
     if (oldColumn == 0 || newColumn == 0) {
-        BOOL outlineColumnIsFirst = [outlineView outlineColumnIsFirst];
         [outlineView enumerateAvailableRowViewsUsingBlock:^(SKNoteTableRowView *rowView, NSInteger row){
             NSTableCellView *rowCellView = [rowView rowCellView];
             if (rowCellView) {
                 NSRect frame = [outlineView convertRect:[outlineView frameOfCellAtColumn:-1 row:row] toView:rowView];
-                if (outlineColumnIsFirst)
-                    frame = SKShrinkRect(frame, -[outlineView indentationPerLevel], NSMinXEdge);
                 [rowCellView setFrame:frame];
             }
         }];
@@ -834,14 +829,10 @@
             CGFloat width = 0.0;
             id cell = [tableColumn dataCell];
             [cell setObjectValue:[item objectValue]];
-            if ([(PDFAnnotation *)item type] == nil) {
-                width = [outlineView visibleColumnsWidth];
-                if ([outlineView outlineColumnIsFirst])
-                    width -= [outlineView outlineIndentation];
-                width = fmax(10.0, width);
-            } else if ([tableColumn isHidden] == NO) {
+            if ([(PDFAnnotation *)item type] == nil)
+                width = fmax(10.0, [outlineView fullWidthCellWidth]);
+            else if ([tableColumn isHidden] == NO)
                 width = [tableColumn width] - [outlineView outlineIndentation];
-            }
             if (width > 0.0)
                 rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
             rowHeight = round(fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT);
