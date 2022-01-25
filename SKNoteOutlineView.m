@@ -61,7 +61,7 @@
 
 @implementation SKNoteOutlineView
 
-@dynamic outlineColumnIsFirst, visibleColumnsWidth, outlineIndentation;
+@dynamic fullWidthCellWidth, outlineIndentation;
 
 static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     if ([identifier isEqualToString:NOTE_COLUMNID])
@@ -160,6 +160,14 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     return YES;
 }
 
+- (BOOL)outlineColumnIsFirst {
+    for (NSTableColumn *tc in [self tableColumns]) {
+        if ([tc isHidden] == NO)
+            return tc == [self outlineTableColumn];
+    }
+    return NO;
+}
+
 - (NSRect)frameOfCellAtColumn:(NSInteger)column row:(NSInteger)row {
     if (column == -1) {
         NSRect frame = NSZeroRect;
@@ -169,26 +177,27 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
             if ([[tcs objectAtIndex:column] isHidden] == NO)
                 frame = NSUnionRect(frame, [super frameOfCellAtColumn:column row:row]);
         }
+        NSInteger level = [self levelForRow:row];
+        if (level > 0 && [self outlineColumnIsFirst])
+            frame = SKShrinkRect(frame, -[self indentationPerLevel] * level, NSMinYEdge);
         return frame;
     }
     return [super frameOfCellAtColumn:column row:row];
 }
 
-- (BOOL)outlineColumnIsFirst {
-    for (NSTableColumn *tc in [self tableColumns]) {
-        if ([tc isHidden] == NO)
-            return tc == [self outlineTableColumn];
-    }
-    return NO;
-}
-
-- (CGFloat)visibleColumnsWidth {
+- (CGFloat)fullWidthCellWidth {
     CGFloat spacing = [self intercellSpacing].width;
     CGFloat width = -spacing;
+    NSInteger outlineIsFirst = -1;
     for (NSTableColumn *tc in [self tableColumns]) {
-        if ([tc isHidden] == NO)
+        if ([tc isHidden] == NO) {
+            if (outlineIsFirst == -1)
+                outlineIsFirst = tc == [self outlineTableColumn];
             width += [tc width] + spacing;
+        }
     }
+    if (outlineIsFirst == 1)
+        width -= [self outlineIndentation];
     return width;
 }
 

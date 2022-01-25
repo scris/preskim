@@ -48,8 +48,7 @@
 - (id <SKNoteOutlineViewDelegate>)delegate;
 - (void)setDelegate:(id <SKNoteOutlineViewDelegate>)newDelegate;
 
-@property (nonatomic, readonly) BOOL outlineColumnIsFirst;
-@property (nonatomic, readonly) CGFloat visibleColumnsWidth;
+@property (nonatomic, readonly) CGFloat fullWidthCellWidth;
 @property (nonatomic, readonly) CGFloat outlineIndentation;
 
 @end
