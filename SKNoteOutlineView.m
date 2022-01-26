@@ -117,7 +117,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
                     if ([theEvent type] == NSLeftMouseDragged) {
                         CGFloat currentHeight = fmax([self rowHeight], round(startHeight + [theEvent locationInView:self].y - mouseLoc.y));
                         [[self delegate] outlineView:self setHeight:currentHeight ofRowByItem:item];
-                        [self noteHeightOfRowsChangedAnimating:NO];
+                        [self noteHeightOfRowChanged:row animating:NO];
                     }
                 }
                 
