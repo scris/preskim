@@ -697,10 +697,9 @@
     SKNoteTableRowView *noteRowView = [rowView isKindOfClass:[SKNoteTableRowView class]] ? (SKNoteTableRowView *)rowView : nil;
     id item = [ov itemAtRow:row];
     if ([(PDFAnnotation *)item type] == nil) {
-        NSRect frame = [outlineView convertRect:[outlineView frameOfCellAtColumn:-1 row:row] toView:rowView];
         NSTableCellView *view = [ov makeViewWithIdentifier:NOTE_COLUMNID owner:self];
         [view setObjectValue:item];
-        [view setFrame:frame];
+        [view setFrame:[outlineView convertRect:[outlineView frameOfCellAtColumn:-1 row:row] toView:rowView]];
         [rowView addSubview:view];
         [noteRowView setRowCellView:view];
     }
@@ -768,10 +767,8 @@
     if (oldColumn == 0 || newColumn == 0) {
         [outlineView enumerateAvailableRowViewsUsingBlock:^(SKNoteTableRowView *rowView, NSInteger row){
             NSTableCellView *rowCellView = [rowView rowCellView];
-            if (rowCellView) {
-                NSRect frame = [outlineView convertRect:[outlineView frameOfCellAtColumn:-1 row:row] toView:rowView];
-                [rowCellView setFrame:frame];
-            }
+            if (rowCellView)
+                [rowCellView setFrame:[outlineView convertRect:[outlineView frameOfCellAtColumn:-1 row:row] toView:rowView]];
         }];
         if (ndFlags.autoResizeRows)
             [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
