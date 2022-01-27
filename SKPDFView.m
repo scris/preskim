@@ -1892,6 +1892,17 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [menu removeItemAtIndex:0];
     }
     
+    static NSSet *annotationActions = nil;
+    if (annotationActions == nil)
+        annotationActions = [[NSSet alloc] initWithObjects:@"_removeNote:", @"_removeMarkup:", nil];
+    while ([menu numberOfItems] > 0) {
+        item = [menu itemAtIndex:0];
+        if ([item isSeparatorItem] || [annotationActions containsObject:NSStringFromSelector([item action])])
+            [menu removeItemAtIndex:0];
+        else
+            break;
+    }
+    
     // On Leopard the selection is automatically set. In some cases we never want a selection though.
     if ((interactionMode == SKPresentationMode) || (toolMode != SKTextToolMode && [[self currentSelection] hasCharacters])) {
         static NSSet *selectionActions = nil;
