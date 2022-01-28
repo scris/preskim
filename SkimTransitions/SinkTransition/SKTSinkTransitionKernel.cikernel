@@ -1,6 +1,6 @@
 kernel vec4 sinkTransition(sampler src, sampler trgt, vec2 center, float t)
 {
-    float pi2 = 6.28318530717958648
+    float pi2 = 6.28318530717958648;
     vec2 loc;
     float a, a1, a2, a3, a4, x, factor, r;
     vec4 extent, p1, p2;
