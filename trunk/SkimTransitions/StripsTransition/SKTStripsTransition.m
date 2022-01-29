@@ -20,7 +20,7 @@ static CIKernel *_SKTStripsTransitionKernel = nil;
 {
     if(_SKTStripsTransitionKernel == nil)
     {
-		NSBundle    *bundle = [NSBundle bundleForClass:NSClassFromString(@"SKTStripsTransition")];
+		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		NSError     *error = nil;
 		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTStripsTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];

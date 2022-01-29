@@ -20,7 +20,7 @@ static CIKernel *_SKTBlindsTransitionKernel = nil;
 {
     if(_SKTBlindsTransitionKernel == nil)
     {
-		NSBundle    *bundle = [NSBundle bundleForClass:NSClassFromString(@"SKTBlindsTransition")];
+		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		NSError     *error = nil;
 		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTBlindsTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];

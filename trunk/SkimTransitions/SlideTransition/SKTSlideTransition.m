@@ -22,7 +22,7 @@ static CIKernel *_SKTSlideTransitionKernel = nil;
 {
     if(_SKTSlideTransitionKernel == nil)
     {
-        NSBundle    *bundle = [NSBundle bundleForClass:NSClassFromString(@"SKTSlideTransition")];
+        NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
         NSStringEncoding encoding = NSUTF8StringEncoding;
         NSError     *error = nil;
         NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTSlideTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];

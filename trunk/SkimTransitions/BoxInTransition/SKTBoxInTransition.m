@@ -20,7 +20,7 @@ static CIKernel *_SKTBoxInTransitionKernel = nil;
 {
     if(_SKTBoxInTransitionKernel == nil)
     {
-		NSBundle    *bundle = [NSBundle bundleForClass:NSClassFromString(@"SKTBoxInTransition")];
+		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		NSError     *error = nil;
 		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTBoxInTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];

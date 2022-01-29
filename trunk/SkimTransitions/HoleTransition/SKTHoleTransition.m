@@ -20,7 +20,7 @@ static CIKernel *_SKTHoleTransitionKernel = nil;
 {
     if(_SKTHoleTransitionKernel == nil)
     {
-		NSBundle    *bundle = [NSBundle bundleForClass:NSClassFromString(@"SKTHoleTransition")];
+		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		NSError     *error = nil;
 		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTHoleTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];

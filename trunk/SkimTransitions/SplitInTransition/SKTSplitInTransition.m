@@ -20,7 +20,7 @@ static CIKernel *_SKTSplitInTransitionKernel = nil;
 {
     if(_SKTSplitInTransitionKernel == nil)
     {
-		NSBundle    *bundle = [NSBundle bundleForClass:NSClassFromString(@"SKTSplitInTransition")];
+		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		NSError     *error = nil;
 		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTSplitInTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];
