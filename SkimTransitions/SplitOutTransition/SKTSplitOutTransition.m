@@ -20,7 +20,7 @@ static CIKernel *_SKTSplitOutTransitionKernel = nil;
 {
     if(_SKTSplitOutTransitionKernel == nil)
     {
-		NSBundle    *bundle = [NSBundle bundleForClass:NSClassFromString(@"SKTSplitOutTransition")];
+		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		NSError     *error = nil;
 		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTSplitOutTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];

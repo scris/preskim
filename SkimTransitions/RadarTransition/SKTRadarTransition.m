@@ -20,7 +20,7 @@ static CIKernel *_SKTRadarTransitionKernel = nil;
 {
     if(_SKTRadarTransitionKernel == nil)
     {
-		NSBundle    *bundle = [NSBundle bundleForClass:NSClassFromString(@"SKTRadarTransition")];
+		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		NSError     *error = nil;
 		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTRadarTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];

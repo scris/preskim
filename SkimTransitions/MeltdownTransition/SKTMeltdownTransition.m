@@ -22,7 +22,7 @@ static CIKernel *_SKTMeltdownTransitionKernel = nil;
 {
     if(_SKTMeltdownTransitionKernel == nil)
     {
-		NSBundle    *bundle = [NSBundle bundleForClass:NSClassFromString(@"SKTMeltdownTransition")];
+		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		NSError     *error = nil;
 		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTMeltdownTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];

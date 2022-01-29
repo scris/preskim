@@ -20,7 +20,7 @@ static CIKernel *_SKTBoxOutTransitionKernel = nil;
 {
     if(_SKTBoxOutTransitionKernel == nil)
     {
-		NSBundle    *bundle = [NSBundle bundleForClass:NSClassFromString(@"SKTBoxOutTransition")];
+		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		NSError     *error = nil;
 		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTBoxOutTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];
