@@ -57,7 +57,7 @@
     [dissolveFilter setValue:[NSNumber numberWithDouble:t1] forKey:kCIInputTimeKey];
     
     CIFilter *twirlFilter = [CIFilter filterWithName:@"CITwirlDistortion"];
-    [twirlFilter setValue:t < 0.5 ? inputImage : inputTargetImage forKey:kCIInputImageKey];
+    [twirlFilter setValue:[dissolveFilter valueForKey:kCIOutputImageKey] forKey:kCIInputImageKey];
     [twirlFilter setValue:inputCenter forKey:kCIInputCenterKey];
     [twirlFilter setValue:[NSNumber numberWithDouble:radius] forKey:kCIInputRadiusKey];
     [twirlFilter setValue:[NSNumber numberWithDouble:angle] forKey:kCIInputAngleKey];
