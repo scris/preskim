@@ -185,7 +185,7 @@ static NSDictionary *oldStyleNames = nil;
                      @"CoreGraphics SKTransitionWarpFade", @"SKTWarpFadeTransition",
                      @"CoreGraphics SKTransitionSwap", @"SKTSwapTransition",
                      @"CoreGraphics SKTransitionCube", @"SKTCubeTransition",
-                     @"CoreGraphics SKTransitionWarpSwitch", @"SKTSwitchTransition",
+                     @"CoreGraphics SKTransitionWarpSwitch", @"SKTWarpSwitchTransition",
                      @"CoreGraphics SKTransitionWarpFlip", @"SKTFlipTransition",
                      @"SKPTAccelerationTransitionFilter", @"SKTAccelerationTransition",
                      @"SKPTBlindsTransitionFilter", @"SKTBlindsTransition",
