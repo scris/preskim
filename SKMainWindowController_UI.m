@@ -1636,10 +1636,13 @@ static NSArray *allMainDocumentPDFViews() {
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] allowsNotes] && ([pdfView toolMode] == SKTextToolMode || [pdfView toolMode] == SKNoteToolMode) && [pdfView hideNotes] == NO;
     } else if (action == @selector(editNote:)) {
         PDFAnnotation *annotation = [pdfView activeAnnotation];
-        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && ([annotation isEditable]);
+        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isEditable];
+    } else if (action == @selector(autoSizeNote:)) {
+        PDFAnnotation *annotation = [pdfView activeAnnotation];
+        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && ([annotation isResizable] && [annotation isLine] == NO);
     } else if (action == @selector(alignLeft:) || action == @selector(alignRight:) || action == @selector(alignCenter:)) {
         PDFAnnotation *annotation = [pdfView activeAnnotation];
-        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && ([annotation isEditable]) && [annotation isText];
+        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isEditable] && [annotation isText];
     } else if (action == @selector(toggleHideNotes:)) {
         if ([pdfView hideNotes])
             [menuItem setTitle:NSLocalizedString(@"Show Notes", @"Menu item title")];

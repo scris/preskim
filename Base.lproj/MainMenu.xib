@@ -564,14 +564,28 @@
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Edit Note" id="691">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="editNote:" target="-1" id="692"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Auto Size Note" id="SPb-oA-liH">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="autoSizeNote:" target="-1" id="iVs-qE-Gfg"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Auto Size Note Unconstrained" tag="1" alternate="YES" id="pVh-3T-0lA">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                <connections>
+                                    <action selector="autoSizeNote:" target="-1" id="8sA-N6-OFa"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="781">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Hide Notes" id="782">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleHideNotes:" target="-1" id="784"/>
                                 </connections>

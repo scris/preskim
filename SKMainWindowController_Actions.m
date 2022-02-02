@@ -266,6 +266,12 @@
     } else NSBeep();
 }
 
+- (IBAction)autoSizeNote:(id)sender{
+    if ([pdfView hideNotes] == NO) {
+        [pdfView autoSizeActiveAnnotation:sender];
+    } else NSBeep();
+}
+
 - (IBAction)toggleHideNotes:(id)sender{
     NSNumber *wasHidden = [NSNumber numberWithBool:[pdfView hideNotes]];
     [notes setValue:wasHidden forKey:@"shouldDisplay"];
