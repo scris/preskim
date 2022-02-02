@@ -50,6 +50,7 @@
 - (IBAction)alignCenter:(id)sender;
 - (IBAction)createNewNote:(id)sender;
 - (IBAction)editNote:(id)sender;
+- (IBAction)autoSizeNote:(id)sender;
 - (IBAction)toggleHideNotes:(id)sender;
 - (IBAction)takeSnapshot:(id)sender;
 - (IBAction)changeDisplaySinglePages:(id)sender;
