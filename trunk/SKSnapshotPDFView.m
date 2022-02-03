@@ -68,7 +68,6 @@
 - (void)handlePDFContentViewFrameChangedNotification:(NSNotification *)notification;
 - (void)handlePDFContentViewFrameChangedDelayedNotification:(NSNotification *)notification;
 - (void)handlePDFViewScaleChangedNotification:(NSNotification *)notification;
-- (void)handleScrollerStyleChangedNotification:(NSNotification *)notification;
 
 @end
 
