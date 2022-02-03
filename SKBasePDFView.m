@@ -95,7 +95,7 @@ static inline NSArray *defaultKeysToObserve() {
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
             SKSetHasLightAppearance([self scrollView]);
         
-        if (!RUNNING_AFTER(10_15)) {
+        if (RUNNING(10_14)) {
             [self handleScrollerStyleChangedNotification:nil];
             
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
