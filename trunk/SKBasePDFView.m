@@ -94,10 +94,13 @@ static inline NSArray *defaultKeysToObserve() {
         SKSetHasLightAppearance([[self scrollView] contentView]);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
             SKSetHasLightAppearance([self scrollView]);
-        [self handleScrollerStyleChangedNotification:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
-                                                     name:NSPreferredScrollerStyleDidChangeNotification object:nil];
+        if (!RUNNING_AFTER(10_15)) {
+            [self handleScrollerStyleChangedNotification:nil];
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
+                                                         name:NSPreferredScrollerStyleDidChangeNotification object:nil];
+        }
     }
     
     [[self scrollView] setContentFilters:SKColorEffectFilters()];
@@ -152,7 +155,7 @@ static inline NSArray *defaultKeysToObserve() {
     [[self scrollView] setContentFilters:SKColorEffectFilters()];
 }
 
-- (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {
+- (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {return;
     if ([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy) {
         SKSetHasDefaultAppearance([[self scrollView] verticalScroller]);
         SKSetHasDefaultAppearance([[self scrollView] horizontalScroller]);
