@@ -155,7 +155,7 @@ static inline NSArray *defaultKeysToObserve() {
     [[self scrollView] setContentFilters:SKColorEffectFilters()];
 }
 
-- (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {return;
+- (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {
     if ([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy) {
         SKSetHasDefaultAppearance([[self scrollView] verticalScroller]);
         SKSetHasDefaultAppearance([[self scrollView] horizontalScroller]);
