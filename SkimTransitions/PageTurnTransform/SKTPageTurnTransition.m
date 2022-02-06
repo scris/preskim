@@ -29,8 +29,8 @@
              nil],                               kCIInputExtentKey,
             
             [NSDictionary dictionaryWithObjectsAndKeys:
-             [NSNumber numberWithDouble:  0.0], kCIAttributeMin,
-             [NSNumber numberWithDouble:  0.0], kCIAttributeMax,
+             [NSNumber numberWithDouble:  -M_PI], kCIAttributeMin,
+             [NSNumber numberWithDouble:  M_PI], kCIAttributeMax,
              [NSNumber numberWithDouble:  -M_PI], kCIAttributeSliderMin,
              [NSNumber numberWithDouble:  M_PI], kCIAttributeSliderMax,
              [NSNumber numberWithDouble:  0.0], kCIAttributeDefault,
