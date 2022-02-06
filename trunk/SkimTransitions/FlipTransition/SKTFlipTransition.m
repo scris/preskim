@@ -19,7 +19,7 @@
 
 @synthesize inputImage, inputTargetImage, inputExtent, inputAngle, inputTime;
 
-- (NSDictionary *)customAttributes
++ (NSDictionary *)customAttributes
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:
             
@@ -49,6 +49,11 @@
                  nil],                              kCIInputTimeKey,
             
             nil];
+}
+
+- (NSDictionary *)customAttributes
+{
+    return [[self class] customAttributes];
 }
 
 static inline NSInteger directionForAngles(CGFloat angle, CGFloat cornerAngle) {
