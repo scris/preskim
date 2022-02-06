@@ -42,7 +42,7 @@ static CIKernel *_SKTStripsTransitionKernel = nil;
  
         [NSDictionary dictionaryWithObjectsAndKeys:
             [NSNumber numberWithDouble:  0.0], kCIAttributeMin,
-            [NSNumber numberWithDouble:  0.0], kCIAttributeMax,
+            [NSNumber numberWithDouble:  100.0], kCIAttributeMax,
             [NSNumber numberWithDouble:  0.0], kCIAttributeSliderMin,
             [NSNumber numberWithDouble:  100.0], kCIAttributeSliderMax,
             [NSNumber numberWithDouble:  50.0], kCIAttributeDefault,
