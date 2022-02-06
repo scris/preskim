@@ -219,7 +219,7 @@ extern NSArray *SKColorEffectFilters(void) {
         // see https://wiki.preterhuman.net/Matrix_Operations_for_Image_Processingand https://beesbuzz.biz/code/16-hsv-color-transforms
         if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", [NSNumber numberWithDouble:0.625], nil]))
             [filters addObject:filter];
-        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-LR*f Y:-LG*f Z:-LB*f], @"inputGVector", [CIVector vectorWithX:-LR*f Y:1.0-LG*f Z:-LB*f], @"inputBVector", [CIVector vectorWithX:-LR*f Y:-LG*f Z:1.0-LB*f], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0], nil]))
+        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-LR*f Y:-LG*f Z:-LB*f W:0.0], @"inputGVector", [CIVector vectorWithX:-LR*f Y:1.0-LG*f Z:-LB*f W:0.0], @"inputBVector", [CIVector vectorWithX:-LR*f Y:-LG*f Z:1.0-LB*f W:0.0], @"inputAVector", [CIVector vectorWithX:0.0 Y:0.0 Z:0.0 W:1.0], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0 W:0.0], nil]))
             [filters addObject:filter];
         if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", [NSNumber numberWithDouble:1.6], nil]))
             [filters addObject:filter];
