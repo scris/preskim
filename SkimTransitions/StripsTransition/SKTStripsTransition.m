@@ -31,7 +31,7 @@ static CIKernel *_SKTStripsTransitionKernel = nil;
     return [super init];
 }
 
-- (NSDictionary *)customAttributes
++ (NSDictionary *)customAttributes
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:
 
@@ -61,6 +61,11 @@ static CIKernel *_SKTStripsTransitionKernel = nil;
             nil],                              kCIInputTimeKey,
 
         nil];
+}
+
+- (NSDictionary *)customAttributes
+{
+    return [[self class] customAttributes];
 }
 
 - (CGRect)regionOf:(int)sampler destRect:(CGRect)R userInfo:(NSNumber *)offset {

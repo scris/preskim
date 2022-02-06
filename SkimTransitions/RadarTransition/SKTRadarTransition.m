@@ -31,7 +31,7 @@ static CIKernel *_SKTRadarTransitionKernel = nil;
     return [super init];
 }
 
-- (NSDictionary *)customAttributes
++ (NSDictionary *)customAttributes
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:
 
@@ -71,6 +71,11 @@ static CIKernel *_SKTRadarTransitionKernel = nil;
             nil],                              kCIInputTimeKey,
 
         nil];
+}
+
+- (NSDictionary *)customAttributes
+{
+    return [[self class] customAttributes];
 }
 
 // called when setting up for fragment program and also calls fragment program

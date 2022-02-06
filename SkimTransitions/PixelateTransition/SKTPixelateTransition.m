@@ -15,7 +15,7 @@
 
 @synthesize inputImage, inputTargetImage, inputScale, inputTime;
 
-- (NSDictionary *)customAttributes
++ (NSDictionary *)customAttributes
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:
         
@@ -39,6 +39,11 @@
              nil],                              kCIInputTimeKey,
         
         nil];
+}
+
+- (NSDictionary *)customAttributes
+{
+    return [[self class] customAttributes];
 }
 
 // called when setting up for fragment program and also calls fragment program
