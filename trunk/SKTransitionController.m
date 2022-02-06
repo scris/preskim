@@ -331,7 +331,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         id value = nil;
         if ([key isEqualToString:kCIInputExtentKey]) {
             CGRect extent = [info shouldRestrict] ? rect : bounds;
-            value = [CIVector vectorWithX:CGRectGetMinX(extent) Y:CGRectGetMinY(extent) Z:CGRectGetWidth(extent) W:CGRectGetHeight(extent)];
+            value = [CIVector vectorWithCGRect:extent];
         } else if ([key isEqualToString:kCIInputAngleKey]) {
             CGFloat angle = forward ? 0.0 : M_PI;
             if ([filterName hasPrefix:@"CIPageCurl"])
