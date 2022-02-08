@@ -9,6 +9,7 @@
 #import "SKTRadarTransition.h"
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import "SKTPluginLoader.h"
 
 @implementation SKTRadarTransition
 
@@ -18,16 +19,8 @@ static CIKernel *_SKTRadarTransitionKernel = nil;
 
 - (id)init
 {
-    if(_SKTRadarTransitionKernel == nil)
-    {
-		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
-		NSStringEncoding encoding = NSUTF8StringEncoding;
-		NSError     *error = nil;
-		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTRadarTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];
-		NSArray     *kernels = [CIKernel kernelsWithString:code];
-
-		_SKTRadarTransitionKernel = [kernels firstObject];
-    }
+    if (_SKTRadarTransitionKernel == nil)
+        _SKTRadarTransitionKernel = [SKTPlugInLoader kernelWithName:@"radarTransition"];
     return [super init];
 }
 

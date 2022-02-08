@@ -9,6 +9,7 @@
 #import "SKTHoleTransition.h"
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import "SKTPluginLoader.h"
 
 @implementation SKTHoleTransition
 
@@ -18,16 +19,8 @@ static CIKernel *_SKTHoleTransitionKernel = nil;
 
 - (id)init
 {
-    if(_SKTHoleTransitionKernel == nil)
-    {
-		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
-		NSStringEncoding encoding = NSUTF8StringEncoding;
-		NSError     *error = nil;
-		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTHoleTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];
-		NSArray     *kernels = [CIKernel kernelsWithString:code];
-
-		_SKTHoleTransitionKernel = [kernels firstObject];
-    }
+    if (_SKTHoleTransitionKernel == nil)
+        _SKTHoleTransitionKernel = [SKTPlugInLoader kernelWithName:@"holeDistortion"];
     return [super init];
 }
 

@@ -9,6 +9,7 @@
 #import "SKTRevealTransition.h"
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import "SKTPluginLoader.h"
 
 #define kCIInputRectangleKey @"inputRectangle"
 
@@ -20,16 +21,8 @@ static CIKernel *_SKTRevealTransitionKernel = nil;
 
 - (id)init
 {
-    if(_SKTRevealTransitionKernel == nil)
-    {
-        NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
-        NSStringEncoding encoding = NSUTF8StringEncoding;
-        NSError     *error = nil;
-        NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTRevealTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];
-        NSArray     *kernels = [CIKernel kernelsWithString:code];
-        
-        _SKTRevealTransitionKernel = [kernels firstObject];
-    }
+    if (_SKTRevealTransitionKernel == nil)
+        _SKTRevealTransitionKernel = [SKTPlugInLoader kernelWithName:@"revealTransition"];
     return [super init];
 }
 

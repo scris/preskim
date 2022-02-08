@@ -9,6 +9,7 @@
 #import "SKTStripsTransition.h"
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import "SKTPluginLoader.h"
 
 @implementation SKTStripsTransition
 
@@ -18,16 +19,8 @@ static CIKernel *_SKTStripsTransitionKernel = nil;
 
 - (id)init
 {
-    if(_SKTStripsTransitionKernel == nil)
-    {
-		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
-		NSStringEncoding encoding = NSUTF8StringEncoding;
-		NSError     *error = nil;
-		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTStripsTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];
-		NSArray     *kernels = [CIKernel kernelsWithString:code];
-
-		_SKTStripsTransitionKernel = [kernels firstObject];
-    }
+    if (_SKTStripsTransitionKernel == nil)
+        _SKTStripsTransitionKernel = [SKTPlugInLoader kernelWithName:@"splitTransition"];
     return [super init];
 }
 

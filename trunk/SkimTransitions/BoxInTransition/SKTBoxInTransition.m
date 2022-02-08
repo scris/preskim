@@ -9,6 +9,7 @@
 #import "SKTBoxInTransition.h"
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import "SKTPluginLoader.h"
 
 @implementation SKTBoxInTransition
 
@@ -18,16 +19,8 @@ static CIKernel *_SKTBoxInTransitionKernel = nil;
 
 - (id)init
 {
-    if(_SKTBoxInTransitionKernel == nil)
-    {
-		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
-		NSStringEncoding encoding = NSUTF8StringEncoding;
-		NSError     *error = nil;
-		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTBoxInTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];
-		NSArray     *kernels = [CIKernel kernelsWithString:code];
-
-		_SKTBoxInTransitionKernel = [kernels firstObject];
-    }
+    if (_SKTBoxInTransitionKernel == nil)
+        _SKTBoxInTransitionKernel = [SKTPlugInLoader kernelWithName:@"boxInTransition"];
     return [super init];
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE399C2327B32B6200B454EB /* SKTTransitions.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CE399C2227B32B6200B454EB /* SKTTransitions.cikernel */; };
 		CEB35B4022A32FA70033E232 /* SKTRadialSwipeTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB35B3E22A32FA70033E232 /* SKTRadialSwipeTransition.m */; };
 		CEB35B4122A32FA70033E232 /* SKTRadialSwipeTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEB35B3F22A32FA70033E232 /* SKTRadialSwipeTransition.h */; };
 		CEBE8F0B22A19E850082E34C /* SKTPixelateTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEBE8F0922A19E850082E34C /* SKTPixelateTransition.h */; };
@@ -25,46 +26,33 @@
 		CEDA032A22958D1800881DE1 /* SKTCoverTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA031C22958D1800881DE1 /* SKTCoverTransition.m */; };
 		CEDA033922958F2100881DE1 /* SKTRevealTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA032E22958F2100881DE1 /* SKTRevealTransition.h */; };
 		CEDA033A22958F2100881DE1 /* SKTRevealTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA032F22958F2100881DE1 /* SKTRevealTransition.m */; };
-		CEDA03552295907000881DE1 /* SKTSplitInTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEDA03412295907000881DE1 /* SKTSplitInTransitionKernel.cikernel */; };
 		CEDA03562295907000881DE1 /* SKTSplitInTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA03422295907000881DE1 /* SKTSplitInTransition.m */; };
 		CEDA035B2295907000881DE1 /* SKTSplitInTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA034D2295907000881DE1 /* SKTSplitInTransition.h */; };
 		CEDA03782295914D00881DE1 /* SKTSplitOutTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA03672295914D00881DE1 /* SKTSplitOutTransition.h */; };
-		CEDA03792295914D00881DE1 /* SKTSplitOutTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEDA03682295914D00881DE1 /* SKTSplitOutTransitionKernel.cikernel */; };
 		CEDA037C2295914D00881DE1 /* SKTSplitOutTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA036E2295914D00881DE1 /* SKTSplitOutTransition.m */; };
 		CEDA03982295927100881DE1 /* SKTBoxInTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA03872295927100881DE1 /* SKTBoxInTransition.h */; };
 		CEDA039A2295927100881DE1 /* SKTBoxInTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA03892295927100881DE1 /* SKTBoxInTransition.m */; };
-		CEDA039B2295927100881DE1 /* SKTBoxInTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEDA038A2295927100881DE1 /* SKTBoxInTransitionKernel.cikernel */; };
 		CEDA03B92295933400881DE1 /* SKTBoxOutTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA03AB2295933300881DE1 /* SKTBoxOutTransition.m */; };
-		CEDA03BA2295933400881DE1 /* SKTBoxOutTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEDA03AC2295933300881DE1 /* SKTBoxOutTransitionKernel.cikernel */; };
 		CEDA03BD2295933400881DE1 /* SKTBoxOutTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA03AF2295933300881DE1 /* SKTBoxOutTransition.h */; };
-		CEDA03D8229593F200881DE1 /* SKTBlindsTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEDA03CA229593F200881DE1 /* SKTBlindsTransitionKernel.cikernel */; };
 		CEDA03DA229593F200881DE1 /* SKTBlindsTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA03CC229593F200881DE1 /* SKTBlindsTransition.h */; };
 		CEDA03DD229593F200881DE1 /* SKTBlindsTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA03CF229593F200881DE1 /* SKTBlindsTransition.m */; };
 		CEDA03F5229594A900881DE1 /* SKTRadarTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA03E1229594A900881DE1 /* SKTRadarTransition.m */; };
-		CEDA03FA229594A900881DE1 /* SKTRadarTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEDA03EC229594A900881DE1 /* SKTRadarTransitionKernel.cikernel */; };
 		CEDA03FB229594A900881DE1 /* SKTRadarTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA03ED229594A900881DE1 /* SKTRadarTransition.h */; };
 		CEDA0418229595C200881DE1 /* SKTStripsTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA0407229595C100881DE1 /* SKTStripsTransition.h */; };
 		CEDA041A229595C200881DE1 /* SKTStripsTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA040C229595C100881DE1 /* SKTStripsTransition.m */; };
-		CEDA041B229595C200881DE1 /* SKTStripsTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEDA040D229595C100881DE1 /* SKTStripsTransitionKernel.cikernel */; };
 		CEDA04392295969200881DE1 /* SKTMeltdownTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA04282295969100881DE1 /* SKTMeltdownTransition.h */; };
-		CEDA043A2295969200881DE1 /* SKTMeltdownTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEDA042C2295969100881DE1 /* SKTMeltdownTransitionKernel.cikernel */; };
 		CEDA043C2295969200881DE1 /* SKTMeltdownTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA042E2295969100881DE1 /* SKTMeltdownTransition.m */; };
 		CEDA04592295979C00881DE1 /* SKTAccelerationTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA044C2295979C00881DE1 /* SKTAccelerationTransition.h */; };
 		CEDA045F229597D700881DE1 /* SKTAccelerationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA045E229597D700881DE1 /* SKTAccelerationTransition.m */; };
 		CEDA04782295988900881DE1 /* SKTBlurTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA04682295988900881DE1 /* SKTBlurTransition.h */; };
 		CEDA047A2295988900881DE1 /* SKTBlurTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA046A2295988900881DE1 /* SKTBlurTransition.m */; };
-		CEDA04932295992700881DE1 /* SKTHoleTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEDA047F2295992600881DE1 /* SKTHoleTransitionKernel.cikernel */; };
 		CEDA04982295992700881DE1 /* SKTHoleTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA04872295992600881DE1 /* SKTHoleTransition.m */; };
 		CEDA049D2295992700881DE1 /* SKTHoleTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA048F2295992600881DE1 /* SKTHoleTransition.h */; };
 		CEDA04B522959A1000881DE1 /* SKTPinchTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA04A822959A1000881DE1 /* SKTPinchTransition.m */; };
 		CEDA04B722959A1000881DE1 /* SKTPinchTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA04AA22959A1000881DE1 /* SKTPinchTransition.h */; };
 		CEDA04D122959AB600881DE1 /* SKTSinkTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA04BD22959AB600881DE1 /* SKTSinkTransition.m */; };
-		CEDA04D522959AB600881DE1 /* SKTSinkTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEDA04C422959AB600881DE1 /* SKTSinkTransitionKernel.cikernel */; };
 		CEDA04D722959AB600881DE1 /* SKTSinkTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEDA04C922959AB600881DE1 /* SKTSinkTransition.h */; };
 		CEDA05612295BCB700881DE1 /* SKTSwapTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA05602295BCB700881DE1 /* SKTSwapTransition.m */; };
-		CEE293C4229AD55F007496ED /* SKTCoverTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEE293C3229AD2B3007496ED /* SKTCoverTransitionKernel.cikernel */; };
-		CEE293C6229AD83E007496ED /* SKTRevealTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEE293C5229AD81D007496ED /* SKTRevealTransitionKernel.cikernel */; };
-		CEE293C8229ADC6F007496ED /* SKTSlideTransitionKernel.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CEE293C7229ADC6F007496ED /* SKTSlideTransitionKernel.cikernel */; };
 		CEE293CC229AF48C007496ED /* SKTPageTurnTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEE293CA229AF48C007496ED /* SKTPageTurnTransition.h */; };
 		CEE293CD229AF48C007496ED /* SKTPageTurnTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE293CB229AF48C007496ED /* SKTPageTurnTransition.m */; };
 		CEF89FCD22993B1D007E4AB2 /* SKTWarpFadeTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF89FCB22993B1D007E4AB2 /* SKTWarpFadeTransition.m */; };
@@ -76,6 +64,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CE399C2227B32B6200B454EB /* SKTTransitions.cikernel */ = {isa = PBXFileReference; lastKnownFileType = text; path = SKTTransitions.cikernel; sourceTree = "<group>"; };
 		CEB35B3E22A32FA70033E232 /* SKTRadialSwipeTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTRadialSwipeTransition.m; sourceTree = "<group>"; };
 		CEB35B3F22A32FA70033E232 /* SKTRadialSwipeTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTRadialSwipeTransition.h; sourceTree = "<group>"; };
 		CEBE8F0922A19E850082E34C /* SKTPixelateTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTPixelateTransition.h; sourceTree = "<group>"; };
@@ -96,41 +85,31 @@
 		CEDA031C22958D1800881DE1 /* SKTCoverTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTCoverTransition.m; sourceTree = "<group>"; };
 		CEDA032E22958F2100881DE1 /* SKTRevealTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTRevealTransition.h; sourceTree = "<group>"; };
 		CEDA032F22958F2100881DE1 /* SKTRevealTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTRevealTransition.m; sourceTree = "<group>"; };
-		CEDA03412295907000881DE1 /* SKTSplitInTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTSplitInTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEDA03422295907000881DE1 /* SKTSplitInTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTSplitInTransition.m; sourceTree = "<group>"; };
 		CEDA034D2295907000881DE1 /* SKTSplitInTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTSplitInTransition.h; sourceTree = "<group>"; };
 		CEDA03672295914D00881DE1 /* SKTSplitOutTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTSplitOutTransition.h; sourceTree = "<group>"; };
-		CEDA03682295914D00881DE1 /* SKTSplitOutTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTSplitOutTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEDA036E2295914D00881DE1 /* SKTSplitOutTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTSplitOutTransition.m; sourceTree = "<group>"; };
 		CEDA03872295927100881DE1 /* SKTBoxInTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTBoxInTransition.h; sourceTree = "<group>"; };
 		CEDA03892295927100881DE1 /* SKTBoxInTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTBoxInTransition.m; sourceTree = "<group>"; };
-		CEDA038A2295927100881DE1 /* SKTBoxInTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTBoxInTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEDA03AB2295933300881DE1 /* SKTBoxOutTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTBoxOutTransition.m; sourceTree = "<group>"; };
-		CEDA03AC2295933300881DE1 /* SKTBoxOutTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTBoxOutTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEDA03AF2295933300881DE1 /* SKTBoxOutTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTBoxOutTransition.h; sourceTree = "<group>"; };
-		CEDA03CA229593F200881DE1 /* SKTBlindsTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTBlindsTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEDA03CC229593F200881DE1 /* SKTBlindsTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTBlindsTransition.h; sourceTree = "<group>"; };
 		CEDA03CF229593F200881DE1 /* SKTBlindsTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTBlindsTransition.m; sourceTree = "<group>"; };
 		CEDA03E1229594A900881DE1 /* SKTRadarTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTRadarTransition.m; sourceTree = "<group>"; };
-		CEDA03EC229594A900881DE1 /* SKTRadarTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTRadarTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEDA03ED229594A900881DE1 /* SKTRadarTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTRadarTransition.h; sourceTree = "<group>"; };
 		CEDA0407229595C100881DE1 /* SKTStripsTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTStripsTransition.h; sourceTree = "<group>"; };
 		CEDA040C229595C100881DE1 /* SKTStripsTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTStripsTransition.m; sourceTree = "<group>"; };
-		CEDA040D229595C100881DE1 /* SKTStripsTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTStripsTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEDA04282295969100881DE1 /* SKTMeltdownTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTMeltdownTransition.h; sourceTree = "<group>"; };
-		CEDA042C2295969100881DE1 /* SKTMeltdownTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTMeltdownTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEDA042E2295969100881DE1 /* SKTMeltdownTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTMeltdownTransition.m; sourceTree = "<group>"; };
 		CEDA044C2295979C00881DE1 /* SKTAccelerationTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTAccelerationTransition.h; sourceTree = "<group>"; };
 		CEDA045E229597D700881DE1 /* SKTAccelerationTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTAccelerationTransition.m; sourceTree = "<group>"; };
 		CEDA04682295988900881DE1 /* SKTBlurTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTBlurTransition.h; sourceTree = "<group>"; };
 		CEDA046A2295988900881DE1 /* SKTBlurTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTBlurTransition.m; sourceTree = "<group>"; };
-		CEDA047F2295992600881DE1 /* SKTHoleTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTHoleTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEDA04872295992600881DE1 /* SKTHoleTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTHoleTransition.m; sourceTree = "<group>"; };
 		CEDA048F2295992600881DE1 /* SKTHoleTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTHoleTransition.h; sourceTree = "<group>"; };
 		CEDA04A822959A1000881DE1 /* SKTPinchTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTPinchTransition.m; sourceTree = "<group>"; };
 		CEDA04AA22959A1000881DE1 /* SKTPinchTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTPinchTransition.h; sourceTree = "<group>"; };
 		CEDA04BD22959AB600881DE1 /* SKTSinkTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTSinkTransition.m; sourceTree = "<group>"; };
-		CEDA04C422959AB600881DE1 /* SKTSinkTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTSinkTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEDA04C922959AB600881DE1 /* SKTSinkTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTSinkTransition.h; sourceTree = "<group>"; };
 		CEDA052322959ECF00881DE1 /* de */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Description.strings; sourceTree = "<group>"; };
 		CEDA052522959ED800881DE1 /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Description.strings; sourceTree = "<group>"; };
@@ -144,9 +123,6 @@
 		CEDA053722959F6900881DE1 /* ja */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Description.strings; sourceTree = "<group>"; };
 		CEDA055F2295BCB700881DE1 /* SKTSwapTransition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKTSwapTransition.h; sourceTree = "<group>"; };
 		CEDA05602295BCB700881DE1 /* SKTSwapTransition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKTSwapTransition.m; sourceTree = "<group>"; };
-		CEE293C3229AD2B3007496ED /* SKTCoverTransitionKernel.cikernel */ = {isa = PBXFileReference; lastKnownFileType = text; path = SKTCoverTransitionKernel.cikernel; sourceTree = "<group>"; };
-		CEE293C5229AD81D007496ED /* SKTRevealTransitionKernel.cikernel */ = {isa = PBXFileReference; lastKnownFileType = text; path = SKTRevealTransitionKernel.cikernel; sourceTree = "<group>"; };
-		CEE293C7229ADC6F007496ED /* SKTSlideTransitionKernel.cikernel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SKTSlideTransitionKernel.cikernel; sourceTree = "<group>"; };
 		CEE293CA229AF48C007496ED /* SKTPageTurnTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTPageTurnTransition.h; sourceTree = "<group>"; };
 		CEE293CB229AF48C007496ED /* SKTPageTurnTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTPageTurnTransition.m; sourceTree = "<group>"; };
 		CEF89FCB22993B1D007E4AB2 /* SKTWarpFadeTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTWarpFadeTransition.m; sourceTree = "<group>"; };
@@ -191,6 +167,7 @@
 			children = (
 				CEDA02812295829B00881DE1 /* SKTPlugInLoader.h */,
 				CEDA02832295829B00881DE1 /* SKTPlugInLoader.m */,
+				CE399C2227B32B6200B454EB /* SKTTransitions.cikernel */,
 				CEDA02922295829B00881DE1 /* Info.plist */,
 				CEDA02A42295884500881DE1 /* Description.plist */,
 				CEDA029E2295884500881DE1 /* Description.strings */,
@@ -245,7 +222,6 @@
 			children = (
 				CEDA02B9229589C900881DE1 /* SKTSlideTransition.h */,
 				CEDA02BC229589C900881DE1 /* SKTSlideTransition.m */,
-				CEE293C7229ADC6F007496ED /* SKTSlideTransitionKernel.cikernel */,
 			);
 			path = SlideTransition;
 			sourceTree = "<group>";
@@ -273,7 +249,6 @@
 			children = (
 				CEDA031522958D1800881DE1 /* SKTCoverTransition.h */,
 				CEDA031C22958D1800881DE1 /* SKTCoverTransition.m */,
-				CEE293C3229AD2B3007496ED /* SKTCoverTransitionKernel.cikernel */,
 			);
 			path = CoverTransition;
 			sourceTree = "<group>";
@@ -283,7 +258,6 @@
 			children = (
 				CEDA032E22958F2100881DE1 /* SKTRevealTransition.h */,
 				CEDA032F22958F2100881DE1 /* SKTRevealTransition.m */,
-				CEE293C5229AD81D007496ED /* SKTRevealTransitionKernel.cikernel */,
 			);
 			path = RevealTransition;
 			sourceTree = "<group>";
@@ -293,7 +267,6 @@
 			children = (
 				CEDA034D2295907000881DE1 /* SKTSplitInTransition.h */,
 				CEDA03422295907000881DE1 /* SKTSplitInTransition.m */,
-				CEDA03412295907000881DE1 /* SKTSplitInTransitionKernel.cikernel */,
 			);
 			path = SplitInTransition;
 			sourceTree = "<group>";
@@ -303,7 +276,6 @@
 			children = (
 				CEDA03672295914D00881DE1 /* SKTSplitOutTransition.h */,
 				CEDA036E2295914D00881DE1 /* SKTSplitOutTransition.m */,
-				CEDA03682295914D00881DE1 /* SKTSplitOutTransitionKernel.cikernel */,
 			);
 			path = SplitOutTransition;
 			sourceTree = "<group>";
@@ -313,7 +285,6 @@
 			children = (
 				CEDA03872295927100881DE1 /* SKTBoxInTransition.h */,
 				CEDA03892295927100881DE1 /* SKTBoxInTransition.m */,
-				CEDA038A2295927100881DE1 /* SKTBoxInTransitionKernel.cikernel */,
 			);
 			path = BoxInTransition;
 			sourceTree = "<group>";
@@ -323,7 +294,6 @@
 			children = (
 				CEDA03AF2295933300881DE1 /* SKTBoxOutTransition.h */,
 				CEDA03AB2295933300881DE1 /* SKTBoxOutTransition.m */,
-				CEDA03AC2295933300881DE1 /* SKTBoxOutTransitionKernel.cikernel */,
 			);
 			path = BoxOutTransition;
 			sourceTree = "<group>";
@@ -333,7 +303,6 @@
 			children = (
 				CEDA03CC229593F200881DE1 /* SKTBlindsTransition.h */,
 				CEDA03CF229593F200881DE1 /* SKTBlindsTransition.m */,
-				CEDA03CA229593F200881DE1 /* SKTBlindsTransitionKernel.cikernel */,
 			);
 			path = BlindsTransition;
 			sourceTree = "<group>";
@@ -343,7 +312,6 @@
 			children = (
 				CEDA03ED229594A900881DE1 /* SKTRadarTransition.h */,
 				CEDA03E1229594A900881DE1 /* SKTRadarTransition.m */,
-				CEDA03EC229594A900881DE1 /* SKTRadarTransitionKernel.cikernel */,
 			);
 			path = RadarTransition;
 			sourceTree = "<group>";
@@ -353,7 +321,6 @@
 			children = (
 				CEDA0407229595C100881DE1 /* SKTStripsTransition.h */,
 				CEDA040C229595C100881DE1 /* SKTStripsTransition.m */,
-				CEDA040D229595C100881DE1 /* SKTStripsTransitionKernel.cikernel */,
 			);
 			path = StripsTransition;
 			sourceTree = "<group>";
@@ -363,7 +330,6 @@
 			children = (
 				CEDA04282295969100881DE1 /* SKTMeltdownTransition.h */,
 				CEDA042E2295969100881DE1 /* SKTMeltdownTransition.m */,
-				CEDA042C2295969100881DE1 /* SKTMeltdownTransitionKernel.cikernel */,
 			);
 			path = MeltdownTransition;
 			sourceTree = "<group>";
@@ -391,7 +357,6 @@
 			children = (
 				CEDA048F2295992600881DE1 /* SKTHoleTransition.h */,
 				CEDA04872295992600881DE1 /* SKTHoleTransition.m */,
-				CEDA047F2295992600881DE1 /* SKTHoleTransitionKernel.cikernel */,
 			);
 			path = HoleTransition;
 			sourceTree = "<group>";
@@ -410,7 +375,6 @@
 			children = (
 				CEDA04C922959AB600881DE1 /* SKTSinkTransition.h */,
 				CEDA04BD22959AB600881DE1 /* SKTSinkTransition.m */,
-				CEDA04C422959AB600881DE1 /* SKTSinkTransitionKernel.cikernel */,
 			);
 			path = SinkTransition;
 			sourceTree = "<group>";
@@ -555,21 +519,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEE293C6229AD83E007496ED /* SKTRevealTransitionKernel.cikernel in Resources */,
-				CEE293C4229AD55F007496ED /* SKTCoverTransitionKernel.cikernel in Resources */,
-				CEDA03552295907000881DE1 /* SKTSplitInTransitionKernel.cikernel in Resources */,
-				CEDA03792295914D00881DE1 /* SKTSplitOutTransitionKernel.cikernel in Resources */,
-				CEDA04D522959AB600881DE1 /* SKTSinkTransitionKernel.cikernel in Resources */,
-				CEDA039B2295927100881DE1 /* SKTBoxInTransitionKernel.cikernel in Resources */,
-				CEDA03BA2295933400881DE1 /* SKTBoxOutTransitionKernel.cikernel in Resources */,
+				CE399C2327B32B6200B454EB /* SKTTransitions.cikernel in Resources */,
 				CEDA02A82295884500881DE1 /* Description.strings in Resources */,
-				CEDA03FA229594A900881DE1 /* SKTRadarTransitionKernel.cikernel in Resources */,
-				CEDA03D8229593F200881DE1 /* SKTBlindsTransitionKernel.cikernel in Resources */,
-				CEDA041B229595C200881DE1 /* SKTStripsTransitionKernel.cikernel in Resources */,
 				CEDA02AD2295884500881DE1 /* Description.plist in Resources */,
-				CEDA043A2295969200881DE1 /* SKTMeltdownTransitionKernel.cikernel in Resources */,
-				CEE293C8229ADC6F007496ED /* SKTSlideTransitionKernel.cikernel in Resources */,
-				CEDA04932295992700881DE1 /* SKTHoleTransitionKernel.cikernel in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
