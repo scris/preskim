@@ -9,6 +9,7 @@
 #import "SKTSinkTransition.h"
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import "SKTPluginLoader.h"
 
 @implementation SKTSinkTransition
 
@@ -18,16 +19,8 @@ static CIKernel *_SKTSinkTransitionKernel = nil;
 
 - (id)init
 {
-    if(_SKTSinkTransitionKernel == nil)
-    {
-		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
-		NSStringEncoding encoding = NSUTF8StringEncoding;
-		NSError     *error = nil;
-		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTSinkTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];
-		NSArray     *kernels = [CIKernel kernelsWithString:code];
-
-		_SKTSinkTransitionKernel = [kernels firstObject];
-    }
+    if (_SKTSinkTransitionKernel == nil)
+        _SKTSinkTransitionKernel = [SKTPlugInLoader kernelWithName:@"sinkTransition"];
     return [super init];
 }
 

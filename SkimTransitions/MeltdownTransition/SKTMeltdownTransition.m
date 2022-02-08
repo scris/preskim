@@ -9,6 +9,7 @@
 #import "SKTMeltdownTransition.h"
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import "SKTPluginLoader.h"
 
 #define kCIInputAmountKey @"inputAmount"
 
@@ -20,16 +21,8 @@ static CIKernel *_SKTMeltdownTransitionKernel = nil;
 
 - (id)init
 {
-    if(_SKTMeltdownTransitionKernel == nil)
-    {
-		NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
-		NSStringEncoding encoding = NSUTF8StringEncoding;
-		NSError     *error = nil;
-		NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTMeltdownTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];
-		NSArray     *kernels = [CIKernel kernelsWithString:code];
-
-		_SKTMeltdownTransitionKernel = [kernels firstObject];
-    }
+    if (_SKTMeltdownTransitionKernel == nil)
+        _SKTMeltdownTransitionKernel = [SKTPlugInLoader kernelWithName:@"meltingTransition"];
     return [super init];
 }
 

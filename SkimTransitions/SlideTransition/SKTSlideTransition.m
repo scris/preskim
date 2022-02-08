@@ -9,6 +9,7 @@
 #import "SKTSlideTransition.h"
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import "SKTPluginLoader.h"
 
 #define kCIInputRectangleKey @"inputRectangle"
 
@@ -20,16 +21,8 @@ static CIKernel *_SKTSlideTransitionKernel = nil;
 
 - (id)init
 {
-    if(_SKTSlideTransitionKernel == nil)
-    {
-        NSBundle    *bundle = [NSBundle bundleForClass:[self class]];
-        NSStringEncoding encoding = NSUTF8StringEncoding;
-        NSError     *error = nil;
-        NSString    *code = [NSString stringWithContentsOfFile:[bundle pathForResource:@"SKTSlideTransitionKernel" ofType:@"cikernel"] encoding:encoding error:&error];
-        NSArray     *kernels = [CIKernel kernelsWithString:code];
-        
-        _SKTSlideTransitionKernel = [kernels firstObject];
-    }
+    if (_SKTSlideTransitionKernel == nil)
+        _SKTSlideTransitionKernel = [SKTPlugInLoader kernelWithName:@"slideTransition"];
     return [super init];
 }
 

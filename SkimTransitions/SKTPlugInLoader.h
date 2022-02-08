@@ -12,4 +12,6 @@
 
 - (BOOL)load:(void *)host;
 
++ (CIKernel *)kernelWithName:(NSString *)name;
+
 @end
