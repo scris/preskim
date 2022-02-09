@@ -27,7 +27,7 @@ kernel vec4 coverComposition(sampler front, sampler back, vec4 extent, vec2 offs
     p1 = sample(back, samplerTransform(back, destCoord()));
     p2 = sample(front, samplerTransform(front, t1));
     p2 = t1.x < extent.x ? vec4(0.0) : (t1.x > extent.x + extent.z ? vec4(0.0) : (t1.y < extent.y ? vec4(0.0) : (t1.y > extent.y + extent.w ? vec4(0.0) : p2)));
-    p1.rgb = shade * p1.rgb;
+    p1.rgb *= shade;
     
     return p2 + (1.0 - p2.a) * p1;
 }
@@ -52,7 +52,7 @@ kernel vec4 meltingTransition(sampler src, sampler trgt, sampler mask, float amo
     t1 = destCoord();
     t2 = t1 + vec2(0.0, radius);
     m = sample(mask, samplerTransform(mask, t2));
-    t3 = t2 + vec2(0.0,  amount * (m.r + m.g + m.b) / 3.0);
+    t3 = t2 + vec2(0.0, amount * (m.r + m.g + m.b) / 3.0);
     
     p1 = sample(src, samplerTransform(src, t3));
     extent = samplerExtent(src);
@@ -76,7 +76,7 @@ kernel vec4 radarTransition(sampler src, sampler trgt, vec2 center, float angle,
     
     t1 = destCoord() - center;
     a1 = 0.5 * pi - atan(t1.x, t1.y);
-    da1 = mod(angle - a1  + 0.5 * width, pi2);
+    da1 = mod(angle - a1 + 0.5 * width, pi2);
     da2 = mod(da1 + pi, pi2) - pi;
     angle1 = 2.0 * (pi + width) * t;
     
