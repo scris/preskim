@@ -20,7 +20,7 @@ static CIKernel *_SKTSplitInTransitionKernel = nil;
 - (id)init
 {
     if (_SKTSplitInTransitionKernel == nil)
-        _SKTSplitInTransitionKernel = [SKTPlugInLoader kernelWithName:@"splitInTransition"];
+        _SKTSplitInTransitionKernel = [SKTPlugInLoader kernelWithName:@"boxComposition"];
     return [super init];
 }
 
@@ -65,8 +65,11 @@ static CIKernel *_SKTSplitInTransitionKernel = nil;
     CGFloat y = [inputExtent Y];
     CGFloat width = [inputExtent Z];
     CGFloat height = [inputExtent W];
-    NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithDouble:x], [NSNumber numberWithDouble:y], [NSNumber numberWithDouble:width], [NSNumber numberWithDouble:height], nil];
-    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, inputCenter, inputTime, nil];
+    CGFloat cx = [inputCenter X];
+    CGFloat t = [inputTime doubleValue];
+    CIVector *rect = [CIVector vectorWithX:t * cx + (1.0 - t) * x Y:y Z:(1.0 - t) * width W:height];
+   NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithDouble:x], [NSNumber numberWithDouble:y], [NSNumber numberWithDouble:width], [NSNumber numberWithDouble:height], nil];
+    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, rect, nil];
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, nil];
     
     return [self apply:_SKTSplitInTransitionKernel arguments:arguments options:options];

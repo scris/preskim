@@ -20,7 +20,7 @@ static CIKernel *_SKTStripsTransitionKernel = nil;
 - (id)init
 {
     if (_SKTStripsTransitionKernel == nil)
-        _SKTStripsTransitionKernel = [SKTPlugInLoader kernelWithName:@"splitTransition"];
+        _SKTStripsTransitionKernel = [SKTPlugInLoader kernelWithName:@"stripsTransition"];
     return [super init];
 }
 

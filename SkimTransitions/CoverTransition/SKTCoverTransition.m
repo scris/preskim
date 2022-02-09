@@ -22,7 +22,7 @@ static CIKernel *_SKTCoverTransitionKernel = nil;
 - (id)init
 {
     if (_SKTCoverTransitionKernel == nil)
-        _SKTCoverTransitionKernel = [SKTPlugInLoader kernelWithName:@"coverTransition"];
+        _SKTCoverTransitionKernel = [SKTPlugInLoader kernelWithName:@"coverComposition"];
     return [super init];
 }
 
@@ -80,9 +80,10 @@ static CIKernel *_SKTCoverTransitionKernel = nil;
     CGFloat c = cos(angle);
     CGFloat s = sin(angle);
     CGFloat d = [inputExtent Z] * (1.0 - t) / fmax(fabs(c), fabs(s));
+    NSNumber *shade = [NSNumber numberWithDouble:1.0 - 0.2 * t];
     CIVector *offset = [CIVector vectorWithX:d * c Y:d * s];
     NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithDouble:[inputExtent X]], [NSNumber numberWithDouble:[inputExtent Y]], [NSNumber numberWithDouble:[inputExtent Z]], [NSNumber numberWithDouble:[inputExtent W]], nil];
-    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, offset, inputTime, nil];
+    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, offset, shade, nil];
     NSDictionary *options  = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, offset, kCIApplyOptionUserInfo, nil];
     
     [_SKTCoverTransitionKernel setROISelector:@selector(regionOf:destRect:userInfo:)];
