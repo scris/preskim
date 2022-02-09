@@ -22,7 +22,7 @@ static CIKernel *_SKTSlideTransitionKernel = nil;
 - (id)init
 {
     if (_SKTSlideTransitionKernel == nil)
-        _SKTSlideTransitionKernel = [SKTPlugInLoader kernelWithName:@"slideTransition"];
+        _SKTSlideTransitionKernel = [SKTPlugInLoader kernelWithName:@"offsetComposition"];
     return [super init];
 }
 
@@ -81,8 +81,9 @@ static CIKernel *_SKTSlideTransitionKernel = nil;
     CGFloat d2 = [inputExtent Z] * (t - 1.0) / fmax(fabs(c), fabs(s));
     CIVector *offset1 = [CIVector vectorWithX:d1 * c Y:d1 * s];
     CIVector *offset2 = [CIVector vectorWithX:d2 * c Y:d2 * s];
+    NSNumber *one = [NSNumber numberWithDouble:1.0];
     NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithDouble:[inputExtent X]], [NSNumber numberWithDouble:[inputExtent Y]], [NSNumber numberWithDouble:[inputExtent Z]], [NSNumber numberWithDouble:[inputExtent W]], nil];
-    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, offset1, offset2, nil];
+    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, offset1, offset2, one, nil];
     NSArray *userInfo = [NSArray arrayWithObjects:offset1, offset2, nil];
     NSDictionary *options  = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, userInfo, kCIApplyOptionUserInfo, nil];
     

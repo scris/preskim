@@ -22,7 +22,7 @@ static CIKernel *_SKTRevealTransitionKernel = nil;
 - (id)init
 {
     if (_SKTRevealTransitionKernel == nil)
-        _SKTRevealTransitionKernel = [SKTPlugInLoader kernelWithName:@"coverComposition"];
+        _SKTRevealTransitionKernel = [SKTPlugInLoader kernelWithName:@"offsetComposition"];
     return [super init];
 }
 
@@ -65,7 +65,7 @@ static CIKernel *_SKTRevealTransitionKernel = nil;
 
 - (CGRect)regionOf:(int)sampler destRect:(CGRect)R userInfo:(CIVector *)offset {
     if (sampler == 0) {
-        R = CGRectOffset(R, -[offset X], -[offset Y]);
+        R = CGRectOffset(R, [offset X], [offset Y]);
     }
     return R;
 }
@@ -79,12 +79,13 @@ static CIKernel *_SKTRevealTransitionKernel = nil;
     CGFloat angle = [inputAngle doubleValue];
     CGFloat c = cos(angle);
     CGFloat s = sin(angle);
-    CGFloat d = -[inputExtent Z] * t / fmax(fabs(c), fabs(s));
+    CGFloat d = [inputExtent Z] * t / fmax(fabs(c), fabs(s));
     NSNumber *shade = [NSNumber numberWithDouble:0.8 + 0.2 * t];
-    CIVector *offset = [CIVector vectorWithX:d * c Y:d * s];
+    CIVector *offset1 = [CIVector vectorWithX:d * c Y:d * s];
+    CIVector *offset2 = [CIVector vectorWithX:0.0 Y:0.0];
     NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithFloat:[inputExtent X]], [NSNumber numberWithFloat:[inputExtent Y]], [NSNumber numberWithFloat:[inputExtent Z]], [NSNumber numberWithFloat:[inputExtent W]], nil];
-    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, offset, shade, nil];
-    NSDictionary *options  = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, offset, kCIApplyOptionUserInfo, nil];
+    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, offset1, offset2, shade, nil];
+    NSDictionary *options  = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, offset1, kCIApplyOptionUserInfo, nil];
     
     [_SKTRevealTransitionKernel setROISelector:@selector(regionOf:destRect:userInfo:)];
     

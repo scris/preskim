@@ -18,18 +18,20 @@ kernel vec4 boxComposition(sampler front, sampler back, vec4 rect)
     return dot(step(rect.xy, t1), step(t1, rect.xy + rect.zw)) < 2.0 ? sample(back, samplerCoord(back)) : sample(front, samplerCoord(front));
 }
 
-kernel vec4 coverComposition(sampler front, sampler back, vec4 extent, vec2 offset, float shade)
+kernel vec4 offsetComposition(sampler front, sampler back, vec4 extent, vec2 offset1, vec2 offset2, float darken)
 {
-    vec2 t1;
+    vec2 t1, t2;
     vec4 p1, p2;
     
-    t1 = destCoord() - offset;
-    p1 = sample(back, samplerTransform(back, destCoord()));
-    p2 = sample(front, samplerTransform(front, t1));
-    p2 = t1.x < extent.x ? vec4(0.0) : (t1.x > extent.x + extent.z ? vec4(0.0) : (t1.y < extent.y ? vec4(0.0) : (t1.y > extent.y + extent.w ? vec4(0.0) : p2)));
-    p1.rgb *= shade;
+    t1 = destCoord() + offset1;
+    t2 = destCoord() + offset2;
+    p1 = sample(front, samplerTransform(front, t1));
+    p2 = sample(back, samplerTransform(back, t2));
+    p1 = t1.x < extent.x ? vec4(0.0) : (t1.x > extent.x + extent.z ? vec4(0.0) : (t1.y < extent.y ? vec4(0.0) : (t1.y > extent.y + extent.w ? vec4(0.0) : p1)));
+    p2 = t2.x < extent.x ? vec4(0.0) : (t2.x > extent.x + extent.z ? vec4(0.0) : (t2.y < extent.y ? vec4(0.0) : (t2.y > extent.y + extent.w ? vec4(0.0) : p2)));
+    p2.rgb *= darken;
     
-    return p2 + (1.0 - p2.a) * p1;
+    return p1 + (1.0 - p1.a) * p2;
 }
 
 kernel vec4 holeDistortion(sampler src, sampler trgt, vec2 center, float radius)  {
@@ -117,21 +119,6 @@ kernel vec4 sinkTransition(sampler src, sampler trgt, vec2 center, float t)
     p1 = loc.x < extent.x ? vec4(0.0) : (loc.x > extent.x + extent.z ? vec4(0.0) : (loc.y < extent.y ? vec4(0.0) : (loc.y > extent.y + extent.w ? vec4(0.0) : p1)));
 
     p2 = sample(trgt, samplerTransform(trgt, destCoord()));
-
-    return p1 + (1.0 - p1.a) * p2;
-}
-
-kernel vec4 slideTransition(sampler src, sampler trgt, vec4 extent, vec2 offset1, vec2 offset2)
-{
-    vec2 t1, t2;
-    vec4 p1, p2;
-    
-    t1 = destCoord() + offset1;
-    t2 = destCoord() + offset2;
-    p1 = sample(src, samplerTransform(src, t1));
-    p2 = sample(trgt, samplerTransform(trgt, t2));
-    p1 = t1.x < extent.x ? vec4(0.0) : (t1.x > extent.x + extent.z ? vec4(0.0) : (t1.y < extent.y ? vec4(0.0) : (t1.y > extent.y + extent.w ? vec4(0.0) : p1)));
-    p2 = t2.x < extent.x ? vec4(0.0) : (t2.x > extent.x + extent.z ? vec4(0.0) : (t2.y < extent.y ? vec4(0.0) : (t2.y > extent.y + extent.w ? vec4(0.0) : p2)));
 
     return p1 + (1.0 - p1.a) * p2;
 }
