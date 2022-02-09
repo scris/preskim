@@ -34,7 +34,7 @@ kernel vec4 coverComposition(sampler back, sampler front, vec4 extent, vec2 offs
     p2 = sample(front, samplerTransform(front, t1));
     p2 = t1.x < extent.x ? vec4(0.0) : (t1.x > extent.x + extent.z ? vec4(0.0) : (t1.y < extent.y ? vec4(0.0) : (t1.y > extent.y + extent.w ? vec4(0.0) : p2)));
     p1.rgb = shade * p1.rgb;
-
+    
     return p2 + (1.0 - p2.a) * p1;
 }
 
