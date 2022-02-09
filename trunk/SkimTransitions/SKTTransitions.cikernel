@@ -9,22 +9,16 @@ kernel vec4 blindsTransition(sampler src, sampler trgt, float width, float t)
     return d1 < width * t ? sample(trgt, samplerCoord(trgt)) : sample(src, samplerCoord(src));
 }
 
-kernel vec4 boxComposition(sampler src, sampler trgt, vec4 rect)
+kernel vec4 boxComposition(sampler front, sampler back, vec4 rect)
 {
-    vec2 t1, r1, r2;
-    float d1;
+    vec2 t1;
     
     t1 = destCoord();
     
-    r1 = rect.xy;
-    r2 = rect.xy + rect.zw;
-    
-    d1 = step(r1.x, t1.x) * step(t1.x, r2.x) * step(r1.y, t1.y) * step(t1.y, r2.y);
-    
-    return d1 < 0.5 ? sample(trgt, samplerCoord(trgt)) : sample(src, samplerCoord(src));
+    return dot(step(rect.xy, t1), step(t1, rect.xy + rect.zw)) < 2.0 ? sample(back, samplerCoord(back)) : sample(front, samplerCoord(front));
 }
 
-kernel vec4 coverComposition(sampler back, sampler front, vec4 extent, vec2 offset, float shade)
+kernel vec4 coverComposition(sampler front, sampler back, vec4 extent, vec2 offset, float shade)
 {
     vec2 t1;
     vec4 p1, p2;

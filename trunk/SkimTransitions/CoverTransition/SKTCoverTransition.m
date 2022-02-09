@@ -64,7 +64,7 @@ static CIKernel *_SKTCoverTransitionKernel = nil;
 }
 
 - (CGRect)regionOf:(int)sampler destRect:(CGRect)R userInfo:(CIVector *)offset {
-    if (sampler == 1) {
+    if (sampler == 0) {
         R = CGRectOffset(R, -[offset X], -[offset Y]);
     }
     return R;
@@ -83,7 +83,7 @@ static CIKernel *_SKTCoverTransitionKernel = nil;
     NSNumber *shade = [NSNumber numberWithDouble:1.0 - 0.2 * t];
     CIVector *offset = [CIVector vectorWithX:d * c Y:d * s];
     NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithDouble:[inputExtent X]], [NSNumber numberWithDouble:[inputExtent Y]], [NSNumber numberWithDouble:[inputExtent Z]], [NSNumber numberWithDouble:[inputExtent W]], nil];
-    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, offset, shade, nil];
+    NSArray *arguments = [NSArray arrayWithObjects:trgt, src, inputExtent, offset, shade, nil];
     NSDictionary *options  = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, offset, kCIApplyOptionUserInfo, nil];
     
     [_SKTCoverTransitionKernel setROISelector:@selector(regionOf:destRect:userInfo:)];
