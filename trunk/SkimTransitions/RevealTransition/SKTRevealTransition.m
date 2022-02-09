@@ -22,7 +22,7 @@ static CIKernel *_SKTRevealTransitionKernel = nil;
 - (id)init
 {
     if (_SKTRevealTransitionKernel == nil)
-        _SKTRevealTransitionKernel = [SKTPlugInLoader kernelWithName:@"revealTransition"];
+        _SKTRevealTransitionKernel = [SKTPlugInLoader kernelWithName:@"coverComposition"];
     return [super init];
 }
 
@@ -64,8 +64,8 @@ static CIKernel *_SKTRevealTransitionKernel = nil;
 }
 
 - (CGRect)regionOf:(int)sampler destRect:(CGRect)R userInfo:(CIVector *)offset {
-    if (sampler == 0) {
-        R = CGRectOffset(R, [offset X], [offset Y]);
+    if (sampler == 1) {
+        R = CGRectOffset(R, -[offset X], -[offset Y]);
     }
     return R;
 }
@@ -75,14 +75,15 @@ static CIKernel *_SKTRevealTransitionKernel = nil;
 {
     CISampler *src = [CISampler samplerWithImage:inputImage];
     CISampler *trgt = [CISampler samplerWithImage:inputTargetImage];
-     CGFloat t = [inputTime doubleValue];
+    CGFloat t = [inputTime doubleValue];
     CGFloat angle = [inputAngle doubleValue];
     CGFloat c = cos(angle);
     CGFloat s = sin(angle);
-    CGFloat d = [inputExtent Z] * t / fmax(fabs(c), fabs(s));
+    CGFloat d = -[inputExtent Z] * t / fmax(fabs(c), fabs(s));
+    NSNumber *shade = [NSNumber numberWithDouble:0.8 + 0.2 * t];
     CIVector *offset = [CIVector vectorWithX:d * c Y:d * s];
     NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithFloat:[inputExtent X]], [NSNumber numberWithFloat:[inputExtent Y]], [NSNumber numberWithFloat:[inputExtent Z]], [NSNumber numberWithFloat:[inputExtent W]], nil];
-    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, offset, inputTime, nil];
+    NSArray *arguments = [NSArray arrayWithObjects:trgt, src, inputExtent, offset, shade, nil];
     NSDictionary *options  = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, offset, kCIApplyOptionUserInfo, nil];
     
     [_SKTRevealTransitionKernel setROISelector:@selector(regionOf:destRect:userInfo:)];

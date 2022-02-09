@@ -20,7 +20,7 @@ static CIKernel *_SKTBoxInTransitionKernel = nil;
 - (id)init
 {
     if (_SKTBoxInTransitionKernel == nil)
-        _SKTBoxInTransitionKernel = [SKTPlugInLoader kernelWithName:@"boxInTransition"];
+        _SKTBoxInTransitionKernel = [SKTPlugInLoader kernelWithName:@"boxComposition"];
     return [super init];
 }
 
@@ -65,8 +65,12 @@ static CIKernel *_SKTBoxInTransitionKernel = nil;
     CGFloat y = [inputExtent Y];
     CGFloat width = [inputExtent Z];
     CGFloat height = [inputExtent W];
+    CGFloat cx = [inputCenter X];
+    CGFloat cy = [inputCenter Y];
+    CGFloat t = [inputTime doubleValue];
+    CIVector *rect = [CIVector vectorWithX:t * cx + (1.0 - t) * x Y:t * cy + (1.0 - t) * y Z:(1.0 - t) * width W:(1.0 - t) * height];
     NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithDouble:x], [NSNumber numberWithDouble:y], [NSNumber numberWithDouble:width], [NSNumber numberWithDouble:height], nil];
-    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, inputCenter, inputTime, nil];
+    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, rect, nil];
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, nil];
     
     return [self apply:_SKTBoxInTransitionKernel arguments:arguments options:options];

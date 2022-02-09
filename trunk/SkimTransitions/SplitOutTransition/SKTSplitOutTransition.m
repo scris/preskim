@@ -20,7 +20,7 @@ static CIKernel *_SKTSplitOutTransitionKernel = nil;
 - (id)init
 {
     if (_SKTSplitOutTransitionKernel == nil)
-        _SKTSplitOutTransitionKernel = [SKTPlugInLoader kernelWithName:@"splitOutTransition"];
+        _SKTSplitOutTransitionKernel = [SKTPlugInLoader kernelWithName:@"boxComposition"];
     return [super init];
 }
 
@@ -65,8 +65,11 @@ static CIKernel *_SKTSplitOutTransitionKernel = nil;
     CGFloat y = [inputExtent Y];
     CGFloat width = [inputExtent Z];
     CGFloat height = [inputExtent W];
+    CGFloat cx = [inputCenter X];
+    CGFloat t = [inputTime doubleValue];
+    CIVector *rect = [CIVector vectorWithX:(1.0 - t) * cx + t * x Y:y Z:t * width W:height];
     NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithDouble:x], [NSNumber numberWithDouble:y], [NSNumber numberWithDouble:width], [NSNumber numberWithDouble:height], nil];
-    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, inputCenter, inputTime, nil];
+    NSArray *arguments = [NSArray arrayWithObjects:trgt, src, rect, nil];
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, nil];
     
     return [self apply:_SKTSplitOutTransitionKernel arguments:arguments options:options];
