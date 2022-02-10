@@ -13,7 +13,7 @@ kernel vec4 boxComposition(sampler front, sampler back, vec4 rect)
     
     t1 = destCoord();
     
-    return all(greaterThan(t1, rect.xy)) && all(lessThan(t1, rect.xy + rect.zw)) ? sample(front, samplerCoord(front)) : sample(back, samplerCoord(back));
+    return any(lessThan(t1, rect.xy)) || any(greaterThan(t1, rect.xy + rect.zw)) ? sample(back, samplerCoord(back)) : sample(front, samplerCoord(front));
 }
 
 kernel vec4 offsetComposition(sampler front, sampler back, vec4 extent, vec2 offset1, vec2 offset2, float darken)
