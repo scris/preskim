@@ -25,7 +25,7 @@ kernel vec4 offsetComposition(sampler front, sampler back, vec4 extent, vec2 off
     t1 = t0 + offset1;
     t2 = t0 + offset2;
     p1 = any(lessThan(t1, extent.xy)) || any(greaterThan(t1, extent.xy + extent.zw)) ? vec4(0.0) : sample(front, samplerTransform(front, t1));
-    p1 = any(lessThan(t2, extent.xy)) || any(greaterThan(t2, extent.xy + extent.zw)) ? vec4(0.0) : sample(back, samplerTransform(back, t2));
+    p2 = any(lessThan(t2, extent.xy)) || any(greaterThan(t2, extent.xy + extent.zw)) ? vec4(0.0) : sample(back, samplerTransform(back, t2));
     p2.rgb *= darken;
     
     return p1 + (1.0 - p1.a) * p2;
