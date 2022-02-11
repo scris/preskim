@@ -15,7 +15,7 @@ kernel vec4 boxComposition(sampler front, sampler back, vec4 rect)
     
     t1 = destCoord();
     
-    return any(lessThan(t1, rect.xy)) || any(greaterThan(t1, rect.xy + rect.zw)) ? sample(back, samplerTransform(back, t1)) : sample(front, samplerTransform(front, t1));
+    return any(lessThan(t1, rect.xy)) || any(greaterThanEqual(t1, rect.xy + rect.zw)) ? sample(back, samplerTransform(back, t1)) : sample(front, samplerTransform(front, t1));
 }
 
 kernel vec4 offsetComposition(sampler front, sampler back, vec4 extent, vec2 offset1, vec2 offset2, float darken)
@@ -26,8 +26,8 @@ kernel vec4 offsetComposition(sampler front, sampler back, vec4 extent, vec2 off
     t0 = destCoord();
     t1 = t0 + offset1;
     t2 = t0 + offset2;
-    p1 = any(lessThan(t1, extent.xy)) || any(greaterThan(t1, extent.xy + extent.zw)) ? vec4(0.0) : sample(front, samplerTransform(front, t1));
-    p2 = any(lessThan(t2, extent.xy)) || any(greaterThan(t2, extent.xy + extent.zw)) ? vec4(0.0) : sample(back, samplerTransform(back, t2));
+    p1 = any(lessThan(t1, extent.xy)) || any(greaterThanEqual(t1, extent.xy + extent.zw)) ? vec4(0.0) : sample(front, samplerTransform(front, t1));
+    p2 = any(lessThan(t2, extent.xy)) || any(greaterThanEqual(t2, extent.xy + extent.zw)) ? vec4(0.0) : sample(back, samplerTransform(back, t2));
     p2.rgb *= darken;
     
     return p1 + (1.0 - p1.a) * p2;
@@ -56,10 +56,10 @@ kernel vec4 meltingTransition(sampler src, sampler trgt, sampler mask, float amo
     t3 = t2 + vec2(0.0, amount * (m.r + m.g + m.b) / 3.0);
     
     extent = samplerExtent(src);
-    p1 = any(lessThan(t3, extent.xy)) || any(greaterThan(t3, extent.xy + extent.zw)) ? vec4(0.0) : sample(src, samplerTransform(src, t3));
+    p1 = any(lessThan(t3, extent.xy)) || any(greaterThanEqual(t3, extent.xy + extent.zw)) ? vec4(0.0) : sample(src, samplerTransform(src, t3));
     
     extent = samplerExtent(trgt);
-    p2 = any(lessThan(t1, extent.xy)) || any(greaterThan(t1, extent.xy + extent.zw)) ? vec4(0.0) : sample(trgt, samplerTransform(trgt, t1));
+    p2 = any(lessThan(t1, extent.xy)) || any(greaterThanEqual(t1, extent.xy + extent.zw)) ? vec4(0.0) : sample(trgt, samplerTransform(trgt, t1));
     
     return p1 + (1.0 - p1.a) * p2;
 }
@@ -112,7 +112,7 @@ kernel vec4 sinkTransition(sampler src, sampler trgt, vec2 center, float t)
     r /= factor;
     loc = vec2(r * cos(a), r * sin(a));
 
-    p1 = any(lessThan(loc, extent.xy)) || any(greaterThan(loc, extent.xy + extent.zw)) ? vec4(0.0) : sample(src, samplerTransform(src, loc + center));
+    p1 = any(lessThan(loc, extent.xy)) || any(greaterThanEqual(loc, extent.xy + extent.zw)) ? vec4(0.0) : sample(src, samplerTransform(src, loc + center));
 
     p2 = sample(trgt, samplerTransform(trgt, destCoord()));
 
