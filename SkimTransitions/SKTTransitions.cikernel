@@ -6,7 +6,7 @@ kernel vec4 blindsTransition(sampler src, sampler trgt, float width, float t)
     t1 = destCoord();
     d1 = mod(-t1.y, width);
     
-    return d1 < width * t ? sample(trgt, samplerTransform(trgt, t1)) : sample(src, samplerTransform(src, t1));
+    return d1 < width * t ? sample(trgt, samplerCoord(trgt)) : sample(src, samplerCoord(src));
 }
 
 kernel vec4 boxComposition(sampler front, sampler back, vec4 rect)
@@ -15,7 +15,7 @@ kernel vec4 boxComposition(sampler front, sampler back, vec4 rect)
     
     t1 = destCoord();
     
-    return any(lessThan(t1, rect.xy)) || any(greaterThanEqual(t1, rect.xy + rect.zw)) ? sample(back, samplerTransform(back, t1)) : sample(front, samplerTransform(front, t1));
+    return any(lessThan(t1, rect.xy)) || any(greaterThanEqual(t1, rect.xy + rect.zw)) ? sample(back, samplerCoord(back)) : sample(front, samplerCoord(front));
 }
 
 kernel vec4 offsetComposition(sampler front, sampler back, vec4 extent, vec2 offset1, vec2 offset2, float darken)
@@ -42,7 +42,7 @@ kernel vec4 holeDistortion(sampler src, sampler trgt, vec2 center, float radius)
     distsquare = dot(t1, t1);
     t1 = t1 * (1.0 - (rsquare / distsquare)) + center;
     
-    return distsquare < rsquare ? sample(trgt, samplerTransform(trgt, destCoord())) : sample(src, samplerTransform(src, t1));
+    return distsquare < rsquare ? sample(trgt, samplerCoord(trgt)) : sample(src, samplerTransform(src, t1));
 }
 
 kernel vec4 meltingTransition(sampler src, sampler trgt, sampler mask, float amount, float radius)
@@ -79,8 +79,8 @@ kernel vec4 radarTransition(sampler src, sampler trgt, vec2 center, float angle,
     da2 = mod(da1 + pi, pi2) - pi;
     angle1 = 2.0 * (pi + width) * t;
     
-    p1 = sample(src, samplerTransform(src, destCoord()));
-    p2 = sample(trgt, samplerTransform(trgt, destCoord()));
+    p1 = sample(src, samplerCoord(src));
+    p2 = sample(trgt, samplerCoord(trgt));
     x = angle1 > pi2 ? 1.0 - smoothstep(-width, 0.0, -da2) * smoothstep(-width, 0.0, da2 - angle1 + pi2) : smoothstep(0.0, width, da1) * smoothstep(0.0, width, angle1 - da1);
     
     return mix(p1, p2, x);
