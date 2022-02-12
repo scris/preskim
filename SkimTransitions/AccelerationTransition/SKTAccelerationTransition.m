@@ -55,7 +55,7 @@
     CGFloat t = [inputTime doubleValue];
     CGFloat t1 = fmin(fmax(2.0 * t - 0.5, 0.0), 1.0);
     CGFloat amount = 400.0 * (0.5 - fabs(0.5 - t));
-    CGRect extent = CGRectMake([inputExtent X], [inputExtent Y], [inputExtent Z], [inputExtent W]);
+    CGRect extent = [inputExtent CGRectValue];
     
     CIFilter *dissolveFilter = [CIFilter filterWithName:@"CIDissolveTransition"];
     [dissolveFilter setValue:inputImage forKey:kCIInputImageKey];
