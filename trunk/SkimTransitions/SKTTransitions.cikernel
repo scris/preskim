@@ -18,21 +18,6 @@ kernel vec4 boxComposition(sampler front, sampler back, vec4 rect)
     return any(lessThan(t1, rect.xy)) || any(greaterThanEqual(t1, rect.xy + rect.zw)) ? sample(back, samplerCoord(back)) : sample(front, samplerCoord(front));
 }
 
-kernel vec4 offsetComposition(sampler front, sampler back, vec4 extent, vec2 offset1, vec2 offset2, float darken)
-{
-    vec2 t0, t1, t2;
-    vec4 p1, p2;
-    
-    t0 = destCoord();
-    t1 = t0 + offset1;
-    t2 = t0 + offset2;
-    p1 = any(lessThan(t1, extent.xy)) || any(greaterThanEqual(t1, extent.xy + extent.zw)) ? vec4(0.0) : sample(front, samplerTransform(front, t1));
-    p2 = any(lessThan(t2, extent.xy)) || any(greaterThanEqual(t2, extent.xy + extent.zw)) ? vec4(0.0) : sample(back, samplerTransform(back, t2));
-    p2.rgb *= darken;
-    
-    return p1 + (1.0 - p1.a) * p2;
-}
-
 kernel vec4 holeDistortion(sampler src, sampler trgt, vec2 center, float radius)  {
     vec2 t1;
     float distsquare, rsquare;

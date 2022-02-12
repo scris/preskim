@@ -9,22 +9,10 @@
 #import "SKTRevealTransition.h"
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
-#import "SKTPluginLoader.h"
-
-#define kCIInputRectangleKey @"inputRectangle"
 
 @implementation SKTRevealTransition
 
 @synthesize inputImage, inputTargetImage, inputExtent, inputAngle, inputTime;
-
-static CIKernel *_SKTRevealTransitionKernel = nil;
-
-- (id)init
-{
-    if (_SKTRevealTransitionKernel == nil)
-        _SKTRevealTransitionKernel = [SKTPlugInLoader kernelWithName:@"offsetComposition"];
-    return [super init];
-}
 
 + (NSDictionary *)customAttributes
 {
@@ -73,23 +61,18 @@ static CIKernel *_SKTRevealTransitionKernel = nil;
 // called when setting up for fragment program and also calls fragment program
 - (CIImage *)outputImage
 {
-    CISampler *src = [CISampler samplerWithImage:inputImage];
-    CISampler *trgt = [CISampler samplerWithImage:inputTargetImage];
     CGFloat t = [inputTime doubleValue];
     CGFloat angle = [inputAngle doubleValue];
     CGFloat c = cos(angle);
     CGFloat s = sin(angle);
     CGFloat d = [inputExtent Z] * t / fmax(fabs(c), fabs(s));
-    NSNumber *shade = [NSNumber numberWithDouble:0.8 + 0.2 * t];
-    CIVector *offset1 = [CIVector vectorWithX:d * c Y:d * s];
-    CIVector *offset2 = [CIVector vectorWithX:0.0 Y:0.0];
-    NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithFloat:[inputExtent X]], [NSNumber numberWithFloat:[inputExtent Y]], [NSNumber numberWithFloat:[inputExtent Z]], [NSNumber numberWithFloat:[inputExtent W]], nil];
-    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, offset1, offset2, shade, nil];
-    NSDictionary *options  = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, offset1, kCIApplyOptionUserInfo, nil];
+    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -d*c, -d*s);
+    CIImage *image = [inputImage imageByApplyingTransform:transform];
+    CIFilter *darkenFilter = [CIFilter filterWithName:@"CIExposureAdjust"];
+    [darkenFilter setValue:[NSNumber numberWithDouble:-0.4 * (1.0 - t)] forKey:@"inputEV"];
+    [darkenFilter setValue:inputTargetImage forKey:kCIInputImageKey];
     
-    [_SKTRevealTransitionKernel setROISelector:@selector(regionOf:destRect:userInfo:)];
-    
-    return [self apply:_SKTRevealTransitionKernel arguments:arguments options:options];
+    return [[image imageByCompositingOverImage:[darkenFilter valueForKey:kCIOutputImageKey]] imageByCroppingToRect:[inputExtent CGRectValue]];
 }
 
 @end
