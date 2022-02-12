@@ -597,7 +597,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 - (void)setProgress:(CGFloat)newProgress {
     if (filter) {
         [filter setValue:[NSNumber numberWithDouble:newProgress] forKey:kCIInputTimeKey];
-        [self setImage:[filter valueForKey:kCIOutputImageKey]];
+        [self setImage:[filter outputImage]];
         [self setNeedsDisplay:YES];
     }
 }
@@ -658,7 +658,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 - (void)setProgress:(CGFloat)newProgress {
     if (filter) {
         [filter setValue:[NSNumber numberWithDouble:newProgress] forKey:kCIInputTimeKey];
-        [self setImage:[filter valueForKey:kCIOutputImageKey]];
+        [self setImage:[filter outputImage]];
         [self setNeedsDisplay:YES];
     }
 }
@@ -773,7 +773,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 - (void)setProgress:(CGFloat)newProgress {
     if (filter) {
         [filter setValue:[NSNumber numberWithDouble:newProgress] forKey:kCIInputTimeKey];
-        [self setImage:[filter valueForKey:kCIOutputImageKey]];
+        [self setImage:[filter outputImage]];
         [[[self subviews] firstObject] setNeedsDisplay:YES];
     }
 }
