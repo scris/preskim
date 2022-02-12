@@ -9,22 +9,12 @@
 #import "SKTSlideTransition.h"
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
-#import "SKTPluginLoader.h"
 
 #define kCIInputRectangleKey @"inputRectangle"
 
 @implementation SKTSlideTransition
 
 @synthesize inputImage, inputTargetImage, inputExtent, inputAngle, inputTime;
-
-static CIKernel *_SKTSlideTransitionKernel = nil;
-
-- (id)init
-{
-    if (_SKTSlideTransitionKernel == nil)
-        _SKTSlideTransitionKernel = [SKTPlugInLoader kernelWithName:@"offsetComposition"];
-    return [super init];
-}
 
 + (NSDictionary *)customAttributes
 {
@@ -63,33 +53,21 @@ static CIKernel *_SKTSlideTransitionKernel = nil;
     return [[self class] customAttributes];
 }
 
-- (CGRect)regionOf:(int)sampler destRect:(CGRect)R userInfo:(NSArray *)userInfo {
-    CIVector *offset = [userInfo objectAtIndex:sampler];
-    return CGRectOffset(R, [offset X], [offset Y]);
-}
-
 // called when setting up for fragment program and also calls fragment program
 - (CIImage *)outputImage
 {
-    CISampler *src = [CISampler samplerWithImage:inputImage];
-    CISampler *trgt = [CISampler samplerWithImage:inputTargetImage];
     CGFloat t = [inputTime doubleValue];
     CGFloat angle = [inputAngle doubleValue];
     CGFloat c = cos(angle);
     CGFloat s = sin(angle);
     CGFloat d1 = [inputExtent Z] * t / fmax(fabs(c), fabs(s));
     CGFloat d2 = [inputExtent Z] * (t - 1.0) / fmax(fabs(c), fabs(s));
-    CIVector *offset1 = [CIVector vectorWithX:d1 * c Y:d1 * s];
-    CIVector *offset2 = [CIVector vectorWithX:d2 * c Y:d2 * s];
-    NSNumber *one = [NSNumber numberWithDouble:1.0];
-    NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithDouble:[inputExtent X]], [NSNumber numberWithDouble:[inputExtent Y]], [NSNumber numberWithDouble:[inputExtent Z]], [NSNumber numberWithDouble:[inputExtent W]], nil];
-    NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, offset1, offset2, one, nil];
-    NSArray *userInfo = [NSArray arrayWithObjects:offset1, offset2, nil];
-    NSDictionary *options  = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, userInfo, kCIApplyOptionUserInfo, nil];
+    CGAffineTransform transform1 = CGAffineTransformTranslate(CGAffineTransformIdentity, -d1*c, -d1*s);
+    CGAffineTransform transform2 = CGAffineTransformTranslate(CGAffineTransformIdentity, -d2*c, -d2*s);
+    CIImage *image1 = [inputImage imageByApplyingTransform:transform1];
+    CIImage *image2 = [inputTargetImage imageByApplyingTransform:transform2];
     
-    [_SKTSlideTransitionKernel setROISelector:@selector(regionOf:destRect:userInfo:)];
-    
-    return [self apply:_SKTSlideTransitionKernel arguments:arguments options:options];
+    return [[image1 imageByCompositingOverImage:image2] imageByCroppingToRect:[inputExtent CGRectValue]];
 }
 
 @end
