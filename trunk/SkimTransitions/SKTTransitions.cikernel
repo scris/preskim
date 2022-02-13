@@ -59,7 +59,7 @@ kernel vec4 radarTransition(sampler src, sampler trgt, vec2 center, float angle,
     pi2 = 2.0 * pi;
     
     t1 = destCoord() - center;
-    a1 = t1.y != 0.0 ? 0.5 * pi - atan(t1.x, t1.y) : (t1.x > 0.0 ? 0.0 : (t1.x < 0.0 ? pi : 0.5 * pi));
+    a1 = abs(t1.y) > abs(t1.x) ? 0.5 * pi - atan(t1.x, t1.y) : atan(t1.y, t1.x);
     da1 = mod(angle - a1 + 0.5 * width, pi2);
     da2 = mod(da1 + pi, pi2) - pi;
     angle1 = 2.0 * (pi + width) * t;
@@ -73,15 +73,17 @@ kernel vec4 radarTransition(sampler src, sampler trgt, vec2 center, float angle,
 
 kernel vec4 sinkTransition(sampler src, sampler trgt, vec2 center, float t)
 {
-    float pi2 = 6.28318530717958648;
     vec2 loc;
-    float a, a1, a2, a3, a4, x, factor, r;
+    float pi, pi2, a, a1, a2, a3, a4, x, r;
     vec4 extent, p1, p2;
+    
+    pi = 3.14159265358979324;
+    pi2 = 2.0 * pi;
     
     loc = destCoord() - center;
     r = sqrt(dot(loc, loc));
-    a = (loc.x != 0.0 ? atan(loc.y, loc.x) : loc.y < 0.0 ? -0.25 * pi2 : loc.y > 0.0 ? 0.25 * pi2 : 0.0) - pi2 * t * t / (1.0 + 0.01 * r);
-    a = a > -0.5 * pi2 ? a : a + pi2;
+    a = (abs(loc.y) > abs(loc.x) ? 0.5 * pi - atan(loc.x, loc.y) : atan(loc.y, loc.x)) - pi2 * t * t / (1.0 + 0.01 * r);
+    a = a > -pi ? (a < pi ? a : a - pi2) : a + pi2;
 
     extent = samplerExtent(src);
     extent.xy -= center;
@@ -92,9 +94,7 @@ kernel vec4 sinkTransition(sampler src, sampler trgt, vec2 center, float t)
     
     x = a > a1 ? ((a - a1) / (a4 + pi2 - a1)) : (a > a2 ? ((a - a2) / (a1 - a2)) : (a > a3 ? ((a - a3) / (a2 - a3)) : (a > a4 ? ((a - a4) / (a3 - a4)) : ((a - a1 + pi2) / (a4 - a1 + pi2)))));
     
-    factor = 1.0 - (1.0 + (x * x * (1.0 - x) * (1.0 - x))) * t;
-    factor = factor < 0.00000001 ? 0.00000001 : factor;
-    r /= factor;
+    r /= max(0.00000001, 1.0 - (1.0 + (x * x * (1.0 - x) * (1.0 - x))) * t);
     loc = r * vec2(cos(a), sin(a));
 
     p1 = any(lessThan(loc, extent.xy)) || any(greaterThanEqual(loc, extent.xy + extent.zw)) ? vec4(0.0) : sample(src, samplerTransform(src, loc + center));
