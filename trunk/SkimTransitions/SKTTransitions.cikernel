@@ -79,7 +79,7 @@ kernel vec4 sinkTransition(sampler src, sampler trgt, vec2 center, float t)
     vec4 extent, p1, p2;
     
     loc = destCoord() - center;
-    r = sqrt(loc.x * loc.x + loc.y * loc.y);
+    r = sqrt(dot(loc, loc));
     a = atan(loc.y, loc.x) - pi2 * t * t / (1.0 + 0.01 * r);
     a = a > -0.5 * pi2 ? a : a + pi2;
 
@@ -95,7 +95,7 @@ kernel vec4 sinkTransition(sampler src, sampler trgt, vec2 center, float t)
     factor = 1.0 - (1.0 + (x * x * (1.0 - x) * (1.0 - x))) * t;
     factor = factor < 0.00000001 ? 0.00000001 : factor;
     r /= factor;
-    loc = vec2(r * cos(a), r * sin(a));
+    loc = r * vec2(cos(a), sin(a));
 
     p1 = any(lessThan(loc, extent.xy)) || any(greaterThanEqual(loc, extent.xy + extent.zw)) ? vec4(0.0) : sample(src, samplerTransform(src, loc + center));
 
