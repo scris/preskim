@@ -59,7 +59,7 @@ kernel vec4 radarTransition(sampler src, sampler trgt, vec2 center, float angle,
     pi2 = 2.0 * pi;
     
     t1 = destCoord() - center;
-    a1 = 0.5 * pi - atan(t1.x, t1.y);
+    a1 = t1.y != 0.0 ? 0.5 * pi - atan(t1.x, t1.y) : (t1.x > 0.0 ? 0.0 : (t1.x < 0.0 ? pi : 0.5 * pi));
     da1 = mod(angle - a1 + 0.5 * width, pi2);
     da2 = mod(da1 + pi, pi2) - pi;
     angle1 = 2.0 * (pi + width) * t;
@@ -80,7 +80,7 @@ kernel vec4 sinkTransition(sampler src, sampler trgt, vec2 center, float t)
     
     loc = destCoord() - center;
     r = sqrt(dot(loc, loc));
-    a = atan(loc.y, loc.x) - pi2 * t * t / (1.0 + 0.01 * r);
+    a = (loc.x != 0.0 ? atan(loc.y, loc.x) : loc.y < 0.0 ? -0.25 * pi2 : loc.y > 0.0 ? 0.25 * pi2 : 0.0) - pi2 * t * t / (1.0 + 0.01 * r);
     a = a > -0.5 * pi2 ? a : a + pi2;
 
     extent = samplerExtent(src);
