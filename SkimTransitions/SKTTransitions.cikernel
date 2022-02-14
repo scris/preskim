@@ -61,7 +61,8 @@ kernel vec4 radarTransition(sampler src, sampler trgt, vec2 center, float angle,
     t1 = destCoord() - center;
     a1 = abs(t1.y) > abs(t1.x) ? 0.5 * pi - atan(t1.x, t1.y) : atan(t1.y, t1.x);
     da1 = mod(angle - a1 + 0.5 * width, pi2);
-    da2 = mod(da1 + pi, pi2) - pi;
+    da1 = da1 < 0.0 ? da1 + pi2 : da1;
+    da2 = da1 < pi ? da1 : da1 - pi2;
     angle1 = 2.0 * (pi + width) * t;
     
     p1 = sample(src, samplerCoord(src));
