@@ -76,8 +76,7 @@ static CIKernel *_SKTStripsTransitionKernel = nil;
     NSNumber *offset = [NSNumber numberWithDouble:[inputExtent Z] * [inputTime doubleValue]];
     NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithDouble:[inputExtent X]], [NSNumber numberWithDouble:[inputExtent Y]], [NSNumber numberWithDouble:[inputExtent Z]], [NSNumber numberWithDouble:[inputExtent W]], nil];
     NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputExtent, inputWidth, inputTime, nil];
-    NSNumber *userInfo = offset;
-    NSDictionary *options  = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, userInfo, kCIApplyOptionUserInfo, nil];
+    NSDictionary *options  = [NSDictionary dictionaryWithObjectsAndKeys:extent, kCIApplyOptionDefinition, extent, kCIApplyOptionExtent, offset, kCIApplyOptionUserInfo, nil];
     
     [_SKTStripsTransitionKernel setROISelector:@selector(regionOf:destRect:userInfo:)];
     
