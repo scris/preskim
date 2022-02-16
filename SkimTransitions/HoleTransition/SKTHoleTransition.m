@@ -93,7 +93,7 @@ static CIKernel *_SKTHoleTransitionKernel = nil;
     
     dx = fmax(fabs(dx), fabs(dx + width));
     dy = fmax(fabs(dy), fabs(dy + height));
-    radius = ceilf(sqrt(dx * dx + dy * dy)) * [inputTime doubleValue];
+    radius = sqrt(dx * dx + dy * dy) * [inputTime doubleValue];
     
     NSArray *extent = [NSArray arrayWithObjects:[NSNumber numberWithDouble:x], [NSNumber numberWithDouble:y], [NSNumber numberWithDouble:width], [NSNumber numberWithDouble:height], nil];
     NSArray *arguments = [NSArray arrayWithObjects:src, trgt, inputCenter, [NSNumber numberWithDouble:radius], nil];
