@@ -109,6 +109,7 @@
 #import "SKThumbnailView.h"
 #import "SKDocumentController.h"
 #import "NSColor_SKExtensions.h"
+#import "NSObject_SKExtensions.h"
 
 #define MULTIPLICATION_SIGN_CHARACTER (unichar)0x00d7
 
@@ -2389,6 +2390,11 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     return NO;
 }
 
+- (void)reloadNotesTable {
+    [rightSideController.noteArrayController rearrangeObjects];
+    [rightSideController.noteOutlineView reloadData];
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &SKMainWindowDefaultsObservationContext) {
         
@@ -2560,8 +2566,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                     NSMapRemove(rowHeights, [note noteText]);
             }
             if ([self notesNeedReloadForKey:keyPath]) {
-                [rightSideController.noteArrayController rearrangeObjects];
-                [rightSideController.noteOutlineView reloadData];
+                [self performSelectorOnce:@selector(reloadNotesTable) afterDelay:0.0];
             } else if ([keyPath isEqualToString:SKNPDFAnnotationStringKey] ||
                        [keyPath isEqualToString:SKNPDFAnnotationTextKey]) {
                 [rightSideController.noteOutlineView reloadTypeSelectStrings];
