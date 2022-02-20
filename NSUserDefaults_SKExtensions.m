@@ -45,10 +45,10 @@
     NSColor *color = nil;
     NSData *data = [self dataForKey:key];
     if (data) {
-        @try { color = [NSUnarchiver unarchiveObjectWithData:data]; }
+        @try { color = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
         @catch (id e) {}
         if (color == nil) {
-            @try { color = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
+            @try { color = [NSUnarchiver unarchiveObjectWithData:data]; }
             @catch (id e) {}
         }
         if ([color isKindOfClass:[NSColor class]] == NO)
@@ -73,7 +73,7 @@
 }
 
 - (void)setColor:(NSColor *)color forKey:(NSString *)key {
-    NSData *data = color ? [NSArchiver archivedDataWithRootObject:color] : nil;
+    NSData *data = color ? [NSKeyedArchiver archivedDataWithRootObject:color] : nil;
     [self setObject:data forKey:key];
 }
 

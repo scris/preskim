@@ -106,10 +106,10 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
     if ([value isKindOfClass:[NSData class]] == NO)
         return nil;
     NSColor *color = nil;
-    @try { color = [NSUnarchiver unarchiveObjectWithData:value]; }
+    @try { color = [NSKeyedUnarchiver unarchiveObjectWithData:value]; }
     @catch (id e) {}
     if (color == nil) {
-        @try { color = [NSKeyedUnarchiver unarchiveObjectWithData:value]; }
+        @try { color = [NSUnarchiver unarchiveObjectWithData:value]; }
         @catch (id e) {}
     }
     if ([color isKindOfClass:[NSColor class]] == NO)
@@ -120,7 +120,7 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 - (id)reverseTransformedValue:(id)value {
     if ([value isKindOfClass:[NSColor class]] == NO)
         return nil;
-    return [NSArchiver archivedDataWithRootObject:value];
+    return [NSKeyedArchiver archivedDataWithRootObject:value];
 }
 
 @end
