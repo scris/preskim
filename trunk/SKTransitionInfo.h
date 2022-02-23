@@ -68,7 +68,7 @@ typedef NS_ENUM(NSUInteger, SKTransitionStyle) {
 
 @class SKThumbnail;
 
-@interface SKLabeledTransitionInfo : SKTransitionInfo <NSPasteboardReading, NSPasteboardWriting> {
+@interface SKLabeledTransitionInfo : SKTransitionInfo {
     SKThumbnail *thumbnail;
     SKThumbnail *toThumbnail;
 }
