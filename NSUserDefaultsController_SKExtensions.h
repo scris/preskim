@@ -45,7 +45,6 @@
 - (void)removeObserver:(NSObject *)anObserver forKey:(NSString *)key context:(void *)context;
 - (void)addObserver:(NSObject *)anObserver forKeys:(NSArray *)keys context:(void *)context;
 - (void)removeObserver:(NSObject *)anObserver forKeys:(NSArray *)keys context:(void *)context;
-- (void)revertToInitialValueForKey:(NSString *)key;
 - (void)revertToInitialValuesForKeys:(NSArray *)keys;
 
 @end
