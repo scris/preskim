@@ -60,10 +60,6 @@
         [self removeObserver:anObserver forKey:key context:context];
 }
 
-- (void)revertToInitialValueForKey:(NSString *)key {
-    [[self values] setValue:[[self initialValues] objectForKey:key] forKey:key];
-}
-
 - (void)revertToInitialValuesForKeys:(NSArray *)keys {
     for (NSString *key in keys)
         [[self values] setValue:[[self initialValues] objectForKey:key] forKey:key];
