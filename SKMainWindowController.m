@@ -182,6 +182,8 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 
 #define SKUseSettingsFromPDFKey @"SKUseSettingsFromPDF"
 
+#define SKCollapseTOCSublevelsKey @"SKCollapseTOCSublevels"
+
 #if SDK_BEFORE(10_11)
 @interface NSCollectionView (SKElCapitanExtensions)
 - (BOOL)allowsEmptySelection;
@@ -808,8 +810,8 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     return dict;
 }
 
-- (void)expandOutline:(PDFOutline *)anOutline forExpansionState:(NSDictionary *)info {
-    BOOL isExpanded = info ? [[info valueForKey:EXPANDED_KEY] boolValue] : [anOutline isOpen];
+- (void)expandOutline:(PDFOutline *)anOutline forExpansionState:(NSDictionary *)info level:(NSInteger)level {
+    BOOL isExpanded = info ? [[info valueForKey:EXPANDED_KEY] boolValue] : level < 0 ? [anOutline isOpen] : level < 2;
     if (isExpanded && anOutline) {
         NSUInteger i, iMax = [anOutline numberOfChildren];
         NSMutableArray *children = [[NSMutableArray alloc] init];
@@ -817,12 +819,13 @@ static char SKMainWindowThumbnailSelectionObservationContext;
             [children addObject:[anOutline childAtIndex:i]];
         if ([anOutline parent])
             [leftSideController.tocOutlineView expandItem:anOutline];
+        if (level >= 0) ++level;
         NSArray *childrenStates = [info valueForKey:CHILDREN_KEY];
         NSEnumerator *infoEnum = nil;
         if (childrenStates && [[children valueForKey:LABEL_KEY] isEqualToArray:[childrenStates valueForKey:LABEL_KEY]])
             infoEnum = [childrenStates objectEnumerator];
         for (PDFOutline *child in children)
-            [self expandOutline:child forExpansionState:[infoEnum nextObject]];
+            [self expandOutline:child forExpansionState:[infoEnum nextObject] level:level];
         [children release];
     }
 }
@@ -863,8 +866,10 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     
     // If this is a reload following a TeX run and the user just killed the outline for some reason, we get a crash if the outlineView isn't reloaded, so no longer make it conditional on pdfOutline != nil
     [ov reloadData];
-    if (outlineRoot)
-        [self expandOutline:outlineRoot forExpansionState:info];
+    if (outlineRoot) {
+        NSInteger level = [[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseTOCSublevelsKey] ? ([outlineRoot numberOfChildren] > 1) : -1;
+        [self expandOutline:outlineRoot forExpansionState:info level:level];
+    }
     mwcFlags.updatingOutlineSelection = 0;
     [self updateOutlineSelection];
     
