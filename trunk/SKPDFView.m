@@ -1161,8 +1161,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     NSPasteboardItem *imageItem = nil;
     PDFAnnotation *note = nil;
     
-    if ([self hideNotes] == NO && [activeAnnotation isSkimNote] && [activeAnnotation isMovable])
-        note = activeAnnotation;
+    if ([self hideNotes] == NO && [activeAnnotation isSkimNote]) {
+        if ([activeAnnotation isMovable])
+            note = activeAnnotation;
+        else if (attrString == nil && [activeAnnotation isMarkup])
+            attrString = [[(PDFAnnotationMarkup *)activeAnnotation selection] attributedString];
+    }
     
     if (toolMode == SKSelectToolMode && NSIsEmptyRect(selectionRect) == NO && selectionPageIndex != NSNotFound) {
         NSRect selRect = NSIntegralRect(selectionRect);
@@ -1187,7 +1191,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
          */
     }
     
-    if ([attrString length] > 0  || imageItem || note) {
+    if ([attrString length] > 0 || imageItem || note) {
     
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         
@@ -3198,13 +3202,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [menuItem setState:[self annotationMode] == (SKNoteType)[menuItem tag] ? NSOnState : NSOffState];
         return YES;
     } else if (action == @selector(copy:)) {
-        if ([[self currentSelection] hasCharacters])
-            return YES;
-        if ([activeAnnotation isSkimNote] && [activeAnnotation isMovable])
-            return YES;
-        if (toolMode == SKSelectToolMode && NSIsEmptyRect(selectionRect) == NO && selectionPageIndex != NSNotFound && [[self document] isLocked] == NO)
-            return YES;
-        return NO;
+        return ([[self currentSelection] hasCharacters] || [activeAnnotation isSkimNote] ||
+            (toolMode == SKSelectToolMode && NSIsEmptyRect(selectionRect) == NO && selectionPageIndex != NSNotFound && [[self document] isLocked] == NO));
     } else if (action == @selector(cut:)) {
         if ([activeAnnotation isSkimNote] && [activeAnnotation isMovable])
             return YES;
