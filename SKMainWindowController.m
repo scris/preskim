@@ -133,15 +133,13 @@
 #define AUTHOR_COLUMNID @"author"
 #define DATE_COLUMNID   @"date"
 
+#define LABEL_COLUMNID  @"label"
+
 #define RELEVANCE_COLUMNID  @"relevance"
 #define RESULTS_COLUMNID    @"results"
 
 #define PAGENUMBER_KEY  @"pageNumber"
 #define PAGELABEL_KEY   @"pageLabel"
-
-#define CONTENTVIEW_KEY @"contentView"
-#define BUTTONVIEW_KEY @"buttonView"
-#define FIRSTRESPONDER_KEY @"firstResponder"
 
 #define MAINWINDOWFRAME_KEY         @"windowFrame"
 #define LEFTSIDEPANEWIDTH_KEY       @"leftSidePaneWidth"
@@ -860,7 +858,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     // column width = width of column - intercellspacing (??)
     NSOutlineView *ov = leftSideController.tocOutlineView;
     CGFloat minWidth = fmin(MAX_MIN_COLUMN_WIDTH, 7.0 + [ov indentationPerLevel] * [outlineRoot deepestLevel]);
-    [[ov tableColumnWithIdentifier:@"label"] setMinWidth:minWidth];
+    [[ov tableColumnWithIdentifier:LABEL_COLUMNID] setMinWidth:minWidth];
     
     mwcFlags.updatingOutlineSelection = 1;
     
