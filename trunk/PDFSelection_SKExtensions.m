@@ -77,7 +77,21 @@
 }
 
 - (NSString *)compactedCleanedString {
-    return [[[[[self selectionsByLine] valueForKey:@"string"] componentsJoinedByString:@" "] stringByRemovingAliens] stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines];
+    NSArray *lines = [self selectionsByLine];
+    if ([lines count] < 2)
+        return [[[self string] stringByRemovingAliens] stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines];
+    NSMutableString *string = [NSMutableString string];
+    for (PDFSelection *line in lines) {
+        NSString *str = [[[line string] stringByRemovingAliens] stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines];
+        if ([str length] == 0) continue;
+        NSInteger l = [string length];
+        if (l > 1 && [string characterAtIndex:l - 1] == '-' && [[NSCharacterSet letterCharacterSet] characterIsMember:[string characterAtIndex:l - 2]])
+            [string deleteCharactersInRange:NSMakeRange(l - 1, 1)];
+        else if (l > 0)
+            [string appendString:@" "];
+        [string appendString:str];
+    }
+    return string;
 }
 
 - (NSString *)cleanedString {
