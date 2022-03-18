@@ -76,6 +76,19 @@
     return [[self safeFirstPage] displayLabel];
 }
 
+static inline BOOL consecutiveSelections(PDFSelection *sel1, PDFSelection *sel2) {
+    PDFPage *page = [sel1 safeLastPage];
+    if ([[sel2 safeFirstPage] isEqual:page] == NO)
+        return NO;
+    NSUInteger i = [sel1 safeIndexOfLastCharacterOnPage:page];
+    NSUInteger j = [sel2 safeIndexOfFirstCharacterOnPage:page];
+    if (i + 1 == j)
+        return YES;
+    if (i + 2 != j)
+        return NO;
+    return [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[[page string] characterAtIndex:i + 1]];
+}
+
 - (NSString *)compactedCleanedString {
     NSArray *lines = [self selectionsByLine];
     if ([lines count] < 2)
@@ -86,7 +99,7 @@
         NSString *str = [[[line string] stringByRemovingAliens] stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines];
         if ([str length] == 0) continue;
         NSInteger l = [string length];
-        if (l > 1 && [string characterAtIndex:l - 1] == '-' && [[NSCharacterSet letterCharacterSet] characterIsMember:[string characterAtIndex:l - 2]] && [line safeIndexOfFirstCharacterOnPage:nil] <= [lastLine safeIndexOfLastCharacterOnPage:nil] + 2)
+        if (l > 1 && [string characterAtIndex:l - 1] == '-' && [[NSCharacterSet letterCharacterSet] characterIsMember:[string characterAtIndex:l - 2]] && consecutiveSelections(lastLine, line))
             [string deleteCharactersInRange:NSMakeRange(l - 1, 1)];
         else if (l > 0)
             [string appendString:@" "];

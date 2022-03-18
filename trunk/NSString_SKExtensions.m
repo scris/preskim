@@ -79,22 +79,16 @@ CFStringRef __SKStringCreateByCollapsingAndTrimmingWhitespaceAndNewlines(CFAlloc
     NSCAssert1(buffer != NULL, @"failed to allocate memory for string of length %ld", (long)length);
     
     CFCharacterSetRef wsnlCharSet = CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline);
-    CFCharacterSetRef nlCharSet = CFCharacterSetGetPredefined(kCFCharacterSetNewline);
-    BOOL isFirst = NO, wasHyphen = NO, found = NO;
+    BOOL isFirst = NO, found = NO;
     CFIndex bufCnt = 0;
-    for(cnt = 0; cnt < length; cnt++){
+    for(cnt = 0; cnt < length; cnt++) {
         ch = CFStringGetCharacterFromInlineBuffer(&inlineBuffer, cnt);
-        if(NO == CFCharacterSetIsCharacterMember(wsnlCharSet, ch)){
-            wasHyphen = (ch == '-');
+        if(NO == CFCharacterSetIsCharacterMember(wsnlCharSet, ch)) {
             isFirst = YES;
             buffer[bufCnt++] = ch; // not whitespace, so we want to keep it
         } else {
-            if(isFirst){
-                if(wasHyphen && CFCharacterSetIsCharacterMember(nlCharSet, ch))
-                    bufCnt--; // ignore the last hyphen and current newline
-                else
-                    buffer[bufCnt++] = ' '; // if it's the first whitespace, we add a single space
-                wasHyphen = NO;
+            if (isFirst){
+                buffer[bufCnt++] = ' '; // if it's the first whitespace, we add a single space
                 isFirst = NO;
             }
             found = YES;
@@ -102,7 +96,7 @@ CFStringRef __SKStringCreateByCollapsingAndTrimmingWhitespaceAndNewlines(CFAlloc
     }
     
     if (found){
-        if(buffer[(bufCnt-1)] == ' ') // we've collapsed any trailing whitespace, so disregard it
+        if (buffer[(bufCnt-1)] == ' ') // we've collapsed any trailing whitespace, so disregard it
             bufCnt--;
         
         retStr = CFStringCreateWithCharacters(allocator, buffer, bufCnt);
