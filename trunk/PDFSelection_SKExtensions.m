@@ -81,15 +81,18 @@
     if ([lines count] < 2)
         return [[[self string] stringByRemovingAliens] stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines];
     NSMutableString *string = [NSMutableString string];
+    PDFSelection *lastLine = nil;
     for (PDFSelection *line in lines) {
         NSString *str = [[[line string] stringByRemovingAliens] stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines];
         if ([str length] == 0) continue;
         NSInteger l = [string length];
-        if (l > 1 && [string characterAtIndex:l - 1] == '-' && [[NSCharacterSet letterCharacterSet] characterIsMember:[string characterAtIndex:l - 2]])
+        if (l > 1 && [string characterAtIndex:l - 1] == '-' && [[NSCharacterSet letterCharacterSet] characterIsMember:[string characterAtIndex:l - 2]] && [line safeIndexOfFirstCharacterOnPage:nil] <= [lastLine safeIndexOfLastCharacterOnPage:nil] + 2) {
             [string deleteCharactersInRange:NSMakeRange(l - 1, 1)];
+        }
         else if (l > 0)
             [string appendString:@" "];
         [string appendString:str];
+        lastLine = line;
     }
     return string;
 }
@@ -172,6 +175,11 @@
 }
 
 - (NSUInteger)safeIndexOfFirstCharacterOnPage:(PDFPage *)page {
+    if (page == nil) {
+        page = [self safeFirstPage];
+        if (page == nil)
+            return NSNotFound;
+    }
     NSInteger i, count = [self numberOfTextRangesOnPage:page];
     for (i = 0; i < count; i++) {
         NSRange range = [self rangeAtIndex:i onPage:page];
@@ -182,6 +190,11 @@
 }
 
 - (NSUInteger)safeIndexOfLastCharacterOnPage:(PDFPage *)page {
+    if (page == nil) {
+        page = [self safeLastPage];
+        if (page == nil)
+            return NSNotFound;
+    }
     NSInteger i, count = [self numberOfTextRangesOnPage:page];
     for (i = count - 1; i >= 0; i--) {
         NSRange range = [self rangeAtIndex:i onPage:page];
