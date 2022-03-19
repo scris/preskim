@@ -44,6 +44,7 @@
 #import "SKMainDocument.h"
 #import "NSPointerArray_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
+#import "NSCharacterSet_SKExtensions.h"
 
 #define SKIncludeNewlinesFromEnclosedTextKey @"SKIncludeNewlinesFromEnclosedText"
 
@@ -76,12 +77,12 @@
     return [[self safeFirstPage] displayLabel];
 }
 
-static inline BOOL consecutiveSelections(PDFSelection *sel1, PDFSelection *sel2) {
-    PDFPage *page = [sel1 safeLastPage];
-    if ([[sel2 safeFirstPage] isEqual:page] == NO)
+- (BOOL)isConsecutiveToSelection:(PDFSelection *)selection {
+    PDFPage *page = [selection safeLastPage];
+    if ([[self safeFirstPage] isEqual:page] == NO)
         return NO;
-    NSUInteger i = [sel1 safeIndexOfLastCharacterOnPage:page];
-    NSUInteger j = [sel2 safeIndexOfFirstCharacterOnPage:page];
+    NSUInteger i = [selection safeIndexOfLastCharacterOnPage:page];
+    NSUInteger j = [self safeIndexOfFirstCharacterOnPage:page];
     if (i + 1 == j)
         return YES;
     if (i + 2 != j)
@@ -98,8 +99,8 @@ static inline BOOL consecutiveSelections(PDFSelection *sel1, PDFSelection *sel2)
     for (PDFSelection *line in lines) {
         NSString *str = [[[line string] stringByRemovingAliens] stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines];
         if ([str length] == 0) continue;
-        NSInteger l = [string length];
-        if (l > 1 && [string characterAtIndex:l - 1] == '-' && [[NSCharacterSet letterCharacterSet] characterIsMember:[string characterAtIndex:l - 2]] && consecutiveSelections(lastLine, line))
+        NSUInteger l = [string length];
+        if (l > 1 && [[NSCharacterSet hyphensCharacterSet] characterIsMember:[string characterAtIndex:l - 1]] && [[NSCharacterSet letterCharacterSet] characterIsMember:[string characterAtIndex:l - 2]] && [line isConsecutiveToSelection:lastLine])
             [string deleteCharactersInRange:NSMakeRange(l - 1, 1)];
         else if (l > 0)
             [string appendString:@" "];

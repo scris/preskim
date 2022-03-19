@@ -70,4 +70,16 @@
     return URLGenericAllowedCharacterSet;
 }
 
++ (id)hyphensCharacterSet {
+    static NSCharacterSet *hyphensCharacterSet = nil;
+    if (hyphensCharacterSet == nil) {
+        NSMutableCharacterSet *tmpSet = [[NSMutableCharacterSet alloc] init];
+        [tmpSet addCharactersInRange:NSMakeRange(0x2D, 1)];
+        [tmpSet addCharactersInRange:NSMakeRange(0xAD, 1)];
+        hyphensCharacterSet = [tmpSet copy];
+        [tmpSet release];
+    }
+    return hyphensCharacterSet;
+}
+
 @end
