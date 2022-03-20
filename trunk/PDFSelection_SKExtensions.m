@@ -78,16 +78,22 @@
     return [[self safeFirstPage] displayLabel];
 }
 
-static BOOL inline isHyphenated(NSString *string, PDFSelection *lastLine, PDFSelection *line) {
+static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelection *nextLine) {
     NSUInteger l = [string length];
     unichar ch = [string characterAtIndex:l - 1];
     if (ch != SOFT_HYPHEN_CHARACTER && (ch != HYPHEN_CHARACTER || l < 2 || [[NSCharacterSet letterCharacterSet] characterIsMember:[string characterAtIndex:l - 2]] == NO))
         return NO;
-    PDFPage *page = [lastLine safeLastPage];
-    if ([[line safeFirstPage] isEqual:page] == NO)
+    PDFPage *page = [line safeLastPage];
+    PDFPage *nextPage = [nextLine safeFirstPage];
+    if ([nextPage isEqual:page] == NO && [nextPage pageIndex] != [page pageIndex] + 1)
         return NO;
-    NSUInteger i = [lastLine safeIndexOfLastCharacterOnPage:page];
-    NSUInteger j = [line safeIndexOfFirstCharacterOnPage:page];
+    NSUInteger i = [line safeIndexOfLastCharacterOnPage:page];
+    NSUInteger j = [nextLine safeIndexOfFirstCharacterOnPage:nextPage];
+    if (nextPage != page) {
+        if (j > 0)
+            return NO;
+        j = [[page string] length];
+    }
     return i + 1 == j || (i + 2 == j && [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[[page string] characterAtIndex:i + 1]]);
 }
 
