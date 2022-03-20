@@ -190,11 +190,6 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *lastLine, PDFSel
 }
 
 - (NSUInteger)safeIndexOfFirstCharacterOnPage:(PDFPage *)page {
-    if (page == nil) {
-        page = [self safeFirstPage];
-        if (page == nil)
-            return NSNotFound;
-    }
     NSInteger i, count = [self numberOfTextRangesOnPage:page];
     for (i = 0; i < count; i++) {
         NSRange range = [self rangeAtIndex:i onPage:page];
@@ -205,11 +200,6 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *lastLine, PDFSel
 }
 
 - (NSUInteger)safeIndexOfLastCharacterOnPage:(PDFPage *)page {
-    if (page == nil) {
-        page = [self safeLastPage];
-        if (page == nil)
-            return NSNotFound;
-    }
     NSInteger i, count = [self numberOfTextRangesOnPage:page];
     for (i = count - 1; i >= 0; i--) {
         NSRange range = [self rangeAtIndex:i onPage:page];
