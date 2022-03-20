@@ -44,11 +44,12 @@
 #import "SKMainDocument.h"
 #import "NSPointerArray_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
-#import "NSCharacterSet_SKExtensions.h"
 
 #define SKIncludeNewlinesFromEnclosedTextKey @"SKIncludeNewlinesFromEnclosedText"
 
 #define ELLIPSIS_CHARACTER (unichar)0x2026
+#define HYPHEN_CHARACTER (unichar)0x002D
+#define SOFT_HYPHEN_CHARACTER (unichar)0x00AD
 
 @interface NSTextStorage (SKNSSubTextStoragePrivateDeclarations)
 - (NSRange)range;
@@ -77,17 +78,17 @@
     return [[self safeFirstPage] displayLabel];
 }
 
-- (BOOL)isConsecutiveToSelection:(PDFSelection *)selection {
-    PDFPage *page = [selection safeLastPage];
-    if ([[self safeFirstPage] isEqual:page] == NO)
+static BOOL inline isHyphenated(NSString *string, PDFSelection *lastLine, PDFSelection *line) {
+    NSUInteger l = [string length];
+    unichar ch = [string characterAtIndex:l - 1];
+    if (ch != SOFT_HYPHEN_CHARACTER && (ch != HYPHEN_CHARACTER || l < 2 || [[NSCharacterSet letterCharacterSet] characterIsMember:[string characterAtIndex:l - 2]] == NO))
         return NO;
-    NSUInteger i = [selection safeIndexOfLastCharacterOnPage:page];
-    NSUInteger j = [self safeIndexOfFirstCharacterOnPage:page];
-    if (i + 1 == j)
-        return YES;
-    if (i + 2 != j)
+    PDFPage *page = [lastLine safeLastPage];
+    if ([[line safeFirstPage] isEqual:page] == NO)
         return NO;
-    return [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[[page string] characterAtIndex:i + 1]];
+    NSUInteger i = [lastLine safeIndexOfLastCharacterOnPage:page];
+    NSUInteger j = [line safeIndexOfFirstCharacterOnPage:page];
+    return i + 1 == j || (i + 2 == j && [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[[page string] characterAtIndex:i + 1]]);
 }
 
 - (NSString *)compactedCleanedString {
@@ -99,11 +100,12 @@
     for (PDFSelection *line in lines) {
         NSString *str = [[[line string] stringByRemovingAliens] stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines];
         if ([str length] == 0) continue;
-        NSUInteger l = [string length];
-        if (l > 1 && [[NSCharacterSet hyphensCharacterSet] characterIsMember:[string characterAtIndex:l - 1]] && [[NSCharacterSet letterCharacterSet] characterIsMember:[string characterAtIndex:l - 2]] && [line isConsecutiveToSelection:lastLine])
-            [string deleteCharactersInRange:NSMakeRange(l - 1, 1)];
-        else if (l > 0)
-            [string appendString:@" "];
+        if ([string length]) {
+            if (isHyphenated(string, lastLine, line))
+                [string deleteCharactersInRange:NSMakeRange([string length] - 1, 1)];
+            else
+                [string appendString:@" "];
+        }
         [string appendString:str];
         lastLine = line;
     }

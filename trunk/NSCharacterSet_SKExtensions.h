@@ -43,5 +43,4 @@
 + (id)nonWhitespaceAndNewlineCharacterSet;
 + (id)URLBookmarkNameAllowedCharacterSet;
 + (id)URLGenericAllowedCharacterSet;
-+ (id)hyphensCharacterSet;
 @end
