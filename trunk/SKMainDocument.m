@@ -1492,6 +1492,8 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
             if ([editorPreset isEqualToString:@""] == NO) {
                 if ((path = [[NSWorkspace sharedWorkspace] fullPathForApplication:editorPreset]) &&
                     (appBundle = [NSBundle bundleWithPath:path])) {
+                    if ((path = [[appBundle bundlePath] stringByDeletingLastPathComponent]))
+                        [searchPaths insertObject:path atIndex:0];
                     if ((path = [[appBundle bundlePath] stringByAppendingPathComponent:@"Contents"]))
                         [searchPaths insertObject:path atIndex:0];
                     if ((path = [[[appBundle bundlePath] stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Helpers"]))
