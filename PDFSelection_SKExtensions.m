@@ -95,7 +95,7 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
             return NO;
         j = [[page string] length];
     }
-    return i + 1 == j || (i + 1 < j && i + 5 < j && [[page string] rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet] options:0 range:NSMakeRange(i + 1, j - i - 1)].location == NSNotFound);
+    return i + 1 == j || (i + 1 < j && i + 5 > j && [[page string] rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet] options:0 range:NSMakeRange(i + 1, j - i - 1)].location == NSNotFound);
 }
 
 - (NSString *)compactedCleanedString {
