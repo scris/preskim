@@ -44,6 +44,7 @@
 #import "SKMainDocument.h"
 #import "NSPointerArray_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
+#import "NSCharacterSet_SKExtensions.h"
 
 #define SKIncludeNewlinesFromEnclosedTextKey @"SKIncludeNewlinesFromEnclosedText"
 
@@ -94,7 +95,7 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
             return NO;
         j = [[page string] length];
     }
-    return i + 1 == j || (i + 2 == j && [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[[page string] characterAtIndex:i + 1]]);
+    return i + 1 == j || (i + 1 < j && i + 5 < j && [[page string] rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet] options:0 range:NSMakeRange(i + 1, j - i - 1)].location == NSNotFound);
 }
 
 - (NSString *)compactedCleanedString {
