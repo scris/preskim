@@ -218,7 +218,8 @@
 }
 
 - (IBAction)find:(id)sender {
-    [self findForward:[sender selectedTag] == 1];
+    BOOL forward = [sender isKindOfClass:[NSSegmentedControl class]] ? [sender selectedSegment] == 1 : ([NSEvent modifierFlags] & NSShiftKeyMask) == 0;
+    [self findForward:forward];
 }
 
 - (IBAction)remove:(id)sender {
