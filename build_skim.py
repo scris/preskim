@@ -152,13 +152,13 @@ def read_versions():
 def clean_and_build():
     
     # clean and rebuild the Xcode project
-    buildCmd = ["/usr/bin/xcodebuild", "clean", "-configuration", "Release", "-target", "Skim", "-scheme", "Skim", "-derivedDataPath", DERIVED_DATA_DIR, "SYMROOT=" + SYMROOT]
+    buildCmd = ["/usr/bin/xcodebuild", "clean", "-configuration", "Release", "-target", "Skim", "-scheme", "Skim", "-destination", "generic/platform=macOS", "-derivedDataPath", DERIVED_DATA_DIR, "SYMROOT=" + SYMROOT]
     print(" ".join(buildCmd))
     x = Popen(buildCmd, cwd=SOURCE_DIR)
     rc = x.wait()
     print("xcodebuild clean exited with status %s" % (rc))
 
-    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "Skim", "-scheme", "Skim", "-derivedDataPath", DERIVED_DATA_DIR, "SYMROOT=" + SYMROOT, "CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO"]
+    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "Skim", "-scheme", "Skim", "-destination", "generic/platform=macOS", "-derivedDataPath", DERIVED_DATA_DIR, "SYMROOT=" + SYMROOT, "CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO"]
     print(" ".join(buildCmd))
     x = Popen(buildCmd, cwd=SOURCE_DIR)
     rc = x.wait()
