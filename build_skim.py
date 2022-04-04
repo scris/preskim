@@ -497,7 +497,6 @@ def get_options():
     archive = ""
     version = ""
     test = False
-    opts = []
     
     try:
         opts, args = getopt.getopt(sys.argv[1:], "s:n:o:a:v:t", ["sign=", "notarize=", "out=", "archive=", "version=", "test"])
