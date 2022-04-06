@@ -253,7 +253,7 @@ static inline NSArray *defaultKeysToObserve() {
 #pragma clang diagnostic ignored "-Wpartial-availability"
 
 static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
-    return RUNNING_AFTER(10_14) && [pdfView displayMode] == kPDFDisplaySinglePageContinuous && [pdfView displayDirection] == kPDFDisplayDirectionHorizontal;
+    return RUNNING_AFTER(10_12) && [pdfView displayMode] == kPDFDisplaySinglePageContinuous && [pdfView displayDirection] == kPDFDisplayDirectionHorizontal;
 }
 
 #pragma clang diagnostic pop
