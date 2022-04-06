@@ -300,7 +300,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
 
 - (void)goToPage:(PDFPage *)page {
     if (hasHorizontalLayout(self)) {
-        NSView *clipView = [[self scrollView] contentView];
+        NSClipView *clipView = [[self scrollView] contentView];
         NSRect bounds = [self convertRect:[self convertRect:[page boundsForBox:[self displayBox]] fromPage:page] toView:clipView];
         NSPoint point = NSMakePoint(NSMinX(bounds), NSMinY([clipView bounds]));
         if ([self displaysPageBreaks]) {
@@ -309,7 +309,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
             point.x -= [self pageBreakMargins].left;
 #pragma clang diagnostic pop
         }
-        [clipView scrollPoint:point];
+        [clipView scrollToPoint:point];
     } else {
         [super goToPage:page];
     }
