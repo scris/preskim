@@ -300,23 +300,16 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
 
 - (void)goToPage:(PDFPage *)page {
     if (hasHorizontalLayout(self)) {
-        NSRect bounds = [page boundsForBox:[self displayBox]];
+        NSView *clipView = [[self scrollView] contentView];
+        NSRect bounds = [self convertRect:[self convertRect:[page boundsForBox:[self displayBox]] fromPage:page] toView:clipView];
+        NSPoint point = NSMakePoint(NSMinX(bounds), NSMinY([clipView bounds]));
         if ([self displaysPageBreaks]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-            NSEdgeInsets margins = [self pageBreakMargins];
+            point.x -= [self pageBreakMargins].left;
 #pragma clang diagnostic pop
-            bounds = NSInsetRect(bounds, -margins.left, ([page rotation] % 180) == 0 ? -margins.bottom : -margins.left);
         }
-        NSPoint point;
-        switch ([page rotation]) {
-            case 0:   point = SKTopLeftPoint(bounds);     break;
-            case 90:  point = SKBottomLeftPoint(bounds);  break;
-            case 180: point = SKBottomRightPoint(bounds); break;
-            case 270: point = SKTopRightPoint(bounds);    break;
-            default:  point = SKTopLeftPoint(bounds);     break;
-        }
-        [self goToDestination:[[[PDFDestination alloc] initWithPage:page atPoint:point] autorelease]];
+        [clipView scrollPoint:point];
     } else {
         [super goToPage:page];
     }
