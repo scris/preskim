@@ -298,7 +298,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
         PDFPage *page = [doc pageAtIndex:0];
         [self horizontallyGoToPage:page];
     } else {
-        [super goToPage:sender];
+        [super goToFirstPage:sender];
     }
 }
 
