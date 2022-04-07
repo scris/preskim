@@ -256,13 +256,27 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     return RUNNING_AFTER(10_12) && [pdfView displayDirection] == kPDFDisplayDirectionHorizontal && [pdfView displayMode] == kPDFDisplaySinglePageContinuous;
 }
 
+- (void)horizontallyGoToPage:(PDFPage *)page {
+    NSClipView *clipView = [[self scrollView] contentView];
+    NSRect bounds = [page boundsForBox:[self displayBox]];
+    if ([self displaysPageBreaks]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        NSEdgeInsets margins = [self pageBreakMargins];
+#pragma clang diagnostic pop
+        bounds = NSInsetRect(bounds, -margins.left, ([page rotation] % 180) == 0 ? -margins.bottom : -margins.left);
+    }
+    bounds = [self convertRect:[self convertRect:bounds fromPage:page] toView:clipView];
+    [clipView scrollToPoint:NSMakePoint(NSMinX(bounds), NSMinY([clipView bounds]))];
+}
+
 #pragma clang diagnostic pop
 
 - (void)goToPreviousPage:(id)sender {
     if (hasHorizontalLayout(self) && [self canGoToPreviousPage]) {
         PDFDocument *doc = [self document];
         PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] - 1];
-        [self goToPage:page];
+        [self horizontallyGoToPage:page];
     } else {
         [super goToPreviousPage:sender];
     }
@@ -272,7 +286,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     if (hasHorizontalLayout(self) && [self canGoToNextPage]) {
         PDFDocument *doc = [self document];
         PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] + 1];
-        [self goToPage:page];
+        [self horizontallyGoToPage:page];
     } else {
         [super goToNextPage:sender];
     }
@@ -282,9 +296,9 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     if (hasHorizontalLayout(self) && [self canGoToFirstPage]) {
         PDFDocument *doc = [self document];
         PDFPage *page = [doc pageAtIndex:0];
-        [self goToPage:page];
+        [self horizontallyGoToPage:page];
     } else {
-        [super goToFirstPage:sender];
+        [super goToPage:sender];
     }
 }
 
@@ -292,28 +306,17 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     if (hasHorizontalLayout(self) && [self canGoToLastPage]) {
         PDFDocument *doc = [self document];
         PDFPage *page = [doc pageAtIndex:[doc pageCount] - 1];
-        [self goToPage:page];
+        [self horizontallyGoToPage:page];
     } else {
         [super goToLastPage:sender];
     }
 }
 
 - (void)goToPage:(PDFPage *)page {
-    if (hasHorizontalLayout(self)) {
-        NSClipView *clipView = [[self scrollView] contentView];
-        NSRect bounds = [page boundsForBox:[self displayBox]];
-        if ([self displaysPageBreaks]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-            NSEdgeInsets margins = [self pageBreakMargins];
-#pragma clang diagnostic pop
-            bounds = NSInsetRect(bounds, -margins.left, ([page rotation] % 180) == 0 ? -margins.bottom : -margins.left);
-        }
-        bounds = [self convertRect:[self convertRect:bounds fromPage:page] toView:clipView];
-        [clipView scrollToPoint:NSMakePoint(NSMinX(bounds), NSMinY([clipView bounds]))];
-    } else {
+    if (hasHorizontalLayout(self))
+        [self horizontallyGoToPage:page];
+    else
         [super goToPage:page];
-    }
 }
 
 @end
