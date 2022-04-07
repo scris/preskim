@@ -450,15 +450,8 @@ static NSArray *allMainDocumentPDFViews() {
     }
 }
 
-// @@ Horizontal layout
-- (IBAction)alternateZoomToFit:(id)sender {
-    PDFDisplayMode displayMode = [pdfView extendedDisplayMode];
-    NSRect frame = [pdfView frame];
-    PDFPage *page = [pdfView currentPage];
+static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
     NSRect pageRect = [page boundsForBox:[pdfView displayBox]];
-    CGFloat scrollerWidth = 0.0;
-    CGFloat scaleFactor;
-    NSUInteger pageCount = [[pdfView document] pageCount];
     if ([pdfView displaysPageBreaks]) {
         if (RUNNING_BEFORE(10_13)) {
             pageRect = NSInsetRect(pageRect, -PAGE_BREAK_MARGIN, -PAGE_BREAK_MARGIN);
@@ -467,25 +460,64 @@ static NSArray *allMainDocumentPDFViews() {
 #pragma clang diagnostic ignored "-Wpartial-availability"
             NSEdgeInsets margins = [pdfView pageBreakMargins];
 #pragma clang diagnostic pop
-            pageRect = NSInsetRect(pageRect, -margins.bottom, -margins.left);
-            pageRect.size.width += margins.right - margins.left;
-            pageRect.size.height += margins.top - margins.bottom;
+            switch ([page rotation]) {
+                case 0:
+                    pageRect = NSInsetRect(pageRect, -margins.left, -margins.bottom);
+                    pageRect.size.width += margins.right - margins.left;
+                    pageRect.size.height += margins.top - margins.bottom;
+                    break;
+                case 90:
+                    pageRect = NSInsetRect(pageRect, -margins.top, -margins.left);
+                    pageRect.size.width += margins.bottom - margins.top;
+                    pageRect.size.height += margins.right - margins.left;
+                    break;
+                case 180:
+                    pageRect = NSInsetRect(pageRect, -margins.right, -margins.top);
+                    pageRect.size.width += margins.left - margins.right;
+                    pageRect.size.height += margins.bottom - margins.top;
+                    break;
+                case 270:
+                    pageRect = NSInsetRect(pageRect, -margins.bottom, -margins.right);
+                    pageRect.size.width += margins.top - margins.bottom;
+                    pageRect.size.height += margins.left - margins.right;
+                    break;
+            }
         }
+    }
+    return pageRect;
+}
+
+// @@ Horizontal layout
+- (IBAction)alternateZoomToFit:(id)sender {
+    PDFDisplayMode displayMode = [pdfView extendedDisplayMode];
+    NSRect frame = [pdfView frame];
+    PDFPage *page = [pdfView currentPage];
+    NSRect pageRect = layoutBoundsForPage(page, pdfView);
+    CGFloat width, height;
+    CGFloat scrollerWidth = 0.0;
+    CGFloat scaleFactor;
+    NSUInteger pageCount = [[pdfView document] pageCount];
+    if (([page rotation] % 180) == 0) {
+        width = NSWidth(pageRect);
+        height = NSHeight(pageRect);
+    } else {
+        width = NSHeight(pageRect);
+        height = NSWidth(pageRect);
     }
     if ((displayMode & kPDFDisplaySinglePageContinuous) == 0) {
         // zoom to width
         NSUInteger numCols = (displayMode == kPDFDisplayTwoUp && pageCount > 1 && ([pdfView displaysAsBook] == NO || pageCount > 2)) ? 2 : 1;
-        if (NSWidth(frame) * ( NSHeight(pageRect) ) > NSHeight(frame) * numCols * ( NSWidth(pageRect) ))
+        if (NSWidth(frame) * height > NSHeight(frame) * numCols * width)
             scrollerWidth =  [NSScroller effectiveScrollerWidth];
-        scaleFactor = ( NSWidth(frame) - scrollerWidth ) / ( NSWidth(pageRect) );
+        scaleFactor = ( NSWidth(frame) - scrollerWidth ) / width;
     } else {
         // zoom to height
         NSUInteger numRows = pageCount;
         if (displayMode == kPDFDisplayTwoUpContinuous)
             numRows = [pdfView displaysAsBook] ? (1 + pageCount) / 2 : 1 + pageCount / 2;
-        if (NSHeight(frame) * ( NSWidth(pageRect) ) > NSWidth(frame) * numRows * ( NSHeight(pageRect) ))
+        if (NSHeight(frame) * width > NSWidth(frame) * numRows * height)
             scrollerWidth = [NSScroller effectiveScrollerWidth];
-        scaleFactor = ( NSHeight(frame) - scrollerWidth ) / ( NSHeight(pageRect) );
+        scaleFactor = ( NSHeight(frame) - scrollerWidth ) / height;
     }
     [pdfView setScaleFactor:scaleFactor];
     [pdfView layoutDocumentView];
@@ -897,21 +929,7 @@ static NSArray *allMainDocumentPDFViews() {
     NSSize size, oldSize = [[self pdfView] frame].size;
     NSRect documentRect = [[[self pdfView] documentView] convertRect:[[[self pdfView] documentView] bounds] toView:nil];
     PDFPage *page = [[self pdfView] currentPage];
-    NSRect pageRect = [page boundsForBox:[[self pdfView] displayBox]];
-    
-    if ([pdfView displaysPageBreaks]) {
-        if (RUNNING_BEFORE(10_13)) {
-            pageRect = NSInsetRect(pageRect, -PAGE_BREAK_MARGIN, -PAGE_BREAK_MARGIN);
-        } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-            NSEdgeInsets margins = [pdfView pageBreakMargins];
-#pragma clang diagnostic pop
-            pageRect = NSInsetRect(pageRect, -margins.bottom, -margins.left);
-            pageRect.size.width += margins.right - margins.left;
-            pageRect.size.height += margins.top - margins.bottom;
-        }
-    }
+    NSRect pageRect = layoutBoundsForPage(page, pdfView);
     
     // Calculate the new size for the pdfView
     size.width = NSWidth(documentRect);
