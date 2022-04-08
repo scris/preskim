@@ -257,7 +257,6 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
 }
 
 - (void)horizontallyGoToPage:(PDFPage *)page {
-    NSClipView *clipView = [[self scrollView] contentView];
     NSRect bounds = [page boundsForBox:[self displayBox]];
     if ([self displaysPageBreaks]) {
 #pragma clang diagnostic push
@@ -266,8 +265,11 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
 #pragma clang diagnostic pop
         bounds = NSInsetRect(bounds, -margin, -margin);
     }
-    bounds = [self convertRect:[self convertRect:bounds fromPage:page] toView:clipView];
-    [clipView scrollToPoint:NSMakePoint(NSMinX(bounds), NSMinY([clipView bounds]))];
+    NSClipView *clipView = [[self scrollView] contentView];
+    CGFloat x = NSMinX([self convertRect:[self convertRect:bounds fromPage:page] toView:clipView]);
+    bounds = [clipView bounds];
+    bounds.origin.x = x;
+    [clipView scrollToPoint:[clipView constrainBoundsRect:bounds].origin];
 }
 
 #pragma clang diagnostic pop
