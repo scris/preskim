@@ -264,7 +264,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
 #pragma clang diagnostic ignored "-Wpartial-availability"
         CGFloat margin = [self pageBreakMargins].left;
 #pragma clang diagnostic pop
-        bounds = NSInsetRect(bounds, -margin, margin);
+        bounds = NSInsetRect(bounds, -margin, -margin);
     }
     bounds = [self convertRect:[self convertRect:bounds fromPage:page] toView:clipView];
     [clipView scrollToPoint:NSMakePoint(NSMinX(bounds), NSMinY([clipView bounds]))];
