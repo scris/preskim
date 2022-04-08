@@ -257,6 +257,8 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
 }
 
 - (void)horizontallyGoToPage:(PDFPage *)page {
+    if (page == [self currentPage])
+        return;
     NSRect bounds = [page boundsForBox:[self displayBox]];
     if ([self displaysPageBreaks]) {
 #pragma clang diagnostic push
