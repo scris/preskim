@@ -44,8 +44,6 @@
 #import "NSView_SKExtensions.h"
 #import <objc/objc-runtime.h>
 
-#define SKDisableExtendedPDFViewAccessibilityKey @"SKDisableExtendedPDFViewAccessibility"
-
 @interface NSView (SKPDFDisplayViewPrivateDeclarations)
 - (NSRange)accessibilityRangeForSelection:(id)selection;
 - (id)selectionForAccessibilityRange:(NSRange)range;
