@@ -1741,7 +1741,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self doDrawFreehandNoteWithEvent:theEvent];
             [self setActiveAnnotation:nil];
         } else if ((area & kPDFLinkArea)) {
-            [self setTemporaryToolMode:SKNoToolMode];
             [super mouseDown:theEvent];
         } else if ([[self window] styleMask] != NSBorderlessWindowMask && [NSApp willDragMouse]) {
             [[NSCursor closedHandCursor] set];
