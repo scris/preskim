@@ -1742,7 +1742,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self setActiveAnnotation:nil];
         } else if ((area & kPDFLinkArea)) {
             [super mouseDown:theEvent];
-        } else if ([[self window] styleMask] != NSBorderlessWindowMask && [NSApp willDragMouse]) {
+        } else if (([[self window] styleMask] & NSResizableWindowMask) != 0 && [NSApp willDragMouse]) {
             [[NSCursor closedHandCursor] set];
             [self doDragWindowWithEvent:theEvent];
         } else {
