@@ -1497,8 +1497,8 @@
     [self showSnapshotAtPageNumber:pageNum forRect:rect scaleFactor:scaleFactor autoFits:autoFits];
 }
 
-- (void)PDFViewExitFullscreen:(PDFView *)sender {
-    [self exitFullscreen];
+- (void)PDFViewExitPresentation:(PDFView *)sender {
+    [self exitPresentation];
 }
 
 - (void)PDFViewTogglePages:(PDFView *)sender {

@@ -1392,9 +1392,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [self setExtendedDisplayModeAndRewind:kPDFDisplayHorizontalContinuous];
 }
 
-- (void)exitFullscreen:(id)sender {
-    if ([[self delegate] respondsToSelector:@selector(PDFViewExitFullscreen:)])
-        [[self delegate] PDFViewExitFullscreen:self];
+- (void)exitPresentation:(id)sender {
+    if ([[self delegate] respondsToSelector:@selector(PDFViewExitPresentation:)])
+        [[self delegate] PDFViewExitPresentation:self];
 }
 
 - (void)showColorsForThisAnnotation:(id)sender {
