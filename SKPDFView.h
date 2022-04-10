@@ -217,7 +217,7 @@ enum {
 
 - (void)zoomLog:(id)sender;
 - (void)toggleAutoActualSize:(id)sender;
-- (void)exitFullscreen:(id)sender;
+- (void)exitPresentation:(id)sender;
 
 - (void)addAnnotationForContext:(id)sender;
 - (void)addAnnotationWithType:(SKNoteType)annotationType;
@@ -261,7 +261,7 @@ enum {
 - (void)PDFViewDidEndEditing:(PDFView *)sender;
 - (void)PDFView:(PDFView *)sender editAnnotation:(PDFAnnotation *)annotation;
 - (void)PDFView:(PDFView *)sender showSnapshotAtPageNumber:(NSInteger)pageNum forRect:(NSRect)rect scaleFactor:(CGFloat)scaleFactor autoFits:(BOOL)autoFits;
-- (void)PDFViewExitFullscreen:(PDFView *)sender;
+- (void)PDFViewExitPresentation:(PDFView *)sender;
 - (void)PDFViewTogglePages:(PDFView *)sender;
 - (void)PDFViewToggleContents:(PDFView *)sender;
 @end
