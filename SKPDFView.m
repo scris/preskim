@@ -2207,11 +2207,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
     gestureRotation -= [theEvent rotation];
     if (fabs(gestureRotation) > 45.0 && gesturePageIndex != NSNotFound) {
-        [self rotatePageAtIndex:gesturePageIndex by:90.0 * round(gestureRotation / 90.0)];
-        gestureRotation -= 90.0 * round(gestureRotation / 90.0);
+        CGFloat rotation = 90.0 * round(gestureRotation / 90.0);
+        [self rotatePageAtIndex:gesturePageIndex by:rotation];
+        gestureRotation -= rotation;
     }
     if (([theEvent phase] == NSEventPhaseEnded || [theEvent phase] == NSEventPhaseCancelled)) {
-         gestureRotation = 0.0;
+        gestureRotation = 0.0;
         gesturePageIndex = NSNotFound;
     }
 }
