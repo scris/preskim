@@ -1546,7 +1546,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     laserPointerColor = (laserPointerColor + 1) % 7;
     pdfvFlags.cursorHidden = 0;
     [self setCursorForMouse:nil];
-    [self performSelectorOnce:@selector(doAutoHide) afterDelay:AUTO_HIDE_DELAY];
+    [self performSelectorOnce:@selector(doAutoHideCursor) afterDelay:AUTO_HIDE_DELAY];
     [[NSUserDefaults standardUserDefaults] setInteger:laserPointerColor forKey:SKLaserPointerColorKey];
 }
 
@@ -1554,7 +1554,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     laserPointerColor = (laserPointerColor + 6) % 7;
     pdfvFlags.cursorHidden = 0;
     [self setCursorForMouse:nil];
-    [self performSelectorOnce:@selector(doAutoHide) afterDelay:AUTO_HIDE_DELAY];
+    [self performSelectorOnce:@selector(doAutoHideCursor) afterDelay:AUTO_HIDE_DELAY];
     [[NSUserDefaults standardUserDefaults] setInteger:laserPointerColor forKey:SKLaserPointerColorKey];
 }
 
@@ -3124,6 +3124,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (interactionMode == SKPresentationMode) {
         [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(showNavWindow) object:nil];
         [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(doAutoHide) object:nil];
+        [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(doAutoHideCursor) object:nil];
     }
     
     [self setTemporaryToolMode:SKNoToolMode];
@@ -3288,6 +3289,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
     [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(showNavWindow) object:nil];
     [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(doAutoHide) object:nil];
+    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(doAutoHideCursor) object:nil];
     if (navWindow) {
         [navWindow remove];
         SKDESTROY(navWindow);
