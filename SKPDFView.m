@@ -1546,7 +1546,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     laserPointerColor = (laserPointerColor + 1) % 7;
     pdfvFlags.cursorHidden = 0;
     [self setCursorForMouse:nil];
-    [self performSelectorOnce:@selector(doAutoHideCursor) afterDelay:AUTO_HIDE_DELAY];
+    [self performSelectorOnce:@selector(doAutoHide) afterDelay:AUTO_HIDE_DELAY];
     [[NSUserDefaults standardUserDefaults] setInteger:laserPointerColor forKey:SKLaserPointerColorKey];
 }
 
@@ -1554,7 +1554,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     laserPointerColor = (laserPointerColor + 6) % 7;
     pdfvFlags.cursorHidden = 0;
     [self setCursorForMouse:nil];
-    [self performSelectorOnce:@selector(doAutoHideCursor) afterDelay:AUTO_HIDE_DELAY];
+    [self performSelectorOnce:@selector(doAutoHide) afterDelay:AUTO_HIDE_DELAY];
     [[NSUserDefaults standardUserDefaults] setInteger:laserPointerColor forKey:SKLaserPointerColorKey];
 }
 
