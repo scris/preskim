@@ -1099,6 +1099,13 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
+- (void)doAutoHideCursorIfNeeded {
+    if (interactionMode == SKPresentationMode && [self window] && pdfvFlags.cursorHidden) {
+        [self performSelector:@selector(doAutoHideCursor) withObject:nil afterDelay:0.0];
+        [self performSelector:@selector(doAutoHideCursor) withObject:nil afterDelay:0.1];
+    }
+}
+
 - (IBAction)goToNextPage:(id)sender {
     if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSCommandKeyMask | NSAlternateKeyMask)) {
         [self setToolMode:([self toolMode] + 1) % TOOL_MODE_COUNT];
@@ -1108,10 +1115,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self animateTransitionForNextPage:YES];
     else
         [super goToNextPage:sender];
-    if (interactionMode == SKPresentationMode && [self window] && pdfvFlags.cursorHidden) {
-        [self performSelector:@selector(doAutoHideCursor) withObject:nil afterDelay:0.0];
-        [self performSelector:@selector(doAutoHideCursor) withObject:nil afterDelay:0.1];
-    }
+    [self doAutoHideCursorIfNeeded];
 }
 
 - (IBAction)goToPreviousPage:(id)sender {
@@ -1123,10 +1127,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self animateTransitionForNextPage:NO];
     else
         [super goToPreviousPage:sender];
-    if (interactionMode == SKPresentationMode && [self window] && pdfvFlags.cursorHidden) {
-        [self performSelector:@selector(doAutoHideCursor) withObject:nil afterDelay:0.0];
-        [self performSelector:@selector(doAutoHideCursor) withObject:nil afterDelay:0.1];
-    }
+    [self doAutoHideCursorIfNeeded];
 }
 
 - (IBAction)goToFirstPage:(id)sender {
@@ -1378,10 +1379,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self setScaleFactor:1.0];
     else
         [self setAutoScales:YES];
-    if (interactionMode == SKPresentationMode && pdfvFlags.cursorHidden) {
-        [self performSelector:@selector(doAutoHideCursor) withObject:nil afterDelay:0.0];
-        [self performSelector:@selector(doAutoHideCursor) withObject:nil afterDelay:0.1];
-    }
+    [self doAutoHideCursorIfNeeded];
 }
 
 - (void)setSinglePageScrolling:(id)sender {
