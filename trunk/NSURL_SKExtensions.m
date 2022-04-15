@@ -173,7 +173,22 @@ static NSString *fileTypeOfURL(NSURL *url) {
     if ([url isFileURL]) {
         type = [[NSWorkspace sharedWorkspace] typeOfFile:[url path] error:NULL];
     } else {
-        type = [(NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)[url pathExtension], NULL) autorelease];
+        type = [url pathExtension];
+        if ([type length]) {
+            type = [(NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)type, NULL) autorelease];
+        } else {
+            NSString *scheme = [[url scheme] lowercaseString];
+            if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"])
+                type = NSFileTypeForHFSTypeCode(kInternetLocationHTTPIcon);
+            else if ([scheme isEqualToString:@"ftp"])
+                type = NSFileTypeForHFSTypeCode(kInternetLocationFTPIcon);
+            else if ([scheme isEqualToString:@"mailto"])
+                type = NSFileTypeForHFSTypeCode(kInternetLocationMailIcon);
+            else if ([scheme isEqualToString:@"news"])
+                type = NSFileTypeForHFSTypeCode(kInternetLocationNewsIcon);
+            else
+                type = NSFileTypeForHFSTypeCode(kInternetLocationGenericIcon);
+        }
     }
     return type ?: @"";
 }
