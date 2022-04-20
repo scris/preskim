@@ -199,10 +199,14 @@ static NSColor *SKNColorFromArray(NSArray *array) {
 NSArray *SKNSkimNotesFromData(NSData *data) {
     NSArray *noteDicts = nil;
     
-    if ([data length]) {
-        @try { noteDicts = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
-        @catch (id e) {}
-        if (noteDicts == nil) {
+    if ([data length] > 8) {
+        unsigned char ch = 0;
+        [data getBytes:&ch range:NSMakeRange(8, 1)];
+        ch = ch >> 4;
+        if (ch == 0xD) {
+            @try { noteDicts = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
+            @catch (id e) {}
+        } else if (ch == 0xA) {
             noteDicts = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListMutableContainers format:NULL errorDescription:NULL];
             if ([noteDicts isKindOfClass:[NSArray class]]) {
                 for (NSMutableDictionary *dict in noteDicts) {
