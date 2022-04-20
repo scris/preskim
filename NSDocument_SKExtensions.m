@@ -215,7 +215,7 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
 
 - (NSData *)notesData {
     NSArray *array = [self SkimNoteProperties];
-    return SKNDataFromSkimNotes(array, [[NSUserDefaults standardUserDefaults] boolForKey:SKWriteSkimNotesAsPlistKey]);
+    return SKNDataFromSkimNotes(array, [[NSUserDefaults standardUserDefaults] boolForKey:SKWriteLegacySkimNotesKey] == NO && [[NSUserDefaults standardUserDefaults] boolForKey:SKWriteSkimNotesAsArchiveKey] == NO);
 }
 
 - (NSString *)notesStringForTemplateType:(NSString *)typeName {
