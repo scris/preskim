@@ -459,10 +459,10 @@ enum {
     SKNXattrFlags flags = kSKNXattrDefault;
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKWriteLegacySkimNotesKey] == NO) {
         writeOptions = SKNSkimNotesWritingSyncable;
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKWriteSkimNotesAsArchiveKey] == NO)
+            writeOptions |= SKNSkimNotesWritingPlist;
         flags = kSKNXattrSyncable;
     }
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKWriteSkimNotesAsPlistKey])
-        writeOptions |= SKNSkimNotesWritingPlist;
     
     BOOL success = [fm writeSkimNotes:[self SkimNoteProperties] textNotes:[self notesString] richTextNotes:[self notesRTFData] toExtendedAttributesAtURL:absoluteURL options:writeOptions error:NULL];
     
@@ -712,7 +712,7 @@ enum {
     } else if ([ws type:SKArchiveDocumentType conformsToType:typeName]) {
         didWrite = [self writeArchiveToURL:absoluteURL error:&error];
     } else if ([ws type:SKNotesDocumentType conformsToType:typeName]) {
-        SKNSkimNotesWritingOptions options = [[NSUserDefaults standardUserDefaults] boolForKey:SKWriteSkimNotesAsPlistKey] ? SKNSkimNotesWritingPlist : 0;
+        SKNSkimNotesWritingOptions options = [[NSUserDefaults standardUserDefaults] boolForKey:SKWriteLegacySkimNotesKey] || [[NSUserDefaults standardUserDefaults] boolForKey:SKWriteSkimNotesAsArchiveKey] ? 0 : SKNSkimNotesWritingPlist;
         didWrite = [[NSFileManager defaultManager] writeSkimNotes:[self SkimNoteProperties] toSkimFileAtURL:absoluteURL options:options error:&error];
     } else if ([ws type:SKNotesRTFDocumentType conformsToType:typeName]) {
         NSData *data = [self notesRTFData];
