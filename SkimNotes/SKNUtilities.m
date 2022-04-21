@@ -199,10 +199,11 @@ static NSColor *SKNColorFromArray(NSArray *array) {
 NSArray *SKNSkimNotesFromData(NSData *data) {
     NSArray *noteDicts = nil;
     
-    if ([data length] > 8) {
+    if ([data length] > 0) {
         unsigned char ch = 0;
-        [data getBytes:&ch range:NSMakeRange(8, 1)];
-        ch = ch >> 4;
+        if ([data length] > 8)
+            [data getBytes:&ch range:NSMakeRange(8, 1)];
+        ch >>= 4;
         if (ch == 0xD) {
             @try { noteDicts = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
             @catch (id e) {}
