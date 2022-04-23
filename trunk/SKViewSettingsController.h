@@ -41,6 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @interface SKViewSettingsController : NSWindowController {
     BOOL custom;
+    BOOL useSettingsFromPDF;
     BOOL autoScales;
     CGFloat scaleFactor;
     NSInteger displayMode;
@@ -50,14 +51,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     BOOL displaysPageBreaks;
     NSInteger displayBox;
     NSDictionary *defaultSettings;
-    NSButton *customButton;
 }
 
 - (id)initWithSettings:(NSDictionary *)settings defaultSettings:(NSDictionary *)aDefaultSettings;
 
-@property (nonatomic, retain) IBOutlet NSButton *customButton;
-
 @property (nonatomic, getter=isCustom) BOOL custom;
+
+@property (nonatomic) BOOL useSettingsFromPDF;
 
 @property (nonatomic) BOOL autoScales;
 @property (nonatomic) CGFloat scaleFactor;

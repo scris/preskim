@@ -107,6 +107,7 @@ extern NSString *SKDefaultNoteHeightKey;
 extern NSString *SKSwatchColorsKey;
 extern NSString *SKDefaultPDFDisplaySettingsKey;
 extern NSString *SKDefaultFullScreenPDFDisplaySettingsKey;
+extern NSString *SKUseSettingsFromPDFKey;
 extern NSString *SKShowStatusBarKey;
 extern NSString *SKShowBookmarkStatusBarKey;
 extern NSString *SKShowNotesStatusBarKey;
