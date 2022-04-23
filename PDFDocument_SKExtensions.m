@@ -165,6 +165,7 @@
                 [settings setObject:[NSNumber numberWithInteger:kPDFDisplaySinglePage] forKey:@"displayMode"];
             } else if (0 == strcmp(pageLayout, "OneColumn")) {
                 [settings setObject:[NSNumber numberWithInteger:kPDFDisplaySinglePageContinuous] forKey:@"displayMode"];
+                [settings setObject:[NSNumber numberWithInteger:0] forKey:@"displayDirection"];
             } else if (0 == strcmp(pageLayout, "TwoColumnLeft")) {
                 [settings setObject:[NSNumber numberWithInteger:kPDFDisplayTwoUpContinuous] forKey:@"displayMode"];
                 [settings setObject:[NSNumber numberWithBool:NO] forKey:@"displaysAsBook"];
