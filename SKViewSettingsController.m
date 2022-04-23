@@ -37,13 +37,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #import "SKViewSettingsController.h"
+#import "SKStringConstants.h"
 
 #define kPDFDisplaySinglePageContinuous 1
 #define kPDFDisplayHorizontalContinuous 4
 
 @implementation SKViewSettingsController
 
-@synthesize customButton, custom, autoScales, scaleFactor, displayMode, displayDirection, displaysAsBook, displaysRTL, displaysPageBreaks, displayBox;
+@synthesize custom, useSettingsFromPDF, autoScales, scaleFactor, displayMode, displayDirection, displaysAsBook, displaysRTL, displaysPageBreaks, displayBox;
 @dynamic extendedDisplayMode, allowsHorizontalSettings, settings;
 
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
@@ -68,27 +69,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             settings = defaultSettings;
         }
         [self setSettings:settings];
+        useSettingsFromPDF = [[NSUserDefaults standardUserDefaults] boolForKey:SKUseSettingsFromPDFKey];
     }
     return self;
 }
 
 - (void)dealloc {
     SKDESTROY(defaultSettings);
-    SKDESTROY(customButton);
     [super dealloc];
 }
 
 - (NSString *)windowNibName {
     return @"ViewSettings";
-}
-
-- (void)windowDidLoad {
-    [super windowDidLoad];
-    if (defaultSettings == nil) {
-        [customButton removeFromSuperview];
-        [customButton unbind:NSValueBinding];
-        SKDESTROY(customButton);
-    }
 }
 
 - (NSInteger)extendedDisplayMode {

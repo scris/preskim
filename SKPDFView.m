@@ -1716,7 +1716,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if ([activeAnnotation isLink])
         [self setActiveAnnotation:nil];
     
-    // 10.6 does not automatically make us firstResponder, that's annoying
+    // 10.6 does not automatichally make us firstResponder, that's annoying
     // but we don't want an edited text note to stop editing when we're resizing it
     if ([[[self window] firstResponder] isDescendantOf:self] == NO)
         [[self window] makeFirstResponder:self];

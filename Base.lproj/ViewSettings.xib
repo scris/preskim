@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SKViewSettingsController">
             <connections>
-                <outlet property="customButton" destination="4tx-Im-k2d" id="9mi-dv-VJM"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="3GF-pN-sxX"/>
             </connections>
         </customObject>
@@ -43,6 +41,26 @@
                         </buttonCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="custom" id="fvj-eE-nHm"/>
+                            <binding destination="-2" name="hidden" keyPath="defaultSettings" id="xZg-vO-Mzs">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">NSIsNil</string>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="V7T-S1-Td4">
+                        <rect key="frame" x="18" y="252" width="219" height="18"/>
+                        <buttonCell key="cell" type="check" title="Use available settings from PDF" bezelStyle="regularSquare" imagePosition="left" inset="2" id="g8A-hm-CIh">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="-2" name="hidden" keyPath="defaultSettings" id="vKg-ob-NKQ">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">NSIsNotNil</string>
+                                </dictionary>
+                            </binding>
+                            <binding destination="-2" name="value" keyPath="useSettingsFromPDF" id="G4j-4v-oer"/>
                         </connections>
                     </button>
                     <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jh7-f6-LtY">
@@ -218,6 +236,7 @@ Gw
                     <constraint firstItem="7lV-o8-w8w" firstAttribute="leading" secondItem="jK7-jB-zxl" secondAttribute="trailing" constant="8" symbolic="YES" id="4vt-lb-H2v"/>
                     <constraint firstItem="7lV-o8-w8w" firstAttribute="top" secondItem="8cW-DD-wHC" secondAttribute="bottom" constant="8" symbolic="YES" id="5lZ-xa-SBH"/>
                     <constraint firstItem="WFv-vV-yVb" firstAttribute="leading" secondItem="D1r-q4-3vf" secondAttribute="trailing" constant="8" symbolic="YES" id="8TS-Gr-Qgp"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="V7T-S1-Td4" secondAttribute="trailing" constant="20" symbolic="YES" id="8pN-6Y-A1v"/>
                     <constraint firstItem="RaB-j3-S3B" firstAttribute="leading" secondItem="Jh7-f6-LtY" secondAttribute="trailing" constant="20" id="Ck8-Pw-3iE"/>
                     <constraint firstAttribute="bottom" secondItem="oIO-AP-hzR" secondAttribute="bottom" constant="20" symbolic="YES" id="FJe-cO-40W"/>
                     <constraint firstItem="8cW-DD-wHC" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="IKL-gC-Yno"/>
@@ -233,6 +252,7 @@ Gw
                     <constraint firstItem="WFv-vV-yVb" firstAttribute="top" secondItem="Uer-IA-rxW" secondAttribute="bottom" constant="8" id="Zjf-Ff-dGs"/>
                     <constraint firstItem="8cW-DD-wHC" firstAttribute="top" secondItem="4tx-Im-k2d" secondAttribute="bottom" constant="20" id="az3-qD-edc"/>
                     <constraint firstItem="oIO-AP-hzR" firstAttribute="firstBaseline" secondItem="dpy-5S-Zp3" secondAttribute="firstBaseline" id="bci-k4-rEO"/>
+                    <constraint firstItem="V7T-S1-Td4" firstAttribute="leading" secondItem="4tx-Im-k2d" secondAttribute="leading" id="fPb-n3-DL4"/>
                     <constraint firstItem="Uer-IA-rxW" firstAttribute="leading" secondItem="8cW-DD-wHC" secondAttribute="leading" id="fhI-KT-U7c"/>
                     <constraint firstItem="Jh7-f6-LtY" firstAttribute="top" secondItem="ZR7-HY-PNO" secondAttribute="bottom" constant="8" symbolic="YES" id="fwn-WL-FWK"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Uer-IA-rxW" secondAttribute="trailing" constant="20" symbolic="YES" id="g1Y-UP-zFl"/>
@@ -241,8 +261,8 @@ Gw
                     <constraint firstItem="Jh7-f6-LtY" firstAttribute="leading" secondItem="8cW-DD-wHC" secondAttribute="leading" id="haD-WQ-YQv"/>
                     <constraint firstAttribute="trailing" secondItem="oIO-AP-hzR" secondAttribute="trailing" constant="20" symbolic="YES" id="jCS-t4-4kW"/>
                     <constraint firstItem="VYe-Nl-QHJ" firstAttribute="leading" secondItem="8cW-DD-wHC" secondAttribute="leading" id="jS7-tr-bI9"/>
+                    <constraint firstItem="V7T-S1-Td4" firstAttribute="firstBaseline" secondItem="4tx-Im-k2d" secondAttribute="firstBaseline" id="ohk-Ys-QqW"/>
                     <constraint firstItem="oIO-AP-hzR" firstAttribute="width" secondItem="dpy-5S-Zp3" secondAttribute="width" id="pUV-GC-yn2"/>
-                    <constraint firstItem="8cW-DD-wHC" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" priority="749" constant="20" symbolic="YES" id="snI-zm-OBz"/>
                     <constraint firstItem="oIO-AP-hzR" firstAttribute="top" secondItem="WFv-vV-yVb" secondAttribute="bottom" constant="20" id="uqe-7V-4sf"/>
                     <constraint firstItem="4tx-Im-k2d" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="vAg-87-diM"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="4tx-Im-k2d" secondAttribute="trailing" constant="20" symbolic="YES" id="vVR-K5-slg"/>

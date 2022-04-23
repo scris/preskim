@@ -108,6 +108,7 @@ NSString *SKDefaultNoteHeightKey = @"SKDefaultNoteHeight";
 NSString *SKSwatchColorsKey = @"SKSwatchColors";
 NSString *SKDefaultPDFDisplaySettingsKey = @"SKDefaultPDFDisplaySettings";
 NSString *SKDefaultFullScreenPDFDisplaySettingsKey = @"SKDefaultFullScreenPDFDisplaySettings";
+NSString *SKUseSettingsFromPDFKey = @"SKUseSettingsFromPDF";
 NSString *SKShowStatusBarKey = @"SKShowStatusBar";
 NSString *SKShowBookmarkStatusBarKey = @"SKShowBookmarkStatusBar";
 NSString *SKShowNotesStatusBarKey = @"SKShowNotesStatusBar";

@@ -178,8 +178,6 @@ static char SKMainWindowThumbnailSelectionObservationContext;
 #define SKLeftSidePaneWidthKey @"SKLeftSidePaneWidth"
 #define SKRightSidePaneWidthKey @"SKRightSidePaneWidth"
 
-#define SKUseSettingsFromPDFKey @"SKUseSettingsFromPDF"
-
 #define SKCollapseTOCSublevelsKey @"SKCollapseTOCSublevels"
 
 #if SDK_BEFORE(10_11)
