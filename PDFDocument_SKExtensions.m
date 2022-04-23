@@ -171,7 +171,19 @@
             } else if (0 == strcmp(pageLayout, "TwoColumnRight")) {
                 [settings setObject:[NSNumber numberWithInteger:kPDFDisplayTwoUpContinuous] forKey:@"displayMode"];
                 [settings setObject:[NSNumber numberWithBool:YES] forKey:@"displaysAsBook"];
+            } else if (0 == strcmp(pageLayout, "TwoPageLeft")) {
+                [settings setObject:[NSNumber numberWithInteger:kPDFDisplayTwoUp] forKey:@"displayMode"];
+                [settings setObject:[NSNumber numberWithBool:NO] forKey:@"displaysAsBook"];
+            } else if (0 == strcmp(pageLayout, "TwoPageRight")) {
+                [settings setObject:[NSNumber numberWithInteger:kPDFDisplayTwoUp] forKey:@"displayMode"];
+                [settings setObject:[NSNumber numberWithBool:YES] forKey:@"displaysAsBook"];
             }
+        }
+        if (CGPDFDictionaryGetName(catalog, "Direction", &pageLayout)) {
+            if (0 == strcmp(pageLayout, "L2R"))
+                [settings setObject:[NSNumber numberWithBool:NO] forKey:@"displaysRTL"];
+            else if (0 == strcmp(pageLayout, "R2L"))
+                [settings setObject:[NSNumber numberWithBool:YES] forKey:@"displaysRTL"];
         }
         if (CGPDFDictionaryGetDictionary(catalog, "ViewerPreferences", &viewerPrefs)) {
             const char *viewArea = NULL;
