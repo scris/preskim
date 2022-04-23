@@ -107,8 +107,11 @@ static char SKGeneralPreferencesUpdaterObservationContext;
     SKViewSettingsController *viewSettings = [[[SKViewSettingsController alloc] initWithSettings:settings defaultSettings:defaultSettings] autorelease];
     
     [viewSettings beginSheetModalForWindow:[[self view] window] completionHandler:^(NSInteger result){
-        if (result == NSModalResponseOK)
+        if (result == NSModalResponseOK) {
             [sud setObject:[viewSettings settings] forKey:key];
+            if (fullScreen == NO)
+                [sud setBool:[viewSettings useSettingsFromPDF] forKey:SKUseSettingsFromPDFKey];
+        }
     }];
 }
 
