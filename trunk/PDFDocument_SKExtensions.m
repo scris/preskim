@@ -157,6 +157,7 @@
     CGPDFDocumentRef doc = [self documentRef];
     CGPDFDictionaryRef catalog = CGPDFDocumentGetCatalog(doc);
     const char *pageLayout = NULL;
+    const char *direction = NULL;
     CGPDFDictionaryRef viewerPrefs = NULL;
     NSMutableDictionary *settings = [NSMutableDictionary dictionary];
     if (catalog) {
@@ -180,10 +181,10 @@
                 [settings setObject:[NSNumber numberWithBool:YES] forKey:@"displaysAsBook"];
             }
         }
-        if (CGPDFDictionaryGetName(catalog, "Direction", &pageLayout)) {
-            if (0 == strcmp(pageLayout, "L2R"))
+        if (CGPDFDictionaryGetName(catalog, "Direction", &direction)) {
+            if (0 == strcmp(direction, "L2R"))
                 [settings setObject:[NSNumber numberWithBool:NO] forKey:@"displaysRTL"];
-            else if (0 == strcmp(pageLayout, "R2L"))
+            else if (0 == strcmp(direction, "R2L"))
                 [settings setObject:[NSNumber numberWithBool:YES] forKey:@"displaysRTL"];
         }
         if (CGPDFDictionaryGetDictionary(catalog, "ViewerPreferences", &viewerPrefs)) {
@@ -208,6 +209,7 @@
     SKLanguageDirections directions = (SKLanguageDirections){NSLocaleLanguageDirectionLeftToRight, NSLocaleLanguageDirectionTopToBottom};
     if (catalog) {
         CGPDFStringRef lang = NULL;
+        const char *direction = NULL;
         if (CGPDFDictionaryGetString(catalog, "Lang", &lang)) {
             NSString *language = (NSString *)CGPDFStringCopyTextString(lang);
             directions.characterDirection = [NSLocale characterDirectionForLanguage:language];
@@ -225,6 +227,11 @@
                     directions.characterDirection = NSLocaleLanguageDirectionTopToBottom;
             }
             [language release];
+        } else if (CGPDFDictionaryGetName(catalog, "Direction", &direction)) {
+            if (0 == strcmp(direction, "L2R"))
+                directions.characterDirection = kCFLocaleLanguageDirectionLeftToRight;
+            else if (0 == strcmp(direction, "R2L"))
+                directions.characterDirection = kCFLocaleLanguageDirectionRightToLeft;
         }
     }
     return directions;
