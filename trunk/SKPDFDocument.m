@@ -55,7 +55,7 @@
 
 - (void)dealloc {
     containingDocument = nil;
-    SKZONEDESTROY(languageDirections);
+    SKZONEDESTROY(languageDirectionAngles);
     [super dealloc];
 }
 
@@ -63,12 +63,12 @@
     return [SKPDFPage class];
 }
 
-- (SKLanguageDirections)languageDirections {
-    if (languageDirections == NULL) {
-        languageDirections = (SKLanguageDirections *)NSZoneMalloc(NULL, sizeof(SKLanguageDirections));
-        *languageDirections = [super languageDirections];
+- (SKLanguageDirectionAngles)languageDirectionAngles {
+    if (languageDirectionAngles == NULL) {
+        languageDirectionAngles = (SKLanguageDirectionAngles *)NSZoneMalloc(NULL, sizeof(SKLanguageDirectionAngles));
+        *languageDirectionAngles = [super languageDirectionAngles];
     }
-    return *languageDirections;
+    return *languageDirectionAngles;
 }
 
 - (BOOL)unlockWithPassword:(NSString *)password {

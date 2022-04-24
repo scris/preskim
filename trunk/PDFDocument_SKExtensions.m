@@ -203,39 +203,52 @@
     return [settings count] > 0 ? settings : nil;
 }
 
-- (SKLanguageDirections)languageDirections {
+static inline NSInteger angleForDirection(NSLocaleLanguageDirection direction, BOOL isLine) {
+    switch (direction) {
+        case NSLocaleLanguageDirectionLeftToRight: return 0;
+        case NSLocaleLanguageDirectionRightToLeft: return 180;
+        case NSLocaleLanguageDirectionTopToBottom: return 270;
+        case NSLocaleLanguageDirectionBottomToTop: return 90;
+        case NSLocaleLanguageDirectionUnknown:
+        default:                                   return isLine ? 270 : 0;
+    }
+}
+
+- (SKLanguageDirectionAngles)languageDirectionAngles {
     CGPDFDocumentRef doc = [self documentRef];
     CGPDFDictionaryRef catalog = CGPDFDocumentGetCatalog(doc);
-    SKLanguageDirections directions = (SKLanguageDirections){NSLocaleLanguageDirectionLeftToRight, NSLocaleLanguageDirectionTopToBottom};
+    SKLanguageDirectionAngles angles = (SKLanguageDirectionAngles){0, 270};
     if (catalog) {
         CGPDFStringRef lang = NULL;
         CGPDFDictionaryRef viewerPrefs = NULL;
         const char *direction = NULL;
         if (CGPDFDictionaryGetString(catalog, "Lang", &lang)) {
             NSString *language = (NSString *)CGPDFStringCopyTextString(lang);
-            directions.characterDirection = [NSLocale characterDirectionForLanguage:language];
-            directions.lineDirection = [NSLocale lineDirectionForLanguage:language];
-            if (directions.lineDirection == NSLocaleLanguageDirectionUnknown) {
-                if (directions.characterDirection < NSLocaleLanguageDirectionTopToBottom)
-                    directions.lineDirection = NSLocaleLanguageDirectionTopToBottom;
-                else
-                    directions.lineDirection = NSLocaleLanguageDirectionLeftToRight;
-            }
-            if (directions.characterDirection == NSLocaleLanguageDirectionUnknown) {
-                if (directions.lineDirection > NSLocaleLanguageDirectionRightToLeft)
-                    directions.characterDirection = NSLocaleLanguageDirectionLeftToRight;
-                else
-                    directions.characterDirection = NSLocaleLanguageDirectionTopToBottom;
-            }
+            NSLocaleLanguageDirection characterDirection = [NSLocale characterDirectionForLanguage:language];
+            NSLocaleLanguageDirection lineDirection = [NSLocale lineDirectionForLanguage:language];
             [language release];
+            if (lineDirection == NSLocaleLanguageDirectionUnknown) {
+                if (characterDirection < NSLocaleLanguageDirectionTopToBottom)
+                    lineDirection = NSLocaleLanguageDirectionTopToBottom;
+                else
+                    lineDirection = NSLocaleLanguageDirectionLeftToRight;
+            }
+            if (characterDirection == NSLocaleLanguageDirectionUnknown) {
+                if (lineDirection > NSLocaleLanguageDirectionRightToLeft)
+                    characterDirection = NSLocaleLanguageDirectionLeftToRight;
+                else
+                    characterDirection = NSLocaleLanguageDirectionTopToBottom;
+            }
+            angles.characterDirection = angleForDirection(characterDirection, NO);
+            angles.lineDirection = angleForDirection(lineDirection, YES);
         } else if (CGPDFDictionaryGetDictionary(catalog, "ViewerPreferences", &viewerPrefs) && CGPDFDictionaryGetName(viewerPrefs, "Direction", &direction)) {
             if (0 == strcmp(direction, "L2R"))
-                directions.characterDirection = kCFLocaleLanguageDirectionLeftToRight;
+                angles.characterDirection = 0;
             else if (0 == strcmp(direction, "R2L"))
-                directions.characterDirection = kCFLocaleLanguageDirectionRightToLeft;
+                angles.characterDirection = 180;
         }
     }
-    return directions;
+    return angles;
 }
 
 #pragma clang diagnostic push
