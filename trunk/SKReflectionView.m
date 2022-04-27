@@ -38,16 +38,53 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "SKReflectionView.h"
 #import "NSView_SKExtensions.h"
+#import "NSGraphics_SKExtensions.h"
+#import "NSUserDefaultsController_SKExtensions.h"
+#import "SKStringConstants.h"
 
+static char SKReflectionViewDefaultsObservationContext;
 
 @implementation SKReflectionView
 
-@synthesize reflectedScrollView;
+@synthesize reflectedScrollView,wantsFilters;
 
 - (void)dealloc {
+    if (wantsFilters) {
+        @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[NSArray arrayWithObjects:SKInvertColorsInDarkModeKey, SKSepiaToneKey, nil] context:&SKReflectionViewDefaultsObservationContext]; }
+        @catch (id e) {}
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     SKDESTROY(reflectedScrollView);
     [super dealloc];
+}
+
+- (void)setWantsFilters:(BOOL)flag {
+    if (flag != wantsFilters) {
+        wantsFilters = flag;
+        if (wantsFilters) {
+            [self setContentFilters:SKColorEffectFilters()];
+            [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[NSArray arrayWithObjects:SKInvertColorsInDarkModeKey, SKSepiaToneKey, nil] context:&SKReflectionViewDefaultsObservationContext];
+        } else {
+            [self setContentFilters:[NSArray array]];
+            [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[NSArray arrayWithObjects:SKInvertColorsInDarkModeKey, SKSepiaToneKey, nil] context:&SKReflectionViewDefaultsObservationContext];
+        }
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == &SKReflectionViewDefaultsObservationContext)
+        [self setContentFilters:SKColorEffectFilters()];
+    else
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+- (void)viewDidChangeEffectiveAppearance {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+    [super viewDidChangeEffectiveAppearance];
+#pragma clang diagnostic pop
+    if (wantsFilters)
+        [self setContentFilters:SKColorEffectFilters()];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

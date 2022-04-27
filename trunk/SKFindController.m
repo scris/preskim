@@ -157,7 +157,7 @@
     
     [messageField setHidden:YES];
     if (visible == NO)
-        [(SKTopBarView *)[self view] reflectView:nil animate:NO];
+        [(SKTopBarView *)[self view] reflectView:nil animate:NO wantsFilters:YES];
     
     if (animate) {
         animating = YES;
@@ -172,7 +172,7 @@
                 }
                 NSWindow *window = [[self view] window];
                 if (visible) {
-                    [(SKTopBarView *)findBar reflectView:view animate:NO];
+                    [(SKTopBarView *)findBar reflectView:view animate:NO wantsFilters:YES];
                 } else {
                     [findBar removeFromSuperview];
                     [NSLayoutConstraint activateConstraints:constraints];
@@ -182,7 +182,7 @@
             }];
     } else {
         if (visible) {
-            [(SKTopBarView *)findBar reflectView:view animate:NO];
+            [(SKTopBarView *)findBar reflectView:view animate:NO wantsFilters:YES];
         } else {
             [findBar removeFromSuperview];
             [NSLayoutConstraint activateConstraints:constraints];
@@ -195,7 +195,7 @@
 - (void)setDelegate:(id <SKFindControllerDelegate>)newDelegate {
     if (delegate && newDelegate == nil) {
         [ownerController setContent:nil];
-        [(SKTopBarView *)[self view] reflectView:nil animate:NO];
+        [(SKTopBarView *)[self view] reflectView:nil animate:NO wantsFilters:YES];
     }
     delegate = newDelegate;
 }

@@ -65,20 +65,12 @@
 #pragma clang diagnostic ignored "-Wpartial-availability"
             separatorColor = [[NSColor separatorColor] retain];
 #pragma clang diagnostic pop
-            NSVisualEffectView *view = [[NSVisualEffectView alloc] init];
+            backgroundView = [[NSVisualEffectView alloc] initWithFrame:[self contentRect]];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-            [view setMaterial:RUNNING_AFTER(10_15) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
+            [backgroundView setMaterial:RUNNING_AFTER(10_15) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
 #pragma clang diagnostic pop
-            [view setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
-            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableSearchBarBlurringKey]) {
-                backgroundView = [view retain];
-            } else {
-                backgroundView = [[SKReflectionView alloc] init];
-                [view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-                [backgroundView addSubview:view];
-            }
-            [backgroundView setFrame:[self contentRect]];
+            [backgroundView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
             [super addSubview:backgroundView];
         } else {
             static CGFloat defaultGrays[5] = {0.85, 0.9,  0.9, 0.95,  0.8};
@@ -100,6 +92,7 @@
 		// this decodes only the reference, the actual view should already be decoded as a subview
         contentView = [[decoder decodeObjectForKey:@"contentView"] retain];
         backgroundView = [[decoder decodeObjectForKey:@"backgroundView"] retain];
+        reflectionView = [[decoder decodeObjectForKey:@"reflectionView"] retain];
         backgroundColors = [[decoder decodeObjectForKey:@"backgroundColors"] retain];
         alternateBackgroundColors = [[decoder decodeObjectForKey:@"alternateBackgroundColors"] retain];
         separatorColor = [[decoder decodeObjectForKey:@"separatorColor"] retain];
@@ -116,6 +109,7 @@
     // this encodes only a reference, the actual contentView should already be encoded because it's a subview
     [coder encodeConditionalObject:contentView forKey:@"contentView"];
     [coder encodeConditionalObject:backgroundView forKey:@"backgroundView"];
+    [coder encodeConditionalObject:reflectionView forKey:@"reflectionView"];
     [coder encodeObject:backgroundColors forKey:@"backgroundColors"];
     [coder encodeObject:alternateBackgroundColors forKey:@"alternateBackgroundColors"];
     [coder encodeInteger:overflowEdge forKey:@"overflowEdge"];
@@ -127,6 +121,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     SKDESTROY(contentView);
     SKDESTROY(backgroundView);
+    SKDESTROY(reflectionView);
     SKDESTROY(backgroundColors);
     SKDESTROY(alternateBackgroundColors);
     SKDESTROY(separatorColor);
@@ -135,6 +130,7 @@
 
 - (void)resizeSubviewsWithOldSize:(NSSize)size {
     [backgroundView setFrame:[self contentRect]];
+    [reflectionView setFrame:[self contentRect]];
     [contentView setFrame:[self contentRect]];
 }
 
@@ -230,6 +226,7 @@
 	if (flag != hasSeparator) {
 		hasSeparator = flag;
         [backgroundView setFrame:[self contentRect]];
+        [reflectionView setFrame:[self contentRect]];
         [contentView setFrame:[self contentRect]];
 		[self setNeedsDisplay:YES];
 	}
@@ -245,6 +242,7 @@
         }
         drawsBackground = flag;
         [backgroundView setHidden:drawsBackground == NO];
+        [reflectionView setHidden:drawsBackground == NO];
         [self setNeedsDisplay:YES];
     }
 }
@@ -269,22 +267,39 @@
     return rect;
 }
 
-- (void)reflectView:(NSView *)view animate:(BOOL)animate {
-    if ([backgroundView respondsToSelector:@selector(setReflectedScrollView:)] == NO)
+- (void)reflectView:(NSView *)view animate:(BOOL)animate wantsFilters:(BOOL)wantsFilters {
+    if (RUNNING_BEFORE(10_14) || [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableSearchBarBlurringKey])
         return;
     NSScrollView *scrollView = [view descendantOfClass:[NSScrollView class]];
-    if (scrollView == [(SKReflectionView *)backgroundView reflectedScrollView])
+    if (scrollView == [reflectionView reflectedScrollView]) {
+        [reflectionView setWantsFilters:wantsFilters];
         return;
+    }
     if (animate == NO || [self drawsBackground] == NO) {
-        [(SKReflectionView *)backgroundView setReflectedScrollView:scrollView];
+        if (reflectionView == nil) {
+            reflectionView = [[SKReflectionView alloc] initWithFrame:[self contentRect]];
+            [reflectionView setHidden:drawsBackground == NO];
+            [reflectionView setReflectedScrollView:scrollView];
+            wantsSubviews = YES;
+            [super addSubview:reflectionView positioned:NSWindowBelow relativeTo:nil];
+            wantsSubviews = NO;
+        } else {
+            [reflectionView setReflectedScrollView:scrollView];
+        }
+        [reflectionView setWantsFilters:wantsFilters];
     } else {
-        SKReflectionView *bgView = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:backgroundView]];
-        [bgView setReflectedScrollView:scrollView];
+        SKReflectionView *newView = [[SKReflectionView alloc] initWithFrame:[self contentRect]];
+        [newView setHidden:drawsBackground == NO];
+        [newView setReflectedScrollView:scrollView];
+        [newView setWantsFilters:wantsFilters];
         wantsSubviews = YES;
-        [[self animator] replaceSubview:backgroundView with:bgView];
+        if (reflectionView)
+            [[self animator] replaceSubview:reflectionView with:newView];
+        else
+            [[self animator] addSubview:newView positioned:NSWindowBelow relativeTo:nil];
         wantsSubviews = NO;
-        [backgroundView release];
-        backgroundView = [bgView retain];
+        [reflectionView release];
+        reflectionView = newView;
     }
 }
 
