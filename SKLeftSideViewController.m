@@ -173,6 +173,10 @@
     return [findTableView isDescendantOf:aView] || [groupedFindTableView isDescendantOf:aView];
 }
 
+- (BOOL)wantsFiltersForView:(NSView *)aView {
+    return [thumbnailTableView isDescendantOf:aView];
+}
+
 - (void)applySearchTableHeader:(NSString *)message {
     [[[findTableView tableColumnWithIdentifier:RESULTS_COLUMNID] headerCell] setStringValue:message];
     [[findTableView headerView] setNeedsDisplay:YES];

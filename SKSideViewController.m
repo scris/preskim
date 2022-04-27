@@ -68,7 +68,7 @@
 
 - (void)setMainController:(SKMainWindowController *)newMainController {
     if (mainController && newMainController == nil) {
-        [[self topBar] reflectView:nil animate:NO];
+        [[self topBar] reflectView:nil animate:NO wantsFilters:NO];
     }
     mainController = newMainController;
 }
@@ -76,6 +76,10 @@
 #pragma mark View animation
 
 - (BOOL)requiresAlternateButtonForView:(NSView *)aView {
+    return NO;
+}
+
+- (BOOL)wantsFiltersForView:(NSView *)aView {
     return NO;
 }
 
@@ -92,6 +96,7 @@
     
     BOOL wasAlternate = [self requiresAlternateButtonForView:oldView];
     BOOL isAlternate = [self requiresAlternateButtonForView:newView];
+    BOOL wantsFilters = [self wantsFiltersForView:newView];
     BOOL changeButton = wasAlternate != isAlternate;
     NSSegmentedControl *oldButton = wasAlternate ? alternateButton : button;
     NSSegmentedControl *newButton = isAlternate ? alternateButton : button;
@@ -124,7 +129,7 @@
         }
         [[firstResponder window] makeFirstResponder:firstResponder];
         [[contentView window] recalculateKeyViewLoop];
-        [[self topBar] reflectView:newView animate:NO];
+        [[self topBar] reflectView:newView animate:NO wantsFilters:wantsFilters];
     } else {
         isAnimating = YES;
         
@@ -152,7 +157,7 @@
                 [context setDuration:DURATION]; 
                 [[contentView animator] replaceSubview:oldView with:newView];
                 [NSLayoutConstraint activateConstraints:constraints];
-                [[self topBar] reflectView:newView animate:YES];
+                [[self topBar] reflectView:newView animate:YES wantsFilters:wantsFilters];
                 if (changeButton) {
                     [[newButton animator] setHidden:NO];
                     [[oldButton animator] setHidden:YES];

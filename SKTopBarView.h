@@ -38,9 +38,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class SKReflectionView;
+
 @interface SKTopBarView : NSView {
 	NSView *contentView;
-    NSView *backgroundView;
+    NSVisualEffectView *backgroundView;
+    SKReflectionView *reflectionView;
     NSArray *backgroundColors;
     NSArray *alternateBackgroundColors;
     NSColor *separatorColor;
@@ -57,6 +60,6 @@
 @property (nonatomic) NSRectEdge overflowEdge;
 @property (nonatomic) BOOL hasSeparator, drawsBackground;
 
-- (void)reflectView:(NSView *)view animate:(BOOL)animate;
+- (void)reflectView:(NSView *)view animate:(BOOL)animate wantsFilters:(BOOL)wantsFilters;
 
 @end

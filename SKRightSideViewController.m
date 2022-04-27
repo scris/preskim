@@ -133,4 +133,8 @@
     [super setMainController:newMainController];
 }
 
+- (BOOL)wantsFiltersForView:(NSView *)aView {
+    return [noteOutlineView isDescendantOf:aView];
+}
+
 @end

@@ -41,9 +41,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @interface SKReflectionView : NSView {
     NSScrollView *reflectedScrollView;
+    BOOL wantsFilters;
 }
 
 @property (nonatomic, retain) NSScrollView *reflectedScrollView;
+@property (nonatomic) BOOL wantsFilters;
 
 @end
     
