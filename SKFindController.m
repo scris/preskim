@@ -195,7 +195,7 @@
 - (void)setDelegate:(id <SKFindControllerDelegate>)newDelegate {
     if (delegate && newDelegate == nil) {
         [ownerController setContent:nil];
-        [(SKTopBarView *)[self view] reflectView:nil animate:NO wantsFilters:YES];
+        [(SKTopBarView *)[self view] reflectView:nil animate:NO wantsFilters:NO];
     }
     delegate = newDelegate;
 }
