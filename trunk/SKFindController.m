@@ -157,7 +157,7 @@
     
     [messageField setHidden:YES];
     if (visible == NO)
-        [(SKTopBarView *)[self view] reflectView:nil animate:NO wantsFilters:YES];
+        [(SKTopBarView *)[self view] reflectView:nil animate:NO wantsFilters:NO];
     
     if (animate) {
         animating = YES;
