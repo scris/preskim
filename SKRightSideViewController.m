@@ -134,7 +134,7 @@
 }
 
 - (BOOL)wantsFiltersForView:(NSView *)aView {
-    return [noteOutlineView isDescendantOf:aView];
+    return [snapshotTableView isDescendantOf:aView];
 }
 
 @end
