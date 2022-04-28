@@ -129,9 +129,11 @@
 }
 
 - (void)resizeSubviewsWithOldSize:(NSSize)size {
-    [backgroundView setFrame:[self contentRect]];
-    [reflectionView setFrame:[self contentRect]];
-    [contentView setFrame:[self contentRect]];
+    [super resizeSubviewsWithOldSize:size];
+    NSRect rect = [self contentRect];
+    [backgroundView setFrame:rect];
+    [reflectionView setFrame:rect];
+    [contentView setFrame:rect];
 }
 
 - (void)addSubview:(NSView *)aView {
@@ -225,9 +227,10 @@
 - (void)setHasSeparator:(BOOL)flag {
 	if (flag != hasSeparator) {
 		hasSeparator = flag;
-        [backgroundView setFrame:[self contentRect]];
-        [reflectionView setFrame:[self contentRect]];
-        [contentView setFrame:[self contentRect]];
+        NSRect rect = [self contentRect];
+        [backgroundView setFrame:rect];
+        [reflectionView setFrame:rect];
+        [contentView setFrame:rect];
 		[self setNeedsDisplay:YES];
 	}
 }
