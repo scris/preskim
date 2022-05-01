@@ -98,7 +98,7 @@ static char SKReflectionViewDefaultsObservationContext;
         return;
     NSBitmapImageRep *imageRep = [view bitmapImageRepCachingDisplayInRect:rect];
     rect = [self convertRect:rect fromView:view];
-    [imageRep drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSpourceOver fraction:1.0 respectFlipped:YES hints:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:NSImageInterpolationNone], NSImageHintInterpolation, nil]];
+    [imageRep drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0 respectFlipped:YES hints:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:NSImageInterpolationNone], NSImageHintInterpolation, nil]];
 }
 
 - (void)reflectedSscrollBoundsChanged:(NSNotification *)notification {
