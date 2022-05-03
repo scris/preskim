@@ -112,7 +112,8 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     if (sideWindow == nil)
         sideWindow = [[SKSideWindow alloc] initWithView:leftSideController.view];
     
-    [leftSideController.topBar setDrawsBackground:NO];
+    [leftSideController.topBar setHasSeparator:NO];
+    [leftSideController.topBar applyPresentationBackground];
     
     mwcFlags.savedLeftSidePaneState = [self leftSidePaneState];
     [self setLeftSidePaneState:SKSidePaneStateThumbnail];
@@ -126,7 +127,8 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         
         if ([[sideWindow firstResponder] isDescendantOf:leftSideController.view])
             [sideWindow makeFirstResponder:nil];
-        [leftSideController.topBar setDrawsBackground:YES];
+        [leftSideController.topBar setHasSeparator:YES];
+        [leftSideController.topBar applyDefaultBackground];
         [leftSideController.view setFrame:[leftSideContentView bounds]];
         
         [leftSideContentView addSubview:leftSideController.view];
@@ -208,6 +210,8 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [scrollView setHasHorizontalScroller:NO];
     [scrollView setHasVerticalScroller:NO];
     [scrollView setDrawsBackground:NO];
+    [scrollView setAutomaticallyAdjustsContentInsets:YES];
+    [scrollView setContentInsets:NSEdgeInsetsZero];
     
     [pdfView setCurrentSelection:nil];
     if ([pdfView hasReadingBar])
@@ -270,6 +274,10 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [scrollView setHasVerticalScroller:[[savedNormalSetup objectForKey:HASVERTICALSCROLLER_KEY] boolValue]];
     [scrollView setAutohidesScrollers:[[savedNormalSetup objectForKey:AUTOHIDESSCROLLERS_KEY] boolValue]];
     [scrollView setDrawsBackground:[[savedNormalSetup objectForKey:DRAWSBACKGROUND_KEY] boolValue]];
+    if ([[findController view] window]) {
+        [scrollView setAutomaticallyAdjustsContentInsets:NO];
+        [scrollView setContentInsets:NSEdgeInsetsMake(NSHeight([[findController view] frame]), 0.0, 0.0, 0.0)];
+    }
 }
 
 - (void)fadeInFullScreenWindowOnScreen:(NSScreen *)screen {
@@ -449,7 +457,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     interactionMode = SKNormalMode;
     
     // this should be done before exitPresentationMode to get a smooth transition
-    [pdfContentView addSubview:pdfView];
+    [pdfContentView addSubview:pdfView positioned:NSWindowBelow relativeTo:nil];
     [pdfView activateConstraintsToSuperview];
     [pdfView setBackgroundColor:backgroundColor];
     [secondaryPdfView setBackgroundColor:backgroundColor];

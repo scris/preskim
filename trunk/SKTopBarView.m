@@ -37,7 +37,6 @@
  */
 
 #import "SKTopBarView.h"
-#import "SKReflectionView.h"
 #import "NSGeometry_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "NSView_SKExtensions.h"
@@ -46,41 +45,31 @@
 
 #define SEPARATOR_WIDTH 1.0
 
+@interface SKEdgeView : NSView {
+    BOOL hasSeparator;
+}
+@property (nonatomic) BOOL hasSeparator;
+@end
+
+#pragma mark -
+
 @implementation SKTopBarView
 
-@synthesize contentView, backgroundColors, alternateBackgroundColors, separatorColor, overflowEdge, hasSeparator, drawsBackground;
-@dynamic contentRect;
+@synthesize contentView, backgroundColors, alternateBackgroundColors, hasSeparator;
 
 - (id)initWithFrame:(NSRect)frame {
     wantsSubviews = YES;
     self = [super initWithFrame:frame];
     if (self) {
         hasSeparator = NO; // we start with no separator, so we can use this in IB without getting weird offsets
-		overflowEdge = NSMaxXEdge;
-        drawsBackground = YES;
         if (RUNNING_AFTER(10_13)) {
-            backgroundColors = nil;
-            alternateBackgroundColors = nil;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-            separatorColor = [[NSColor separatorColor] retain];
-#pragma clang diagnostic pop
-            backgroundView = [[NSVisualEffectView alloc] initWithFrame:[self contentRect]];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-            [backgroundView setMaterial:RUNNING_AFTER(10_15) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
-#pragma clang diagnostic pop
-            [backgroundView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
+            backgroundView = [[NSVisualEffectView alloc] initWithFrame:[self bounds]];
             [super addSubview:backgroundView];
-        } else {
-            static CGFloat defaultGrays[5] = {0.85, 0.9,  0.9, 0.95,  0.8};
-            backgroundColors = [[NSArray alloc] initWithObjects:[NSColor colorWithGenericGamma22White:defaultGrays[0] alpha:1.0], [NSColor colorWithGenericGamma22White:defaultGrays[1] alpha:1.0], nil];
-            alternateBackgroundColors = [[NSArray alloc] initWithObjects:[NSColor colorWithGenericGamma22White:defaultGrays[2] alpha:1.0], [NSColor colorWithGenericGamma22White:defaultGrays[3] alpha:1.0], nil];
-            separatorColor = [[NSColor colorWithGenericGamma22White:defaultGrays[4] alpha:1.0] retain];
         }
-        contentView = [[NSView alloc] initWithFrame:[self contentRect]];
+        contentView = [[SKEdgeView alloc] initWithFrame:[self bounds]];
         [super addSubview:contentView];
         wantsSubviews = NO;
+        [self applyDefaultBackground];
     }
     return self;
 }
@@ -92,13 +81,9 @@
 		// this decodes only the reference, the actual view should already be decoded as a subview
         contentView = [[decoder decodeObjectForKey:@"contentView"] retain];
         backgroundView = [[decoder decodeObjectForKey:@"backgroundView"] retain];
-        reflectionView = [[decoder decodeObjectForKey:@"reflectionView"] retain];
         backgroundColors = [[decoder decodeObjectForKey:@"backgroundColors"] retain];
         alternateBackgroundColors = [[decoder decodeObjectForKey:@"alternateBackgroundColors"] retain];
-        separatorColor = [[decoder decodeObjectForKey:@"separatorColor"] retain];
-		overflowEdge = [decoder decodeIntegerForKey:@"overflowEdge"];
         hasSeparator = [decoder decodeBoolForKey:@"hasSeparator"];
-        drawsBackground = [decoder decodeBoolForKey:@"drawsBackground"];
         wantsSubviews = NO;
 	}
 	return self;
@@ -109,30 +94,24 @@
     // this encodes only a reference, the actual contentView should already be encoded because it's a subview
     [coder encodeConditionalObject:contentView forKey:@"contentView"];
     [coder encodeConditionalObject:backgroundView forKey:@"backgroundView"];
-    [coder encodeConditionalObject:reflectionView forKey:@"reflectionView"];
     [coder encodeObject:backgroundColors forKey:@"backgroundColors"];
     [coder encodeObject:alternateBackgroundColors forKey:@"alternateBackgroundColors"];
-    [coder encodeInteger:overflowEdge forKey:@"overflowEdge"];
     [coder encodeBool:hasSeparator forKey:@"hasSeparator"];
-    [coder encodeBool:drawsBackground forKey:@"drawsBackground"];
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     SKDESTROY(contentView);
     SKDESTROY(backgroundView);
-    SKDESTROY(reflectionView);
     SKDESTROY(backgroundColors);
     SKDESTROY(alternateBackgroundColors);
-    SKDESTROY(separatorColor);
 	[super dealloc];
 }
 
 - (void)resizeSubviewsWithOldSize:(NSSize)size {
     [super resizeSubviewsWithOldSize:size];
-    NSRect rect = [self contentRect];
+    NSRect rect = [self bounds];
     [backgroundView setFrame:rect];
-    [reflectionView setFrame:rect];
     [contentView setFrame:rect];
 }
 
@@ -158,25 +137,19 @@
 
 }
 
-- (void)drawRect:(NSRect)aRect
-{        
-	if ([self drawsBackground] == NO)
-        return;
-    
-    NSRect rect = [self bounds];
-	
-    [NSGraphicsContext saveGraphicsState];
-    
-    if (hasSeparator) {
-        NSRect edgeRect;
-		NSDivideRect(rect, &edgeRect, &rect, SEPARATOR_WIDTH, NSMinYEdge);
-        [[self separatorColor] setFill];
-        [NSBezierPath fillRect:edgeRect];
-	}
-    
+- (void)drawRect:(NSRect)aRect {
     NSArray *colors = backgroundColors;
     if (alternateBackgroundColors && [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO)
         colors = alternateBackgroundColors;
+    
+    if ([colors count] == 0)
+        return;
+    
+    NSRect rect = [self bounds];
+    if (hasSeparator)
+        rect = SKShrinkRect(rect, 1.0, NSMinYEdge);
+    
+    [NSGraphicsContext saveGraphicsState];
     
     if ([colors count] > 1) {
         NSGradient *aGradient = [[NSGradient alloc] initWithColors:colors];
@@ -211,7 +184,7 @@
 }
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow {
-    if (drawsBackground && alternateBackgroundColors) {
+    if (alternateBackgroundColors) {
         NSWindow *oldWindow = [self window];
         if (oldWindow)
             [self stopObservingWindow:oldWindow];
@@ -221,38 +194,17 @@
     [super viewWillMoveToWindow:newWindow];
 }
 
-// required in order for redisplay to work properly with the controls
-- (BOOL)isOpaque{ return [self drawsBackground] && [self backgroundColors]; }
-
 - (void)setHasSeparator:(BOOL)flag {
 	if (flag != hasSeparator) {
 		hasSeparator = flag;
-        NSRect rect = [self contentRect];
-        [backgroundView setFrame:rect];
-        [reflectionView setFrame:rect];
-        [contentView setFrame:rect];
+        [contentView setHasSeparator:hasSeparator];
 		[self setNeedsDisplay:YES];
 	}
 }
 
-- (void)setDrawsBackground:(BOOL)flag {
-    if (flag != drawsBackground) {
-        if ([self window] && alternateBackgroundColors) {
-            if (drawsBackground)
-                [self stopObservingWindow:[self window]];
-            else
-                [self startObservingWindow:[self window]];
-        }
-        drawsBackground = flag;
-        [backgroundView setHidden:drawsBackground == NO];
-        [reflectionView setHidden:drawsBackground == NO];
-        [self setNeedsDisplay:YES];
-    }
-}
-
 - (void)setAlternateBackgroundColors:(NSArray *)colors {
     if (colors != alternateBackgroundColors) {
-        if ([self window] && drawsBackground) {
+        if ([self window]) {
             if (alternateBackgroundColors && colors == nil)
                 [self stopObservingWindow:[self window]];
             else if (alternateBackgroundColors == nil && colors)
@@ -263,46 +215,71 @@
     }
 }
 
-- (NSRect)contentRect {
-    NSRect rect = [self bounds];
-    if (hasSeparator)
-        rect = SKShrinkRect(rect, SEPARATOR_WIDTH, NSMinYEdge);
-    return rect;
+- (void)applyDefaultBackground {
+    if (RUNNING_AFTER(10_13)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        [backgroundView setMaterial:RUNNING_AFTER(10_15) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
+#pragma clang diagnostic pop
+        [backgroundView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
+    } else {
+        static CGFloat defaultGrays[5] = {0.85, 0.9,  0.9, 0.95};
+        [self setBackgroundColors:[NSArray arrayWithObjects:[NSColor colorWithGenericGamma22White:defaultGrays[0] alpha:1.0], [NSColor colorWithGenericGamma22White:defaultGrays[1] alpha:1.0], nil]];
+        [self setAlternateBackgroundColors:[NSArray arrayWithObjects:[NSColor colorWithGenericGamma22White:defaultGrays[2] alpha:1.0], [NSColor colorWithGenericGamma22White:defaultGrays[3] alpha:1.0], nil]];
+    }
 }
 
-- (void)reflectView:(NSView *)view animate:(BOOL)animate wantsFilters:(BOOL)wantsFilters {
-    if (RUNNING_BEFORE(10_14) || [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableSearchBarBlurringKey])
-        return;
-    NSScrollView *scrollView = [view descendantOfClass:[NSScrollView class]];
-    if (scrollView == [reflectionView reflectedScrollView]) {
-        [reflectionView setWantsFilters:wantsFilters];
-        return;
-    }
-    if (animate == NO || [self drawsBackground] == NO) {
-        if (reflectionView == nil) {
-            reflectionView = [[SKReflectionView alloc] initWithFrame:[self contentRect]];
-            [reflectionView setHidden:drawsBackground == NO];
-            [reflectionView setReflectedScrollView:scrollView];
-            wantsSubviews = YES;
-            [super addSubview:reflectionView positioned:NSWindowBelow relativeTo:nil];
-            wantsSubviews = NO;
-        } else {
-            [reflectionView setReflectedScrollView:scrollView];
-        }
-        [reflectionView setWantsFilters:wantsFilters];
+- (void)applyPresentationBackground {
+    if (RUNNING_AFTER(10_13)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        [backgroundView setMaterial:NSVisualEffectMaterialSidebar];
+#pragma clang diagnostic pop
+        [backgroundView setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
     } else {
-        SKReflectionView *newView = [[SKReflectionView alloc] initWithFrame:[self contentRect]];
-        [newView setHidden:drawsBackground == NO];
-        [newView setReflectedScrollView:scrollView];
-        [newView setWantsFilters:wantsFilters];
-        wantsSubviews = YES;
-        if (reflectionView)
-            [[self animator] replaceSubview:reflectionView with:newView];
+        [self setBackgroundColors:[NSArray arrayWithObjects:[NSColor windowBackgroundColor], nil]];
+        [self setAlternateBackgroundColors:nil];
+    }
+}
+
+@end
+
+#pragma mark -
+
+@implementation SKEdgeView
+
+@synthesize hasSeparator;
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    self = [super initWithCoder:decoder];
+    if (self) {
+        hasSeparator = [decoder decodeBoolForKey:@"hasSeparator"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    [super encodeWithCoder:coder];
+    [coder encodeBool:hasSeparator forKey:@"hasSeparator"];
+}
+
+- (void)setHasSeparator:(BOOL)flag {
+    if (flag != hasSeparator) {
+        hasSeparator = flag;
+        [self setNeedsDisplay:YES];
+    }
+}
+
+- (void)drawRect:(NSRect)dirtyRect {
+    if ([self hasSeparator]) {
+        if (RUNNING_AFTER(10_13))
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+            [[NSColor separatorColor] setFill];
+#pragma clang diagnostic pop
         else
-            [[self animator] addSubview:newView positioned:NSWindowBelow relativeTo:nil];
-        wantsSubviews = NO;
-        [reflectionView release];
-        reflectionView = newView;
+            [[NSColor colorWithGenericGamma22White:0.8 alpha:1.0] setFill];
+        [NSBezierPath fillRect:SKSliceRect([self bounds], SEPARATOR_WIDTH, NSMinYEdge)];
     }
 }
 
