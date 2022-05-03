@@ -206,10 +206,10 @@
                 [separatorView setTitlePosition:NSNoTitle];
                 [separatorView setBorderWidth:0.0];
                 [separatorView setContentViewMargins:NSZeroSize];
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wpartial-availability"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
                 [separatorView setFillColor:[NSColor separatorColor]];
-    #pragma clang diagnostic pop
+#pragma clang diagnostic pop
                 wantsSubviews = YES;
                 [super addSubview:separatorView positioned:NSWindowBelow relativeTo:contentView];
                 wantsSubviews = NO;
