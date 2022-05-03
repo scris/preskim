@@ -45,14 +45,6 @@
 
 #define SEPARATOR_WIDTH 1.0
 
-@interface SKEdgeView : NSView {
-    BOOL hasSeparator;
-}
-@property (nonatomic) BOOL hasSeparator;
-@end
-
-#pragma mark -
-
 @implementation SKTopBarView
 
 @synthesize contentView, backgroundColors, alternateBackgroundColors, hasSeparator;
@@ -66,7 +58,7 @@
             backgroundView = [[NSVisualEffectView alloc] initWithFrame:[self bounds]];
             [super addSubview:backgroundView];
         }
-        contentView = [[SKEdgeView alloc] initWithFrame:[self bounds]];
+        contentView = [[NSView alloc] initWithFrame:[self bounds]];
         [super addSubview:contentView];
         wantsSubviews = NO;
         [self applyDefaultBackground];
@@ -81,6 +73,7 @@
 		// this decodes only the reference, the actual view should already be decoded as a subview
         contentView = [[decoder decodeObjectForKey:@"contentView"] retain];
         backgroundView = [[decoder decodeObjectForKey:@"backgroundView"] retain];
+        separatorView = [[decoder decodeObjectForKey:@"separatorView"] retain];
         backgroundColors = [[decoder decodeObjectForKey:@"backgroundColors"] retain];
         alternateBackgroundColors = [[decoder decodeObjectForKey:@"alternateBackgroundColors"] retain];
         hasSeparator = [decoder decodeBoolForKey:@"hasSeparator"];
@@ -103,6 +96,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     SKDESTROY(contentView);
     SKDESTROY(backgroundView);
+    SKDESTROY(separatorView);
     SKDESTROY(backgroundColors);
     SKDESTROY(alternateBackgroundColors);
 	[super dealloc];
@@ -113,6 +107,7 @@
     NSRect rect = [self bounds];
     [backgroundView setFrame:rect];
     [contentView setFrame:rect];
+    [separatorView setFrame:SKSliceRect(rect, SEPARATOR_WIDTH, NSMinYEdge)];
 }
 
 - (void)addSubview:(NSView *)aView {
@@ -146,8 +141,9 @@
         return;
     
     NSRect rect = [self bounds];
+    NSRect sepRect = NSZeroRect;
     if (hasSeparator)
-        rect = SKShrinkRect(rect, 1.0, NSMinYEdge);
+        NSDivideRect(rect, &sepRect, &rect, SEPARATOR_WIDTH, NSMinYEdge);
     
     [NSGraphicsContext saveGraphicsState];
     
@@ -157,6 +153,11 @@
         [aGradient release];
     } else if ([colors count] == 1) {
         [[colors firstObject] setFill];
+        [NSBezierPath fillRect:rect];
+    }
+    
+    if (RUNNING_BEFORE(10_14) && hasSeparator) {
+        [[NSColor colorWithGenericGamma22White:0.8 alpha:1.0] setFill];
         [NSBezierPath fillRect:rect];
     }
     
@@ -197,8 +198,26 @@
 - (void)setHasSeparator:(BOOL)flag {
 	if (flag != hasSeparator) {
 		hasSeparator = flag;
-        [contentView setHasSeparator:hasSeparator];
-		[self setNeedsDisplay:YES];
+        if (RUNNING_AFTER(10_13)) {
+            if (separatorView == nil && hasSeparator) {
+                separatorView = [[NSBox alloc] initWithFrame:SKSliceRect([self bounds], SEPARATOR_WIDTH, NSMinYEdge)];
+                [separatorView setBoxType:NSBoxCustom];
+                [separatorView setBorderType:NSNoBorder];
+                [separatorView setTitlePosition:NSNoTitle];
+                [separatorView setBorderWidth:0.0];
+                [separatorView setContentViewMargins:NSZeroSize];
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wpartial-availability"
+                [separatorView setFillColor:[NSColor separatorColor]];
+    #pragma clang diagnostic pop
+                wantsSubviews = YES;
+                [super addSubview:separatorView positioned:NSWindowBelow relativeTo:contentView];
+                wantsSubviews = NO;
+            }
+            [separatorView setHidden:hasSeparator == NO];
+        } else {
+            [self setNeedsDisplay:YES];
+        }
 	}
 }
 
@@ -239,47 +258,6 @@
     } else {
         [self setBackgroundColors:[NSArray arrayWithObjects:[NSColor windowBackgroundColor], nil]];
         [self setAlternateBackgroundColors:nil];
-    }
-}
-
-@end
-
-#pragma mark -
-
-@implementation SKEdgeView
-
-@synthesize hasSeparator;
-
-- (id)initWithCoder:(NSCoder *)decoder {
-    self = [super initWithCoder:decoder];
-    if (self) {
-        hasSeparator = [decoder decodeBoolForKey:@"hasSeparator"];
-    }
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
-    [super encodeWithCoder:coder];
-    [coder encodeBool:hasSeparator forKey:@"hasSeparator"];
-}
-
-- (void)setHasSeparator:(BOOL)flag {
-    if (flag != hasSeparator) {
-        hasSeparator = flag;
-        [self setNeedsDisplay:YES];
-    }
-}
-
-- (void)drawRect:(NSRect)dirtyRect {
-    if ([self hasSeparator]) {
-        if (RUNNING_AFTER(10_13))
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-            [[NSColor separatorColor] setFill];
-#pragma clang diagnostic pop
-        else
-            [[NSColor colorWithGenericGamma22White:0.8 alpha:1.0] setFill];
-        [NSBezierPath fillRect:SKSliceRect([self bounds], SEPARATOR_WIDTH, NSMinYEdge)];
     }
 }
 

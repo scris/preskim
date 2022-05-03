@@ -38,18 +38,18 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class SKEdgeView;
 
 @interface SKTopBarView : NSView {
-    SKEdgeView *contentView;
+    NSView *contentView;
     NSVisualEffectView *backgroundView;
+    NSBox *separatorView;
     NSArray *backgroundColors;
     NSArray *alternateBackgroundColors;
     BOOL hasSeparator;
     BOOL wantsSubviews;
 }
 
-@property (nonatomic, readonly) SKEdgeView *contentView;
+@property (nonatomic, readonly) NSView *contentView;
 @property (nonatomic, copy) NSArray *backgroundColors, *alternateBackgroundColors;
 @property (nonatomic) BOOL hasSeparator;
 
