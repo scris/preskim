@@ -38,28 +38,22 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class SKReflectionView;
+@class SKEdgeView;
 
 @interface SKTopBarView : NSView {
-	NSView *contentView;
+    SKEdgeView *contentView;
     NSVisualEffectView *backgroundView;
-    SKReflectionView *reflectionView;
     NSArray *backgroundColors;
     NSArray *alternateBackgroundColors;
-    NSColor *separatorColor;
     BOOL hasSeparator;
-	NSRectEdge overflowEdge;
-    BOOL drawsBackground;
     BOOL wantsSubviews;
 }
 
-@property (nonatomic, readonly) NSView *contentView;
+@property (nonatomic, readonly) SKEdgeView *contentView;
 @property (nonatomic, copy) NSArray *backgroundColors, *alternateBackgroundColors;
-@property (nonatomic, retain) NSColor *separatorColor;
-@property (nonatomic, readonly) NSRect contentRect;
-@property (nonatomic) NSRectEdge overflowEdge;
-@property (nonatomic) BOOL hasSeparator, drawsBackground;
+@property (nonatomic) BOOL hasSeparator;
 
-- (void)reflectView:(NSView *)view animate:(BOOL)animate wantsFilters:(BOOL)wantsFilters;
+- (void)applyDefaultBackground;
+- (void)applyPresentationBackground;
 
 @end

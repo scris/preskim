@@ -1822,7 +1822,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
         [findController setDelegate:self];
     }
     if ([[findController view] window] == nil) {
-        [findController toggleAboveView:pdfSplitView animate:YES];
+        [findController toggleAboveView:pdfView animate:YES];
     }
     [[findController findField] selectText:nil];
 }
