@@ -72,10 +72,6 @@
     return NO;
 }
 
-- (BOOL)wantsFiltersForView:(NSView *)aView {
-    return NO;
-}
-
 - (void)replaceSideView:(NSView *)newView animate:(BOOL)animate {
     if ([newView superview] != nil)
         return;
