@@ -367,12 +367,6 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     
     // Set up the panes and subviews, needs to be done before we resize them
     
-    // This gets sometimes messed up in the nib, AppKit bug rdar://5346690
-    [leftSideContentView setAutoresizesSubviews:YES];
-    [rightSideContentView setAutoresizesSubviews:YES];
-    [centerContentView setAutoresizesSubviews:YES];
-    [pdfContentView setAutoresizesSubviews:YES];
-    
     // make sure the first thing we call on the side view controllers is its view so their nib is loaded
     [leftSideContentView addSubview:leftSideController.view];
     [leftSideController.view activateConstraintsToSuperview];
