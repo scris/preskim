@@ -83,8 +83,8 @@ static NSArray *TeXEditors = nil;
     return @"SyncPreferences";
 }
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
     NSString *editorPreset = [[NSUserDefaults standardUserDefaults] stringForKey:SKTeXEditorPresetKey];
     NSInteger i = [TeXEditors count];

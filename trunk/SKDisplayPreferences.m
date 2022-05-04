@@ -86,8 +86,8 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
     return @"DisplayPreferences";
 }
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
     NSValueTransformer *transformer = [NSValueTransformer valueTransformerForName:SKUnarchiveColorArrayTransformerName];
     NSDictionary *options = [NSDictionary dictionaryWithObject:transformer forKey:NSValueTransformerBindingOption];
