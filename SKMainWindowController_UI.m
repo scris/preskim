@@ -1607,6 +1607,35 @@
         if (rightCollapsed == NO)
             [rightView setFrameSize:rightSize];
         [mainView setFrameSize:mainSize];
+    } else if ([sender isEqual:pdfSplitView] && [[sender subviews] count] > 1) {
+        NSView *topView = [[sender subviews] objectAtIndex:0];
+        NSView *bottomView = [[sender subviews] objectAtIndex:1];
+        NSSize topSize = [topView frame].size;
+        NSSize bottomSize = [bottomView frame].size;
+        CGFloat contentHeight = NSHeight([sender frame]) - [sender dividerThickness];
+        
+        if (bottomSize.height <= 0.0 || contentHeight < 2.0 * MIN_SPLIT_PANE_HEIGHT) {
+            topSize.height = contentHeight;
+            bottomSize.height = 0.0;
+        } else {
+            if (rand() % 2 == 0) {
+                topSize.height = floor(contentHeight * topSize.height / (oldSize.height - [sender dividerThickness]));
+                bottomSize.height = contentHeight - topSize.height;
+            } else {
+                bottomSize.height = floor(contentHeight * bottomSize.height / (oldSize.height - [sender dividerThickness]));
+                topSize.height = contentHeight - bottomSize.height;
+            }
+            if (bottomSize.height < MIN_SPLIT_PANE_HEIGHT) {
+                bottomSize.height = MIN_SPLIT_PANE_HEIGHT;
+                topSize.height = contentHeight - MIN_SPLIT_PANE_HEIGHT;
+            } else if (topSize.height < MIN_SPLIT_PANE_HEIGHT) {
+                topSize.height = MIN_SPLIT_PANE_HEIGHT;
+                bottomSize.height = contentHeight - MIN_SPLIT_PANE_HEIGHT;
+            }
+        }
+        topSize.width = bottomSize.width = NSWidth([sender frame]);
+        [topView setFrameSize:topSize];
+        [bottomView setFrameSize:bottomSize];
     }
     [sender adjustSubviews];
 }
