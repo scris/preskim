@@ -279,7 +279,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         [topBar addSubview:scalePopUpButton];
         
         controlView = topBar;
-        [controlView setAutoresizingMask:NSViewWidthSizable | NSViewMinYMargin];
+        [controlView setTranslatesAutoresizingMaskIntoConstraints:NO];
         
         NSArray *constraints = [NSArray arrayWithObjects:
              [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:CONTROL_HEIGHT],
