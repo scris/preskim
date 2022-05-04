@@ -133,8 +133,4 @@
     [super setMainController:newMainController];
 }
 
-- (BOOL)wantsFiltersForView:(NSView *)aView {
-    return [snapshotTableView isDescendantOf:aView];
-}
-
 @end
