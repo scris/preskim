@@ -1563,6 +1563,8 @@
         return proposedMin;
     else if ([sender isEqual:splitView] && dividerIndex == 0)
         return proposedMin + MIN_SIDE_PANE_WIDTH;
+    else if ([sender isEqual:pdfSplitView])
+        return proposedMin + MIN_SPLIT_PANE_HEIGHT;
     return proposedMin;
 }
 
