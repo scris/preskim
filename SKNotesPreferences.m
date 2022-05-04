@@ -73,8 +73,8 @@
 [lineWell bind:SKLineWellDashPatternKey toObject:sudc withKeyPath:VALUES_KEY_PATH(SK##noteType##NoteDashPatternKey) options:nil];\
 [lineWell setDisplayStyle:displayStyle]
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
     NSUserDefaultsController *sudc = [NSUserDefaultsController sharedUserDefaultsController];
     

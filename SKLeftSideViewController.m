@@ -85,8 +85,8 @@
     return @"LeftSideView";
 }
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
     [button setHelp:NSLocalizedString(@"View Thumbnails", @"Tool tip message") forSegment:SKSidePaneStateThumbnail];
     [button setHelp:NSLocalizedString(@"View Table of Contents", @"Tool tip message") forSegment:SKSidePaneStateOutline];

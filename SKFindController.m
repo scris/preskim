@@ -65,8 +65,8 @@
     return @"FindBar";
 }
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
     [(SKTopBarView *)[self view] setHasSeparator:YES];
     
