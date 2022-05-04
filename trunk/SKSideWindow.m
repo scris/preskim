@@ -85,7 +85,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
         
         if (RUNNING_AFTER(10_13)) {
             NSVisualEffectView *contentView = [[NSVisualEffectView alloc] init];
-            [contentView setMaterial:RUNNING_BEFORE(10_11) ? NSVisualEffectMaterialAppearanceBased : NSVisualEffectMaterialSidebar];
+            [contentView setMaterial:NSVisualEffectMaterialSidebar];
             [self setContentView:contentView];
             [backgroundView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [backgroundView setFrame:[contentView bounds]];
