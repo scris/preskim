@@ -504,6 +504,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
         width = NSHeight(pageRect);
         height = NSWidth(pageRect);
     }
+    frame.size.height -= [[pdfView scrollView] contentInsets].top;
     if ((displayMode & kPDFDisplaySinglePageContinuous) == 0) {
         // zoom to width
         NSUInteger numCols = (displayMode == kPDFDisplayTwoUp && pageCount > 1 && ([pdfView displaysAsBook] == NO || pageCount > 2)) ? 2 : 1;
@@ -930,6 +931,8 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
     NSRect documentRect = [[[self pdfView] documentView] convertRect:[[[self pdfView] documentView] bounds] toView:nil];
     PDFPage *page = [[self pdfView] currentPage];
     NSRect pageRect = layoutBoundsForPage(page, pdfView);
+    
+    oldSize.height -= [[[self pdfView] scrollView] contentInsets].top;
     
     // Calculate the new size for the pdfView
     size.width = NSWidth(documentRect);
