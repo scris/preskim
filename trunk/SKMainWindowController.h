@@ -160,6 +160,8 @@ enum {
     CGFloat                             lastRightSidePaneWidth;
     CGFloat                             lastSplitPDFHeight;
     
+    CGFloat                             titleBarHeight;
+    
     CGFloat                             thumbnailCacheSize;
     CGFloat                             snapshotCacheSize;
     

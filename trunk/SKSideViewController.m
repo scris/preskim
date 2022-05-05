@@ -42,12 +42,14 @@
 #import "SKImageToolTipWindow.h"
 #import "NSGeometry_SKExtensions.h"
 #import "SKStringConstants.h"
+#import "NSView_SKExtensions.h"
 
 #define DURATION 0.7
 
 @implementation SKSideViewController
 
 @synthesize mainController, topBar, button, alternateButton, searchField, currentView;
+@dynamic topInset, tableViews;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -64,6 +66,24 @@
     [super viewDidLoad];
     
     [topBar setHasSeparator:YES];
+}
+
+#pragma mark Accessors
+
+- (NSArray *)tableViews { return nil; }
+
+- (CGFloat)topInset {
+    return [[[topBar superview] constraintWithFirstItem:topBar firstAttribute:NSLayoutAttributeTop] constant];
+}
+
+- (void)setTopInset:(CGFloat)topInset {
+    [[[topBar superview] constraintWithFirstItem:topBar firstAttribute:NSLayoutAttributeTop] setConstant:topInset];
+    NSEdgeInsets insets = NSEdgeInsetsMake(topInset + NSHeight([topBar frame]) + 1.0, 1.0, 1.0, 1.0);
+    for (NSTableView *view in [self tableViews]) {
+        NSScrollView *scrollView = [view enclosingScrollView];
+        [scrollView setAutomaticallyAdjustsContentInsets:NO];
+        [scrollView setContentInsets:insets];
+    }
 }
 
 #pragma mark View animation

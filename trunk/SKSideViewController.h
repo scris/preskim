@@ -56,6 +56,9 @@
 @property (nonatomic, retain) IBOutlet NSSearchField *searchField;
 @property (nonatomic, retain) IBOutlet NSView *currentView;
 
+@property (nonatomic) CGFloat topInset;
+@property (nonatomic, readonly) NSArray *tableViews;
+
 - (BOOL)requiresAlternateButtonForView:(NSView *)aView;
 
 - (void)replaceSideView:(NSView *)newView animate:(BOOL)animate;

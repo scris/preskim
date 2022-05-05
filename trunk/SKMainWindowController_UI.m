@@ -112,6 +112,7 @@
 #define MIN_SIDE_PANE_WIDTH 100.0
 #define DEFAULT_SPLIT_PANE_HEIGHT 200.0
 #define MIN_SPLIT_PANE_HEIGHT 50.0
+#define MIN_PDF_PANE_HEIGHT 50.0
 
 #define SNAPSHOT_HEIGHT 200.0
 
@@ -1564,7 +1565,7 @@
     else if ([sender isEqual:splitView] && dividerIndex == 0)
         return proposedMin + MIN_SIDE_PANE_WIDTH;
     else if ([sender isEqual:pdfSplitView])
-        return proposedMin + MIN_SPLIT_PANE_HEIGHT;
+        return proposedMin + titleBarHeight + MIN_PDF_PANE_HEIGHT;
     return proposedMin;
 }
 
@@ -1614,7 +1615,7 @@
         NSSize bottomSize = [bottomView frame].size;
         CGFloat contentHeight = NSHeight([sender frame]) - [sender dividerThickness];
         
-        if (bottomSize.height <= 0.0 || contentHeight < 2.0 * MIN_SPLIT_PANE_HEIGHT) {
+        if (bottomSize.height <= 0.0 || contentHeight < titleBarHeight + MIN_PDF_PANE_HEIGHT + MIN_SPLIT_PANE_HEIGHT) {
             topSize.height = contentHeight;
             bottomSize.height = 0.0;
         } else {
@@ -1628,9 +1629,9 @@
             if (bottomSize.height < MIN_SPLIT_PANE_HEIGHT) {
                 bottomSize.height = MIN_SPLIT_PANE_HEIGHT;
                 topSize.height = contentHeight - MIN_SPLIT_PANE_HEIGHT;
-            } else if (topSize.height < MIN_SPLIT_PANE_HEIGHT) {
-                topSize.height = MIN_SPLIT_PANE_HEIGHT;
-                bottomSize.height = contentHeight - MIN_SPLIT_PANE_HEIGHT;
+            } else if (topSize.height < titleBarHeight + MIN_PDF_PANE_HEIGHT) {
+                topSize.height = titleBarHeight - MIN_PDF_PANE_HEIGHT;
+                bottomSize.height = contentHeight - titleBarHeight - MIN_PDF_PANE_HEIGHT;
             }
         }
         topSize.width = bottomSize.width = NSWidth([sender frame]);

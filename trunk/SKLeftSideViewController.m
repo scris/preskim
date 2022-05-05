@@ -169,6 +169,10 @@
     [super setMainController:newMainController];
 }
 
+- (NSArray *)tableViews {
+    return [NSArray arrayWithObjects:thumbnailTableView, tocOutlineView, findTableView, groupedFindTableView, nil];
+}
+
 - (BOOL)requiresAlternateButtonForView:(NSView *)aView {
     return [findTableView isDescendantOf:aView] || [groupedFindTableView isDescendantOf:aView];
 }

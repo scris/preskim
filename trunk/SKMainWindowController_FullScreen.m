@@ -114,6 +114,8 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     
     [leftSideController.topBar setHasSeparator:NO];
     [leftSideController.topBar applyPresentationBackground];
+    if (RUNNING_AFTER(10_13))
+        [leftSideController setTopInset:0.0];
     
     mwcFlags.savedLeftSidePaneState = [self leftSidePaneState];
     [self setLeftSidePaneState:SKSidePaneStateThumbnail];
@@ -129,6 +131,9 @@ static CGFloat fullScreenToolbarOffset = 0.0;
             [sideWindow makeFirstResponder:nil];
         [leftSideController.topBar setHasSeparator:YES];
         [leftSideController.topBar applyDefaultBackground];
+        if (RUNNING_AFTER(10_13))
+            [leftSideController setTopInset:titleBarHeight];
+        
         [leftSideController.view setFrame:[leftSideContentView bounds]];
         
         [leftSideContentView addSubview:leftSideController.view];
@@ -276,7 +281,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [scrollView setDrawsBackground:[[savedNormalSetup objectForKey:DRAWSBACKGROUND_KEY] boolValue]];
     if ([[findController view] window]) {
         [scrollView setAutomaticallyAdjustsContentInsets:NO];
-        [scrollView setContentInsets:NSEdgeInsetsMake(NSHeight([[findController view] frame]), 0.0, 0.0, 0.0)];
+        [scrollView setContentInsets:NSEdgeInsetsMake(NSHeight([[findController view] frame]) + titleBarHeight, 0.0, 0.0, 0.0)];
     }
 }
 
