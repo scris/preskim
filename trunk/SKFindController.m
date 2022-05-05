@@ -117,7 +117,7 @@
     if (view == nil) {
         NSArray *subviews = [[findBar superview] subviews];
         for (view in subviews) {
-            if (view != findBar && NSMaxY([view frame]) >= NSMaxY([findBar frame]))
+            if (view != findBar && NSMaxY([view frame]) >= NSMinY([findBar frame]))
                 break;
         }
     }
@@ -126,8 +126,7 @@
     BOOL visible = (nil == [findBar superview]);
     NSLayoutConstraint *topConstraint = nil;
     CGFloat barHeight = NSHeight([findBar frame]);
-    NSArray *constraints;
-    NSScrollView *scrollView = [view descendantOfClass:[NSScrollView class]];
+    NSArray *constraints = nil;
     CGFloat inset = 0.0;
     if (RUNNING_AFTER(10_13))
         inset += NSHeight([[contentView window] frame]) - NSHeight([[contentView window] contentLayoutRect]);
@@ -139,6 +138,10 @@
             [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:animate ? inset - barHeight : inset], nil];
         [NSLayoutConstraint activateConstraints:constraints];
+        if (RUNNING_BEFORE(10_14)) {
+            [[contentView constraintWithFirstItem:view firstAttribute:NSLayoutAttributeTop] setActive:NO];
+            [[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0] setActive:YES];
+        }
         [contentView layoutSubtreeIfNeeded];
         topConstraint = [constraints lastObject];
         
@@ -147,6 +150,9 @@
         [self windowDidBecomeKey:nil];
     } else {
         topConstraint = [contentView constraintWithFirstItem:findBar firstAttribute:NSLayoutAttributeTop];
+        if (RUNNING_BEFORE(10_14))
+            constraints = [NSArray arrayWithObjects:
+                [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0], nil];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:[findBar window]];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:[findBar window]];
@@ -156,8 +162,11 @@
     
     [messageField setHidden:YES];
     
-    [scrollView setAutomaticallyAdjustsContentInsets:visible == NO];
-    [scrollView setContentInsets:NSEdgeInsetsMake(visible ? barHeight + inset : inset, 0.0, 0.0, 0.0)];
+    if (RUNNING_AFTER(10_13)) {
+        NSScrollView *scrollView = [view descendantOfClass:[NSScrollView class]];
+        [scrollView setAutomaticallyAdjustsContentInsets:visible == NO];
+        [scrollView setContentInsets:NSEdgeInsetsMake(visible ? barHeight + inset : inset, 0.0, 0.0, 0.0)];
+    }
     
     if (animate) {
         animating = YES;
@@ -166,14 +175,21 @@
                 [[topConstraint animator] setConstant:visible ? inset : inset - barHeight];
             }
             completionHandler:^{
-                if (visible == NO)
+                if (visible == NO) {
                     [findBar removeFromSuperview];
+                    if (RUNNING_BEFORE(10_14))
+                        [NSLayoutConstraint activateConstraints:constraints];
+                }
                 [[contentView window] recalculateKeyViewLoop];
+                
                 animating = NO;
             }];
     } else {
-        if (visible == NO)
+        if (visible == NO) {
             [findBar removeFromSuperview];
+            if (RUNNING_BEFORE(10_14))
+                [NSLayoutConstraint activateConstraints:constraints];
+        }
         [contentView layoutSubtreeIfNeeded];
         [[contentView window] recalculateKeyViewLoop];
     }

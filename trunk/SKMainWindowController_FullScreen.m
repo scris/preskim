@@ -215,8 +215,10 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [scrollView setHasHorizontalScroller:NO];
     [scrollView setHasVerticalScroller:NO];
     [scrollView setDrawsBackground:NO];
-    [scrollView setAutomaticallyAdjustsContentInsets:YES];
-    [scrollView setContentInsets:NSEdgeInsetsZero];
+    if (RUNNING_AFTER(10_13)) {
+        [scrollView setAutomaticallyAdjustsContentInsets:YES];
+        [scrollView setContentInsets:NSEdgeInsetsZero];
+    }
     
     [pdfView setCurrentSelection:nil];
     if ([pdfView hasReadingBar])
@@ -279,7 +281,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [scrollView setHasVerticalScroller:[[savedNormalSetup objectForKey:HASVERTICALSCROLLER_KEY] boolValue]];
     [scrollView setAutohidesScrollers:[[savedNormalSetup objectForKey:AUTOHIDESSCROLLERS_KEY] boolValue]];
     [scrollView setDrawsBackground:[[savedNormalSetup objectForKey:DRAWSBACKGROUND_KEY] boolValue]];
-    if ([[findController view] window]) {
+    if (RUNNING_AFTER(10_13) && [[findController view] window]) {
         [scrollView setAutomaticallyAdjustsContentInsets:NO];
         [scrollView setContentInsets:NSEdgeInsetsMake(NSHeight([[findController view] frame]) + titleBarHeight, 0.0, 0.0, 0.0)];
     }
