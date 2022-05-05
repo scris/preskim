@@ -256,7 +256,7 @@
 #pragma clang diagnostic pop
         [backgroundView setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
     } else {
-        [self setBackgroundColors:[NSArray arrayWithObjects:[NSColor windowBackgroundColor], nil]];
+        [self setBackgroundColors:nil];
         [self setAlternateBackgroundColors:nil];
     }
 }
