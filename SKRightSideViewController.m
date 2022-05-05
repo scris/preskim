@@ -133,4 +133,8 @@
     [super setMainController:newMainController];
 }
 
+- (NSArray *)tableViews {
+    return [NSArray arrayWithObjects:noteOutlineView, snapshotTableView, nil];
+}
+
 @end

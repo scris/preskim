@@ -117,7 +117,7 @@
     if (view == nil) {
         NSArray *subviews = [[findBar superview] subviews];
         for (view in subviews) {
-            if (view != findBar && fabs(NSMaxY([view frame]) - NSMaxY([findBar frame])) <= 0.0)
+            if (view != findBar && NSMaxY([view frame]) >= NSMaxY([findBar frame]))
                 break;
         }
     }
@@ -128,13 +128,16 @@
     CGFloat barHeight = NSHeight([findBar frame]);
     NSArray *constraints;
     NSScrollView *scrollView = [view descendantOfClass:[NSScrollView class]];
+    CGFloat inset = 0.0;
+    if (RUNNING_AFTER(10_13))
+        inset += NSHeight([[contentView window] frame]) - NSHeight([[contentView window] contentLayoutRect]);
     
     if (visible) {
         [contentView addSubview:findBar];
         constraints = [NSArray arrayWithObjects:
             [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:animate ? -barHeight : 0.0], nil];
+            [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:animate ? inset - barHeight : inset], nil];
         [NSLayoutConstraint activateConstraints:constraints];
         [contentView layoutSubtreeIfNeeded];
         topConstraint = [constraints lastObject];
@@ -154,13 +157,13 @@
     [messageField setHidden:YES];
     
     [scrollView setAutomaticallyAdjustsContentInsets:visible == NO];
-    [scrollView setContentInsets:NSEdgeInsetsMake(visible ? barHeight : 0.0, 0.0, 0.0, 0.0)];
+    [scrollView setContentInsets:NSEdgeInsetsMake(visible ? barHeight + inset : inset, 0.0, 0.0, 0.0)];
     
     if (animate) {
         animating = YES;
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [context setDuration:0.5 * [context duration]];
-                [[topConstraint animator] setConstant:visible ? 0.0 : -barHeight];
+                [[topConstraint animator] setConstant:visible ? inset : inset - barHeight];
             }
             completionHandler:^{
                 if (visible == NO)

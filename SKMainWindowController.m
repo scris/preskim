@@ -175,6 +175,8 @@ static char SKMainWindowAppObservationContext;
 
 static char SKMainWindowThumbnailSelectionObservationContext;
 
+static char SKMainWindowContentLayoutObservationContext;
+
 #define SKLeftSidePaneWidthKey @"SKLeftSidePaneWidth"
 #define SKRightSidePaneWidthKey @"SKRightSidePaneWidth"
 
@@ -391,17 +393,24 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     // Set up the window
     [window setCollectionBehavior:[window collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
     
-    NSLayoutConstraint *constraint = [[window contentView] constraintWithFirstItem:splitView firstAttribute:NSLayoutAttributeTop];
-    if (constraint) {
-        [constraint setActive:NO];
-        [[NSLayoutConstraint constraintWithItem:splitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[window contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0] setActive:YES];
-    }
-    [window setStyleMask:[window styleMask] | NSFullSizeContentViewWindowMask];
     if ([window respondsToSelector:@selector(setToolbarStyle:)])
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
         [window setToolbarStyle:NSWindowToolbarStyleExpanded];
 #pragma clang diagnostic pop
+    
+    [window setStyleMask:[window styleMask] | NSFullSizeContentViewWindowMask];
+    if (RUNNING_AFTER(10_13)) {
+        titleBarHeight = NSHeight([window frame]) - NSHeight([window contentLayoutRect]);
+        [leftSideController setTopInset:titleBarHeight];
+        [rightSideController setTopInset:titleBarHeight];
+    } else {
+        NSLayoutConstraint *constraint = [[window contentView] constraintWithFirstItem:splitView firstAttribute:NSLayoutAttributeTop];
+        if (constraint) {
+            [constraint setActive:NO];
+            [[NSLayoutConstraint constraintWithItem:splitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[window contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0] setActive:YES];
+        }
+    }
     
     [self setWindowFrameAutosaveNameOrCascade:SKMainWindowFrameAutosaveName];
     
@@ -1645,7 +1654,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     NSArray *constraints = [NSArray arrayWithObjects:
         [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:isPresentation ? contentView : [[self window] contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:RUNNING_AFTER(10_13) || isPresentation ? contentView : [[self window] contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     [overviewContentView setFrame:[oldView frame]];
@@ -1711,7 +1720,7 @@ static char SKMainWindowThumbnailSelectionObservationContext;
     NSArray *constraints = [NSArray arrayWithObjects:
         [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:isMainWindow ? [mainWindow contentLayoutGuide] : contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:RUNNING_AFTER(10_13) || isMainWindow == NO ? contentView : [mainWindow contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     if (animate) {
@@ -2318,8 +2327,10 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                                   SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
                                   SKTableFontSizeKey, nil]
         context:&SKMainWindowDefaultsObservationContext];
-    if (RUNNING_AFTER(10_13))
+    if (RUNNING_AFTER(10_13)) {
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKMainWindowAppObservationContext];
+        [[self window] addObserver:self forKeyPath:@"contentLayoutRect" options:0 context:&SKMainWindowContentLayoutObservationContext];
+    }
 }
 
 - (void)unregisterAsObserver {
@@ -2334,6 +2345,8 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     @catch (id e) {}
     if (RUNNING_AFTER(10_13)) {
         @try { [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:&SKMainWindowAppObservationContext]; }
+        @catch (id e) {}
+        @try { [mainWindow removeObserver:self forKeyPath:@"contentLayoutRect" context:&SKMainWindowContentLayoutObservationContext]; }
         @catch (id e) {}
     }
 }
@@ -2447,6 +2460,21 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         }
         [pdfView setBackgroundColor:backgroundColor];
         [secondaryPdfView setBackgroundColor:backgroundColor];
+        
+    } else if (context == &SKMainWindowContentLayoutObservationContext) {
+        
+        CGFloat titleHeight = NSHeight([mainWindow frame]) - NSHeight([mainWindow contentLayoutRect]);
+        if (fabs(titleHeight - titleBarHeight) > 0.0) {
+            titleBarHeight = titleHeight;
+            [rightSideController setTopInset:titleBarHeight];
+            if ([self interactionMode] != SKPresentationMode || [self leftSidePaneIsOpen] == NO)
+                [leftSideController setTopInset:titleBarHeight];
+            if ([[findController view] window]) {
+                [[[[findController view] superview] constraintWithFirstItem:[findController view] firstAttribute:NSLayoutAttributeTop] setConstant:titleBarHeight];
+                if ([self interactionMode] != SKPresentationMode)
+                    [[pdfView scrollView] setContentInsets:NSEdgeInsetsMake(NSHeight([[findController view] frame]) + titleBarHeight, 0.0, 0.0, 0.0)];
+            }
+        }
         
     } else if (context == &SKMainWindowThumbnailSelectionObservationContext) {
         
