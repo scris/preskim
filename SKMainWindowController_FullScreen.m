@@ -114,7 +114,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     
     [leftSideController.topBar setHasSeparator:NO];
     [leftSideController.topBar applyPresentationBackground];
-    if (RUNNING_AFTER(10_13))
+    if (mwcFlags.fullSizeContent)
         [leftSideController setTopInset:0.0];
     
     mwcFlags.savedLeftSidePaneState = [self leftSidePaneState];
@@ -131,7 +131,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
             [sideWindow makeFirstResponder:nil];
         [leftSideController.topBar setHasSeparator:YES];
         [leftSideController.topBar applyDefaultBackground];
-        if (RUNNING_AFTER(10_13))
+        if (mwcFlags.fullSizeContent)
             [leftSideController setTopInset:titleBarHeight];
         
         [leftSideController.view setFrame:[leftSideContentView bounds]];
@@ -215,10 +215,8 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [scrollView setHasHorizontalScroller:NO];
     [scrollView setHasVerticalScroller:NO];
     [scrollView setDrawsBackground:NO];
-    if (RUNNING_AFTER(10_13)) {
+    if (mwcFlags.fullSizeContent)
         [scrollView setAutomaticallyAdjustsContentInsets:YES];
-        [scrollView setContentInsets:NSEdgeInsetsZero];
-    }
     
     [pdfView setCurrentSelection:nil];
     if ([pdfView hasReadingBar])
@@ -281,7 +279,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [scrollView setHasVerticalScroller:[[savedNormalSetup objectForKey:HASVERTICALSCROLLER_KEY] boolValue]];
     [scrollView setAutohidesScrollers:[[savedNormalSetup objectForKey:AUTOHIDESSCROLLERS_KEY] boolValue]];
     [scrollView setDrawsBackground:[[savedNormalSetup objectForKey:DRAWSBACKGROUND_KEY] boolValue]];
-    if (RUNNING_AFTER(10_13) && [[findController view] window]) {
+    if (mwcFlags.fullSizeContent && [[findController view] window]) {
         [scrollView setAutomaticallyAdjustsContentInsets:NO];
         [scrollView setContentInsets:NSEdgeInsetsMake(NSHeight([[findController view] frame]) + titleBarHeight, 0.0, 0.0, 0.0)];
     }

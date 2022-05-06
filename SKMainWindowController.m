@@ -249,6 +249,7 @@ static char SKMainWindowContentLayoutObservationContext;
         searchResults = [[NSMutableArray alloc] init];
         searchResultIndex = 0;
         memset(&mwcFlags, 0, sizeof(mwcFlags));
+        mwcFlags.fullSizeContent = RUNNING_AFTER(10_13);
         mwcFlags.caseInsensitiveSearch = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveSearchKey];
         mwcFlags.wholeWordSearch = [[NSUserDefaults standardUserDefaults] boolForKey:SKWholeWordSearchKey];
         mwcFlags.caseInsensitiveFilter = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveFilterKey];
@@ -375,6 +376,11 @@ static char SKMainWindowContentLayoutObservationContext;
     [rightSideContentView addSubview:rightSideController.view];
     [rightSideController.view activateConstraintsToSuperview];
     
+    if (mwcFlags.fullSizeContent) {
+        [leftSideController setCurrentView:[[leftSideController currentView] superview]];
+        [rightSideController setCurrentView:[[rightSideController currentView] superview]];
+    }
+    
     [self updateTableFont];
     
     [self displayThumbnailViewAnimating:NO];
@@ -400,7 +406,7 @@ static char SKMainWindowContentLayoutObservationContext;
 #pragma clang diagnostic pop
     
     [window setStyleMask:[window styleMask] | NSFullSizeContentViewWindowMask];
-    if (RUNNING_AFTER(10_13)) {
+    if (mwcFlags.fullSizeContent) {
         titleBarHeight = NSHeight([window frame]) - NSHeight([window contentLayoutRect]);
         [leftSideController setTopInset:titleBarHeight];
         [rightSideController setTopInset:titleBarHeight];
@@ -1654,7 +1660,7 @@ static char SKMainWindowContentLayoutObservationContext;
     NSArray *constraints = [NSArray arrayWithObjects:
         [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:RUNNING_AFTER(10_13) || isPresentation ? contentView : [[self window] contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:mwcFlags.fullSizeContent || isPresentation ? contentView : [[self window] contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     [overviewContentView setFrame:[oldView frame]];
@@ -1720,7 +1726,7 @@ static char SKMainWindowContentLayoutObservationContext;
     NSArray *constraints = [NSArray arrayWithObjects:
         [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:RUNNING_AFTER(10_13) || isMainWindow == NO ? contentView : [mainWindow contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:mwcFlags.fullSizeContent || isMainWindow == NO ? contentView : [mainWindow contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
     
     if (animate) {
@@ -1825,7 +1831,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [findController setDelegate:self];
     }
     if ([[findController view] window] == nil) {
-        [findController toggleAboveView:RUNNING_AFTER(10_13) ? pdfView : pdfSplitView animate:YES];
+        [findController toggleAboveView:mwcFlags.fullSizeContent ? pdfView : pdfSplitView animate:YES];
     }
     [[findController findField] selectText:nil];
 }
@@ -2327,10 +2333,10 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                                   SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
                                   SKTableFontSizeKey, nil]
         context:&SKMainWindowDefaultsObservationContext];
-    if (RUNNING_AFTER(10_13)) {
+    if (RUNNING_AFTER(10_13))
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKMainWindowAppObservationContext];
+    if (mwcFlags.fullSizeContent)
         [[self window] addObserver:self forKeyPath:@"contentLayoutRect" options:0 context:&SKMainWindowContentLayoutObservationContext];
-    }
 }
 
 - (void)unregisterAsObserver {
@@ -2346,6 +2352,8 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     if (RUNNING_AFTER(10_13)) {
         @try { [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:&SKMainWindowAppObservationContext]; }
         @catch (id e) {}
+    }
+    if (mwcFlags.fullSizeContent) {
         @try { [mainWindow removeObserver:self forKeyPath:@"contentLayoutRect" context:&SKMainWindowContentLayoutObservationContext]; }
         @catch (id e) {}
     }

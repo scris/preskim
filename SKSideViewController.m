@@ -66,9 +66,6 @@
     [super viewDidLoad];
     
     [topBar setHasSeparator:YES];
-    
-    if (RUNNING_AFTER(10_13))
-        [self setCurrentView:[currentView superview]];
 }
 
 #pragma mark Accessors
