@@ -196,6 +196,7 @@ enum {
         unsigned int wantsPresentation:1;
         unsigned int recentInfoNeedsUpdate:1;
         unsigned int hasCropped:1;
+        unsigned int fullSizeContent:1;
     } mwcFlags;
 }
 
