@@ -123,12 +123,13 @@
     }
     
     NSView *contentView = [view superview];
+    BOOL covering = NSMaxY([contentView convertRect:[contentView bounds] toView:nil]) > NSMaxY([[contentView window] contentLayoutRect]);
     BOOL visible = (nil == [findBar superview]);
     NSLayoutConstraint *topConstraint = nil;
     CGFloat barHeight = NSHeight([findBar frame]);
     NSArray *constraints = nil;
     CGFloat inset = 0.0;
-    if (RUNNING_AFTER(10_13))
+    if (covering)
         inset += NSHeight([[contentView window] frame]) - NSHeight([[contentView window] contentLayoutRect]);
     
     if (visible) {
@@ -138,7 +139,7 @@
             [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:animate ? inset - barHeight : inset], nil];
         [NSLayoutConstraint activateConstraints:constraints];
-        if (RUNNING_BEFORE(10_14)) {
+        if (covering == NO) {
             [[contentView constraintWithFirstItem:view firstAttribute:NSLayoutAttributeTop] setActive:NO];
             [[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0] setActive:YES];
         }
@@ -150,7 +151,7 @@
         [self windowDidBecomeKey:nil];
     } else {
         topConstraint = [contentView constraintWithFirstItem:findBar firstAttribute:NSLayoutAttributeTop];
-        if (RUNNING_BEFORE(10_14))
+        if (covering == NO)
             constraints = [NSArray arrayWithObjects:
                 [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0], nil];
         
@@ -162,7 +163,7 @@
     
     [messageField setHidden:YES];
     
-    if (RUNNING_AFTER(10_13)) {
+    if (covering) {
         NSScrollView *scrollView = [view descendantOfClass:[NSScrollView class]];
         [scrollView setAutomaticallyAdjustsContentInsets:visible == NO];
         [scrollView setContentInsets:NSEdgeInsetsMake(visible ? barHeight + inset : inset, 0.0, 0.0, 0.0)];
@@ -177,7 +178,7 @@
             completionHandler:^{
                 if (visible == NO) {
                     [findBar removeFromSuperview];
-                    if (RUNNING_BEFORE(10_14))
+                    if (covering == NO)
                         [NSLayoutConstraint activateConstraints:constraints];
                 }
                 [[contentView window] recalculateKeyViewLoop];
@@ -187,7 +188,7 @@
     } else {
         if (visible == NO) {
             [findBar removeFromSuperview];
-            if (RUNNING_BEFORE(10_14))
+            if (covering == NO)
                 [NSLayoutConstraint activateConstraints:constraints];
         }
         [contentView layoutSubtreeIfNeeded];
