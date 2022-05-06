@@ -47,7 +47,7 @@
 
 @implementation SKTopBarView
 
-@synthesize contentView, backgroundColors, alternateBackgroundColors, hasSeparator;
+@synthesize contentView, backgroundColors, alternateBackgroundColors, hasSeparator, drawsBackground;
 
 - (id)initWithFrame:(NSRect)frame {
     wantsSubviews = YES;
@@ -77,6 +77,7 @@
         backgroundColors = [[decoder decodeObjectForKey:@"backgroundColors"] retain];
         alternateBackgroundColors = [[decoder decodeObjectForKey:@"alternateBackgroundColors"] retain];
         hasSeparator = [decoder decodeBoolForKey:@"hasSeparator"];
+        drawsBackground = [decoder decodeBoolForKey:@"drawsBackground"];
         wantsSubviews = NO;
 	}
 	return self;
@@ -90,6 +91,7 @@
     [coder encodeObject:backgroundColors forKey:@"backgroundColors"];
     [coder encodeObject:alternateBackgroundColors forKey:@"alternateBackgroundColors"];
     [coder encodeBool:hasSeparator forKey:@"hasSeparator"];
+    [coder encodeBool:drawsBackground forKey:@"drawsBackground"];
 }
 
 - (void)dealloc {
@@ -133,6 +135,9 @@
 }
 
 - (void)drawRect:(NSRect)aRect {
+    if (drawsBackground == NO)
+        return;
+    
     NSArray *colors = backgroundColors;
     if (alternateBackgroundColors && [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO)
         colors = alternateBackgroundColors;
@@ -221,6 +226,16 @@
 	}
 }
 
+- (void)setDrawsBackground:(BOOL)flag {
+    if (drawsBackground != flag) {
+        drawsBackground = flag;
+        [backgroundView setHidden:drawsBackground == NO];
+        [separatorView setHidden:drawsBackground == NO];
+        if (RUNNING_BEFORE(10_14))
+            [self setNeedsDisplay:YES];
+    }
+}
+
 - (void)setAlternateBackgroundColors:(NSArray *)colors {
     if (colors != alternateBackgroundColors) {
         if ([self window]) {
@@ -256,7 +271,7 @@
 #pragma clang diagnostic pop
         [backgroundView setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
     } else {
-        [self setBackgroundColors:nil];
+        [self setBackgroundColors:[NSArray arrayWithObjects:[NSColor windowBackgroundColor], nil]];
         [self setAlternateBackgroundColors:nil];
     }
 }

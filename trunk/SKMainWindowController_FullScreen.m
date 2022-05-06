@@ -113,10 +113,13 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         sideWindow = [[SKSideWindow alloc] initWithView:leftSideController.view];
     
     [leftSideController.topBar setHasSeparator:NO];
-    [leftSideController.topBar applyPresentationBackground];
-    if (mwcFlags.fullSizeContent)
+    if (mwcFlags.fullSizeContent) {
+        [leftSideController.topBar applyPresentationBackground];
         [leftSideController setTopInset:0.0];
-    
+    } else {
+        [leftSideController.topBar setDrawsBackground:NO];
+    }
+
     mwcFlags.savedLeftSidePaneState = [self leftSidePaneState];
     [self setLeftSidePaneState:SKSidePaneStateThumbnail];
     [sideWindow makeFirstResponder:leftSideController.thumbnailTableView];
@@ -130,9 +133,12 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         if ([[sideWindow firstResponder] isDescendantOf:leftSideController.view])
             [sideWindow makeFirstResponder:nil];
         [leftSideController.topBar setHasSeparator:YES];
-        [leftSideController.topBar applyDefaultBackground];
-        if (mwcFlags.fullSizeContent)
+        if (mwcFlags.fullSizeContent) {
+            [leftSideController.topBar applyDefaultBackground];
             [leftSideController setTopInset:titleBarHeight];
+        } else {
+            [leftSideController.topBar setDrawsBackground:YES];
+        }
         
         [leftSideController.view setFrame:[leftSideContentView bounds]];
         

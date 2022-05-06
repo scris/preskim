@@ -46,12 +46,13 @@
     NSArray *backgroundColors;
     NSArray *alternateBackgroundColors;
     BOOL hasSeparator;
+    BOOL drawsBackground;
     BOOL wantsSubviews;
 }
 
 @property (nonatomic, readonly) NSView *contentView;
 @property (nonatomic, copy) NSArray *backgroundColors, *alternateBackgroundColors;
-@property (nonatomic) BOOL hasSeparator;
+@property (nonatomic) BOOL hasSeparator, drawsBackground;
 
 - (void)applyDefaultBackground;
 - (void)applyPresentationBackground;
