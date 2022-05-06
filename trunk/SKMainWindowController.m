@@ -400,7 +400,7 @@ static char SKMainWindowContentLayoutObservationContext;
 #pragma clang diagnostic pop
     
     [window setStyleMask:[window styleMask] | NSFullSizeContentViewWindowMask];
-    if (RUNNING_AFTER(10_13)) {
+    if (0&&RUNNING_AFTER(10_13)) {
         titleBarHeight = NSHeight([window frame]) - NSHeight([window contentLayoutRect]);
         [leftSideController setTopInset:titleBarHeight];
         [rightSideController setTopInset:titleBarHeight];
