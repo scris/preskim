@@ -1825,7 +1825,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [findController setDelegate:self];
     }
     if ([[findController view] window] == nil) {
-        [findController toggleAboveView:RUNNING_AFTER(10_3) ? pdfView : pdfSplitView animate:YES];
+        [findController toggleAboveView:RUNNING_AFTER(10_13) ? pdfView : pdfSplitView animate:YES];
     }
     [[findController findField] selectText:nil];
 }
