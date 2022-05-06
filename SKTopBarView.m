@@ -53,7 +53,8 @@
     wantsSubviews = YES;
     self = [super initWithFrame:frame];
     if (self) {
-        hasSeparator = NO; // we start with no separator, so we can use this in IB without getting weird offsets
+        hasSeparator = NO;
+        drawsBackground = YES;
         if (RUNNING_AFTER(10_13)) {
             backgroundView = [[NSVisualEffectView alloc] initWithFrame:[self bounds]];
             [super addSubview:backgroundView];
