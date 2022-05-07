@@ -1820,9 +1820,45 @@ static char SKMainWindowContentLayoutObservationContext;
 	}
 }
 
-- (void)findControllerWillBeRemoved:(SKFindController *)aFindController {
-    if ([[[self window] firstResponder] isDescendantOf:[aFindController view]])
-        [[self window] makeFirstResponder:[self hasOverview] ? overviewView : [self pdfView]];
+- (void)removeFindController:(SKFindController *)aFindController {
+    if (mwcFlags.isAnimatingFindBar)
+        return;
+    
+    BOOL animate = NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey];
+    NSView *findBar = [findController view];
+    NSView *contentView = [findBar superview];
+    NSLayoutConstraint *newTopConstraint = nil;
+    CGFloat barHeight = NSHeight([findBar frame]);
+    
+    if (mwcFlags.fullSizeContent == NO)
+        newTopConstraint = [NSLayoutConstraint constraintWithItem:mwcFlags.fullSizeContent ? pdfView : pdfSplitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+    
+    if ([[mainWindow firstResponder] isDescendantOf:findBar])
+        [mainWindow makeFirstResponder:pdfView];
+    
+    if (mwcFlags.fullSizeContent)
+        [[pdfView scrollView] setAutomaticallyAdjustsContentInsets:YES];
+    
+    if (animate) {
+        NSLayoutConstraint *topConstraint = [contentView constraintWithFirstItem:findBar firstAttribute:NSLayoutAttributeTop];
+        mwcFlags.isAnimatingFindBar = YES;
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                [context setDuration:0.5 * [context duration]];
+                [[topConstraint animator] setConstant:titleBarHeight - barHeight];
+            }
+            completionHandler:^{
+                [findBar removeFromSuperview];
+                [newTopConstraint setActive:YES];
+                [mainWindow recalculateKeyViewLoop];
+                
+                mwcFlags.isAnimatingFindBar = NO;
+            }];
+    } else {
+        [findBar removeFromSuperview];
+        [newTopConstraint setActive:YES];
+        [contentView layoutSubtreeIfNeeded];
+        [mainWindow recalculateKeyViewLoop];
+    }
 }
 
 - (void)showFindBar {
@@ -1830,9 +1866,57 @@ static char SKMainWindowContentLayoutObservationContext;
         findController = [[SKFindController alloc] init];
         [findController setDelegate:self];
     }
-    if ([[findController view] window] == nil)
-        [findController toggleAboveView:mwcFlags.fullSizeContent ? pdfView : pdfSplitView];
-    [[findController findField] selectText:nil];
+    
+    NSView *findBar = [findController view];
+    NSTextField *findField = [findController findField];
+    
+    if ([findBar window]) {
+        [findField selectText:nil];
+    } else if (mwcFlags.isAnimatingFindBar == 0) {
+        
+        BOOL animate = NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey];
+        NSView *contentView = mwcFlags.fullSizeContent ? pdfContentView : centerContentView;
+        CGFloat barHeight = NSHeight([findBar frame]);
+        NSArray *constraints = nil;
+        
+        [contentView addSubview:findBar];
+        constraints = [NSArray arrayWithObjects:
+            [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:animate ? titleBarHeight - barHeight : titleBarHeight], nil];
+        [NSLayoutConstraint activateConstraints:constraints];
+        if (mwcFlags.fullSizeContent == NO) {
+            [[contentView constraintWithFirstItem:pdfSplitView firstAttribute:NSLayoutAttributeTop] setActive:NO];
+            [[NSLayoutConstraint constraintWithItem:pdfSplitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0] setActive:YES];
+        }
+        [contentView layoutSubtreeIfNeeded];
+        
+        [findController didAddFindBar];
+        
+        if (mwcFlags.fullSizeContent) {
+            NSScrollView *scrollView = [pdfView scrollView];
+            [scrollView setAutomaticallyAdjustsContentInsets:NO];
+            [scrollView setContentInsets:NSEdgeInsetsMake(barHeight + titleBarHeight, 0.0, 0.0, 0.0)];
+        }
+        
+        if (animate) {
+            mwcFlags.isAnimatingFindBar = YES;
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                    [context setDuration:0.5 * [context duration]];
+                    [[[constraints lastObject] animator] setConstant:titleBarHeight];
+                }
+                completionHandler:^{
+                    [mainWindow recalculateKeyViewLoop];
+                    [findField selectText:nil];
+                    
+                    mwcFlags.isAnimatingFindBar = NO;
+                }];
+        } else {
+            [contentView layoutSubtreeIfNeeded];
+            [mainWindow recalculateKeyViewLoop];
+            [findField selectText:nil];
+        }
+    }
 }
 
 #define FIND_RESULT_MARGIN 50.0

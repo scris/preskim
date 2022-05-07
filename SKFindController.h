@@ -50,7 +50,6 @@
     NSString *findString;
     NSInteger lastChangeCount;
     BOOL didChange;
-    BOOL animating;
 }
 
 @property (nonatomic, retain) IBOutlet NSSearchField *findField;
@@ -61,8 +60,6 @@
 @property (nonatomic, assign) id <SKFindControllerDelegate> delegate;
 @property (nonatomic, retain) NSString *findString;
 
-- (void)toggleAboveView:(NSView *)view;
-
 - (void)findForward:(BOOL)forward;
 - (void)updateFindPboard;
 
@@ -70,10 +67,12 @@
 - (IBAction)remove:(id)sender;
 - (IBAction)toggleCaseInsensitiveFind:(id)sender;
 
+- (void)didAddFindBar;
+
 @end
 
 
 @protocol SKFindControllerDelegate <NSObject>
 - (BOOL)findString:(NSString *)string forward:(BOOL)forward;
-- (void)findControllerWillBeRemoved:(SKFindController *)findController;
+- (void)removeFindController:(SKFindController *)findController;
 @end
