@@ -105,13 +105,11 @@
     }
 }
 
-- (void)toggleAboveView:(NSView *)view animate:(BOOL)animate {
+- (void)toggleAboveView:(NSView *)view {
     if (animating)
         return;
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
-        animate = NO;
-    
+    BOOL animate = NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey];
     NSView *findBar = [self view];
     
     if (view == nil) {
@@ -226,7 +224,7 @@
 }
 
 - (IBAction)remove:(id)sender {
-    [self toggleAboveView:nil animate:YES];
+    [self toggleAboveView:nil];
 }
 
 - (IBAction)toggleCaseInsensitiveFind:(id)sender {

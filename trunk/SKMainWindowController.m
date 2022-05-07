@@ -1830,9 +1830,8 @@ static char SKMainWindowContentLayoutObservationContext;
         findController = [[SKFindController alloc] init];
         [findController setDelegate:self];
     }
-    if ([[findController view] window] == nil) {
-        [findController toggleAboveView:mwcFlags.fullSizeContent ? pdfView : pdfSplitView animate:YES];
-    }
+    if ([[findController view] window] == nil)
+        [findController toggleAboveView:mwcFlags.fullSizeContent ? pdfView : pdfSplitView];
     [[findController findField] selectText:nil];
 }
 

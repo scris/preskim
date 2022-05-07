@@ -61,7 +61,7 @@
 @property (nonatomic, assign) id <SKFindControllerDelegate> delegate;
 @property (nonatomic, retain) NSString *findString;
 
-- (void)toggleAboveView:(NSView *)view animate:(BOOL)animate;
+- (void)toggleAboveView:(NSView *)view;
 
 - (void)findForward:(BOOL)forward;
 - (void)updateFindPboard;
