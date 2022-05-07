@@ -3232,7 +3232,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [menuItem setState:[self extendedDisplayMode] == kPDFDisplayHorizontalContinuous ? NSOnState : NSOffState];
         return YES;
     } else if (action == @selector(zoomToPhysicalSize:)) {
-        [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0 ) > 0.01) ? NSOffState : NSOnState];
+        [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0) > 0.001) ? NSOffState : NSOnState];
         return YES;
     } else if (action == @selector(editActiveAnnotation:)) {
         return [[self activeAnnotation] isEditable];
