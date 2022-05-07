@@ -105,94 +105,12 @@
     }
 }
 
-- (void)toggleAboveView:(NSView *)view {
-    if (animating)
-        return;
-    
-    BOOL animate = NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey];
-    NSView *findBar = [self view];
-    
-    if (view == nil) {
-        NSArray *subviews = [[findBar superview] subviews];
-        for (view in subviews) {
-            if (view != findBar && NSMaxY([view frame]) >= NSMinY([findBar frame]))
-                break;
-        }
-    }
-    
-    NSView *contentView = [view superview];
-    BOOL covering = NSMaxY([contentView convertRect:[contentView bounds] toView:nil]) > NSMaxY([[contentView window] contentLayoutRect]);
-    BOOL visible = (nil == [findBar superview]);
-    NSLayoutConstraint *topConstraint = nil;
-    CGFloat barHeight = NSHeight([findBar frame]);
-    NSArray *constraints = nil;
-    CGFloat inset = 0.0;
-    if (covering)
-        inset += NSHeight([[contentView window] frame]) - NSHeight([[contentView window] contentLayoutRect]);
-    
-    if (visible) {
-        [contentView addSubview:findBar];
-        constraints = [NSArray arrayWithObjects:
-            [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:animate ? inset - barHeight : inset], nil];
-        [NSLayoutConstraint activateConstraints:constraints];
-        if (covering == NO) {
-            [[contentView constraintWithFirstItem:view firstAttribute:NSLayoutAttributeTop] setActive:NO];
-            [[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0] setActive:YES];
-        }
-        [contentView layoutSubtreeIfNeeded];
-        topConstraint = [constraints lastObject];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:[findBar window]];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidResignKey:) name:NSWindowDidResignKeyNotification object:[findBar window]];
-        [self windowDidBecomeKey:nil];
-    } else {
-        topConstraint = [contentView constraintWithFirstItem:findBar firstAttribute:NSLayoutAttributeTop];
-        if (covering == NO)
-            constraints = [NSArray arrayWithObjects:
-                [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0], nil];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:[findBar window]];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:[findBar window]];
-        [self windowDidResignKey:nil];
-        [delegate findControllerWillBeRemoved:self];
-    }
-    
+- (void)didAddFindBar {
+    NSWindow *window = [[self view] window];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:window];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidResignKey:) name:NSWindowDidResignKeyNotification object:window];
+    [self windowDidBecomeKey:nil];
     [messageField setHidden:YES];
-    
-    if (covering) {
-        NSScrollView *scrollView = [view descendantOfClass:[NSScrollView class]];
-        [scrollView setAutomaticallyAdjustsContentInsets:visible == NO];
-        if (visible)
-            [scrollView setContentInsets:NSEdgeInsetsMake(barHeight + inset, 0.0, 0.0, 0.0)];
-    }
-    
-    if (animate) {
-        animating = YES;
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [context setDuration:0.5 * [context duration]];
-                [[topConstraint animator] setConstant:visible ? inset : inset - barHeight];
-            }
-            completionHandler:^{
-                if (visible == NO) {
-                    [findBar removeFromSuperview];
-                    if (covering == NO)
-                        [NSLayoutConstraint activateConstraints:constraints];
-                }
-                [[contentView window] recalculateKeyViewLoop];
-                
-                animating = NO;
-            }];
-    } else {
-        if (visible == NO) {
-            [findBar removeFromSuperview];
-            if (covering == NO)
-                [NSLayoutConstraint activateConstraints:constraints];
-        }
-        [contentView layoutSubtreeIfNeeded];
-        [[contentView window] recalculateKeyViewLoop];
-    }
 }
 
 - (void)setDelegate:(id <SKFindControllerDelegate>)newDelegate {
@@ -224,7 +142,17 @@
 }
 
 - (IBAction)remove:(id)sender {
-    [self toggleAboveView:nil];
+    NSWindow *window = [[self view] window];
+    if (window == nil)
+        return;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:window];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:window];
+    [self windowDidResignKey:nil];
+    
+    [messageField setHidden:YES];
+    
+    [delegate removeFindController:self];
 }
 
 - (IBAction)toggleCaseInsensitiveFind:(id)sender {
