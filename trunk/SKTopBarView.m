@@ -153,7 +153,7 @@
     
     [NSGraphicsContext saveGraphicsState];
     
-    if ([colors count] > 1) {
+    if ([colors count] > 1) {log_method();
         NSGradient *aGradient = [[NSGradient alloc] initWithColors:colors];
         [aGradient drawInRect:rect angle:90.0];
         [aGradient release];

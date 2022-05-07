@@ -166,7 +166,8 @@
     if (covering) {
         NSScrollView *scrollView = [view descendantOfClass:[NSScrollView class]];
         [scrollView setAutomaticallyAdjustsContentInsets:visible == NO];
-        [scrollView setContentInsets:NSEdgeInsetsMake(visible ? barHeight + inset : inset, 0.0, 0.0, 0.0)];
+        if (visible)
+            [scrollView setContentInsets:NSEdgeInsetsMake(barHeight + inset, 0.0, 0.0, 0.0)];
     }
     
     if (animate) {
