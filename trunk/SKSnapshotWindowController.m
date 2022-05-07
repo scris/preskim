@@ -467,9 +467,9 @@ static char SKSnaphotWindowAppObservationContext;
     } else if (action == @selector(doZoomOut:)) {
         return [pdfView canZoomOut];
     } else if (action == @selector(doZoomToActualSize:)) {
-        return fabs([pdfView scaleFactor] - 1.0 ) > 0.01;
+        return fabs([pdfView scaleFactor] - 1.0) > 0.0;
     } else if (action == @selector(doZoomToPhysicalSize:)) {
-        return fabs([pdfView physicalScaleFactor] - 1.0 ) > 0.01;
+        return fabs([pdfView physicalScaleFactor] - 1.0) > 0.001;
     } else if (action == @selector(toggleAutoScale:)) {
         [menuItem setState:[pdfView autoFits] ? NSOnState : NSOffState];
         return YES;

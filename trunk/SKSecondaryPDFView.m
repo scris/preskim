@@ -615,10 +615,10 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         [menuItem setState:[self displaysPageBreaks] ? NSOnState : NSOffState];
         return YES;
     } else if ([menuItem action] == @selector(doActualSize:)) {
-        [menuItem setState:fabs([self scaleFactor] - 1.0) < 0.1 ? NSOnState : NSOffState];
+        [menuItem setState:fabs([self scaleFactor] - 1.0) > 0.0 ? NSOffState : NSOnState];
         return YES;
     } else if ([menuItem action] == @selector(doPhysicalSize:)) {
-        [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0 ) > 0.01) ? NSOffState : NSOnState];
+        [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0) > 0.001) ? NSOffState : NSOnState];
         return YES;
     } else if ([menuItem action] == @selector(changeToolMode:)) {
         [menuItem setState:[self selectsText] == (BOOL)[menuItem tag] ? NSOnState : NSOffState];

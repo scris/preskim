@@ -1024,7 +1024,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     if ([[toolbarItem toolbar] customizationPaletteIsRunning]) {
         return NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarZoomActualItemIdentifier]) {
-        return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && ([mainController.pdfView  autoScales] || fabs([mainController.pdfView scaleFactor] - 1.0 ) > 0.01);
+        return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && ([mainController.pdfView  autoScales] || fabs([mainController.pdfView scaleFactor] - 1.0) > 0.0);
     } else if ([identifier isEqualToString:SKDocumentToolbarZoomToFitItemIdentifier]) {
         return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && [mainController.pdfView autoScales] == NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarZoomToSelectionItemIdentifier]) {
