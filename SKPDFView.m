@@ -3078,6 +3078,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)handleScaleChangedNotification:(NSNotification *)notification {
     [self resetPDFToolTipRects];
     [self updatePacer];
+    if (interactionMode == SKPresentationMode && [self autoScales] == NO && fabs([self scaleFactor] - 1.0) > 0.0)
+        [self setAutoScales:YES];
 }
 
 - (void)handlePDFContentViewFrameChangedNotification:(NSNotification *)notification {
