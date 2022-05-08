@@ -249,7 +249,7 @@ static char SKMainWindowContentLayoutObservationContext;
         searchResults = [[NSMutableArray alloc] init];
         searchResultIndex = 0;
         memset(&mwcFlags, 0, sizeof(mwcFlags));
-        mwcFlags.fullSizeContent = RUNNING_AFTER(10_13);
+        mwcFlags.fullSizeContent = 1;
         mwcFlags.caseInsensitiveSearch = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveSearchKey];
         mwcFlags.wholeWordSearch = [[NSUserDefaults standardUserDefaults] boolForKey:SKWholeWordSearchKey];
         mwcFlags.caseInsensitiveFilter = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveFilterKey];

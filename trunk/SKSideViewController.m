@@ -62,12 +62,6 @@
     [super dealloc];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    [topBar setHasSeparator:YES];
-}
-
 #pragma mark Accessors
 
 - (NSArray *)tableViews { return nil; }
