@@ -38,23 +38,20 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class SKBackgroundView;
 
 @interface SKTopBarView : NSView {
     NSView *contentView;
-    NSVisualEffectView *backgroundView;
-    NSBox *separatorView;
-    NSArray *backgroundColors;
-    NSArray *alternateBackgroundColors;
-    BOOL hasSeparator;
+    NSVisualEffectView *blurView;
+    SKBackgroundView *backgroundView;
     BOOL drawsBackground;
     BOOL wantsSubviews;
 }
 
-@property (nonatomic, readonly) NSView *contentView;
-@property (nonatomic, copy) NSArray *backgroundColors, *alternateBackgroundColors;
-@property (nonatomic) BOOL hasSeparator, drawsBackground;
+@property (nonatomic) BOOL drawsBackground;
 
 - (void)applyDefaultBackground;
 - (void)applyPresentationBackground;
+- (void)applyPdfControlBackground;
 
 @end

@@ -68,8 +68,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [(SKTopBarView *)[self view] setHasSeparator:YES];
-    
     NSMenu *menu = [NSMenu menu];
     [menu addItemWithTitle:NSLocalizedString(@"Ignore Case", @"Menu item title") action:@selector(toggleCaseInsensitiveFind:) target:self];
     [[findField cell] setSearchMenuTemplate:menu];
