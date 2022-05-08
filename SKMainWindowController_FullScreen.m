@@ -113,7 +113,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         sideWindow = [[SKSideWindow alloc] initWithView:leftSideController.view];
     
     if (mwcFlags.fullSizeContent) {
-        [leftSideController.topBar applyPresentationBackground];
+        [leftSideController.topBar setStyle:SKTopBarStylePresentation];
         [leftSideController setTopInset:0.0];
     } else {
         [leftSideController.topBar setDrawsBackground:NO];
@@ -132,7 +132,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         if ([[sideWindow firstResponder] isDescendantOf:leftSideController.view])
             [sideWindow makeFirstResponder:nil];
         if (mwcFlags.fullSizeContent) {
-            [leftSideController.topBar applyDefaultBackground];
+            [leftSideController.topBar setStyle:SKTopBarStyleDefault];
             [leftSideController setTopInset:titleBarHeight];
         } else {
             [leftSideController.topBar setDrawsBackground:YES];

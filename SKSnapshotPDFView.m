@@ -179,7 +179,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 		[scalePopUpButton setRefusesFirstResponder:YES];
         
         SKTopBarView *topBar = [[SKTopBarView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 0.0, CONTROL_HEIGHT)];
-        [topBar applyPdfControlBackground];
+        [topBar setStyle:SKTopBarStylePDFControlBackground];
         [scalePopUpButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [topBar addSubview:scalePopUpButton];
         
