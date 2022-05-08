@@ -38,20 +38,24 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef NS_ENUM(NSInteger, SKTopBarStyle) {
+    SKTopBarStyleDefault,
+    SKTopBarStylePDFControlBackground,
+    SKTopBarStylePresentation
+};
+
 @class SKBackgroundView;
 
 @interface SKTopBarView : NSView {
     NSView *contentView;
     NSVisualEffectView *blurView;
     SKBackgroundView *backgroundView;
+    SKTopBarStyle style;
     BOOL drawsBackground;
     BOOL wantsSubviews;
 }
 
 @property (nonatomic) BOOL drawsBackground;
-
-- (void)applyDefaultBackground;
-- (void)applyPresentationBackground;
-- (void)applyPdfControlBackground;
+@property (nonatomic) SKTopBarStyle style;
 
 @end

@@ -57,7 +57,7 @@
 
 @implementation SKTopBarView
 
-@synthesize drawsBackground;
+@synthesize style, drawsBackground;
 
 - (id)initWithFrame:(NSRect)frame {
     wantsSubviews = YES;
@@ -71,7 +71,7 @@
         contentView = [[NSView alloc] initWithFrame:[self bounds]];
         [super addSubview:contentView];
         wantsSubviews = NO;
-        [self applyDefaultBackground];
+        [self setStyle:SKTopBarStyleDefault];
     }
     return self;
 }
@@ -122,52 +122,52 @@
     }
 }
 
-- (void)applyDefaultBackground {
+- (void)setStyle:(SKTopBarStyle)newStyle {
+    style = newStyle;
+    NSColor *sepColor = nil;
+    switch (style) {
+        case SKTopBarStyleDefault:
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-    [blurView setMaterial:RUNNING_AFTER(10_15) || RUNNING_BEFORE(10_13) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
+            [blurView setMaterial:RUNNING_AFTER(10_15) || RUNNING_BEFORE(10_13) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
 #pragma clang diagnostic pop
-    [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
-    if (RUNNING_AFTER(10_13)) {
+            [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
+            if (RUNNING_AFTER(10_13)) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-        [backgroundView setSeparatorColor:[NSColor separatorColor]];
+                sepColor = [NSColor separatorColor];
 #pragma clang diagnostic pop
-    } else{
-        [backgroundView setBackgroundColor:[NSColor colorWithGenericGamma22White:1.0 alpha:0.25]];
-        [backgroundView setSeparatorColor:[NSColor colorWithGenericGamma22White:0.8 alpha:0.35]];
+            } else{
+                [backgroundView setBackgroundColor:[NSColor colorWithGenericGamma22White:1.0 alpha:0.25]];
+                sepColor = [NSColor colorWithGenericGamma22White:0.8 alpha:0.35];
+            }
+            break;
+        case SKTopBarStylePDFControlBackground:
+            if (RUNNING_AFTER(10_13)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+                [blurView setMaterial:RUNNING_AFTER(10_15) || RUNNING_BEFORE(10_13) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
+#pragma clang diagnostic pop
+                [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
+            } else {
+                [blurView setMaterial:NSVisualEffectMaterialLight];
+                [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
+                [backgroundView setBackgroundColor:[NSColor colorWithGenericGamma22White:0.98 alpha:0.5]];
+            }
+            break;
+        case SKTopBarStylePresentation:
+            if (RUNNING_AFTER(10_13)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+                [blurView setMaterial:NSVisualEffectMaterialSidebar];
+#pragma clang diagnostic pop
+                [blurView setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
+            } else {
+                [backgroundView setBackgroundColor:[NSColor windowBackgroundColor]];
+            }
+            break;
     }
-    [backgroundView setNeedsDisplay:YES];
-}
-
-- (void)applyPresentationBackground {
-    if (RUNNING_AFTER(10_13)) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        [blurView setMaterial:NSVisualEffectMaterialSidebar];
-#pragma clang diagnostic pop
-        [blurView setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
-    } else {
-        [backgroundView setBackgroundColor:[NSColor windowBackgroundColor]];
-    }
-    [backgroundView setSeparatorColor:nil];
-    [backgroundView setNeedsDisplay:YES];
-}
-
-- (void)applyPdfControlBackground {
-    if (RUNNING_AFTER(10_13)) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        [blurView setMaterial:RUNNING_AFTER(10_15) || RUNNING_BEFORE(10_13) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
-#pragma clang diagnostic pop
-        [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
-    } else {
-        [blurView setMaterial:NSVisualEffectMaterialLight];
-        [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
-        [backgroundView setBackgroundColor:[NSColor colorWithGenericGamma22White:0.98 alpha:0.5]];
-        [backgroundView setNeedsDisplay:YES];
-    }
-    [backgroundView setSeparatorColor:nil];
+    [backgroundView setSeparatorColor:sepColor];
     [backgroundView setNeedsDisplay:YES];
 }
 
