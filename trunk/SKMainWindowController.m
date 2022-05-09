@@ -247,14 +247,15 @@ static char SKMainWindowContentLayoutObservationContext;
 - (id)init {
     self = [super initWithWindowNibName:@"MainWindow"];
     if (self) {
+        NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
         interactionMode = SKNormalMode;
         searchResults = [[NSMutableArray alloc] init];
         searchResultIndex = 0;
         memset(&mwcFlags, 0, sizeof(mwcFlags));
-        mwcFlags.fullSizeContent = NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableSearchBarBlurringKey];
-        mwcFlags.caseInsensitiveSearch = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveSearchKey];
-        mwcFlags.wholeWordSearch = [[NSUserDefaults standardUserDefaults] boolForKey:SKWholeWordSearchKey];
-        mwcFlags.caseInsensitiveFilter = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveFilterKey];
+        mwcFlags.fullSizeContent = NO == [sud boolForKey:SKDisableSearchBarBlurringKey];
+        mwcFlags.caseInsensitiveSearch = [sud boolForKey:SKCaseInsensitiveSearchKey];
+        mwcFlags.wholeWordSearch = [sud boolForKey:SKWholeWordSearchKey];
+        mwcFlags.caseInsensitiveFilter = [sud boolForKey:SKCaseInsensitiveFilterKey];
         groupedSearchResults = [[NSMutableArray alloc] init];
         thumbnails = [[NSMutableArray alloc] init];
         notes = [[NSMutableArray alloc] init];
