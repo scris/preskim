@@ -157,9 +157,6 @@ static SKDownloadController *sharedDownloadController = nil;
     
     [self setWindowFrameAutosaveName:SKDownloadsWindowFrameAutosaveName];
     
-    [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-    [[self window] setContentBorderThickness:24.0 forEdge:NSMinYEdge];
-    
     [tableView setTypeSelectHelper:[SKTypeSelectHelper typeSelectHelper]];
     
     [tableView registerForDraggedTypes:[NSArray arrayWithObjects:(NSString *)kUTTypeURL, (NSString *)kUTTypeFileURL, NSURLPboardType, NSFilenamesPboardType, NSPasteboardTypeString, nil]];
