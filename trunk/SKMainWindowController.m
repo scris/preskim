@@ -182,6 +182,8 @@ static char SKMainWindowContentLayoutObservationContext;
 
 #define SKCollapseTOCSublevelsKey @"SKCollapseTOCSublevels"
 
+#define SKDisableSearchBarBlurringKey @"SKDisableSearchBarBlurring"
+
 #if SDK_BEFORE(10_11)
 @interface NSCollectionView (SKElCapitanExtensions)
 - (BOOL)allowsEmptySelection;
@@ -249,7 +251,7 @@ static char SKMainWindowContentLayoutObservationContext;
         searchResults = [[NSMutableArray alloc] init];
         searchResultIndex = 0;
         memset(&mwcFlags, 0, sizeof(mwcFlags));
-        mwcFlags.fullSizeContent = 1;
+        mwcFlags.fullSizeContent = NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableSearchBarBlurringKey];
         mwcFlags.caseInsensitiveSearch = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveSearchKey];
         mwcFlags.wholeWordSearch = [[NSUserDefaults standardUserDefaults] boolForKey:SKWholeWordSearchKey];
         mwcFlags.caseInsensitiveFilter = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveFilterKey];
