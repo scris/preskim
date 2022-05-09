@@ -73,6 +73,7 @@
 @implementation SKSnapshotPDFView
 
 @synthesize autoFits, shouldAutoFit;
+@dynamic visibleContentRect;
 
 #define SKPDFContentViewChangedNotification @"SKPDFContentViewChangedNotification"
 
@@ -253,10 +254,17 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     [super setDelegate:newDelegate];
 }
 
+- (NSRect)visibleContentRect {
+    NSScrollView *scrollView = [self scrollView];
+    NSView *clipView = [scrollView contentView];
+    NSRect rect = [self convertRect:[clipView bounds] fromView:clipView];
+    rect.size.height -= [scrollView contentInsets].top;
+    return rect;
+}
+
 - (void)handlePDFViewFrameChangedNotification:(NSNotification *)notification {
     if ([self autoFits]) {
-        NSView *clipView = [[self scrollView] contentView];
-        NSRect clipRect = [self convertRect:[clipView visibleRect] fromView:clipView];
+        NSRect clipRect = [self visibleContentRect];
         NSRect rect = [self convertRect:autoFitRect fromPage:autoFitPage];
         CGFloat factor = fmin(NSWidth(clipRect) / NSWidth(rect), NSHeight(clipRect) / NSHeight(rect));
         rect = [self convertRect:NSInsetRect(rect, 0.5 * (NSWidth(rect) - NSWidth(clipRect) / factor), 0.5 * (NSHeight(rect) - NSHeight(clipRect) / factor)) toPage:autoFitPage];
@@ -284,9 +292,8 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 
 - (void)resetAutoFitRectIfNeeded {
     if ([self autoFits]) {
-        NSView *clipView = [[self scrollView] contentView];
         autoFitPage = [self currentPage];
-        autoFitRect = [self convertRect:[self convertRect:[clipView visibleRect] fromView:clipView] toPage:autoFitPage];
+        autoFitRect = [self convertRect:[self visibleContentRect] toPage:autoFitPage];
     }
 }
 

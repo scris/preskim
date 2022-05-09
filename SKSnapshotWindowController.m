@@ -167,8 +167,7 @@ static char SKSnaphotWindowAppObservationContext;
 
 - (void)updateString {
     NSMutableString *mutableString = [NSMutableString string];
-    NSView *clipView = [[pdfView scrollView] contentView];
-    NSRect rect = [clipView convertRect:[clipView visibleRect] toView:pdfView];
+    NSRect rect = [pdfView visibleContentRect];
     
     for (PDFPage *page in [pdfView displayedPages]) {
         PDFSelection *sel = [page selectionForRect:[pdfView convertRect:rect toPage:page]];
@@ -376,8 +375,7 @@ static char SKSnaphotWindowAppObservationContext;
 #pragma mark Acessors
 
 - (NSRect)bounds {
-    NSView *clipView = [[pdfView scrollView] contentView];
-    return [pdfView convertRect:[pdfView convertRect:[clipView bounds] fromView:clipView] toPage:[pdfView currentPage]];
+    return [pdfView convertRect:[pdfView visibleContentRect] toPage:[pdfView currentPage]];
 }
 
 - (NSUInteger)pageIndex {
@@ -480,9 +478,8 @@ static char SKSnaphotWindowAppObservationContext;
 #pragma mark Thumbnails
 
 - (NSImage *)thumbnailWithSize:(CGFloat)size {
-    NSView *clipView = [[pdfView scrollView] contentView];
-    NSRect bounds = [pdfView convertRect:[clipView bounds] fromView:clipView];
-    NSBitmapImageRep *imageRep = [clipView bitmapImageRepCachingDisplayInRect:[clipView bounds]];
+    NSRect bounds = [pdfView visibleContentRect];
+    NSBitmapImageRep *imageRep = [pdfView bitmapImageRepCachingDisplayInRect:bounds];
     NSAffineTransform *transform = nil;
     NSSize thumbnailSize = thumbnailSize = bounds.size;
     CGFloat shadowBlurRadius = 0.0;
@@ -564,8 +561,7 @@ static char SKSnaphotWindowAppObservationContext;
 #pragma mark Miniaturize / Deminiaturize
 
 - (NSRect)miniaturizedRectForDockingRect:(NSRect)dockRect {
-    NSView *clipView = [[pdfView scrollView] contentView];
-    NSRect sourceRect = [clipView convertRect:[clipView bounds] toView:nil];
+    NSRect sourceRect = [pdfView convertRect:[pdfView visibleContentRect] toView:nil];
     NSRect targetRect;
     NSSize windowSize = [[self window] frame].size;
     NSSize thumbSize = [thumbnail size];
