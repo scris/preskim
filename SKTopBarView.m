@@ -41,8 +41,6 @@
 #import "NSColor_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 
-#define SKDisableSearchBarBlurringKey @"SKDisableSearchBarBlurring"
-
 #define SEPARATOR_WIDTH 1.0
 
 @interface SKBackgroundView : NSView {
