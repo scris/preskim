@@ -166,10 +166,16 @@ static NSString *HTMLEscapeString(NSString *htmlString)
 + (NSArray *)notesWithData:(NSData *)data;
 {
     NSArray *notes = nil;
-    @try { notes = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
-    @catch (id e) {}
-    if (notes == nil)
+    unsigned char ch = 0;
+    if ([data length] > 8)
+        [data getBytes:&ch range:NSMakeRange(8, 1)];
+    ch >>= 4;
+    if (ch == 0xD) {
+        @try { notes = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
+        @catch (id e) {}
+    } else if (ch == 0xA) {
         notes = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
+    }
     return notes;
 }
 
