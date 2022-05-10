@@ -532,10 +532,6 @@ static inline void normalizeOptions(NSMutableDictionary *options) {
             id value = [NSNumber numberWithInteger:[[options objectForKey:key] integerValue]];
             [options removeObjectForKey:key];
             [options setObject:value forKey:@"displayBox"];
-        } else if ([key isEqualToString:@"displaybox"]) {
-            id value = [NSNumber numberWithInteger:[[options objectForKey:key] integerValue]];
-            [options removeObjectForKey:key];
-            [options setObject:value forKey:@"displayBox"];
         }
     }
 }
