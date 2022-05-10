@@ -1931,7 +1931,7 @@ static NSArray *allMainDocumentPDFViews() {
         beforeMarkedPageIndex = NSNotFound;
     
     [self synchronizeWindowTitleWithDocumentName];
-    [self updateLeftStatus];M_PI;
+    [self updateLeftStatus];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayPageBoundsKey])
         [self updateRightStatus];
 
