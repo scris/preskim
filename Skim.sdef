@@ -673,6 +673,10 @@
                 description="The current page.">
                 <cocoa key="currentPage"/>
             </property>
+            <property name="current point" code="CPnt" type="point"
+                description="The current point relative to the current page.">
+                <cocoa key="currentQDPoint"/>
+            </property>
             <property name="active note" code="ANot" type="note"
                 description="The currently selected note.">
                 <cocoa key="activeNote"/>

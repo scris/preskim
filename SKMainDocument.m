@@ -90,6 +90,7 @@
 #import "SKFileShare.h"
 #import "SKAnimatedBorderlessWindow.h"
 #import "PDFOutline_SKExtensions.h"
+#import "PDFView_SKExtensions.h"
 
 #define BUNDLE_DATA_FILENAME @"data"
 #define PRESENTATION_OPTIONS_KEY @"net_sourceforge_skim-app_presentation_options"
@@ -1726,6 +1727,13 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 
 - (void)setCurrentPage:(PDFPage *)page {
     return [[self pdfView] goToPage:page];
+}
+
+- (NSData *)currentQDPoint {
+    NSPoint point;
+    [[self pdfView] currentPageIndexAndPoint:&point rotated:NULL];
+    Point qdPoint = SKQDPointFromNSPoint(point);
+    return [NSData dataWithBytes:&qdPoint length:sizeof(Point)];
 }
 
 - (PDFAnnotation *)activeNote {
