@@ -230,7 +230,7 @@
 
 - (NSString *)windowTitleForDocumentDisplayName:(NSString *)displayName {
     if ([pdfView document])
-        return [NSString stringWithFormat:NSLocalizedString(@"%@ (page %ld of %ld)", @"Window title format"), displayName, (long)[self pageNumber], (long)[[pdfView document] pageCount]];
+        return [NSString stringWithFormat:NSLocalizedString(@"%@ (page %ld of %ld)", @"Window title format"), displayName, (long)([[[self pdfView] currentPage] pageIndex] + 1), (long)[[pdfView document] pageCount]];
     else
         return displayName;
 }

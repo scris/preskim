@@ -272,13 +272,7 @@ enum {
 }
 
 - (void)applyOptions:(NSDictionary *)options {
-    NSInteger page = [[options objectForKey:@"page"] integerValue];
-    NSString *searchString = [options objectForKey:@"search"];
-    if (page > 0)
-        [[self mainWindowController] setPageNumber:page];
-    if ([searchString length] > 0)
-        [[self mainWindowController] displaySearchResultsForString:searchString];
-    [[self mainWindowController] applyPDFSettings:options rewind:NO];
+    [[self mainWindowController] applyOptions:options];
 }
 
 #pragma mark Writing
