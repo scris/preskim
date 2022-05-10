@@ -143,7 +143,6 @@ enum {
     NSMutableArray                      *pageLabels;
     
     NSString                            *pageLabel;
-    NSUInteger                          pageNumber;
     
     NSUInteger                          markedPageIndex;
     NSPoint                             markedPagePoint;

@@ -126,7 +126,6 @@
 
 - (void)goToSelectedOutlineItem:(id)sender;
 
-- (void)updatePageNumber;
 - (void)updatePageLabel;
 
 - (void)updateNoteFilterPredicate;
@@ -1916,7 +1915,6 @@ static NSArray *allMainDocumentPDFViews() {
     [self updateThumbnailHighlights];
     [self updateTocHighlights];
 
-    [self updatePageNumber];
     [self updatePageLabel];
     
     [self updateOutlineSelection];
