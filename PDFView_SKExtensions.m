@@ -209,8 +209,13 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 - (NSUInteger)currentPageIndexAndPoint:(NSPoint *)point rotated:(BOOL *)rotated {
     PDFPage *page = [self currentPage];
     // don't use currentDestination, as that always gives the top-left of the page in non-continuous mode, rather than the visible area
-    if (point) *point = [self convertPoint:SKTopLeftPoint([self bounds]) toPage:page];
-    if (rotated) *rotated = [page rotation] != [page intrinsicRotation];
+    if (point) {
+        NSPoint p = SKTopLeftPoint([self bounds]);
+        p.y -= [[self scrollView] contentInsets].top;
+        *point = [self convertPoint:p toPage:page];
+    }
+    if (rotated)
+        *rotated = [page rotation] != [page intrinsicRotation];
     return [page pageIndex];
 }
 
