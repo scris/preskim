@@ -138,7 +138,6 @@
 #define RELEVANCE_COLUMNID  @"relevance"
 #define RESULTS_COLUMNID    @"results"
 
-#define PAGENUMBER_KEY  @"pageNumber"
 #define PAGELABEL_KEY   @"pageLabel"
 
 #define MAINWINDOWFRAME_KEY         @"windowFrame"
@@ -229,8 +228,8 @@ static char SKMainWindowContentLayoutObservationContext;
 
 @implementation SKMainWindowController
 
-@synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, statusBar, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, tags, rating, pageNumber, pageLabel, interactionMode, placeholderPdfDocument;
-@dynamic pdfDocument, presentationOptions, selectedNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
+@synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, statusBar, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
+@dynamic pdfDocument, presentationOptions, selectedNotes, pageNumber, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -239,8 +238,6 @@ static char SKMainWindowContentLayoutObservationContext;
     
     [self defineFullScreenGlobalVariables];
 }
-
-+ (BOOL)automaticallyNotifiesObserversOfPageNumber { return NO; }
 
 + (BOOL)automaticallyNotifiesObserversOfPageLabel { return NO; }
 
@@ -271,7 +268,6 @@ static char SKMainWindowContentLayoutObservationContext;
         mwcFlags.rightSidePaneState = SKSidePaneStateNote;
         mwcFlags.findPaneState = SKFindPaneStateSingular;
         pageLabel = nil;
-        pageNumber = NSNotFound;
         markedPageIndex = NSNotFound;
         markedPagePoint = NSZeroPoint;
         beforeMarkedPageIndex = NSNotFound;
@@ -1208,13 +1204,8 @@ static char SKMainWindowContentLayoutObservationContext;
     }
 }
 
-- (void)updatePageNumber {
-    NSUInteger number = [[pdfView currentPage] pageIndex] + 1;
-    if (pageNumber != number) {
-        [self willChangeValueForKey:PAGENUMBER_KEY];
-        pageNumber = number;
-        [self didChangeValueForKey:PAGENUMBER_KEY];
-    }
+- (NSUInteger)pageNumber {
+    return [[pdfView currentPage] pageIndex] + 1;
 }
 
 - (void)setPageNumber:(NSUInteger)number {
@@ -1224,9 +1215,6 @@ static char SKMainWindowContentLayoutObservationContext;
         number = pageCount;
     if (number > 0 && [[pdfView currentPage] pageIndex] != number - 1)
         [pdfView goToPage:[[pdfView document] pageAtIndex:number - 1]];
-    if (pageNumber != number) {
-        pageNumber = number;
-    }
 }
 
 - (void)updatePageLabel {
