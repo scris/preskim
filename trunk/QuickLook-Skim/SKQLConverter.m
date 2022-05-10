@@ -176,7 +176,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
     } else if (ch == 0xA) {
         notes = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
     }
-    return notes;
+    return [notes isKindOfClass:[NSArray class]] ? notes : nil;
 }
 
 + (NSAttributedString *)attributedStringWithNotes:(NSArray *)notes forThumbnail:(QLThumbnailRequestRef)thumbnail;
