@@ -229,7 +229,7 @@ static char SKMainWindowContentLayoutObservationContext;
 @implementation SKMainWindowController
 
 @synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, statusBar, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
-@dynamic pdfDocument, presentationOptions, selectedNotes, pageNumber, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
+@dynamic pdfDocument, presentationOptions, selectedNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -710,10 +710,33 @@ static char SKMainWindowContentLayoutObservationContext;
     return setup;
 }
 
+- (void)applyOptions:(NSDictionary *)options {
+    NSInteger page = [[options objectForKey:@"page"] integerValue];
+    NSString *searchString = [options objectForKey:@"search"];
+    if (page > 0) {
+        page = MIN(page, (NSInteger)[[pdfView document] pageCount]);
+        NSString *pointString = [options objectForKey:@"point"];
+        if ([pointString length] > 0) {
+            if ([pointString hasPrefix:@"{"] == NO)
+                pointString = [NSString stringWithFormat:@"{%@}", pointString];
+            [pdfView goToPageAtIndex:page - 1 point:NSPointFromString(pointString)];
+        } else if ((NSInteger)[[pdfView currentPage] pageIndex] != page) {
+            [pdfView goToPage:[[pdfView document] pageAtIndex:page - 1]];
+        }
+    }
+    if ([searchString length] > 0) {
+        if ([self leftSidePaneIsOpen] == NO)
+            [self toggleLeftSidePane:nil];
+        [leftSideController.searchField setStringValue:searchString];
+        [self performSelector:@selector(search:) withObject:leftSideController.searchField afterDelay:0.0];
+    }
+    [self applyPDFSettings:options rewind:NO];
+}
+
 #pragma mark UI updating
 
 - (void)updateLeftStatus {
-    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Page %ld of %ld", @"Status message"), (long)[self pageNumber], (long)[[pdfView document] pageCount]];
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Page %ld of %ld", @"Status message"), (long)([[[self pdfView] currentPage] pageIndex] + 1), (long)[[pdfView document] pageCount]];
     [statusBar setLeftStringValue:message];
 }
 
@@ -1202,19 +1225,6 @@ static char SKMainWindowContentLayoutObservationContext;
         [self updateLeftStatus];
         [self updateRightStatus];
     }
-}
-
-- (NSUInteger)pageNumber {
-    return [[pdfView currentPage] pageIndex] + 1;
-}
-
-- (void)setPageNumber:(NSUInteger)number {
-    // Check that the page number exists
-    NSUInteger pageCount = [[pdfView document] pageCount];
-    if (number > pageCount)
-        number = pageCount;
-    if (number > 0 && [[pdfView currentPage] pageIndex] != number - 1)
-        [pdfView goToPage:[[pdfView document] pageAtIndex:number - 1]];
 }
 
 - (void)updatePageLabel {
@@ -1756,13 +1766,6 @@ static char SKMainWindowContentLayoutObservationContext;
 }
 
 #pragma mark Searching
-
-- (void)displaySearchResultsForString:(NSString *)string {
-    if ([self leftSidePaneIsOpen] == NO)
-        [self toggleLeftSidePane:nil];
-    [leftSideController.searchField setStringValue:string];
-    [self performSelector:@selector(search:) withObject:leftSideController.searchField afterDelay:0.0];
-}
 
 - (NSString *)searchString {
     return [leftSideController.searchField stringValue];

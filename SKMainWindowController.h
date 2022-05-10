@@ -216,8 +216,6 @@ enum {
     
 @property (nonatomic, retain) IBOutlet NSView *leftSideContentView, *rightSideContentView;
 
-- (void)displaySearchResultsForString:(NSString *)string;
-
 @property (nonatomic, readonly) NSString *searchString;
 
 - (void)showSnapshotAtPageNumber:(NSInteger)pageNum forRect:(NSRect)rect scaleFactor:(CGFloat)scaleFactor autoFits:(BOOL)autoFits;
@@ -276,7 +274,6 @@ enum {
 
 @property (nonatomic, copy) NSArray *selectedNotes;
 
-@property (nonatomic) NSUInteger pageNumber;
 @property (nonatomic, copy) NSString *pageLabel;
 
 @property (nonatomic, readonly) SKInteractionMode interactionMode;
@@ -339,6 +336,7 @@ enum {
 - (NSDictionary *)currentSetup;
 - (void)applyPDFSettings:(NSDictionary *)setup rewind:(BOOL)rewind;
 - (NSDictionary *)currentPDFSettings;
+- (void)applyOptions:(NSDictionary *)options;
 
 - (void)updateLeftStatus;
 - (void)updateRightStatus;
