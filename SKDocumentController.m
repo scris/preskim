@@ -504,7 +504,7 @@ static inline void normalizeOptions(NSMutableDictionary *options) {
             id value = [NSNumber numberWithBool:[[options objectForKey:key] boolValue]];
             [options removeObjectForKey:key];
             [options setObject:value forKey:@"autoScales"];
-        } else if ([key isEqualToString:@"scalefactor"] || [key isEqualToString:@"scale"]) {
+        } else if ([key isEqualToString:@"scalefactor"] || [key isEqualToString:@"scale"] || [key isEqualToString:@"zoom"]) {
             id value = [NSNumber numberWithDouble:[[options objectForKey:key] doubleValue]];
             [options removeObjectForKey:key];
             [options setObject:value forKey:@"scaleFactor"];
