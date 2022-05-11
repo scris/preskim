@@ -208,7 +208,7 @@ NSArray *SKNSkimNotesFromData(NSData *data) {
             @try { noteDicts = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
             @catch (id e) {}
         } else if (ch == 0xA || ch == 0x0) {
-            noteDicts = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListMutableContainers format:NULL errorDescription:NULL];
+            noteDicts = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainers format:NULL error:NULL];
             if ([noteDicts isKindOfClass:[NSArray class]]) {
                 for (NSMutableDictionary *dict in noteDicts) {
                     id value;
@@ -330,7 +330,7 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
                 [array addObject:dict];
                 [dict release];
             }
-            data = [NSPropertyListSerialization dataFromPropertyList:array format:NSPropertyListBinaryFormat_v1_0 errorDescription:NULL];
+            data = [NSPropertyListSerialization dataWithPropertyList:array format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
             [array release];
             [colors release];
         } else {

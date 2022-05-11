@@ -128,7 +128,7 @@
             @try { array = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
             @catch (id e) {}
             if (array == nil)
-                array = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:NULL];
+                array = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
         }
     }
 
@@ -191,7 +191,7 @@
             @try { array = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
             @catch (id e) {}
             if (array == nil)
-                array = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:NULL];
+                array = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL errorDescription:NULL];
         } else {
             array = [NSArray array];
         }
