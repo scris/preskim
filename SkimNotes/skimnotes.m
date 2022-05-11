@@ -563,7 +563,7 @@ int main (int argc, const char * argv[]) {
                 @try { inNotes = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
                 @catch (id e) {}
                 if (inNotes == nil) {
-                    inNotes = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:NULL];
+                    inNotes = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
                     isPlist = YES;
                 }
                 if ([inNotes isKindOfClass:[NSArray class]]) {

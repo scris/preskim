@@ -261,9 +261,7 @@ static id sharedNoSplitManager = nil;
     }
     
     if (namePrefix && [self isPlistData:attribute]) {
-        NSPropertyListFormat format;
-        NSString *errorString;
-        id plist = [NSPropertyListSerialization propertyListFromData:attribute mutabilityOption:NSPropertyListImmutable format:&format errorDescription:&errorString];
+        id plist = [NSPropertyListSerialization propertyListWithData:attribute options:NSPropertyListImmutable format:NULL error:NULL];
         
         // even if it's a plist, it may not be a dictionary or have the key we're looking for
         if (plist && [plist respondsToSelector:@selector(objectForKey:)] && [[plist objectForKey:wrapperKey] boolValue]) {
@@ -331,14 +329,12 @@ static id sharedNoSplitManager = nil;
             if (error) *error = [NSError errorWithDomain:SKNSkimNotesErrorDomain code:SKNInvalidDataError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SKNLocalizedString(@"Invalid data.", @"Error description"), NSLocalizedDescriptionKey, nil]];
 
         } else {
-            NSString *errorString;
-            plist = [NSPropertyListSerialization propertyListFromData:data
-                                                     mutabilityOption:NSPropertyListImmutable
+            plist = [NSPropertyListSerialization propertyListWithData:data
+                                                              options:NSPropertyListImmutable
                                                                format:NULL
-                                                     errorDescription:&errorString];
+                                                                error:&anError];
             if (nil == plist) {
-                if (error) *error = [NSError errorWithDomain:SKNSkimNotesErrorDomain code:SKNPlistDeserializationFailedError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:path, NSFilePathErrorKey, errorString, NSLocalizedDescriptionKey, nil]];
-                [errorString release];
+                if (error) *error = [NSError errorWithDomain:SKNSkimNotesErrorDomain code:SKNPlistDeserializationFailedError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:path, NSFilePathErrorKey, [anError localizedDescription], NSLocalizedDescriptionKey, nil]];
             }
         }
     }
@@ -375,7 +371,7 @@ static id sharedNoSplitManager = nil;
         NSString *uniqueValue = [self uniqueName];
         NSUInteger numberOfFragments = ([value length] / MAX_XATTR_LENGTH) + ([value length] % MAX_XATTR_LENGTH ? 1 : 0);
         NSDictionary *wrapper = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], wrapperKey, uniqueValue, uniqueKey, [NSNumber numberWithUnsignedInteger:numberOfFragments], fragmentsKey, nil];
-        NSData *wrapperData = [NSPropertyListSerialization dataFromPropertyList:wrapper format:NSPropertyListBinaryFormat_v1_0 errorDescription:NULL];
+        NSData *wrapperData = [NSPropertyListSerialization dataWithPropertyList:wrapper format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
         NSParameterAssert([wrapperData length] < MAX_XATTR_LENGTH && [wrapperData length] > 0);
         
         // we don't want to split this dictionary (or compress it)
@@ -419,14 +415,14 @@ static id sharedNoSplitManager = nil;
 
 - (BOOL)setExtendedAttributeNamed:(NSString *)attr toPropertyListValue:(id)plist atPath:(NSString *)path options:(SKNXattrFlags)options error:(NSError **)error;
 {
-    NSString *errorString;
-    NSData *data = [NSPropertyListSerialization dataFromPropertyList:plist 
-                                                              format:NSPropertyListBinaryFormat_v1_0 
-                                                    errorDescription:&errorString];
+    NSError *anError = nil;
+    NSData *data = [NSPropertyListSerialization dataWithPropertyList:plist
+                                                              format:NSPropertyListBinaryFormat_v1_0
+                                                             options:0
+                                                               error:&anError];
     BOOL success;
     if (nil == data) {
-        if (error) *error = [NSError errorWithDomain:SKNSkimNotesErrorDomain code:SKNPlistDeserializationFailedError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:path, NSFilePathErrorKey, errorString, NSLocalizedDescriptionKey, nil]];
-        [errorString release];
+        if (error) *error = [NSError errorWithDomain:SKNSkimNotesErrorDomain code:SKNPlistDeserializationFailedError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:path, NSFilePathErrorKey, [anError localizedDescription], NSLocalizedDescriptionKey, nil]];
         success = NO;
     } else {
         // if we don't split and the data is too long, compress the data using bzip to save space
@@ -476,12 +472,10 @@ static id sharedNoSplitManager = nil;
             // let NSData worry about freeing the buffer
             NSData *attribute = [[NSData alloc] initWithBytesNoCopy:namebuf length:bufSize];
             
-            NSPropertyListFormat format;
-            NSString *errorString;
             id plist = nil;
             
             if (namePrefix && [self isPlistData:attribute])
-                plist = [NSPropertyListSerialization propertyListFromData:attribute mutabilityOption:NSPropertyListImmutable format:&format errorDescription:&errorString];
+                plist = [NSPropertyListSerialization propertyListWithData:attribute options:NSPropertyListImmutable format:NULL error:NULL];
             
             // even if it's a plist, it may not be a dictionary or have the key we're looking for
             if (plist && [plist respondsToSelector:@selector(objectForKey:)] && [[plist objectForKey:wrapperKey] boolValue]) {
