@@ -422,7 +422,7 @@ static id sharedNoSplitManager = nil;
                                                                error:&anError];
     BOOL success;
     if (nil == data) {
-        if (error) *error = [NSError errorWithDomain:SKNSkimNotesErrorDomain code:SKNPlistDeserializationFailedError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:path, NSFilePathErrorKey, [anError localizedDescription], NSLocalizedDescriptionKey, nil]];
+        if (error) *error = [NSError errorWithDomain:SKNSkimNotesErrorDomain code:SKNPlistSerializationFailedError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:path, NSFilePathErrorKey, [anError localizedDescription], NSLocalizedDescriptionKey, nil]];
         success = NO;
     } else {
         // if we don't split and the data is too long, compress the data using bzip to save space
