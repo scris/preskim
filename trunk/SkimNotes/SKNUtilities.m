@@ -207,7 +207,7 @@ NSArray *SKNSkimNotesFromData(NSData *data) {
         if (ch == 0xD) {
             @try { noteDicts = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
             @catch (id e) {}
-        } else if (ch == 0xA || ch == 0x0) {
+        } else {
             noteDicts = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainers format:NULL error:NULL];
             if ([noteDicts isKindOfClass:[NSArray class]]) {
                 for (NSMutableDictionary *dict in noteDicts) {

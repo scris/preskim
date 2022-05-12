@@ -173,7 +173,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
     if (ch == 0xD) {
         @try { notes = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
         @catch (id e) {}
-    } else if (ch == 0xA || ch == 0x0) {
+    } else {
         notes = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
     }
     return [notes isKindOfClass:[NSArray class]] ? notes : nil;
