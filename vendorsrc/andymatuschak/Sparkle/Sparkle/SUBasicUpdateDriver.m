@@ -55,6 +55,8 @@
 
 @synthesize updateValidator = _updateValidator;
 
+@dynamic statusFrame;
+
 - (void)checkForUpdatesAtURL:(NSURL *)URL host:(SUHost *)aHost
 {
     [super checkForUpdatesAtURL:URL host:aHost];
@@ -469,6 +471,11 @@
     return (!updater.delegate || ![updater.delegate respondsToSelector:@selector(updaterShouldRelaunchApplication:)] || [updater.delegate updaterShouldRelaunchApplication:self.updater]);
 }
 
+- (NSString *)statusFrame
+{
+    return @"";
+}
+
 - (void)installWithToolAndRelaunch:(BOOL)relaunch displayingUserInterface:(BOOL)showUI
 {
     assert(self.updateItem);
@@ -602,7 +609,8 @@
                                                                     [NSString stringWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]],
                                                                     self.tempDir,
                                                                     relaunch ? @"1" : @"0",
-                                                                    showUI ? @"1" : @"0"]];
+                                                                    showUI ? @"1" : @"0",
+                                                                    self.statusFrame]];
     [self terminateApp];
 }
 
