@@ -271,6 +271,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     CGFloat x = NSMinX([self convertRect:[self convertRect:bounds fromPage:page] toView:clipView]);
     bounds = [clipView bounds];
     bounds.origin.x = x;
+    [super goToPage:page];
     [clipView scrollToPoint:[clipView constrainBoundsRect:bounds].origin];
 }
 
