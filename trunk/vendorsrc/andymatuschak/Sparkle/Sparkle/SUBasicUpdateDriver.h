@@ -19,7 +19,6 @@
 @property (strong, readonly) SUAppcastItem *updateItem;
 @property (strong, readonly) SPUDownloader *download;
 @property (copy, readonly) NSString *downloadPath;
-@property (copy, readonly) NSString *statusFrame;
 
 - (void)checkForUpdatesAtURL:(NSURL *)URL host:(SUHost *)host;
 

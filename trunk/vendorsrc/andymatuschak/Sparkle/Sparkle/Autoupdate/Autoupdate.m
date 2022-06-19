@@ -32,9 +32,8 @@ static const NSTimeInterval SUTerminationTimeDelay = 0.5;
  * updateFolderPath - path to update folder (i.e, temporary directory containing the new update)
  * shouldRelaunch - indicates if the new installed app should re-launched
  * shouldShowUI - indicates if we should show the status window when installing the update
- * statusFrame - the frame to use for the status window as a string
  */
-- (instancetype)initWithHostPath:(NSString *)hostPath relaunchPath:(NSString *)relaunchPath parentProcessId:(pid_t)parentProcessId updateFolderPath:(NSString *)updateFolderPath shouldRelaunch:(BOOL)shouldRelaunch shouldShowUI:(BOOL)shouldShowUI statusFrame:(NSString *)statusFrame;
+- (instancetype)initWithHostPath:(NSString *)hostPath relaunchPath:(NSString *)relaunchPath parentProcessId:(pid_t)parentProcessId updateFolderPath:(NSString *)updateFolderPath shouldRelaunch:(BOOL)shouldRelaunch shouldShowUI:(BOOL)shouldShowUI;
 
 @end
 
@@ -48,7 +47,6 @@ static const NSTimeInterval SUTerminationTimeDelay = 0.5;
 @property (nonatomic, copy) NSString *relaunchPath;
 @property (nonatomic, assign) BOOL shouldRelaunch;
 @property (nonatomic, assign) BOOL shouldShowUI;
-@property (nonatomic, copy) NSString *statusFrame;
 
 @property (nonatomic, assign) BOOL isTerminating;
 
@@ -64,9 +62,8 @@ static const NSTimeInterval SUTerminationTimeDelay = 0.5;
 @synthesize shouldRelaunch = _shouldRelaunch;
 @synthesize shouldShowUI = _shouldShowUI;
 @synthesize isTerminating = _isTerminating;
-@synthesize statusFrame = _statusFrame;
 
-- (instancetype)initWithHostPath:(NSString *)hostPath relaunchPath:(NSString *)relaunchPath parentProcessId:(pid_t)parentProcessId updateFolderPath:(NSString *)updateFolderPath shouldRelaunch:(BOOL)shouldRelaunch shouldShowUI:(BOOL)shouldShowUI statusFrame:(NSString *)statusFrame
+- (instancetype)initWithHostPath:(NSString *)hostPath relaunchPath:(NSString *)relaunchPath parentProcessId:(pid_t)parentProcessId updateFolderPath:(NSString *)updateFolderPath shouldRelaunch:(BOOL)shouldRelaunch shouldShowUI:(BOOL)shouldShowUI
 {
     if (!(self = [super init])) {
         return nil;
@@ -79,8 +76,7 @@ static const NSTimeInterval SUTerminationTimeDelay = 0.5;
     self.updateFolderPath = updateFolderPath;
     self.shouldRelaunch = shouldRelaunch;
     self.shouldShowUI = shouldShowUI;
-    self.statusFrame = statusFrame;
-
+    
     return self;
 }
 
@@ -141,8 +137,6 @@ static const NSTimeInterval SUTerminationTimeDelay = 0.5;
         [self.statusController setButtonTitle:SULocalizedString(@"Cancel Update", @"") target:nil action:Nil isDefault:NO];
         [self.statusController beginActionWithTitle:SULocalizedString(@"Installing update...", @"")
                                    maxProgressValue:100 statusText: @""];
-        if (self.statusFrame.length)
-            [self.statusController.window setFrame:NSRectFromString(self.statusFrame) display:NO];
         [self.statusController showWindow:self];
     }
     
@@ -255,8 +249,7 @@ int main(int __unused argc, const char __unused *argv[])
                                                             parentProcessId:[[args objectAtIndex:3] intValue]
                                                            updateFolderPath:[args objectAtIndex:4]
                                                              shouldRelaunch:(args.count > 5) ? [[args objectAtIndex:5] boolValue] : YES
-                                                               shouldShowUI:shouldShowUI
-                                                                statusFrame:(args.count > 7) ? [args objectAtIndex:7] : nil];
+                                                               shouldShowUI:shouldShowUI];
         [application setDelegate:appInstaller];
         [application run];
     }
