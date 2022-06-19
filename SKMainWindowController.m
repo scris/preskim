@@ -1229,7 +1229,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)updatePageLabel {
     NSString *label = [[pdfView currentPage] displayLabel];
-    if (label != pageLabel) {
+    if ([label isEqualToString:pageLabel] == NO) {
         [self willChangeValueForKey:PAGELABEL_KEY];
         [pageLabel release];
         pageLabel = [label retain];
@@ -1238,13 +1238,13 @@ static char SKMainWindowContentLayoutObservationContext;
 }
 
 - (void)setPageLabel:(NSString *)label {
-    NSUInteger idx = [pageLabels indexOfObject:label];
-    if (idx != NSNotFound && [[pdfView currentPage] pageIndex] != idx)
-        [pdfView goToPage:[[pdfView document] pageAtIndex:idx]];
     if (label != pageLabel) {
         [pageLabel release];
         pageLabel = [label retain];
     }
+    NSUInteger idx = [pageLabels indexOfObject:label];
+    if (idx != NSNotFound && [[pdfView currentPage] pageIndex] != idx)
+        [pdfView goToPage:[[pdfView document] pageAtIndex:idx]];
 }
 
 - (BOOL)validatePageLabel:(id *)value error:(NSError **)error {
