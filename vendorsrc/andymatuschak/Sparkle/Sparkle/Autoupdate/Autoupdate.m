@@ -32,8 +32,9 @@ static const NSTimeInterval SUTerminationTimeDelay = 0.5;
  * updateFolderPath - path to update folder (i.e, temporary directory containing the new update)
  * shouldRelaunch - indicates if the new installed app should re-launched
  * shouldShowUI - indicates if we should show the status window when installing the update
+ * statusFrame - the frame to use for for the status window
  */
-- (instancetype)initWithHostPath:(NSString *)hostPath relaunchPath:(NSString *)relaunchPath parentProcessId:(pid_t)parentProcessId updateFolderPath:(NSString *)updateFolderPath shouldRelaunch:(BOOL)shouldRelaunch shouldShowUI:(BOOL)shouldShowUI;
+- (instancetype)initWithHostPath:(NSString *)hostPath relaunchPath:(NSString *)relaunchPath parentProcessId:(pid_t)parentProcessId updateFolderPath:(NSString *)updateFolderPath shouldRelaunch:(BOOL)shouldRelaunch shouldShowUI:(BOOL)shouldShowUI statusFrame:(NSRect)statusFrame;
 
 @end
 
@@ -47,6 +48,7 @@ static const NSTimeInterval SUTerminationTimeDelay = 0.5;
 @property (nonatomic, copy) NSString *relaunchPath;
 @property (nonatomic, assign) BOOL shouldRelaunch;
 @property (nonatomic, assign) BOOL shouldShowUI;
+@property (nonatomic, assign) NSRect statusFrame;
 
 @property (nonatomic, assign) BOOL isTerminating;
 
@@ -62,8 +64,9 @@ static const NSTimeInterval SUTerminationTimeDelay = 0.5;
 @synthesize shouldRelaunch = _shouldRelaunch;
 @synthesize shouldShowUI = _shouldShowUI;
 @synthesize isTerminating = _isTerminating;
+@synthesize statusFrame = _statusFrame;
 
-- (instancetype)initWithHostPath:(NSString *)hostPath relaunchPath:(NSString *)relaunchPath parentProcessId:(pid_t)parentProcessId updateFolderPath:(NSString *)updateFolderPath shouldRelaunch:(BOOL)shouldRelaunch shouldShowUI:(BOOL)shouldShowUI
+- (instancetype)initWithHostPath:(NSString *)hostPath relaunchPath:(NSString *)relaunchPath parentProcessId:(pid_t)parentProcessId updateFolderPath:(NSString *)updateFolderPath shouldRelaunch:(BOOL)shouldRelaunch shouldShowUI:(BOOL)shouldShowUI statusFrame:(NSRect)statusFrame
 {
     if (!(self = [super init])) {
         return nil;
@@ -76,7 +79,8 @@ static const NSTimeInterval SUTerminationTimeDelay = 0.5;
     self.updateFolderPath = updateFolderPath;
     self.shouldRelaunch = shouldRelaunch;
     self.shouldShowUI = shouldShowUI;
-    
+    self.statusFrame = statusFrame;
+
     return self;
 }
 
@@ -137,6 +141,8 @@ static const NSTimeInterval SUTerminationTimeDelay = 0.5;
         [self.statusController setButtonTitle:SULocalizedString(@"Cancel Update", @"") target:nil action:Nil isDefault:NO];
         [self.statusController beginActionWithTitle:SULocalizedString(@"Installing update...", @"")
                                    maxProgressValue:100 statusText: @""];
+        if (NSIsEmptyRect(self.statusFrame) == NO)
+            [self.statusController.window setFrame:self.statusFrame display:NO];
         [self.statusController showWindow:self];
     }
     
@@ -233,7 +239,7 @@ int main(int __unused argc, const char __unused *argv[])
     @autoreleasepool
     {
         NSArray<NSString *> *args = [[NSProcessInfo processInfo] arguments];
-        if (args.count < 5 || args.count > 7) {
+        if (args.count < 5 || args.count > 8) {
             return EXIT_FAILURE;
         }
         
@@ -249,7 +255,8 @@ int main(int __unused argc, const char __unused *argv[])
                                                             parentProcessId:[[args objectAtIndex:3] intValue]
                                                            updateFolderPath:[args objectAtIndex:4]
                                                              shouldRelaunch:(args.count > 5) ? [[args objectAtIndex:5] boolValue] : YES
-                                                               shouldShowUI:shouldShowUI];
+                                                               shouldShowUI:shouldShowUI
+                                                                statusFrame:(args.count > 7) ? NSRectFromString([args objectAtIndex:7]) : NSZeroRect];
         [application setDelegate:appInstaller];
         [application run];
     }
