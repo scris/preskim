@@ -286,13 +286,6 @@
     [self installWithToolAndRelaunch:YES];
 }
 
-- (NSString *)statusFrame
-{
-    if (self.statusController == nil)
-        return @"";
-    return NSStringFromRect(self.statusController.window.frame);
-}
-
 - (void)installWithToolAndRelaunch:(BOOL)relaunch
 {
     [self.statusController beginActionWithTitle:SULocalizedString(@"Installing update...", @"Take care not to overflow the status window.") maxProgressValue:0.0 statusText:nil];
