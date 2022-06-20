@@ -48,11 +48,13 @@ typedef void (^SKSyncDotUpdateBlock)(BOOL finished);
     NSTimer *timer;
     volatile int32_t phase;
     SKSyncDotUpdateBlock handler;
+    BOOL shouldHideReadingBar;
 }
 
 @property (nonatomic, readonly) NSPoint point;
 @property (nonatomic, readonly) PDFPage *page;
 @property (nonatomic, readonly) NSRect bounds;
+@property (nonatomic) BOOL shouldHideReadingBar;
 
 - (id)initWithPoint:(NSPoint)aPoint page:(PDFPage *)aPage updateHandler:(SKSyncDotUpdateBlock)aHandler;
 

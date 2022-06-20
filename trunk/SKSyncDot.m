@@ -50,7 +50,7 @@
 
 @implementation SKSyncDot
 
-@synthesize point, page;
+@synthesize point, page, shouldHideReadingBar;
 @dynamic bounds;
 
 - (id)initWithPoint:(NSPoint)aPoint page:(PDFPage *)aPage updateHandler:(SKSyncDotUpdateBlock)aHandler {

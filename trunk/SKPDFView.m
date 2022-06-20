@@ -536,6 +536,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)setDocument:(PDFDocument *)document {
     SKDESTROY(rewindPage);
     
+    BOOL shouldHideReadingBar = [syncDot shouldHideReadingBar];
     [syncDot invalidate];
     [self setSyncDot:nil];
     
@@ -551,8 +552,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     NSInteger readingBarLine = -1;
     [self stopPacer];
     if ([self hasReadingBar]) {
-        readingBarPageIndex = [[readingBar page] pageIndex];
-        readingBarLine = [readingBar currentLine];
+        if (shouldHideReadingBar == NO) {
+            readingBarPageIndex = [[readingBar page] pageIndex];
+            readingBarLine = [readingBar currentLine];
+        }
         [self setReadingBar:nil];
     }
     
@@ -2930,12 +2933,15 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         NSRect rect = lineRect;
         NSRect visibleRect;
         BOOL wasPageDisplayed = [self isPageAtIndexDisplayed:pageIndex];
+        BOOL shouldHideReadingBar = NO;
         
         if (wasPageDisplayed == NO)
             [self goToPage:page];
         
         if (interactionMode != SKPresentationMode) {
             if (showBar) {
+                if ([self hasReadingBar] == NO || [syncDot shouldHideReadingBar])
+                    shouldHideReadingBar = YES;
                 [self stopPacer];
                 BOOL invert = [[NSUserDefaults standardUserDefaults] boolForKey:SKReadingBarInvertKey];
                 PDFPage *oldPage = nil;
@@ -2985,9 +2991,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [syncDot invalidate];
         [self setSyncDot:[[[SKSyncDot alloc] initWithPoint:point page:page updateHandler:^(BOOL finished){
                 [self setNeedsDisplayInRect:[syncDot bounds] ofPage:[syncDot page]];
-                if (finished)
-                    [self setSyncDot:nil];
+            if (finished) {
+                if ([syncDot shouldHideReadingBar] && [self hasReadingBar])
+                    [self toggleReadingBar];
+                [self setSyncDot:nil];
+            }
             }] autorelease]];
+        [syncDot setShouldHideReadingBar:shouldHideReadingBar];
     }
 }
 
@@ -3756,6 +3766,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:oldPage, SKPDFViewOldPageKey, newPage, SKPDFViewNewPageKey, nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewReadingBarDidChangeNotification object:self userInfo:userInfo];
     }
+    [syncDot setShouldHideReadingBar:NO];
 }
 
 - (void)doResizeReadingBarForKey:(unichar)eventChar {
@@ -3773,6 +3784,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewReadingBarDidChangeNotification object:self
             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewOldPageKey, page, SKPDFViewNewPageKey, nil]];
     }
+    [syncDot setShouldHideReadingBar:NO];
 }
 
 - (void)doMoveAnnotationWithEvent:(NSEvent *)theEvent offset:(NSPoint)offset {
@@ -4579,6 +4591,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [NSEvent stopPeriodicEvents];
     
     [self updatePacer];
+    [syncDot setShouldHideReadingBar:NO];
     
     [NSCursor pop];
     // ??? PDFView's delayed layout seems to reset the cursor to an arrow
@@ -4614,6 +4627,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewReadingBarDidChangeNotification object:self userInfo:userInfo];
         }
     }
+    
+    [syncDot setShouldHideReadingBar:NO];
     
     [NSCursor pop];
     // ??? PDFView's delayed layout seems to reset the cursor to an arrow
