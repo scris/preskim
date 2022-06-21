@@ -2990,9 +2990,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         [syncDot invalidate];
         [self setSyncDot:[[[SKSyncDot alloc] initWithPoint:point page:page updateHandler:^(BOOL finished){
-                [self setNeedsDisplayInRect:[[self syncDot] bounds] ofPage:[[self syncDot] page]];
+                [self setNeedsDisplayInRect:[syncDot bounds] ofPage:[syncDot page]];
             if (finished) {
-                if ([[self syncDot] shouldHideReadingBar] && [self hasReadingBar])
+                if ([syncDot shouldHideReadingBar] && [self hasReadingBar])
                     [self toggleReadingBar];
                 [self setSyncDot:nil];
             }
