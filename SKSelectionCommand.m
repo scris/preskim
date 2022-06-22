@@ -64,7 +64,7 @@
     if (point)
         return [[page selectionFromPoint:[rectOrPoint pointValueAsQDPoint] toPoint:[point pointValueAsQDPoint]] objectSpecifiers];
     else
-        return [[page selectionForRect:NSInsetRect([rectOrPoint rectValueAsQDRect], -0.5, -0.5)] objectSpecifiers];
+        return [[page selectionForRect:NSInsetRect([rectOrPoint rectValueAsQDRect], -1.0, -1.0)] objectSpecifiers];
 }
 
 @end
