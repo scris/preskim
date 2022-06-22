@@ -673,7 +673,7 @@
                 description="The current page.">
                 <cocoa key="currentPage"/>
             </property>
-            <property name="current point" code="CPnt" type="point"
+            <property name="current point" code="CPnt" type="point" access="r"
                 description="The current point relative to the current page.">
                 <cocoa key="currentQDPoint"/>
             </property>
