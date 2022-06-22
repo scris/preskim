@@ -2948,8 +2948,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 NSRect oldRect = NSZeroRect;
                 if ([self hasReadingBar] == NO) {
                     SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page];
-                    if (NO == [aReadingBar goToLineForPoint:point])
-                        [aReadingBar goToNextLine];
+                    [aReadingBar goToLineForPoint:point];
                     [self setReadingBar:aReadingBar];
                     [aReadingBar release];
                     if (invert)
@@ -2960,8 +2959,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                     oldPage = [readingBar page];
                     oldRect = [readingBar currentBoundsForBox:[self displayBox]];
                     [readingBar setPage:page];
-                    if (NO == [readingBar goToLineForPoint:point])
-                        [readingBar goToNextLine];
+                    [readingBar goToLineForPoint:point];
                     [self setNeedsDisplayInRect:oldRect ofPage:oldPage];
                     [self setNeedsDisplayInRect:[readingBar currentBoundsForBox:[self displayBox]] ofPage:[readingBar page]];
                 }
