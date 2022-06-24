@@ -46,6 +46,7 @@
 @property (nonatomic, readonly) NSArray *displayedPages;
 @property (nonatomic, readonly) CGFloat minimumScaleFactor;
 @property (nonatomic, readonly) CGFloat maximumScaleFactor;
+@property (nonatomic, readonly) NSRect visibleContentRect;
 
 - (BOOL)isPageAtIndexDisplayed:(NSUInteger)pageIndex;
 

@@ -374,11 +374,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [self stopPacer];
 }
 
-- (NSRect)visibleContentRect {
-    NSView *clipView = [[self scrollView] contentView];
-    return [clipView convertRect:[clipView visibleRect] toView:self];
-}
-
 - (void)resetHistory {
     if ([self respondsToSelector:@selector(currentHistoryIndex)])
         minHistoryIndex = [self currentHistoryIndex];
