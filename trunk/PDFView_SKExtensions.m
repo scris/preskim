@@ -71,7 +71,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 @implementation PDFView (SKExtensions)
 
-@dynamic physicalScaleFactor, scrollView, displayedPages, minimumScaleFactor, maximumScaleFactor, drawsActiveSelections;
+@dynamic physicalScaleFactor, scrollView, displayedPages, minimumScaleFactor, maximumScaleFactor, visibleContentRect, drawsActiveSelections;
 
 static inline CGFloat physicalScaleFactorForView(NSView *view) {
     NSScreen *screen = [[view window] screen];
@@ -266,6 +266,14 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     if ([self respondsToSelector:@selector(minScaleFactor)])
         return [self minScaleFactor];
     return 0.1;
+}
+
+- (NSRect)visibleContentRect {
+    NSScrollView *scrollView = [self scrollView];
+    NSView *clipView = [scrollView contentView];
+    NSRect rect = [self convertRect:[clipView bounds] fromView:clipView];
+    rect.size.height -= [scrollView contentInsets].top;
+    return rect;
 }
 
 - (CGFloat)maximumScaleFactor {

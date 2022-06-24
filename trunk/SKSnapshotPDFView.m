@@ -73,7 +73,6 @@
 @implementation SKSnapshotPDFView
 
 @synthesize autoFits, shouldAutoFit;
-@dynamic visibleContentRect;
 
 #define SKPDFContentViewChangedNotification @"SKPDFContentViewChangedNotification"
 
@@ -252,14 +251,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 
 - (void)setDelegate:(id <SKSnapshotPDFViewDelegate>)newDelegate {
     [super setDelegate:newDelegate];
-}
-
-- (NSRect)visibleContentRect {
-    NSScrollView *scrollView = [self scrollView];
-    NSView *clipView = [scrollView contentView];
-    NSRect rect = [self convertRect:[clipView bounds] fromView:clipView];
-    rect.size.height -= [scrollView contentInsets].top;
-    return rect;
 }
 
 - (void)handlePDFViewFrameChangedNotification:(NSNotification *)notification {

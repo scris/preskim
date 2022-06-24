@@ -57,7 +57,6 @@
 
 @property (nonatomic) BOOL autoFits;
 @property (nonatomic) BOOL shouldAutoFit;
-@property (nonatomic, readonly) NSRect visibleContentRect;
 
 - (void)resetHistory;
 
