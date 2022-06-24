@@ -245,7 +245,7 @@ static inline BOOL topAbovePoint(NSRect rect, NSPoint point, NSInteger lineAngle
 - (BOOL)goToLineForPoint:(NSPoint)point {
     if ([lineRects count] == 0) {
         if (currentLine == -1)
-            return [self goToNextLine];
+            return [self goToNextPageAtTop:YES];
         return NO;
     }
     NSInteger i = [self maxLine];
