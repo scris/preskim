@@ -568,8 +568,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
         if (page) {
             SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page];
-            if (readingBarLine <= [aReadingBar maxLine])
-                [aReadingBar setCurrentLine:readingBarLine];
+            if ([aReadingBar maxLine] != -1)
+                [aReadingBar setCurrentLine:MIN(readingBarLine, [aReadingBar maxLine])];
             else
                 [aReadingBar goToNextLine];
             [self setReadingBar:aReadingBar];
