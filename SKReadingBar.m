@@ -55,9 +55,10 @@
     self = [super init];
     if (self) {
         numberOfLines = MAX(1, [[NSUserDefaults standardUserDefaults] integerForKey:SKReadingBarNumberOfLinesKey]);
-        lineRects = nil;
+        page = [aPage retain];
+        lineRects = [[page lineRects] retain];
         currentLine = -1;
-        [self setPage:aPage];
+        currentBounds = NSZeroRect;
     }
     return self;
 }
