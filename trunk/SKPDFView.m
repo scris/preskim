@@ -1014,7 +1014,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 #pragma mark Pacer
 
 - (void)setPacerSpeed:(CGFloat)speed {
-    if (pacerSpeed > 0.0) {
+    if (speed > 0.0) {
         pacerSpeed = speed;
         [self updatePacer];
         [[NSUserDefaults standardUserDefaults] setDouble:speed forKey:SKPacerSpeedKey];
