@@ -161,8 +161,6 @@ static BOOL useToolModeCursors = NO;
 
 static inline PDFAreaOfInterest SKAreaOfInterestForResizeHandle(SKRectEdges mask, PDFPage *page);
 
-static inline NSInteger SKIndexOfRectAtPointInOrderedRects(NSPoint point,  NSPointerArray *rectArray, NSInteger lineAngle, BOOL lower);
-
 static inline NSSize SKFitTextNoteSize(NSString *string, NSFont *font, CGFloat width);
 
 enum {
@@ -4495,14 +4493,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)doDragReadingBarWithEvent:(NSEvent *)theEvent {
     PDFPage *readingBarPage = [readingBar page];
     PDFPage *page = readingBarPage;
-    NSPointerArray *lineRects = [page lineRects];
+    NSInteger numberOfLines = [[page lineRects] count];
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewOldPageKey, nil];
     NSInteger lineAngle = [page lineDirectionAngle];
     
     NSEvent *lastMouseEvent = theEvent;
     NSPoint lastMouseLoc = [theEvent locationInView:self];
     NSPoint point = [self convertPoint:lastMouseLoc toPage:page];
-    NSInteger lineOffset = SKIndexOfRectAtPointInOrderedRects(point, lineRects, lineAngle, YES) - [readingBar currentLine];
+    NSInteger lineOffset = [page indexOfLineRectAtPoint:point lower:YES] - [readingBar currentLine];
     NSDate *lastPageChangeDate = [NSDate distantPast];
     
     lastMouseLoc = [self convertPoint:lastMouseLoc toView:[self documentView]];
@@ -4550,16 +4548,15 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         if ([mousePage isEqual:page] == NO) {
             page = mousePage;
-            lineRects = [page lineRects];
+            numberOfLines = [[page lineRects] count];
             lineAngle = [page lineDirectionAngle];
         }
         
-        if ([lineRects count] == 0)
+        if (numberOfLines == 0)
             continue;
         
-        currentLine = SKIndexOfRectAtPointInOrderedRects(mouseLocInPage, lineRects, lineAngle, mouseLocInDocument.y < lastMouseLoc.y) - lineOffset;
-        currentLine = MIN((NSInteger)[lineRects count] - (NSInteger)[readingBar numberOfLines], currentLine);
-        currentLine = MAX(0, currentLine);
+        currentLine = [page indexOfLineRectAtPoint:mouseLocInPage lower:mouseLocInDocument.y < lastMouseLoc.y] - lineOffset;
+        currentLine = MAX(0, MIN(numberOfLines - (NSInteger)[readingBar numberOfLines], currentLine));
         
         if ([page isEqual:readingBarPage] == NO || currentLine != [readingBar currentLine]) {
             NSRect newRect, oldRect = [readingBar currentBoundsForBox:[self displayBox]];
@@ -4594,10 +4591,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)doResizeReadingBarWithEvent:(NSEvent *)theEvent {
     PDFPage *page = [readingBar page];
     NSInteger firstLine = [readingBar currentLine];
-    NSPointerArray *lineRects = [page lineRects];
 	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewOldPageKey, page, SKPDFViewNewPageKey, nil];
-    NSInteger lineAngle = [page lineDirectionAngle];
-
+    
     [[NSCursor resizeUpDownCursor] push];
     
 	while (YES) {
@@ -4611,7 +4606,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if ([[self pageAndPoint:&point forEvent:theEvent nearest:YES] isEqual:page] == NO)
             continue;
         
-        NSInteger numberOfLines = MAX(0, SKIndexOfRectAtPointInOrderedRects(point, lineRects, lineAngle, YES)) - firstLine + 1;
+        NSInteger numberOfLines = MAX(0, [page indexOfLineRectAtPoint:point lower:YES]) - firstLine + 1;
         
         if (numberOfLines > 0 && numberOfLines != (NSInteger)[readingBar numberOfLines]) {
             NSRect oldRect = [readingBar currentBoundsForBox:[self displayBox]];
@@ -5360,28 +5355,6 @@ static inline PDFAreaOfInterest SKAreaOfInterestForResizeHandle(SKRectEdges mask
         return rotated ? SKResizeDiagonal45Area : SKResizeDiagonal135Area;
     else
         return kPDFNoArea;
-}
-
-static inline NSInteger SKIndexOfRectAtPointInOrderedRects(NSPoint point,  NSPointerArray *rectArray, NSInteger lineAngle, BOOL lower)
-{
-    NSInteger i = 0, iMax = [rectArray count];
-    
-    for (i = 0; i < iMax; i++) {
-        NSRect rect = [rectArray rectAtIndex:i];
-        NSInteger pos;
-        switch (lineAngle) {
-            case 0:   pos = point.x > NSMaxX(rect) ? -1 : point.x > NSMinX(rect) ? 0 : 1; break;
-            case 90:  pos = point.y > NSMaxY(rect) ? -1 : point.y > NSMinY(rect) ? 0 : 1; break;
-            case 180: pos = point.x < NSMinX(rect) ? -1 : point.x < NSMaxX(rect) ? 0 : 1; break;
-            case 270: pos = point.y < NSMinY(rect) ? -1 : point.y < NSMaxY(rect) ? 0 : 1; break;
-            default:  pos = point.y < NSMinY(rect) ? -1 : point.y < NSMaxY(rect) ? 0 : 1; break;
-        }
-        if (pos != -1) {
-            if (pos == 1 && lower && i > 0) i--;
-            break;
-        }
-    }
-    return MIN(i, iMax - 1);
 }
 
 static inline NSSize SKFitTextNoteSize(NSString *string, NSFont *font, CGFloat width) {

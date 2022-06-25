@@ -232,27 +232,13 @@
     return [self goToPreviousPageAtTop:YES];
 }
 
-static inline BOOL topAbovePoint(NSRect rect, NSPoint point, NSInteger lineAngle) {
-    switch (lineAngle) {
-        case 0:   return NSMinX(rect) <= point.x;
-        case 90:  return NSMinY(rect) <= point.y;
-        case 180: return NSMaxX(rect) >= point.x;
-        case 270: return NSMaxY(rect) >= point.y;
-        default:  return NSMaxY(rect) >= point.x;
-    }
-}
-
 - (BOOL)goToLineForPoint:(NSPoint)point {
     if ([lineRects count] == 0) {
         if (currentLine == -1)
             return [self goToNextPageAtTop:YES];
         return NO;
     }
-    NSInteger i = [self maxLine] + 1;
-    NSInteger lineAngle = [page lineDirectionAngle];
-    while (--i >= 0)
-        if (topAbovePoint([lineRects rectAtIndex:i], point, lineAngle)) break;
-    currentLine = MAX(0, i);
+    currentLine = MAX(0, MAX([self maxLine], [page indexOfLineRectAtPoint:point lower:YES]));
     [self updateCurrentBounds];
     return YES;
 }
