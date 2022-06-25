@@ -443,6 +443,28 @@ static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
     return lines;
 }
 
+- (NSInteger)indexOfLineRectAtPoint:(NSPoint)point lower:(BOOL)lower {
+    NSPointerArray *rectArray = [self lineRects];
+    NSInteger i = 0, iMax = [rectArray count];
+    
+    for (i = 0; i < iMax; i++) {
+        NSRect rect = [rectArray rectAtIndex:i];
+        NSInteger pos;
+        switch ([self lineDirectionAngle]) {
+            case 0:   pos = point.x > NSMaxX(rect) ? -1 : point.x > NSMinX(rect) ? 0 : 1; break;
+            case 90:  pos = point.y > NSMaxY(rect) ? -1 : point.y > NSMinY(rect) ? 0 : 1; break;
+            case 180: pos = point.x < NSMinX(rect) ? -1 : point.x < NSMaxX(rect) ? 0 : 1; break;
+            case 270: pos = point.y < NSMinY(rect) ? -1 : point.y < NSMaxY(rect) ? 0 : 1; break;
+            default:  pos = point.y < NSMinY(rect) ? -1 : point.y < NSMaxY(rect) ? 0 : 1; break;
+        }
+        if (pos != -1) {
+            if (pos == 1 && lower && i > 0) i--;
+            break;
+        }
+    }
+    return MIN(i, iMax - 1);
+}
+
 - (NSUInteger)pageIndex {
     return [[self document] indexForPage:self];
 }

@@ -78,6 +78,7 @@ extern NSString *SKPDFPageActionRotate;
 - (NSURL *)skimURL;
 
 - (NSPointerArray *)lineRects;
+- (NSInteger)indexOfLineRectAtPoint:(NSPoint)point lower:(BOOL)lower;
 
 - (NSUInteger)pageIndex;
 - (NSString *)sequentialLabel;
