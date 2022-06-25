@@ -275,10 +275,10 @@
 - (void)goToLine:(NSInteger)line onPage:(PDFPage *)aPage {
     if (page != aPage)
         [self setPage:aPage];
-    if ([lineRects count] == 0)
-        [self goToNextPageAtTop:YES];
-    else
+    if ([lineRects count])
         [self setCurrentLine:MAX(0, MIN([self maxLine], line))];
+    else
+        [self goToNextPageAtTop:YES] || [self goToPreviousPageAtTop:NO];
 }
 
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
