@@ -565,8 +565,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             readingBarLine = 0;
         }
         if (page) {
-            SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page];
-            [aReadingBar goToLine:readingBarLine onPage:page];
+            SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page line:readingBarLine];
             [self setReadingBar:aReadingBar];
             [aReadingBar release];
         }
@@ -985,8 +984,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         userInfo = [NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewOldPageKey, nil];
     } else {
         page = [self currentPage];
-        SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page];
-        [aReadingBar goToNextLine];
+        SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page line:-1];
         bounds = [aReadingBar currentBoundsForBox:[self displayBox]];
         [self goToRect:NSInsetRect([aReadingBar currentBounds], 0.0, -20.0) onPage:page];
         [self setReadingBar:aReadingBar];
@@ -2938,8 +2936,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 NSRect oldRect = NSZeroRect;
                 NSInteger line = [page indexOfLineRectAtPoint:point lower:YES];
                 if ([self hasReadingBar] == NO) {
-                    SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page];
-                    [aReadingBar goToLine:line onPage:page];
+                    SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page line:line];
                     [self setReadingBar:aReadingBar];
                     [aReadingBar release];
                     if (invert)

@@ -54,7 +54,7 @@
 @property (nonatomic) NSInteger maxLine;
 @property (readonly) NSRect currentBounds;
 
-- (id)initWithPage:(PDFPage *)aPage;
+- (id)initWithPage:(PDFPage *)aPage line:(NSInteger)line;
 
 - (NSRect)currentBoundsForBox:(PDFDisplayBox)box;
 
