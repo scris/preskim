@@ -2939,9 +2939,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 BOOL invert = [[NSUserDefaults standardUserDefaults] boolForKey:SKReadingBarInvertKey];
                 PDFPage *oldPage = nil;
                 NSRect oldRect = NSZeroRect;
+                NSInteger line = [page indexOfLineRectAtPoint:point lower:YES];
                 if ([self hasReadingBar] == NO) {
                     SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page];
-                    [aReadingBar goToLineForPoint:point];
+                    if (line == -1)
+                        [aReadingBar goToNextPage];
+                    else
+                        [aReadingBar setCurrentLine:MIN([aReadingBar maxLine], line)];
                     [self setReadingBar:aReadingBar];
                     [aReadingBar release];
                     if (invert)
@@ -2952,7 +2956,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                     oldPage = [readingBar page];
                     oldRect = [readingBar currentBoundsForBox:[self displayBox]];
                     [readingBar setPage:page];
-                    [readingBar goToLineForPoint:point];
+                    if (line == -1)
+                        [readingBar goToNextPage];
+                    else
+                        [readingBar setCurrentLine:MIN([readingBar maxLine], line)];
                     [self setNeedsDisplayInRect:oldRect ofPage:oldPage];
                     [self setNeedsDisplayInRect:[readingBar currentBoundsForBox:[self displayBox]] ofPage:[readingBar page]];
                 }
