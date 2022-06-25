@@ -81,7 +81,7 @@
                     if ([lines count]) {
                         page = [nextPage retain];
                         lineRects = [lines retain];
-                        currentLine = 0;
+                        currentLine = [self maxLine];
                         break;
                     }
                 }
