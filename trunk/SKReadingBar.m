@@ -55,7 +55,7 @@
     self = [super init];
     if (self) {
         numberOfLines = MAX(1, [[NSUserDefaults standardUserDefaults] integerForKey:SKReadingBarNumberOfLinesKey]);
-        NSPointerArray *lines = [page lineRects];
+        NSPointerArray *lines = [aPage lineRects];
         if ([lines count]) {
             page = [aPage retain];
             lineRects = [lines retain];
