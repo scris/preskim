@@ -51,7 +51,7 @@
 @synthesize currentLine, numberOfLines;
 @dynamic page, currentBounds, maxLine;
 
-- (id)initWithPage:(PDFPage *)aPage {
+- (id)initWithPage:(PDFPage *)aPage line:(NSInteger)line {
     self = [super init];
     if (self) {
         numberOfLines = MAX(1, [[NSUserDefaults standardUserDefaults] integerForKey:SKReadingBarNumberOfLinesKey]);
@@ -59,12 +59,23 @@
         lineRects = [[page lineRects] retain];
         currentLine = -1;
         currentBounds = NSZeroRect;
+        if ([lineRects count]) {
+            currentLine = MAX(0, MIN([self maxLine], line));
+            NSRect rect = [lineRects rectAtIndex:currentLine];
+            if (numberOfLines > 1) {
+                NSInteger i, endLine = MIN([lineRects count], currentLine + numberOfLines);
+                for (i = currentLine + 1; i < endLine; i++)
+                    rect = NSUnionRect(rect, [lineRects rectAtIndex:i]);
+            }
+        } else {
+            [self goToNextPageAtTop:YES];
+        }
     }
     return self;
 }
 
 - (id)init {
-    return [self initWithPage:nil];
+    return [self initWithPage:nil line:-1];
 }
 
 - (void)dealloc {
