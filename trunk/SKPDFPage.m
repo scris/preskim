@@ -84,9 +84,17 @@
 }
 
 - (NSInteger)intrinsicRotation {
-    if (intrinsicRotation == 0)
+    if (intrinsicRotation == 0) {
         intrinsicRotation = [super intrinsicRotation] + 360;
+    }
     return intrinsicRotation - 360;
+}
+
+- (void)setRotation:(NSInteger)rotation {
+    if (intrinsicRotation == 0) {
+        intrinsicRotation = [super intrinsicRotation] + 360;
+    }
+    return [super setRotation:rotation];
 }
 
 - (NSInteger)characterDirectionAngle {
