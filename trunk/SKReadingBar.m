@@ -232,17 +232,6 @@
     return [self goToPreviousPageAtTop:YES];
 }
 
-- (BOOL)goToLineForPoint:(NSPoint)point {
-    if ([lineRects count] == 0) {
-        if (currentLine == -1)
-            return [self goToNextPageAtTop:YES];
-        return NO;
-    }
-    currentLine = MAX(0, MIN([self maxLine], [page indexOfLineRectAtPoint:point lower:YES]));
-    [self updateCurrentBounds];
-    return YES;
-}
-
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
     BOOL invert = [[NSUserDefaults standardUserDefaults] boolForKey:SKReadingBarInvertKey];
     
