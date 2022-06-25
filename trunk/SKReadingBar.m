@@ -238,7 +238,7 @@
             return [self goToNextPageAtTop:YES];
         return NO;
     }
-    currentLine = MAX(0, MAX([self maxLine], [page indexOfLineRectAtPoint:point lower:YES]));
+    currentLine = MAX(0, MIN([self maxLine], [page indexOfLineRectAtPoint:point lower:YES]));
     [self updateCurrentBounds];
     return YES;
 }
