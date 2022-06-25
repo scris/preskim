@@ -55,20 +55,49 @@
     self = [super init];
     if (self) {
         numberOfLines = MAX(1, [[NSUserDefaults standardUserDefaults] integerForKey:SKReadingBarNumberOfLinesKey]);
-        page = [aPage retain];
-        lineRects = [[page lineRects] retain];
-        currentLine = -1;
-        currentBounds = NSZeroRect;
-        if ([lineRects count]) {
+        NSPointerArray *lines = [page lineRects];
+        if ([lines count]) {
+            page = [aPage retain];
+            lineRects = [lines retain];
             currentLine = MAX(0, MIN([self maxLine], line));
-            NSRect rect = [lineRects rectAtIndex:currentLine];
+        } else {
+            PDFDocument *doc = [aPage document];
+            NSInteger i = [aPage pageIndex], iMax = [doc pageCount];
+            while (++i < iMax) {
+                PDFPage *nextPage = [doc pageAtIndex:i];
+                lines = [nextPage lineRects];
+                if ([lines count]) {
+                    page = [nextPage retain];
+                    lineRects = [lines retain];
+                    currentLine = 0;
+                    break;
+                }
+            }
+            if (page == nil) {
+                i = [aPage pageIndex];
+                while (--i >= 0) {
+                    PDFPage *nextPage = [doc pageAtIndex:i];
+                    lines = [nextPage lineRects];
+                    if ([lines count]) {
+                        page = [nextPage retain];
+                        lineRects = [lines retain];
+                        currentLine = 0;
+                        break;
+                    }
+                }
+            }
+        }
+        if (page) {
+            currentBounds = [lineRects rectAtIndex:currentLine];
             if (numberOfLines > 1) {
                 NSInteger i, endLine = MIN([lineRects count], currentLine + numberOfLines);
                 for (i = currentLine + 1; i < endLine; i++)
-                    rect = NSUnionRect(rect, [lineRects rectAtIndex:i]);
+                    currentBounds = NSUnionRect(currentBounds, [lineRects rectAtIndex:i]);
             }
         } else {
-            [self goToNextPageAtTop:YES];
+            page = [aPage retain];
+            currentLine = -1;
+            currentBounds = NSZeroRect;
         }
     }
     return self;
