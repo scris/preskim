@@ -566,10 +566,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
         if (page) {
             SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page];
-            if ([aReadingBar maxLine] != -1)
-                [aReadingBar setCurrentLine:MIN(readingBarLine, [aReadingBar maxLine])];
-            else
-                [aReadingBar goToNextLine];
+            [aReadingBar goToLine:readingBarLine onPage:page];
             [self setReadingBar:aReadingBar];
             [aReadingBar release];
         }
@@ -2942,10 +2939,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 NSInteger line = [page indexOfLineRectAtPoint:point lower:YES];
                 if ([self hasReadingBar] == NO) {
                     SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page];
-                    if (line == -1)
-                        [aReadingBar goToNextPage];
-                    else
-                        [aReadingBar setCurrentLine:MIN([aReadingBar maxLine], line)];
+                    [aReadingBar goToLine:line onPage:page];
                     [self setReadingBar:aReadingBar];
                     [aReadingBar release];
                     if (invert)
@@ -2955,11 +2949,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 } else {
                     oldPage = [readingBar page];
                     oldRect = [readingBar currentBoundsForBox:[self displayBox]];
-                    [readingBar setPage:page];
-                    if (line == -1)
-                        [readingBar goToNextPage];
-                    else
-                        [readingBar setCurrentLine:MIN([readingBar maxLine], line)];
+                    [readingBar goToLine:line onPage:page];
                     [self setNeedsDisplayInRect:oldRect ofPage:oldPage];
                     [self setNeedsDisplayInRect:[readingBar currentBoundsForBox:[self displayBox]] ofPage:[readingBar page]];
                 }
@@ -4568,8 +4558,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if ([page isEqual:readingBarPage] == NO || currentLine != [readingBar currentLine]) {
             NSRect newRect, oldRect = [readingBar currentBoundsForBox:[self displayBox]];
             [self setNeedsDisplayInRect:[readingBar currentBoundsForBox:[self displayBox]] ofPage:readingBarPage];
-            [readingBar setPage:page];
-            [readingBar setCurrentLine:currentLine];
+            [readingBar goToLine:currentLine onPage:page];
             newRect = [readingBar currentBoundsForBox:[self displayBox]];
             if ([page isEqual:readingBarPage]) {
                 [self setNeedsDisplayInRect:NSUnionRect(oldRect, newRect) ofPage:page];
