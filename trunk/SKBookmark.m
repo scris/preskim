@@ -239,7 +239,7 @@ static Class SKBookmarkClass = Nil;
 - (void)removeObjectFromChildrenAtIndex:(NSUInteger)anIndex {}
 - (void)removeChildrenAtIndexes:(NSIndexSet *)indexes {}
 
-- (id)objectSpecifier {
+- (NSScriptObjectSpecifier *)objectSpecifier {
     NSUInteger idx = [[parent children] indexOfObjectIdenticalTo:self];
     if (idx != NSNotFound) {
         NSScriptObjectSpecifier *containerRef = nil;

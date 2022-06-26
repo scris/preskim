@@ -244,7 +244,7 @@ static NSSet *keysAffectedByStatus = nil;
     return [self expectedContentLength] > 0;
 }
 
-- (id)objectSpecifier {
+- (NSScriptObjectSpecifier *)objectSpecifier {
     NSUInteger idx = [[[SKDownloadController sharedDownloadController] downloads] indexOfObjectIdenticalTo:self];
     if (idx != NSNotFound) {
         NSScriptClassDescription *containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
