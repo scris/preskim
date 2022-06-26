@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+@protocol SKReadingBarDelegate;
 
 @interface SKReadingBar : NSObject {
     PDFPage *page;
@@ -46,16 +47,19 @@
     NSInteger currentLine;
     NSUInteger numberOfLines;
     NSRect currentBounds;
+    id <SKReadingBarDelegate> delegate;
 }
 
-@property (retain) PDFPage *page;
-@property (nonatomic) NSInteger currentLine;
+@property (readonly, retain) PDFPage *page;
+@property (nonatomic, readonly) NSInteger currentLine;
 @property (nonatomic) NSUInteger numberOfLines;
 @property (nonatomic) NSInteger maxLine;
 @property (readonly) NSRect currentBounds;
+@property (nonatomic, assign) id <SKReadingBarDelegate> delegate;
 
-- (id)initWithPage:(PDFPage *)aPage line:(NSInteger)line;
+- (id)initWithPage:(PDFPage *)aPage line:(NSInteger)line delegate:(id <SKReadingBarDelegate>)aDelegate;
 
++ (NSRect)bounds:(NSRect)rect forBox:(PDFDisplayBox)box onPage:(PDFPage *)aPage;
 - (NSRect)currentBoundsForBox:(PDFDisplayBox)box;
 
 - (BOOL)goToNextLine;
@@ -67,5 +71,12 @@
 
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box active:(BOOL)active;
+
+@end
+
+
+@protocol SKReadingBarDelegate <NSObject>
+
+- (void)readingBar:(SKReadingBar *)readingBar didChangeBounds:(NSRect)oldBounds onPage:(PDFPage *)oldPage toBounds:(NSRect)newBounds onPage:(PDFPage *)newPage scroll:(BOOL)shouldScroll;
 
 @end
