@@ -384,6 +384,10 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
 
 - (BOOL)isPDFDocument { return NO; }
 
+- (id)readingBar { return nil; }
+
+- (BOOL)hasReadingBar { return NO; }
+
 - (void)handleRevertScriptCommand:(NSScriptCommand *)command {
     if ([self fileURL] && [[self fileURL] checkResourceIsReachableAndReturnError:NULL]) {
         if ([self revertToContentsOfURL:[self fileURL] ofType:[self fileType] error:NULL] == NO) {

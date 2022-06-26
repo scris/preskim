@@ -91,6 +91,7 @@
 #import "SKAnimatedBorderlessWindow.h"
 #import "PDFOutline_SKExtensions.h"
 #import "PDFView_SKExtensions.h"
+#import "SKLine.h"
 
 #define BUNDLE_DATA_FILENAME @"data"
 #define PRESENTATION_OPTIONS_KEY @"net_sourceforge_skim-app_presentation_options"
@@ -1868,6 +1869,19 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     return YES;
 }
 
+- (id)readingBar {
+    return [[self pdfView] readingBar];
+}
+
+- (BOOL)hasReadingBar {
+    return [[self pdfView] hasReadingBar];
+}
+
+- (void)setHasReadingBar:(BOOL)flag {
+    if ([[self pdfView] hasReadingBar] != flag)
+        [[self pdfView] toggleReadingBar];
+}
+
 - (id)newScriptingObjectOfClass:(Class)class forValueForKey:(NSString *)key withContentsValue:(id)contentsValue properties:(NSDictionary *)properties {
     if ([key isEqualToString:@"notes"]) {
         PDFAnnotation *annotation = nil;
@@ -2016,6 +2030,10 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
             if (action)
                  [[self pdfView] performAction:action];
         }
+    } else if ([location isKindOfClass:[SKLine class]]) {
+        PDFPage *page = [(SKLine *)location page];
+        NSRect bounds = [(SKLine *)location bounds];
+        [[self pdfView] goToRect:bounds onPage:page];
     } else if ([location isKindOfClass:[NSNumber class]]) {
         id source = [args objectForKey:@"Source"];
         BOOL showBar = [[args objectForKey:@"ShowReadingBar"] boolValue];

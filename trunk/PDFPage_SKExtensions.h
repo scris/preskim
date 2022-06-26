@@ -48,7 +48,7 @@ extern NSString *SKPDFPageActionCrop;
 extern NSString *SKPDFPageActionResize;
 extern NSString *SKPDFPageActionRotate;
 
-@class SKMainDocument, SKReadingBar;
+@class SKMainDocument, SKReadingBar, SKLine;
 
 @interface PDFPage (SKExtensions) <NSPasteboardItemDataProvider, NSFilePromiseProviderDelegate>
 
@@ -105,6 +105,8 @@ extern NSString *SKPDFPageActionRotate;
 - (void)setMediaBoundsAsQDRect:(NSData *)inQDBoundsAsData;
 - (NSData *)contentBoundsAsQDRect;
 - (NSArray *)lineBoundsAsQDRects;
+- (NSUInteger)countOfLines;
+- (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex;
 - (NSTextStorage *)richText;
 - (NSArray *)notes;
 - (id)valueInNotesWithUniqueID:(NSString *)aUniqueID;

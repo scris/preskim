@@ -41,6 +41,8 @@
 
 @protocol SKReadingBarDelegate;
 
+@class SKLine;
+
 @interface SKReadingBar : NSObject {
     PDFPage *page;
     NSPointerArray *lineRects;
@@ -59,9 +61,6 @@
 
 - (id)initWithPage:(PDFPage *)aPage line:(NSInteger)line delegate:(id <SKReadingBarDelegate>)aDelegate;
 
-+ (NSRect)bounds:(NSRect)rect forBox:(PDFDisplayBox)box onPage:(PDFPage *)aPage;
-- (NSRect)currentBoundsForBox:(PDFDisplayBox)box;
-
 - (BOOL)goToNextLine;
 - (BOOL)goToPreviousLine;
 - (BOOL)goToNextPage;
@@ -69,8 +68,20 @@
 
 - (void)goToLine:(NSInteger)line onPage:(PDFPage *)page;
 
++ (NSRect)bounds:(NSRect)rect forBox:(PDFDisplayBox)box onPage:(PDFPage *)aPage;
+- (NSRect)currentBoundsForBox:(PDFDisplayBox)box;
+
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box active:(BOOL)active;
+
+- (NSScriptObjectSpecifier *)objectSpecifier;
+
+- (NSUInteger)countOfLines;
+- (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex;
+
+- (NSData *)boundsAsQDRect;
+
+- (void)handleGoToScriptCommand:(NSScriptCommand *)command;
 
 @end
 
