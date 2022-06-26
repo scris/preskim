@@ -68,20 +68,18 @@
 
 - (void)goToLine:(NSInteger)line onPage:(PDFPage *)page;
 
+- (NSUInteger)countOfLines;
+- (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex;
+
+@property (nonatomic, readonly) NSData *boundsAsQDRect;
+
+- (void)handleGoToScriptCommand:(NSScriptCommand *)command;
+
 + (NSRect)bounds:(NSRect)rect forBox:(PDFDisplayBox)box onPage:(PDFPage *)aPage;
 - (NSRect)currentBoundsForBox:(PDFDisplayBox)box;
 
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box active:(BOOL)active;
-
-- (NSScriptObjectSpecifier *)objectSpecifier;
-
-- (NSUInteger)countOfLines;
-- (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex;
-
-- (NSData *)boundsAsQDRect;
-
-- (void)handleGoToScriptCommand:(NSScriptCommand *)command;
 
 @end
 

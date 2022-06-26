@@ -57,7 +57,7 @@
 @implementation SKReadingBar
 
 @synthesize page, currentLine, numberOfLines, currentBounds, delegate;
-@dynamic maxLine;
+@dynamic maxLine, boundsAsQDRect;
 
 - (id)initWithPage:(PDFPage *)aPage line:(NSInteger)line delegate:(id <SKReadingBarDelegate>)aDelegate {
     self = [super init];
