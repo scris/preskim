@@ -83,7 +83,7 @@
     [self setDocument:nil];
 }
 
-- (id)objectSpecifier {
+- (NSScriptObjectSpecifier *)objectSpecifier {
     NSUInteger idx = [self index];
     if (idx != NSNotFound) {
         NSScriptObjectSpecifier *containerRef = nil;

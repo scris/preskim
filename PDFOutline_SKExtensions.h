@@ -49,7 +49,7 @@
 
 - (void)clearDocument;
 
-- (id)objectSpecifier;
+- (NSScriptObjectSpecifier *)objectSpecifier;
 - (PDFOutline *)scriptingParent;
 - (NSArray *)entireContents;
 - (NSUInteger)countOfOutlines;
