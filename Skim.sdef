@@ -376,13 +376,17 @@
 
         <command name="go" code="SKIMGoTo"
             description="Go to a location.">
-            <direct-parameter type="document"
-                description="The document in which to scroll."/>
+            <direct-parameter
+                description="The document in which to scroll.">
+                <type type="document"/>
+                <type type="reading bar"/>
+            </direct-parameter>
             <parameter name="to" code="to  "
-                description="The page, note, outline, TeX line, or selection to go to.">
+                description="The page, note, outline, line, TeX line, or selection to go to.">
                 <type type="page"/>
                 <type type="note"/>
                 <type type="outline"/>
+                <type type="line"/>
                 <type type="TeX line"/>
                 <type type="specifier" list="yes"/>
                 <cocoa key="To"/>
@@ -719,6 +723,14 @@
                 description="Is this a PDF document?">
                 <cocoa key="isPDFDocument"/>
             </property>
+            <property name="reading bar" type="reading bar" code="RBar" access="r"
+                description="The reading bar for the document.">
+                <cocoa key="readingBar"/>
+            </property>
+            <property name="has reading bar" type="boolean" code="HRBr"
+                description="Does the document have a reading bar?">
+                <cocoa key="hasReadingBar"/>
+            </property>
             <property name="presentation notes document" type="document" code="NotD"
                 description="A document containing notes for a presentation that is synchronized, or the document itself to display the current or next page.">
                 <cocoa key="presentationNotesDocument"/>
@@ -761,6 +773,10 @@
             <element type="note"
                 description="Notes in the page">
                 <cocoa key="notes" insert-at-beginning="no"/>
+            </element>
+            <element type="line" access="r"
+                description="Lines in the page">
+                <cocoa key="lines"/>
             </element>
             <contents name="text" code="ctxt" type="rich text" access="r"
                 description="The text of the page.">
@@ -1032,6 +1048,48 @@
             <property name="status" code="Stat" type="download status"
                 description="The current status of the download. Set this to cancel or resume a download.">
                 <cocoa key="scriptingStatus"/>
+            </property>
+        </class>
+
+        <class name="reading bar" plural="reading bars" code="RBar"
+            description="A reading bar for a page.">
+            <cocoa class="SKReadingBar"/>
+            <element type="line" access="r"
+                description="Lines covered by the reading bar">
+                <cocoa key="lines"/>
+            </element>
+            <property name="page" code="Page" type="page" access="r"
+                description="Page of the reading bar">
+                <cocoa key="page"/>
+            </property>
+            <property name="width" code="Wdth" type="integer"
+                description="The number of lines covered by the reading bar">
+                <cocoa key="numberOfLines"/>
+            </property>
+            <property name="bounds" code="pbnd" type="rectangle"
+                description="The bounding rectangle of the reading bar.">
+                <cocoa key="boundsAsQDRect"/>
+            </property>
+            <responds-to name="go">
+                <cocoa method="handleGoToScriptCommand:"/>
+            </responds-to>
+        </class>
+
+        <class name="line" plural="lines" code="LINE"
+            description="A line in a page.">
+            <cocoa class="SKLine"/>
+            <property name="index" code="pidx" type="integer"
+                description="The index of the line.">
+                <cocoa key="scriptingIndex"/>
+            </property>
+            <property name="bounds" code="pbnd" type="rectangle"
+                description="The bounding rectangle of the line.">
+                <cocoa key="boundsAsQDRect"/>
+            </property>
+            <property name="selection" code="sele"
+                description="The text selection of the line.">
+                <type type="specifier" list="yes"/>
+                <cocoa key="selectionSpecifier"/>
             </property>
         </class>
 

@@ -42,6 +42,10 @@
 #import "NSGeometry_SKExtensions.h"
 #import "NSUserDefaults_SKExtensions.h"
 #import "NSPointerArray_SKExtensions.h"
+#import "NSData_SKExtensions.h"
+#import "SKLine.h"
+#import "SKMainDocument.h"
+#import "PDFSelection_SKExtensions.h"
 
 #define SKReadingBarNumberOfLinesKey @"SKReadingBarNumberOfLines"
 
@@ -129,6 +133,8 @@
     [self setCurrentBounds:page == nil ? NSZeroRect : rect];
 }
 
+#pragma mark Accessors
+
 - (void)setNumberOfLines:(NSUInteger)number {
     if (number != numberOfLines) {
         PDFPage *oldPage = currentLine != -1 ? page : nil;
@@ -146,23 +152,7 @@
     return lineCount == 0 ? -1 : MAX(0, lineCount - (NSInteger)numberOfLines);
 }
 
-+ (NSRect)bounds:(NSRect)rect forBox:(PDFDisplayBox)box onPage:(PDFPage *)aPage {
-    if (NSEqualRects(rect, NSZeroRect))
-        return NSZeroRect;
-    NSRect bounds = [aPage boundsForBox:box];
-    if (([aPage lineDirectionAngle] % 180) == 0) {
-        rect.origin.y = NSMinY(bounds);
-        rect.size.height = NSHeight(bounds);
-    } else {
-        rect.origin.x = NSMinX(bounds);
-        rect.size.width = NSWidth(bounds);
-    }
-    return rect;
-}
-
-- (NSRect)currentBoundsForBox:(PDFDisplayBox)box {
-    return [[self class] bounds:[self currentBounds] forBox:box onPage:[self page]];
-}
+#pragma mark Navigation
 
 - (BOOL)goToNextPageAtTop:(BOOL)atTop {
     BOOL didMove = NO;
@@ -258,7 +248,7 @@
     return didMove;
 }
 
-- (void)goToLine:(NSInteger)line onPage:(PDFPage *)aPage {
+- (void)goToLine:(NSInteger)line onPage:(PDFPage *)aPage scroll:(BOOL)shouldScroll {
     PDFPage *oldPage = currentLine != -1 ? page : nil;
     NSRect oldBounds = currentBounds;
     if (page != aPage) {
@@ -274,7 +264,102 @@
         [self goToNextPageAtTop:YES] || [self goToPreviousPageAtTop:NO];
     }
     if (delegate && (page != oldPage || NSEqualRects(oldBounds, currentBounds) == NO))
-        [delegate readingBar:self didChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:NO];
+        [delegate readingBar:self didChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:shouldScroll];
+}
+
+- (void)goToLine:(NSInteger)line onPage:(PDFPage *)aPage {
+    [self goToLine:line onPage:aPage scroll:NO];
+}
+
+#pragma mark Scripting
+
+- (NSScriptObjectSpecifier *)objectSpecifier {
+    NSScriptObjectSpecifier *containerRef = [[page containingDocument] objectSpecifier];
+    return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"readingBar"] autorelease];
+}
+
+- (NSUInteger)countOfLines {
+    return currentLine == -1 ? 0 : MIN(numberOfLines, [lineRects count] - currentLine);
+}
+
+- (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex {
+    return [[[SKLine alloc] initWithPage:page index:currentLine + anIndex] autorelease];
+}
+
+- (NSData *)boundsAsQDRect {
+    return [NSData dataWithRectAsQDRect:currentBounds];
+}
+
+- (void)handleGoToScriptCommand:(NSScriptCommand *)command {
+    NSDictionary *args = [command evaluatedArguments];
+    id location = [args objectForKey:@"To"];
+    PDFPage *aPage = nil;
+    NSInteger line = -1;
+    NSPoint point = NSZeroPoint;
+    
+    if ([location isKindOfClass:[PDFPage class]]) {
+        aPage = location;
+        id pointData = [args objectForKey:@"At"];
+        if ([pointData isKindOfClass:[NSData class]])
+            point = [(NSData *)pointData pointValueAsQDPoint];
+        else
+            line = 0;
+    } else if ([location isKindOfClass:[PDFAnnotation class]]) {
+        aPage = [(PDFAnnotation *)location page];
+        point = SKCenterPoint([(PDFAnnotation *)location bounds]);
+    } else if ([location isKindOfClass:[PDFOutline class]]) {
+        PDFDestination *dest = [(PDFOutline *)location destination];
+        if (dest == nil) {
+            PDFAction *action = [(PDFOutline *)location action];
+            if ([action respondsToSelector:@selector(destination)])
+                dest = [(PDFActionGoTo *)action destination];
+        }
+        if (dest) {
+            aPage = [dest page];
+            point = [dest point];
+        }
+    } else if ([location isKindOfClass:[SKLine class]]) {
+        aPage = [(SKLine *)location page];
+        line = [(SKLine *)location index];
+    } else if ([location isKindOfClass:[NSNumber class]]) {
+        id source = [args objectForKey:@"Source"];
+        if ([source isKindOfClass:[NSString class]])
+            source = [NSURL fileURLWithPath:source isDirectory:NO];
+        else if ([source isKindOfClass:[NSURL class]] == NO)
+            source = nil;
+        [[(SKMainDocument *)[page containingDocument] synchronizer] findPageAndLocationForLine:[location integerValue] inFile:[source path] options:SKPDFSynchronizerShowReadingBarMask];
+        return;
+    } else {
+        PDFSelection *selection = [[[PDFSelection selectionWithSpecifier:[[command arguments] objectForKey:@"To"]] selectionsByLine] firstObject];
+        if ([selection hasCharacters]) {
+            aPage = [selection safeFirstPage];
+            point = SKCenterPoint([selection boundsForPage:page]);
+        }
+    }
+    if (line == -1 && aPage)
+        line = [aPage indexOfLineRectAtPoint:point lower:YES];
+    if (aPage)
+        [self goToLine:line onPage:aPage scroll:YES];
+}
+
+#pragma mark Drawing
+
++ (NSRect)bounds:(NSRect)rect forBox:(PDFDisplayBox)box onPage:(PDFPage *)aPage {
+    if (NSEqualRects(rect, NSZeroRect))
+        return NSZeroRect;
+    NSRect bounds = [aPage boundsForBox:box];
+    if (([aPage lineDirectionAngle] % 180) == 0) {
+        rect.origin.y = NSMinY(bounds);
+        rect.size.height = NSHeight(bounds);
+    } else {
+        rect.origin.x = NSMinX(bounds);
+        rect.size.width = NSWidth(bounds);
+    }
+    return rect;
+}
+
+- (NSRect)currentBoundsForBox:(PDFDisplayBox)box {
+    return [[self class] bounds:[self currentBounds] forBox:box onPage:[self page]];
 }
 
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context {

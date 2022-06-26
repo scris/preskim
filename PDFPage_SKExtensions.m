@@ -62,6 +62,7 @@
 #import "SKRuntime.h"
 #import "NSPasteboard_SKExtensions.h"
 #import "NSURL_SKExtensions.h"
+#import "SKLine.h"
 
 NSString *SKPDFPageBoundsDidChangeNotification = @"SKPDFPageBoundsDidChangeNotification";
 
@@ -632,6 +633,14 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
     for (i = 0; i < count; i++)
         [lineBounds addObject:[NSData dataWithRectAsQDRect:[lineRects rectAtIndex:i]]];
     return lineBounds;
+}
+
+- (NSUInteger)countOfLines {
+    return [[self lineRects] count];
+}
+
+- (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex {
+    return [[[SKLine alloc] initWithPage:self index:anIndex] autorelease];
 }
 
 - (NSTextStorage *)richText {
