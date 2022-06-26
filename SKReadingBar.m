@@ -333,7 +333,8 @@
         PDFSelection *selection = [[[PDFSelection selectionWithSpecifier:[[command arguments] objectForKey:@"To"]] selectionsByLine] firstObject];
         if ([selection hasCharacters]) {
             aPage = [selection safeFirstPage];
-            point = SKCenterPoint([selection boundsForPage:page]);
+            NSRect rect = [selection boundsForPage:aPage];
+            point = [aPage lineDirectionAngle] < 180 ? NSMakePoint(NSMinX(rect) + 1.0, NSMinY(rect) + 1.0) : NSMakePoint(NSMaxX(rect) - 1.0, NSMaxY(rect) - 1.0);
         }
     }
     if (line == -1 && aPage)
