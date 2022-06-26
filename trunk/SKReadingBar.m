@@ -45,16 +45,21 @@
 
 #define SKReadingBarNumberOfLinesKey @"SKReadingBarNumberOfLines"
 
+@interface SKReadingBar ()
+@property (retain) PDFPage *page;
+@property NSRect currentBounds;
+@end
 
 @implementation SKReadingBar
 
-@synthesize currentLine, numberOfLines;
-@dynamic page, currentBounds, maxLine;
+@synthesize page, currentLine, numberOfLines, currentBounds, delegate;
+@dynamic maxLine;
 
-- (id)initWithPage:(PDFPage *)aPage line:(NSInteger)line {
+- (id)initWithPage:(PDFPage *)aPage line:(NSInteger)line delegate:(id <SKReadingBarDelegate>)aDelegate {
     self = [super init];
     if (self) {
         numberOfLines = MAX(1, [[NSUserDefaults standardUserDefaults] integerForKey:SKReadingBarNumberOfLinesKey]);
+        delegate = aDelegate;
         NSPointerArray *lines = [aPage lineRects];
         if ([lines count]) {
             page = [aPage retain];
@@ -104,34 +109,14 @@
 }
 
 - (id)init {
-    return [self initWithPage:nil line:-1];
+    return [self initWithPage:nil line:-1 delegate:nil];
 }
 
 - (void)dealloc {
+    delegate = nil;
     SKDESTROY(page);
     SKDESTROY(lineRects);
     [super dealloc];
-}
-
-- (PDFPage *)page {
-    PDFPage *aPage = nil;
-    @synchronized (self) {
-        aPage = [page retain];
-    }
-    return [aPage autorelease];
-}
-
-- (void)setPage:(PDFPage *)newPage {
-    @synchronized (self) {
-        if (page != newPage) {
-            [page release];
-            page = [newPage retain];
-            [lineRects release];
-            lineRects = [[page lineRects] retain];
-            currentLine = -1;
-            currentBounds = NSZeroRect;
-        }
-    }
 }
 
 - (void)updateCurrentBounds {
@@ -141,20 +126,19 @@
         for (i = currentLine; i < endLine; i++)
             rect = NSUnionRect(rect, [lineRects rectAtIndex:i]);
     }
-    @synchronized (self) {
-        currentBounds = page == nil ? NSZeroRect : rect;
-    }
-}
-
-- (void)setCurrentLine:(NSInteger)line {
-    currentLine = line;
-    [self updateCurrentBounds];
+    [self setCurrentBounds:page == nil ? NSZeroRect : rect];
 }
 
 - (void)setNumberOfLines:(NSUInteger)number {
-    numberOfLines = number;
-    [self updateCurrentBounds];
-    [[NSUserDefaults standardUserDefaults] setInteger:numberOfLines forKey:SKReadingBarNumberOfLinesKey];
+    if (number != numberOfLines) {
+        PDFPage *oldPage = currentLine != -1 ? page : nil;
+        NSRect oldBounds = currentBounds;
+        numberOfLines = number;
+        [self updateCurrentBounds];
+        [[NSUserDefaults standardUserDefaults] setInteger:numberOfLines forKey:SKReadingBarNumberOfLinesKey];
+        if (delegate && NSEqualRects(oldBounds, currentBounds) == NO)
+            [delegate readingBar:self didChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:NO];
+    }
 }
 
 - (NSInteger)maxLine {
@@ -162,25 +146,11 @@
     return lineCount == 0 ? -1 : MAX(0, lineCount - (NSInteger)numberOfLines);
 }
 
-- (NSRect)currentBounds {
-    NSRect bounds;
-    @synchronized (self) {
-        bounds = currentBounds;
-    }
-    return bounds;
-}
-
-- (NSRect)currentBoundsForBox:(PDFDisplayBox)box {
-    NSRect rect, bounds;
-    BOOL rotated;
-    @synchronized (self) {
-        rect = currentBounds;
-        bounds = [page boundsForBox:box];
-        rotated = ([page lineDirectionAngle] % 180) == 0;
-    }
++ (NSRect)bounds:(NSRect)rect forBox:(PDFDisplayBox)box onPage:(PDFPage *)aPage {
     if (NSEqualRects(rect, NSZeroRect))
         return NSZeroRect;
-    if (rotated) {
+    NSRect bounds = [aPage boundsForBox:box];
+    if (([aPage lineDirectionAngle] % 180) == 0) {
         rect.origin.y = NSMinY(bounds);
         rect.size.height = NSHeight(bounds);
     } else {
@@ -188,6 +158,10 @@
         rect.size.width = NSWidth(bounds);
     }
     return rect;
+}
+
+- (NSRect)currentBoundsForBox:(PDFDisplayBox)box {
+    return [[self class] bounds:[self currentBounds] forBox:box onPage:[self page]];
 }
 
 - (BOOL)goToNextPageAtTop:(BOOL)atTop {
@@ -199,10 +173,7 @@
         PDFPage *nextPage = [doc pageAtIndex:i];
         NSPointerArray *lines = [nextPage lineRects];
         if ([lines count]) {
-            @synchronized (self) {
-                [page release];
-                page = [nextPage retain];
-            }
+            [self setPage:nextPage];
             [lineRects release];
             lineRects = [lines retain];
             currentLine = atTop ? 0 : [self maxLine];
@@ -223,10 +194,7 @@
         PDFPage *prevPage = [doc pageAtIndex:i];
         NSPointerArray *lines = [prevPage lineRects];
         if ([lines count]) {
-            @synchronized (self) {
-                [page release];
-                page = [prevPage retain];
-            }
+            [self setPage:prevPage];
             [lineRects release];
             lineRects = [lines retain];
             currentLine = atTop ? 0 : [self maxLine];
@@ -239,6 +207,8 @@
 }
 
 - (BOOL)goToNextLine {
+    PDFPage *oldPage = currentLine != -1 ? page : nil;
+    NSRect oldBounds = currentBounds;
     BOOL didMove = NO;
     if (currentLine < [self maxLine]) {
         ++currentLine;
@@ -247,10 +217,14 @@
     } else if ([self goToNextPageAtTop:YES]) {
         didMove = YES;
     }
+    if (didMove && delegate)
+        [delegate readingBar:self didChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:YES];
     return didMove;
 }
 
 - (BOOL)goToPreviousLine {
+    PDFPage *oldPage = currentLine != -1 ? page : nil;
+    NSRect oldBounds = currentBounds;
     BOOL didMove = NO;
     if (currentLine == -1 && [lineRects count])
         currentLine = [lineRects count];
@@ -261,24 +235,46 @@
     } else if ([self goToPreviousPageAtTop:NO]) {
         didMove = YES;
     }
+    if (didMove && delegate)
+        [delegate readingBar:self didChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:YES];
     return didMove;
 }
 
 - (BOOL)goToNextPage {
-    return [self goToNextPageAtTop:YES];
+    PDFPage *oldPage = currentLine != -1 ? page : nil;
+    NSRect oldBounds = currentBounds;
+    BOOL didMove = [self goToNextPageAtTop:YES];
+    if (didMove && delegate)
+        [delegate readingBar:self didChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:YES];
+    return didMove;
 }
 
 - (BOOL)goToPreviousPage {
-    return [self goToPreviousPageAtTop:YES];
+    PDFPage *oldPage = currentLine != -1 ? page : nil;
+    NSRect oldBounds = currentBounds;
+    BOOL didMove = [self goToPreviousPageAtTop:YES];
+    if (didMove && delegate)
+        [delegate readingBar:self didChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:YES];
+    return didMove;
 }
 
 - (void)goToLine:(NSInteger)line onPage:(PDFPage *)aPage {
-    if (page != aPage)
+    PDFPage *oldPage = currentLine != -1 ? page : nil;
+    NSRect oldBounds = currentBounds;
+    if (page != aPage) {
         [self setPage:aPage];
-    if ([lineRects count])
-        [self setCurrentLine:MAX(0, MIN([self maxLine], line))];
-    else
+        [lineRects release];
+        lineRects = [[page lineRects] retain];
+        currentLine = -1;
+    }
+    if ([lineRects count]) {
+        currentLine = MAX(0, MIN([self maxLine], line));
+        [self updateCurrentBounds];
+    } else {
         [self goToNextPageAtTop:YES] || [self goToPreviousPageAtTop:NO];
+    }
+    if (delegate && (page != oldPage || NSEqualRects(oldBounds, currentBounds) == NO))
+        [delegate readingBar:self didChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:NO];
 }
 
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
