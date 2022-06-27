@@ -1066,7 +1066,7 @@
                 description="The number of lines covered by the reading bar">
                 <cocoa key="numberOfLines"/>
             </property>
-            <property name="bounds" code="pbnd" type="rectangle"
+            <property name="bounds" code="pbnd" type="rectangle" access="r"
                 description="The bounding rectangle of the reading bar.">
                 <cocoa key="boundsAsQDRect"/>
             </property>
