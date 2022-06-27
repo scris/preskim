@@ -1052,7 +1052,7 @@
         </class>
 
         <class name="reading bar" plural="reading bars" code="RBar"
-            description="A reading bar for a page.">
+            description="A reading bar for a document.">
             <cocoa class="SKReadingBar"/>
             <element type="line" access="r"
                 description="Lines covered by the reading bar">
