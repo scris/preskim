@@ -136,6 +136,7 @@
 #pragma mark Accessors
 
 - (void)setNumberOfLines:(NSUInteger)number {
+    if (number < 1) number = 1;
     if (number != numberOfLines) {
         PDFPage *oldPage = currentLine != -1 ? page : nil;
         NSRect oldBounds = currentBounds;
