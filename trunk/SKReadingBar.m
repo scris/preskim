@@ -372,7 +372,7 @@
     CGContextSetFillColorWithColor(context, [[[NSUserDefaults standardUserDefaults] colorForKey:SKReadingBarColorKey] CGColor]);
     
     if ([[self page] isEqual:pdfPage]) {
-        NSRect rect = [self currentBoundsForBox:box];
+        NSRect rect = [self currentBounds];
         if (invert) {
             NSRect bounds = [pdfPage boundsForBox:box];
             if (NSEqualRects(rect, NSZeroRect)) {
