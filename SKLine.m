@@ -62,6 +62,10 @@
     [super dealloc];
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: line=%ld, page=%@>", [self class], (long)index, page];
+}
+
 - (NSRect)bounds {
     return [[page lineRects] rectAtIndex:index];
 }
