@@ -984,7 +984,15 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         userInfo = [NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewOldPageKey, nil];
     } else {
         page = [self currentPage];
-        SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page line:0 delegate:self];
+        NSInteger line = 0;
+        PDFSelection *sel = [self currentSelection];
+        if ([[sel pages] containsObject:page]) {
+            NSRect rect = [sel boundsForPage:page];
+            NSPoint point = [page lineDirectionAngle] < 180 ? NSMakePoint(NSMinX(rect) + 1.0, NSMinY(rect) + 1.0) : NSMakePoint(NSMaxY(rect) - 1.0, NSMaxY(rect) - 1.0);
+            line = [page indexOfLineRectAtPoint:point lower:YES];
+        }
+        SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page line:line delegate:self];
+        page = [readingBar page];
         bounds = [aReadingBar currentBoundsForBox:[self displayBox]];
         [self goToRect:NSInsetRect([aReadingBar currentBounds], 0.0, -20.0) onPage:page];
         [self setReadingBar:aReadingBar];
