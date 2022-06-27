@@ -1075,7 +1075,7 @@
             </responds-to>
         </class>
 
-        <class name="line" plural="lines" code="LINE"
+        <class name="line" plural="lines" code="line"
             description="A line in a page.">
             <cocoa class="SKLine"/>
             <property name="index" code="pidx" type="integer"
