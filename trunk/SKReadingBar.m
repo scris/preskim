@@ -147,7 +147,6 @@
 }
 
 - (NSInteger)maxLine {
-    NSInteger lineCount = (NSInteger)lineCount;
     return lineCount == 0 ? -1 : MAX(0, lineCount - (NSInteger)numberOfLines);
 }
 
