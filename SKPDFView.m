@@ -1076,7 +1076,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)pacerTimerFired:(NSTimer *)timer {
     if ([self hasReadingBar]) {
-        [self doMoveReadingBarForKey:0];
+        [readingBar goToNextLine];
     } else {
         NSClipView *clipView = [[self scrollView] contentView];
         NSRect startBounds = [clipView bounds];
@@ -3741,10 +3741,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
 }
 
-// @@ Horizontal layout
 - (void)doMoveReadingBarForKey:(unichar)eventChar {
     BOOL moved = NO;
-    if (eventChar == NSDownArrowFunctionKey || eventChar == 0)
+    if (eventChar == NSDownArrowFunctionKey)
         moved = [readingBar goToNextLine];
     else if (eventChar == NSUpArrowFunctionKey)
         moved = [readingBar goToPreviousLine];
@@ -3752,7 +3751,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         moved = [readingBar goToNextPage];
     else if (eventChar == NSLeftArrowFunctionKey)
         moved = [readingBar goToPreviousPage];
-    if (moved && eventChar != 0)
+    if (moved)
         [self updatePacer];
 }
 
