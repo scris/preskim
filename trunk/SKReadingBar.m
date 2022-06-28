@@ -213,7 +213,7 @@
     NSRect oldBounds = currentBounds;
     BOOL didMove = NO;
     if (currentLine == -1 && lineCount)
-        currentLine = lineCount;
+        currentLine = [self maxLine] + 1;
     if (currentLine > 0) {
         --currentLine;
         [self setCurrentBounds:[self currentBoundsFromLineRects:nil]];
