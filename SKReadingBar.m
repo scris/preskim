@@ -52,6 +52,7 @@
 @interface SKReadingBar ()
 @property (retain) PDFPage *page;
 @property NSRect currentBounds;
+- (NSRect)currentBoundsFromLineRects:(NSPointerArray *)lineRects;
 @end
 
 @implementation SKReadingBar
@@ -67,8 +68,9 @@
         NSPointerArray *lines = [aPage lineRects];
         if ([lines count]) {
             page = [aPage retain];
-            lineRects = [lines retain];
+            lineCount = [lines count];
             currentLine = MAX(0, MIN([self maxLine], line));
+            currentBounds = [self currentBoundsFromLineRects:lines];
         } else {
             PDFDocument *doc = [aPage document];
             NSInteger i = [aPage pageIndex], iMax = [doc pageCount];
@@ -77,8 +79,9 @@
                 lines = [nextPage lineRects];
                 if ([lines count]) {
                     page = [nextPage retain];
-                    lineRects = [lines retain];
+                    lineCount = [lines count];
                     currentLine = 0;
+                    currentBounds = [self currentBoundsFromLineRects:lines];
                     break;
                 }
             }
@@ -89,21 +92,15 @@
                     lines = [nextPage lineRects];
                     if ([lines count]) {
                         page = [nextPage retain];
-                        lineRects = [lines retain];
+                        lineCount = [lines count];
                         currentLine = [self maxLine];
+                        currentBounds = [self currentBoundsFromLineRects:lines];
                         break;
                     }
                 }
             }
         }
-        if (page) {
-            currentBounds = [lineRects rectAtIndex:currentLine];
-            if (numberOfLines > 1) {
-                NSInteger i, endLine = MIN([lineRects count], currentLine + numberOfLines);
-                for (i = currentLine + 1; i < endLine; i++)
-                    currentBounds = NSUnionRect(currentBounds, [lineRects rectAtIndex:i]);
-            }
-        } else {
+        if (page == nil) {
             page = [aPage retain];
             currentLine = -1;
             currentBounds = NSZeroRect;
@@ -119,18 +116,19 @@
 - (void)dealloc {
     delegate = nil;
     SKDESTROY(page);
-    SKDESTROY(lineRects);
     [super dealloc];
 }
 
-- (void)updateCurrentBounds {
+- (NSRect)currentBoundsFromLineRects:(NSPointerArray *)lineRects {
     NSRect rect = NSZeroRect;
-    if (currentLine >= 0) {
-        NSInteger i, endLine = MIN([lineRects count], currentLine + numberOfLines);
+    if (page && currentLine >= 0) {
+        if (lineRects == nil)
+            lineRects = [page lineRects];
+        NSInteger i, endLine = MIN(lineCount, currentLine + numberOfLines);
         for (i = currentLine; i < endLine; i++)
             rect = NSUnionRect(rect, [lineRects rectAtIndex:i]);
     }
-    [self setCurrentBounds:page == nil ? NSZeroRect : rect];
+    return rect;
 }
 
 #pragma mark Accessors
@@ -141,7 +139,7 @@
         PDFPage *oldPage = currentLine != -1 ? page : nil;
         NSRect oldBounds = currentBounds;
         numberOfLines = number;
-        [self updateCurrentBounds];
+        [self setCurrentBounds:[self currentBoundsFromLineRects:nil]];
         [[NSUserDefaults standardUserDefaults] setInteger:numberOfLines forKey:SKReadingBarNumberOfLinesKey];
         if (delegate && NSEqualRects(oldBounds, currentBounds) == NO)
             [delegate readingBar:self didChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:NO];
@@ -149,7 +147,7 @@
 }
 
 - (NSInteger)maxLine {
-    NSInteger lineCount = (NSInteger)[lineRects count];
+    NSInteger lineCount = (NSInteger)lineCount;
     return lineCount == 0 ? -1 : MAX(0, lineCount - (NSInteger)numberOfLines);
 }
 
@@ -165,10 +163,9 @@
         NSPointerArray *lines = [nextPage lineRects];
         if ([lines count]) {
             [self setPage:nextPage];
-            [lineRects release];
-            lineRects = [lines retain];
+            lineCount = [lines count];
             currentLine = atTop ? 0 : [self maxLine];
-            [self updateCurrentBounds];
+            [self setCurrentBounds:[self currentBoundsFromLineRects:lines]];
             didMove = YES;
             break;
         }
@@ -186,10 +183,9 @@
         NSPointerArray *lines = [prevPage lineRects];
         if ([lines count]) {
             [self setPage:prevPage];
-            [lineRects release];
-            lineRects = [lines retain];
+            lineCount = [lines count];
             currentLine = atTop ? 0 : [self maxLine];
-            [self updateCurrentBounds];
+            [self setCurrentBounds:[self currentBoundsFromLineRects:lines]];
             didMove = YES;
             break;
         }
@@ -203,7 +199,7 @@
     BOOL didMove = NO;
     if (currentLine < [self maxLine]) {
         ++currentLine;
-        [self updateCurrentBounds];
+        [self setCurrentBounds:[self currentBoundsFromLineRects:nil]];
         didMove = YES;
     } else if ([self goToNextPageAtTop:YES]) {
         didMove = YES;
@@ -217,11 +213,11 @@
     PDFPage *oldPage = currentLine != -1 ? page : nil;
     NSRect oldBounds = currentBounds;
     BOOL didMove = NO;
-    if (currentLine == -1 && [lineRects count])
-        currentLine = [lineRects count];
+    if (currentLine == -1 && lineCount)
+        currentLine = lineCount;
     if (currentLine > 0) {
         --currentLine;
-        [self updateCurrentBounds];
+        [self setCurrentBounds:[self currentBoundsFromLineRects:nil]];
         didMove =  YES;
     } else if ([self goToPreviousPageAtTop:NO]) {
         didMove = YES;
@@ -254,13 +250,12 @@
     NSRect oldBounds = currentBounds;
     if (page != aPage) {
         [self setPage:aPage];
-        [lineRects release];
-        lineRects = [[page lineRects] retain];
+        lineCount = [[page lineRects] count];
         currentLine = -1;
     }
-    if ([lineRects count]) {
+    if (lineCount) {
         currentLine = MAX(0, MIN([self maxLine], line));
-        [self updateCurrentBounds];
+        [self setCurrentBounds:[self currentBoundsFromLineRects:nil]];
     } else {
         [self goToNextPageAtTop:YES] || [self goToPreviousPageAtTop:NO];
     }
@@ -280,7 +275,7 @@
 }
 
 - (NSUInteger)countOfLines {
-    return currentLine == -1 ? 0 : MIN(numberOfLines, [lineRects count] - currentLine);
+    return currentLine == -1 ? 0 : MIN(numberOfLines, lineCount - currentLine);
 }
 
 - (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex {
