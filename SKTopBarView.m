@@ -127,7 +127,7 @@
 #pragma clang diagnostic ignored "-Wpartial-availability"
     switch (style) {
         case SKTopBarStyleDefault:
-            [blurView setMaterial:RUNNING_AFTER(10_15) || RUNNING_BEFORE(10_13) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
+            [blurView setMaterial:RUNNING_AFTER(10_15) || RUNNING_BEFORE(10_14) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
             [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
             if (RUNNING_AFTER(10_13)) {
                 sepColor = [NSColor separatorColor];
