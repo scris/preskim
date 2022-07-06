@@ -63,7 +63,7 @@
 @implementation SKStatusBar
 
 @synthesize animating, leftField, rightField, progressIndicator;
-@dynamic visible, icon, progressIndicatorStyle, progressIndicatorValue, progressIndicatorMaxValue;
+@dynamic visible, icon, progressIndicatorStyle;
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
