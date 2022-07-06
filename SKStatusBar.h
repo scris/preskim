@@ -59,7 +59,6 @@ typedef NS_ENUM(NSInteger, SKProgressIndicatorStyle) {
 @property (nonatomic, readonly) NSProgressIndicator *progressIndicator;
 @property (nonatomic, retain) NSImage *icon;
 @property (nonatomic) SKProgressIndicatorStyle progressIndicatorStyle;
-@property (nonatomic) double progressIndicatorValue, progressIndicatorMaxValue;
 
 - (void)toggleBelowView:(NSView *)view animate:(BOOL)animate;
 
