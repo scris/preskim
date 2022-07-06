@@ -2039,7 +2039,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [statusBar setProgressIndicatorStyle:SKProgressIndicatorStyleDeterminate];
     [statusBar setProgressIndicatorMaxValue:[[note object] pageCount]];
     [statusBar setProgressIndicatorValue:0.0];
-    [statusBar startAnimation:self];
+    [statusBar startProgressAnimation:self];
     [self willChangeValueForKey:SEARCHRESULTS_KEY];
     [self willChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
 }
@@ -2055,7 +2055,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [self didChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
     [self didChangeValueForKey:SEARCHRESULTS_KEY];
     mwcFlags.updatingFindResults = 0;
-    [statusBar stopAnimation:self];
+    [statusBar stopProgressAnimation:self];
     [statusBar setProgressIndicatorStyle:SKProgressIndicatorStyleNone];
 }
 
