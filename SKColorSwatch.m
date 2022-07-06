@@ -76,7 +76,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     SKColorSwatchDropAfter
 };
 
-@interface SKColorSwatchItemView : NSView {
+@interface SKColorSwatchItemView : NSView <NSAccessibilityElement> {
     NSColor *color;
     BOOL highlighted;
     BOOL selected;
@@ -758,11 +758,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 #pragma mark Accessibility
 
-- (BOOL)accessibilityIsIgnored {
-    return NO;
-}
-
-- (BOOL)accessibilityElement {
+- (BOOL)isAccessibilityElement {
     return YES;
 }
 
@@ -772,6 +768,14 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (NSString *)accessibilityRoleDescription {
     return NSAccessibilityRoleDescriptionForUIElement(self);
+}
+
+- (NSRect)accessibilityFrame {
+    return [self convertRectToScreen:[self bounds]];
+}
+
+- (id)accessibilityParent {
+    return NSAccessibilityUnignoredAncestor([self superview]);
 }
 
 - (NSArray *)accessibilityChildren {
@@ -1003,11 +1007,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     [NSGraphicsContext restoreGraphicsState];
 }
 
-- (BOOL)accessibilityIsIgnored {
-    return NO;
-}
-
-- (BOOL)accessibilityElement {
+- (BOOL)isAccessibilityElement {
     return YES;
 }
 
@@ -1017,6 +1017,14 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 
 - (NSString *)accessibilityRoleDescription {
     return NSAccessibilityRoleDescriptionForUIElement(self);
+}
+
+- (NSRect)accessibilityFrame {
+    return [self convertRectToScreen:[self bounds]];
+}
+
+- (id)accessibilityParent {
+    return NSAccessibilityUnignoredAncestor([self superview]);
 }
 
 - (id)accessibilityValue {
