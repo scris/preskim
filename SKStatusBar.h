@@ -46,12 +46,10 @@ typedef NS_ENUM(NSInteger, SKProgressIndicatorStyle) {
 
 
 @interface SKStatusBar : NSView {
-	id leftCell;
-	id rightCell;
-    id iconCell;
+    NSTextField *leftField;
+    NSTextField *rightField;
+    NSImageView *iconView;
 	NSProgressIndicator *progressIndicator;
-    NSTrackingArea *leftTrackingArea;
-    NSTrackingArea *rightTrackingArea;
     BOOL animating;
 }
 
@@ -61,15 +59,13 @@ typedef NS_ENUM(NSInteger, SKProgressIndicatorStyle) {
 @property (nonatomic) SEL leftAction, rightAction;
 @property (nonatomic, assign) id leftTarget, rightTarget;
 @property (nonatomic) NSInteger leftState, rightState;
-@property (nonatomic, retain) NSFont *font; 
-@property (nonatomic, retain) id iconCell; 
-@property (nonatomic, readonly) NSProgressIndicator *progressIndicator;
+@property (nonatomic, retain) NSImage *icon;
 @property (nonatomic) SKProgressIndicatorStyle progressIndicatorStyle;
 @property (nonatomic) double progressIndicatorValue, progressIndicatorMaxValue;
 
 - (void)toggleBelowView:(NSView *)view animate:(BOOL)animate;
 
-- (void)startAnimation:(id)sender;
-- (void)stopAnimation:(id)sender;
+- (void)startProgressAnimation:(id)sender;
+- (void)stopProgressAnimation:(id)sender;
 
 @end

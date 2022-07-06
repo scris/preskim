@@ -241,11 +241,10 @@ static NSURL *temporaryDirectoryURL = nil;
     }
     
     NSValueTransformer *transformer = [NSValueTransformer valueTransformerForName:SKTypeImageTransformerName];
-    NSImageCell *cell = [[[NSImageCell alloc] initImageCell:[transformer transformedValue:[note type]]] autorelease];
     
     [statusBar setLeftAction:@selector(statusBarClicked:)];
     [statusBar setLeftTarget:self];
-    [statusBar setIconCell:cell];
+    [statusBar setIcon:[transformer transformedValue:[note type]]];
     
     [self updateStatusMessage];
     

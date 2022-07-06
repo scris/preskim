@@ -43,13 +43,14 @@
 #import "SKApplication.h"
 #import "NSView_SKExtensions.h"
 
-#define LEFT_MARGIN         5.0
-#define RIGHT_MARGIN        15.0
-#define SEPARATION          2.0
-#define VERTICAL_OFFSET     0.0
-#define PROGRESSBAR_WIDTH   100.0
-#define ICON_HEIGHT_OFFSET  2.0
+#define LEFT_MARGIN         8.0
+#define RIGHT_MARGIN        16.0
+#define SEPARATION          4.0
+#define ICON_OFFSET         1.0
 
+
+@interface SKStatusTextField : NSTextField
+@end
 
 @interface SKStatusTextFieldCell : NSTextFieldCell {
     BOOL underlined;
@@ -61,47 +62,60 @@
 
 @implementation SKStatusBar
 
-@synthesize animating, iconCell;
-@dynamic visible, leftStringValue, rightStringValue, leftAction, leftTarget, rightAction, rightTarget, leftState, rightState, font, progressIndicator, progressIndicatorStyle, progressIndicatorValue, progressIndicatorMaxValue;
+@synthesize animating;
+@dynamic visible, leftStringValue, rightStringValue, leftAction, leftTarget, rightAction, rightTarget, leftState, rightState, icon, progressIndicatorStyle, progressIndicatorValue, progressIndicatorMaxValue;
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        leftCell = [[SKStatusTextFieldCell alloc] initTextCell:@""];
-		[leftCell setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
-        [leftCell setAlignment:NSLeftTextAlignment];
-        [leftCell setControlView:self];
-        rightCell = [[SKStatusTextFieldCell alloc] initTextCell:@""];
-		[rightCell setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
-        [rightCell setAlignment:NSRightTextAlignment];
-        [rightCell setControlView:self];
-        iconCell = nil;
+        leftField = [[SKStatusTextField alloc] init];
+        [leftField setBezeled:NO];
+        [leftField setBordered:NO];
+        [leftField setDrawsBackground:NO];
+        [leftField setEditable:NO];
+        [leftField setSelectable:NO];
+        [leftField setControlSize:NSSmallControlSize];
+        [leftField setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self addSubview:leftField];
+        [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
+            [NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:LEFT_MARGIN],
+            [NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil]];
+        
+        rightField = [[SKStatusTextField alloc] init];
+        [rightField setBezeled:NO];
+        [rightField setBordered:NO];
+        [rightField setDrawsBackground:NO];
+        [rightField setEditable:NO];
+        [rightField setSelectable:NO];
+        [rightField setControlSize:NSSmallControlSize];
+        [rightField setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self addSubview:rightField];
+        [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
+            [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:rightField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:RIGHT_MARGIN],
+            [NSLayoutConstraint constraintWithItem:rightField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil]];
+        
+        iconView = nil;
 		progressIndicator = nil;
-        leftTrackingArea = nil;
-        rightTrackingArea = nil;
         animating = NO;
     }
     return self;
 }
 
 - (void)dealloc {
-	SKDESTROY(leftCell);
-	SKDESTROY(rightCell);
-	SKDESTROY(iconCell);
-    SKDESTROY(leftTrackingArea);
-    SKDESTROY(rightTrackingArea);
+    SKDESTROY(leftField);
+    SKDESTROY(rightField);
+    SKDESTROY(iconView);
+    SKDESTROY(progressIndicator);
 	[super dealloc];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
 	self = [super initWithCoder:decoder];
     if (self) {
-        leftCell = [[decoder decodeObjectForKey:@"leftCell"] retain];
-        rightCell = [[decoder decodeObjectForKey:@"rightCell"] retain];
-        iconCell = [[decoder decodeObjectForKey:@"iconCell"] retain];
+        leftField = [[decoder decodeObjectForKey:@"leftField"] retain];
+        rightField = [[decoder decodeObjectForKey:@"rightField"] retain];
+        iconView = [[decoder decodeObjectForKey:@"iconView"] retain];
         progressIndicator = [[decoder decodeObjectForKey:@"progressIndicator"] retain];
-        leftTrackingArea = nil;
-        rightTrackingArea = nil;
         animating = NO;
 	}
 	return self;
@@ -109,57 +123,10 @@
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [super encodeWithCoder:coder];
-    [coder encodeObject:leftCell forKey:@"leftCell"];
-    [coder encodeObject:rightCell forKey:@"rightCell"];
-    [coder encodeObject:iconCell forKey:@"iconCell"];
+    [coder encodeObject:leftField forKey:@"leftField"];
+    [coder encodeObject:rightField forKey:@"rightField"];
+    [coder encodeObject:iconView forKey:@"iconView"];
     [coder encodeObject:progressIndicator forKey:@"progressIndicator"];
-}
-
-- (void)getLeftFrame:(NSRectPointer)leftFrame rightFrame:(NSRectPointer)rightFrame {
-    CGFloat leftWidth = [[leftCell stringValue] length] ? [leftCell cellSize].width : 0.0;
-    CGFloat rightWidth = [[rightCell stringValue] length] ? [rightCell cellSize].width : 0.0;
-    NSRect ignored, rect = [self bounds];
-    CGFloat leftMargin = LEFT_MARGIN;
-    CGFloat rightMargin = RIGHT_MARGIN;
-    if (iconCell)
-        leftMargin += NSHeight([self bounds]) - ICON_HEIGHT_OFFSET + SEPARATION;
-    if (progressIndicator)
-        rightMargin += NSWidth([progressIndicator frame]) + SEPARATION;
-    rect = SKShrinkRect(SKShrinkRect(rect, leftMargin, NSMinXEdge), rightMargin, NSMaxXEdge);
-    if (rightFrame != NULL)
-        NSDivideRect(rect, rightFrame, &ignored, rightWidth, NSMaxXEdge);
-    if (leftFrame != NULL)
-        NSDivideRect(rect, leftFrame, &ignored, leftWidth, NSMinXEdge);
-}
-
-- (void)drawRect:(NSRect)rect {
-    NSRect bounds = [self bounds];
-    NSRect textRect, iconRect = NSZeroRect;
-    CGFloat rightMargin = RIGHT_MARGIN;
-    CGFloat iconHeight = NSHeight(bounds) - ICON_HEIGHT_OFFSET;
-    
-    if (progressIndicator)
-        rightMargin += NSWidth([progressIndicator frame]) + SEPARATION;
-    textRect = SKShrinkRect(SKShrinkRect(bounds, LEFT_MARGIN, NSMinXEdge), rightMargin, NSMaxXEdge);
-    if (iconCell) {
-        NSDivideRect(textRect, &iconRect, &textRect, iconHeight, NSMinXEdge);
-        textRect = SKShrinkRect(textRect, SEPARATION, NSMaxXEdge);
-    }
-	
-	if (textRect.size.width < 0.0)
-		textRect.size.width = 0.0;
-	
-    CGFloat height = fmax([leftCell cellSize].height, [rightCell cellSize].height);
-    textRect = SKCenterRectVertically(textRect, height, VERTICAL_OFFSET, NO);
-    textRect.origin.y += VERTICAL_OFFSET;
-    
-	[leftCell drawWithFrame:textRect inView:self];
-	[rightCell drawWithFrame:textRect inView:self];
-    
-    if (iconCell) {
-        iconRect = SKCenterRectVertically(iconRect, iconHeight, VERTICAL_OFFSET, NO);
-        [iconCell drawWithFrame:iconRect inView:self];
-    }
 }
 
 - (BOOL)isVisible {
@@ -222,95 +189,54 @@
     }
 }
 
-- (void)mouseDown:(NSEvent *)theEvent {
-    NSPoint mouseLoc = [theEvent locationInView:self];
-    NSRect leftRect, rightRect;
-    [self getLeftFrame:&leftRect rightFrame:&rightRect];
-    if (NSMouseInRect(mouseLoc, rightRect, [self isFlipped]) && [rightCell action]) {
-        while ([theEvent type] != NSLeftMouseUp)
-            theEvent = [[self window] nextEventMatchingMask: NSLeftMouseDraggedMask | NSLeftMouseUpMask];
-        mouseLoc = [theEvent locationInView:self];
-        if (NSMouseInRect(mouseLoc, rightRect, [self isFlipped])) {
-            [rightCell setNextState];
-            [NSApp sendAction:[rightCell action] to:[rightCell target] from:self];
-        }
-    } else if (NSMouseInRect(mouseLoc, leftRect, [self isFlipped]) && [leftCell action]) {
-        while ([theEvent type] != NSLeftMouseUp)
-            theEvent = [[self window] nextEventMatchingMask: NSLeftMouseDraggedMask | NSLeftMouseUpMask];
-        mouseLoc = [theEvent locationInView:self];
-        if (NSMouseInRect(mouseLoc, leftRect, [self isFlipped])) {
-            [leftCell setNextState];
-            [NSApp sendAction:[leftCell action] to:[leftCell target] from:self];
-        }
-    } else {
-        [super mouseDown:theEvent];
-    }
-}
-
 #pragma mark Text cell accessors
 
 - (NSString *)leftStringValue {
-	return [leftCell stringValue];
+	return [leftField stringValue];
 }
 
 - (void)setLeftStringValue:(NSString *)aString {
-	[leftCell setStringValue:aString];
-	[self setNeedsDisplay:YES];
-    [self updateTrackingAreas];
+	[leftField setStringValue:aString];
 }
 
 - (NSString *)rightStringValue {
-	return [rightCell stringValue];
+	return [rightField stringValue];
 }
 
 - (void)setRightStringValue:(NSString *)aString {
-	[rightCell setStringValue:aString];
-	[self setNeedsDisplay:YES];
-    [self updateTrackingAreas];
-}
-
-- (NSFont *)font {
-	return [leftCell font];
-}
-
-- (void)setFont:(NSFont *)fontObject {
-	[leftCell setFont:fontObject];
-	[rightCell setFont:fontObject];
-	[self setNeedsDisplay:YES];
+	[rightField setStringValue:aString];
 }
 
 - (SEL)leftAction {
-    return [leftCell action];
+    return [leftField action];
 }
 
 - (void)setLeftAction:(SEL)selector {
-    [leftCell setAction:selector];
-    [self updateTrackingAreas];
+    [leftField setAction:selector];
 }
 
 - (id)leftTarget {
-    return [leftCell target];
+    return [leftField target];
 }
 
 - (void)setLeftTarget:(id)newTarget {
-    [leftCell setTarget:newTarget];
+    [leftField setTarget:newTarget];
 }
 
 - (SEL)rightAction {
-    return [rightCell action];
+    return [rightField action];
 }
 
 - (void)setRightAction:(SEL)selector {
-    [rightCell setAction:selector];
-    [self updateTrackingAreas];
+    [rightField setAction:selector];
 }
 
 - (id)rightTarget {
-    return [rightCell target];
+    return [rightField target];
 }
 
 - (void)setRightTarget:(id)newTarget {
-    [rightCell setTarget:newTarget];
+    [rightField setTarget:newTarget];
 }
 
 - (SEL)action {
@@ -330,35 +256,47 @@
 }
 
 - (NSInteger)leftState {
-    return [(NSCell *)leftCell state];
+    return [[leftField cell] state];
 }
 
 - (void)setLeftState:(NSInteger)newState {
-    [(NSCell *)leftCell setState:newState];
+    [[leftField cell] setState:newState];
 }
 
 - (NSInteger)rightState {
-    return [(NSCell *)rightCell state];
+    return [[rightField cell] state];
 }
 
 - (void)setRightState:(NSInteger)newState {
-    [(NSCell *)rightCell setState:newState];
+    [[rightField cell] setState:newState];
 }
 
-- (void)setIconCell:(id)newIconCell {
-    if (iconCell != newIconCell) {
-        [iconCell release];
-        iconCell = [newIconCell retain];
-        [[self superview] setNeedsDisplayInRect:[self frame]];
-        [self updateTrackingAreas];
+- (NSImage *)icon {
+    return [iconView image];
+}
+
+- (void)setIcon:(NSImage *)icon {
+    if (icon) {
+        if (iconView == nil) {
+            iconView = [[NSImageView alloc] init];
+            [iconView setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [self addSubview:iconView];
+            [[self constraintWithFirstItem:leftField firstAttribute:NSLayoutAttributeLeading] setActive:NO];
+            [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
+                 [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:LEFT_MARGIN],
+                 [NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:iconView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:SEPARATION],
+                 [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:1.0],
+                 [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:iconView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0], nil]];
+        }
+        [iconView setImage:icon];
+    } else if (iconView) {
+        [iconView removeFromSuperview];
+        SKDESTROY(iconView);
+        [[NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:LEFT_MARGIN] setActive:YES];
     }
 }
 
 #pragma mark Progress indicator
-
-- (NSProgressIndicator *)progressIndicator {
-	return progressIndicator;
-}
 
 - (SKProgressIndicatorStyle)progressIndicatorStyle {
 	if (progressIndicator == nil)
@@ -372,37 +310,27 @@
 		if (progressIndicator == nil)
 			return;
 		[progressIndicator removeFromSuperview];
-		progressIndicator = nil;
+		SKDESTROY(progressIndicator);
+        [[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:rightField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:RIGHT_MARGIN] setActive:YES];
 	} else {
 		if (progressIndicator && (NSInteger)[progressIndicator style] == style)
 			return;
-		if(progressIndicator == nil) {
+		if (progressIndicator == nil) {
             progressIndicator = [[NSProgressIndicator alloc] init];
-        } else {
-            [progressIndicator retain];
-            [progressIndicator removeFromSuperview];
+            [progressIndicator setControlSize:NSSmallControlSize];
+            [progressIndicator setDisplayedWhenStopped:YES];
+            [progressIndicator setUsesThreadedAnimation:YES];
+            [progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
+            [progressIndicator setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [self addSubview:progressIndicator];
+            [[self constraintWithSecondItem:rightField secondAttribute:NSLayoutAttributeTrailing] setActive:NO];
+            [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
+                 [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:progressIndicator attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:RIGHT_MARGIN],
+                 [NSLayoutConstraint constraintWithItem:progressIndicator attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:rightField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:SEPARATION],
+                 [NSLayoutConstraint constraintWithItem:progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil]];
 		}
-        [progressIndicator setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin | NSViewMaxYMargin];
-		[progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
-		[progressIndicator setControlSize:NSSmallControlSize];
 		[progressIndicator setIndeterminate:style == SKProgressIndicatorStyleIndeterminate];
-		[progressIndicator setDisplayedWhenStopped:YES];
-        [progressIndicator setUsesThreadedAnimation:YES];
-        [progressIndicator sizeToFit];
-		
-        NSRect rect;
-        NSSize size = [progressIndicator frame].size;
-        if (size.width < 0.01) size.width = PROGRESSBAR_WIDTH;
-        rect = SKSliceRect(SKShrinkRect([self bounds], RIGHT_MARGIN, NSMaxXEdge), size.width, NSMaxXEdge);
-        rect.origin.y = floor(NSMidY(rect) - 0.5 * size.height) + VERTICAL_OFFSET;
-        rect.size.height = size.height;
-        [progressIndicator setFrame:rect];
-        
-        [self addSubview:progressIndicator];
-		[progressIndicator release];
 	}
-    [self setNeedsDisplay:YES];
-    [self updateTrackingAreas];
 }
 
 - (double)progressIndicatorValue {
@@ -421,62 +349,12 @@
     [progressIndicator setMaxValue:maxValue];
 }
 
-- (void)startAnimation:(id)sender {
+- (void)startProgressAnimation:(id)sender {
 	[progressIndicator startAnimation:sender];
 }
 
-- (void)stopAnimation:(id)sender {
+- (void)stopProgressAnimation:(id)sender {
 	[progressIndicator stopAnimation:sender];
-}
-
-#pragma mark Tracking rects
-
-- (void)updateTrackingAreas {
-    [super updateTrackingAreas];
-    if (leftTrackingArea) {
-        [self removeTrackingArea:leftTrackingArea];
-        SKDESTROY(leftTrackingArea);
-    }
-    if (rightTrackingArea) {
-        [self removeTrackingArea:rightTrackingArea];
-        SKDESTROY(rightTrackingArea);
-    }
-    NSRect leftRect, rightRect;
-    [self getLeftFrame:&leftRect rightFrame:&rightRect];
-    if ([self leftAction] != NULL) {
-        leftTrackingArea = [[NSTrackingArea alloc] initWithRect:leftRect options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp owner:self userInfo:nil];
-        [self addTrackingArea:leftTrackingArea];
-    } else {
-        [leftCell setUnderlined:NO];
-    }
-    if ([self rightAction] != NULL) {
-        rightTrackingArea = [[NSTrackingArea alloc] initWithRect:rightRect options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp owner:self userInfo:nil];
-        [self addTrackingArea:rightTrackingArea];
-    } else {
-        [rightCell setUnderlined:NO];
-    }
-}
-
-- (void)mouseEntered:(NSEvent *)theEvent {
-    if ([[theEvent trackingArea] isEqual:leftTrackingArea]) {
-        [leftCell setUnderlined:YES];
-        [self setNeedsDisplay:YES];
-    } else if ([[theEvent trackingArea] isEqual:rightTrackingArea]) {
-        [rightCell setUnderlined:YES];
-        [self setNeedsDisplay:YES];
-    } else if ([[SKStatusBar superclass] instancesRespondToSelector:_cmd])
-        [super mouseEntered:theEvent];
-}
-
-- (void)mouseExited:(NSEvent *)theEvent {
-    if ([[theEvent trackingArea] isEqual:leftTrackingArea]) {
-        [leftCell setUnderlined:NO];
-        [self setNeedsDisplay:YES];
-    } else if ([[theEvent trackingArea] isEqual:rightTrackingArea]) {
-        [rightCell setUnderlined:NO];
-        [self setNeedsDisplay:YES];
-    } else if ([[SKStatusBar superclass] instancesRespondToSelector:_cmd])
-        [super mouseExited:theEvent];
 }
 
 #pragma mark Accessibility
@@ -497,37 +375,67 @@
     return NSAccessibilityRoleDescription(NSAccessibilityGroupRole, nil);
 }
 
-- (NSArray *)accessibilityChildren {
-    NSMutableArray *children = [NSMutableArray arrayWithObjects:leftCell, rightCell, nil];
-    if (iconCell)
-        [children addObject:iconCell];
-    if (progressIndicator)
-        [children addObject:progressIndicator];
-    return NSAccessibilityUnignoredChildren(children);
-}
-
-- (id)accessibilityHitTest:(NSPoint)point {
-    NSPoint localPoint = [self convertPointFromScreen:point];
-    NSRect leftRect, rightRect;
-    [self getLeftFrame:&leftRect rightFrame:&rightRect];
-    if (NSMouseInRect(localPoint, rightRect, [self isFlipped]))
-        return NSAccessibilityUnignoredAncestor(rightCell);
-    else
-        return NSAccessibilityUnignoredAncestor(leftCell);
-}
-
-- (id)accessibilityFocusedUIElement {
-    if ([NSApp accessibilityFocusedUIElement] == rightCell)
-        return NSAccessibilityUnignoredAncestor(rightCell);
-    else if (progressIndicator && [NSApp accessibilityFocusedUIElement] == progressIndicator)
-        return NSAccessibilityUnignoredAncestor(progressIndicator);
-    else
-        return NSAccessibilityUnignoredAncestor(leftCell);
-}
-
 @end
 
 #pragma mark -
+
+@implementation SKStatusTextField
+
++ (Class)cellClass { return [SKStatusTextFieldCell class]; }
+
+- (id)initWithFrame:(NSRect)frameRect {
+    self = [super initWithFrame:frameRect];
+    if (self) {
+        NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:[self bounds] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect owner:self userInfo:nil];
+        [self addTrackingArea:area];
+        [area release];
+    }
+    return self;
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent {
+    if ([[SKStatusTextField superclass] instancesRespondToSelector:_cmd])
+        [super mouseEntered:theEvent];
+    if ([self action] != NULL) {
+        [(SKStatusTextFieldCell *)[self cell] setUnderlined:YES];
+        [self setNeedsDisplay:YES];
+    }
+}
+
+- (void)mouseExited:(NSEvent *)theEvent {
+    if ([[SKStatusTextField superclass] instancesRespondToSelector:_cmd])
+        [super mouseExited:theEvent];
+    if ([self action] != NULL) {
+        [(SKStatusTextFieldCell *)[self cell] setUnderlined:NO];
+        [self setNeedsDisplay:YES];
+    }
+}
+
+- (void)setAction:(SEL)action {
+    [super setAction:action];
+    if ([self action] != NULL) {
+        [(SKStatusTextFieldCell *)[self cell] setUnderlined:NO];
+        [self setNeedsDisplay:YES];
+    }
+}
+
+- (void)mouseDown:(NSEvent *)theEvent {
+    NSPoint mouseLoc = [theEvent locationInView:self];
+    NSRect bounds = [self bounds];
+    if ([self action]) {
+        while ([theEvent type] != NSLeftMouseUp)
+            theEvent = [[self window] nextEventMatchingMask: NSLeftMouseDraggedMask | NSLeftMouseUpMask];
+        mouseLoc = [theEvent locationInView:self];
+        if (NSMouseInRect(mouseLoc, bounds, [self isFlipped])) {
+            [[self cell] setNextState];
+            [self sendAction:[self action] to:[self target]];
+        }
+    } else {
+        [super mouseDown:theEvent];
+    }
+}
+
+@end
 
 @implementation SKStatusTextFieldCell
 
