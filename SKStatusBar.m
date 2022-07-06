@@ -77,9 +77,6 @@
         [leftField setControlSize:NSSmallControlSize];
         [leftField setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addSubview:leftField];
-        [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
-            [NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:LEFT_MARGIN],
-            [NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil]];
         
         rightField = [[SKStatusTextField alloc] init];
         [rightField setBezeled:NO];
@@ -90,8 +87,11 @@
         [rightField setControlSize:NSSmallControlSize];
         [rightField setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addSubview:rightField];
+        
         [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
-            [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:rightField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:RIGHT_MARGIN],
+             [NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:LEFT_MARGIN],
+             [NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0],
+             [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:rightField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:RIGHT_MARGIN],
             [NSLayoutConstraint constraintWithItem:rightField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil]];
         
         iconView = nil;
