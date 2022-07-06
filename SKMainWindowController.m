@@ -421,8 +421,8 @@ static char SKMainWindowContentLayoutObservationContext;
     
     [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
     
-    [statusBar setRightAction:@selector(statusBarClicked:)];
-    [statusBar setRightTarget:self];
+    [[statusBar rightField] setAction:@selector(statusBarClicked:)];
+    [[statusBar rightField] setTarget:self];
 
     if ([sud boolForKey:SKShowStatusBarKey] == NO)
         [self toggleStatusBar:nil];
@@ -737,7 +737,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)updateLeftStatus {
     NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Page %ld of %ld", @"Status message"), (long)([[[self pdfView] currentPage] pageIndex] + 1), (long)[[pdfView document] pageCount]];
-    [statusBar setLeftStringValue:message];
+    [[statusBar leftField] setStringValue:message];
 }
 
 #define CM_PER_POINT 0.035277778
@@ -755,7 +755,7 @@ static char SKMainWindowContentLayoutObservationContext;
         rect = [[pdfView currentPage] boundsForBox:[pdfView displayBox]];
 
     if (NSEqualRects(rect, NSZeroRect) == NO) {
-        if ([statusBar rightState] == NSOnState) {
+        if ([[[statusBar rightField] cell] state] == NSOnState) {
             BOOL useMetric = [[[NSLocale currentLocale] objectForKey:NSLocaleUsesMetricSystem] boolValue];
             NSString *units = useMetric ? NSLocalizedString(@"cm", @"size unit") : NSLocalizedString(@"in", @"size unit");
             CGFloat factor = useMetric ? CM_PER_POINT : INCH_PER_POINT;
@@ -768,7 +768,7 @@ static char SKMainWindowContentLayoutObservationContext;
     } else {
         message = @"";
     }
-    [statusBar setRightStringValue:message];
+    [[statusBar rightField] setStringValue:message];
 }
 
 - (void)updatePageColumnWidthForTableViews:(NSArray *)tvs {
@@ -2037,9 +2037,9 @@ static char SKMainWindowContentLayoutObservationContext;
     [self setSearchResults:nil];
     [self setGroupedSearchResults:nil];
     [statusBar setProgressIndicatorStyle:SKProgressIndicatorStyleDeterminate];
-    [statusBar setProgressIndicatorMaxValue:[[note object] pageCount]];
-    [statusBar setProgressIndicatorValue:0.0];
-    [statusBar startProgressAnimation:self];
+    [[statusBar progressIndicator] setMaxValue:[[note object] pageCount]];
+    [[statusBar progressIndicator] setDoubleValue:0.0];
+    [[statusBar progressIndicator] startAnimation:self];
     [self willChangeValueForKey:SEARCHRESULTS_KEY];
     [self willChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
 }
@@ -2055,13 +2055,13 @@ static char SKMainWindowContentLayoutObservationContext;
     [self didChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
     [self didChangeValueForKey:SEARCHRESULTS_KEY];
     mwcFlags.updatingFindResults = 0;
-    [statusBar stopProgressAnimation:self];
+    [[statusBar progressIndicator] stopAnimation:self];
     [statusBar setProgressIndicatorStyle:SKProgressIndicatorStyleNone];
 }
 
 - (void)documentDidEndPageFind:(NSNotification *)note {
     NSNumber *pageIndex = [[note userInfo] objectForKey:@"PDFDocumentPageIndex"];
-    [statusBar setProgressIndicatorValue:[pageIndex doubleValue] + 1.0];
+    [[statusBar progressIndicator] setDoubleValue:[pageIndex doubleValue] + 1.0];
     if ([pageIndex unsignedIntegerValue] % 50 == 0) {
         mwcFlags.updatingFindResults = 1;
         [self didChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];

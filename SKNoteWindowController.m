@@ -182,7 +182,7 @@ static NSURL *temporaryDirectoryURL = nil;
 
 - (void)updateStatusMessage {
     NSRect bounds = [note bounds];
-    [statusBar setLeftStringValue:[NSString stringWithFormat:NSLocalizedString(@"Page %@ at (%ld, %ld)", @"Status message"), [[note page] displayLabel], (long)NSMidX(bounds), (long)NSMidY(bounds)]];
+    [[statusBar leftField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Page %@ at (%ld, %ld)", @"Status message"), [[note page] displayLabel], (long)NSMidX(bounds), (long)NSMidY(bounds)]];
 }
 
 - (void)windowDidLoad {
@@ -242,8 +242,8 @@ static NSURL *temporaryDirectoryURL = nil;
     
     NSValueTransformer *transformer = [NSValueTransformer valueTransformerForName:SKTypeImageTransformerName];
     
-    [statusBar setLeftAction:@selector(statusBarClicked:)];
-    [statusBar setLeftTarget:self];
+    [[statusBar leftField] setAction:@selector(statusBarClicked:)];
+    [[statusBar leftField] setTarget:self];
     [statusBar setIcon:[transformer transformedValue:[note type]]];
     
     [self updateStatusMessage];

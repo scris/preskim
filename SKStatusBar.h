@@ -55,17 +55,12 @@ typedef NS_ENUM(NSInteger, SKProgressIndicatorStyle) {
 
 @property (nonatomic, readonly, getter=isVisible) BOOL visible;
 @property (nonatomic, readonly, getter=isAnimating) BOOL animating;
-@property (nonatomic, copy) NSString *leftStringValue, *rightStringValue;
-@property (nonatomic) SEL leftAction, rightAction;
-@property (nonatomic, assign) id leftTarget, rightTarget;
-@property (nonatomic) NSInteger leftState, rightState;
+@property (nonatomic, readonly) NSTextField *leftField, *rightField;
+@property (nonatomic, readonly) NSProgressIndicator *progressIndicator;
 @property (nonatomic, retain) NSImage *icon;
 @property (nonatomic) SKProgressIndicatorStyle progressIndicatorStyle;
 @property (nonatomic) double progressIndicatorValue, progressIndicatorMaxValue;
 
 - (void)toggleBelowView:(NSView *)view animate:(BOOL)animate;
-
-- (void)startProgressAnimation:(id)sender;
-- (void)stopProgressAnimation:(id)sender;
 
 @end

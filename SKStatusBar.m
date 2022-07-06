@@ -62,8 +62,8 @@
 
 @implementation SKStatusBar
 
-@synthesize animating;
-@dynamic visible, leftStringValue, rightStringValue, leftAction, leftTarget, rightAction, rightTarget, leftState, rightState, icon, progressIndicatorStyle, progressIndicatorValue, progressIndicatorMaxValue;
+@synthesize animating, leftField, rightField, progressIndicator;
+@dynamic visible, icon, progressIndicatorStyle, progressIndicatorValue, progressIndicatorMaxValue;
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
@@ -331,30 +331,6 @@
 		}
 		[progressIndicator setIndeterminate:style == SKProgressIndicatorStyleIndeterminate];
 	}
-}
-
-- (double)progressIndicatorValue {
-    return progressIndicator ? [progressIndicator doubleValue] : 0.0;
-}
-
-- (void)setProgressIndicatorValue:(double)value {
-    [progressIndicator setDoubleValue:value];
-}
-
-- (double)progressIndicatorMaxValue {
-    return progressIndicator ? [progressIndicator maxValue] : 0.0;
-}
-
-- (void)setProgressIndicatorMaxValue:(double)maxValue {
-    [progressIndicator setMaxValue:maxValue];
-}
-
-- (void)startProgressAnimation:(id)sender {
-	[progressIndicator startAnimation:sender];
-}
-
-- (void)stopProgressAnimation:(id)sender {
-	[progressIndicator stopAnimation:sender];
 }
 
 #pragma mark Accessibility
