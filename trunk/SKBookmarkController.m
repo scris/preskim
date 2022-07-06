@@ -245,7 +245,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
             message = count == 1 ? NSLocalizedString(@"1 item", @"Bookmark folder description") : [NSString stringWithFormat:NSLocalizedString(@"%ld items", @"Bookmark folder description"), (long)count];
         }
     }
-    [statusBar setLeftStringValue:message ?: @""];
+    [[statusBar leftField] setStringValue:message ?: @""];
 }
 
 - (void)saveBookmarksData {
@@ -1099,12 +1099,12 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
 }
 
 - (void)outlineView:(NSOutlineView *)ov typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper didFailToFindMatchForSearchString:(NSString *)searchString {
-    [statusBar setLeftStringValue:[NSString stringWithFormat:NSLocalizedString(@"No match: \"%@\"", @"Status message"), searchString]];
+    [[statusBar leftField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"No match: \"%@\"", @"Status message"), searchString]];
 }
 
 - (void)outlineView:(NSOutlineView *)ov typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper updateSearchString:(NSString *)searchString {
     if (searchString)
-        [statusBar setLeftStringValue:[NSString stringWithFormat:NSLocalizedString(@"Finding: \"%@\"", @"Status message"), searchString]];
+        [[statusBar leftField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Finding: \"%@\"", @"Status message"), searchString]];
     else
         [self updateStatus];
 }
