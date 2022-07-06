@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger, SKProgressIndicatorStyle) {
 };
 
 
-@interface SKStatusBar : NSView {
+@interface SKStatusBar : NSView <NSAccessibilityGroup> {
     NSTextField *leftField;
     NSTextField *rightField;
     NSImageView *iconView;

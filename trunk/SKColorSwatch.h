@@ -42,7 +42,7 @@ extern NSString *SKColorSwatchColorsChangedNotification;
 
 @class SKColorSwatchBackgroundView;
 
-@interface SKColorSwatch : NSControl <NSDraggingSource> {
+@interface SKColorSwatch : NSControl <NSDraggingSource, NSAccessibilityGroup> {
     NSMutableArray *colors;
     NSMutableArray *itemViews;
     SKColorSwatchBackgroundView *backgroundView;

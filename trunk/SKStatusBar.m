@@ -335,11 +335,7 @@
 
 #pragma mark Accessibility
 
-- (BOOL)accessibilityIsIgnored {
-    return NO;
-}
-
-- (BOOL)accessibilityElement {
+- (BOOL)isAccessibilityElement {
     return YES;
 }
 
@@ -349,6 +345,14 @@
 
 - (NSString *)accessibilityRoleDescription {
     return NSAccessibilityRoleDescription(NSAccessibilityGroupRole, nil);
+}
+
+- (NSRect)accessibilityFrame {
+    return [self convertRectToScreen:[self bounds]];
+}
+
+- (id)accessibilityParent {
+    return NSAccessibilityUnignoredAncestor([self superview]);
 }
 
 @end

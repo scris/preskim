@@ -76,7 +76,7 @@
 
 - (BOOL)canBecomeMainWindow { return NO; }
 
-- (BOOL)accessibilityIsIgnored { return YES; }
+- (BOOL)isccessibilityElement { return NO; }
 
 - (NSTimeInterval)fadeInDuration { return FADE_IN_DURATION; }
 

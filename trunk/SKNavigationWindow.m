@@ -276,8 +276,8 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     SKDESTROY(view);
 }
 
-- (BOOL)accessibilityIsIgnored {
-    return YES;
+- (BOOL)isAccessibilityElement {
+    return NO;
 }
 
 @end

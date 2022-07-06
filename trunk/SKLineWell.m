@@ -614,11 +614,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
 
 #pragma mark Accessibility
 
-- (BOOL)accessibilityIsIgnored {
-    return NO;
-}
-
-- (BOOL)accessibilityElement {
+- (BOOL)isAccessibilityElement {
     return YES;
 }
 
@@ -630,8 +626,20 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     return NSAccessibilityRoleDescription(NSAccessibilityCheckBoxRole, nil);
 }
 
+- (NSRect)accessibilityFrame {
+    return [self convertRectToScreen:[self bounds]];
+}
+
+- (id)accessibilityParent {
+    return NSAccessibilityUnignoredAncestor([self superview]);
+}
+
 - (id)accessibilityValue {
     return [NSNumber numberWithInteger:[self isActive]];
+}
+
+- (NSString *)accessibilityLabel {
+    return [NSString stringWithFormat:@"%@ %ld", NSLocalizedString(@"line width", @"Accessibility description"), (long)[self lineWidth]];
 }
 
 - (NSString *)accessibilityTitle {
