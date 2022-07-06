@@ -45,17 +45,8 @@
 #import <objc/objc-runtime.h>
 
 @interface NSView (SKPDFDisplayViewPrivateDeclarations)
-- (NSRange)accessibilityRangeForSelection:(id)selection;
-- (id)selectionForAccessibilityRange:(NSRange)range;
 - (id)pdfView;
 - (id)getPDFView;
-@end
-
-@interface NSView (SKPDFDisplayViewAdditionalAccessibility)
-- (id)accessibilityRangeForPositionAttributeForParameter:(id)parameter;
-- (id)accessibilityRTFForRangeAttributeForParameter:(id)parameter;
-- (id)accessibilityAttributedStringForRangeAttributeForParameter:(id)parameter;
-- (id)accessibilityStyleRangeForIndexAttributeForParameter:(id)parameter;
 @end
 
 #pragma mark -
