@@ -758,6 +758,14 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 #pragma mark Accessibility
 
+- (BOOL)accessibilityIsIgnored {
+    return NO;
+}
+
+- (BOOL)accessibilityElement {
+    return YES;
+}
+
 - (NSString *)accessibilityRole {
     return NSAccessibilityGroupRole;
 }
@@ -993,6 +1001,10 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     }
     
     [NSGraphicsContext restoreGraphicsState];
+}
+
+- (BOOL)accessibilityIsIgnored {
+    return NO;
 }
 
 - (BOOL)accessibilityElement {

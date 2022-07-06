@@ -481,6 +481,10 @@
 
 #pragma mark Accessibility
 
+- (BOOL)accessibilityIsIgnored {
+    return NO;
+}
+
 - (BOOL)accessibilityElement {
     return YES;
 }
