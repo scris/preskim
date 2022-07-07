@@ -344,7 +344,7 @@
 }
 
 - (NSString *)accessibilityRoleDescription {
-    return NSAccessibilityRoleDescription(NSAccessibilityGroupRole, nil);
+    return NSLocalizedString(@"status bar", @"Accessibility description");
 }
 
 - (NSRect)accessibilityFrame {
