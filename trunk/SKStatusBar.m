@@ -68,7 +68,7 @@
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-`        leftField = [[SKStatusTextField alloc] init];
+        leftField = [[SKStatusTextField alloc] init];
         [leftField setBezeled:NO];
         [leftField setBordered:NO];
         [leftField setDrawsBackground:NO];
