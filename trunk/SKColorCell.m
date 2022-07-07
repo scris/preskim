@@ -109,8 +109,20 @@
     [NSGraphicsContext restoreGraphicsState];
 }
 
-- (id)accessibilityValueAttribute {
+- (NSString *)accessibilityRole {
+    return NSAccessibilityColorWellRole;
+}
+
+- (NSString *)accessibilityRoleDescription {
+    return NSAccessibilityRoleDescription(NSAccessibilityColorWellRole, nil);
+}
+
+- (id)accessibilityValue {
     return [color accessibilityValue];
+}
+
+- (BOOL)isAccessibilityEnabled {
+    return NO;
 }
 
 @end
