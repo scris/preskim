@@ -98,28 +98,4 @@ static NSMutableDictionary *activeImages;
     }
 }
 
-- (NSString *)accessibilityLabel {
-    NSString *name = [[self image] name];
-    if ([name isEqualToString:SKImageNameTextNote])
-        return [SKNFreeTextString typeName];
-    else if ([name isEqualToString:SKImageNameAnchoredNote])
-        return [SKNNoteString typeName];
-    else if ([name isEqualToString:SKImageNameCircleNote])
-        return [SKNCircleString typeName];
-    else if ([name isEqualToString:SKImageNameSquareNote])
-        return [SKNSquareString typeName];
-    else if ([name isEqualToString:SKImageNameHighlightNote])
-        return [SKNHighlightString typeName];
-    else if ([name isEqualToString:SKImageNameUnderlineNote])
-        return [SKNUnderlineString typeName];
-    else if ([name isEqualToString:SKImageNameStrikeOutNote])
-        return [SKNStrikeOutString typeName];
-    else if ([name isEqualToString:SKImageNameLineNote])
-        return [SKNLineString typeName];
-    else if ([name isEqualToString:SKImageNameInkNote])
-        return [SKNInkString typeName];
-    else
-        return nil;
-}
-
 @end

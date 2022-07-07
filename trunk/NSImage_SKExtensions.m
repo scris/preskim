@@ -40,6 +40,8 @@
 #import "NSBitmapImageRep_SKExtensions.h"
 #import "NSShadow_SKExtensions.h"
 #import "NSBezierPath_SKExtensions.h"
+#import "NSString_SKExtensions.h"
+#import <SkimNotes/SkimNotes.h>
 
 
 NSString *SKImageNameTextNote = @"TextNote";
@@ -1369,6 +1371,15 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     
     APPLY_NOTE_TYPES(MAKE_NOTE_IMAGE);
     
+    [[self imageNamed:SKImageNameTextNote] setAccessibilityDescription:[SKNFreeTextString typeName]];
+    [[self imageNamed:SKImageNameAnchoredNote] setAccessibilityDescription:[SKNNoteString typeName]];
+    [[self imageNamed:SKImageNameCircleNote] setAccessibilityDescription:[SKNCircleString typeName]];
+    [[self imageNamed:SKImageNameSquareNote] setAccessibilityDescription:[SKNSquareString typeName]];
+    [[self imageNamed:SKImageNameHighlightNote] setAccessibilityDescription:[SKNHighlightString typeName]];
+    [[self imageNamed:SKImageNameUnderlineNote] setAccessibilityDescription:[SKNUnderlineString typeName]];
+    [[self imageNamed:SKImageNameStrikeOutNote] setAccessibilityDescription:[SKNStrikeOutString typeName]];
+    [[self imageNamed:SKImageNameLineNote] setAccessibilityDescription:[SKNLineString typeName]];
+    [[self imageNamed:SKImageNameInkNote] setAccessibilityDescription:[SKNInkString typeName]];
 }
 
 + (void)makeAdornImages {
