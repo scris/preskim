@@ -786,6 +786,10 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     return [self accessibilityChildren];
 }
 
+- (NSString *)accessibilityLabel {
+    return NSLocalizedString(@"colors", @"accessibility description");
+}
+
 - (id)accessibilityHitTest:(NSPoint)point {
     NSPoint localPoint = [self convertPointFromScreen:point];
     NSInteger i = [self colorIndexAtPoint:localPoint];
