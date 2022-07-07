@@ -276,10 +276,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     SKDESTROY(view);
 }
 
-- (BOOL)isAccessibilityElement {
-    return NO;
-}
-
 @end
 
 #pragma mark -
