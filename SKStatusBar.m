@@ -344,7 +344,7 @@
 }
 
 - (NSString *)accessibilityRoleDescription {
-    return NSLocalizedString(@"status bar", @"Accessibility description");
+    return NSAccessibilityRoleDescription(NSAccessibilityGroupRole, nil);
 }
 
 - (NSRect)accessibilityFrame {
@@ -353,6 +353,10 @@
 
 - (id)accessibilityParent {
     return NSAccessibilityUnignoredAncestor([self superview]);
+}
+
+- (NSString *)accessibilityLabel {
+    return NSLocalizedString(@"status bar", @"Accessibility description");
 }
 
 @end
