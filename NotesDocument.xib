@@ -101,7 +101,7 @@
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NA6-l1-CAo">
                                                             <rect key="frame" x="0.0" y="-3" width="21" height="23"/>
-                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="sVs-LE-rAz"/>
+                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="sVs-LE-rAz" customClass="SKAnnotationTypeImageCell"/>
                                                             <connections>
                                                                 <binding destination="E1b-NS-HOF" name="value" keyPath="objectValue.type" id="kNb-1A-kUk">
                                                                     <dictionary key="options">
