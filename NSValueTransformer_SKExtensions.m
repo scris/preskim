@@ -222,6 +222,7 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
                 return YES;
             }] retain];
             [windowImage setTemplate:YES];
+            [windowImage setAccessibilityDescription:NSLocalizedString(@"window", @"Accessibility description")];
         }
         return windowImage;
     }
