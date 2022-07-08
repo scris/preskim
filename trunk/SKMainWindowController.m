@@ -2282,6 +2282,8 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 
 - (void)snapshotController:(SKSnapshotWindowController *)controller didFinishSetup:(SKSnapshotOpenType)openType {
     NSImage *image = [controller thumbnailWithSize:snapshotCacheSize];
+    
+    [image setAccessibilityDescription:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [controller pageLabel]]];
     [controller setThumbnail:image];
     
     if (openType == SKSnapshotOpenFromSetup) {
@@ -2789,6 +2791,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     
     dispatch_async(queue, ^{
         NSImage *image = [page thumbnailWithSize:thumbnailCacheSize forBox:box readingBar:readingBar];
+        [image setAccessibilityDescription:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [page displayLabel]]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             NSUInteger pageIndex = [thumbnail pageIndex];
@@ -2989,6 +2992,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         NSSize newSize, oldSize = [[controller thumbnail] size];
         NSImage *image = [controller thumbnailWithSize:snapshotCacheSize];
         
+        [image setAccessibilityDescription:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [controller pageLabel]]];
         [controller setThumbnail:image];
         [dirtySnapshots removeObject:controller];
         
