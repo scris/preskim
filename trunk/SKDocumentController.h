@@ -68,6 +68,7 @@ extern NSString *SKDocumentControllerDocumentKey;
 
 @interface SKDocumentController : NSDocumentController {
     BOOL openedFile;
+    Class openDocumentClass;
 }
 
 - (IBAction)newDocumentFromClipboard:(id)sender;
