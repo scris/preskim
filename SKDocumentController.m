@@ -84,11 +84,9 @@ NSString *SKDocumentControllerDocumentKey = @"document";
 
 #define WARNING_LIMIT 10
 
-#if SDK_BEFORE(10_12)
-@interface NSResponder(NSWindowTabbing)
-- (IBAction)newWindowForTab:(id)sender;
+@interface NSDocumentController (SKPrivateDeclaration)
+- (void)_setTabPlusButtonWasClicked:(BOOL)wasClicked;
 @end
-#endif
 
 @interface NSDocumentController (SKDeprecated)
 // we don't want this to be flagged as deprecated, because Apple's replacement using UTIs is too buggy, and there's no replacement for this method
@@ -122,8 +120,18 @@ NSString *SKDocumentControllerDocumentKey = @"document";
 }
 
 - (void)beginOpenPanel:(NSOpenPanel *)openPanel forTypes:(NSArray *)inTypes completionHandler:(void (^)(NSInteger result))completionHandler {
-    [openPanel setCanChooseDirectories:YES];
-    [super beginOpenPanel:openPanel forTypes:inTypes completionHandler:completionHandler];
+    if (openDocumentClass)
+       inTypes = [openDocumentClass readableTypes];
+    else
+        [openPanel setCanChooseDirectories:YES];
+    [super beginOpenPanel:openPanel forTypes:inTypes completionHandler:^(NSInteger result) {
+        completionHandler(result);
+        if (openDocumentClass) {
+            openDocumentClass = Nil;
+            if (result == NSFileHandlingPanelCancelButton && [self respondsToSelector:@selector(_setTabPlusButtonWasClicked:)])
+                [self _setTabPlusButtonWasClicked:NO];
+        }
+    }];
 }
 
 static BOOL isPDFData(NSData *data) {
@@ -215,6 +223,12 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
     if (imsrc) CFRelease(imsrc);
 
     return pdfData;
+}
+
+// new empty documents make no sense, so open using the open panel
+- (void)newWindowForTab:sender {
+    openDocumentClass = [sender isKindOfClass:[NSWindow class]] ? [[[sender windowController] document] class] : nil;
+    [self openDocument:sender];
 }
 
 - (IBAction)newDocumentFromClipboard:(id)sender {
@@ -630,11 +644,6 @@ static inline NSDictionary *optionsFromFragmentAndEvent(NSString *fragment) {
                 completionHandler(document, documentWasAlreadyOpen, error);
         }];
     }
-}
-
-// By not responding to newWindowForTab: no "+" button is shown in the tab bar
-- (BOOL)respondsToSelector:(SEL)aSelector {
-    return aSelector != @selector(newWindowForTab:) && [super respondsToSelector:aSelector];
 }
 
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
