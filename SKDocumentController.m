@@ -120,17 +120,18 @@ NSString *SKDocumentControllerDocumentKey = @"document";
 }
 
 - (void)beginOpenPanel:(NSOpenPanel *)openPanel forTypes:(NSArray *)inTypes completionHandler:(void (^)(NSInteger result))completionHandler {
-    if (openDocumentClass)
-       inTypes = [openDocumentClass readableTypes];
-    else
+    BOOL shouldResetTab = NO;
+    if (openDocumentClass) {
+        openDocumentClass = Nil;
+        inTypes = [openDocumentClass readableTypes];
+        shouldResetTab = [self respondsToSelector:@selector(_setTabPlusButtonWasClicked:)];
+    } else {
         [openPanel setCanChooseDirectories:YES];
+    }
     [super beginOpenPanel:openPanel forTypes:inTypes completionHandler:^(NSInteger result) {
         completionHandler(result);
-        if (openDocumentClass) {
-            openDocumentClass = Nil;
-            if (result == NSFileHandlingPanelCancelButton && [self respondsToSelector:@selector(_setTabPlusButtonWasClicked:)])
-                [self _setTabPlusButtonWasClicked:NO];
-        }
+        if (shouldResetTab && result == NSFileHandlingPanelCancelButton)
+            [self _setTabPlusButtonWasClicked:NO];
     }];
 }
 
