@@ -619,11 +619,11 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
 }
 
 - (NSString *)accessibilityRole {
-    return NSAccessibilityCheckBoxRole;
+    return NSAccessibilityButtonRole;
 }
 
 - (NSString *)accessibilityRoleDescription {
-    return NSAccessibilityRoleDescription(NSAccessibilityCheckBoxRole, nil);
+    return NSLocalizedString(@"line well", @"Accessibility description");
 }
 
 - (NSRect)accessibilityFrame {
@@ -635,15 +635,13 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
 }
 
 - (id)accessibilityValue {
-    return [NSNumber numberWithInteger:[self isActive]];
+    if ([self style] == kPDFBorderStyleDashed)
+        return [NSString stringWithFormat:@"%@ %ld %@ %@", NSLocalizedString(@"line width", @"Accessibility description"), (long)[self lineWidth], NSLocalizedString(@"dashed", @"Accessibility description"), [[[self dashPattern] valueForKey:@"stringValue"] componentsJoinedByString:@" "]];
+    return [NSString stringWithFormat:@"%@ %ld", NSLocalizedString(@"line width", @"Accessibility description"), (long)[self lineWidth]];
 }
 
 - (NSString *)accessibilityLabel {
-    return [NSString stringWithFormat:@"%@ %ld", NSLocalizedString(@"line width", @"Accessibility description"), (long)[self lineWidth]];
-}
-
-- (NSString *)accessibilityTitle {
-    return [NSString stringWithFormat:@"%@ %ld", NSLocalizedString(@"line width", @"Accessibility description"), (long)[self lineWidth]];
+    return nil;
 }
 
 - (NSString *)accessibilityHelp {
@@ -661,11 +659,6 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
 }
 
 - (BOOL)accessibilityPerformPress {
-    [self performClick:self];
-    return YES;
-}
-
-- (BOOL)accessibilityPerformPick {
     [self performClick:self];
     return YES;
 }
