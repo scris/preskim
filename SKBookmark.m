@@ -443,6 +443,8 @@ static Class SKBookmarkClass = Nil;
                 [icon drawInRect:rect fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1.0];
                 return YES;
             }];
+            if (type)
+                [icon setAccessibilityDescription:[[NSWorkspace sharedWorkspace] localizedDescriptionForType:type]];
             [setupFileTypeIcons setObject:icon forKey:type ?: @""];
         }
     } else {
@@ -451,8 +453,10 @@ static Class SKBookmarkClass = Nil;
         if (icon == nil) {
             if (fileTypeIcons == nil)
                 fileTypeIcons = [[NSMutableDictionary alloc] init];
-            if (type)
+            if (type) {
                 icon = [[NSWorkspace sharedWorkspace] iconForFileType:type];
+                [icon setAccessibilityDescription:[[NSWorkspace sharedWorkspace] localizedDescriptionForType:type]];
+            }
             if (icon == nil) {
                 NSImage *genericDocImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericDocumentIcon)];
                 NSImage *questionMark = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kQuestionMarkIcon)];
