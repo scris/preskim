@@ -542,4 +542,20 @@ static char SKFontWellFontSizeObservationContext;
     }
 }
 
+- (NSString *)accessibilityRoleDescription {
+    return NSLocalizedString(@"font well", @"Accessibility description");
+}
+
+- (id)accessibilityValue {
+    return [self title];
+}
+
+- (NSString *)accessibilityLabel {
+    return nil;
+}
+
+- (NSString *)accessibilityTitle {
+    return nil;
+}
+
 @end
