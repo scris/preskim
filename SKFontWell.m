@@ -542,6 +542,10 @@ static char SKFontWellFontSizeObservationContext;
     }
 }
 
+- (NSString *)accessibilitySubrole {
+    return @"AXFontWell";
+}
+
 - (NSString *)accessibilityRoleDescription {
     return NSLocalizedString(@"font well", @"Accessibility description");
 }
