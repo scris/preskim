@@ -622,6 +622,10 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     return NSAccessibilityButtonRole;
 }
 
+- (NSString *)accessibilitySubrole {
+    return @"AXLineWell";
+}
+
 - (NSString *)accessibilityRoleDescription {
     return NSLocalizedString(@"line well", @"Accessibility description");
 }
@@ -634,10 +638,40 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     return NSAccessibilityUnignoredAncestor([self superview]);
 }
 
+static inline NSString *lineStyleDescription(PDFLineStyle lineStyle) {
+    switch (lineStyle) {
+        case kPDFLineStyleSquare:
+            return NSLocalizedString(@"square", @"Accessibility description");
+        case kPDFLineStyleCircle:
+            return NSLocalizedString(@"circle", @"Accessibility description");
+        case kPDFLineStyleDiamond:
+            return NSLocalizedString(@"diamond", @"Accessibility description");
+        case kPDFLineStyleOpenArrow:
+            return NSLocalizedString(@"open arrow", @"Accessibility description");
+        case kPDFLineStyleClosedArrow:
+            return NSLocalizedString(@"closed arrow", @"Accessibility description");
+        default:
+            return @"";
+    }
+    return nil;
+}
+
 - (id)accessibilityValue {
-    if ([self style] == kPDFBorderStyleDashed)
+    /*
+     if ([self style] == kPDFBorderStyleDashed)
         return [NSString stringWithFormat:@"%@ %ld %@ %@", NSLocalizedString(@"line width", @"Accessibility description"), (long)[self lineWidth], NSLocalizedString(@"dashed", @"Accessibility description"), [[[self dashPattern] valueForKey:@"stringValue"] componentsJoinedByString:@" "]];
     return [NSString stringWithFormat:@"%@ %ld", NSLocalizedString(@"line width", @"Accessibility description"), (long)[self lineWidth]];
+    */
+    NSMutableString *value = [NSMutableString stringWithFormat:@"%@ %ld", NSLocalizedString(@"line width", @"Accessibility description"), (long)[self lineWidth]];
+    if ([self style] == kPDFBorderStyleDashed && [[self dashPattern] count])
+        [value appendFormat:@" %@ %@", NSLocalizedString(@"dashed", @"Accessibility description"), [[[self dashPattern] valueForKey:@"stringValue"] componentsJoinedByString:@" "]];
+    if ([self displayStyle] == SKLineWellDisplayStyleLine) {
+        if ([self startLineStyle] != kPDFLineStyleNone)
+            [value appendFormat:NSLocalizedString(@" from %@", @"Accessibility description"), lineStyleDescription([self startLineStyle])];
+        if ([self endLineStyle] != kPDFLineStyleNone)
+            [value appendFormat:NSLocalizedString(@" to %@", @"Accessibility description"), lineStyleDescription([self endLineStyle])];
+    }
+    return value;
 }
 
 - (NSString *)accessibilityLabel {
