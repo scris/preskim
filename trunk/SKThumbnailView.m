@@ -476,10 +476,6 @@ static char SKThumbnailViewThumbnailObservationContext;
     return NSAccessibilityUnignoredAncestor([self superview]);
 }
 
-- (NSArray *)accessibilityChildren {
-    return NSAccessibilityUnignoredChildren([self subviews]);
-}
-
 - (NSString *)accessibilityLabel {
     return [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [thumbnail label]];
 }
