@@ -375,6 +375,9 @@ static char SKMainWindowContentLayoutObservationContext;
     [rightSideContentView addSubview:rightSideController.view];
     [rightSideController.view activateConstraintsToSuperview];
     
+    [leftSideContentView setAccessibilityLabel:NSLocalizedString(@"Contents Pane", @"")];
+    [rightSideContentView setAccessibilityLabel:NSLocalizedString(@"Notes Pane", @"")];
+    
     if (mwcFlags.fullSizeContent) {
         [leftSideController setCurrentView:[[leftSideController currentView] superview]];
         [rightSideController setCurrentView:[[rightSideController currentView] superview]];
