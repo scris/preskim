@@ -68,6 +68,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [[self view] setAccessibilityLabel:NSLocalizedString(@"search bar", @"Accessibility description")];
+    
     NSMenu *menu = [NSMenu menu];
     [menu addItemWithTitle:NSLocalizedString(@"Ignore Case", @"Menu item title") action:@selector(toggleCaseInsensitiveFind:) target:self];
     [[findField cell] setSearchMenuTemplate:menu];

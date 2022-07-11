@@ -62,6 +62,11 @@
     [super dealloc];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [topBar setAccessibilityLabel:NSLocalizedString(@"search bar", @"Accessibility description")];
+}
+
 #pragma mark Accessors
 
 - (NSArray *)tableViews { return nil; }

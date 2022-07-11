@@ -37,6 +37,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "SKGroupView.h"
 
 typedef NS_ENUM(NSInteger, SKTopBarStyle) {
     SKTopBarStyleDefault,
@@ -46,7 +47,7 @@ typedef NS_ENUM(NSInteger, SKTopBarStyle) {
 
 @class SKBackgroundView;
 
-@interface SKTopBarView : NSView {
+@interface SKTopBarView : SKGroupView {
     NSView *contentView;
     NSVisualEffectView *blurView;
     SKBackgroundView *backgroundView;
