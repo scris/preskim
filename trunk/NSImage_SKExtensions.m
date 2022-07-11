@@ -397,6 +397,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
                 [path fill];
                 return YES;
             }] retain];
+        [markImage setAccessibilityDescription:NSLocalizedString(@"marked page", @"Accessibility description")];
     }
     return markImage;
 }
