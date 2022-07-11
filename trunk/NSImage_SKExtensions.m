@@ -1545,6 +1545,9 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path stroke];
     );
     
+    [[self imageNamed:SKImageNameTextAlignLeft] setAccessibilityDescription:NSLocalizedString(@"align left", @"Accessibility description")];
+    [[self imageNamed:SKImageNameTextAlignCenter] setAccessibilityDescription:NSLocalizedString(@"center", @"Accessibility description")];
+    [[self imageNamed:SKImageNameTextAlignRight] setAccessibilityDescription:NSLocalizedString(@"align right", @"Accessibility description")];
 }
 
 + (void)makeCursorImages {
