@@ -37,10 +37,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #import <Cocoa/Cocoa.h>
+#import "SKGroupView.h"
 
 @class SKThumbnail;
 
-@interface SKThumbnailView : NSView <NSDraggingSource, NSAccessibilityGroup> {
+@interface SKThumbnailView : SKGroupView <NSDraggingSource> {
     SKThumbnail *thumbnail;
     BOOL selected;
     NSBackgroundStyle backgroundStyle;

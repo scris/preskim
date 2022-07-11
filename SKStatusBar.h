@@ -37,6 +37,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "SKGroupView.h"
 
 typedef NS_ENUM(NSInteger, SKProgressIndicatorStyle) {
    SKProgressIndicatorStyleNone,
@@ -45,7 +46,7 @@ typedef NS_ENUM(NSInteger, SKProgressIndicatorStyle) {
 };
 
 
-@interface SKStatusBar : NSView <NSAccessibilityGroup> {
+@interface SKStatusBar : SKGroupView {
     NSTextField *leftField;
     NSTextField *rightField;
     NSImageView *iconView;
