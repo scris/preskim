@@ -88,6 +88,7 @@ static NSSet *keysAffectedByStatus = nil;
             [[[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kToolbarDeleteIcon)] drawInRect:NSMakeRect(-2.0, -1.0, 20.0, 20.0) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
             return YES;
         }] retain];
+        [deleteImage setAccessibilityDescription:NSLocalizedString(@"delete", @"Accessibility description")];
     }
     return deleteImage;
 }
@@ -100,6 +101,7 @@ static NSSet *keysAffectedByStatus = nil;
             return YES;
         }] retain];
         [cancelImage setTemplate:YES];
+        [cancelImage setAccessibilityDescription:NSLocalizedString(@"cancel", @"Accessibility description")];
     }
     return cancelImage;
 }
@@ -112,6 +114,7 @@ static NSSet *keysAffectedByStatus = nil;
             return YES;
         }] retain];
         [resumeImage setTemplate:YES];
+        [resumeImage setAccessibilityDescription:NSLocalizedString(@"resume", @"Accessibility description")];
     }
     return resumeImage;
 }

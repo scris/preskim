@@ -131,6 +131,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [NSBezierPath fillRect:NSMakeRect(0.0, 0.0, 2.0, 2.0)];
     [separatorImage unlockFocus];
     [separatorImage setName:SKImageNameSeparator];
+    [separatorImage setAccessibilityDescription:NSLocalizedString(@"separator", @"Accessibility description")];
 }
 
 + (id)sharedBookmarkController {
