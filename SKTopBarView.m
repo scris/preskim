@@ -157,6 +157,30 @@
     [backgroundView setNeedsDisplay:YES];
 }
 
+- (BOOL)isAccessibilityElement {
+    return YES;
+}
+
+- (NSString *)accessibilityRole {
+    return NSAccessibilityGroupRole;
+}
+
+- (NSString *)accessibilityRoleDescription {
+    return NSAccessibilityRoleDescription(NSAccessibilityGroupRole, nil);
+}
+
+- (NSRect)accessibilityFrame {
+    return [self convertRectToScreen:[self bounds]];
+}
+
+- (id)accessibilityParent {
+    return NSAccessibilityUnignoredAncestor([self superview]);
+}
+
+- (NSString *)accessibilityLabel {
+    return NSLocalizedString(@"search bar", @"Accessibility description");
+}
+
 @end
 
 #pragma mark -
