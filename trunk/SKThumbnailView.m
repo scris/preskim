@@ -454,4 +454,43 @@ static char SKThumbnailViewThumbnailObservationContext;
     [[session draggingPasteboard] clearContents];
 }
 
+#pragma mark Accessibility
+
+- (BOOL)isAccessibilityElement {
+    return YES;
+}
+
+- (NSString *)accessibilityRole {
+    return NSAccessibilityGroupRole;
+}
+
+- (NSString *)accessibilityRoleDescription  {
+    return NSAccessibilityRoleDescription(NSAccessibilityGroupRole, nil);
+}
+
+- (NSRect)accessibilityFrame {
+    return [self convertRectToScreen:[self bounds]];
+}
+
+- (id)accessibilityParent {
+    return NSAccessibilityUnignoredAncestor([self superview]);
+}
+
+- (NSArray *)accessibilityChildren {
+    return NSAccessibilityUnignoredChildren([self subviews]);
+}
+
+- (NSString *)accessibilityLabel {
+    return [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [thumbnail label]];
+}
+
+- (BOOL)isAccessibilitySelected {
+    return [self isSelected];
+}
+
+- (BOOL)accessibilityPerformPress {
+    [[controller collectionView] setSelectionIndexes:[NSIndexSet indexSetWithIndex:[thumbnail pageIndex]]];
+    return YES;
+}
+
 @end

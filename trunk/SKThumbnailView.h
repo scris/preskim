@@ -40,7 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @class SKThumbnail;
 
-@interface SKThumbnailView : NSView <NSDraggingSource> {
+@interface SKThumbnailView : NSView <NSDraggingSource, NSAccessibilityGroup> {
     SKThumbnail *thumbnail;
     BOOL selected;
     NSBackgroundStyle backgroundStyle;
