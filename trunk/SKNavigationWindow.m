@@ -204,6 +204,14 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     [self setFrame:frame display:YES];
 }
 
+- (BOOL)isAccessibilityElement {
+    return YES;
+}
+
+- (NSArray *)accessibilityChildren {
+    return NSAccessibilityUnignoredChildren([[self contentView] subviews]);
+}
+
 @end
 
 #pragma mark -
@@ -466,6 +474,25 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
             NSString *currentToolTip = [self state] == NSOnState && alternateToolTip ? alternateToolTip : toolTip;
             [[SKNavigationToolTipWindow sharedToolTipWindow] showToolTip:currentToolTip forView:button];
         }
+    }
+    [self setAccessibilityLabel:state == NSOnState && alternateToolTip ? alternateToolTip : toolTip];
+}
+
+- (void)setToolTip:(NSString *)aToolTip {
+    if (aToolTip != toolTip) {
+        [toolTip release];
+        toolTip = [aToolTip retain];
+        if ([self state] == NSOffState || alternateToolTip == nil)
+            [self setAccessibilityLabel:toolTip];
+    }
+}
+
+- (void)setAlternateToolTip:(NSString *)aToolTip {
+    if (aToolTip != alternateToolTip) {
+        [alternateToolTip release];
+        alternateToolTip = [aToolTip retain];
+        if ([self state] == NSOnState)
+            [self setAccessibilityLabel:alternateToolTip];
     }
 }
 
