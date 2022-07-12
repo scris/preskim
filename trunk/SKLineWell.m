@@ -318,6 +318,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     if ([self isActive])
         [[SKLineInspector sharedLineInspector] setValue:[self valueForKey:key] forKey:key];
     [self setNeedsDisplay:YES];
+    NSAccessibilityPostNotification(self, NSAccessibilityValueChangedNotification);
 }
 
 - (void)takeValueForKey:(NSString *)key from:(id)object {

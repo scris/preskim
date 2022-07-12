@@ -250,6 +250,7 @@ static char SKFontWellFontSizeObservationContext;
         [[NSFontManager sharedFontManager] setSelectedFont:[self font] isMultiple:NO];
     [self setTitle:[NSString stringWithFormat:@"%@ %li", [[self font] displayName], (long)[self fontSize]]];
     [self setNeedsDisplay:YES];
+    NSAccessibilityPostNotification([self cell], NSAccessibilityValueChangedNotification);
 }
 
 #pragma mark Accessors
