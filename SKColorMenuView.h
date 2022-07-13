@@ -37,10 +37,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #import <Cocoa/Cocoa.h>
+#import "SKGroupView.h"
 
 @class PDFAnnotation;
 
-@interface SKColorMenuView : NSView {
+@interface SKColorMenuView : SKGroupView {
     PDFAnnotation *annotation;
     NSArray *colors;
     NSUInteger hoveredIndex;

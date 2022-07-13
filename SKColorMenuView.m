@@ -41,6 +41,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import "NSColor_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
 #import "PDFAnnotation_SKExtensions.h"
+#import "NSView_SKExtensions.h"
+
+@interface SKAccessibilityColorElement : NSAccessibilityElement
+@end
 
 @interface SKColorMenuView (SKPrivate)
 - (void)setup;
@@ -163,4 +167,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     }
 }
 
+- (NSString *)accessibilityLabel {
+    return NSLocalizedString(@"colors", @"accessibility description");
+}
+
+- (NSArray *)accessibilityChildren {
+    NSArray *children = [super accessibilityChildren];
+    if ([children count] == 0) {
+        NSMutableArray *array = [NSMutableArray array];
+        [colors enumerateObjectsUsingBlock:^(id color, NSUInteger i, BOOL *stop){
+            NSRect rect = [self rectAtIndex:i];
+            SKAccessibilityColorElement *element = [SKAccessibilityColorElement accessibilityElementWithRole:NSAccessibilityColorWellRole frame:[self convertRectToScreen:rect] label:[color accessibilityValue] parent:self];
+            [element setAccessibilityFrameInParentSpace:rect];
+            [array addObject:element];
+        }];
+        [self setAccessibilityChildren:array];
+        children = array;
+    }
+    return children;
+}
+
+- (BOOL)pressAccssibilityColorElement:(SKAccessibilityColorElement *)element {
+    NSUInteger idx = [[self accessibilityChildren] indexOfObject:element];
+    if (idx == NSNotFound)
+        return NO;
+    [annotation setColor:[colors objectAtIndex:idx] alternate:NO updateDefaults:NO];
+    [[[self enclosingMenuItem] menu] cancelTracking];
+    return YES;
+}
+
 @end
+
+@implementation SKAccessibilityColorElement
+
+- (id)accessibilityValue {
+    return [self accessibilityLabel];
+}
+
+- (BOOL)accessibilityPerformPress {
+    id parent = [self accessibilityParent];
+    return [parent respondsToSelector:@selector(pressAccssibilityColorElement:)] && [parent pressAccssibilityColorElement:self];
+}
+
+@end
+
