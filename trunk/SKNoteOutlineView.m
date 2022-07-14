@@ -179,7 +179,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
         }
         NSInteger level = [self levelForRow:row];
         if (level > 0 && [self outlineColumnIsFirst])
-            frame = SKShrinkRect(frame, -[self indentationPerLevel] * level, NSMinYEdge);
+            frame = SKShrinkRect(frame, -[self indentationPerLevel] * level, NSMinXEdge);
         return frame;
     }
     return [super frameOfCellAtColumn:column row:row];
