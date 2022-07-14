@@ -767,7 +767,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 }
 
 - (NSString *)accessibilityRoleDescription {
-    return NSAccessibilityRoleDescriptionForUIElement(self);
+    return NSAccessibilityRoleDescription(NSAccessibilityGroupRole, nil);
 }
 
 - (NSRect)accessibilityFrame {
@@ -886,6 +886,14 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 
 - (void)keyDown:(NSEvent *)event {
     [[self superview] keyDown:event];
+}
+
+- (BOOL)isAccessibilityElement {
+    return NO;
+}
+
+- (NSArray *)accessibilityChildren {
+    return nil;
 }
 
 @end
@@ -1020,7 +1028,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 }
 
 - (NSString *)accessibilityRoleDescription {
-    return NSAccessibilityRoleDescriptionForUIElement(self);
+    return NSAccessibilityRoleDescription(NSAccessibilityColorWellRole, nil);
 }
 
 - (NSRect)accessibilityFrame {
