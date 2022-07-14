@@ -679,10 +679,6 @@ static inline NSString *lineStyleDescription(PDFLineStyle lineStyle) {
     return nil;
 }
 
-- (NSString *)accessibilityHelp {
-    return [self toolTip];
-}
-
 - (BOOL)isAccessibilityFocused {
     // Just check if the app thinks we're focused.
     return [[NSApp accessibilityFocusedUIElement] isEqual:self];
