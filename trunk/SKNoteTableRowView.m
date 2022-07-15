@@ -38,15 +38,14 @@
 
 #import "SKNoteTableRowView.h"
 #import "NSGeometry_SKExtensions.h"
+#import "SKNoteText.h"
+#import "SKNoteOutlineView.h"
 
 #define RESIZE_EDGE_HEIGHT 5.0
 
 @implementation SKNoteTableRowView
 
-@synthesize rowCellView;
-
 - (void)dealloc {
-    rowCellView = nil;
     SKDESTROY(resizeIndicatorCell);
     [super dealloc];
 }
@@ -73,21 +72,28 @@
     [resizeIndicatorCell drawWithFrame:[self bounds] inView:self];
 }
 
-- (void)setEmphasized:(BOOL)emphasized {
-    [super setEmphasized:emphasized];
-    [[self rowCellView] setBackgroundStyle:[self interiorBackgroundStyle]];
-}
-
-- (void)setSelected:(BOOL)selected {
-    [super setSelected:selected];
-    [[self rowCellView] setBackgroundStyle:[self interiorBackgroundStyle]];
-}
-
 - (void)resetCursorRects {
     [self discardCursorRects];
     [super resetCursorRects];
 
     [self addCursorRect:SKSliceRect([self bounds], RESIZE_EDGE_HEIGHT, [self isFlipped] ? NSMaxYEdge : NSMinYEdge) cursor:[NSCursor resizeUpDownCursor]];
+}
+
+@end
+
+
+@implementation SKNoteTableCellView
+
+- (void)setFrame:(NSRect)frame {
+    if (!RUNNING_AFTER(10_15) && [[self objectValue] isKindOfClass:[SKNoteText class]]) {
+        SKNoteOutlineView *ov = (id)[[self superview] superview];
+        if ([ov isKindOfClass:[SKNoteOutlineView class]]) {
+            NSInteger row = [ov rowForView:self];
+            if (row != -1)
+                frame = [ov convertRect:[ov frameOfCellAtColumn:-1 row:row] toView:[self superview]];
+        }
+    }
+    [super setFrame:frame];
 }
 
 @end

@@ -110,7 +110,7 @@
                                 </textFieldCell>
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                 <prototypeCellViews>
-                                    <tableCellView id="ZGN-Pg-55C">
+                                    <tableCellView id="ZGN-Pg-55C" customClass="SKNoteTableCellView">
                                         <rect key="frame" x="11" y="1" width="93" height="15"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
@@ -122,8 +122,17 @@
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                                 <connections>
-                                                    <binding destination="ZGN-Pg-55C" name="value" keyPath="objectValue.objectValue" id="dWq-ky-T1D"/>
+                                                    <binding destination="ZGN-Pg-55C" name="editable" keyPath="objectValue.type" id="d6c-t3-IzB">
+                                                        <dictionary key="options">
+                                                            <string key="NSValueTransformerName">NSIsNotNil</string>
+                                                        </dictionary>
+                                                    </binding>
                                                     <binding destination="ZGN-Pg-55C" name="toolTip" keyPath="objectValue.string" id="R78-BC-j6A"/>
+                                                    <binding destination="ZGN-Pg-55C" name="value" keyPath="objectValue.objectValue" id="Dhp-4I-hEo">
+                                                        <dictionary key="options">
+                                                            <bool key="NSConditionallySetsEditable" value="NO"/>
+                                                        </dictionary>
+                                                    </binding>
                                                 </connections>
                                             </textField>
                                         </subviews>
@@ -356,7 +365,7 @@
             <rect key="frame" x="0.0" y="0.0" width="200" height="400"/>
             <clipView key="contentView" drawsBackground="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GlW-dx-lwj">
                 <rect key="frame" x="1" y="1" width="198" height="398"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="32" viewBased="YES" translatesAutoresizingMaskIntoConstraints="NO" id="13" customClass="SKTableView">
                         <rect key="frame" x="0.0" y="0.0" width="198" height="398"/>

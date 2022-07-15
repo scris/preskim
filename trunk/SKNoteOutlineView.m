@@ -169,7 +169,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
 }
 
 - (NSRect)frameOfCellAtColumn:(NSInteger)column row:(NSInteger)row {
-    if (column == -1) {
+    if (column == -1 || ([self levelForRow:row] > 0 && [[self tableColumns] objectAtIndex:column] == [self outlineTableColumn])) {
         NSRect frame = NSZeroRect;
         NSInteger numColumns = [self numberOfColumns];
         NSArray *tcs = [self tableColumns];

@@ -40,10 +40,10 @@
 
 
 @interface SKNoteTableRowView : NSTableRowView {
-    NSTableCellView *rowCellView;
     NSImageCell *resizeIndicatorCell;
 }
+@end
 
-@property (nonatomic, assign) NSTableCellView *rowCellView;
 
+@interface SKNoteTableCellView : NSTableCellView
 @end
