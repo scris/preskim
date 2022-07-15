@@ -202,7 +202,6 @@
 
 - (void)windowWillClose:(NSNotification *)notification {
     [pdfDocument setContainingDocument:nil];
-    [outlineView enumerateAvailableRowViewsUsingBlock:^(SKNoteTableRowView *rowView, NSInteger row){ [[rowView rowCellView] setObjectValue:nil]; }];
 }
 
 - (void)windowDidResize:(NSNotification *)notification {
@@ -683,7 +682,7 @@
 }
 
 - (NSView *)outlineView:(NSOutlineView *)ov viewForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
-    if ([(PDFAnnotation *)item type]) {
+    if ([(PDFAnnotation *)item type] || tableColumn == [ov outlineTableColumn]) {
         return [ov makeViewWithIdentifier:[tableColumn identifier] owner:self];
     }
     return nil;
@@ -691,30 +690,6 @@
 
 - (NSTableRowView *)outlineView:(NSOutlineView *)ov rowViewForItem:(id)item {
     return [ov makeViewWithIdentifier:ROWVIEW_IDENTIFIER owner:self];
-}
-
-- (void)outlineView:(NSOutlineView *)ov didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row {
-    SKNoteTableRowView *noteRowView = [rowView isKindOfClass:[SKNoteTableRowView class]] ? (SKNoteTableRowView *)rowView : nil;
-    id item = [ov itemAtRow:row];
-    if ([(PDFAnnotation *)item type] == nil) {
-        NSTableCellView *view = [ov makeViewWithIdentifier:NOTE_COLUMNID owner:self];
-        [view setObjectValue:item];
-        [view setFrame:[outlineView convertRect:[outlineView frameOfCellAtColumn:-1 row:row] toView:rowView]];
-        [rowView addSubview:view];
-        [noteRowView setRowCellView:view];
-    }
-}
-
-- (void)outlineView:(NSOutlineView *)ov didRemoveRowView:(NSTableRowView *)rowView forRow:(NSInteger)row {
-    SKNoteTableRowView *noteRowView = [rowView isKindOfClass:[SKNoteTableRowView class]] ? (SKNoteTableRowView *)rowView : nil;
-    NSTableCellView *view = [noteRowView rowCellView];
-    if (view) {
-        [noteRowView setRowCellView:nil];
-        [view setObjectValue:nil];
-        @try { [[view textField] unbind:NSValueBinding]; }
-        @catch (id e) {}
-        [view removeFromSuperview];
-    }
 }
 
 - (void)outlineView:(NSOutlineView *)ov didClickTableColumn:(NSTableColumn *)tableColumn {
@@ -762,16 +737,11 @@
 }
 
 - (void)outlineViewColumnDidMove:(NSNotification *)notification {
-    NSInteger oldColumn = [[[notification userInfo] objectForKey:@"NSOldColumn"] integerValue];
-    NSInteger newColumn = [[[notification userInfo] objectForKey:@"NSNewColumn"] integerValue];
-    if (oldColumn == 0 || newColumn == 0) {
-        [outlineView enumerateAvailableRowViewsUsingBlock:^(SKNoteTableRowView *rowView, NSInteger row){
-            NSTableCellView *rowCellView = [rowView rowCellView];
-            if (rowCellView)
-                [rowCellView setFrame:[outlineView convertRect:[outlineView frameOfCellAtColumn:-1 row:row] toView:rowView]];
-        }];
-        if (ndFlags.autoResizeRows)
-            [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
+    if (ndFlags.autoResizeRows) {
+        NSInteger oldColumn = [[[notification userInfo] objectForKey:@"NSOldColumn"] integerValue];
+        NSInteger newColumn = [[[notification userInfo] objectForKey:@"NSNewColumn"] integerValue];
+        if (oldColumn == 0 || newColumn == 0)
+                [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
     }
 }
 
