@@ -384,13 +384,18 @@
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
-    NSPoint mouseLoc = [theEvent locationInView:self];
-    NSRect bounds = [self bounds];
     if ([self action]) {
-        while ([theEvent type] != NSLeftMouseUp)
-            theEvent = [[self window] nextEventMatchingMask: NSLeftMouseDraggedMask | NSLeftMouseUpMask];
-        mouseLoc = [theEvent locationInView:self];
-        if (NSMouseInRect(mouseLoc, bounds, [self isFlipped])) {
+        NSRect bounds = [self bounds];
+        BOOL inside = YES;
+        while ([theEvent type] != NSLeftMouseUp) {
+            theEvent = [[self window] nextEventMatchingMask: NSLeftMouseDraggedMask | NSLeftMouseUpMask | NSMouseEnteredMask | NSMouseExitedMask];
+            inside = NSMouseInRect([theEvent locationInView:self], bounds, [self isFlipped]);
+            if (inside != [(SKStatusTextFieldCell *)[self cell] isUnderlined]) {
+                [(SKStatusTextFieldCell *)[self cell] setUnderlined:inside];
+                [self setNeedsDisplay:YES];
+            }
+        }
+        if (inside) {
             [[self cell] setNextState];
             [self sendAction:[self action] to:[self target]];
         }
