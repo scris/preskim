@@ -69,9 +69,10 @@ static id (*original_menuForEvent)(id, SEL, id) = NULL;
 
 static void (*original_updateTrackingAreas)(id, SEL) = NULL;
 
+static BOOL (*original_isAccessibilityAlternateUIVisible)(id, SEL) = NULL;
 static BOOL (*original_accessibilityPerformShowAlternateUI)(id, SEL) = NULL;
 static BOOL (*original_accessibilityPerformShowDefaultUI)(id, SEL) = NULL;
-static BOOL (*original_isAccessibilityAlternateUIVisible)(id, SEL) = NULL;
+static BOOL (*original_accessibilityPerformShowMenu)(id, SEL) = NULL;
 
 #pragma mark PDFPageView fix
 
@@ -93,6 +94,11 @@ static void replacement_updateTrackingAreas(id self, SEL _cmd) {
         [pdfView resetPDFToolTipRects];
 }
 
+static BOOL replacement_isAccessibilityAlternateUIVisible(id self, SEL _cmd) {
+    id pdfView = [self pdfView];
+    return [pdfView isAccessibilityAlternateUIVisible];
+}
+
 static BOOL replacement_accessibilityPerformShowAlternateUI(id self, SEL _cmd) {
     id pdfView = [self pdfView];
     return [pdfView accessibilityPerformShowAlternateUI];
@@ -103,9 +109,9 @@ static BOOL replacement_accessibilityPerformShowDefaultUI(id self, SEL _cmd) {
     return [pdfView accessibilityPerformShowDefaultUI];
 }
 
-static BOOL replacement_isAccessibilityAlternateUIVisible(id self, SEL _cmd) {
+static BOOL replacement_accessibilityPerformShowMenu(id self, SEL _cmd) {
     id pdfView = [self pdfView];
-    return [pdfView isAccessibilityAlternateUIVisible];
+    return [pdfView accessibilityPerformShowMenu];
 }
 
 #pragma mark SKSwizzlePDFDocumentViewMethods
@@ -134,7 +140,8 @@ void SKSwizzlePDFDocumentViewMethods() {
     
     original_updateTrackingAreas = (void (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFDocumentViewClass, @selector(updateTrackingAreas), (IMP)replacement_updateTrackingAreas);
     
+    original_isAccessibilityAlternateUIVisible = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFDocumentViewClass, @selector(isAccessibilityAlternateUIVisible), (IMP)replacement_isAccessibilityAlternateUIVisible);
     original_accessibilityPerformShowAlternateUI = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFDocumentViewClass, @selector(accessibilityPerformShowAlternateUI), (IMP)replacement_accessibilityPerformShowAlternateUI);
     original_accessibilityPerformShowDefaultUI = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFDocumentViewClass, @selector(accessibilityPerformShowDefaultUI), (IMP)replacement_accessibilityPerformShowDefaultUI);
-    original_isAccessibilityAlternateUIVisible = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFDocumentViewClass, @selector(isAccessibilityAlternateUIVisible), (IMP)replacement_isAccessibilityAlternateUIVisible);
+    original_accessibilityPerformShowMenu = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFDocumentViewClass, @selector(accessibilityPerformShowMenu), (IMP)replacement_accessibilityPerformShowMenu);
 }

@@ -308,13 +308,14 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 }
 
 - (void)hideControlView {
-    if ([controlView superview])
+    if ([controlView superview]) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
             [[controlView animator] setAlphaValue:0.0];
         } completionHandler:^{
             [controlView removeFromSuperview];
-            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, nil);
         }];
+        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, nil);
+    }
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {
