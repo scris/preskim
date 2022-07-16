@@ -228,6 +228,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
             [[controlView animator] setAlphaValue:0.0];
         } completionHandler:^{
             [controlView removeFromSuperview];
+            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, nil);
         }];
     }
 }
@@ -569,10 +570,12 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 - (void)keyDown:(NSEvent *)theEvent {
     if ([theEvent firstCharacter] == '?' && ([theEvent standardModifierFlags] & ~NSShiftKeyMask) == 0) {
         [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(showControlView) object:nil];
-        if ([controlView superview])
+        if ([controlView superview]) {
             [controlView removeFromSuperview];
-        else
+            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, nil);
+        } else {
             [self showControlView];
+        }
     } else {
         [super keyDown:theEvent];
     }
