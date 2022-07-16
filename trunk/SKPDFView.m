@@ -5307,6 +5307,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
 }
 
+- (BOOL)accessibilityPerformShowAlternateUI {
+    if ([[self delegate] respondsToSelector:@selector(PDFViewPerformFind:)]) {
+        [[self delegate] PDFViewPerformFind:self];
+        return YES;
+    }
+    return NO;
+}
+
 @end
 
 static inline PDFAreaOfInterest SKAreaOfInterestForResizeHandle(SKRectEdges mask, PDFPage *page) {
