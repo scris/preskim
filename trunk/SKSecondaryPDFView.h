@@ -51,6 +51,7 @@
     BOOL synchronizeZoom;
     BOOL switching;
     BOOL selectsText;
+    BOOL transientControlView;
     CGFloat startScale;
 }
 

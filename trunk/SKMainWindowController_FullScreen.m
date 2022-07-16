@@ -739,6 +739,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
             [presentationNotesButton setTarget:self];
             [presentationNotesButton setAction:@selector(doGoToNextPage:)];
             [presentationNotesButton setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin];
+            [[presentationNotesButton cell] setAccessibilityLabel:NSLocalizedString(@"Next", @"")];
         }
         [presentationNotesButton setAlphaValue:0.0];
         [presentationNotesButton setFrame:SKRectFromCenterAndSize(SKCenterPoint([notesView frame]), [presentationNotesButton frame].size)];
@@ -746,6 +747,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
             [[presentationNotesButton animator] setAlphaValue:1.0];
         } completionHandler:^{}];
+        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor(notesView), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:presentationNotesButton, nil]), NSAccessibilityUIElementsKey, nil]);
     } else if ([[SKMainWindowController superclass] instancesRespondToSelector:_cmd]) {
         [super mouseEntered:event];
     }
@@ -758,6 +760,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
         } completionHandler:^{
             [presentationNotesButton removeFromSuperview];
         }];
+        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self presentationNotesView]), NSAccessibilityLayoutChangedNotification, nil);
     } else if ([[SKMainWindowController superclass] instancesRespondToSelector:_cmd]) {
         [super mouseExited:event];
     }
