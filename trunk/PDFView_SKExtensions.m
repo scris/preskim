@@ -319,4 +319,19 @@ static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *d
     return defaultBackgroundColor(SKFullScreenBackgroundColorKey, SKDarkFullScreenBackgroundColorKey);
 }
 
+- (BOOL)accessibilityPerformShowMenu {
+    NSPoint point = SKCenterPoint([self visibleContentRect]);
+    NSEvent *event = [NSEvent mouseEventWithType:NSRightMouseDown
+                                        location:[self convertPoint:point toView:nil]
+                                   modifierFlags:0
+                                       timestamp:0
+                                    windowNumber:[[self window] windowNumber]
+                                         context:nil
+                                     eventNumber:0
+                                      clickCount:1
+                                        pressure:0.0];
+    NSMenu *menu = [self menuForEvent:event];
+    return [menu popUpMenuPositioningItem:nil atLocation:point inView:self];
+}
+
 @end
