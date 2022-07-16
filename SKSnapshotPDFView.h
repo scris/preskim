@@ -51,6 +51,7 @@
     BOOL autoFits;
     BOOL shouldAutoFit;
     BOOL switching;
+    BOOL transientControlView;
     CGFloat startScale;
     NSInteger minHistoryIndex;
 }

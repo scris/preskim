@@ -307,6 +307,16 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:controlView, nil]), NSAccessibilityUIElementsKey, nil]);
 }
 
+- (void)hideControlView {
+    if ([controlView superview])
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+            [[controlView animator] setAlphaValue:0.0];
+        } completionHandler:^{
+            [controlView removeFromSuperview];
+            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, nil);
+        }];
+}
+
 - (void)mouseEntered:(NSEvent *)theEvent {
     if ([[SKSecondaryPDFView superclass] instancesRespondToSelector:_cmd])
         [super mouseEntered:theEvent];
@@ -321,12 +331,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         [super mouseExited:theEvent];
     if (trackingArea && [theEvent trackingArea] == trackingArea) {
         [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(showControlView) object:nil];
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-            [[controlView animator] setAlphaValue:0.0];
-        } completionHandler:^{
-            [controlView removeFromSuperview];
-            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, nil);
-        }];
+        [self hideControlView];
     }
 }
 
@@ -352,14 +357,20 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         [self setSynchronizeZoom:YES adjustPopup:NO];
     else
         [self setAutoScales:YES adjustPopup:NO];
+    if (transientControlView)
+        [self hideControlView];
 }
 
 - (void)pagePopUpAction:(id)sender {
     [self goToPage:[[self document] pageAtIndex:[sender indexOfSelectedItem]]];
+    if (transientControlView)
+        [self hideControlView];
 }
 
 - (void)toolModeButtonAction:(id)sender {
     [self setSelectsText:[(NSButton *)sender state]];
+    if (transientControlView)
+        [self hideControlView];
 }
 
 - (void)setSynchronizedPDFView:(PDFView *)newSynchronizedPDFView {
@@ -798,6 +809,21 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 - (void)handlePDFViewScaleChangedNotification:(NSNotification *)notification {
     if ([self autoScales] == NO && [self synchronizeZoom] == NO)
         [self setScaleFactor:fmax([self scaleFactor], SKMinDefaultScaleMenuFactor) adjustPopup:YES];
+}
+
+- (BOOL)accessibilityPerformShowAlternateUI {
+    [self showControlView];
+    transientControlView = YES;
+    return YES;
+}
+
+- (BOOL)accessibilityPerformShowDefaultUI {
+    [self hideControlView];
+    return YES;
+}
+
+- (BOOL)isAccessibilityAlternateUIVisible {
+    return [controlView superview] != nil;
 }
 
 @end
