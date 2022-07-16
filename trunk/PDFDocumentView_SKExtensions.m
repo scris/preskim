@@ -84,7 +84,7 @@ static NSMenu *replacement_menuForEvent(id self, SEL _cmd, NSEvent *event) {
 
 static void replacement_updateTrackingAreas(id self, SEL _cmd) {
 	original_updateTrackingAreas(self, _cmd);
-    id pdfView = [self getPDFView];
+    id pdfView = [self pdfView];
     if ([pdfView respondsToSelector:@selector(resetPDFToolTipRects)])
         [pdfView resetPDFToolTipRects];
 }
@@ -100,16 +100,16 @@ void SKSwizzlePDFDocumentViewMethods() {
     if (PDFDocumentViewClass == Nil)
         return;
 
-    if ([PDFDocumentViewClass instancesRespondToSelector:@selector(getPDFView)] == NO) {
-        if ([PDFDocumentViewClass instancesRespondToSelector:@selector(pdfView)]) {
-            SKAddInstanceMethodImplementationFromSelector(PDFDocumentViewClass, @selector(getPDFView), @selector(pdfView));
+    if ([PDFDocumentViewClass instancesRespondToSelector:@selector(pdfView)] == NO) {
+        if ([PDFDocumentViewClass instancesRespondToSelector:@selector(getPDFView)]) {
+            SKAddInstanceMethodImplementationFromSelector(PDFDocumentViewClass, @selector(pdfView), @selector(getPDFView));
         } else if (class_getInstanceVariable(PDFDocumentViewClass, "_pdfView")) {
             pdfViewIvarKeyPath = @"pdfView";
-            SKAddInstanceMethodImplementation(PDFDocumentViewClass, @selector(getPDFView), (IMP)fallback_ivar_getPDFView, "@@:");
+            SKAddInstanceMethodImplementation(PDFDocumentViewClass, @selector(pdfView), (IMP)fallback_ivar_getPDFView, "@@:");
         } else if (class_getInstanceVariable(PDFDocumentViewClass, "_private")) {
-            SKAddInstanceMethodImplementation(PDFDocumentViewClass, @selector(getPDFView), (IMP)fallback_ivar_getPDFView, "@@:");
+            SKAddInstanceMethodImplementation(PDFDocumentViewClass, @selector(pdfView), (IMP)fallback_ivar_getPDFView, "@@:");
         } else {
-            SKAddInstanceMethodImplementation(PDFDocumentViewClass, @selector(getPDFView), (IMP)fallback_getPDFView, "@@:");
+            SKAddInstanceMethodImplementation(PDFDocumentViewClass, @selector(pdfView), (IMP)fallback_getPDFView, "@@:");
         }
     }
     
