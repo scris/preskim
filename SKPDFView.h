@@ -264,4 +264,5 @@ enum {
 - (void)PDFViewExitPresentation:(PDFView *)sender;
 - (void)PDFViewTogglePages:(PDFView *)sender;
 - (void)PDFViewToggleContents:(PDFView *)sender;
+- (void)PDFViewPerformHideFind:(PDFView *)sender;
 @end
