@@ -207,7 +207,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
         [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0], nil];
     [NSLayoutConstraint activateConstraints:constraints];
     [[controlView animator] setAlphaValue:1.0];
-    NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:controlView, nil]), NSAccessibilityUIElementsKey, nil]);
+    NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:[controlView subviews], nil]), NSAccessibilityUIElementsKey, nil]);
 }
 
 - (void)hideControlView {
