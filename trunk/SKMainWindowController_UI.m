@@ -1428,6 +1428,10 @@
     [self showFindBar];
 }
 
+- (void)PDFViewPerformHideFind:(PDFView *)sender {
+    [findController remove:nil];
+}
+
 - (void)PDFViewPerformGoToPage:(PDFView *)sender {
     [self doGoToPage:sender];
 }
