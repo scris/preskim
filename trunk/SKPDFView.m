@@ -1912,6 +1912,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (navWindow && [navWindow isVisible] == NO) {
         if (navigationMode == SKNavigationEverywhere && NSPointInRect([theEvent locationInWindow], [[[self window] contentView] frame])) {
             [navWindow showForWindow:[self window]];
+            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:navWindow, nil]), NSAccessibilityUIElementsKey, nil]);
         } else if (navigationMode == SKNavigationBottom && NSPointInRect([theEvent locationInWindow], SKSliceRect([[[self window] contentView] frame], NAVIGATION_BOTTOM_EDGE_HEIGHT, NSMinYEdge))) {
             [self performSelectorOnce:@selector(showNavWindow) afterDelay:SHOW_NAV_DELAY];
         }
@@ -3341,13 +3342,17 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)doAutoHide {
     if (interactionMode == SKPresentationMode && ([navWindow isVisible] == NO || NSPointInRect([NSEvent mouseLocation], [navWindow frame]) == NO)) {
         [self doAutoHideCursor];
-        [navWindow fadeOut];
+        if ([navWindow isVisible]) {
+            [navWindow fadeOut];
+            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, nil);
+        }
     }
 }
 
 - (void)showNavWindow {
     if ([navWindow isVisible] == NO && NSPointInRect([[self window] mouseLocationOutsideOfEventStream], SKSliceRect([[[self window] contentView] frame], NAVIGATION_BOTTOM_EDGE_HEIGHT, NSMinYEdge))) {
         [navWindow showForWindow:[self window]];
+        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:navWindow, nil]), NSAccessibilityUIElementsKey, nil]);
     }
 }
 
@@ -5308,7 +5313,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (BOOL)accessibilityPerformShowAlternateUI {
-    if ([[self delegate] respondsToSelector:@selector(PDFViewPerformFind:)]) {
+    if (interactionMode == SKPresentationMode) {
+        if ([navWindow isVisible] == NO) {
+            [navWindow showForWindow:[self window]];
+            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:navWindow, nil]), NSAccessibilityUIElementsKey, nil]);
+        }
+    } else if ([[self delegate] respondsToSelector:@selector(PDFViewPerformFind:)]) {
         [[self delegate] PDFViewPerformFind:self];
         return YES;
     }
@@ -5316,7 +5326,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (BOOL)accessibilityPerformShowDefaultUI {
-    if ([[self delegate] respondsToSelector:@selector(PDFViewPerformHideFind:)]) {
+    if (interactionMode == SKPresentationMode) {
+        if ([navWindow isVisible]) {
+            [navWindow fadeOut];
+            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, nil);
+        }
+    } else if ([[self delegate] respondsToSelector:@selector(PDFViewPerformHideFind:)]) {
         [[self delegate] PDFViewPerformHideFind:self];
         return YES;
     }
@@ -5324,7 +5339,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (BOOL)isAccessibilityAlternateUIVisible{
-    return [[self delegate] respondsToSelector:@selector(PDFViewIsFindVisible:)] && [[self delegate] PDFViewIsFindVisible:self];
+    if (interactionMode == SKPresentationMode) {
+        return [navWindow isVisible];
+    } else {
+        return [[self delegate] respondsToSelector:@selector(PDFViewIsFindVisible:)] && [[self delegate] PDFViewIsFindVisible:self];
+    }
 }
 
 @end
