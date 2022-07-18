@@ -265,4 +265,5 @@ enum {
 - (void)PDFViewTogglePages:(PDFView *)sender;
 - (void)PDFViewToggleContents:(PDFView *)sender;
 - (void)PDFViewPerformHideFind:(PDFView *)sender;
+- (BOOL)PDFViewIsFindVisible:(PDFView *)sender;
 @end
