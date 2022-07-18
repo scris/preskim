@@ -1425,11 +1425,21 @@
 }
 
 - (void)PDFViewPerformFind:(PDFView *)sender {
+    BOOL wasVisible = [[findController view] window] != nil;
     [self showFindBar];
+    if (wasVisible == NO)
+        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([pdfView documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:[[findController view] subviews], nil]), NSAccessibilityUIElementsKey, nil]);
 }
 
 - (void)PDFViewPerformHideFind:(PDFView *)sender {
-    [findController remove:nil];
+    if ([[findController view] window]) {
+        [findController remove:nil];
+        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([pdfView documentView]), NSAccessibilityLayoutChangedNotification, nil);
+    }
+}
+
+- (BOOL)PDFViewIsFindVisible:(PDFView *)sender {
+    return [[findController view] window] != nil;
 }
 
 - (void)PDFViewPerformGoToPage:(PDFView *)sender {

@@ -5323,6 +5323,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     return NO;
 }
 
+- (BOOL)isAccessibilityAlternateUIVisible{
+    return [[self delegate] respondsToSelector:@selector(PDFViewIsFindVisible:)] && [[self delegate] PDFViewIsFindVisible:self];
+}
+
 @end
 
 static inline PDFAreaOfInterest SKAreaOfInterestForResizeHandle(SKRectEdges mask, PDFPage *page) {
