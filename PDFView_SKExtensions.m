@@ -320,7 +320,8 @@ static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *d
 }
 
 - (BOOL)accessibilityPerformShowMenu {
-    NSPoint point = SKCenterPoint([self visibleContentRect]);
+    NSRect rect = [self visibleContentRect];
+    NSPoint point = NSMakePoint(NSMidX(rect), floor(NSMinY(rect) + 0.75 * NSHeight(rect)));
     NSEvent *event = [NSEvent mouseEventWithType:NSRightMouseDown
                                         location:[self convertPoint:point toView:nil]
                                    modifierFlags:0
@@ -331,7 +332,8 @@ static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *d
                                       clickCount:1
                                         pressure:0.0];
     NSMenu *menu = [self menuForEvent:event];
-    return [menu popUpMenuPositioningItem:nil atLocation:point inView:self];
+    [NSMenu popUpContextMenu:menu withEvent:event forView:self];
+    return YES;
 }
 
 @end
