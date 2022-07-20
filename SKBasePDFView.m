@@ -249,11 +249,11 @@ static inline NSArray *defaultKeysToObserve() {
     [super setCurrentSelection:currentSelection];
 }
 
+static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-
-static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     return RUNNING_AFTER(10_12) && [pdfView displayDirection] == kPDFDisplayDirectionHorizontal && [pdfView displayMode] == kPDFDisplaySinglePageContinuous;
+#pragma clang diagnostic pop
 }
 
 - (void)horizontallyGoToPage:(PDFPage *)page {
@@ -274,8 +274,6 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
     [super goToPage:page];
     [clipView scrollToPoint:[clipView constrainBoundsRect:bounds].origin];
 }
-
-#pragma clang diagnostic pop
 
 - (void)goToPreviousPage:(id)sender {
     if (hasHorizontalLayout(self) && [self canGoToPreviousPage]) {
