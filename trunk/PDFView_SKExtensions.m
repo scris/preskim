@@ -64,7 +64,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (CGFloat)minScaleFactor;
 - (CGFloat)maxScaleFactor;
 @property (nonatomic) PDFDisplayDirection displayDirection;
-@property (nonatomic) NSEdgeInsets pageBreakMargins;
 @end
 
 #endif
