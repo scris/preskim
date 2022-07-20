@@ -103,6 +103,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super initWithCoder:coder];
     if (self) {
+        [[[[self subviews] copy] autorelease] makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self commonInit];
     }
     return self;
