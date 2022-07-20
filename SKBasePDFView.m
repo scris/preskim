@@ -67,6 +67,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 @interface PDFView (SKHighSierraDeclarations)
 @property (nonatomic) PDFDisplayDirection displayDirection;
 @property (nonatomic) BOOL displaysRTL;
+@property (nonatomic) NSEdgeInsets pageBreakMargins;
 @end
 #endif
 
