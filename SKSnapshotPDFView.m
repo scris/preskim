@@ -133,10 +133,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     [super dealloc];
 }
 
-- (void)awakeFromNib {
-    [self makeScalePopUpButton];
-}
-
 - (void)makeScalePopUpButton {
     
     if (scalePopUpButton == nil) {
@@ -167,7 +163,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
         if([self autoFits] || [self autoScales])
             [scalePopUpButton selectItemAtIndex:0];
         else
-            [self setScaleFactor:[self scaleFactor] adjustPopup:YES];
+            [scalePopUpButton selectItemAtIndex:[self indexForScaleFactor:[self scaleFactor]]];
         
         // hook it up
         [scalePopUpButton setTarget:self];
@@ -196,6 +192,9 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 }
 
 - (void)showControlView {
+    if (controlView == nil)
+        [self makeScalePopUpButton];
+    
     NSRect rect = [self bounds];
     rect = SKSliceRect(rect, NSHeight([controlView frame]), [self isFlipped] ? NSMinYEdge : NSMaxYEdge);
     [controlView setFrame:rect];
@@ -244,13 +243,11 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     [super updateTrackingAreas];
     if (trackingArea)
         [self removeTrackingArea:trackingArea];
-    if (controlView) {
-        NSRect rect = [self bounds];
-        if (NSHeight(rect) > NSHeight([controlView frame])) {
-            rect = SKSliceRect(rect, NSHeight([controlView frame]), [self isFlipped] ? NSMinYEdge : NSMaxYEdge);
-            trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingActiveInKeyWindow | NSTrackingMouseEnteredAndExited owner:self userInfo:nil];
-            [self addTrackingArea:trackingArea];
-        }
+    NSRect rect = [self bounds];
+    if (NSHeight(rect) > CONTROL_HEIGHT) {
+        rect = SKSliceRect(rect, CONTROL_HEIGHT, [self isFlipped] ? NSMinYEdge : NSMaxYEdge);
+        trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingActiveInKeyWindow | NSTrackingMouseEnteredAndExited owner:self userInfo:nil];
+        [self addTrackingArea:trackingArea];
     }
 }
 

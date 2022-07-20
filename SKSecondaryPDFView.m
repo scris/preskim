@@ -131,15 +131,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     [super dealloc];
 }
 
-- (void)awakeFromNib {
-    [self makeControls];
-}
-- (void)viewWillMoveToWindow:(NSWindow *)newWindow {
-    [super viewWillMoveToWindow:newWindow];
-    if (controlView == nil)
-        [self makeControls];
-}
-
 - (void)setDocument:(PDFDocument *)document {
     if ([self document])
         [[NSNotificationCenter defaultCenter] removeObserver:self name:PDFDocumentDidUnlockNotification object:[self document]];
@@ -200,7 +191,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         else if([self autoScales])
             [scalePopUpButton selectItemAtIndex:1];
         else
-            [self setScaleFactor:[self scaleFactor] adjustPopup:YES];
+            [scalePopUpButton selectItemAtIndex:[self indexForScaleFactor:[self scaleFactor]]];
         
 		// don't let it become first responder
 		[scalePopUpButton setRefusesFirstResponder:YES];
@@ -293,6 +284,9 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 }
 
 - (void)showControlView {
+    if (controlView == nil)
+        [self makeControls];
+    
     NSRect rect = [self bounds];
     rect = SKSliceRect(rect, NSHeight([controlView frame]), [self isFlipped] ? NSMinYEdge : NSMaxYEdge);
     [controlView setFrame:rect];
@@ -340,13 +334,11 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     [super updateTrackingAreas];
     if (trackingArea)
         [self removeTrackingArea:trackingArea];
-    if (controlView) {
-        NSRect rect = [self bounds];
-        if (NSHeight(rect) > NSHeight([controlView frame])) {
-            rect = SKSliceRect(rect, NSHeight([controlView frame]), [self isFlipped] ? NSMinYEdge : NSMaxYEdge);
-            trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingActiveInKeyWindow | NSTrackingMouseEnteredAndExited owner:self userInfo:nil];
-            [self addTrackingArea:trackingArea];
-        }
+    NSRect rect = [self bounds];
+    if (NSHeight(rect) > CONTROL_HEIGHT) {
+        rect = SKSliceRect(rect, CONTROL_HEIGHT, [self isFlipped] ? NSMinYEdge : NSMaxYEdge);
+        trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingActiveInKeyWindow | NSTrackingMouseEnteredAndExited owner:self userInfo:nil];
+        [self addTrackingArea:trackingArea];
     }
 }
 
