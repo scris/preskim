@@ -1104,6 +1104,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
                 [color drawSwatchInRoundedRect:rect];
                 return YES;
             }];
+        [image setAccessibilityDescription:[color accessibilityValue]];
         [item setRepresentedObject:color];
         [item setImage:image];
     }
