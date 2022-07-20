@@ -43,21 +43,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import "PDFAnnotation_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 
-@interface SKAccessibilityColorElement : NSAccessibilityElement
-@end
+#define ITEM_SIZE 21.0
+#define OFFSET    23.0
+#define MARGIN    20.0
 
-@interface SKColorMenuView (SKPrivate)
-- (void)setup;
+@interface SKAccessibilityColorElement : NSAccessibilityElement
 @end
 
 @implementation SKColorMenuView
 
 - (id)initWithAnnotation:(PDFAnnotation *)anAnnotation {
-    self = [super init];
+    NSArray *favoriteColors = [NSColor favoriteColors];
+    self = [super initWithFrame:NSMakeRect(0.0, 0.0, ([favoriteColors count] - 1) * OFFSET + ITEM_SIZE + MARGIN, ITEM_SIZE)];
     if (self) {
+        colors = [favoriteColors copy];
         annotation = [anAnnotation retain];
         hoveredIndex = NSNotFound;
-        [self setup];
+        
+        NSUInteger i, iMax = [colors count];
+        NSRect rect = NSMakeRect(MARGIN, 0.0, ITEM_SIZE, ITEM_SIZE);
+        for (i = 0; i < iMax; i++) {
+            NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp owner:self userInfo:nil];
+            [self addTrackingArea:area];
+            [area release];
+            rect.origin.x += OFFSET;
+        }
     }
     return self;
 }
@@ -69,7 +79,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 - (NSRect)rectAtIndex:(NSUInteger)anIndex {
-    return NSMakeRect(anIndex * 23.0 + 20.0, 0.0, 21.0, 21.0);
+    return NSMakeRect(anIndex * OFFSET + MARGIN, 0.0, ITEM_SIZE, ITEM_SIZE);
 }
 
 - (NSUInteger)indexForPoint:(NSPoint)point {
@@ -151,19 +161,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 break;
             }
         }
-    }
-}
-
-- (void)setup {
-    colors = [[NSColor favoriteColors] copy];
-    
-    [self setFrame:NSMakeRect(0.0, 0.0, [colors count] * 23.0 + 20.0, 21.0)];
-    
-    NSUInteger i, iMax = [colors count];
-    for (i = 0; i < iMax; i++) {
-        NSRect rect = [self rectAtIndex:i];
-        NSTrackingArea *area = [[[NSTrackingArea alloc] initWithRect:rect options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp owner:self userInfo:nil] autorelease];
-        [self addTrackingArea:area];
     }
 }
 
