@@ -147,16 +147,18 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 #pragma mark Popup buttons
 
 - (void)reloadPagePopUpButton {
-    NSArray *labels = [[self document] pageLabels];
-    NSUInteger count = [pagePopUpButton numberOfItems];
-    
-    while (count--)
-        [pagePopUpButton removeItemAtIndex:count];
-    
-    if ([labels count] > 0) {
-        for (NSString *label in labels)
-            [pagePopUpButton addItemWithTitle:label];
-        [pagePopUpButton selectItemAtIndex:[[self currentPage] pageIndex]];
+    if (pagePopUpButton) {
+        NSArray *labels = [[self document] pageLabels];
+        NSUInteger count = [pagePopUpButton numberOfItems];
+        
+        while (count--)
+            [pagePopUpButton removeItemAtIndex:count];
+        
+        if ([labels count] > 0) {
+            for (NSString *label in labels)
+                [pagePopUpButton addItemWithTitle:label];
+            [pagePopUpButton selectItemAtIndex:[[self currentPage] pageIndex]];
+        }
     }
 }
 
