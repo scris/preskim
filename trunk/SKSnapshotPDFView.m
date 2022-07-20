@@ -165,7 +165,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
         
         // select the appropriate item, adjusting the scaleFactor if necessary
         if([self autoFits] || [self autoScales])
-            [self setScaleFactor:0.0 adjustPopup:YES];
+            [scalePopUpButton selectItemAtIndex:0];
         else
             [self setScaleFactor:[self scaleFactor] adjustPopup:YES];
         
