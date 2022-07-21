@@ -790,6 +790,15 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     return NSLocalizedString(@"colors", @"accessibility description");
 }
 
+- (NSArray *)accessibilitySelectedChildren {
+    if ([self selects] == NO)
+        return nil;
+    else if (selectedIndex == -1)
+        return [NSArray array];
+    else
+        return NSAccessibilityUnignoredChildren([itemViews subarrayWithRange:NSMakeRange(selectedIndex, 1)]);
+}
+
 - (id)accessibilityHitTest:(NSPoint)point {
     NSPoint localPoint = [self convertPointFromScreen:point];
     NSInteger i = [self colorIndexAtPoint:localPoint];
@@ -808,16 +817,23 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 }
 
 - (BOOL)isItemViewFocused:(SKColorSwatchItemView *)itemView {
-    return focusedIndex == (NSInteger)[itemViews indexOfObject:itemView];
+    return [[self window] firstResponder] == self && focusedIndex == (NSInteger)[itemViews indexOfObject:itemView];
 }
 
 - (void)itemView:(SKColorSwatchItemView *)itemView setFocused:(BOOL)focused {
-    NSUInteger anIndex = [itemViews indexOfObject:itemView];
-    if (focused && anIndex < [[self colors] count]) {
-        [[self window] makeFirstResponder:self];
-        focusedIndex = anIndex;
-        [self noteFocusRingMaskChanged];
+    if (focused) {
+        NSUInteger anIndex = [itemViews indexOfObject:itemView];
+        if (anIndex < [[self colors] count]) {
+            focusedIndex = anIndex;
+            [self noteFocusRingMaskChanged];
+        }
+        if ([[self window] firstResponder] != self)
+            [[self window] makeFirstResponder:self];
     }
+}
+
+- (BOOL)isItemViewSelected:(SKColorSwatchItemView *)itemView {
+    return selectedIndex !=-1 && selectedIndex == (NSInteger)[itemViews indexOfObject:itemView];
 }
 
 - (void)pressItemView:(SKColorSwatchItemView *)itemView {
@@ -1049,6 +1065,10 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 
 - (void)setAccessibilityFocused:(BOOL)flag {
     [(SKColorSwatch *)[self superview] itemView:self setFocused:flag];
+}
+
+- (BOOL)isAccessibilitySelected {
+    return [(SKColorSwatch *)[self superview] isItemViewSelected:self];
 }
 
 - (BOOL)accessibilityPerformPress {
