@@ -956,6 +956,10 @@
                 description="Intensity of a sepia tone effect applied to the PDF content. The same for normal and full screen mode.">
                 <cocoa key="sepiaTone"/>
             </property>
+            <property name="inverted" type="boolean" code="InvC"
+                description="Invert colors in Dark Mode? The same for normal and full screen mode.">
+                <cocoa key="inverted"/>
+            </property>
         </class>
 
         <class name="outline" plural="outlines" code="Outl"
