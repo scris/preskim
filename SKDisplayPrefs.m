@@ -44,7 +44,7 @@
 
 @implementation SKDisplayPrefs
 
-@dynamic name, pdfViewSettings, backgroundColor, sepiaTone;
+@dynamic name, pdfViewSettings, backgroundColor, sepiaTone, inverted;
 
 - (id)initForFullScreen:(BOOL)isFullScreen {
     self = [super init];
@@ -115,6 +115,14 @@
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:SKSepiaToneKey];
     else
         [[NSUserDefaults standardUserDefaults] setDouble:fmin(sepiaTone, 1.0) forKey:SKSepiaToneKey];
+}
+
+- (BOOL)isInverted {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey];
+}
+
+- (void)setInverted:(BOOL)inverted {
+    [[NSUserDefaults standardUserDefaults] setBool:inverted forKey:SKInvertColorsInDarkModeKey];
 }
 
 @end
