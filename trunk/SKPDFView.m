@@ -1912,7 +1912,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (navWindow && [navWindow isVisible] == NO) {
         if (navigationMode == SKNavigationEverywhere && NSPointInRect([theEvent locationInWindow], [[[self window] contentView] frame])) {
             [navWindow showForWindow:[self window]];
-            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:navWindow, nil]), NSAccessibilityUIElementsKey, nil]);
+            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(navWindow), NSAccessibilityUIElementsKey, nil]);
         } else if (navigationMode == SKNavigationBottom && NSPointInRect([theEvent locationInWindow], SKSliceRect([[[self window] contentView] frame], NAVIGATION_BOTTOM_EDGE_HEIGHT, NSMinYEdge))) {
             [self performSelectorOnce:@selector(showNavWindow) afterDelay:SHOW_NAV_DELAY];
         }
@@ -3352,7 +3352,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)showNavWindow {
     if ([navWindow isVisible] == NO && NSPointInRect([[self window] mouseLocationOutsideOfEventStream], SKSliceRect([[[self window] contentView] frame], NAVIGATION_BOTTOM_EDGE_HEIGHT, NSMinYEdge))) {
         [navWindow showForWindow:[self window]];
-        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:navWindow, nil]), NSAccessibilityUIElementsKey, nil]);
+        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(navWindow), NSAccessibilityUIElementsKey, nil]);
     }
 }
 
@@ -5316,7 +5316,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (interactionMode == SKPresentationMode) {
         if ([navWindow isVisible] == NO) {
             [navWindow showForWindow:[self window]];
-            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:navWindow, nil]), NSAccessibilityUIElementsKey, nil]);
+            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(navWindow), NSAccessibilityUIElementsKey, nil]);
         }
     } else if ([[self delegate] respondsToSelector:@selector(PDFViewPerformFind:)]) {
         [[self delegate] PDFViewPerformFind:self];

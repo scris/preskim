@@ -796,7 +796,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     else if (selectedIndex == -1)
         return [NSArray array];
     else
-        return NSAccessibilityUnignoredChildren([itemViews subarrayWithRange:NSMakeRange(selectedIndex, 1)]);
+        return NSAccessibilityUnignoredChildrenForOnlyChild([itemViews objectAtIndex:selectedIndex]);
 }
 
 - (id)accessibilityHitTest:(NSPoint)point {
