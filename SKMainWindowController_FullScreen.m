@@ -747,7 +747,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
             [[presentationNotesButton animator] setAlphaValue:1.0];
         } completionHandler:^{}];
-        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor(notesView), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:presentationNotesButton, nil]), NSAccessibilityUIElementsKey, nil]);
+        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor(notesView), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(presentationNotesButton), NSAccessibilityUIElementsKey, nil]);
     } else if ([[SKMainWindowController superclass] instancesRespondToSelector:_cmd]) {
         [super mouseEntered:event];
     }
