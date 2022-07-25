@@ -1080,7 +1080,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 }
 
 - (BOOL)accessibilityPerformPick {
-    [(SKColorSwatch *)[self superview] pressItemView:self alternate:NO];
+    [(SKColorSwatch *)[self superview] pressItemView:self alternate:YES];
     return YES;
 }
 
