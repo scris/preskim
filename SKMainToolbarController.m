@@ -1296,6 +1296,8 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     NSColor *newColor = [sender respondsToSelector:@selector(color)] ? [sender color] : [sender respondsToSelector:@selector(representedObject)] ? [sender representedObject] : nil;
     BOOL isShift = ([NSEvent standardModifierFlags] & NSShiftKeyMask) != 0;
     BOOL isAlt = ([NSEvent standardModifierFlags] & NSAlternateKeyMask) != 0;
+    if (isAlt == NO && [sender respondsToSelector:@selector(isAlternate)])
+        isAlt = [sender isAlternate];
     if ([annotation isSkimNote]) {
         [annotation setColor:newColor alternate:isAlt updateDefaults:isShift];
     } else {

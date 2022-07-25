@@ -58,6 +58,7 @@ extern NSString *SKColorSwatchColorsChangedNotification;
     
     BOOL autoResizes;
     BOOL selects;
+    BOOL alternate;
 }
 
 @property (nonatomic, copy) NSArray *colors;
@@ -66,6 +67,7 @@ extern NSString *SKColorSwatchColorsChangedNotification;
 @property (nonatomic, readonly) NSColor *color;
 @property (nonatomic) BOOL autoResizes;
 @property (nonatomic) BOOL selects;
+@property (nonatomic, getter=isAlternate) BOOL alternate;
 
 - (void)deactivate;
 
