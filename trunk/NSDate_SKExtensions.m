@@ -124,7 +124,7 @@
 }
 
 - (id)initWithDate:(NSDate *)aDate {
-    if (date == nil) {
+    if (aDate == nil) {
         [self release];
         return nil;
     }
