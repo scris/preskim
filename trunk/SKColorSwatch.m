@@ -106,7 +106,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 @implementation SKColorSwatch
 
-@synthesize colors, autoResizes, selects, clickedColorIndex=clickedIndex, selectedColorIndex=selectedIndex;
+@synthesize colors, autoResizes, selects, alternate, clickedColorIndex=clickedIndex, selectedColorIndex=selectedIndex;
 @dynamic color, fitWidth;
 
 + (void)initialize {
@@ -836,10 +836,13 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     return selectedIndex !=-1 && selectedIndex == (NSInteger)[itemViews indexOfObject:itemView];
 }
 
-- (void)pressItemView:(SKColorSwatchItemView *)itemView {
+- (void)pressItemView:(SKColorSwatchItemView *)itemView  alternate:(BOOL)isAlternate {
     NSUInteger anIndex = [itemViews indexOfObject:itemView];
-    if (anIndex < [[self colors] count])
+    if (anIndex < [[self colors] count]) {
+        alternate = isAlternate;
         [self performClickAtIndex:anIndex];
+        alternate = NO;
+    }
 }
 
 @end
@@ -1072,12 +1075,12 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 }
 
 - (BOOL)accessibilityPerformPress {
-    [(SKColorSwatch *)[self superview] pressItemView:self];
+    [(SKColorSwatch *)[self superview] pressItemView:self alternate:NO];
     return YES;
 }
 
 - (BOOL)accessibilityPerformPick {
-    [(SKColorSwatch *)[self superview] pressItemView:self];
+    [(SKColorSwatch *)[self superview] pressItemView:self alternate:NO];
     return YES;
 }
 
