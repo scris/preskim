@@ -774,7 +774,7 @@ static Class SKBookmarkClass = Nil;
                             aPageNumber = [docClass isPDFDocument] ? 0 : NSNotFound;
                         if (aLabel == nil)
                             [aURL getResourceValue:&aLabel forKey:NSURLLocalizedNameKey error:NULL];
-                        bookmark = [[SKBookmark alloc] initWithURL:aURL pageIndex:aPageNumber label:aLabel ?: [[[NSDate date] shortDateFormat] description]];
+                        bookmark = [[SKBookmark alloc] initWithURL:aURL pageIndex:aPageNumber label:aLabel ?: @""];
                     }
                 } else {
                     [[NSScriptCommand currentCommand] setScriptErrorNumber:NSArgumentsWrongScriptError];
@@ -796,6 +796,12 @@ static Class SKBookmarkClass = Nil;
             case SKBookmarkTypeSession:
             {
                 NSArray *setups = [[NSApp orderedDocuments] valueForKey:@"currentDocumentSetup"];
+                if (aLabel == nil) {
+                    if ([setups count] == 1)
+                        aLabel = [[[NSApp orderedDocuments] firstObject] displayName];
+                    else
+                        aLabel = [[[NSDate date] shortDateFormat] description];
+                }
                 bookmark = [[SKBookmark alloc] initSessionWithSetups:setups label:aLabel ?: @""];
                 break;
             }
