@@ -668,4 +668,46 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
     }
 }
 
+- (BOOL)accessibilityPerformPress {
+    if ([self isSkimNote] == NO)
+        return NO;
+    NSDocument *doc = [[self page] containingDocument];
+    if ([doc respondsToSelector:@selector(pdfView)] == NO)
+        return NO;
+    [[(SKMainDocument *)doc pdfView] editAnnotation:self];
+    return YES;
+}
+
+- (BOOL)accessibilityPerformPick {
+    if ([self isSkimNote] == NO)
+        return NO;
+    NSDocument *doc = [[self page] containingDocument];
+    if ([doc respondsToSelector:@selector(pdfView)] == NO)
+        return NO;
+    [[(SKMainDocument *)doc pdfView] setActiveAnnotation:self];
+    return YES;
+}
+
+- (BOOL)accessibilityPerformShowMenu {
+    if ([self isSkimNote] == NO)
+        return NO;
+    NSDocument *doc = [[self page] containingDocument];
+    if ([doc respondsToSelector:@selector(pdfView)] == NO)
+        return NO;
+    PDFView *pdfView = [(SKMainDocument *)doc pdfView];
+    NSPoint point = SKCenterPoint([pdfView convertRect:[self bounds] fromPage:[self page]]);
+    NSEvent *event = [NSEvent mouseEventWithType:NSRightMouseDown
+                                        location:[pdfView convertPoint:point toView:nil]
+                                   modifierFlags:0
+                                       timestamp:0
+                                    windowNumber:[[pdfView window] windowNumber]
+                                         context:nil
+                                     eventNumber:0
+                                      clickCount:1
+                                        pressure:0.0];
+    NSMenu *menu = [pdfView menuForEvent:event];
+    [NSMenu popUpContextMenu:menu withEvent:event forView:pdfView];
+    return YES;
+}
+
 @end

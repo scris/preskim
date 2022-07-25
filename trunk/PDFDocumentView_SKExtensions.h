@@ -40,3 +40,4 @@
 #import <Quartz/Quartz.h>
 
 extern void SKSwizzlePDFDocumentViewMethods();
+extern void SKSwizzlePDFAccessibilityNodeAnnotationMethods();

@@ -270,6 +270,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     useToolModeCursors = [[NSUserDefaults standardUserDefaults] boolForKey:SKUseToolModeCursorsKey];
     
     SKSwizzlePDFDocumentViewMethods();
+    SKSwizzlePDFAccessibilityNodeAnnotationMethods();
 }
 
 + (NSArray *)defaultKeysToObserve {

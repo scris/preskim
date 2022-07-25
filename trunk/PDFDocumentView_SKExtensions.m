@@ -43,10 +43,12 @@
 #import "SKRuntime.h"
 #import "NSView_SKExtensions.h"
 #import <objc/objc-runtime.h>
+#import <SkimNotes/SkimNotes.h>
 
 @interface NSView (SKPDFDisplayViewPrivateDeclarations)
 - (id)pdfView;
 - (id)getPDFView;
+- (id)annotation;
 @end
 
 #pragma mark -
@@ -73,6 +75,9 @@ static BOOL (*original_isAccessibilityAlternateUIVisible)(id, SEL) = NULL;
 static BOOL (*original_accessibilityPerformShowAlternateUI)(id, SEL) = NULL;
 static BOOL (*original_accessibilityPerformShowDefaultUI)(id, SEL) = NULL;
 static BOOL (*original_accessibilityPerformShowMenu)(id, SEL) = NULL;
+static BOOL (*original_annotation_accessibilityPerformPress)(id, SEL) = NULL;
+static BOOL (*original_annotation_accessibilityPerformPick)(id, SEL) = NULL;
+static BOOL (*original_annotation_accessibilityPerformShowMenu)(id, SEL) = NULL;
 
 #pragma mark PDFPageView fix
 
@@ -114,6 +119,27 @@ static BOOL replacement_accessibilityPerformShowMenu(id self, SEL _cmd) {
     return [pdfView accessibilityPerformShowMenu];
 }
 
+static BOOL replacement_annotation_accessibilityPerformPress(id self, SEL _cmd) {
+    id annotation = [self annotation];
+    if ([annotation respondsToSelector:@selector(isSkimNote)] && [annotation isSkimNote] && [annotation respondsToSelector:_cmd])
+        return [annotation accessibilityPerformPress];
+    return original_annotation_accessibilityPerformPress(self, _cmd);
+}
+
+static BOOL replacement_annotation_accessibilityPerformPick(id self, SEL _cmd) {
+    id annotation = [self annotation];
+    if ([annotation respondsToSelector:@selector(isSkimNote)] && [annotation isSkimNote] && [annotation respondsToSelector:_cmd])
+        return [annotation accessibilityPerformPick];
+    return original_annotation_accessibilityPerformPick(self, _cmd);
+}
+
+static BOOL replacement_annotation_accessibilityPerformShowMenu(id self, SEL _cmd) {
+    id annotation = [self annotation];
+    if ([annotation respondsToSelector:@selector(isSkimNote)] && [annotation isSkimNote] && [annotation respondsToSelector:_cmd])
+        return [annotation accessibilityPerformShowMenu];
+    return original_accessibilityPerformShowMenu(self, _cmd);
+}
+
 #pragma mark SKSwizzlePDFDocumentViewMethods
 
 void SKSwizzlePDFDocumentViewMethods() {
@@ -144,4 +170,18 @@ void SKSwizzlePDFDocumentViewMethods() {
     original_accessibilityPerformShowAlternateUI = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFDocumentViewClass, @selector(accessibilityPerformShowAlternateUI), (IMP)replacement_accessibilityPerformShowAlternateUI);
     original_accessibilityPerformShowDefaultUI = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFDocumentViewClass, @selector(accessibilityPerformShowDefaultUI), (IMP)replacement_accessibilityPerformShowDefaultUI);
     original_accessibilityPerformShowMenu = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFDocumentViewClass, @selector(accessibilityPerformShowMenu), (IMP)replacement_accessibilityPerformShowMenu);
+}
+
+void SKSwizzlePDFAccessibilityNodeAnnotationMethods() {
+    if (RUNNING_BEFORE(10_13))
+        return;
+    
+    Class PDFAccessibilityNodeAnnotationClass = NSClassFromString(@"PDFAccessibilityNodeAnnotation");
+    
+    if (PDFAccessibilityNodeAnnotationClass == Nil || [PDFAccessibilityNodeAnnotationClass instancesRespondToSelector:@selector(annotation)] == NO)
+        return;
+    
+    original_annotation_accessibilityPerformPress = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFAccessibilityNodeAnnotationClass, @selector(accessibilityPerformPress), (IMP)replacement_annotation_accessibilityPerformPress);
+    original_annotation_accessibilityPerformPick = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFAccessibilityNodeAnnotationClass, @selector(accessibilityPerformPick), (IMP)replacement_annotation_accessibilityPerformPick);
+    original_annotation_accessibilityPerformShowMenu = (BOOL (*)(id, SEL))SKReplaceInstanceMethodImplementation(PDFAccessibilityNodeAnnotationClass, @selector(accessibilityPerformShowMenu), (IMP)replacement_annotation_accessibilityPerformShowMenu);
 }
