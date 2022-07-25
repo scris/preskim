@@ -46,6 +46,7 @@
 #import "NSShadow_SKExtensions.h"
 #import "SKBookmarkController.h"
 #import "NSCharacterSet_SKExtensions.h"
+#import "NSDate_SKExtensions.h"
 
 #define BOOKMARK_STRING     @"bookmark"
 #define SESSION_STRING      @"session"
@@ -751,18 +752,19 @@ static Class SKBookmarkClass = Nil;
                     [[NSScriptCommand currentCommand] setScriptErrorString:@"New file bookmark requires an existing file."];
                 } else if ((docClass = [[NSDocumentController sharedDocumentController] documentClassForContentsOfURL:aURL])) {
                     NSDocument *doc = nil;
+                    NSScriptObjectSpecifier *spec = nil;
                     if (contentsValue) {
                         NSAppleEventDescriptor *desc = [[[NSScriptCommand currentCommand] arguments] objectForKey:@"ObjectData"];
-                        if ([desc isKindOfClass:[NSAppleEventDescriptor class]] && [desc descriptorType] == typeObjectSpecifier) {
-                            NSScriptObjectSpecifier *spec = [NSScriptObjectSpecifier objectSpecifierWithDescriptor:desc];
-                            if ([[[spec containerClassDescription] className] isEqualToString:@"document"]) {
-                                doc = [[spec containerSpecifier] objectsByEvaluatingSpecifier];
-                                if ([doc isKindOfClass:[NSDocument class]] == NO)
-                                    doc = nil;
-                            }
-                        }
+                        if ([desc isKindOfClass:[NSAppleEventDescriptor class]] && [desc descriptorType] == typeObjectSpecifier)
+                            spec = [NSScriptObjectSpecifier objectSpecifierWithDescriptor:desc];
+                    } else {
+                        spec = [[[[NSScriptCommand currentCommand] arguments] objectForKey:@"KeyDictionary"] objectForKey:@"fileURL"];
                     }
-                    if (doc) {
+                    if ([spec isKindOfClass:[NSScriptObjectSpecifier class]] && [[[spec containerClassDescription] className] isEqualToString:@"document"])
+                        doc = [[spec containerSpecifier] objectsByEvaluatingSpecifier];
+                    if (aLabel == nil)
+                        [aURL getResourceValue:&aLabel forKey:NSURLLocalizedNameKey error:NULL];
+                    if ([doc isKindOfClass:[NSDocument class]]) {
                         bookmark = [[SKBookmark alloc] initWithSetup:[doc currentDocumentSetup] label:aLabel ?: @""];
                     } else {
                         NSUInteger aPageNumber = [[properties objectForKey:@"pageNumber"] unsignedIntegerValue];
@@ -772,7 +774,7 @@ static Class SKBookmarkClass = Nil;
                             aPageNumber = [docClass isPDFDocument] ? 0 : NSNotFound;
                         if (aLabel == nil)
                             [aURL getResourceValue:&aLabel forKey:NSURLLocalizedNameKey error:NULL];
-                        bookmark = [[SKBookmark alloc] initWithURL:aURL pageIndex:aPageNumber label:aLabel ?: @""];
+                        bookmark = [[SKBookmark alloc] initWithURL:aURL pageIndex:aPageNumber label:aLabel ?: [[[NSDate date] shortDateFormat] description]];
                     }
                 } else {
                     [[NSScriptCommand currentCommand] setScriptErrorNumber:NSArgumentsWrongScriptError];
