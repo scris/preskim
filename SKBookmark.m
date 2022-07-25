@@ -739,13 +739,6 @@ static Class SKBookmarkClass = Nil;
             type = SKBookmarkTypeFolder;
         else
             type = SKBookmarkTypeBookmark;
-        if (type == SKBookmarkTypeBookmark && contentsValue) {
-            id doc = nil;
-            NSAppleEventDescriptor *desc = [[[NSScriptCommand currentCommand] arguments] objectForKey:@"ObjectData"];
-            NSScriptObjectSpecifier *spec = [desc isKindOfClass:[NSAppleEventDescriptor class]] ? [NSScriptObjectSpecifier objectSpecifierWithDescriptor:desc] : nil;
-            if ([[[spec containerClassDescription] className] isEqualToString:@"document"])
-                doc = [[spec containerSpecifier] objectsByEvaluatingSpecifier];
-        }
         switch (type) {
             case SKBookmarkTypeBookmark:
             {
@@ -760,11 +753,13 @@ static Class SKBookmarkClass = Nil;
                     NSDocument *doc = nil;
                     if (contentsValue) {
                         NSAppleEventDescriptor *desc = [[[NSScriptCommand currentCommand] arguments] objectForKey:@"ObjectData"];
-                        NSScriptObjectSpecifier *spec = [desc isKindOfClass:[NSAppleEventDescriptor class]] ? [NSScriptObjectSpecifier objectSpecifierWithDescriptor:desc] : nil;
-                        if ([[[spec containerClassDescription] className] isEqualToString:@"document"]) {
-                            doc = [[spec containerSpecifier] objectsByEvaluatingSpecifier];
-                            if ([doc isKindOfClass:[NSDocument class]] == NO)
-                                doc = nil;
+                        if ([desc isKindOfClass:[NSAppleEventDescriptor class]] && [desc descriptorType] == typeObjectSpecifier) {
+                            NSScriptObjectSpecifier *spec = [NSScriptObjectSpecifier objectSpecifierWithDescriptor:desc];
+                            if ([[[spec containerClassDescription] className] isEqualToString:@"document"]) {
+                                doc = [[spec containerSpecifier] objectsByEvaluatingSpecifier];
+                                if ([doc isKindOfClass:[NSDocument class]] == NO)
+                                    doc = nil;
+                            }
                         }
                     }
                     if (doc) {
