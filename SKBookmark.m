@@ -731,7 +731,7 @@ static Class SKBookmarkClass = Nil;
         NSString *aLabel = [properties objectForKey:@"label"];
         NSNumber *aType = [properties objectForKey:@"bookmarkType"];
         NSInteger type;
-        if ([aType respondsToSelector:@selector(integerValue)])
+        if ([aType respondsToSelector:@selector(intergerValue)])
             type = [aType integerValue];
         else if (aURL == nil)
             type = SKBookmarkTypeSession;
@@ -739,6 +739,13 @@ static Class SKBookmarkClass = Nil;
             type = SKBookmarkTypeFolder;
         else
             type = SKBookmarkTypeBookmark;
+        if (type == SKBookmarkTypeBookmark && contentsValue) {
+            id doc = nil;
+            NSAppleEventDescriptor *desc = [[[NSScriptCommand currentCommand] arguments] objectForKey:@"ObjectData"];
+            NSScriptObjectSpecifier *spec = [desc isKindOfClass:[NSAppleEventDescriptor class]] ? [NSScriptObjectSpecifier objectSpecifierWithDescriptor:desc] : nil;
+            if ([[[spec containerClassDescription] className] isEqualToString:@"document"])
+                doc = [[spec containerSpecifier] objectsByEvaluatingSpecifier];
+        }
         switch (type) {
             case SKBookmarkTypeBookmark:
             {
@@ -750,14 +757,28 @@ static Class SKBookmarkClass = Nil;
                     [[NSScriptCommand currentCommand] setScriptErrorNumber:NSArgumentsWrongScriptError];
                     [[NSScriptCommand currentCommand] setScriptErrorString:@"New file bookmark requires an existing file."];
                 } else if ((docClass = [[NSDocumentController sharedDocumentController] documentClassForContentsOfURL:aURL])) {
-                    NSUInteger aPageNumber = [[properties objectForKey:@"pageNumber"] unsignedIntegerValue];
-                    if (aPageNumber > 0)
-                        aPageNumber--;
-                    else
-                        aPageNumber = [docClass isPDFDocument] ? 0 : NSNotFound;
-                    if (aLabel == nil)
-                        [aURL getResourceValue:&aLabel forKey:NSURLLocalizedNameKey error:NULL];
-                    bookmark = [[SKBookmark alloc] initWithURL:aURL pageIndex:aPageNumber label:aLabel ?: @""];
+                    NSDocument *doc = nil;
+                    if (contentsValue) {
+                        NSAppleEventDescriptor *desc = [[[NSScriptCommand currentCommand] arguments] objectForKey:@"ObjectData"];
+                        NSScriptObjectSpecifier *spec = [desc isKindOfClass:[NSAppleEventDescriptor class]] ? [NSScriptObjectSpecifier objectSpecifierWithDescriptor:desc] : nil;
+                        if ([[[spec containerClassDescription] className] isEqualToString:@"document"]) {
+                            doc = [[spec containerSpecifier] objectsByEvaluatingSpecifier];
+                            if ([doc isKindOfClass:[NSDocument class]] == NO)
+                                doc = nil;
+                        }
+                    }
+                    if (doc) {
+                        bookmark = [[SKBookmark alloc] initWithSetup:[doc currentDocumentSetup] label:aLabel ?: @""];
+                    } else {
+                        NSUInteger aPageNumber = [[properties objectForKey:@"pageNumber"] unsignedIntegerValue];
+                        if (aPageNumber > 0)
+                            aPageNumber--;
+                        else
+                            aPageNumber = [docClass isPDFDocument] ? 0 : NSNotFound;
+                        if (aLabel == nil)
+                            [aURL getResourceValue:&aLabel forKey:NSURLLocalizedNameKey error:NULL];
+                        bookmark = [[SKBookmark alloc] initWithURL:aURL pageIndex:aPageNumber label:aLabel ?: @""];
+                    }
                 } else {
                     [[NSScriptCommand currentCommand] setScriptErrorNumber:NSArgumentsWrongScriptError];
                     [[NSScriptCommand currentCommand] setScriptErrorString:@"Unsupported file type for new bookmark."];
