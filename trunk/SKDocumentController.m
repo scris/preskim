@@ -122,8 +122,8 @@ NSString *SKDocumentControllerDocumentKey = @"document";
 - (void)beginOpenPanel:(NSOpenPanel *)openPanel forTypes:(NSArray *)inTypes completionHandler:(void (^)(NSInteger result))completionHandler {
     BOOL shouldResetTab = NO;
     if (openDocumentClass) {
-        openDocumentClass = Nil;
         inTypes = [openDocumentClass readableTypes];
+        openDocumentClass = Nil;
         shouldResetTab = [self respondsToSelector:@selector(_setTabPlusButtonWasClicked:)];
     } else {
         [openPanel setCanChooseDirectories:YES];
