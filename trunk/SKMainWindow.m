@@ -39,6 +39,7 @@
 #import "SKMainWindow.h"
 #import "SKImageToolTipWindow.h"
 #import "NSResponder_SKExtensions.h"
+#import "NSEvent_SKExtensions.h"
 
 
 @implementation SKMainWindow
@@ -59,6 +60,23 @@
         }
     }
     [super sendEvent:theEvent];
+}
+
+- (void)keyDown:(NSEvent *)event {
+    if (RUNNING_AFTER(10_12) && [event standardModifierFlags] == (NSCommandKeyMask | NSAlternateKeyMask)) {
+        unichar eventChar = [event firstCharacter];
+        if (eventChar >= '1' && eventChar <= '9') {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+            NSArray *windows = [self tabbedWindows];
+#pragma clang diagnostic pop
+            if ([windows count] > MAX(1UL, eventChar - '1')) {
+                [self setValue:[windows objectAtIndex:eventChar - '1'] forKeyPath:@"tabGroup.selectedWindow"];
+                return;
+            }
+        }
+    }
+    [super keyDown:event];
 }
 
 - (void)resignMainWindow {
