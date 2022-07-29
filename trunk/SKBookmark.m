@@ -732,7 +732,7 @@ static Class SKBookmarkClass = Nil;
         NSString *aLabel = [properties objectForKey:@"label"];
         NSNumber *aType = [properties objectForKey:@"bookmarkType"];
         NSInteger type;
-        if ([aType respondsToSelector:@selector(intergerValue)])
+        if ([aType respondsToSelector:@selector(integerValue)])
             type = [aType integerValue];
         else if (aURL == nil)
             type = SKBookmarkTypeSession;
