@@ -717,7 +717,7 @@ enum {
         else
             error = [NSError writeFileErrorWithLocalizedDescription:NSLocalizedString(@"Unable to write notes as RTF", @"Error description")];
     } else if ([ws type:SKNotesRTFDDocumentType conformsToType:typeName]) {
-        NSFileWrapper *fileWrapper = [self notesRTFDFileWrapper];
+        NSFileWrapper *fileWrapper = [self notesFileWrapperForTemplateType:typeName];
         if (fileWrapper)
             didWrite = [fileWrapper writeToURL:absoluteURL options:0 originalContentsURL:nil error:&error];
         else

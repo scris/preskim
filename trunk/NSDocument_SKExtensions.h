@@ -92,7 +92,6 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 
 - (NSString *)notesString;
 - (NSData *)notesRTFData;
-- (NSFileWrapper *)notesRTFDFileWrapper;
 
 - (NSData *)notesFDFDataForFile:(NSString *)filename fileIDStrings:(NSArray *)fileIDStrings;
 

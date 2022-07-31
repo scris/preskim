@@ -270,15 +270,11 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
 }
 
 - (NSString *)notesString {
-    return [self notesStringForTemplateType:@"notesTemplate.txt"];
+    return [self notesStringForTemplateType:SKNotesTextDocumentType];
 }
 
 - (NSData *)notesRTFData {
-    return [self notesDataForTemplateType:@"notesTemplate.rtf"];
-}
-
-- (NSFileWrapper *)notesRTFDFileWrapper {
-    return [self notesFileWrapperForTemplateType:@"notesTemplate.rtfd"];
+    return [self notesDataForTemplateType:SKNotesRTFDocumentType];
 }
 
 - (NSData *)notesFDFDataForFile:(NSString *)filename fileIDStrings:(NSArray *)fileIDStrings {
