@@ -39,6 +39,7 @@
 #import "SKTemplateManager.h"
 #import "NSFileManager_SKExtensions.h"
 #import "NSString_SKExtensions.h"
+#import "SKDocumentController.h"
 
 #define TEMPLATES_DIRECTORY @"Templates"
 
@@ -54,8 +55,17 @@
     return sharedManager;
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        templateFileNames = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"notesTemplate.txt", SKNotesTextDocumentType, @"notesTemplate.rtf", SKNotesRTFDocumentType, @"notesTemplate.rtfd", SKNotesRTFDDocumentType, nil];
+    }
+    return self;
+}
+
 - (void)dealloc {
     SKDESTROY(customTemplateTypes);
+    SKDESTROY(templateFileNames);
     [super dealloc];
 }
 
@@ -63,7 +73,8 @@
     if (customTemplateTypes == nil) {
         NSFileManager *fm = [NSFileManager defaultManager];
         NSMutableArray *templates = [NSMutableArray array];
-        
+        NSMutableDictionary *types = [NSMutableDictionary dictionary];
+                             
         for (NSURL *appSupportURL in [fm applicationSupportDirectoryURLs]) {
             NSURL *templatesURL = [appSupportURL URLByAppendingPathComponent:TEMPLATES_DIRECTORY isDirectory:YES];
             NSNumber *isDir = nil;
@@ -72,13 +83,29 @@
                 for (NSURL *url in [fm contentsOfDirectoryAtURL:templatesURL includingPropertiesForKeys:[NSArray array] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL]) {
                     NSString *file = [url lastPathComponent];
                     if ([[file stringByDeletingPathExtension] isEqualToString:@"notesTemplate"] == NO &&
-                        [templates containsObject:file] == NO)
+                        [templates containsObject:file] == NO) {
                         [templates addObject:file];
+                        NSString *type = [[templateFileNames allKeysForObject:file] firstObject];
+                        if (type == nil) {
+                            if (RUNNING_AFTER(10_15)) {
+                                // create a unique but deterministic dynamic UTI that knows the extension
+                                CFStringRef baseType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassNSPboardType, (CFStringRef)file, NULL);
+                                type = [(NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)[file pathExtension], baseType) autorelease];
+                                CFRelease(baseType);
+                            } else {
+                                // NSSavePanel on 10.15- cannot handle dynamic UTIs
+                                // make sure the type cannot be confused with a UTI
+                                type = [file stringByReplacingOccurrencesOfString:@"." withString:@"_"];
+                            }
+                            [templateFileNames setObject:file forKey:type];
+                        }
+                        [types setObject:type forKey:file];
+                    }
                 }
             }
         }
         [templates sortUsingSelector:@selector(caseInsensitiveCompare:)];
-        customTemplateTypes = [templates copy];
+        customTemplateTypes = [[types objectsForKeys:templates notFoundMarker:@""] copy];
     }
     return customTemplateTypes;
 }
@@ -90,9 +117,13 @@
 - (NSURL *)URLForTemplateType:(NSString *)typeName {
     NSFileManager *fm = [NSFileManager defaultManager];
     NSURL *url = nil;
+    NSString *file = [templateFileNames objectForKey:typeName];
+    
+    if (file == nil)
+        return nil;
     
     for (NSURL *appSupportURL in [[fm applicationSupportDirectoryURLs] arrayByAddingObject:[[NSBundle mainBundle] sharedSupportURL]]) {
-        url = [[appSupportURL URLByAppendingPathComponent:TEMPLATES_DIRECTORY isDirectory:YES] URLByAppendingPathComponent:typeName isDirectory:NO];
+        url = [[appSupportURL URLByAppendingPathComponent:TEMPLATES_DIRECTORY isDirectory:YES] URLByAppendingPathComponent:file isDirectory:NO];
         if ([url checkResourceIsReachableAndReturnError:NULL] == NO)
             url = nil;
         else break;
@@ -102,11 +133,11 @@
 }
 
 - (NSString *)fileNameExtensionForTemplateType:(NSString *)typeName {
-    return [[self customTemplateTypes] containsObject:typeName] ? [typeName pathExtension] : nil;
+    return [[self customTemplateTypes] containsObject:typeName] ? [[templateFileNames objectForKey:typeName] pathExtension] : nil;
 }
 
 - (NSString *)displayNameForTemplateType:(NSString *)typeName {
-    return [[self customTemplateTypes] containsObject:typeName] ? [typeName stringByDeletingPathExtension] : nil;
+    return [[self customTemplateTypes] containsObject:typeName] ? [[templateFileNames objectForKey:typeName] stringByDeletingPathExtension] : nil;
 }
 
 - (NSString *)templateTypeForDisplayName:(NSString *)name {
@@ -121,11 +152,11 @@
     static NSSet *types = nil;
     if (types == nil)
         types = [[NSSet alloc] initWithObjects:@"rtf", @"doc", @"docx", @"odt", @"webarchive", @"rtfd", nil];
-    return [types containsObject:[[typeName pathExtension] lowercaseString]];
+    return [types containsObject:[[[templateFileNames objectForKey:typeName] pathExtension] lowercaseString]];
 }
 
 - (BOOL)isRichTextBundleTemplateType:(NSString *)typeName {
-    return [[typeName pathExtension] isCaseInsensitiveEqual:@"rtfd"];
+    return [[[templateFileNames objectForKey:typeName] pathExtension] isCaseInsensitiveEqual:@"rtfd"];
 }
 
 @end

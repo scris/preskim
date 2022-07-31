@@ -279,13 +279,11 @@
     NSFileWrapper *fileWrapper = nil;
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     
-    if ([ws type:SKNotesRTFDDocumentType conformsToType:typeName])
-        fileWrapper = [self notesRTFDFileWrapper];
-    else if ([ws type:SKNotesDocumentType conformsToType:typeName] || 
-             [ws type:SKNotesTextDocumentType conformsToType:typeName] || 
-             [ws type:SKNotesRTFDocumentType conformsToType:typeName] || 
-             [ws type:SKNotesFDFDocumentType conformsToType:typeName] || 
-             [[SKTemplateManager sharedManager] isRichTextBundleTemplateType:typeName] == NO)
+    if ([ws type:SKNotesDocumentType conformsToType:typeName] ||
+        [ws type:SKNotesTextDocumentType conformsToType:typeName] ||
+        [ws type:SKNotesRTFDocumentType conformsToType:typeName] ||
+        [ws type:SKNotesFDFDocumentType conformsToType:typeName] ||
+        [[SKTemplateManager sharedManager] isRichTextBundleTemplateType:typeName] == NO)
         fileWrapper = [super fileWrapperOfType:typeName error:outError];
     else
         fileWrapper = [self notesFileWrapperForTemplateType:typeName];

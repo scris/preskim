@@ -41,6 +41,7 @@
 
 @interface SKTemplateManager : NSObject {
     NSArray *customTemplateTypes;
+    NSMutableDictionary *templateFileNames;
 }
 
 + (id)sharedManager;
