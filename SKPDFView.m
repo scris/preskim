@@ -993,9 +993,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             line = [page indexOfLineRectAtPoint:point lower:YES];
         }
         SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page line:line delegate:self];
-        page = [readingBar page];
+        page = [aReadingBar page];
         bounds = [aReadingBar currentBoundsForBox:[self displayBox]];
-        [self goToRect:NSInsetRect([aReadingBar currentBounds], 0.0, -20.0) onPage:page];
+        NSRect rect = [aReadingBar currentBounds];
+        rect = ([page lineDirectionAngle] % 180) ? NSInsetRect(rect, 0.0, -20.0) : NSInsetRect(rect, -20.0, 0.0);
+        [self goToRect:rect onPage:page];
         [self setReadingBar:aReadingBar];
         [aReadingBar release];
         userInfo = [NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewNewPageKey, nil];
