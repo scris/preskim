@@ -965,8 +965,8 @@
     // we don't want to expose the UTI types to the user, and we allow template file names without extension
     if (fileType && file) {
         NSString *normalizedType = nil;
+        NSArray *writableTypes = [self writableTypesForSaveOperation:NSSaveToOperation];
         SKTemplateManager *tm = [SKTemplateManager sharedManager];
-        [tm resetCustomTemplateTypes];
         if ([fileType isEqualToString:@"Skim Notes"])
             normalizedType = SKNotesDocumentType;
         else if ([fileType isEqualToString:@"Notes as Text"])
@@ -977,9 +977,9 @@
             normalizedType = SKNotesRTFDDocumentType;
         else if ([fileType isEqualToString:@"Notes as FDF"])
             normalizedType = SKNotesFDFDocumentType;
-        else if ([[self writableTypesForSaveOperation:NSSaveToOperation] containsObject:fileType] == NO)
+        else if ([writableTypes containsObject:fileType] == NO)
             normalizedType = [tm templateTypeForDisplayName:fileType];
-        if (normalizedType || [[tm customTemplateTypes] containsObject:fileType]) {
+        if ([writableTypes containsObject:normalizedType] || [[tm customTemplateTypes] containsObject:fileType]) {
             NSMutableDictionary *arguments = [args mutableCopy];
             if (normalizedType) {
                 fileType = normalizedType;
