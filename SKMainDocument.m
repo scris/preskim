@@ -1933,8 +1933,10 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     if (fileType && file) {
         NSString *normalizedType = nil;
         NSInteger option = SKExportOptionDefault;
-        NSArray *writableTypes = [self writableTypesForSaveOperation:NSSaveToOperation];
+        NSArray *writableTypes;
         SKTemplateManager *tm = [SKTemplateManager sharedManager];
+        [tm resetCustomTemplateTypes];
+        writableTypes = [self writableTypesForSaveOperation:NSSaveToOperation];
         if ([fileType isEqualToString:@"PDF"]) {
             normalizedType = SKPDFDocumentType;
         } else if ([fileType isEqualToString:@"PDF With Embedded Notes"]) {

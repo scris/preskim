@@ -966,6 +966,7 @@
     if (fileType && file) {
         NSString *normalizedType = nil;
         SKTemplateManager *tm = [SKTemplateManager sharedManager];
+        [tm resetCustomTemplateTypes];
         if ([fileType isEqualToString:@"Skim Notes"])
             normalizedType = SKNotesDocumentType;
         else if ([fileType isEqualToString:@"Notes as Text"])
