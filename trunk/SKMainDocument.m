@@ -1982,7 +1982,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
         }
         if ([writableTypes containsObject:normalizedType] || [[tm customTemplateTypes] containsObject:fileType]) {
             mdFlags.exportOption = option;
-            NSMutableDictionary *arguments = [[command arguments] mutableCopy];
+            NSMutableDictionary *arguments = [args mutableCopy];
             if (normalizedType) {
                 fileType = normalizedType;
                 [arguments setObject:fileType forKey:@"FileType"];

@@ -980,7 +980,7 @@
         else if ([[self writableTypesForSaveOperation:NSSaveToOperation] containsObject:fileType] == NO)
             normalizedType = [tm templateTypeForDisplayName:fileType];
         if (normalizedType || [[tm customTemplateTypes] containsObject:fileType]) {
-            NSMutableDictionary *arguments = [[command arguments] mutableCopy];
+            NSMutableDictionary *arguments = [args mutableCopy];
             if (normalizedType) {
                 fileType = normalizedType;
                 [arguments setObject:fileType forKey:@"FileType"];
