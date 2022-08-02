@@ -142,7 +142,8 @@
 
 - (NSString *)templateTypeForDisplayName:(NSString *)name {
     for (NSString *typeName in [self customTemplateTypes]) {
-        if ([[self displayNameForTemplateType:typeName] isEqualToString:name])
+        NSString *fileName = [templateFileNames objectForKey:typeName];
+        if ([fileName isEqualToString:name] || [[fileName stringByDeletingPathExtension] isEqualToString:name])
             return typeName;
     }
     return nil;
