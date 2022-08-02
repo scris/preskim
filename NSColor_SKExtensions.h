@@ -81,8 +81,6 @@ enum {
 
 + (NSColor *)searchHighlightColor;
 
-+ (NSColor *)pdfControlBackgroundColor;
-
 + (NSArray *)favoriteColors;
 
 - (NSComparisonResult)colorCompare:(NSColor *)aColor;

@@ -107,16 +107,6 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 #pragma clang diagnostic pop
 }
 
-#pragma mark Legacy colors
-
-+ (NSColor *)pdfControlBackgroundColor {
-    static NSColor *color = nil;
-    if (color == nil) {
-        color = [[NSColor colorWithGenericGamma22White:0.96 alpha:0.95] retain];
-    }
-    return color;
-}
-
 #pragma mark Favorite Colors
 
 + (NSArray *)favoriteColors {
