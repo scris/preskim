@@ -79,8 +79,6 @@ enum {
 + (NSColor *)selectionHighlightColor:(BOOL)active;
 + (NSColor *)selectionHighlightInteriorColor:(BOOL)active;
 
-+ (NSColor *)searchHighlightColor;
-
 + (NSArray *)favoriteColors;
 
 - (NSComparisonResult)colorCompare:(NSColor *)aColor;

@@ -46,6 +46,7 @@
 
 + (void)load {
     SKAddClassMethodImplementationFromSelector(self, @selector(separatorColor), @selector(gridColor));
+    SKAddClassMethodImplementationFromSelector(self, @selector(findHighlightColor), @selector(yellowColor));
 }
 
 #pragma mark Note Highlight Colors
@@ -98,13 +99,6 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
         color = [active ? activeSelectionHighlightInteriorColor : inactiveSelectionHighlightInteriorColor retain];
     }
     return [color autorelease];
-}
-
-+ (NSColor *)searchHighlightColor {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    return [NSColor respondsToSelector:@selector(findHighlightColor)] ? [NSColor findHighlightColor] : [NSColor yellowColor];
-#pragma clang diagnostic pop
 }
 
 #pragma mark Favorite Colors
