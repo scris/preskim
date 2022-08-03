@@ -95,7 +95,7 @@
                             } else {
                                 // NSSavePanel on 10.15- cannot handle dynamic UTIs
                                 // make sure the type cannot be confused with a UTI
-                                type = [file stringByReplacingOccurrencesOfString:@"." withString:@"_"];
+                                type = [NSString stringWithFormat:@"%@_%@", [file stringByDeletingPathExtension], [file pathExtension]];
                             }
                             [templateFileNames setObject:file forKey:type];
                         }
