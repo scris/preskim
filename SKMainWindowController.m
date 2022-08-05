@@ -553,6 +553,12 @@ static char SKMainWindowContentLayoutObservationContext;
     [window recalculateKeyViewLoop];
     [window makeFirstResponder:pdfView];
     
+    // initially autoScale does not take the content inset into account
+    if (mwcFlags.fullSizeContent && [pdfView autoScales]) {
+        [pdfView setAutoScales:NO];
+        [pdfView setAutoScales:YES];
+    }
+    
     // Update page states
     [self handlePageChangedNotification:nil];
     [toolbarController handlePageChangedNotification:nil];
