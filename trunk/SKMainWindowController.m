@@ -554,7 +554,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [window makeFirstResponder:pdfView];
     
     // initially autoScale does not take the content inset into account
-    if (mwcFlags.fullSizeContent && [pdfView autoScales]) {
+    if (mwcFlags.fullSizeContent && [pdfView autoScales] && ([pdfView extendedDisplayMode] & kPDFDisplaySinglePageContinuous) == 0) {
         [pdfView setAutoScales:NO];
         [pdfView setAutoScales:YES];
     }
@@ -1839,8 +1839,13 @@ static char SKMainWindowContentLayoutObservationContext;
     if ([[mainWindow firstResponder] isDescendantOf:findBar])
         [mainWindow makeFirstResponder:pdfView];
     
-    if (mwcFlags.fullSizeContent)
+    if (mwcFlags.fullSizeContent) {
         [[pdfView scrollView] setAutomaticallyAdjustsContentInsets:YES];
+        if ([pdfView autoScales] && ([pdfView extendedDisplayMode] & kPDFDisplaySinglePageContinuous) == 0) {
+            [pdfView setAutoScales:NO];
+            [pdfView setAutoScales:YES];
+        }
+    }
     
     if (animate) {
         NSLayoutConstraint *topConstraint = [contentView constraintWithFirstItem:findBar firstAttribute:NSLayoutAttributeTop];
@@ -1900,6 +1905,10 @@ static char SKMainWindowContentLayoutObservationContext;
             NSScrollView *scrollView = [pdfView scrollView];
             [scrollView setAutomaticallyAdjustsContentInsets:NO];
             [scrollView setContentInsets:NSEdgeInsetsMake(barHeight + titleBarHeight, 0.0, 0.0, 0.0)];
+            if ([pdfView autoScales] && ([pdfView extendedDisplayMode] & kPDFDisplaySinglePageContinuous) == 0) {
+                [pdfView setAutoScales:NO];
+                [pdfView setAutoScales:YES];
+            }
         }
         
         if (animate) {
