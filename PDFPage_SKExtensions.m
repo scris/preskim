@@ -399,9 +399,9 @@ static BOOL usesSequentialPageNumbering = NO;
 
 static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
     if (rotated)
-        return (NSMaxX(r1) > NSMidX(r2) && NSMidX(r1) < NSMaxX(r2)) || (NSMidX(r1) > NSMinX(r2) && NSMinX(r1) < NSMidX(r2));
+        return ((NSMaxX(r1) > NSMidX(r2) && NSMidX(r1) < NSMaxX(r2)) || (NSMidX(r1) > NSMinX(r2) && NSMinX(r1) < NSMidX(r2))) && NSHeight(r1) >= NSWidth(r1) && NSHeight(r2) >= NSWidth(r2);
     else
-        return (NSMinY(r1) < NSMidY(r2) && NSMidY(r1) > NSMinY(r2)) || (NSMidY(r1) < NSMaxY(r2) && NSMaxY(r1) > NSMidY(r2));
+        return ((NSMinY(r1) < NSMidY(r2) && NSMidY(r1) > NSMinY(r2)) || (NSMidY(r1) < NSMaxY(r2) && NSMaxY(r1) > NSMidY(r2))) && NSWidth(r1) >= NSHeight(r1) && NSWidth(r2) >= NSHeight(r2);
 }
 
 - (NSPointerArray *)lineRects {
@@ -410,12 +410,15 @@ static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
     CGFloat lastOrder = -CGFLOAT_MAX;
     NSUInteger i;
     NSRect rect;
+    NSMutableIndexSet *singleCharLines = [NSMutableIndexSet indexSet];
     
     for (PDFSelection *s in [sel selectionsByLine]) {
         rect = [s boundsForPage:self];
         if (NSIsEmptyRect(rect) == NO && [[s string] rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet]].length) {
             CGFloat order = [self sortOrderForBounds:rect];
             if (lastOrder <= order) {
+                if ([[s string] length] == 1)
+                    [singleCharLines addIndex:[lines count]];
                 [lines addPointer:&rect];
                 lastOrder = order;
             } else {
@@ -423,22 +426,30 @@ static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
                     if ([self sortOrderForBounds:[lines rectAtIndex:i - 1]] <= order)
                         break;
                 }
+                if ([[s string] length] == 1)
+                    [singleCharLines addIndex:i];
                 [lines insertPointer:&rect atIndex:i];
-            }
+           }
         }
     }
     
     NSRect prevRect = NSZeroRect;
     BOOL rotated = ([self lineDirectionAngle] % 180) == 0;
+    BOOL prevVertical = NO;
+    BOOL vertical = NO;
+    NSUInteger offset = 0;
     
     for (i = 0; i < [lines count]; i++) {
         rect = [lines rectAtIndex:i];
-        if (i > 0 && lineRectsOverlap(prevRect, rect, rotated)) {
+        vertical = (rotated ? NSWidth(rect) > NSHeight(rect) : NSHeight(rect) > NSHeight(rect)) && [singleCharLines containsIndex:i + offset] == NO;
+        if (i > 0 && vertical == NO && prevVertical == NO && lineRectsOverlap(prevRect, rect, rotated)) {
             rect = NSUnionRect(prevRect, rect);
             [lines removePointerAtIndex:i--];
             [lines replacePointerAtIndex:i withPointer:&rect];
+            offset++;
         }
         prevRect = rect;
+        prevVertical = vertical;
     }
     
     return lines;
