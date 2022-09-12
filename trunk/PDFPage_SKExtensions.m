@@ -399,9 +399,9 @@ static BOOL usesSequentialPageNumbering = NO;
 
 static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
     if (rotated)
-        return ((NSMaxX(r1) > NSMidX(r2) && NSMidX(r1) < NSMaxX(r2)) || (NSMidX(r1) > NSMinX(r2) && NSMinX(r1) < NSMidX(r2))) && NSHeight(r1) >= NSWidth(r1) && NSHeight(r2) >= NSWidth(r2);
+        return (NSMaxX(r1) > NSMidX(r2) && NSMidX(r1) < NSMaxX(r2)) || (NSMidX(r1) > NSMinX(r2) && NSMinX(r1) < NSMidX(r2));
     else
-        return ((NSMinY(r1) < NSMidY(r2) && NSMidY(r1) > NSMinY(r2)) || (NSMidY(r1) < NSMaxY(r2) && NSMaxY(r1) > NSMidY(r2))) && NSWidth(r1) >= NSHeight(r1) && NSWidth(r2) >= NSHeight(r2);
+        return (NSMinY(r1) < NSMidY(r2) && NSMidY(r1) > NSMinY(r2)) || (NSMidY(r1) < NSMaxY(r2) && NSMaxY(r1) > NSMidY(r2));
 }
 
 - (NSPointerArray *)lineRects {
@@ -417,8 +417,9 @@ static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
         if (NSIsEmptyRect(rect) == NO && [[s string] rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet]].length) {
             CGFloat order = [self sortOrderForBounds:rect];
             if (lastOrder <= order) {
-                if ([[s string] length] == 1)
+                if ([[s string] length] == 1) {
                     [singleCharLines addIndex:[lines count]];
+                }
                 [lines addPointer:&rect];
                 lastOrder = order;
             } else {
