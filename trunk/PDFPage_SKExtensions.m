@@ -458,7 +458,7 @@ static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
     NSPointerArray *rectArray = [self lineRects];
     NSInteger i = 0, iMax = [rectArray count];
     
-    for (i = 0; i < iMax; i++) {
+    for (i = iMax - 1; i >= 0; i--) {
         NSRect rect = [rectArray rectAtIndex:i];
         NSInteger pos;
         switch ([self lineDirectionAngle]) {
@@ -468,8 +468,8 @@ static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
             case 270: pos = point.y < NSMinY(rect) ? -1 : point.y < NSMaxY(rect) ? 0 : 1; break;
             default:  pos = point.y < NSMinY(rect) ? -1 : point.y < NSMaxY(rect) ? 0 : 1; break;
         }
-        if (pos != -1) {
-            if (pos == 1 && lower && i > 0) i--;
+        if (pos != 1) {
+            if (pos == -1 && lower == NO && i < iMax - 1) i++;
             break;
         }
     }
