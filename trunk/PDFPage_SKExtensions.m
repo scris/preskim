@@ -410,39 +410,37 @@ static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
     CGFloat lastOrder = -CGFLOAT_MAX;
     NSUInteger i;
     NSRect rect;
-    NSMutableIndexSet *singleCharLines = [NSMutableIndexSet indexSet];
+    NSMutableIndexSet *verticalLines = [NSMutableIndexSet indexSet];
+    BOOL rotated = ([self lineDirectionAngle] % 180) == 0;
     
     for (PDFSelection *s in [sel selectionsByLine]) {
+        NSString *str = [s string];
         rect = [s boundsForPage:self];
-        if (NSIsEmptyRect(rect) == NO && [[s string] rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet]].length) {
+        if (NSIsEmptyRect(rect) == NO && [str rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet]].length) {
             CGFloat order = [self sortOrderForBounds:rect];
             if (lastOrder <= order) {
-                if ([[s string] length] == 1) {
-                    [singleCharLines addIndex:[lines count]];
-                }
-                [lines addPointer:&rect];
+                i = [lines count];
                 lastOrder = order;
             } else {
                 for (i = [lines count] - 1; i > 0; i--) {
                     if ([self sortOrderForBounds:[lines rectAtIndex:i - 1]] <= order)
                         break;
                 }
-                if ([[s string] length] == 1)
-                    [singleCharLines addIndex:i];
-                [lines insertPointer:&rect atIndex:i];
-           }
+            }
+            if ([str length] > 1 && (rotated ? NSHeight(rect) <= NSHeight(rect) : NSWidth(rect) <= NSHeight(rect)))
+                [verticalLines addIndex:i];
+            [lines insertPointer:&rect atIndex:i];
         }
     }
     
     NSRect prevRect = NSZeroRect;
-    BOOL rotated = ([self lineDirectionAngle] % 180) == 0;
     BOOL prevVertical = NO;
     BOOL vertical = NO;
     NSUInteger offset = 0;
     
     for (i = 0; i < [lines count]; i++) {
         rect = [lines rectAtIndex:i];
-        vertical = (rotated ? NSWidth(rect) > NSHeight(rect) : NSHeight(rect) > NSHeight(rect)) && [singleCharLines containsIndex:i + offset] == NO;
+        vertical = [verticalLines containsIndex:i + offset];
         if (i > 0 && vertical == NO && prevVertical == NO && lineRectsOverlap(prevRect, rect, rotated)) {
             rect = NSUnionRect(prevRect, rect);
             [lines removePointerAtIndex:i--];
