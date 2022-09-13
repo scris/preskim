@@ -454,31 +454,41 @@ static inline BOOL lineRectsOverlap(NSRect r1, NSRect r2, BOOL rotated) {
     return lines;
 }
 
+static inline BOOL pointBelowRect(NSPoint point, NSRect rect, NSInteger lineDirectionAngle) {
+    switch (lineDirectionAngle) {
+        case 0:   return point.x > NSMaxX(rect);
+        case 90:  return point.y > NSMaxY(rect);
+        case 180: return point.x < NSMinX(rect);
+        case 270: return point.y < NSMinY(rect);
+        default:  return point.y < NSMinY(rect);
+    }
+}
+
+static inline BOOL pointAboveRect(NSPoint point, NSRect rect, NSInteger lineDirectionAngle) {
+    switch (lineDirectionAngle) {
+        case 0:   return point.x < NSMinX(rect);
+        case 90:  return point.y < NSMinY(rect);
+        case 180: return point.x > NSMaxX(rect);
+        case 270: return point.y > NSMaxY(rect);
+        default:  return point.y > NSMaxY(rect);
+    }
+}
+
 - (NSInteger)indexOfLineRectAtPoint:(NSPoint)point lower:(BOOL)lower {
     NSPointerArray *rectArray = [self lineRects];
     NSInteger i = [rectArray count];
-    BOOL hadLine = NO;
-    
-    if (i == 0)
-        return -1;
+    BOOL preferNext = NO;
+    NSInteger angle = [self lineDirectionAngle];
     
     while (i-- > 0) {
         NSRect rect = [rectArray rectAtIndex:i];
-        NSInteger pos;
-        switch ([self lineDirectionAngle]) {
-            case 0:   pos = point.x > NSMaxX(rect) ? -1 : point.x > NSMinX(rect) ? 0 : 1; break;
-            case 90:  pos = point.y > NSMaxY(rect) ? -1 : point.y > NSMinY(rect) ? 0 : 1; break;
-            case 180: pos = point.x < NSMinX(rect) ? -1 : point.x < NSMaxX(rect) ? 0 : 1; break;
-            case 270: pos = point.y < NSMinY(rect) ? -1 : point.y < NSMaxY(rect) ? 0 : 1; break;
-            default:  pos = point.y < NSMinY(rect) ? -1 : point.y < NSMaxY(rect) ? 0 : 1; break;
-        }
-        if (pos != 1) {
-            if (pos == -1 && lower == NO && hadLine) i++;
-            break;
-        }
-        hadLine = YES;
+        if (pointBelowRect(point, rect, angle))
+            return preferNext ? i + 1 : i;
+        else if (NO == pointAboveRect(point, rect, angle))
+            return i;
+        preferNext = lower == NO;
     }
-    return MAX(i, 0);
+    return -1;
 }
 
 - (NSUInteger)pageIndex {
