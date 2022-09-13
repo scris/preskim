@@ -4503,6 +4503,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     NSPoint point = [self convertPoint:lastMouseLoc toPage:page];
     NSInteger lineOffset = [page indexOfLineRectAtPoint:point lower:YES] - [readingBar currentLine];
     NSDate *lastPageChangeDate = [NSDate distantPast];
+    BOOL isDoubleClick = [theEvent clickCount] == 2;
     
     lastMouseLoc = [self convertPoint:lastMouseLoc toView:[self documentView]];
     
@@ -4516,8 +4517,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 		
         if ([theEvent type] == NSLeftMouseUp)
             break;
-		if ([theEvent type] == NSLeftMouseDragged)
+        if ([theEvent type] == NSLeftMouseDragged) {
             lastMouseEvent = theEvent;
+            isDoubleClick = NO;
+        }
         
         // dragging
         NSPoint mouseLocInWindow = [lastMouseEvent locationInWindow];
@@ -4567,6 +4570,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
     
     [NSEvent stopPeriodicEvents];
+    
+    if (isDoubleClick) {
+        if (([lastMouseEvent modifierFlags] & NSShiftKeyMask) != 0)
+            [readingBar goToPreviousLine];
+        else
+            [readingBar goToNextLine];
+    }
     
     [self updatePacer];
     
