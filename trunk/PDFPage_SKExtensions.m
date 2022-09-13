@@ -482,11 +482,10 @@ static inline BOOL pointAboveRect(NSPoint point, NSRect rect, NSInteger lineDire
     
     while (i-- > 0) {
         NSRect rect = [rectArray rectAtIndex:i];
-        if (pointBelowRect(point, rect, angle))
-            return preferNext ? i + 1 : i;
-        else if (NO == pointAboveRect(point, rect, angle))
-            return i;
-        preferNext = lower == NO;
+        if (pointAboveRect(point, rect, angle))
+            preferNext = lower == NO;
+        else
+            return (preferNext && pointBelowRect(point, rect, angle)) ? i + 1 : i;
     }
     return -1;
 }
