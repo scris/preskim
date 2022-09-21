@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "synctex_parser.h"
+#import <stdatomic.h>
 
 typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
     SKPDFSynchronizerDefaultOptions = 0,
@@ -66,7 +67,7 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
     NSMapTable *filenames;
     synctex_scanner_p scanner;
     
-    volatile int32_t shouldKeepRunning;
+    _Atomic(BOOL) shouldKeepRunning;
 }
 
 @property (nonatomic, assign) id <SKPDFSynchronizerDelegate> delegate;

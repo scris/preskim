@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
+#import <stdatomic.h>
 
 
 typedef void (^SKSyncDotUpdateBlock)(BOOL finished);
@@ -46,7 +47,7 @@ typedef void (^SKSyncDotUpdateBlock)(BOOL finished);
     NSPoint point;
     PDFPage *page;
     NSTimer *timer;
-    volatile int32_t phase;
+    _Atomic(NSInteger) phase;
     SKSyncDotUpdateBlock handler;
     BOOL shouldHideReadingBar;
 }
