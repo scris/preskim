@@ -37,7 +37,6 @@
  */
 
 #import "SKPDFSynchronizer.h"
-#import <libkern/OSAtomic.h>
 #import "SKPDFSyncRecord.h"
 #import "NSCharacterSet_SKExtensions.h"
 #import "NSScanner_SKExtensions.h"
@@ -84,7 +83,7 @@ static NSUInteger caseInsensitiveStringHash(const void *item, NSUInteger (*size)
         filenames = nil;
         scanner = NULL;
         
-        shouldKeepRunning = 1;
+        shouldKeepRunning = YES;
         
         // it is not safe to use the defaultManager on background threads
         fileManager = [[NSFileManager alloc] init];
@@ -111,14 +110,13 @@ static NSUInteger caseInsensitiveStringHash(const void *item, NSUInteger (*size)
     // make sure we're not calling our delegate
     delegate = nil;
     // set the stop flag immediately, so any running task may stop in its tracks
-    OSAtomicCompareAndSwap32Barrier(1, 0, (int32_t *)&shouldKeepRunning);
+    atomic_store(&shouldKeepRunning, NO);
 }
 
 #pragma mark Thread safe accessors
 
 - (BOOL)shouldKeepRunning {
-    OSMemoryBarrier();
-    return shouldKeepRunning == 1;
+    return atomic_load(&shouldKeepRunning);
 }
 
 - (NSString *)fileName {
