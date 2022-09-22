@@ -42,68 +42,90 @@
 
 @implementation SKKeychain
 
-+ (SKPasswordStatus)getPassword:(NSString **)password item:(id *)itemPtr forService:(NSString *)service account:(NSString *)account {
-    void *passwordData = NULL;
-    UInt32 passwordLength = 0;
-    const char *serviceData = [service UTF8String];
-    const char *accountData = [account UTF8String];
++ (NSString *)passwordForService:(NSString *)service account:(NSString *)account status:(SKPasswordStatus *)status {
+    NSMutableDictionary *query = [NSMutableDictionary dictionary];
+    NSData *passwordData = nil;
+    NSString *password = nil;
     
-    OSStatus err = SecKeychainFindGenericPassword(NULL, strlen(serviceData), serviceData, strlen(accountData), accountData, password ? &passwordLength : NULL, password ? &passwordData : NULL, (SecKeychainItemRef *)itemPtr);
+    [query setObject:(NSString *)kSecClassGenericPassword forKey:(NSString *)kSecClass];
+    [query setObject:(NSString *)kSecMatchLimitOne forKey:(NSString *)kSecMatchLimit];
+    if (service)
+        [query setObject:service forKey:(NSString *)kSecAttrService];
+    if (account)
+        [query setObject:account forKey:(NSString *)kSecAttrAccount];
+    [query setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kSecReturnData];
+    
+    OSStatus err = SecItemCopyMatching((CFDictionaryRef)query, password ? (CFTypeRef *)&passwordData : NULL);
     
     if (err == noErr) {
-        if (password) {
-            *password = [[[NSString alloc] initWithBytes:passwordData length:passwordLength encoding:NSUTF8StringEncoding] autorelease];
-            SecKeychainItemFreeContent(NULL, passwordData);
+        if (passwordData) {
+            password = [[[NSString alloc] initWithData:passwordData encoding:NSUTF8StringEncoding] autorelease];
+            [passwordData release];
         }
-        if (itemPtr)
-            [*itemPtr autorelease];
+        if (status) *status = SKPasswordStatusFound;
+    } else if (err == errSecItemNotFound) {
+        if (status) *status = SKPasswordStatusNotFound;
+    } else {
+        if (err != errSecUserCanceled)
+            NSLog(@"Error %d occurred finding password: %@", (int)err, [(id)SecCopyErrorMessageString(err, NULL) autorelease]);
+        if (status) *status = SKPasswordStatusError;
+    }
+    return password;
+}
+
++ (void)setPassword:(NSString *)password forService:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment {
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    OSStatus err;
+    
+    // password not on keychain, so add it
+    [attributes setObject:service forKey:(NSString *)kSecAttrService];
+    [attributes setObject:account forKey:(NSString *)kSecAttrAccount];
+    [attributes setObject:(NSString *)kSecClassGenericPassword forKey:(NSString *)kSecClass];
+    if (label)
+        [attributes setObject:label forKey:(NSString *)kSecAttrLabel];
+    if (comment)
+        [attributes setObject:comment forKey:(NSString *)kSecAttrComment];
+    if (password)
+        [attributes setObject:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(NSString *)kSecValueData];
+    
+    err = SecItemAdd((CFDictionaryRef)attributes, NULL);
+    if (err != noErr && err != errSecUserCanceled)
+        NSLog(@"Error %d occurred adding password: %@", (int)err, [(id)SecCopyErrorMessageString(err, NULL) autorelease]);
+}
+
++ (SKPasswordStatus)updatePassword:(NSString *)password service:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment forService:(NSString *)itemService account:(NSString *)itemAccount {
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    NSMutableDictionary *query = [NSMutableDictionary dictionary];
+    OSStatus err;
+    
+    [query setObject:(NSString *)kSecClassGenericPassword forKey:(NSString *)kSecClass];
+    [query setObject:(NSString *)kSecMatchLimitOne forKey:(NSString *)kSecMatchLimit];
+    if (itemService)
+        [query setObject:itemService forKey:(NSString *)kSecAttrService];
+    if (itemAccount)
+        [query setObject:itemAccount forKey:(NSString *)kSecAttrAccount];
+    
+    if (service && [service isEqualToString:itemService] == NO)
+        [attributes setObject:service forKey:(NSString *)kSecAttrService];
+    if (account && [account isEqualToString:itemAccount] == NO)
+        [attributes setObject:account forKey:(NSString *)kSecAttrAccount];
+    if (label)
+        [attributes setObject:label forKey:(NSString *)kSecAttrLabel];
+    if (comment)
+        [attributes setObject:comment forKey:(NSString *)kSecAttrComment];
+    if (password)
+        [attributes setObject:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(NSString *)kSecValueData];
+    
+    // password was on keychain, so modify the keychain
+    err = SecItemUpdate((CFDictionaryRef)query, (CFDictionaryRef)attributes);
+    if (err == noErr) {
         return SKPasswordStatusFound;
     } else if (err == errSecItemNotFound) {
         return SKPasswordStatusNotFound;
     } else {
         if (err != errSecUserCanceled)
-            NSLog(@"Error %d occurred finding password: %@", (int)err, [(id)SecCopyErrorMessageString(err, NULL) autorelease]);
+            NSLog(@"Error %d occurred modifying password or attributes: %@", (int)err, [(id)SecCopyErrorMessageString(err, NULL) autorelease]);
         return SKPasswordStatusError;
-    }
-}
-
-static inline SecKeychainAttribute makeKeychainAttribute(SecKeychainAttrType tag, NSString *string) {
-    const char *data = [string UTF8String];
-    SecKeychainAttribute attr;
-    attr.tag = tag;
-    attr.length = strlen(data);
-    attr.data = (void *)data;
-    return attr;
-}
-
-+ (void)setPassword:(NSString *)password item:(id)item forService:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment {
-    const void *passwordData = [password UTF8String];
-    UInt32 passwordLength = password ? strlen(passwordData) : 0;
-    NSUInteger attrCount = 2;
-    SecKeychainAttributeList attributes;
-    SecKeychainAttribute attrs[4];
-    OSStatus err;
-    
-    attrs[0] = makeKeychainAttribute(kSecServiceItemAttr, service);
-    attrs[1] = makeKeychainAttribute(kSecAccountItemAttr, account);
-    if (label)
-        attrs[attrCount++] = makeKeychainAttribute(kSecLabelItemAttr, label);
-    if (comment)
-        attrs[attrCount++] = makeKeychainAttribute(kSecCommentItemAttr, comment);
-    
-    attributes.count = attrCount;
-    attributes.attr = attrs;
-    
-    if (item) {
-        // password was on keychain, so modify the keychain
-        err = SecKeychainItemModifyAttributesAndData((SecKeychainItemRef)item, &attributes, passwordLength, passwordData);
-        if (err != noErr && err != errSecUserCanceled)
-            NSLog(@"Error %d occurred modifying password: %@", (int)err, [(id)SecCopyErrorMessageString(err, NULL) autorelease]);
-    } else if (password) {
-        // password not on keychain, so add it
-        err = SecKeychainItemCreateFromContent(kSecGenericPasswordItemClass, &attributes, passwordLength, passwordData, NULL, NULL, NULL);
-        if (err != noErr && err != errSecUserCanceled)
-            NSLog(@"Error %d occurred adding password: %@", (int)err, [(id)SecCopyErrorMessageString(err, NULL) autorelease]);
     }
 }
 

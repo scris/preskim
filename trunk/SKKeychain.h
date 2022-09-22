@@ -47,7 +47,8 @@ typedef NS_ENUM(NSInteger, SKPasswordStatus) {
 
 @interface SKKeychain : NSObject
 
-+ (SKPasswordStatus)getPassword:(NSString **)password item:(id *)itemPtr forService:(NSString *)service account:(NSString *)account;
-+ (void)setPassword:(NSString *)password item:(id)item forService:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment;
++ (NSString *)passwordForService:(NSString *)service account:(NSString *)account status:(SKPasswordStatus *)status;
++ (void)setPassword:(NSString *)password forService:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment;
++ (SKPasswordStatus)updatePassword:(NSString *)password service:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment forService:(NSString *)oldService account:(NSString *)oldAccount;
 
 @end
