@@ -1326,8 +1326,12 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
 #pragma mark Services
 
 - (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard types:(NSArray *)types {
-    if ([types containsObject:(NSString *)kUTTypeFileURL] && [outlineView selectedRow] != -1) {
-        NSArray *allBookmarks = minimumCoverForBookmarks([outlineView selectedItems]);
+    if ([types containsObject:(NSString *)kUTTypeFileURL] && ([outlineView selectedRow] != -1 || [outlineView clickedRow] != -1)) {
+        NSInteger rowIndex = [outlineView clickedRow];
+        NSIndexSet *indexes = [outlineView selectedRowIndexes];
+        if (rowIndex != -1 && [indexes containsIndex:rowIndex] == NO)
+            indexes = [NSIndexSet indexSetWithIndex:rowIndex];
+        NSArray *allBookmarks = minimumCoverForBookmarks([outlineView itemsAtRowIndexes:indexes]);
         allBookmarks = [allBookmarks valueForKeyPath:@"@distinctUnionOfArrays.containingBookmarks.fileURL"];
         if ([allBookmarks containsObject:[NSNull null]]) {
             NSMutableArray *bms = [allBookmarks mutableCopy];
@@ -1345,7 +1349,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
 
 - (id)validRequestorForSendType:(NSString *)sendType returnType:(NSString *)returnType {
     if ([sendType isEqualToString:(NSString *)kUTTypeFileURL] && returnType == nil)
-        return [outlineView selectedRow] != -1 ? self : nil;
+        return [outlineView selectedRow] != -1 || [outlineView clickedRow] != -1 ? self : nil;
     return [super validRequestorForSendType:sendType returnType:returnType];
 }
 
