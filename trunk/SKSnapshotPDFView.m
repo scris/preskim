@@ -498,6 +498,24 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     }
 }
 
+- (void)copy:(id)sender {
+    NSMutableString *mutableString = [NSMutableString string];
+    NSRect rect = [self visibleContentRect];
+    
+    for (PDFPage *page in [self displayedPages]) {
+        PDFSelection *sel = [page selectionForRect:[self convertRect:rect toPage:page]];
+        if ([sel hasCharacters]) {
+            if ([mutableString length] > 0)
+                [mutableString appendString:@"\n"];
+            [mutableString appendString:[sel string]];
+        }
+    }
+    
+    NSPasteboard *pboard = [NSPasteboard generalPasteboard];
+    [pboard clearContents];
+    [pboard writeObjects:[NSArray arrayWithObjects:mutableString, nil]];
+}
+
 // we don't want to steal the printDocument: action from the responder chain
 - (void)printDocument:(id)sender{}
 
@@ -558,7 +576,11 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
-    if ([menuItem action] == @selector(doAutoFit:)) {
+    if ([menuItem action] == @selector(copy:)) {
+        return YES;
+    } else if ([menuItem action] == @selector(selectAll:)) {
+        return NO;
+    } else if ([menuItem action] == @selector(doAutoFit:)) {
         [menuItem setState:[self autoFits] ? NSOnState : NSOffState];
         return [self shouldAutoFit];
     } else if ([menuItem action] == @selector(doActualSize:)) {

@@ -612,7 +612,11 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
-    if ([menuItem action] == @selector(toggleDisplaysAsBookFromMenu:)) {
+    if ([menuItem action] == @selector(copy:)) {
+        return [self selectsText] && [[self currentSelection] hasCharacters];
+    } else if ([menuItem action] == @selector(selectAll:)) {
+        return [self selectsText];
+    } else if ([menuItem action] == @selector(toggleDisplaysAsBookFromMenu:)) {
         [menuItem setState:[self displaysAsBook] ? NSOnState : NSOffState];
         return YES;
     } else if ([menuItem action] == @selector(toggleDisplayPageBreaksFromMenu:)) {
