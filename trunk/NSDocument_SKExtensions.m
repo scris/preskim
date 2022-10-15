@@ -84,11 +84,15 @@ NSString *SKDocumentFileURLDidChangeNotification = @"SKDocumentFileURLDidChangeN
     if (fileURL) {
         NSURLComponents *components = [[NSURLComponents alloc] initWithURL:fileURL resolvingAgainstBaseURL:NO];
         [components setScheme:@"skim"];
-        NSURL *skimURL = [components URL];
+        NSString *skimURL = [[components URL] absoluteString];
         [components release];
+        NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
+        [item setString:skimURL forType:(NSString *)kUTTypeURL];
+        [item setString:skimURL forType:NSPasteboardTypeString];
+        [item setString:[self displayName] forType:@"public.url-name"];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeObjects:[NSArray arrayWithObjects:skimURL, nil]];
+        [pboard writeObjects:[NSArray arrayWithObjects:item, nil]];
     } else {
         NSBeep();
     }
