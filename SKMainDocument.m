@@ -1035,9 +1035,14 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
             skimURL = [components URL];
             [components release];
         }
+        NSString *string = [skimURL absoluteString];
+        NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
+        [item setString:string forType:(NSString *)kUTTypeURL];
+        [item setString:string forType:NSPasteboardTypeString];
+        [item setString:[self displayName] forType:@"public.url-name"];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeObjects:[NSArray arrayWithObjects:skimURL, nil]];
+        [pboard writeObjects:[NSArray arrayWithObjects:item, nil]];
     } else {
         NSBeep();
     }
