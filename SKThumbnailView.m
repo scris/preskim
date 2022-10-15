@@ -433,12 +433,27 @@ static char SKThumbnailViewThumbnailObservationContext;
     [[[self thumbnail] page] writeToClipboard];
 }
 
+- (void)copyPageURL:(id)sender {
+    PDFPage *page = [[self thumbnail] page];
+    NSString *skimURL = [[page skimURL] absoluteString];
+    if (skimURL != nil) {
+        NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
+        [item setString:skimURL forType:(NSString *)kUTTypeURL];
+        [item setString:skimURL forType:NSPasteboardTypeString];
+        [item setString:[[[[self window] windowController] document] displayName] forType:@"public.url-name"];
+        NSPasteboard *pboard = [NSPasteboard generalPasteboard];
+        [pboard clearContents];
+        [pboard writeObjects:[NSArray arrayWithObjects:item, nil]];
+    }
+}
+
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent {
     PDFPage *page = [[self thumbnail] page];
     NSMenu *menu = nil;
     if (page && [[page document] isLocked] == NO) {
         menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
         [menu addItemWithTitle:NSLocalizedString(@"Copy", @"Menu item title") action:@selector(copyPage:) target:self];
+        [menu addItemWithTitle:NSLocalizedString(@"Copy URL", @"Menu item title") action:@selector(copyPageURL:) target:self];
     }
     return menu;
 }

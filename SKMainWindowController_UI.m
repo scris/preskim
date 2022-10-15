@@ -1000,6 +1000,23 @@
     [self tableView:leftSideController.thumbnailTableView copyRowsWithIndexes:[sender representedObject]];
 }
 
+- (void)copyPageURL:(id)sender {
+    NSUInteger idx = [[sender representedObject] firstIndex];
+    if (idx != NSNotFound) {
+        PDFPage *page = [[pdfView document] pageAtIndex:idx];
+        NSString *skimURL = [[page skimURL] absoluteString];
+        if (skimURL != nil) {
+            NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
+            [item setString:skimURL forType:(NSString *)kUTTypeURL];
+            [item setString:skimURL forType:NSPasteboardTypeString];
+            [item setString:[[self document] displayName] forType:@"public.url-name"];
+            NSPasteboard *pboard = [NSPasteboard generalPasteboard];
+            [pboard clearContents];
+            [pboard writeObjects:[NSArray arrayWithObjects:item, nil]];
+        }
+    }
+}
+
 - (void)selectSelections:(id)sender {
     [pdfView setCurrentSelection:[PDFSelection selectionByAddingSelections:[sender representedObject]]];
 }
@@ -1173,6 +1190,8 @@
         NSInteger row = [leftSideController.thumbnailTableView clickedRow];
         if (row != -1) {
             item = [menu addItemWithTitle:NSLocalizedString(@"Copy", @"Menu item title") action:@selector(copyPage:) target:self];
+            [item setRepresentedObject:[NSIndexSet indexSetWithIndex:row]];
+            item = [menu addItemWithTitle:NSLocalizedString(@"Copy URL", @"Menu item title") action:@selector(copyPageURL:) target:self];
             [item setRepresentedObject:[NSIndexSet indexSetWithIndex:row]];
         }
     } else if ([menu isEqual:[leftSideController.findTableView menu]]) {
