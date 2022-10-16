@@ -534,7 +534,7 @@ static inline void addNormalizedOption(NSMutableDictionary *options, NSString *k
         value = [NSNumber numberWithInteger:[valueString integerValue]];
         key = @"displayDirection";
     } else if ([key isEqualToString:@"displaysrtl"] || [key isEqualToString:@"rtl"]) {
-        value = [NSNumber numberWithInteger:[valueString integerValue]];
+        value = [NSNumber numberWithBool:[valueString boolValue]];
         key = @"displaysRTL";
     } else if ([key isEqualToString:@"displaybox"] || [key isEqualToString:@"box"]) {
         value = [NSNumber numberWithInteger:[valueString integerValue]];
