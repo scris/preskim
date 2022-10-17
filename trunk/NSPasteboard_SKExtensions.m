@@ -38,6 +38,8 @@
 
 #import "NSPasteboard_SKExtensions.h"
 
+#define SKPasteboardTypeURLName @"public.url-name"
+
 @implementation NSPasteboard (SKExtensions)
 
 - (NSURL *)pasteLocationURL; {
@@ -56,6 +58,29 @@
         }
     }
     return pasteLocationURL;
+}
+
+- (BOOL)writeURLs:(NSArray *)URLs names:(NSArray *)names {
+    NSMutableArray *items = [NSMutableArray array];
+    NSUInteger i, urlCount = [URLs count], namesCount = [names count];
+    
+    for (i = 0; i < urlCount; i++) {
+        
+        NSURL *theURL = [URLs objectAtIndex:i];
+        NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
+        
+        [item setString:[theURL absoluteString] forType:(NSString *)([theURL isFileURL] ? kUTTypeFileURL : kUTTypeURL)];
+        [item setString:[theURL absoluteString] forType:NSPasteboardTypeString];
+        if (i < namesCount)
+            [item setString:[names objectAtIndex:i] forType:SKPasteboardTypeURLName];
+        
+        [items addObject:item];
+    }
+    
+    if ([items count])
+        return [self writeObjects:items];
+    else
+        return NO;
 }
 
 @end

@@ -48,6 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import "PDFPage_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "SKThumbnailImageView.h"
+#import "NSPasteboard_SKExtensions.h"
 
 #define MARGIN 8.0
 #define TEXT_MARGIN 4.0
@@ -435,15 +436,11 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)copyPageURL:(id)sender {
     PDFPage *page = [[self thumbnail] page];
-    NSString *skimURL = [[page skimURL] absoluteString];
+    NSURL *skimURL = [page skimURL];
     if (skimURL != nil) {
-        NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
-        [item setString:skimURL forType:(NSString *)kUTTypeURL];
-        [item setString:skimURL forType:NSPasteboardTypeString];
-        [item setString:[[[[self window] windowController] document] displayName] forType:@"public.url-name"];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeObjects:[NSArray arrayWithObjects:item, nil]];
+        [pboard writeURLs:[NSArray arrayWithObjects:skimURL, nil] names:[NSArray arrayWithObjects:[[[[self window] windowController] document] displayName], nil]];
     }
 }
 

@@ -53,6 +53,7 @@
 #import "NSError_SKExtensions.h"
 #import "SKDocumentController.h"
 #import "SKRecentDocumentInfo.h"
+#import "NSPasteboard_SKExtensions.h"
 
 #define SKPasteboardTypeBookmarkRow @"net.sourceforge.skim-app.pasteboard.bookmarkrow"
 
@@ -571,20 +572,18 @@ static NSUInteger maxRecentDocumentsCount = 0;
 - (IBAction)copyURL:(id)sender {
     NSArray *selectedBookmarks = minimumCoverForBookmarks([outlineView selectedItems]);
     NSMutableArray *skimURLs = [NSMutableArray array];
+    NSMutableArray *labels = [NSMutableArray array];
     for (SKBookmark *bookmark in selectedBookmarks) {
-        NSString *skimURL = [[bookmark skimURL] absoluteString];
+        NSURL *skimURL = [bookmark skimURL];
         if (skimURL) {
-            NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
-            [item setString:skimURL forType:(NSString *)kUTTypeURL];
-            [item setString:skimURL forType:NSPasteboardTypeString];
-            [item setString:[bookmark label] forType:@"public.url-name"];
-            [skimURLs addObject:item];
+            [skimURLs addObject:skimURL];
+            [labels addObject:[bookmark label]];
         }
     }
     if ([skimURLs count]) {
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeObjects:skimURLs];
+        [pboard writeURLs:skimURLs names:labels];
     } else {
         NSBeep();
     }
