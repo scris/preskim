@@ -90,6 +90,7 @@
 #import "NSView_SKExtensions.h"
 #import "NSImage_SKExtensions.h"
 #import "NSObject_SKExtensions.h"
+#import "NSPasteboard_SKExtensions.h"
 
 #define NOTES_KEY       @"notes"
 #define SNAPSHOTS_KEY   @"snapshots"
@@ -1004,15 +1005,11 @@
     NSUInteger idx = [[sender representedObject] firstIndex];
     if (idx != NSNotFound) {
         PDFPage *page = [[pdfView document] pageAtIndex:idx];
-        NSString *skimURL = [[page skimURL] absoluteString];
+        NSURL *skimURL = [page skimURL];
         if (skimURL != nil) {
-            NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
-            [item setString:skimURL forType:(NSString *)kUTTypeURL];
-            [item setString:skimURL forType:NSPasteboardTypeString];
-            [item setString:[[self document] displayName] forType:@"public.url-name"];
             NSPasteboard *pboard = [NSPasteboard generalPasteboard];
             [pboard clearContents];
-            [pboard writeObjects:[NSArray arrayWithObjects:item, nil]];
+            [pboard writeURLs:[NSArray arrayWithObjects:skimURL, nil] names:[NSArray arrayWithObjects:[[self document] displayName], nil]];
         }
     }
 }

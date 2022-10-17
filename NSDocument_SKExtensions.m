@@ -55,6 +55,7 @@
 #import "NSWindow_SKExtensions.h"
 #import "SKStringConstants.h"
 #import <SkimNotes/SkimNotes.h>
+#import "NSPasteboard_SKExtensions.h"
 
 #define SKDisableExportAttributesKey @"SKDisableExportAttributes"
 
@@ -84,15 +85,11 @@ NSString *SKDocumentFileURLDidChangeNotification = @"SKDocumentFileURLDidChangeN
     if (fileURL) {
         NSURLComponents *components = [[NSURLComponents alloc] initWithURL:fileURL resolvingAgainstBaseURL:NO];
         [components setScheme:@"skim"];
-        NSString *skimURL = [[components URL] absoluteString];
+        NSURL  *skimURL = [components URL];
         [components release];
-        NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
-        [item setString:skimURL forType:(NSString *)kUTTypeURL];
-        [item setString:skimURL forType:NSPasteboardTypeString];
-        [item setString:[self displayName] forType:@"public.url-name"];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeObjects:[NSArray arrayWithObjects:item, nil]];
+        [pboard writeURLs:[NSArray arrayWithObjects:skimURL, nil] names:[NSArray arrayWithObjects:[self displayName], nil]];
     } else {
         NSBeep();
     }

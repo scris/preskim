@@ -43,4 +43,6 @@
 
 - (NSURL *)pasteLocationURL;
 
+- (BOOL)writeURLs:(NSArray *)URLs names:(NSArray *)names;
+
 @end

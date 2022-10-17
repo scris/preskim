@@ -92,6 +92,7 @@
 #import "PDFOutline_SKExtensions.h"
 #import "PDFView_SKExtensions.h"
 #import "SKLine.h"
+#import "NSPasteboard_SKExtensions.h"
 
 #define BUNDLE_DATA_FILENAME @"data"
 #define PRESENTATION_OPTIONS_KEY @"net_sourceforge_skim-app_presentation_options"
@@ -1035,14 +1036,9 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
             skimURL = [components URL];
             [components release];
         }
-        NSString *string = [skimURL absoluteString];
-        NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
-        [item setString:string forType:(NSString *)kUTTypeURL];
-        [item setString:string forType:NSPasteboardTypeString];
-        [item setString:[self displayName] forType:@"public.url-name"];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeObjects:[NSArray arrayWithObjects:item, nil]];
+        [pboard writeURLs:[NSArray arrayWithObjects:skimURL, nil] names:[NSArray arrayWithObject:[self displayName]]];
     } else {
         NSBeep();
     }
