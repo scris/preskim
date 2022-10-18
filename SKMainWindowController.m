@@ -693,7 +693,7 @@ static char SKMainWindowContentLayoutObservationContext;
     if ((number = [setup objectForKey:DISPLAYSASBOOK_KEY]))
         [pdfView setDisplaysAsBook:[number boolValue]];
     if ((number = [setup objectForKey:DISPLAYMODE_KEY]))
-        [pdfView setDisplayMode:[number integerValue]];
+        [pdfView setExtendedDisplayMode:[number integerValue]];
     if ((number = [setup objectForKey:DISPLAYDIRECTION_KEY]))
         [pdfView setDisplaysHorizontally:[number boolValue]];
     if ((number = [setup objectForKey:DISPLAYSRTL_KEY]))
