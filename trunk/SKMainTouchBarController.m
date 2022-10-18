@@ -424,6 +424,29 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
     }
 }
 
+- (void)handleTemporaryToolModeChangedNotification:(NSNotification *)notification {
+    SKToolMode toolMode = [mainController.pdfView toolMode];
+    NSString *name = nil;
+    switch ([mainController.pdfView temporaryToolMode]) {
+        case SKZoomToolMode :      name = SKImageNameTouchBarZoomToSelection;  break;
+        case SKSnapshotToolMode :  name = SKImageNameTouchBarSnapshotTool;     break;
+        case SKHighlightToolMode : name = SKImageNameTouchBarAddHighlightNote; break;
+        case SKUnderlineToolMode : name = SKImageNameTouchBarAddUnderlineNote; break;
+        case SKStrikeOutToolMode : name = SKImageNameTouchBarAddStrikeOutNote; break;
+        case SKInkToolMode :       name = SKImageNameTouchBarAddInkNote;       break;
+        case SKNoToolMode:
+            switch (toolMode) {
+                case SKTextToolMode :    name = SKImageNameTouchBarTextTool;    break;
+                case SKMoveToolMode :    name = SKImageNameTouchBarMoveTool;    break;
+                case SKMagnifyToolMode : name = SKImageNameTouchBarMagnifyTool; break;
+                case SKSelectToolMode :  name = SKImageNameTouchBarSelectTool;  break;
+                case SKNoteToolMode :    name = noteToolImageNames[mainController.pdfView.annotationMode]; break;
+            }
+            break;
+    }
+    [toolModeButton setImage:[NSImage imageNamed:name] forSegment:toolMode];
+}
+
 - (void)handleAnnotationModeChangedNotification:(NSNotification *)notification {
     [toolModeButton setImage:[NSImage imageNamed:noteToolImageNames[[mainController.pdfView annotationMode]]] forSegment:SKNoteToolMode];
     if ([mainController.pdfView toolMode] == SKNoteToolMode)
@@ -462,6 +485,8 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
                name:PDFViewScaleChangedNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handleToolModeChangedNotification:)
                name:SKPDFViewToolModeChangedNotification object:mainController.pdfView];
+    [nc addObserver:self selector:@selector(handleTemporaryToolModeChangedNotification:)
+                             name:SKPDFViewTemporaryToolModeChangedNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handleAnnotationModeChangedNotification:)
                name:SKPDFViewAnnotationModeChangedNotification object:mainController.pdfView];
 }
