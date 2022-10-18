@@ -1393,6 +1393,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (IBAction)selectAll:(id)sender {
+    [self setTemporaryToolMode:SKNoToolMode];
     if (toolMode == SKTextToolMode)
         [super selectAll:sender];
 }
@@ -1563,6 +1564,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         page = [[self document] pageAtIndex:i];
         idx = 0;
     }
+    
+    [self setTemporaryToolMode:SKNoToolMode];
     
     if (range.location != NSNotFound) {
         selection = [page selectionForRange:range];
