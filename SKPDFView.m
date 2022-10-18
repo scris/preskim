@@ -4592,7 +4592,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     PDFPage *page = [readingBar page];
     NSInteger firstLine = [readingBar currentLine];
     
-    [[NSCursor resizeUpDownCursor] push];
+    if (([page rotation] - [page lineDirectionAngle]) % 180)
+        [[NSCursor resizeUpDownCursor] push];
+    else
+        [[NSCursor resizeLeftRightCursor] push];
     
 	while (YES) {
 		
