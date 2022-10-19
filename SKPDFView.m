@@ -4696,8 +4696,6 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     BOOL dragged = NO;
     NSRect selRect = [self doSelectRectWithEvent:theEvent didDrag:&dragged];
     
-	[self setCursorForMouse:theEvent];
-    
     NSPoint point = [self convertPoint:SKCenterPoint(selRect) fromView:[self documentView]];
     PDFPage *page = [self pageForPoint:point nearest:YES];
     NSRect rect = [self convertRect:selRect fromView:[self documentView]];
@@ -5057,8 +5055,6 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     
     BOOL dragged = NO;
     NSRect selRect = [self doSelectRectWithEvent:theEvent didDrag:&dragged];
-    
-    [self setCursorForMouse:theEvent];
     
     if (dragged && NSIsEmptyRect(selRect) == NO) {
         
