@@ -1650,7 +1650,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     return rewindPage != nil;
 }
 
-- (void)setNeedsRewind:(BOOL)flag {return;
+- (void)setNeedsRewind:(BOOL)flag {
     if (flag) {
         [rewindPage release];
         rewindPage = [[self currentPage] retain];
