@@ -100,9 +100,13 @@ enum {
     SKResizeLeftRightArea = 1 << 18,
     SKResizeDiagonal45Area = 1 << 19,
     SKResizeDiagonal135Area = 1 << 20,
-    SKReadingBarArea = 1 << 21,
-    SKSpecialToolArea = 1 << 22,
-    SKTemporaryToolArea = 1 << 23
+    SKResizeRightArea = 1 << 21,
+    SKResizeUpArea = 1 << 22,
+    SKResizeLeftArea = 1 << 23,
+    SKResizeDownArea = 1 << 24,
+    SKReadingBarArea = 1 << 25,
+    SKSpecialToolArea = 1 << 26,
+    SKTemporaryToolArea = 1 << 27
 };
 
 enum {
