@@ -1827,7 +1827,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     } else if ((area & SKReadingBarArea) && (area & kPDFLinkArea) == 0) {
         [self setTemporaryToolMode:SKNoToolMode];
         BOOL wantsLoupe = [self hideLoupeWindow];
-        if ((area & (SKResizeUpDownArea | SKResizeLeftRightArea)))
+        if ((area & (SKResizeUpDownArea | SKResizeLeftRightArea | SKResizeRightArea | SKResizeUpArea | SKResizeLeftArea | SKResizeDownArea)))
             [self doResizeReadingBarWithEvent:theEvent];
         else
             [self doDragReadingBarWithEvent:theEvent];
@@ -4588,14 +4588,32 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [self performSelector:@selector(setCursorForMouse:) withObject:lastMouseEvent afterDelay:0];
 }
 
+static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
+    if (single) {
+        switch (angle) {
+            case 0:
+                return [NSCursor resizeRightCursor];
+            case 90:
+                return [NSCursor resizeUpCursor];
+            case 180:
+                return [NSCursor resizeLeftCursor];
+            case 270:
+            default:
+                return [NSCursor resizeDownCursor];
+        }
+    } else if ((angle % 180)) {
+        return [NSCursor resizeUpDownCursor];
+    } else {
+        return [NSCursor resizeLeftRightCursor];
+    }
+}
+
 - (void)doResizeReadingBarWithEvent:(NSEvent *)theEvent {
     PDFPage *page = [readingBar page];
     NSInteger firstLine = [readingBar currentLine];
+    NSInteger angle = (360 - [page rotation] + [page lineDirectionAngle]) % 360;
     
-    if (([page rotation] - [page lineDirectionAngle]) % 180)
-        [[NSCursor resizeUpDownCursor] push];
-    else
-        [[NSCursor resizeLeftRightCursor] push];
+    [resizeCursor(angle, [readingBar numberOfLines] == 1) push];
     
 	while (YES) {
 		
@@ -4612,6 +4630,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         if (numberOfLines > 0 && numberOfLines != (NSInteger)[readingBar numberOfLines]) {
             [readingBar setNumberOfLines:numberOfLines];
+            [resizeCursor(angle, numberOfLines == 1) set];
         }
     }
     
@@ -5215,14 +5234,22 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             if ((lineAngle % 180)) {
                 if (p.y >= NSMinY(bounds) && p.y <= NSMaxY(bounds)) {
                     area |= SKReadingBarArea;
-                    if ((lineAngle == 270 && p.y < NSMinY(bounds) + READINGBAR_RESIZE_EDGE_HEIGHT) || (lineAngle == 90 && p.y > NSMaxY(bounds) - READINGBAR_RESIZE_EDGE_HEIGHT))
-                        area |= ([page rotation] % 180) ? SKResizeLeftRightArea : SKResizeUpDownArea;
+                    if ((lineAngle == 270 && p.y < NSMinY(bounds) + READINGBAR_RESIZE_EDGE_HEIGHT) || (lineAngle == 90 && p.y > NSMaxY(bounds) - READINGBAR_RESIZE_EDGE_HEIGHT)) {
+                        if ([readingBar numberOfLines] == 1)
+                            area |= SKResizeRightArea << (((360 - [page rotation] + lineAngle) % 360) / 90);
+                        else
+                            area |= ([page rotation] % 180) ? SKResizeLeftRightArea : SKResizeUpDownArea;
+                    }
                 }
             } else {
                 if (p.x >= NSMinX(bounds) && p.x <= NSMaxX(bounds)) {
                     area |= SKReadingBarArea;
-                    if ((lineAngle == 0 && p.x > NSMaxX(bounds) - READINGBAR_RESIZE_EDGE_HEIGHT) || (lineAngle == 180 && p.x < NSMinX(bounds) + READINGBAR_RESIZE_EDGE_HEIGHT))
-                        area |= ([page rotation] % 180) ? SKResizeUpDownArea : SKResizeLeftRightArea;
+                    if ((lineAngle == 0 && p.x > NSMaxX(bounds) - READINGBAR_RESIZE_EDGE_HEIGHT) || (lineAngle == 180 && p.x < NSMinX(bounds) + READINGBAR_RESIZE_EDGE_HEIGHT)) {
+                        if ([readingBar numberOfLines] == 1)
+                            area |= SKResizeRightArea << (((360 - [page rotation] + lineAngle) % 360) / 90);
+                        else
+                            area |= ([page rotation] % 180) ? SKResizeUpDownArea : SKResizeLeftRightArea;
+                    }
                 }
             }
         }
@@ -5273,6 +5300,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [[NSCursor resizeDiagonal45Cursor] set];
     else if ((area & SKResizeDiagonal135Area))
         [[NSCursor resizeDiagonal135Cursor] set];
+    else if ((area & SKResizeRightArea))
+        [[NSCursor resizeRightCursor] set];
+    else if ((area & SKResizeUpArea))
+        [[NSCursor resizeUpCursor] set];
+    else if ((area & SKResizeLeftArea))
+        [[NSCursor resizeLeftCursor] set];
+    else if ((area & SKResizeDownArea))
+        [[NSCursor resizeDownCursor] set];
     else if ((area & SKReadingBarArea))
         [[NSCursor openHandBarCursor] set];
     else if (area == kPDFTextFieldArea)
