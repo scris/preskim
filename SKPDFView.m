@@ -718,7 +718,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setDisplayModeAndRewind:(PDFDisplayMode)mode {
     if (mode != [self displayMode]) {
-        [self setNeedsRewind:YES];
+        if ((mode & kPDFDisplaySinglePageContinuous))
+            [self setNeedsRewind:YES];
         [self setDisplayMode:mode];
     }
 }
@@ -760,7 +761,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setExtendedDisplayModeAndRewind:(PDFDisplayMode)mode {
     if (mode != [self extendedDisplayMode]) {
-        [self setNeedsRewind:YES];
+        if ((mode & (kPDFDisplaySinglePageContinuous | kPDFDisplayHorizontalContinuous)))
+            [self setNeedsRewind:YES];
         [self setExtendedDisplayMode:mode];
     }
 }
@@ -820,7 +822,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setDisplaysRightToLeftAndRewind:(BOOL)flag {
     if (RUNNING_AFTER(10_12) && flag != [self displaysRightToLeft]) {
-        [self setNeedsRewind:YES];
+        if (([self displayMode] & kPDFDisplaySinglePageContinuous))
+            [self setNeedsRewind:YES];
         [self setDisplaysRightToLeft:flag];
     }
 }
@@ -838,7 +841,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setDisplayBoxAndRewind:(PDFDisplayBox)box {
     if (box != [self displayBox]) {
-        [self setNeedsRewind:YES];
+        if (([self displayMode] & kPDFDisplaySinglePageContinuous))
+            [self setNeedsRewind:YES];
         [self setDisplayBox:box];
     }
 }
@@ -857,7 +861,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setDisplaysAsBookAndRewind:(BOOL)asBook {
     if (asBook != [self displaysAsBook]) {
-        [self setNeedsRewind:YES];
+        if (([self displayMode] & kPDFDisplaySinglePageContinuous))
+            [self setNeedsRewind:YES];
         [self setDisplaysAsBook:asBook];
     }
 }
@@ -1645,7 +1650,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     return rewindPage != nil;
 }
 
-- (void)setNeedsRewind:(BOOL)flag {
+- (void)setNeedsRewind:(BOOL)flag {return;
     if (flag) {
         [rewindPage release];
         rewindPage = [[self currentPage] retain];
