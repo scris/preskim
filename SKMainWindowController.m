@@ -722,6 +722,13 @@ static char SKMainWindowContentLayoutObservationContext;
 - (void)applyOptions:(NSDictionary *)options {
     NSInteger page = [[options objectForKey:@"page"] integerValue];
     NSString *searchString = [options objectForKey:@"search"];
+    NSMutableDictionary *settings = [options mutableCopy];
+    [settings removeObjectForKey:@"page"];
+    [settings removeObjectForKey:@"point"];
+    [settings removeObjectForKey:@"search"];
+    if ([settings count])
+        [self applyPDFSettings:settings rewind:page == 0 && [[pdfView currentPage] pageIndex] > 0];
+    [settings release];
     if (page > 0) {
         page = MIN(page, (NSInteger)[[pdfView document] pageCount]);
         NSString *pointString = [options objectForKey:@"point"];
@@ -739,7 +746,6 @@ static char SKMainWindowContentLayoutObservationContext;
         [leftSideController.searchField setStringValue:searchString];
         [self performSelector:@selector(search:) withObject:leftSideController.searchField afterDelay:0.0];
     }
-    [self applyPDFSettings:options rewind:NO];
 }
 
 #pragma mark UI updating
