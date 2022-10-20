@@ -1444,6 +1444,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [self setExtendedDisplayModeAndRewind:kPDFDisplaySinglePageContinuous];
 }
 
+- (void)setDoublePageScrolling:(id)sender {
+    [self setExtendedDisplayModeAndRewind:kPDFDisplayTwoUpContinuous];
+}
+
 - (void)setHorizontalScrolling:(id)sender {
     [self setExtendedDisplayModeAndRewind:kPDFDisplayHorizontalContinuous];
 }
@@ -2051,6 +2055,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
         i = [menu indexOfItemWithTarget:self andAction:NSSelectorFromString(@"_setDoublePageScrolling:")];
         if (i != -1) {
+            [[menu itemAtIndex:i] setAction:@selector(setDoublePageScrolling:)];
             [menu insertItem:[NSMenuItem separatorItem] atIndex:i + 1];
             item = [menu insertItemWithTitle:NSLocalizedString(@"Horizontal Continuous", @"Menu item title") action:@selector(setHorizontalScrolling:) target:self atIndex:i + 1];
         }
@@ -3319,6 +3324,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         return [[self document] isLocked] == NO;
     } else if (action == @selector(setSinglePageScrolling:)) {
         [menuItem setState:[self extendedDisplayMode] == kPDFDisplaySinglePageContinuous ? NSOnState : NSOffState];
+        return YES;
+    } else if (action == @selector(setDoublePageScrolling:)) {
+        [menuItem setState:[self extendedDisplayMode] == kPDFDisplayTwoUpContinuous ? NSOnState : NSOffState];
         return YES;
     } else if (action == @selector(setHorizontalScrolling:)) {
         [menuItem setState:[self extendedDisplayMode] == kPDFDisplayHorizontalContinuous ? NSOnState : NSOffState];
