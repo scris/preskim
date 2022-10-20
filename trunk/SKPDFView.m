@@ -1440,11 +1440,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [self doAutoHideCursorIfNeeded];
 }
 
-- (void)setSinglePageScrolling:(id)sender {
+- (void)_setSinglePageScrolling:(id)sender {
     [self setExtendedDisplayModeAndRewind:kPDFDisplaySinglePageContinuous];
 }
 
-- (void)setDoublePageScrolling:(id)sender {
+- (void)_setDoublePageScrolling:(id)sender {
     [self setExtendedDisplayModeAndRewind:kPDFDisplayTwoUpContinuous];
 }
 
@@ -2048,13 +2048,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [item setAlternate:YES];
     }
     
-    i = [menu indexOfItemWithTarget:self andAction:NSSelectorFromString(@"_setSinglePageScrolling:")];
-    if (i != -1) {
-        [[menu itemAtIndex:i] setAction:@selector(setSinglePageScrolling:)];
-    }
     i = [menu indexOfItemWithTarget:self andAction:NSSelectorFromString(@"_setDoublePageScrolling:")];
     if (i != -1) {
-        [[menu itemAtIndex:i] setAction:@selector(setDoublePageScrolling:)];
         if (RUNNING_AFTER(10_12)) {
             [menu insertItem:[NSMenuItem separatorItem] atIndex:i + 1];
             item = [menu insertItemWithTitle:NSLocalizedString(@"Horizontal Continuous", @"Menu item title") action:@selector(setHorizontalScrolling:) target:self atIndex:i + 1];
@@ -3322,10 +3317,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         return toolMode == SKSelectToolMode;
     } else if (action == @selector(takeSnapshot:)) {
         return [[self document] isLocked] == NO;
-    } else if (action == @selector(setSinglePageScrolling:)) {
+    } else if (action == @selector(_setSinglePageScrolling:)) {
         [menuItem setState:[self extendedDisplayMode] == kPDFDisplaySinglePageContinuous ? NSOnState : NSOffState];
         return YES;
-    } else if (action == @selector(setDoublePageScrolling:)) {
+    } else if (action == @selector(_setDoublePageScrolling:)) {
         [menuItem setState:[self extendedDisplayMode] == kPDFDisplayTwoUpContinuous ? NSOnState : NSOffState];
         return YES;
     } else if (action == @selector(setHorizontalScrolling:)) {
