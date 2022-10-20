@@ -1671,7 +1671,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if ([self displaysHorizontally])
             bounds.origin.x = fmin(NSMidX(pageRect) - 0.5 * NSWidth(bounds), NSMinX(pageRect));
         else if ([clipView isFlipped])
-            bounds.origin.y = fmin(NSMidY(pageRect) - 0.5 * (NSHeight(bounds) - inset), NSMinY(pageRect));
+            bounds.origin.y = fmin(NSMidY(pageRect) - 0.5 * (NSHeight(bounds) + inset), NSMinY(pageRect) - inset);
         else
             bounds.origin.y = fmax(NSMaxY(pageRect) - NSHeight(bounds) + inset, NSMidY(pageRect) - 0.5 * (NSHeight(bounds) - inset));
         [clipView scrollToPoint:[clipView constrainBoundsRect:bounds].origin];
