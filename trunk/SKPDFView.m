@@ -2048,14 +2048,14 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [item setAlternate:YES];
     }
     
-    if (RUNNING_AFTER(10_12)) {
-        i = [menu indexOfItemWithTarget:self andAction:NSSelectorFromString(@"_setSinglePageScrolling:")];
-        if (i != -1) {
-            [[menu itemAtIndex:i] setAction:@selector(setSinglePageScrolling:)];
-        }
-        i = [menu indexOfItemWithTarget:self andAction:NSSelectorFromString(@"_setDoublePageScrolling:")];
-        if (i != -1) {
-            [[menu itemAtIndex:i] setAction:@selector(setDoublePageScrolling:)];
+    i = [menu indexOfItemWithTarget:self andAction:NSSelectorFromString(@"_setSinglePageScrolling:")];
+    if (i != -1) {
+        [[menu itemAtIndex:i] setAction:@selector(setSinglePageScrolling:)];
+    }
+    i = [menu indexOfItemWithTarget:self andAction:NSSelectorFromString(@"_setDoublePageScrolling:")];
+    if (i != -1) {
+        [[menu itemAtIndex:i] setAction:@selector(setDoublePageScrolling:)];
+        if (RUNNING_AFTER(10_12)) {
             [menu insertItem:[NSMenuItem separatorItem] atIndex:i + 1];
             item = [menu insertItemWithTitle:NSLocalizedString(@"Horizontal Continuous", @"Menu item title") action:@selector(setHorizontalScrolling:) target:self atIndex:i + 1];
         }
