@@ -1646,6 +1646,40 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 #pragma mark Rewind
 
+- (void)scrollToPage:(PDFPage *)page {
+    PDFDisplayMode mode = [self displayMode];
+    if ((mode & kPDFDisplaySinglePageContinuous)) {
+        NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
+        if ([self displaysPageBreaks]) {
+            CGFloat scale = [self scaleFactor];
+            if (RUNNING_BEFORE(10_13)) {
+                pageRect = NSInsetRect(pageRect, -4.0 * scale, -4.0 * scale);
+            } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+                NSEdgeInsets margins = [self pageBreakMargins];
+#pragma clang diagnostic pop
+                pageRect = NSInsetRect(pageRect, -scale * margins.left, -scale * margins.bottom);
+                pageRect.size.width += scale * (margins.right - margins.left);
+                pageRect.size.height += scale * (margins.top - margins.bottom);
+            }
+        }
+        NSClipView *clipView = [[self scrollView] contentView];
+        NSRect bounds = [clipView bounds];
+        CGFloat inset = [self convertSize:NSMakeSize(0.0, [[self scrollView] contentInsets].top) toView:clipView].height;
+        pageRect = [self convertRect:pageRect toView:clipView];
+        if ([self displaysHorizontally])
+            bounds.origin.x = fmin(NSMidX(pageRect) - 0.5 * NSWidth(bounds), NSMinX(pageRect));
+        else if ([clipView isFlipped])
+            bounds.origin.y = fmin(NSMidY(pageRect) - 0.5 * (NSHeight(bounds) - inset), NSMinY(pageRect));
+        else
+            bounds.origin.y = fmax(NSMaxY(pageRect) - NSHeight(bounds) + inset, NSMidY(pageRect) - 0.5 * (NSHeight(bounds) - inset));
+        [clipView scrollToPoint:[clipView constrainBoundsRect:bounds].origin];
+    } else if ([self isPageAtIndexDisplayed:[page pageIndex]] == NO) {
+        [self goToPage:page];
+    }
+}
+
 - (BOOL)needsRewind {
     return rewindPage != nil;
 }
@@ -1657,7 +1691,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         DISPATCH_MAIN_AFTER_SEC(0.25, ^{
             if (rewindPage) {
                 if ([[self currentPage] isEqual:rewindPage] == NO)
-                    [self goToPage:rewindPage];
+                    [self scrollToPage:rewindPage];
                 SKDESTROY(rewindPage);
             }
         });
