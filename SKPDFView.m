@@ -1647,8 +1647,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 #pragma mark Rewind
 
 - (void)scrollToPage:(PDFPage *)page {
-    PDFDisplayMode mode = [self displayMode];
-    if ((mode & kPDFDisplaySinglePageContinuous)) {
+    if (([self displayMode] & kPDFDisplaySinglePageContinuous)) {
         NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
         if ([self displaysPageBreaks]) {
             CGFloat scale = [self scaleFactor];
