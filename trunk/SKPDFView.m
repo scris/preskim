@@ -1086,36 +1086,34 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
-- (void)pacerTimerFired:(NSTimer *)timer {
-    if ([self hasReadingBar]) {
-        [readingBar goToNextLine];
-    } else {
-        NSClipView *clipView = [[self scrollView] contentView];
-        NSRect startBounds = [clipView bounds];
-        NSRect bounds = startBounds;
-        bounds.origin = [clipView convertPointToBacking:bounds.origin];
-        bounds.origin.y -= [[timer userInfo] doubleValue];
-        bounds.origin = [clipView convertPointFromBacking:bounds.origin];
-        bounds = [clipView constrainBoundsRect:bounds];
-        if (NSEqualPoints(bounds.origin, startBounds.origin) == NO)
-            [clipView scrollToPoint:bounds.origin];
-    }
+- (void)pacerScroll:(NSTimer *)timer {
+    NSClipView *clipView = [[self scrollView] contentView];
+    NSRect startBounds = [clipView bounds];
+    NSRect bounds = startBounds;
+    bounds.origin = [clipView convertPointToBacking:bounds.origin];
+    bounds.origin.y -= [[timer userInfo] doubleValue];
+    bounds.origin = [clipView convertPointFromBacking:bounds.origin];
+    bounds = [clipView constrainBoundsRect:bounds];
+    if (NSEqualPoints(bounds.origin, startBounds.origin) == NO)
+        [clipView scrollToPoint:bounds.origin];
+}
+
+- (void)pacerMoveReadingBar:(NSTimer *)timer {
+    [readingBar goToNextLine];
 }
 
 - (void)togglePacer {
     if (pacerTimer) {
         [self stopPacer];
     } else if (pacerSpeed > 0.0 && [[self document] isLocked] == NO) {
-        CGFloat interval = 0.2;
-        CGFloat pxStep = 1.0;
         if ([self hasReadingBar]) {
-            interval = PACER_LINE_HEIGHT / pacerSpeed;
+            pacerTimer = [[NSTimer scheduledTimerWithTimeInterval:PACER_LINE_HEIGHT / pacerSpeed target:self selector:@selector(pacerMoveReadingBar:) userInfo:nil repeats:YES] retain];
         } else {
             CGFloat pxPerPt = [self backingScale] * [self scaleFactor];
-            pxStep = ceil(0.25 * pxPerPt);
-            interval = pxStep / (pacerSpeed * pxPerPt);
+            CGFloat pxStep = ceil(0.25 * pxPerPt);
+            CGFloat interval = pxStep / (pacerSpeed * pxPerPt);
+            pacerTimer = [[NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(pacerScroll:) userInfo:[NSNumber numberWithFloat:pxStep] repeats:YES] retain];
         }
-        pacerTimer = [[NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(pacerTimerFired:) userInfo:[NSNumber numberWithFloat:pxStep] repeats:YES] retain];
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewPacerStartedOrStoppedNotification object:self];
     }
 }
