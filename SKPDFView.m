@@ -1094,7 +1094,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         NSRect startBounds = [clipView bounds];
         NSRect bounds = startBounds;
         bounds.origin = [clipView convertPointToBacking:bounds.origin];
-        bounds.origin.y -= 1.0;
+        bounds.origin.y -= [[timer userInfo] doubleValue];
         bounds.origin = [clipView convertPointFromBacking:bounds.origin];
         bounds = [clipView constrainBoundsRect:bounds];
         if (NSEqualPoints(bounds.origin, startBounds.origin) == NO)
@@ -1107,11 +1107,15 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self stopPacer];
     } else if (pacerSpeed > 0.0 && [[self document] isLocked] == NO) {
         CGFloat interval = 0.2;
-        if ([self hasReadingBar])
+        CGFloat pxStep = 1.0;
+        if ([self hasReadingBar]) {
             interval = PACER_LINE_HEIGHT / pacerSpeed;
-        else
-            interval = 1.0 / (pacerSpeed * [self backingScale] * [self scaleFactor]);
-        pacerTimer = [[NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(pacerTimerFired:) userInfo:nil repeats:YES] retain];
+        } else {
+            CGFloat pxPerPt = [self backingScale] * [self scaleFactor];
+            pxStep = ceil(0.25 * pxPerPt);
+            interval = pxStep / (pacerSpeed * pxPerPt);
+        }
+        pacerTimer = [[NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(pacerTimerFired:) userInfo:[NSNumber numberWithFloat:pxStep] repeats:YES] retain];
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewPacerStartedOrStoppedNotification object:self];
     }
 }
