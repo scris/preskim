@@ -1089,11 +1089,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)pacerScroll:(NSTimer *)timer {
     NSScrollView *scrollView = [self scrollView];
     NSClipView *clipView = [scrollView contentView];
-    NSRect startBounds = [clipView bounds];
+    NSRect bounds = [clipView bounds];
     NSRect docRect = [[scrollView documentView] frame];
-    if (NSHeight(docRect) + [scrollView contentInsets].top <= NSHeight(startBounds))
+    if (NSHeight(docRect) + [scrollView contentInsets].top <= NSHeight(bounds))
         return;
-    NSRect bounds = startBounds;
+    NSPoint currentOrigin = bounds.origin;
     CGFloat offset = [clipView convertSizeFromBacking:NSMakeSize(0.0, 1.0)].height;
     if ([clipView isFlipped]) {
         bounds.origin.y += offset;
@@ -1104,7 +1104,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if (NSMinY(docRect) > NSMinY(bounds))
             bounds.origin.y = NSMinY(docRect);
     }
-    if (NSEqualPoints(bounds.origin, startBounds.origin) == NO)
+    if (NSEqualPoints(bounds.origin, currentOrigin) == NO)
         [clipView scrollToPoint:bounds.origin];
 }
 
