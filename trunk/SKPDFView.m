@@ -1650,7 +1650,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 #pragma mark Rewind
 
 - (void)scrollToPage:(PDFPage *)page {
-    if (([self displayMode] & kPDFDisplaySinglePageContinuous)) {
+    PDFDisplayMode mode = [self displayMode];
+    if ((mode & kPDFDisplaySinglePageContinuous)) {
         NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
         if ([self displaysPageBreaks]) {
             CGFloat scale = [self scaleFactor];
@@ -1668,14 +1669,18 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
         NSClipView *clipView = [[self scrollView] contentView];
         NSRect bounds = [clipView bounds];
-        CGFloat inset = [self convertSize:NSMakeSize(0.0, [[self scrollView] contentInsets].top) toView:clipView].height;
         pageRect = [self convertRect:pageRect toView:clipView];
-        if ([self extendedDisplayMode] == kPDFDisplayHorizontalContinuous)
+        if ([self displaysHorizontally] && mode == kPDFDisplaySinglePageContinuous) {
             bounds.origin.x = fmin(NSMidX(pageRect) - 0.5 * NSWidth(bounds), NSMinX(pageRect));
-        else if ([clipView isFlipped])
-            bounds.origin.y = fmin(NSMidY(pageRect) - 0.5 * (NSHeight(bounds) + inset), NSMinY(pageRect) - inset);
-        else
-            bounds.origin.y = fmax(NSMaxY(pageRect) - NSHeight(bounds) + inset, NSMidY(pageRect) - 0.5 * (NSHeight(bounds) - inset));
+        } else {
+            CGFloat inset = [self convertSize:NSMakeSize(0.0, [[self scrollView] contentInsets].top) toView:clipView].height;
+            if ([clipView isFlipped])
+                bounds.origin.y = fmin(NSMidY(pageRect) - 0.5 * (NSHeight(bounds) + inset), NSMinY(pageRect) - inset);
+            else
+                bounds.origin.y = fmax(NSMaxY(pageRect) - NSHeight(bounds) + inset, NSMidY(pageRect) - 0.5 * (NSHeight(bounds) - inset));
+            if ((mode & kPDFDisplayTwoUp))
+                bounds.origin.x = fmin(NSMidX(pageRect) - 0.5 * NSWidth(bounds), NSMinX(pageRect));
+        }
         [clipView scrollToPoint:[clipView constrainBoundsRect:bounds].origin];
     } else if ([self isPageAtIndexDisplayed:[page pageIndex]] == NO) {
         [self goToPage:page];
