@@ -750,8 +750,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             horizontal = YES;
         }
         [super setDisplayMode:mode];
-        if (mode == kPDFDisplaySinglePageContinuous)
-            [self _setDisplaysHorizontally:horizontal];
+        [self _setDisplaysHorizontally:horizontal];
         if (page && [page isEqual:[self currentPage]] == NO)
             [self goToPage:page];
         [self resetPDFToolTipRects];
@@ -1671,7 +1670,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         NSRect bounds = [clipView bounds];
         CGFloat inset = [self convertSize:NSMakeSize(0.0, [[self scrollView] contentInsets].top) toView:clipView].height;
         pageRect = [self convertRect:pageRect toView:clipView];
-        if ([self displaysHorizontally])
+        if ([self extendedDisplayMode] == kPDFDisplayHorizontalContinuous)
             bounds.origin.x = fmin(NSMidX(pageRect) - 0.5 * NSWidth(bounds), NSMinX(pageRect));
         else if ([clipView isFlipped])
             bounds.origin.y = fmin(NSMidY(pageRect) - 0.5 * (NSHeight(bounds) + inset), NSMinY(pageRect) - inset);
