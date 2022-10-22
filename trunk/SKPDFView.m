@@ -1055,6 +1055,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self goToRect:rect onPage:newPage];
     }
     
+    if ([loupeWindow parentWindow])
+        [self updateMagnifyWithEvent:nil];
+    
     if (oldPage)
         [self setNeedsDisplayInRect:[SKReadingBar bounds:oldBounds forBox:[self displayBox] onPage:oldPage] ofPage:oldPage];
     if (newPage)
