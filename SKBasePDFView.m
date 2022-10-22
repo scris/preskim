@@ -262,7 +262,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
         return;
     NSClipView *clipView = [[self scrollView] contentView];
     NSRect bounds = [clipView bounds];
-    NSRect docRect = [[[self scrollView] documentView] frame];
+    NSRect docRect = [clipView convertRect:[[self documentView] bounds] fromView:[self documentView]];
     if (NSWidth(docRect) <= NSWidth(bounds))
         return;
     NSRect pageBounds = [page boundsForBox:[self displayBox]];
