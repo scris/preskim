@@ -260,20 +260,23 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
 - (void)horizontallyGoToPage:(PDFPage *)page {
     if (page == [self currentPage])
         return;
-    NSRect bounds = [page boundsForBox:[self displayBox]];
+    NSClipView *clipView = [[self scrollView] contentView];
+    NSRect bounds = [clipView bounds];
+    NSRect docRect = [[[self scrollView] documentView] frame];
+    if (NSWidth(docRect) <= NSWidth(bounds))
+        return;
+    NSRect pageBounds = [page boundsForBox:[self displayBox]];
     if ([self displaysPageBreaks]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
         CGFloat margin = [self pageBreakMargins].left;
 #pragma clang diagnostic pop
-        bounds = NSInsetRect(bounds, -margin, -margin);
+        pageBounds = NSInsetRect(pageBounds, -margin, -margin);
     }
-    NSClipView *clipView = [[self scrollView] contentView];
-    NSRect pageBounds = [self convertRect:[self convertRect:bounds fromPage:page] toView:clipView];
-    bounds = [clipView bounds];
-    bounds.origin.x = fmin(NSMidX(pageBounds) - 0.5 * NSWidth(bounds), NSMinX(pageBounds));
+    pageBounds = [self convertRect:[self convertRect:pageBounds fromPage:page] toView:clipView];
+    bounds.origin.x = fmin(fmax(fmin(NSMidX(pageBounds) - 0.5 * NSWidth(bounds), NSMinX(pageBounds)), NSMinX(docRect)), NSMaxX(docRect) - NSWidth(bounds));
     [super goToPage:page];
-    [clipView scrollToPoint:[clipView constrainBoundsRect:bounds].origin];
+    [clipView scrollToPoint:bounds.origin];
 }
 
 - (void)goToPreviousPage:(id)sender {

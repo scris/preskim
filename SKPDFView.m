@@ -1666,6 +1666,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)scrollToPage:(PDFPage *)page {
     PDFDisplayMode mode = [self displayMode];
     if ((mode & kPDFDisplaySinglePageContinuous)) {
+        NSScrollView *scrollView = [self scrollView];
+        NSClipView *clipView = [scrollView contentView];
+        NSRect bounds = [clipView bounds];
+        CGFloat inset = [self convertSize:NSMakeSize(0.0, [scrollView contentInsets].top) toView:clipView].height;
+        NSPoint origin = bounds.origin;
+        NSRect docRect = [[scrollView documentView] frame];
         NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
         if ([self displaysPageBreaks]) {
             CGFloat scale = [self scaleFactor];
@@ -1681,13 +1687,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                 pageRect.size.height += scale * (margins.top - margins.bottom);
             }
         }
-        NSClipView *clipView = [[self scrollView] contentView];
-        NSRect bounds = [clipView bounds];
         pageRect = [self convertRect:pageRect toView:clipView];
         if ([self displaysHorizontally] && mode == kPDFDisplaySinglePageContinuous) {
             bounds.origin.x = fmin(NSMidX(pageRect) - 0.5 * NSWidth(bounds), NSMinX(pageRect));
         } else {
-            CGFloat inset = [self convertSize:NSMakeSize(0.0, [[self scrollView] contentInsets].top) toView:clipView].height;
             if ([clipView isFlipped])
                 bounds.origin.y = fmin(NSMidY(pageRect) - 0.5 * (NSHeight(bounds) + inset), NSMinY(pageRect) - inset);
             else
@@ -1695,7 +1698,26 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             if ((mode & kPDFDisplayTwoUp))
                 bounds.origin.x = fmin(NSMidX(pageRect) - 0.5 * NSWidth(bounds), NSMinX(pageRect));
         }
-        [clipView scrollToPoint:[clipView constrainBoundsRect:bounds].origin];
+        if (NSWidth(docRect) <= NSWidth(bounds))
+            bounds.origin.x = origin.x;
+        else if (NSMinX(bounds) < NSMinX(docRect))
+            bounds.origin.x = NSMinX(docRect);
+        else if (NSMaxX(bounds) > NSMaxX(docRect))
+            bounds.origin.x = NSMaxX(docRect) - NSWidth(bounds);
+        if (NSHeight(docRect) <= NSHeight(bounds) - inset) {
+            bounds.origin.y = origin.y;
+        } else if ([clipView isFlipped]) {
+            if (NSMinY(bounds) + inset < NSMinY(docRect))
+                bounds.origin.y = NSMinY(docRect) - inset;
+            else if (NSMaxY(bounds) > NSMaxY(docRect))
+                bounds.origin.y = NSMaxY(docRect) - NSHeight(bounds);
+        } else {
+            if (NSMinY(bounds) < NSMinY(docRect))
+                bounds.origin.y = NSMinY(docRect);
+            else if (NSMaxY(bounds) - inset > NSMaxY(docRect))
+                bounds.origin.y = NSMaxY(docRect) - NSHeight(bounds) + inset;
+        }
+        [clipView scrollToPoint:bounds.origin];
     } else if ([self isPageAtIndexDisplayed:[page pageIndex]] == NO) {
         [self goToPage:page];
     }
