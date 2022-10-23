@@ -4868,17 +4868,13 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         }
         
         NSImage *image;
-        NSRange pageRange;
         NSAffineTransform *transform = [NSAffineTransform transform];
         NSImageInterpolation interpolation = [[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey] + 1;
+        NSRect scaledRect = SKRectFromCenterAndSize(mouseLoc, NSMakeSize(NSWidth(magRect) / magnification, NSHeight(magRect) / magnification));
+        NSRange pageRange;
+        pageRange.location = MIN([[self pageForPoint:SKTopLeftPoint(scaledRect) nearest:YES] pageIndex], [[self pageForPoint:SKTopRightPoint(scaledRect) nearest:YES] pageIndex]);
+        pageRange.length = MAX([[self pageForPoint:SKBottomLeftPoint(scaledRect) nearest:YES] pageIndex], [[self pageForPoint:SKBottomRightPoint(scaledRect) nearest:YES] pageIndex]) + 1 - pageRange.location;
         
-        [transform translateXBy:mouseLoc.x yBy:mouseLoc.y];
-        [transform scaleBy:1.0 / magnification];
-        [transform translateXBy:-mouseLoc.x yBy:-mouseLoc.y];
-        pageRange.location = MIN([[self pageForPoint:[transform transformPoint:SKTopLeftPoint(magRect)] nearest:YES] pageIndex], [[self pageForPoint:[transform transformPoint:SKTopRightPoint(magRect)] nearest:YES] pageIndex]);
-        pageRange.length = MAX([[self pageForPoint:[transform transformPoint:SKBottomLeftPoint(magRect)] nearest:YES] pageIndex], [[self pageForPoint:[transform transformPoint:SKBottomRightPoint(magRect)] nearest:YES] pageIndex]) + 1 - pageRange.location;
-        
-        transform = [NSAffineTransform transform];
         [transform translateXBy:mouseLoc.x - NSMinX(magRect) yBy:mouseLoc.y - NSMinY(magRect)];
         [transform scaleBy:magnification];
         [transform translateXBy:-mouseLoc.x yBy:-mouseLoc.y];
