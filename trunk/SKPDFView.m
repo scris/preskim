@@ -1012,6 +1012,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         userInfo = [NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewNewPageKey, nil];
     }
     [self updatePacer];
+    if ([loupeWindow parentWindow])
+        [self updateMagnifyWithEvent:nil];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKReadingBarInvertKey])
         [self requiresDisplay];
     else
@@ -3068,6 +3070,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                     SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page line:line delegate:self];
                     [self setReadingBar:aReadingBar];
                     [aReadingBar release];
+                    if ([loupeWindow parentWindow])
+                        [self updateMagnifyWithEvent:nil];
                     if (invert)
                         [self requiresDisplay];
                     else
