@@ -4925,9 +4925,9 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                     [super drawPage:page toContext:context];
                 else
                     [super drawPage:page];
-                if ([self readingBar]) {
+                if (readingBar) {
                     [page transformContext:context forBox:box];
-                    [[self readingBar] drawForPage:page withBox:box inContext:context];
+                    [readingBar drawForPage:page withBox:box inContext:context];
                 }
                 [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
                 [NSGraphicsContext restoreGraphicsState];
