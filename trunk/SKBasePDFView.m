@@ -199,7 +199,7 @@ static inline NSArray *defaultKeysToObserve() {
                     [self goToNextPage:nil];
                     NSRect docRect = [[scrollView documentView] frame];
                     clipRect = [clipView bounds];
-                    clipRect.origin.y = flipped ? NSMinY(docRect) - inset : NSMaxY(docRect) - NSHeight(clipRect);
+                    clipRect.origin.y = flipped ? NSMinY(docRect) - inset : NSMaxY(docRect) - NSHeight(clipRect) + inset;
                     [clipView scrollPoint:clipRect.origin];
                 }
             } else if (eventChar == NSUpArrowFunctionKey || eventChar == NSPageUpFunctionKey) {
@@ -209,7 +209,7 @@ static inline NSArray *defaultKeysToObserve() {
                     [self goToPreviousPage:nil];
                     NSRect docRect = [[scrollView documentView] frame];
                     clipRect = [clipView bounds];
-                    clipRect.origin.y = flipped ? NSMaxY(docRect) - NSHeight(clipRect) + inset : NSMinY(docRect);
+                    clipRect.origin.y = flipped ? NSMaxY(docRect) - NSHeight(clipRect) : NSMinY(docRect);
                     [clipView scrollPoint:clipRect.origin];
                 }
             }
