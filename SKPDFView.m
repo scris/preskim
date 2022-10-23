@@ -718,7 +718,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setDisplayModeAndRewind:(PDFDisplayMode)mode {
     if (mode != [self displayMode]) {
-        if ((mode & kPDFDisplaySinglePageContinuous))
+        if (mode != kPDFDisplaySinglePage)
             [self setNeedsRewind:YES];
         [self setDisplayMode:mode];
     }
@@ -760,7 +760,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setExtendedDisplayModeAndRewind:(PDFDisplayMode)mode {
     if (mode != [self extendedDisplayMode]) {
-        if ((mode & (kPDFDisplaySinglePageContinuous | kPDFDisplayHorizontalContinuous)))
+        if (mode != kPDFDisplaySinglePage)
             [self setNeedsRewind:YES];
         [self setExtendedDisplayMode:mode];
     }
@@ -821,7 +821,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setDisplaysRightToLeftAndRewind:(BOOL)flag {
     if (RUNNING_AFTER(10_12) && flag != [self displaysRightToLeft]) {
-        if (([self displayMode] & kPDFDisplaySinglePageContinuous))
+        if ([self displayMode] != kPDFDisplaySinglePage)
             [self setNeedsRewind:YES];
         [self setDisplaysRightToLeft:flag];
     }
@@ -840,7 +840,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setDisplayBoxAndRewind:(PDFDisplayBox)box {
     if (box != [self displayBox]) {
-        if (([self displayMode] & kPDFDisplaySinglePageContinuous))
+        if ([self displayMode] != kPDFDisplaySinglePage)
             [self setNeedsRewind:YES];
         [self setDisplayBox:box];
     }
@@ -860,7 +860,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setDisplaysAsBookAndRewind:(BOOL)asBook {
     if (asBook != [self displaysAsBook]) {
-        if (([self displayMode] & kPDFDisplaySinglePageContinuous))
+        if ([self displayMode] != kPDFDisplaySinglePageContinuous)
             [self setNeedsRewind:YES];
         [self setDisplaysAsBook:asBook];
     }
@@ -1464,6 +1464,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [self setExtendedDisplayModeAndRewind:kPDFDisplayTwoUpContinuous];
 }
 
+- (void)_setDoublePage:(id)sender {
+    [self setExtendedDisplayModeAndRewind:kPDFDisplayTwoUp];
+}
+
 - (void)setHorizontalScrolling:(id)sender {
     [self setExtendedDisplayModeAndRewind:kPDFDisplayHorizontalContinuous];
 }
@@ -1667,8 +1671,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 #pragma mark Rewind
 
 - (void)scrollToPage:(PDFPage *)page {
+    if ([self isPageAtIndexDisplayed:[page pageIndex]] == NO) {
+        [self goToPage:page];
+        return;
+    }
     PDFDisplayMode mode = [self extendedDisplayMode];
-    if ((mode & (kPDFDisplaySinglePageContinuous | kPDFDisplayHorizontalContinuous))) {
+    if (mode != kPDFDisplaySinglePage) {
         NSScrollView *scrollView = [self scrollView];
         NSClipView *clipView = [scrollView contentView];
         NSRect bounds = [clipView bounds];
@@ -1700,8 +1708,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                 bounds.origin.y = fmin(fmax(fmax(NSMaxY(pageRect) - NSHeight(bounds) + inset, NSMidY(pageRect) - 0.5 * (NSHeight(bounds) - inset)), NSMinY(docRect)), NSMaxY(docRect) - NSHeight(bounds) + inset);
         }
         [clipView scrollToPoint:bounds.origin];
-    } else if ([self isPageAtIndexDisplayed:[page pageIndex]] == NO) {
-        [self goToPage:page];
     }
 }
 
@@ -3344,6 +3350,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         return YES;
     } else if (action == @selector(_setDoublePageScrolling:)) {
         [menuItem setState:[self extendedDisplayMode] == kPDFDisplayTwoUpContinuous ? NSOnState : NSOffState];
+        return YES;
+    } else if (action == @selector(_setDoublePage:)) {
+        [menuItem setState:[self extendedDisplayMode] == kPDFDisplayTwoUp ? NSOnState : NSOffState];
         return YES;
     } else if (action == @selector(setHorizontalScrolling:)) {
         [menuItem setState:[self extendedDisplayMode] == kPDFDisplayHorizontalContinuous ? NSOnState : NSOffState];
