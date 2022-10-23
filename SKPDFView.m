@@ -4821,10 +4821,10 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
 }
 
 - (void)updateMagnifyWithEvent:(NSEvent *)theEvent {
-    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
-    
     if (loupeWindow == nil)
         return;
+    
+    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
     
     // get the current mouse location
     NSRect visibleRect = [self visibleContentRect];
