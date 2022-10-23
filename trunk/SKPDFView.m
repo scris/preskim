@@ -1093,7 +1093,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     NSScrollView *scrollView = [self scrollView];
     NSClipView *clipView = [scrollView contentView];
     NSRect bounds = [clipView bounds];
-    NSRect docRect = [clipView convertRect:[[self documentView] bounds] fromView:[self documentView]];
+    NSRect docRect = [[scrollView documentView] frame];
     if (NSHeight(docRect) + [scrollView contentInsets].top <= NSHeight(bounds))
         return;
     NSPoint currentOrigin = bounds.origin;
@@ -1673,7 +1673,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         NSClipView *clipView = [scrollView contentView];
         NSRect bounds = [clipView bounds];
         CGFloat inset = [self convertSize:NSMakeSize(0.0, [scrollView contentInsets].top) toView:clipView].height;
-        NSRect docRect = [clipView convertRect:[[self documentView] bounds] fromView:[self documentView]];
+        NSRect docRect = [[scrollView documentView] frame];
         NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
         if ([self displaysPageBreaks]) {
             CGFloat scale = [self scaleFactor];
