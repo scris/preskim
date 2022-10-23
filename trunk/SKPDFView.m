@@ -4870,6 +4870,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         NSImage *image;
         NSAffineTransform *transform = [NSAffineTransform transform];
         NSImageInterpolation interpolation = [[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey] + 1;
+        PDFDisplayBox box = [self displayBox];
         NSRect scaledRect = SKRectFromCenterAndSize(mouseLoc, NSMakeSize(NSWidth(magRect) / magnification, NSHeight(magRect) / magnification));
         NSRange pageRange;
         pageRange.location = MIN([[self pageForPoint:SKTopLeftPoint(scaledRect) nearest:YES] pageIndex], [[self pageForPoint:SKTopRightPoint(scaledRect) nearest:YES] pageIndex]);
@@ -4883,13 +4884,14 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
             
             NSRect imageRect = rect;
             NSUInteger i;
+            CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
             
             if (aShadow)
                 imageRect = NSOffsetRect(NSInsetRect(imageRect, -[aShadow shadowBlurRadius], -[aShadow shadowBlurRadius]), -[aShadow shadowOffset].width, -[aShadow shadowOffset].height);
             
             for (i = pageRange.location; i < NSMaxRange(pageRange); i++) {
                 PDFPage *page = [[self document] pageAtIndex:i];
-                NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
+                NSRect pageRect = [self convertRect:[page boundsForBox:box] fromPage:page];
                 NSPoint pageOrigin = pageRect.origin;
                 NSAffineTransform *pageTransform;
                 
@@ -4916,9 +4918,13 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 [[NSGraphicsContext currentContext] setShouldAntialias:[self shouldAntiAlias]];
                 [[NSGraphicsContext currentContext] setImageInterpolation:interpolation];
                 if ([PDFView instancesRespondToSelector:@selector(drawPage:toContext:)])
-                    [self drawPage:page toContext:[[NSGraphicsContext currentContext] CGContext]];
+                    [super drawPage:page toContext:context];
                 else
-                    [self drawPage:page];
+                    [super drawPage:page];
+                if ([self readingBar]) {
+                    [page transformContext:context forBox:box];
+                    [[self readingBar] drawForPage:page withBox:box inContext:context];
+                }
                 [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
                 [NSGraphicsContext restoreGraphicsState];
             }
