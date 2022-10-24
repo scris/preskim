@@ -4876,6 +4876,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         NSImageInterpolation interpolation = [[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey] + 1;
         PDFDisplayBox box = [self displayBox];
         NSRect scaledRect = SKRectFromCenterAndSize(mouseLoc, NSMakeSize(NSWidth(magRect) / magnification, NSHeight(magRect) / magnification));
+        CGFloat backingScale = [self backingScale];
         NSRange pageRange;
         pageRange.location = MIN([[self pageForPoint:SKTopLeftPoint(scaledRect) nearest:YES] pageIndex], [[self pageForPoint:SKTopRightPoint(scaledRect) nearest:YES] pageIndex]);
         pageRange.length = MAX([[self pageForPoint:SKBottomLeftPoint(scaledRect) nearest:YES] pageIndex], [[self pageForPoint:SKBottomRightPoint(scaledRect) nearest:YES] pageIndex]) + 1 - pageRange.location;
@@ -4884,7 +4885,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         [transform scaleBy:magnification];
         [transform translateXBy:-mouseLoc.x yBy:-mouseLoc.y];
         
-        image = [NSImage bitmapImageWithSize:magRect.size scale:[self backingScale] drawingHandler:^(NSRect rect){
+        image = [NSImage bitmapImageWithSize:magRect.size scale:backingScale drawingHandler:^(NSRect rect){
             
             NSRect imageRect = rect;
             NSUInteger i;
@@ -4907,9 +4908,9 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 
                 // draw page background, simulate the private method -drawPagePre:
                 [NSGraphicsContext saveGraphicsState];
-                [[NSColor whiteColor] set];
+                [[NSColor whiteColor] setFill];
                 [NSShadow setShadowWithColor:[aShadow shadowColor] blurRadius:[aShadow shadowBlurRadius] offset:[aShadow shadowOffset]];
-                NSRectFill(SKIntegralRect(pageRect));
+                NSRectFill(SKScaledRect(SKIntegralRect(SKScaledRect(pageRect, backingScale)), 1.0 / backingScale));
                 [NSGraphicsContext restoreGraphicsState];
                 
                 // only draw the page when there is something to draw

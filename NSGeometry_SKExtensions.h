@@ -152,6 +152,15 @@ static inline NSRect SKTransformRect(NSAffineTransform *transform, NSRect rect) 
     return SKRectFromPoints([transform transformPoint:SKBottomLeftPoint(rect)], [transform transformPoint:SKTopRightPoint(rect)]);
 }
 
+static inline NSRect SKScaledRect(NSRect rect, CGFloat scale) {
+    NSRect r;
+    r.origin.x = scale * NSMinX(rect);
+    r.origin.y = scale * NSMinY(rect);
+    r.size.width = scale * NSWidth(rect);
+    r.size.height = scale * NSHeight(rect);
+    return r;
+}
+
 #pragma mark -
 
 extern NSPoint SKConstrainPointInRect(NSPoint point, NSRect boundary);
