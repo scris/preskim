@@ -4965,7 +4965,9 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
 - (BOOL)hideLoupeWindow {
     if ([loupeWindow parentWindow] == nil)
         return NO;
-    [self updateMagnifyWithEvent:[NSEvent mouseEventWithType:NSLeftMouseDown location:NSMakePoint(-1.0, -1.0) modifierFlags:0 timestamp:0 windowNumber:[[self window] windowNumber] context:nil eventNumber:0 clickCount:1 pressure:0.0]];
+    [NSCursor unhide];
+    [[self window] removeChildWindow:loupeWindow];
+    [loupeWindow orderOut:nil];
     return YES;
 }
 
