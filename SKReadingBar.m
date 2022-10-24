@@ -358,7 +358,7 @@
     return [[self class] bounds:[self currentBounds] forBox:box onPage:[self page]];
 }
 
-- (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
+- (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context transform:(BOOL)shouldTransform {
     BOOL invert = [[NSUserDefaults standardUserDefaults] boolForKey:SKReadingBarInvertKey];
     
     if ([[self page] isEqual:pdfPage]) {
@@ -366,6 +366,9 @@
         CGContextSaveGState(context);
         
         CGContextSetFillColorWithColor(context, [[[NSUserDefaults standardUserDefaults] colorForKey:SKReadingBarColorKey] CGColor]);
+        
+        if (shouldTransform)
+            [page transformContext:context forBox:box];
         
         NSRect rect = [self currentBounds];
         if (invert) {
@@ -392,6 +395,9 @@
         
         CGContextSetFillColorWithColor(context, [[[NSUserDefaults standardUserDefaults] colorForKey:SKReadingBarColorKey] CGColor]);
         
+        if (shouldTransform)
+            [page transformContext:context forBox:box];
+        
         CGContextFillRect(context, NSRectToCGRect([pdfPage boundsForBox:box]));
         
         CGContextRestoreGState(context);
@@ -399,10 +405,12 @@
     }
 }
 
+- (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
+    [self drawForPage:pdfPage withBox:box inContext:context transform:NO];
+}
+
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box active:(BOOL)active {
-    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
-    [pdfPage transformContext:context forBox:box];
-    [self drawForPage:pdfPage withBox:box inContext:context];
+    [self drawForPage:pdfPage withBox:box inContext:[[NSGraphicsContext currentContext] CGContext] transform:YES];
 }
 
 @end
