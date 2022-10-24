@@ -296,7 +296,7 @@ static BOOL usesSequentialPageNumbering = NO;
         return nil;
     
     NSAffineTransform *transform = [self affineTransformForBox:box];
-    NSRect sourceRect = SKRectFromPoints([transform transformPoint:SKBottomLeftPoint(rect)], [transform transformPoint:SKTopRightPoint(rect)]);
+    NSRect sourceRect = SKTransformRect(transform, rect);
     NSRect destRect = sourceRect;
     destRect.origin = NSZeroPoint;
     
