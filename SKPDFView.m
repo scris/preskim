@@ -4912,6 +4912,10 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 NSRectFill(SKIntegralRect(pageRect));
                 [NSGraphicsContext restoreGraphicsState];
                 
+                // only draw the page when there is something to draw
+                if (NSIntersectsRect(rect, pageRect) == NO)
+                    continue;
+                
                 // draw page contents
                 [NSGraphicsContext saveGraphicsState];
                 pageTransform = [transform copy];
