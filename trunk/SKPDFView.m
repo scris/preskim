@@ -473,7 +473,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     
     [pdfPage transformContext:context forBox:[self displayBox]];
     
-    [[self readingBar] drawForPage:pdfPage withBox:[self displayBox] inContext:context];
+    [[self readingBar] drawForPage:pdfPage withBox:[self displayBox] inContext:context transform:NO];
     
     PDFAnnotation *annotation = nil;
     @synchronized (self) {
