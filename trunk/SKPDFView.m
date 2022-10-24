@@ -1980,7 +1980,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [super mouseMoved:theEvent];
     
     if (toolMode == SKMagnifyToolMode && loupeWindow) {
-        [self updateMagnifyWithEvent:theEvent];
+        [self performSelectorOnce:@selector(updateMagnifyWithEvent:) afterDelay:0.0];
     } else {
         
         // make sure the cursor is set, at least outside the pages this does not happen
@@ -2279,11 +2279,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if ([eventArea owner] == self && [eventArea isEqual:trackingArea]) {
         [[self window] setAcceptsMouseMovedEvents:NO];
         [[NSCursor arrowCursor] set];
-        if (toolMode == SKMagnifyToolMode && [loupeWindow parentWindow]) {
-            [NSCursor unhide];
-            [[self window] removeChildWindow:loupeWindow];
-            [loupeWindow orderOut:nil];
-        }
+        if (toolMode == SKMagnifyToolMode)
+            [self hideLoupeWindow];
     } else if ([eventArea owner] == self && (annotation = [[eventArea userInfo] objectForKey:SKAnnotationKey])) {
         if ([annotation isEqual:[[SKImageToolTipWindow sharedToolTipWindow] currentImageContext]])
             [[SKImageToolTipWindow sharedToolTipWindow] fadeOut];
@@ -4952,12 +4949,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         
     } else { // mouse is not in the rect
         
-        // show cursor
-        if ([loupeWindow parentWindow]) {
-            [NSCursor unhide];
-            [[self window] removeChildWindow:loupeWindow];
-            [loupeWindow orderOut:nil];
-        }
+        [self hideLoupeWindow];
         
     }
 }
@@ -4965,6 +4957,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
 - (BOOL)hideLoupeWindow {
     if ([loupeWindow parentWindow] == nil)
         return NO;
+    // show cursor
     [NSCursor unhide];
     [[self window] removeChildWindow:loupeWindow];
     [loupeWindow orderOut:nil];
@@ -5040,12 +5033,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     loupeLevel = 0;
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewMagnificationChangedNotification object:self];
     
-    if ([loupeWindow parentWindow]) {
-        [[self window] removeChildWindow:loupeWindow];
-        [loupeWindow orderOut:nil];
-        [NSCursor unhide];
-    }
-    
+    [self hideLoupeWindow];
     SKDESTROY(loupeWindow);
 }
 
