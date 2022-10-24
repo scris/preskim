@@ -4909,7 +4909,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 // draw page background, simulate the private method -drawPagePre:
                 [NSGraphicsContext saveGraphicsState];
                 [[NSColor whiteColor] setFill];
-                [NSShadow setShadowWithColor:[aShadow shadowColor] blurRadius:[aShadow shadowBlurRadius] offset:[aShadow shadowOffset]];
+                [aShadow set];
                 NSRectFill(SKScaledRect(SKIntegralRect(SKScaledRect(pageRect, backingScale)), 1.0 / backingScale));
                 [NSGraphicsContext restoreGraphicsState];
                 
