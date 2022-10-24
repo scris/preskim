@@ -127,7 +127,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     
     if ([pageSelection hasCharacters]) {
         NSRect selBounds = [pageSelection boundsForPage:page];
-        selBounds = SKRectFromPoints([transform transformPoint:SKBottomLeftPoint(selBounds)], [transform transformPoint:SKTopRightPoint(selBounds)]);
+        selBounds = SKTransformRect(transform, selBounds);
         sourceRect.origin.x = fmax(floor(NSMinX(selBounds)), fmin(floor(NSMaxX(selBounds) - NSWidth(sourceRect)), NSMinX(sourceRect)));
         sourceRect.origin.y = fmin(ceil(NSMaxY(selBounds)), fmax(ceil(NSMinY(selBounds) + NSHeight(sourceRect)), NSMaxY(sourceRect))) - NSHeight(sourceRect);
     }

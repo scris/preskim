@@ -4899,7 +4899,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 NSPoint pageOrigin = pageRect.origin;
                 NSAffineTransform *pageTransform;
                 
-                pageRect = SKRectFromPoints([transform transformPoint:SKBottomLeftPoint(pageRect)], [transform transformPoint:SKTopRightPoint(pageRect)]);
+                pageRect = SKTransformRect(transform, pageRect);
                 
                 // only draw the page when there is something to draw
                 if (NSIntersectsRect(imageRect, pageRect) == NO)

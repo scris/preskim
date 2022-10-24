@@ -148,6 +148,10 @@ static inline NSRect SKIntegralRect(NSRect rect) {
     return NSWidth(r) > 0.0 && NSHeight(r) > 0.0 ? r : NSZeroRect;
 }
 
+static inline NSRect SKTransformRect(NSAffineTransform *transform, NSRect rect) {
+    return SKRectFromPoints([transform transformPoint:SKBottomLeftPoint(rect)], [transform transformPoint:SKTopRightPoint(rect)]);
+}
+
 #pragma mark -
 
 extern NSPoint SKConstrainPointInRect(NSPoint point, NSRect boundary);
