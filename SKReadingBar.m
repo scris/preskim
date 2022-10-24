@@ -405,10 +405,6 @@
     }
 }
 
-- (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
-    [self drawForPage:pdfPage withBox:box inContext:context transform:NO];
-}
-
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box active:(BOOL)active {
     [self drawForPage:pdfPage withBox:box inContext:[[NSGraphicsContext currentContext] CGContext] transform:YES];
 }
