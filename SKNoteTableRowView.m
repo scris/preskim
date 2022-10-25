@@ -75,8 +75,13 @@
 - (void)resetCursorRects {
     [self discardCursorRects];
     [super resetCursorRects];
-
-    [self addCursorRect:SKSliceRect([self bounds], RESIZE_EDGE_HEIGHT, [self isFlipped] ? NSMaxYEdge : NSMinYEdge) cursor:[NSCursor resizeUpDownCursor]];
+    
+    NSCursor *cursor = [NSCursor resizeUpDownCursor];
+    NSTableView *ov = (id)[self superview];
+    if ([ov isKindOfClass:[NSTableView class]] && [ov rowHeight] + [ov intercellSpacing].height >= NSHeight([self frame]))
+            cursor = [NSCursor resizeDownCursor];
+    
+    [self addCursorRect:SKSliceRect([self bounds], RESIZE_EDGE_HEIGHT, [self isFlipped] ? NSMaxYEdge : NSMinYEdge) cursor:cursor];
 }
 
 @end
