@@ -4861,16 +4861,18 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         }
         
         NSShadow *aShadow = nil;
+        CGFloat scaleFactor = [self scaleFactor];
         if ([self displaysPageBreaks]) {
             aShadow = [[[NSShadow alloc] init] autorelease];
             [aShadow setShadowColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.3]];
-            [aShadow setShadowBlurRadius:4.0 * magnification * [self scaleFactor]];
-            [aShadow setShadowOffset:NSMakeSize(0.0, -1.0 * magnification * [self scaleFactor])];
+            [aShadow setShadowBlurRadius:4.0 * magnification * scaleFactor];
+            [aShadow setShadowOffset:NSMakeSize(0.0, -1.0 * magnification * scaleFactor)];
         }
         
         NSImage *image;
         NSAffineTransform *transform = [NSAffineTransform transform];
-        NSImageInterpolation interpolation = [[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey] + 1;
+        NSImageInterpolation interpolation = [self interpolationQuality] + 1;
+        BOOL shouldAntiAlias = [self shouldAntiAlias];
         PDFDisplayBox box = [self displayBox];
         NSRect scaledRect = SKRectFromCenterAndSize(mouseLoc, NSMakeSize(NSWidth(magRect) / magnification, NSHeight(magRect) / magnification));
         CGFloat backingScale = [self backingScale];
@@ -4918,10 +4920,10 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 [NSGraphicsContext saveGraphicsState];
                 pageTransform = [transform copy];
                 [pageTransform translateXBy:pageOrigin.x yBy:pageOrigin.y];
-                [pageTransform scaleBy:[self scaleFactor]];
+                [pageTransform scaleBy:scaleFactor];
                 [pageTransform concat];
                 [pageTransform release];
-                [[NSGraphicsContext currentContext] setShouldAntialias:[self shouldAntiAlias]];
+                [[NSGraphicsContext currentContext] setShouldAntialias:shouldAntiAlias];
                 [[NSGraphicsContext currentContext] setImageInterpolation:interpolation];
                 if ([PDFView instancesRespondToSelector:@selector(drawPage:toContext:)])
                     [super drawPage:page toContext:context];
