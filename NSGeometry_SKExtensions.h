@@ -139,26 +139,17 @@ static inline NSRect SKShrinkRect(NSRect rect, CGFloat amount, NSRectEdge edge) 
     return rect;
 }
 
-static inline NSRect SKIntegralRect(NSRect rect) {
+static inline NSRect SKIntegralRect(NSRect rect, CGFloat scale) {
     NSRect r;
-    r.origin.x = ceil(NSMinX(rect));
-    r.origin.y = ceil(NSMinY(rect));
-    r.size.width = floor(NSMaxX(rect)) - NSMinX(r);
-    r.size.height = floor(NSMaxY(rect)) - NSMinY(r);
+    r.origin.x = ceil(NSMinX(rect) * scale) / scale;
+    r.origin.y = ceil(NSMinY(rect) * scale) / scale;
+    r.size.width = floor(NSMaxX(rect) * scale) / scale - NSMinX(r);
+    r.size.height = floor(NSMaxY(rect) * scale) / scale - NSMinY(r);
     return NSWidth(r) > 0.0 && NSHeight(r) > 0.0 ? r : NSZeroRect;
 }
 
 static inline NSRect SKTransformRect(NSAffineTransform *transform, NSRect rect) {
     return SKRectFromPoints([transform transformPoint:SKBottomLeftPoint(rect)], [transform transformPoint:SKTopRightPoint(rect)]);
-}
-
-static inline NSRect SKScaledRect(NSRect rect, CGFloat scale) {
-    NSRect r;
-    r.origin.x = scale * NSMinX(rect);
-    r.origin.y = scale * NSMinY(rect);
-    r.size.width = scale * NSWidth(rect);
-    r.size.height = scale * NSHeight(rect);
-    return r;
 }
 
 #pragma mark -

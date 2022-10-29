@@ -4909,7 +4909,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 [NSGraphicsContext saveGraphicsState];
                 [[NSColor whiteColor] setFill];
                 [aShadow set];
-                NSRectFill(SKScaledRect(SKIntegralRect(SKScaledRect(pageRect, backingScale)), 1.0 / backingScale));
+                NSRectFill(SKIntegralRect(pageRect, backingScale));
                 [NSGraphicsContext restoreGraphicsState];
                 
                 // only draw the page when there is something to draw
