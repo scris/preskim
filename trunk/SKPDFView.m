@@ -4925,10 +4925,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 [pageTransform release];
                 [[NSGraphicsContext currentContext] setShouldAntialias:shouldAntiAlias];
                 [[NSGraphicsContext currentContext] setImageInterpolation:interpolation];
-                if ([PDFView instancesRespondToSelector:@selector(drawPage:toContext:)])
-                    [super drawPage:page toContext:context];
-                else
-                    [super drawPage:page];
+                [page drawWithBox:box];
                 [readingBar drawForPage:page withBox:box inContext:context transform:YES];
                 [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
                 [NSGraphicsContext restoreGraphicsState];
