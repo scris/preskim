@@ -2808,13 +2808,18 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 }
 
 - (BOOL)generateImageForThumbnail:(SKThumbnail *)thumbnail {
-    if ([(SKScroller *)[leftSideController.thumbnailTableView.enclosingScrollView verticalScroller] isScrolling] || [[pdfView document] isLocked] || [[presentationSheetController verticalScroller] isScrolling])
+    if ([[pdfView document] isLocked])
+        return NO;
+    
+    BOOL isScrolling = ([(SKScroller *)[leftSideController.thumbnailTableView.enclosingScrollView verticalScroller] isScrolling] || [[presentationSheetController verticalScroller] isScrolling]);
+    
+    if (RUNNING_BEFORE(10_12) && isScrolling)
         return NO;
     
     PDFPage *page = [self pageForThumbnail:thumbnail];
     SKReadingBar *readingBar = [[[pdfView readingBar] page] isEqual:page] ? [pdfView readingBar] : nil;
     PDFDisplayBox box = [pdfView displayBox];
-    dispatch_queue_t queue = RUNNING_AFTER(10_11) ? dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) : dispatch_get_main_queue();
+    dispatch_queue_t queue = RUNNING_AFTER(10_11) ? dispatch_get_global_queue(isScrolling ? DISPATCH_QUEUE_PRIORITY_LOW : DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) : dispatch_get_main_queue();
     
     dispatch_async(queue, ^{
         NSImage *image = [page thumbnailWithSize:thumbnailCacheSize forBox:box readingBar:readingBar];

@@ -2133,7 +2133,8 @@ static NSArray *allMainDocumentPDFViews() {
                              name:SKDocumentControllerWillRemoveDocumentNotification object:nil];
     
     // SKScroller
-    [nc addObserver:self selector:@selector(handleScrollerDidScrollNotification:)
+    if (RUNNING_BEFORE(10_12))
+        [nc addObserver:self selector:@selector(handleScrollerDidScrollNotification:)
                name:SKScrollerDidScrollNotification object:nil];
 }
 
