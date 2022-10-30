@@ -4877,8 +4877,13 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         NSRect scaledRect = SKRectFromCenterAndSize(mouseLoc, NSMakeSize(NSWidth(magRect) / magnification, NSHeight(magRect) / magnification));
         CGFloat backingScale = [self backingScale];
         NSRange pageRange;
-        pageRange.location = MIN([[self pageForPoint:SKTopLeftPoint(scaledRect) nearest:YES] pageIndex], [[self pageForPoint:SKTopRightPoint(scaledRect) nearest:YES] pageIndex]);
-        pageRange.length = MAX([[self pageForPoint:SKBottomLeftPoint(scaledRect) nearest:YES] pageIndex], [[self pageForPoint:SKBottomRightPoint(scaledRect) nearest:YES] pageIndex]) + 1 - pageRange.location;
+        if ([self displaysRightToLeft] && ([self displayMode] & kPDFDisplayTwoUp)) {
+            pageRange.location = [[self pageForPoint:SKTopRightPoint(scaledRect) nearest:YES] pageIndex];
+            pageRange.length = [[self pageForPoint:SKBottomLeftPoint(scaledRect) nearest:YES] pageIndex] + 1 - pageRange.location;
+        } else {
+            pageRange.location = [[self pageForPoint:SKTopLeftPoint(scaledRect) nearest:YES] pageIndex];
+            pageRange.length =[[self pageForPoint:SKBottomRightPoint(scaledRect) nearest:YES] pageIndex] + 1 - pageRange.location;
+        }
         
         [transform translateXBy:mouseLoc.x - NSMinX(magRect) yBy:mouseLoc.y - NSMinY(magRect)];
         [transform scaleBy:magnification];
