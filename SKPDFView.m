@@ -4882,7 +4882,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
             pageRange.length = [[self pageForPoint:SKBottomLeftPoint(scaledRect) nearest:YES] pageIndex] + 1 - pageRange.location;
         } else {
             pageRange.location = [[self pageForPoint:SKTopLeftPoint(scaledRect) nearest:YES] pageIndex];
-            pageRange.length =[[self pageForPoint:SKBottomRightPoint(scaledRect) nearest:YES] pageIndex] + 1 - pageRange.location;
+            pageRange.length = [[self pageForPoint:SKBottomRightPoint(scaledRect) nearest:YES] pageIndex] + 1 - pageRange.location;
         }
         
         [transform translateXBy:mouseLoc.x - NSMinX(magRect) yBy:mouseLoc.y - NSMinY(magRect)];
