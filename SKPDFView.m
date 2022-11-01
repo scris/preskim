@@ -186,12 +186,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 @end
 #endif
 
-#if SDK_BEFORE(10_13)
-@interface PDFView (SKMojaveDeclarations)
-@property (nonatomic, setter=enablePageShadows:) BOOL pageShadowsEnabled;
-@end
-#endif
-
 #pragma mark -
 
 @interface SKPDFView () <SKReadingBarDelegate>
@@ -875,11 +869,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)setDisplaysPageBreaks:(BOOL)pageBreaks {
     if (pageBreaks != [self displaysPageBreaks]) {
         [super setDisplaysPageBreaks:pageBreaks];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        if ([self respondsToSelector:@selector(enablePageShadows:)])
-            [self enablePageShadows:pageBreaks];
-#pragma clang diagnostic pop
         [self resetPDFToolTipRects];
         [editor layoutWithEvent:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDisplaysPageBreaksChangedNotification object:self];
