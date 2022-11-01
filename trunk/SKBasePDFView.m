@@ -71,6 +71,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 @end
 #endif
 
+#if SDK_BEFORE(10_13)
+@interface PDFView (SKMojaveDeclarations)
+@property (nonatomic, setter=enablePageShadows:) BOOL pageShadowsEnabled;
+@end
+#endif
+
 @interface SKBasePDFView (BDSKPrivate)
 
 - (void)handleScrollerStyleChangedNotification:(NSNotification *)notification;
@@ -164,6 +170,15 @@ static inline NSArray *defaultKeysToObserve() {
         SKSetHasLightAppearance([[self scrollView] verticalScroller]);
         SKSetHasLightAppearance([[self scrollView] horizontalScroller]);
     }
+}
+
+- (void)setDisplaysPageBreaks:(BOOL)pageBreaks {
+    [super setDisplaysPageBreaks:pageBreaks];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+    if ([self respondsToSelector:@selector(enablePageShadows:)])
+        [self enablePageShadows:pageBreaks];
+#pragma clang diagnostic pop
 }
 
 #pragma mark Bug fixes
