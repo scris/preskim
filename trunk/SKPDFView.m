@@ -371,6 +371,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [syncDot invalidate];
     SKDESTROY(syncDot);
     [self stopPacer];
+    if (loupeWindow)
+        [self removeLoupeWindow];
 }
 
 - (void)resetHistory {
