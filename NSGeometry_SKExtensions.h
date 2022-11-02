@@ -141,10 +141,10 @@ static inline NSRect SKShrinkRect(NSRect rect, CGFloat amount, NSRectEdge edge) 
 
 static inline NSRect SKIntegralRect(NSRect rect, CGFloat scale) {
     NSRect r;
-    r.origin.x = ceil(NSMinX(rect) * scale) / scale;
-    r.origin.y = ceil(NSMinY(rect) * scale) / scale;
-    r.size.width = floor(NSMaxX(rect) * scale) / scale - NSMinX(r);
-    r.size.height = floor(NSMaxY(rect) * scale) / scale - NSMinY(r);
+    r.origin.x = round(NSMinX(rect) * scale) / scale;
+    r.origin.y = round(NSMinY(rect) * scale) / scale;
+    r.size.width = round(NSMaxX(rect) * scale) / scale - NSMinX(r);
+    r.size.height = round(NSMaxY(rect) * scale) / scale - NSMinY(r);
     return NSWidth(r) > 0.0 && NSHeight(r) > 0.0 ? r : NSZeroRect;
 }
 

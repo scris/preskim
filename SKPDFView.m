@@ -4916,8 +4916,8 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 [aShadow set];
                 NSRectFill(SKIntegralRect(pageRect, backingScale));
                 [NSGraphicsContext restoreGraphicsState];
-                [NSGraphicsContext saveGraphicsState];
                 if (RUNNING_AFTER(10_13) && aShadow) {
+                    [NSGraphicsContext saveGraphicsState];
                     [[NSColor colorWithGenericGamma22White:0.94 alpha:1.0] setFill];
                     NSFrameRectWithWidth(SKIntegralRect(pageRect, backingScale), magnification * scaleFactor);
                     [NSGraphicsContext restoreGraphicsState];
