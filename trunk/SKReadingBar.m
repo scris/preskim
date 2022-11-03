@@ -322,7 +322,10 @@
             source = [NSURL fileURLWithPath:source isDirectory:NO];
         else if ([source isKindOfClass:[NSURL class]] == NO)
             source = nil;
-        [[(SKMainDocument *)[page containingDocument] synchronizer] findPageAndLocationForLine:[location integerValue] inFile:[source path] options:SKPDFSynchronizerShowReadingBarMask];
+        SKPDFSynchronizerOption options = SKPDFSynchronizerShowReadingBarMask;
+        if ([[args objectForKey:@"Selecting"] boolValue])
+            options |= SKPDFSynchronizerSelectMask;
+        [[(SKMainDocument *)[page containingDocument] synchronizer] findPageAndLocationForLine:[location integerValue] inFile:[source path] options:options];
         return;
     } else {
         PDFSelection *selection = [[[PDFSelection selectionWithSpecifier:[[command arguments] objectForKey:@"To"]] selectionsByLine] firstObject];

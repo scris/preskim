@@ -1557,7 +1557,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
         PDFPage *page = [pdfDoc pageAtIndex:pageIndex];
         if ((options & SKPDFSynchronizerFlippedMask))
             point.y = NSMaxY([page boundsForBox:kPDFDisplayBoxMediaBox]) - point.y;
-        [[self pdfView] displayLineAtPoint:point inPageAtIndex:pageIndex showReadingBar:(options & SKPDFSynchronizerShowReadingBarMask) != 0 noSelect:(options & SKPDFSynchronizerNoSelectMask) != 0];
+        [[self pdfView] displayLineAtPoint:point inPageAtIndex:pageIndex select:(options & SKPDFSynchronizerSelectMask) != 0 showReadingBar:(options & SKPDFSynchronizerShowReadingBarMask) != 0];
     }
 }
 
@@ -2039,10 +2039,11 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     } else if ([location isKindOfClass:[NSNumber class]]) {
         id source = [args objectForKey:@"Source"];
         NSInteger options = SKPDFSynchronizerDefaultOptions;
-        if ([[args objectForKey:@"ShowReadingBar"] boolValue])
+        BOOL showBar = [[args objectForKey:@"ShowReadingBar"] boolValue];
+        if (showBar)
             options |= SKPDFSynchronizerShowReadingBarMask;
-        if ([args objectForKey:@"Selecting"] && [[args objectForKey:@"Selecting"] boolValue] == NO)
-            options |= SKPDFSynchronizerNoSelectMask;
+        if ([[args objectForKey:@"Selecting"] boolValue] || (showBar == NO && [args objectForKey:@"Selecting"] == nil))
+            options |= SKPDFSynchronizerSelectMask;
         if ([source isKindOfClass:[NSString class]])
             source = [NSURL fileURLWithPath:source isDirectory:NO];
         else if ([source isKindOfClass:[NSURL class]] == NO)

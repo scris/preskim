@@ -42,8 +42,8 @@
 
 typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
     SKPDFSynchronizerDefaultOptions = 0,
-    SKPDFSynchronizerShowReadingBarMask = 1 << 0,
-    SKPDFSynchronizerNoSelectMask = 1 << 1,
+    SKPDFSynchronizerSelectMask = 1 << 0,
+    SKPDFSynchronizerShowReadingBarMask = 1 << 1,
     SKPDFSynchronizerFlippedMask = 1 << 2,
 };
 
