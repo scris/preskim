@@ -238,7 +238,7 @@ enum {
 - (void)selectPreviousActiveAnnotation:(id)sender;
 
 - (void)scrollAnnotationToVisible:(PDFAnnotation *)annotation;
-- (void)displayLineAtPoint:(NSPoint)point inPageAtIndex:(NSUInteger)pageIndex showReadingBar:(BOOL)showBar;
+- (void)displayLineAtPoint:(NSPoint)point inPageAtIndex:(NSUInteger)pageIndex showReadingBar:(BOOL)showBar noSelect:(BOOL)noSelect;
 - (void)zoomToRect:(NSRect)rect onPage:(PDFPage *)page;
 
 - (void)takeSnapshot:(id)sender;
