@@ -57,7 +57,6 @@
 #import "SKLineInspector.h"
 #import "SKLineWell.h"
 #import "SKTypeSelectHelper.h"
-#import "SKAnimatedBorderlessWindow.h"
 #import <CoreServices/CoreServices.h>
 #import "NSDocument_SKExtensions.h"
 #import "PDFSelection_SKExtensions.h"
@@ -68,19 +67,18 @@
 #import "NSEvent_SKExtensions.h"
 #import "PDFView_SKExtensions.h"
 #import "NSMenu_SKExtensions.h"
-#import "NSGeometry_SKExtensions.h"
 #import "NSGraphics_SKExtensions.h"
 #import "NSArray_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 #import "NSPointerArray_SKExtensions.h"
-#import "NSImage_SKExtensions.h"
 #import "NSShadow_SKExtensions.h"
 #import "PDFAnnotationLine_SKExtensions.h"
 #import "NSScroller_SKExtensions.h"
 #import "SKColorMenuView.h"
 #import "SKMainWindowController_Actions.h"
 #import "NSObject_SKExtensions.h"
+#import "SKLoupeController.h"
 
 #define ANNOTATION_MODE_COUNT 9
 #define TOOL_MODE_COUNT 5
@@ -99,10 +97,6 @@
 #define MIN_NOTE_SIZE 8.0
 
 #define HANDLE_SIZE 4.0
-
-#define LOUPE_RADIUS 16.0
-#define LOUPE_BORDER_WIDTH 2.0
-#define LOUPE_BORDER_GRAY 0.2
 
 #define DEFAULT_MAGNIFICATION 2.5
 #define SMALL_MAGNIFICATION   1.5
@@ -136,10 +130,6 @@ NSString *SKPDFViewPageKey = @"page";
 NSString *SKPDFViewOldPageKey = @"oldPage";
 NSString *SKPDFViewNewPageKey = @"newPage";
 
-#define SKSmallMagnificationWidthKey @"SKSmallMagnificationWidth"
-#define SKSmallMagnificationHeightKey @"SKSmallMagnificationHeight"
-#define SKLargeMagnificationWidthKey @"SKLargeMagnificationWidth"
-#define SKLargeMagnificationHeightKey @"SKLargeMagnificationHeight"
 #define SKMoveReadingBarModifiersKey @"SKMoveReadingBarModifiers"
 #define SKResizeReadingBarModifiersKey @"SKResizeReadingBarModifiers"
 #define SKDefaultFreeTextNoteContentsKey @"SKDefaultFreeTextNoteContents"
@@ -232,9 +222,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)setCursorForMouse:(NSEvent *)theEvent;
 - (void)showHelpMenu;
 
-- (void)updateMagnifyWithEvent:(NSEvent *)theEvent;
-- (BOOL)hideLoupeWindow;
-- (void)updateLoupeBackgroundColor;
 - (void)removeLoupeWindow;
 
 - (void)handlePageChangedNotification:(NSNotification *)notification;
@@ -247,9 +234,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 @implementation SKPDFView
 
-@synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, activeAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot;
-@synthesize currentMagnification=magnification, zooming;
-@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, needsRewind, editing;
+@synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, activeAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, zooming;
+@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -311,8 +297,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     
     syncDot = nil;
     
-    magnification = 0.0;
-    
     gestureRotation = 0.0;
     gesturePageIndex = NSNotFound;
     
@@ -371,7 +355,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [syncDot invalidate];
     SKDESTROY(syncDot);
     [self stopPacer];
-    if (loupeWindow)
+    if (loupeController)
         [self removeLoupeWindow];
 }
 
@@ -574,8 +558,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
     }
     
-    if ([loupeWindow parentWindow])
-        [self updateMagnifyWithEvent:nil];
+    [loupeController updateContents];
 }
 
 - (NSUndoManager *)undoManager {
@@ -587,7 +570,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)setBackgroundColor:(NSColor *)newBackgroundColor {
     [super setBackgroundColor:newBackgroundColor];
-    [self updateLoupeBackgroundColor];
+    [loupeController updateBackgroundColor];
 }
 
 - (NSColor *)backgroundColor {
@@ -612,7 +595,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewSelectionChangedNotification object:self];
             }
         } else if (toolMode == SKMagnifyToolMode) {
-            if (loupeWindow)
+            if (loupeController)
                 [self removeLoupeWindow];
         }
         
@@ -934,6 +917,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
+- (CGFloat)currentMagnification {
+    return loupeController ? [loupeController magnification] : 0.0;
+}
+
 - (BOOL)hideNotes {
     return pdfvFlags.hideNotes;
 }
@@ -1014,8 +1001,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         userInfo = [NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewNewPageKey, nil];
     }
     [self updatePacer];
-    if ([loupeWindow parentWindow])
-        [self updateMagnifyWithEvent:nil];
+    [loupeController updateContents];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKReadingBarInvertKey])
         [self requiresDisplay];
     else
@@ -1059,8 +1045,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self goToRect:rect onPage:newPage];
     }
     
-    if ([loupeWindow parentWindow])
-        [self updateMagnifyWithEvent:nil];
+    [loupeController updateContents];
     
     if (oldPage)
         [self setNeedsDisplayInRect:[SKReadingBar bounds:oldBounds forBox:[self displayBox] onPage:oldPage] ofPage:oldPage];
@@ -1884,33 +1869,33 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self performSelectorOnce:@selector(doAutoHideCursor) afterDelay:AUTO_HIDE_DELAY];
         }
     } else if (modifiers == NSCommandKeyMask) {
-        BOOL wantsLoupe = [self hideLoupeWindow];
+        BOOL wantsLoupe = [loupeController hide];
         [self doSelectSnapshotWithEvent:theEvent];
         if (wantsLoupe)
-            [self updateMagnifyWithEvent:nil];
+            [loupeController update];
     } else if (modifiers == (NSCommandKeyMask | NSShiftKeyMask)) {
-        BOOL wantsLoupe = [self hideLoupeWindow];
+        BOOL wantsLoupe = [loupeController hide];
         [self doPdfsyncWithEvent:theEvent];
         if (wantsLoupe)
-            [self updateMagnifyWithEvent:nil];
+            [loupeController update];
     } else if (modifiers == (NSCommandKeyMask | NSAlternateKeyMask)) {
-        BOOL wantsLoupe = [self hideLoupeWindow];
+        BOOL wantsLoupe = [loupeController hide];
         [self doMarqueeZoomWithEvent:theEvent];
         if (wantsLoupe)
-            [self updateMagnifyWithEvent:nil];
+            [loupeController update];
     } else if ((area & SKReadingBarArea) && (area & kPDFLinkArea) == 0) {
         [self setTemporaryToolMode:SKNoToolMode];
-        BOOL wantsLoupe = [self hideLoupeWindow];
+        BOOL wantsLoupe = [loupeController hide];
         if ((area & (SKResizeUpDownArea | SKResizeLeftRightArea | SKResizeRightArea | SKResizeUpArea | SKResizeLeftArea | SKResizeDownArea)))
             [self doResizeReadingBarWithEvent:theEvent];
         else
             [self doDragReadingBarWithEvent:theEvent];
         if (wantsLoupe)
-            [self updateMagnifyWithEvent:nil];
+            [loupeController update];
     } else if ((area & kPDFPageArea) == 0) {
         [self doDragWithEvent:theEvent];
     } else if (temporaryToolMode != SKNoToolMode && (modifiers & NSCommandKeyMask) == 0) {
-        BOOL wantsLoupe = [self hideLoupeWindow];
+        BOOL wantsLoupe = [loupeController hide];
         if (temporaryToolMode == SKZoomToolMode) {
             [self doMarqueeZoomWithEvent:theEvent];
         } else if (temporaryToolMode == SKSnapshotToolMode) {
@@ -1927,7 +1912,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
         [self setTemporaryToolMode:SKNoToolMode];
         if (wantsLoupe)
-            [self updateMagnifyWithEvent:nil];
+            [loupeController update];
     } else if (toolMode == SKMoveToolMode) {
         [self setCurrentSelection:nil];
         if ((area & kPDFLinkArea))
@@ -1981,8 +1966,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (interactionMode != SKPresentationMode)
         [super mouseMoved:theEvent];
     
-    if (toolMode == SKMagnifyToolMode && loupeWindow) {
-        [self performSelectorOnce:@selector(updateMagnifyWithEvent:) afterDelay:0.0];
+    if (toolMode == SKMagnifyToolMode && loupeController) {
+        [loupeController update];
     } else {
         
         // make sure the cursor is set, at least outside the pages this does not happen
@@ -2282,7 +2267,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [[self window] setAcceptsMouseMovedEvents:NO];
         [[NSCursor arrowCursor] set];
         if (toolMode == SKMagnifyToolMode)
-            [self hideLoupeWindow];
+            [loupeController hide];
     } else if ([eventArea owner] == self && (annotation = [[eventArea userInfo] objectForKey:SKAnnotationKey])) {
         if ([annotation isEqual:[[SKImageToolTipWindow sharedToolTipWindow] currentImageContext]])
             [[SKImageToolTipWindow sharedToolTipWindow] fadeOut];
@@ -3069,8 +3054,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                     SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page line:line delegate:self];
                     [self setReadingBar:aReadingBar];
                     [aReadingBar release];
-                    if ([loupeWindow parentWindow])
-                        [self updateMagnifyWithEvent:nil];
+                    [loupeController updateContents];
                     if (invert)
                         [self requiresDisplay];
                     else
@@ -3193,8 +3177,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if ([self displayMode] == kPDFDisplaySinglePage || [self displayMode] == kPDFDisplayTwoUp) {
         [editor layoutWithEvent:nil];
         [self resetPDFToolTipRects];
-        if (toolMode == SKMagnifyToolMode && [loupeWindow parentWindow])
-            [self updateMagnifyWithEvent:nil];
+        if (toolMode == SKMagnifyToolMode)
+            [loupeController updateContents];
     }
 }
 
@@ -3206,8 +3190,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)handlePDFContentViewFrameChangedNotification:(NSNotification *)notification {
-    if (toolMode == SKMagnifyToolMode && [loupeWindow parentWindow])
-        [self performSelectorOnce:@selector(updateMagnifyWithEvent:) afterDelay:0.0];
+    if (toolMode == SKMagnifyToolMode)
+        [loupeController updateContents];
 }
 
 - (void)handleUndoGroupOpenedOrClosedNotification:(NSNotification *)notification {
@@ -3239,7 +3223,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (editor && [self commitEditing] == NO)
         [self discardEditing];
     
-    if (loupeWindow)
+    if (loupeController)
         [self removeLoupeWindow];
     
     [self stopPacer];
@@ -3294,22 +3278,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 #pragma clang diagnostic ignored "-Wpartial-availability"
     [super viewDidChangeEffectiveAppearance];
 #pragma clang diagnostic pop
-    if (loupeWindow) {
-        [[loupeWindow contentView] setContentFilters:SKColorEffectFilters()];
-        [self updateLoupeBackgroundColor];
-    }
+    [loupeController updateColorFilters];
 }
 
 - (void)colorFiltersDidChange {
     [super colorFiltersDidChange];
-    if (loupeWindow) {
-        [[loupeWindow contentView] setContentFilters:SKColorEffectFilters()];
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-            SKSetHasLightAppearance(loupeWindow);
-        else
-            SKSetHasDefaultAppearance(loupeWindow);
-        [self updateLoupeBackgroundColor];
-    }
+    [loupeController updateColorFilters];
 }
 
 #pragma mark Menu validation
@@ -4832,225 +4806,17 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         [[self delegate] PDFView:self showSnapshotAtPageNumber:[page pageIndex] forRect:[self convertRect:rect toPage:page] scaleFactor:[self scaleFactor] * factor autoFits:autoFits];
 }
 
-- (void)updateMagnifyWithEvent:(NSEvent *)theEvent {
-    if (loupeWindow == nil)
-        return;
-    
-    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
-    
-    // get the current mouse location
-    NSRect visibleRect = [self visibleContentRect];
-    NSPoint mouseLoc;
-    if (theEvent && [theEvent type] != NSFlagsChanged)
-        mouseLoc = [theEvent locationInView:self];
-    else
-        mouseLoc = [self convertPointFromScreen:[NSEvent mouseLocation]];
-    
-    if ([self mouse:mouseLoc inRect:visibleRect]) {
-        
-        // define rect for magnification in view coordinate
-        NSRect magRect;
-        if (loupeLevel > 2) {
-            magRect = visibleRect;
-        } else {
-            NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-            NSSize magSize;
-            if (loupeLevel == 2)
-                magSize = NSMakeSize([sud floatForKey:SKLargeMagnificationWidthKey], [sud floatForKey:SKLargeMagnificationHeightKey]);
-            else
-                magSize = NSMakeSize([sud floatForKey:SKSmallMagnificationWidthKey], [sud floatForKey:SKSmallMagnificationHeightKey]);
-            magRect = NSIntegralRect(SKRectFromCenterAndSize(mouseLoc, magSize));
-        }
-        
-        NSShadow *aShadow = nil;
-        CGFloat scaleFactor = [self scaleFactor];
-        if ([self displaysPageBreaks]) {
-            aShadow = [[[NSShadow alloc] init] autorelease];
-            [aShadow setShadowColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.3]];
-            [aShadow setShadowBlurRadius:4.0 * magnification * scaleFactor];
-            [aShadow setShadowOffset:NSMakeSize(0.0, -1.0 * magnification * scaleFactor)];
-        }
-        
-        NSImage *image;
-        NSAffineTransform *transform = [NSAffineTransform transform];
-        NSImageInterpolation interpolation = [self interpolationQuality] + 1;
-        BOOL shouldAntiAlias = [self shouldAntiAlias];
-        PDFDisplayBox box = [self displayBox];
-        NSRect scaledRect = SKRectFromCenterAndSize(mouseLoc, NSMakeSize(NSWidth(magRect) / magnification, NSHeight(magRect) / magnification));
-        CGFloat backingScale = [self backingScale];
-        NSRange pageRange;
-        if ([self displaysRightToLeft] && ([self displayMode] & kPDFDisplayTwoUp)) {
-            pageRange.location = [[self pageForPoint:SKTopRightPoint(scaledRect) nearest:YES] pageIndex];
-            pageRange.length = [[self pageForPoint:SKBottomLeftPoint(scaledRect) nearest:YES] pageIndex] + 1 - pageRange.location;
-        } else {
-            pageRange.location = [[self pageForPoint:SKTopLeftPoint(scaledRect) nearest:YES] pageIndex];
-            pageRange.length = [[self pageForPoint:SKBottomRightPoint(scaledRect) nearest:YES] pageIndex] + 1 - pageRange.location;
-        }
-        
-        [transform translateXBy:mouseLoc.x - NSMinX(magRect) yBy:mouseLoc.y - NSMinY(magRect)];
-        [transform scaleBy:magnification];
-        [transform translateXBy:-mouseLoc.x yBy:-mouseLoc.y];
-        
-        image = [NSImage bitmapImageWithSize:magRect.size scale:backingScale drawingHandler:^(NSRect rect){
-            
-            NSRect imageRect = rect;
-            NSUInteger i;
-            CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
-            
-            if (aShadow)
-                imageRect = NSOffsetRect(NSInsetRect(imageRect, -[aShadow shadowBlurRadius], -[aShadow shadowBlurRadius]), -[aShadow shadowOffset].width, -[aShadow shadowOffset].height);
-            
-            for (i = pageRange.location; i < NSMaxRange(pageRange); i++) {
-                PDFPage *page = [[self document] pageAtIndex:i];
-                NSRect pageRect = [self convertRect:[page boundsForBox:box] fromPage:page];
-                NSPoint pageOrigin = pageRect.origin;
-                NSAffineTransform *pageTransform;
-                
-                pageRect = SKTransformRect(transform, pageRect);
-                
-                // only draw the page when there is something to draw
-                if (NSIntersectsRect(imageRect, pageRect) == NO)
-                    continue;
-                
-                // draw page background, simulate the private method -drawPagePre:
-                [NSGraphicsContext saveGraphicsState];
-                [[NSColor whiteColor] setFill];
-                [aShadow set];
-                NSRectFill(SKIntegralRect(pageRect, backingScale));
-                [NSGraphicsContext restoreGraphicsState];
-                if (RUNNING_AFTER(10_13) && aShadow) {
-                    [NSGraphicsContext saveGraphicsState];
-                    [[NSColor colorWithGenericGamma22White:0.94 alpha:1.0] setFill];
-                    NSFrameRectWithWidth(SKIntegralRect(pageRect, backingScale), magnification * scaleFactor);
-                    [NSGraphicsContext restoreGraphicsState];
-                }
-                
-                // only draw the page when there is something to draw
-                if (NSIntersectsRect(rect, pageRect) == NO)
-                    continue;
-                
-                // draw page contents
-                [NSGraphicsContext saveGraphicsState];
-                pageTransform = [transform copy];
-                [pageTransform translateXBy:pageOrigin.x yBy:pageOrigin.y];
-                [pageTransform scaleBy:scaleFactor];
-                [pageTransform concat];
-                [pageTransform release];
-                [[NSGraphicsContext currentContext] setShouldAntialias:shouldAntiAlias];
-                [[NSGraphicsContext currentContext] setImageInterpolation:interpolation];
-                [page drawWithBox:box];
-                [readingBar drawForPage:page withBox:box inContext:context transform:YES];
-                [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
-                [NSGraphicsContext restoreGraphicsState];
-            }
-            
-        }];
-        
-        NSView *loupeView = [loupeWindow contentView];
-        if (RUNNING_AFTER(10_13))
-            loupeView = [[loupeView subviews] firstObject] ?: loupeView;
-        [[[[loupeView layer] sublayers] firstObject] setContents:image];
-        BOOL needsMask = loupeView != [loupeWindow contentView] && NSEqualSizes([loupeWindow frame].size, magRect.size) == NO;
-        [loupeWindow setFrame:[self convertRectToScreen:magRect] display:YES];
-        if (needsMask)
-            [(NSVisualEffectView *)[loupeWindow contentView] setMaskImage:[NSImage maskImageWithSize:[loupeWindow frame].size cornerRadius:LOUPE_RADIUS]];
-        if ([loupeWindow parentWindow] == nil) {
-            [NSCursor hide];
-            [[self window] addChildWindow:loupeWindow ordered:NSWindowAbove];
-        }
-        
-    } else { // mouse is not in the rect
-        
-        [self hideLoupeWindow];
-        
-    }
-}
-
-- (BOOL)hideLoupeWindow {
-    if ([loupeWindow parentWindow] == nil)
-        return NO;
-    // show cursor
-    [NSCursor unhide];
-    [[self window] removeChildWindow:loupeWindow];
-    [loupeWindow orderOut:nil];
-    return YES;
-}
-
-- (void)updateLoupeBackgroundColor {
-    if (loupeWindow == nil)
-        return;
-    if (RUNNING_AFTER(10_13)) {
-        BOOL hasBackgroundView = NO;
-        NSView *loupeView = [loupeWindow contentView];
-        if ([[loupeView subviews] count] > 0) {
-            hasBackgroundView = YES;
-            loupeView = [[loupeView subviews] firstObject];
-        }
-        CALayer *loupeLayer = [[[loupeView layer] sublayers] firstObject];
-        NSColor *bgColor = [self backgroundColor];
-        NSVisualEffectMaterial material = 0;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        if ([bgColor isEqual:[NSColor windowBackgroundColor]])
-            material = NSVisualEffectMaterialWindowBackground;
-        else if ([bgColor isEqual:[NSColor controlBackgroundColor]] || [bgColor isEqual:[NSColor textBackgroundColor]])
-            material = NSVisualEffectMaterialContentBackground;
-        else if ([bgColor isEqual:[NSColor underPageBackgroundColor]])
-            material = NSVisualEffectMaterialUnderPageBackground;
-#pragma clang diagnostic pop
-        if (material == 0) {
-            __block CGColorRef cgColor = NULL;
-            SKRunWithAppearance([self scrollView], ^{
-                if ([bgColor alphaComponent] < 1.0)
-                    cgColor = [[[NSColor blackColor] blendedColorWithFraction:[bgColor alphaComponent] ofColor:[bgColor colorWithAlphaComponent:1.0]] CGColor];
-                if (cgColor == NULL)
-                    cgColor = [bgColor CGColor] ?: CGColorGetConstantColor(kCGColorBlack);
-            });
-            [loupeLayer setBackgroundColor:cgColor];
-            if (hasBackgroundView) {
-                [loupeWindow setContentView:loupeView];
-                [loupeView setContentFilters:SKColorEffectFilters()];
-            }
-        } else if (hasBackgroundView) {
-            [(NSVisualEffectView *)[loupeWindow contentView] setMaterial:material];
-        } else {
-            NSVisualEffectView *view = [[NSVisualEffectView alloc] init];
-            [view setMaterial:material];
-            [view setState:NSVisualEffectStateActive];
-            [loupeView retain];
-            [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-            [loupeWindow setContentView:view];
-            [view addSubview:loupeView];
-            [view setContentFilters:SKColorEffectFilters()];
-            [loupeView setContentFilters:[NSArray array]];
-            [loupeView release];
-            if (NSIsEmptyRect([view bounds]) == NO)
-                [view setMaskImage:[NSImage maskImageWithSize:[view bounds].size cornerRadius:LOUPE_RADIUS]];
-            [view release];
-            [loupeLayer setBackgroundColor:NULL];
-        }
-    } else {
-        CALayer *loupeLayer = [[[[loupeWindow contentView] layer] sublayers] firstObject];
-        NSColor *bgColor = [self backgroundColor];
-        if ([bgColor alphaComponent] < 1.0)
-            bgColor = [[NSColor blackColor] blendedColorWithFraction:[bgColor alphaComponent] ofColor:[bgColor colorWithAlphaComponent:1.0]] ?: bgColor;
-        [loupeLayer setBackgroundColor:[bgColor CGColor]];
-    }
-}
-
 - (void)removeLoupeWindow {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewBoundsDidChangeNotification object:[[self scrollView] contentView]];
     
-    magnification = 0.0;
-    loupeLevel = 0;
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewMagnificationChangedNotification object:self];
+    [loupeController hide];
+    SKDESTROY(loupeController);
     
-    [self hideLoupeWindow];
-    SKDESTROY(loupeWindow);
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewMagnificationChangedNotification object:self];
 }
 
 - (void)doMagnifyWithEvent:(NSEvent *)theEvent {
-    if (loupeWindow && [theEvent clickCount] == 1) {
+    if (loupeController && [theEvent clickCount] == 1) {
         
         [self removeLoupeWindow];
         
@@ -5067,30 +4833,9 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         if (window == nil)
             return;
         
-        if (loupeWindow == nil) {
+        if (loupeController == nil) {
             
-            CALayer *loupeLayer = [CALayer layer];
-            [loupeLayer setCornerRadius:LOUPE_RADIUS];
-            [loupeLayer setMasksToBounds:YES];
-            [loupeLayer setActions:[NSDictionary dictionaryWithObjectsAndKeys:[NSNull null], @"contents", nil]];
-            [loupeLayer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
-            [loupeLayer setFrame:NSRectToCGRect([self bounds])];
-            if (RUNNING_BEFORE(10_14)) {
-                CGColorRef borderColor = CGColorCreateGenericGray(LOUPE_BORDER_GRAY, 1.0);
-                [loupeLayer setBorderColor:borderColor];
-                [loupeLayer setBorderWidth:LOUPE_BORDER_WIDTH];
-                CGColorRelease(borderColor);
-            }
-            
-            loupeWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[self convertRectToScreen:[self bounds]]];
-            [[loupeWindow contentView] setWantsLayer:YES];
-            [[[loupeWindow contentView] layer] addSublayer:loupeLayer];
-            [loupeLayer setContentsScale:[[[loupeWindow contentView] layer] contentsScale]];
-            [[loupeWindow contentView] setContentFilters:SKColorEffectFilters()];
-            [loupeWindow setHasShadow:YES];
-            [self updateLoupeBackgroundColor];
-            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-                SKSetHasLightAppearance(loupeWindow);
+            loupeController = [[SKLoupeController alloc] initWithPDFView:self];
             
             [[NSNotificationCenter defaultCenter] addObserver:self
                 selector:@selector(handlePDFContentViewFrameChangedNotification:)
@@ -5110,14 +4855,14 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 CGFloat newMagnification = (modifierFlags & NSAlternateKeyMask) ? LARGE_MAGNIFICATION : (modifierFlags & NSControlKeyMask) ? SMALL_MAGNIFICATION : DEFAULT_MAGNIFICATION;
                 if ((modifierFlags & NSShiftKeyMask))
                     newMagnification = 1.0 / newMagnification;
-                if (fabs(magnification - newMagnification) > 0.0001) {
-                    magnification = newMagnification;
+                if (fabs([loupeController magnification] - newMagnification) > 0.0001) {
+                    [loupeController setMagnification:newMagnification];
                     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewMagnificationChangedNotification object:self];
                 }
-                loupeLevel = (modifierFlags & NSCommandKeyMask) ? startLevel + 1 : startLevel;
+                [loupeController setLevel:(modifierFlags & NSCommandKeyMask) ? startLevel + 1 : startLevel];
             }
             
-            [self updateMagnifyWithEvent:theEvent];
+            [loupeController update];
             
             [pool drain];
 

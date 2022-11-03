@@ -115,7 +115,7 @@ enum {
 
 @protocol SKPDFViewDelegate;
 
-@class SKReadingBar, SKTransitionController, SKTypeSelectHelper, SKNavigationWindow, SKTextNoteEditor, SKSyncDot;
+@class SKReadingBar, SKTransitionController, SKTypeSelectHelper, SKNavigationWindow, SKTextNoteEditor, SKSyncDot, SKLoupeController;
 
 @interface SKPDFView : SKBasePDFView {
     SKToolMode toolMode;
@@ -150,9 +150,7 @@ enum {
     
     CAShapeLayer *rectLayer;
     
-    NSWindow *loupeWindow;
-    NSInteger loupeLevel;
-    CGFloat magnification;
+    SKLoupeController *loupeController;
     
     CGFloat gestureRotation;
     NSUInteger gesturePageIndex;
