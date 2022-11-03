@@ -3190,11 +3190,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [self setAutoScales:YES];
 }
 
-- (void)handlePDFContentViewFrameChangedNotification:(NSNotification *)notification {
-    if (toolMode == SKMagnifyToolMode)
-        [loupeController updateContents];
-}
-
 - (void)handleUndoGroupOpenedOrClosedNotification:(NSNotification *)notification {
     pdfvFlags.wantsNewUndoGroup = NO;
 }
@@ -4808,8 +4803,6 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
 }
 
 - (void)removeLoupeWindow {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewBoundsDidChangeNotification object:[[self scrollView] contentView]];
-    
     [loupeController hide];
     SKDESTROY(loupeController);
     
@@ -4834,15 +4827,8 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         if (window == nil)
             return;
         
-        if (loupeController == nil) {
-            
+        if (loupeController == nil)
             loupeController = [[SKLoupeController alloc] initWithPDFView:self];
-            
-            [[NSNotificationCenter defaultCenter] addObserver:self
-                selector:@selector(handlePDFContentViewFrameChangedNotification:)
-                    name:NSViewBoundsDidChangeNotification object:[[self scrollView] contentView]];
-
-        }
         
         NSInteger startLevel = MAX(1, [theEvent clickCount]);
         

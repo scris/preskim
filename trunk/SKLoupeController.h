@@ -61,6 +61,4 @@
 
 - (BOOL)hide;
 
-- (void)makeWindow;
-
 @end

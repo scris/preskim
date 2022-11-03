@@ -62,6 +62,11 @@
 @end
 #endif
 
+@interface SKLoupeController ()
+- (void)makeWindow;
+- (void)handlePDFContentViewFrameChangedNotification:(NSNotification *)notification;
+@end
+
 @implementation SKLoupeController
 
 @synthesize magnification, level;
@@ -73,11 +78,15 @@
         [self makeWindow];
         magnification = 0.0;
         level = 0;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+            selector:@selector(handlePDFContentViewFrameChangedNotification:)
+                name:NSViewBoundsDidChangeNotification object:[[pdfView scrollView] contentView]];
     }
     return self;
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     pdfView = nil;
     [layer setDelegate:nil];
     SKDESTROY(layer);
@@ -109,6 +118,10 @@
     [self updateBackgroundColor];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
         SKSetHasLightAppearance(window);
+}
+
+- (void)handlePDFContentViewFrameChangedNotification:(NSNotification *)notification {
+    [self updateContents];
 }
 
 - (void)updateBackgroundColor {
