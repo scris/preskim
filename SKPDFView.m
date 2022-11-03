@@ -3030,7 +3030,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 #pragma mark Sync
 
 // @@ Horizontal layout
-- (void)displayLineAtPoint:(NSPoint)point inPageAtIndex:(NSUInteger)pageIndex showReadingBar:(BOOL)showBar {
+- (void)displayLineAtPoint:(NSPoint)point inPageAtIndex:(NSUInteger)pageIndex showReadingBar:(BOOL)showBar noSelect:(BOOL)noSelect {
     if (pageIndex < [[self document] pageCount]) {
         PDFPage *page = [[self document] pageAtIndex:pageIndex];
         PDFSelection *sel = [page selectionForLineAtPoint:point];
@@ -3064,7 +3064,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 } else {
                     [readingBar goToLine:line onPage:page];
                 }
-            } else if ([sel hasCharacters] && [self toolMode] == SKTextToolMode) {
+            } else if (noSelect == NO && [sel hasCharacters] && [self toolMode] == SKTextToolMode) {
                 [self setCurrentSelection:sel];
             }
         }

@@ -5,10 +5,11 @@
 # Usage: displayline [-r] [-b] [-g] [-z] LINE PDFFILE [TEXSOURCEFILE]
 
 if [[ $# -eq 0 || "$1" == "-h" || "$1" == "-help" ]]; then
-  echo "Usage: displayline [-r] [-b] [-g] [-z] LINE PDFFILE [TEXSOURCEFILE]
+  echo "Usage: displayline [-r] [-b] [-n] [-g] [-z] LINE PDFFILE [TEXSOURCEFILE]
 Options:
 -r, -revert      Revert the file from disk if it was open
 -b, -readingbar  Indicate the line using the reading bar
+-n, -noselect    Do not select the line
 -g, -background  Do not bring Skim to the foreground
 -z, -zerobased   LINE is zero-based rather than one-based"
   exit 0
@@ -17,6 +18,7 @@ fi
 # get arguments
 revert=
 reading_bar=
+no_select=
 activate="activate"
 zerobased=
 from_source=
@@ -29,6 +31,8 @@ while [[ "${1:0:1}" == "-" ]]; do
     end try"
   elif [[ "$1" == "-b" || "$1" == "-readingbar" ]]; then
     reading_bar="with showing reading bar"
+  elif [[ "$1" == "-n" || "$1" == "-noselect" ]]; then
+    no_select="without selecting"
   elif [[ "$1" == "-g" || "$1" == "-background" ]]; then
     activate=
   elif [[ "$1" == "-z" || "$1" == "-zerobased" ]]; then
@@ -55,7 +59,7 @@ shopt -s extglob
   tell application "Skim"
     ${revert}
     open theFile
-    go document 1 to TeX line ${line} ${from_source} ${reading_bar}
+    go document 1 to TeX line ${line} ${from_source} ${reading_bar} ${no_select}
     $activate
   end tell
 EOF
