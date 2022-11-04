@@ -355,8 +355,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [syncDot invalidate];
     SKDESTROY(syncDot);
     [self stopPacer];
-    if (loupeController)
-        [self removeLoupeWindow];
+    [self removeLoupeWindow];
 }
 
 - (void)resetHistory {
@@ -595,8 +594,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewSelectionChangedNotification object:self];
             }
         } else if (toolMode == SKMagnifyToolMode) {
-            if (loupeController)
-                [self removeLoupeWindow];
+            [self removeLoupeWindow];
         }
         
         toolMode = newToolMode;
@@ -3219,8 +3217,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (editor && [self commitEditing] == NO)
         [self discardEditing];
     
-    if (loupeController)
-        [self removeLoupeWindow];
+    [self removeLoupeWindow];
     
     [self stopPacer];
     
@@ -4803,10 +4800,12 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
 }
 
 - (void)removeLoupeWindow {
-    [loupeController hide];
-    SKDESTROY(loupeController);
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewMagnificationChangedNotification object:self];
+    if (loupeController) {
+        [loupeController hide];
+        SKDESTROY(loupeController);
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewMagnificationChangedNotification object:self];
+    }
 }
 
 - (void)doMagnifyWithEvent:(NSEvent *)theEvent {
