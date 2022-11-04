@@ -999,7 +999,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         userInfo = [NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewNewPageKey, nil];
     }
     [self updatePacer];
-    [loupeController updateContents];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKReadingBarInvertKey])
         [self requiresDisplay];
     else
@@ -1042,8 +1041,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
         [self goToRect:rect onPage:newPage];
     }
-    
-    [loupeController updateContents];
     
     if (oldPage)
         [self setNeedsDisplayInRect:[SKReadingBar bounds:oldBounds forBox:[self displayBox] onPage:oldPage] ofPage:oldPage];
@@ -3025,6 +3022,16 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [self annotationsChangedOnPage:page];
 }
 
+- (void)requiresDisplay {
+    [super requiresDisplay];
+    [loupeController updateContents];
+}
+
+- (void)setNeedsDisplayInRect:(NSRect)rect ofPage:(PDFPage *)page {
+    [super setNeedsDisplayInRect:rect ofPage:page];
+    [loupeController updateContents];
+}
+
 #pragma mark Sync
 
 // @@ Horizontal layout
@@ -3052,7 +3059,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                     SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page line:line delegate:self];
                     [self setReadingBar:aReadingBar];
                     [aReadingBar release];
-                    [loupeController updateContents];
                     if (invert)
                         [self requiresDisplay];
                     else
