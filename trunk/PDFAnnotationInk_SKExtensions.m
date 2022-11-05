@@ -247,6 +247,14 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
         NSRect b = [self bounds];
         NSRect bounds = NSIntegralRect(b);
         NSRect rect = NSMakeRect(0.0, 0.0, scale * NSWidth(bounds), scale * NSHeight(bounds));
+        NSSize offset = NSZeroSize;
+        switch ([[self page] rotation]) {
+            case 0:   offset.height = -2.0; break;
+            case 90:  offset.width = 2.0;   break;
+            case 180: offset.height = 2.0;  break;
+            case 270: offset.width = -2.0;  break;
+            default:  offset.height = -2.0; break;
+        }
         NSImage *image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
         NSAffineTransform *transform = [NSAffineTransform transform];
@@ -265,7 +273,7 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
             [path setLineCapStyle:NSRoundLineCapStyle];
         }
         [NSGraphicsContext saveGraphicsState];
-        [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:2.0 yOffset:-2.0];
+        [NSShadow setShadowWithColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.33333] blurRadius:2.0 offset:offset];
         [[NSColor colorWithGenericGamma22White:0.0 alpha:[[self color] alphaComponent]] setStroke];
         [path stroke];
         [NSGraphicsContext restoreGraphicsState];
