@@ -113,11 +113,8 @@
     [[window contentView] setWantsLayer:YES];
     [[[window contentView] layer] addSublayer:layer];
     [layer setContentsScale:[[[window contentView] layer] contentsScale]];
-    [[window contentView] setContentFilters:SKColorEffectFilters()];
     [window setHasShadow:YES];
-    [self updateBackgroundColor];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        SKSetHasLightAppearance(window);
+    [self updateColorFilters];
 }
 
 - (void)handlePDFContentViewFrameChangedNotification:(NSNotification *)notification {
