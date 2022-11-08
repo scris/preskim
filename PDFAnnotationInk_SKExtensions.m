@@ -52,6 +52,7 @@
 #import "PDFPage_SKExtensions.h"
 #import "PDFView_SKExtensions.h"
 
+NSString *SKPDFAnnotationBezierPathsKey = @"bezierPaths";
 NSString *SKPDFAnnotationScriptingPointListsKey = @"scriptingPointLists";
 
 #if SDK_BEFORE(10_12)
@@ -125,12 +126,33 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
     
     self = [self initSkimNoteWithBounds:bounds];
     if (self) {
-        for (path in paths) {
-            [path transformUsingAffineTransform:transform];
-            [self addBezierPath:path];
-        }
+        for (path in paths)
+            [self addBezierPath:[transform transformBezierPath:path]];
     }
     return self;
+}
+
+- (CGFloat)pathInset {
+    NSRect bounds = NSZeroRect;
+    NSSize size = [self bounds].size;
+    for (NSBezierPath *path in [self paths])
+        bounds = NSUnionRect(bounds, [path nonEmptyBounds]);
+    return floor(fmin(8.0, fmax(0.0, fmin(NSMinX(bounds), fmin(NSMinY(bounds), fmin(size.width - NSMaxX(bounds), size.height - NSMaxY(bounds)))))));
+}
+
+// use a copy of the paths so to ensure different old and new values for undo
+- (NSArray *)bezierPaths {
+    return [[[self paths] copy] autorelease];
+}
+
+- (void)setBezierPaths:(NSArray *)newPaths {
+    NSArray *paths = [[self paths] copy];
+    NSBezierPath *path;
+    for (path in paths)
+        [self removeBezierPath:path];
+    [paths release];
+    for (path in newPaths)
+        [self addBezierPath:path];
 }
 
 - (NSArray *)pagePaths {
@@ -162,7 +184,9 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
     return fdfString;
 }
 
-- (BOOL)isResizable { return NO; }
+- (BOOL)isInk { return YES; }
+
+- (BOOL)isResizable { return YES; }
 
 - (BOOL)isMovable { return [self isSkimNote]; }
 
@@ -307,6 +331,17 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
 
 - (NSString *)colorDefaultKey { return SKInkNoteColorKey; }
 
+- (NSSet *)keysForValuesToObserveForUndo {
+    static NSSet *inkKeys = nil;
+    if (inkKeys == nil) {
+        NSMutableSet *mutableKeys = [[super keysForValuesToObserveForUndo] mutableCopy];
+        [mutableKeys addObject:SKPDFAnnotationBezierPathsKey];
+        inkKeys = [mutableKeys copy];
+        [mutableKeys release];
+    }
+    return inkKeys;
+}
+
 #pragma mark Scripting support
 
 + (NSSet *)customScriptingKeys {
@@ -337,6 +372,35 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
         [pointValues release];
     }
     return pointLists;
+}
+
+- (void)setBoundsAsQDRect:(NSData *)inQDBoundsAsData {
+    if ([self isEditable]) {
+        NSRect newBounds = [inQDBoundsAsData rectValueAsQDRect];
+        CGFloat margin = [self pathInset];
+        NSRect bounds = [self bounds];
+        
+        if (NSWidth(newBounds) < 2.0 * margin)
+            newBounds.size.width = 2.0 * margin;
+        if (NSHeight(newBounds) < 2.0 * margin)
+            newBounds.size.height = 2.0 * margin;
+        
+        if (NSEqualSizes(bounds.size, newBounds.size) == NO) {
+            NSMutableArray *paths = [NSMutableArray array];
+            NSAffineTransform *transform = [NSAffineTransform transform];
+            [transform translateXBy:margin yBy:margin];
+            [transform scaleXBy:fmax(1.0, NSWidth(newBounds) - 2.0 * margin) / fmax(1.0, NSWidth(bounds) - 2.0 * margin) yBy:fmax(1.0, NSHeight(newBounds) - 2.0 * margin) / fmax(1.0, NSHeight(bounds) - 2.0 * margin)];
+            [transform translateXBy:-margin yBy:-margin];
+            
+            for (NSBezierPath *path in [self paths])
+                [paths addObject:[transform transformBezierPath:path]];
+            
+            [self setBezierPaths:paths];
+        }
+        
+        [self setBounds:newBounds];
+    }
+
 }
 
 @end
