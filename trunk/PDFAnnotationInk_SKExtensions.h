@@ -39,11 +39,17 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+extern NSString *SKPDFAnnotationBezierPathsKey;
 extern NSString *SKPDFAnnotationScriptingPointListsKey;
 
 @interface PDFAnnotationInk (SKExtensions)
 
 - (id)initSkimNoteWithPaths:(NSArray *)paths;
+
+- (CGFloat)pathInset;
+
+- (NSArray *)bezierPaths;
+- (void)setBezierPaths:(NSArray *)newPaths;
 
 - (NSArray *)pagePaths;
 

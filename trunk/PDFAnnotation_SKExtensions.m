@@ -365,6 +365,8 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 
 - (BOOL)isLine { return NO; }
 
+- (BOOL)isInk { return NO; }
+
 - (BOOL)isLink { return [[self type] isEqualToString:@"Link"]; }
 
 - (BOOL)isWidget { return NO; }

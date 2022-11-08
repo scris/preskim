@@ -1790,7 +1790,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         } else if ([activeAnnotation isResizable] && IS_ARROW(eventChar) && (modifiers == (NSAlternateKeyMask | NSControlKeyMask) || modifiers == (NSShiftKeyMask | NSControlKeyMask))) {
             [self doResizeActiveAnnotationForKey:eventChar byAmount:(modifiers & NSShiftKeyMask) ? 10.0 : 1.0];
         // with some keyboard layouts, e.g. Japanese, the '=' character requires Shift
-        } else if ([activeAnnotation isResizable] && [activeAnnotation isLine] == NO && (eventChar == '=') && ((modifiers & ~(NSAlternateKeyMask | NSShiftKeyMask)) == NSControlKeyMask)) {
+        } else if ([activeAnnotation isResizable] && [activeAnnotation isLine] == NO && [activeAnnotation isInk] == NO && (eventChar == '=') && ((modifiers & ~(NSAlternateKeyMask | NSShiftKeyMask)) == NSControlKeyMask)) {
             [self doAutoSizeActiveNoteIgnoringWidth:(modifiers & NSAlternateKeyMask) != 0];
         } else if ([self toolMode] == SKNoteToolMode && (eventChar == 't') && (modifiers == 0)) {
             [self setAnnotationMode:SKFreeTextNote];
@@ -3343,7 +3343,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     } else if (action == @selector(resizeActiveAnnotation:)) {
         return [[self activeAnnotation] isResizable];
     } else if (action == @selector(autoSizeActiveAnnotation:)) {
-        return [[self activeAnnotation] isResizable] && [[self activeAnnotation] isLine] == NO;
+        return [[self activeAnnotation] isResizable] && [[self activeAnnotation] isLine] == NO && [activeAnnotation isInk] == NO;
     } else if (action == @selector(changeOnlyAnnotationMode:)) {
         return toolMode == SKNoteToolMode;
     } else if (action == @selector(moveReadingBar:) || action == @selector(resizeReadingBar:)) {
@@ -3738,6 +3738,20 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
         
         if (NSEqualRects(bounds, newBounds) == NO) {
+            if ([activeAnnotation isInk]) {
+                CGFloat margin = [(PDFAnnotationInk *)activeAnnotation pathInset];
+                NSMutableArray *paths = [NSMutableArray array];
+                NSAffineTransform *transform = [NSAffineTransform transform];
+                [transform translateXBy:margin yBy:margin];
+                [transform scaleXBy:fmax(1.0, NSWidth(newBounds) - 2.0 * margin) / fmax(1.0, NSWidth(bounds) - 2.0 * margin) yBy:fmax(1.0, NSHeight(newBounds) - 2.0 * margin) / fmax(1.0, NSHeight(bounds) - 2.0 * margin)];
+                [transform translateXBy:-margin yBy:-margin];
+                
+                for (NSBezierPath *path in [(PDFAnnotationInk *)activeAnnotation paths])
+                    [paths addObject:[transform transformBezierPath:path]];
+                
+                [(PDFAnnotationInk *)activeAnnotation setBezierPaths:paths];
+            }
+            
             [activeAnnotation setBounds:newBounds];
             [activeAnnotation autoUpdateString];
         }
@@ -3745,7 +3759,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)doAutoSizeActiveNoteIgnoringWidth:(BOOL)ignoreWidth {
-    if ([activeAnnotation isResizable] == NO || [activeAnnotation isLine]) {
+    if ([activeAnnotation isResizable] == NO || [activeAnnotation isLine] || [activeAnnotation isInk]) {
         NSBeep();
     } else if ([activeAnnotation isText]) {
         
@@ -3902,13 +3916,15 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
 }
 
-- (void)doResizeAnnotationWithEvent:(NSEvent *)theEvent fromPoint:(NSPoint)originalPagePoint originalBounds:(NSRect)originalBounds resizeHandle:(SKRectEdges *)resizeHandlePtr {
+- (void)doResizeAnnotationWithEvent:(NSEvent *)theEvent fromPoint:(NSPoint)originalPagePoint originalBounds:(NSRect)originalBounds originalPaths:(NSArray *)originalPaths margin:(CGFloat)margin resizeHandle:(SKRectEdges *)resizeHandlePtr {
     PDFPage *page = [activeAnnotation page];
     NSRect newBounds = originalBounds;
     NSRect pageBounds = [page  boundsForBox:[self displayBox]];
     NSPoint currentPagePoint = [self convertPoint:[theEvent locationInView:self] toPage:page];
     NSPoint relPoint = SKSubstractPoints(currentPagePoint, originalPagePoint);
     SKRectEdges resizeHandle = *resizeHandlePtr;
+    CGFloat minSize = fmax(MIN_NOTE_SIZE, 2.0 * margin + 2.0);
+    BOOL isInk = [activeAnnotation isInk];
     
     if (NSEqualSizes(originalBounds.size, NSZeroSize)) {
         SKRectEdges currentResizeHandle = (relPoint.x < 0.0 ? SKMinXEdgeMask : SKMaxXEdgeMask) | (relPoint.y <= 0.0 ? SKMinYEdgeMask : SKMaxYEdgeMask);
@@ -3918,55 +3934,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
     }
     
-    if (([theEvent modifierFlags] & NSShiftKeyMask)) {
-        CGFloat width = NSWidth(newBounds);
-        CGFloat height = NSHeight(newBounds);
+    if (([theEvent modifierFlags] & NSShiftKeyMask) == 0) {
         
-        if ((resizeHandle & SKMaxXEdgeMask))
-            width = fmax(MIN_NOTE_SIZE, width + relPoint.x);
-        else if ((resizeHandle & SKMinXEdgeMask))
-            width = fmax(MIN_NOTE_SIZE, width - relPoint.x);
-        if ((resizeHandle & SKMaxYEdgeMask))
-            height = fmax(MIN_NOTE_SIZE, height + relPoint.y);
-        else if ((resizeHandle & SKMinYEdgeMask))
-            height = fmax(MIN_NOTE_SIZE, height - relPoint.y);
-        
-        if ((resizeHandle & (SKMinXEdgeMask | SKMaxXEdgeMask)) == 0)
-            width = height;
-        else if ((resizeHandle & (SKMinYEdgeMask | SKMaxYEdgeMask)) == 0)
-            height = width;
-        else
-            width = height = fmax(width, height);
-        
-        if ((resizeHandle & SKMinXEdgeMask)) {
-            if (NSMaxX(newBounds) - width < NSMinX(pageBounds))
-                width = height = fmax(MIN_NOTE_SIZE, NSMaxX(newBounds) - NSMinX(pageBounds));
-        } else {
-            if (NSMinX(newBounds) + width > NSMaxX(pageBounds))
-                width = height = fmax(MIN_NOTE_SIZE, NSMaxX(pageBounds) - NSMinX(newBounds));
-        }
-        if ((resizeHandle & SKMinYEdgeMask)) {
-            if (NSMaxY(newBounds) - height < NSMinY(pageBounds))
-                width = height = fmax(MIN_NOTE_SIZE, NSMaxY(newBounds) - NSMinY(pageBounds));
-        } else {
-            if (NSMinY(newBounds) + height > NSMaxY(pageBounds))
-                width = height = fmax(MIN_NOTE_SIZE, NSMaxY(pageBounds) - NSMinY(newBounds));
-        }
-        
-        if ((resizeHandle & SKMinXEdgeMask))
-            newBounds.origin.x = NSMaxX(newBounds) - width;
-        if ((resizeHandle & SKMinYEdgeMask))
-            newBounds.origin.y = NSMaxY(newBounds) - height;
-        newBounds.size.width = width;
-        newBounds.size.height = height;
-       
-    } else {
         if ((resizeHandle & SKMaxXEdgeMask)) {
             newBounds.size.width += relPoint.x;
             if (NSMaxX(newBounds) > NSMaxX(pageBounds))
                 newBounds.size.width = NSMaxX(pageBounds) - NSMinX(newBounds);
-            if (NSWidth(newBounds) < MIN_NOTE_SIZE) {
-                newBounds.size.width = MIN_NOTE_SIZE;
+            if (NSWidth(newBounds) < minSize) {
+                newBounds.size.width = minSize;
             }
         } else if ((resizeHandle & SKMinXEdgeMask)) {
             newBounds.origin.x += relPoint.x;
@@ -3975,9 +3950,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 newBounds.size.width = NSMaxX(newBounds) - NSMinX(pageBounds);
                 newBounds.origin.x = NSMinX(pageBounds);
             }
-            if (NSWidth(newBounds) < MIN_NOTE_SIZE) {
-                newBounds.origin.x = NSMaxX(newBounds) - MIN_NOTE_SIZE;
-                newBounds.size.width = MIN_NOTE_SIZE;
+            if (NSWidth(newBounds) < minSize) {
+                newBounds.origin.x = NSMaxX(newBounds) - minSize;
+                newBounds.size.width = minSize;
             }
         }
         if ((resizeHandle & SKMaxYEdgeMask)) {
@@ -3985,8 +3960,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             if (NSMaxY(newBounds) > NSMaxY(pageBounds)) {
                 newBounds.size.height = NSMaxY(pageBounds) - NSMinY(newBounds);
             }
-            if (NSHeight(newBounds) < MIN_NOTE_SIZE) {
-                newBounds.size.height = MIN_NOTE_SIZE;
+            if (NSHeight(newBounds) < minSize) {
+                newBounds.size.height = minSize;
             }
         } else if ((resizeHandle & SKMinYEdgeMask)) {
             newBounds.origin.y += relPoint.y;
@@ -3995,14 +3970,99 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 newBounds.size.height = NSMaxY(newBounds) - NSMinY(pageBounds);
                 newBounds.origin.y = NSMinY(pageBounds);
             }
-            if (NSHeight(newBounds) < MIN_NOTE_SIZE) {
-                newBounds.origin.y = NSMaxY(newBounds) - MIN_NOTE_SIZE;
-                newBounds.size.height = MIN_NOTE_SIZE;
+            if (NSHeight(newBounds) < minSize) {
+                newBounds.origin.y = NSMaxY(newBounds) - minSize;
+                newBounds.size.height = minSize;
             }
         }
+        
+    } else {
+        
+        CGFloat width = NSWidth(newBounds);
+        CGFloat height = NSHeight(newBounds);
+        CGFloat ds = 2.0 * margin;
+        CGFloat ratio = isInk ? fmax(1.0, NSWidth(originalBounds) - ds) / fmax(1.0, NSHeight(originalBounds) - ds) : 1.0;
+
+        if ((resizeHandle & SKMaxXEdgeMask))
+            width = fmax(minSize, width + relPoint.x);
+        else if ((resizeHandle & SKMinXEdgeMask))
+            width = fmax(minSize, width - relPoint.x);
+        if ((resizeHandle & SKMaxYEdgeMask))
+            height = fmax(minSize, height + relPoint.y);
+        else if ((resizeHandle & SKMinYEdgeMask))
+            height = fmax(minSize, height - relPoint.y);
+        
+        if ((resizeHandle & (SKMinXEdgeMask | SKMaxXEdgeMask)) == 0) {
+            width = ds + (height - ds) * ratio;
+            if (width < minSize) {
+                width = minSize;
+                height = ds + (width - ds) / ratio;
+            }
+        } else if ((resizeHandle & (SKMinYEdgeMask | SKMaxYEdgeMask)) == 0) {
+            height = ds + (width - ds) / ratio;
+            if (height < minSize) {
+                height = minSize;
+                width = ds + (height - ds) * ratio;
+            }
+        } else {
+            width = fmax(width, ds + (height - ds) * ratio);
+            height = ds + (width - ds) / ratio;
+        }
+        
+        if ((resizeHandle & SKMinXEdgeMask)) {
+            if (NSMaxX(newBounds) - width < NSMinX(pageBounds)) {
+                width = fmax(minSize, NSMaxX(newBounds) - NSMinX(pageBounds));
+                height = ds + (width - ds) / ratio;
+            }
+        } else {
+            if (NSMinX(newBounds) + width > NSMaxX(pageBounds)) {
+                width = fmax(minSize, NSMaxX(pageBounds) - NSMinX(newBounds));
+                height = ds + (width - ds) / ratio;
+            }
+        }
+        if ((resizeHandle & SKMinYEdgeMask)) {
+            if (NSMaxY(newBounds) - height < NSMinY(pageBounds)) {
+                height = fmax(minSize, NSMaxY(newBounds) - NSMinY(pageBounds));
+                width = ds + (height - ds) * ratio;
+            }
+        } else {
+            if (NSMinY(newBounds) + height > NSMaxY(pageBounds)) {
+                height = fmax(minSize, NSMaxY(pageBounds) - NSMinY(newBounds));
+                width = ds + (height - ds) * ratio;
+            }
+        }
+        
+        if ((resizeHandle & SKMinXEdgeMask))
+            newBounds.origin.x = NSMaxX(newBounds) - width;
+        if ((resizeHandle & SKMinYEdgeMask))
+            newBounds.origin.y = NSMaxY(newBounds) - height;
+        newBounds.size.width = width;
+        newBounds.size.height = height;
+        
     }
     
-    [activeAnnotation setBounds:NSIntegralRect(newBounds)];
+    newBounds = NSIntegralRect(newBounds);
+    
+    if (isInk) {
+        NSMutableArray *paths = [NSMutableArray array];
+        NSAffineTransform *transform = [NSAffineTransform transform];
+        CGFloat sx = fmax(1.0, NSWidth(newBounds) - 2.0 * margin) / fmax(1.0, NSWidth(originalBounds) - 2.0 * margin);
+        CGFloat sy = fmax(1.0, NSHeight(newBounds) - 2.0 * margin) / fmax(1.0, NSHeight(originalBounds) - 2.0 * margin);
+        
+        [transform translateXBy:margin yBy:margin];
+        if (([theEvent modifierFlags] & NSShiftKeyMask))
+            [transform scaleBy:fmin(sx, sy)];
+        else
+            [transform scaleXBy:sx yBy:sy];
+        [transform translateXBy:-margin yBy:-margin];
+        
+        for (NSBezierPath *path in originalPaths)
+            [paths addObject:[transform transformBezierPath:path]];
+        
+        [(PDFAnnotationInk *)activeAnnotation setBezierPaths:paths];
+    }
+    
+    [activeAnnotation setBounds:newBounds];
 }
 
 - (void)updateCursorForMouse:(NSEvent *)theEvent {
@@ -4020,6 +4080,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     BOOL shouldAddAnnotation = activeAnnotation == nil;
     NSPoint originalStartPoint = NSZeroPoint;
     NSPoint originalEndPoint = NSZeroPoint;
+    NSArray *originalPaths = nil;
+    CGFloat margin = 0.0;
     
     // Hit-test for resize box.
     SKRectEdges resizeHandle = [activeAnnotation resizeHandleForPoint:pagePoint scaleFactor:[self scaleFactor]];
@@ -4041,6 +4103,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     } else if (isLine) {
         originalStartPoint = SKIntegralPoint(SKAddPoints([(PDFAnnotationLine *)activeAnnotation startPoint], originalBounds.origin));
         originalEndPoint = SKIntegralPoint(SKAddPoints([(PDFAnnotationLine *)activeAnnotation endPoint], originalBounds.origin));
+    } else if ([activeAnnotation isInk]) {
+        originalPaths = [[[(PDFAnnotationInk *)activeAnnotation paths] copy] autorelease];
+        margin = [(PDFAnnotationInk *)activeAnnotation pathInset];
     }
     
     // we move or resize the annotation in an event loop, which ensures it's enclosed in a single undo group
@@ -4075,7 +4140,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         else if (isLine)
             [self doResizeLineAnnotationWithEvent:lastMouseEvent fromPoint:pagePoint originalStartPoint:originalStartPoint originalEndPoint:originalEndPoint resizeHandle:resizeHandle];
         else
-            [self doResizeAnnotationWithEvent:lastMouseEvent fromPoint:pagePoint originalBounds:originalBounds resizeHandle:&resizeHandle];
+            [self doResizeAnnotationWithEvent:lastMouseEvent fromPoint:pagePoint originalBounds:originalBounds originalPaths:originalPaths margin:margin resizeHandle:&resizeHandle];
     }
     
     if (resizeHandle == 0) {
@@ -4177,7 +4242,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 
                 newAnnotation = [[[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:sel markupType:markupType] autorelease];
                 [newAnnotation setString:[sel cleanedString]];
-            } else if ([[activeAnnotation type] isEqualToString:SKNInkString]) {
+            } else if ([activeAnnotation isInk]) {
                 NSMutableArray *paths = [[(PDFAnnotationInk *)activeAnnotation pagePaths] mutableCopy];
                 [paths addObjectsFromArray:[(PDFAnnotationInk *)newActiveAnnotation pagePaths]];
                 NSString *string1 = [activeAnnotation string];
@@ -4230,7 +4295,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [layer setFillColor:NULL];
     [layer setLineJoin:kCALineJoinRound];
     [layer setLineCap:kCALineCapRound];
-    if (([theEvent modifierFlags] & (NSShiftKeyMask | NSAlphaShiftKeyMask)) && [[activeAnnotation type] isEqualToString:SKNInkString] && [[activeAnnotation page] isEqual:page]) {
+    if (([theEvent modifierFlags] & (NSShiftKeyMask | NSAlphaShiftKeyMask)) && [activeAnnotation isInk] && [[activeAnnotation page] isEqual:page]) {
         [layer setStrokeColor:[[activeAnnotation color] CGColor]];
         [layer setLineWidth:[activeAnnotation lineWidth]];
         if ([activeAnnotation borderStyle] == kPDFBorderStyleDashed) {
