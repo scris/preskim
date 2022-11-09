@@ -166,6 +166,11 @@ enum {
     SKLayerRemove
 };
 
+enum {
+    SKLayerTypeNote,
+    SKLayerTypeRect
+};
+
 @protocol SKLayerDelegate <NSObject>
 - (void)drawLayerController:(SKLayerController *)controller inContext:(CGContextRef)context;
 @end
@@ -176,10 +181,12 @@ enum {
     CALayer *layer;
     id<SKLayerDelegate> delegate;
     NSRect rect;
+    NSInteger type;
 }
 @property (nonatomic, retain) CALayer *layer;
 @property (nonatomic, assign) id<SKLayerDelegate> delegate;
 @property (nonatomic) NSRect rect;
+@property (nonatomic) NSInteger type;
 @end
 
 #pragma mark -
@@ -508,7 +515,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     NSInteger state = atomic_load(&highlightLayerState);
     if (state == SKLayerAdd) {
         atomic_store(&highlightLayerState, SKLayerUse);
-        dispatch_async(dispatch_get_main_queue(), ^{ [self makeHighlightLayer]; });
+        dispatch_async(dispatch_get_main_queue(), ^{ [self makeHighlightLayerForType:SKLayerTypeNote]; });
     } else if (state == SKLayerRemove) {
         atomic_store(&highlightLayerState, SKLayerNone);
         dispatch_async(dispatch_get_main_queue(), ^{ [self removeHighlightLayer]; });
@@ -529,7 +536,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (void)drawLayerController:(SKLayerController *)controller inContext:(CGContextRef)context {
-    if (atomic_load(&highlightLayerState) == SKLayerUse) {
+    if ([controller type] == SKLayerTypeNote) {
         if (activeAnnotation == nil)
             return;
         PDFPage *page = [activeAnnotation page];
@@ -543,7 +550,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     } else {
         NSRect rect = [controller rect];
         if (NSEqualRects(rect, NSZeroRect))
-            
+            return;
         CGContextSaveGState(context);
         CGContextSetStrokeColorWithColor(context, CGColorGetConstantColor(kCGColorBlack));
         CGContextSetLineWidth(context, 1.0);
@@ -552,7 +559,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
-- (void)makeHighlightLayer {
+- (void)makeHighlightLayerForType:(NSInteger)type {
     if (highlightLayerController) {
         [[highlightLayerController layer] removeFromSuperlayer];
         [highlightLayerController release];
@@ -565,6 +572,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [layer setContentsScale:[[self layer] contentsScale]];
     [layer setFilters:SKColorEffectFilters()];
     highlightLayerController = [[SKLayerController alloc] init];
+    [highlightLayerController setType:type];
     [highlightLayerController setDelegate:self];
     [highlightLayerController setLayer:layer];
     [layer setDelegate:highlightLayerController];
@@ -1014,7 +1022,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         highlightAnnotation = [annotation retain];
         if (highlightAnnotation) {
             if (highlightLayerController == nil)
-                [self makeHighlightLayer];
+                [self makeHighlightLayerForType:SKLayerTypeRect];
             
             NSRect rect = [self backingAlignedRect:[self convertRect:[highlightAnnotation bounds] fromPage:[highlightAnnotation page]] options:NSAlignAllEdgesOutward];
             [highlightLayerController setRect:NSInsetRect(rect, -0.5, -0.5)];
@@ -4839,7 +4847,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     BOOL dragged = NO;
     NSWindow *window = [self window];
     
-    [self makeHighlightLayer];
+    [self makeHighlightLayerForType:SKLayerTypeRect];
     
     while (YES) {
         theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
@@ -5403,7 +5411,7 @@ static inline NSSize SKFitTextNoteSize(NSString *string, NSFont *font, CGFloat w
 
 @implementation SKLayerController
 
-@synthesize layer, delegate, rect;
+@synthesize layer, delegate, rect, type;
 
 - (void)dealloc {
     delegate = nil;
