@@ -40,6 +40,7 @@
 #import <Quartz/Quartz.h>
 #import "SKBasePDFView.h"
 #import "NSDocument_SKExtensions.h"
+#import <stdatomic.h>
 
 extern NSString *SKPDFViewDisplaysAsBookChangedNotification;
 extern NSString *SKPDFViewDisplaysPageBreaksChangedNotification;
@@ -115,7 +116,7 @@ enum {
 
 @protocol SKPDFViewDelegate;
 
-@class SKReadingBar, SKTransitionController, SKTypeSelectHelper, SKNavigationWindow, SKTextNoteEditor, SKSyncDot, SKLoupeController;
+@class SKReadingBar, SKTransitionController, SKTypeSelectHelper, SKNavigationWindow, SKTextNoteEditor, SKSyncDot, SKLoupeController, SKLayerController;
 
 @interface SKPDFView : SKBasePDFView {
     SKToolMode toolMode;
@@ -149,6 +150,9 @@ enum {
     SKSyncDot *syncDot;
     
     CAShapeLayer *rectLayer;
+    
+    SKLayerController *highlightLayerController;
+    _Atomic(NSInteger) highlightLayerState;
     
     SKLoupeController *loupeController;
     
