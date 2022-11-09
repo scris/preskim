@@ -159,6 +159,29 @@ enum {
     SKNavigationEverywhere,
 };
 
+enum {
+    SKLayerNone,
+    SKLayerUse,
+    SKLayerAdd,
+    SKLayerRemove
+};
+
+@protocol SKLayerDelegate <NSObject>
+- (void)drawLayerController:(SKLayerController *)controller inContext:(CGContextRef)context;
+@end
+
+// this class is a proxy for the layer delegate
+// to avoid overriding NSView's CALayerDelegate methods
+@interface SKLayerController : NSObject <CALayerDelegate> {
+    CALayer *layer;
+    id<SKLayerDelegate> delegate;
+}
+@property (nonatomic, retain) CALayer *layer;
+@property (nonatomic, assign) id<SKLayerDelegate> delegate;
+@end
+
+#pragma mark -
+
 #if SDK_BEFORE(10_12)
 @interface PDFView (SKSierraDeclarations)
 - (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context;
@@ -178,7 +201,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 #pragma mark -
 
-@interface SKPDFView () <SKReadingBarDelegate>
+@interface SKPDFView () <SKReadingBarDelegate, SKLayerDelegate>
 @property (retain) SKReadingBar *readingBar;
 @property (retain) SKSyncDot *syncDot;
 @end
@@ -460,13 +483,15 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     
     [[self readingBar] drawForPage:pdfPage withBox:[self displayBox] inContext:context transform:NO];
     
-    PDFAnnotation *annotation = nil;
-    @synchronized (self) {
-        annotation = [[activeAnnotation retain] autorelease];
+    if (atomic_load(&highlightLayerState) != SKLayerUse) {
+        PDFAnnotation *annotation = nil;
+        @synchronized (self) {
+            annotation = [[activeAnnotation retain] autorelease];
+        }
+        
+        if ([[annotation page] isEqual:pdfPage])
+            [annotation drawSelectionHighlightForView:self inContext:context];
     }
-    
-    if ([[annotation page] isEqual:pdfPage])
-        [annotation drawSelectionHighlightForView:self inContext:context];
     
     [self drawSelectionForPage:pdfPage inContext:context];
     
@@ -478,6 +503,15 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (void)drawPage:(PDFPage *)pdfPage toContext:(CGContextRef)context {
+    NSInteger state = atomic_load(&highlightLayerState);
+    if (state == SKLayerAdd) {
+        atomic_store(&highlightLayerState, SKLayerUse);
+        dispatch_async(dispatch_get_main_queue(), ^{ [self makeHighlightLayer]; });
+    } else if (state == SKLayerRemove) {
+        atomic_store(&highlightLayerState, SKLayerNone);
+        dispatch_async(dispatch_get_main_queue(), ^{ [self removeHighlightLayer]; });
+    }
+
     // Let PDFView do most of the hard work.
     [super drawPage:pdfPage toContext:context];
     [self drawPageHighlights:pdfPage toContext:context];
@@ -490,6 +524,45 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         // on 10.12+ this should be called from drawPage:toContext:
         [self drawPageHighlights:pdfPage toContext:[[NSGraphicsContext currentContext] CGContext]];
     }
+}
+
+- (void)drawLayerController:(SKLayerController *)controller inContext:(CGContextRef)context {
+    if (activeAnnotation == nil)
+        return;
+    PDFPage *page = [activeAnnotation page];
+    NSPoint offset = SKSubstractPoints([self convertRect:[page boundsForBox:[self displayBox]]fromPage:page].origin, [self visibleContentRect].origin);
+    CGContextSaveGState(context);
+    CGContextTranslateCTM(context, offset.x, offset.y);
+    CGContextScaleCTM(context, [self scaleFactor], [self scaleFactor]);
+    [page transformContext:context forBox:[self displayBox]];
+    [activeAnnotation drawSelectionHighlightForView:self inContext:context];
+    CGContextRestoreGState(context);
+}
+
+- (void)makeHighlightLayer {
+    if (highlightLayerController) {
+        [[highlightLayerController layer] removeFromSuperlayer];
+        [highlightLayerController release];
+    }
+    CALayer *layer = [[CALayer alloc] init];
+    [layer setFrame:NSRectToCGRect([self visibleContentRect])];
+    [layer setBounds:[layer frame]];
+    [layer setMasksToBounds:YES];
+    [layer setZPosition:1.0];
+    [layer setContentsScale:[[self layer] contentsScale]];
+    [layer setFilters:SKColorEffectFilters()];
+    highlightLayerController = [[SKLayerController alloc] init];
+    [highlightLayerController setDelegate:self];
+    [highlightLayerController setLayer:layer];
+    [layer setDelegate:highlightLayerController];
+    [[self layer] addSublayer:layer];
+    [layer setNeedsDisplay];
+    [layer release];
+}
+
+- (void)removeHighlightLayer {
+    [[highlightLayerController layer] removeFromSuperlayer];
+    SKDESTROY(highlightLayerController);
 }
 
 - (void)makeRectLayer {
@@ -4121,6 +4194,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         eventMask |= NSPeriodicMask;
     }
     
+    if (RUNNING_AFTER(10_11)) {
+        atomic_store(&highlightLayerState, SKLayerAdd);
+        if (activeAnnotation)
+            [self setNeedsDisplayForAnnotation:activeAnnotation];
+    }
+    
     while (YES) {
         theEvent = [[self window] nextEventMatchingMask:eventMask];
         if ([theEvent type] == NSLeftMouseUp) {
@@ -4141,6 +4220,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [self doResizeLineAnnotationWithEvent:lastMouseEvent fromPoint:pagePoint originalStartPoint:originalStartPoint originalEndPoint:originalEndPoint resizeHandle:resizeHandle];
         else
             [self doResizeAnnotationWithEvent:lastMouseEvent fromPoint:pagePoint originalBounds:originalBounds originalPaths:originalPaths margin:margin resizeHandle:&resizeHandle];
+        if (RUNNING_AFTER(10_11))
+            [[highlightLayerController layer] setNeedsDisplay];
     }
     
     if (resizeHandle == 0) {
@@ -4155,7 +4236,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (shouldAddAnnotation && toolMode == SKNoteToolMode && (annotationMode == SKAnchoredNote || annotationMode == SKFreeTextNote))
             [self editActiveAnnotation:self]; 	 
         
+        if (RUNNING_AFTER(10_11))
+            atomic_store(&highlightLayerState, SKLayerRemove);
         [self setNeedsDisplayForAnnotation:activeAnnotation];
+    } else if (RUNNING_AFTER(10_11)) {
+        atomic_store(&highlightLayerState, SKLayerNone);
+        [self removeHighlightLayer];
     }
     
     // ??? PDFView's delayed layout seems to reset the cursor to an arrow
@@ -5322,3 +5408,22 @@ static inline NSSize SKFitTextNoteSize(NSString *string, NSFont *font, CGFloat w
     size.height = ceil(size.height + (RUNNING_AFTER(10_13) ? 6.0 : 2.0));
     return size;
 }
+
+#pragma mark -
+
+@implementation SKLayerController
+
+@synthesize layer, delegate;
+
+- (void)dealloc {
+    delegate = nil;
+    SKDESTROY(layer);
+    [super dealloc];
+}
+
+- (void)drawLayer:(CALayer *)aLayer inContext:(CGContextRef)context {
+    [delegate drawLayerController:self inContext:context];
+}
+
+@end
+
