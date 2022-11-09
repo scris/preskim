@@ -175,9 +175,11 @@ enum {
 @interface SKLayerController : NSObject <CALayerDelegate> {
     CALayer *layer;
     id<SKLayerDelegate> delegate;
+    NSRect rect;
 }
 @property (nonatomic, retain) CALayer *layer;
 @property (nonatomic, assign) id<SKLayerDelegate> delegate;
+@property (nonatomic) NSRect rect;
 @end
 
 #pragma mark -
@@ -363,7 +365,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     SKDESTROY(readingBar);
     SKDESTROY(editor);
     SKDESTROY(highlightAnnotation);
-    SKDESTROY(rectLayer);
+    SKDESTROY(highlightLayerController);
     SKDESTROY(rewindPage);
     [super dealloc];
 }
@@ -527,16 +529,27 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (void)drawLayerController:(SKLayerController *)controller inContext:(CGContextRef)context {
-    if (activeAnnotation == nil)
-        return;
-    PDFPage *page = [activeAnnotation page];
-    NSPoint offset = SKSubstractPoints([self convertRect:[page boundsForBox:[self displayBox]]fromPage:page].origin, [self visibleContentRect].origin);
-    CGContextSaveGState(context);
-    CGContextTranslateCTM(context, offset.x, offset.y);
-    CGContextScaleCTM(context, [self scaleFactor], [self scaleFactor]);
-    [page transformContext:context forBox:[self displayBox]];
-    [activeAnnotation drawSelectionHighlightForView:self inContext:context];
-    CGContextRestoreGState(context);
+    if (atomic_load(&highlightLayerState) == SKLayerUse) {
+        if (activeAnnotation == nil)
+            return;
+        PDFPage *page = [activeAnnotation page];
+        NSPoint offset = SKSubstractPoints([self convertRect:[page boundsForBox:[self displayBox]]fromPage:page].origin, [self visibleContentRect].origin);
+        CGContextSaveGState(context);
+        CGContextTranslateCTM(context, offset.x, offset.y);
+        CGContextScaleCTM(context, [self scaleFactor], [self scaleFactor]);
+        [page transformContext:context forBox:[self displayBox]];
+        [activeAnnotation drawSelectionHighlightForView:self inContext:context];
+        CGContextRestoreGState(context);
+    } else {
+        NSRect rect = [controller rect];
+        if (NSEqualRects(rect, NSZeroRect))
+            
+        CGContextSaveGState(context);
+        CGContextSetStrokeColorWithColor(context, CGColorGetConstantColor(kCGColorBlack));
+        CGContextSetLineWidth(context, 1.0);
+        CGContextStrokeRect(context, NSRectToCGRect(rect));
+        CGContextRestoreGState(context);
+    }
 }
 
 - (void)makeHighlightLayer {
@@ -563,24 +576,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)removeHighlightLayer {
     [[highlightLayerController layer] removeFromSuperlayer];
     SKDESTROY(highlightLayerController);
-}
-
-- (void)makeRectLayer {
-    if (rectLayer) {
-        [rectLayer removeFromSuperlayer];
-        [rectLayer release];
-    }
-    rectLayer = [[CAShapeLayer alloc] init];
-    [rectLayer setStrokeColor:CGColorGetConstantColor(kCGColorBlack)];
-    [rectLayer setFillColor:NULL];
-    [rectLayer setLineWidth:1.0];
-    [rectLayer setFrame:NSRectToCGRect([self visibleContentRect])];
-    [rectLayer setBounds:[rectLayer frame]];
-    [rectLayer setMasksToBounds:YES];
-    [rectLayer setZPosition:1.0];
-    [rectLayer setContentsScale:[[self layer] contentsScale]];
-    [rectLayer setFilters:SKColorEffectFilters()];
-    [[self layer] addSublayer:rectLayer];
 }
 
 #pragma mark Accessors
@@ -1018,16 +1013,13 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [highlightAnnotation release];
         highlightAnnotation = [annotation retain];
         if (highlightAnnotation) {
-            if (rectLayer == nil)
-                [self makeRectLayer];
+            if (highlightLayerController == nil)
+                [self makeHighlightLayer];
             
             NSRect rect = [self backingAlignedRect:[self convertRect:[highlightAnnotation bounds] fromPage:[highlightAnnotation page]] options:NSAlignAllEdgesOutward];
-            CGPathRef path = CGPathCreateWithRect(CGRectInset(NSRectToCGRect(rect), -0.5, -0.5), NULL);
-            [rectLayer setPath:path];
-            CGPathRelease(path);
-        } else if (rectLayer) {
-            [rectLayer removeFromSuperlayer];
-            SKDESTROY(rectLayer);
+            [highlightLayerController setRect:NSInsetRect(rect, -0.5, -0.5)];
+        } else if (highlightLayerController) {
+            [self removeHighlightLayer];
         }
     }
 }
@@ -4847,7 +4839,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     BOOL dragged = NO;
     NSWindow *window = [self window];
     
-    [self makeRectLayer];
+    [self makeHighlightLayer];
     
     while (YES) {
         theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
@@ -4875,13 +4867,11 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         // intersect with the bounds, project on the bounds if necessary and allow zero width or height
         selRect = SKIntersectionRect(selRect, [[self documentView] bounds]);
         
-        CGPathRef path = CGPathCreateWithRect(NSRectToCGRect(NSInsetRect(NSIntegralRect([self convertRect:selRect fromView:[self documentView]]), 0.5, 0.5)), NULL);
-        [rectLayer setPath:path];
-        CGPathRelease(path);
+        [highlightLayerController setRect:NSInsetRect(NSIntegralRect([self convertRect:selRect fromView:[self documentView]]), 0.5, 0.5)];
+        [[highlightLayerController layer] setNeedsDisplay];
     }
     
-    [rectLayer removeFromSuperlayer];
-    SKDESTROY(rectLayer);
+    [self removeHighlightLayer];
 
     [self setCursorForMouse:theEvent];
     
@@ -5413,7 +5403,7 @@ static inline NSSize SKFitTextNoteSize(NSString *string, NSFont *font, CGFloat w
 
 @implementation SKLayerController
 
-@synthesize layer, delegate;
+@synthesize layer, delegate, rect;
 
 - (void)dealloc {
     delegate = nil;

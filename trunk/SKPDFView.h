@@ -149,8 +149,6 @@ enum {
     
     SKSyncDot *syncDot;
     
-    CAShapeLayer *rectLayer;
-    
     SKLayerController *highlightLayerController;
     _Atomic(NSInteger) highlightLayerState;
     
