@@ -4159,6 +4159,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     // Hit-test for resize box.
     SKRectEdges resizeHandle = [activeAnnotation resizeHandleForPoint:pagePoint scaleFactor:[self scaleFactor]];
     
+    if (RUNNING_AFTER(10_11)) {
+        atomic_store(&highlightLayerState, SKLayerAdd);
+        if (activeAnnotation)
+            [self setNeedsDisplayForAnnotation:activeAnnotation];
+    }
+    
     if (shouldAddAnnotation) {
         if (annotationMode == SKAnchoredNote) {
             [self addAnnotationWithType:SKAnchoredNote selection:nil page:page bounds:SKRectFromCenterAndSquareSize(SKIntegralPoint(pagePoint), 0.0)];
@@ -4192,12 +4198,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [[NSCursor closedHandCursor] push];
         [NSEvent startPeriodicEventsAfterDelay:0.1 withPeriod:0.1];
         eventMask |= NSPeriodicMask;
-    }
-    
-    if (RUNNING_AFTER(10_11)) {
-        atomic_store(&highlightLayerState, SKLayerAdd);
-        if (activeAnnotation)
-            [self setNeedsDisplayForAnnotation:activeAnnotation];
     }
     
     while (YES) {
