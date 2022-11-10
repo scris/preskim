@@ -247,7 +247,16 @@
     return YES;
 }
 
-- (void)displayLayer:(CALayer *)aLayer {
+static inline CGRect SKPixelAlignedRect(CGRect rect, CGFloat scale) {
+    CGRect r;
+    r.origin.x = round(CGRectGetMinX(rect) * scale) / scale;
+    r.origin.y = round(CGRectGetMinY(rect) * scale) / scale;
+    r.size.width = round(CGRectGetMaxX(rect) * scale) / scale - CGRectGetMinX(r);
+    r.size.height = round(CGRectGetMaxY(rect) * scale) / scale - CGRectGetMinY(r);
+    return CGRectGetWidth(r) > 0.0 && CGRectGetHeight(r) > 0.0 ? r : CGRectZero;
+}
+
+- (void)drawLayer:(CALayer *)aLayer inContext:(CGContextRef)context {
     NSPoint mouseLoc = [pdfView convertPointFromScreen:[NSEvent mouseLocation]];
     
     if (NSPointInRect(mouseLoc, [pdfView visibleContentRect]) == NO)
@@ -255,18 +264,21 @@
     
     NSRect magRect = [pdfView convertRectFromScreen:[window frame]];
     
-    NSShadow *aShadow = nil;
     CGFloat scaleFactor = [pdfView scaleFactor];
+    CGColorRef shadowColor = NULL;
+    CGFloat shadowBlurRadius = 0.0;
+    CGSize shadowOffset = CGSizeZero;
+    CGColorRef borderColor = NULL;
     if ([pdfView displaysPageBreaks]) {
-        aShadow = [[[NSShadow alloc] init] autorelease];
-        [aShadow setShadowColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.3]];
-        [aShadow setShadowBlurRadius:4.0 * magnification * scaleFactor];
-        [aShadow setShadowOffset:NSMakeSize(0.0, -1.0 * magnification * scaleFactor)];
+        shadowColor = CGColorCreateGenericGray(0.0, 0.3);
+        shadowBlurRadius = 4.0 * magnification * scaleFactor;
+        shadowOffset.height = -magnification * scaleFactor;
+        if (RUNNING_AFTER(10_13))
+            borderColor = CGColorCreateGenericGray(0.925, 1.0);
     }
     
-    NSImage *image;
-    NSAffineTransform *transform = [NSAffineTransform transform];
-    NSImageInterpolation interpolation = [pdfView interpolationQuality] + 1;
+    CGAffineTransform t = CGAffineTransformTranslate(CGAffineTransformScale(CGAffineTransformMakeTranslation(mouseLoc.x - NSMinX(magRect), mouseLoc.y - NSMinY(magRect)), magnification, magnification), -mouseLoc.x, -mouseLoc.y);
+    CGInterpolationQuality interpolation = [pdfView interpolationQuality] + 1;
     BOOL shouldAntiAlias = [pdfView shouldAntiAlias];
     PDFDisplayBox box = [pdfView displayBox];
     NSRect scaledRect = SKRectFromCenterAndSize(mouseLoc, NSMakeSize(NSWidth(magRect) / magnification, NSHeight(magRect) / magnification));
@@ -283,68 +295,61 @@
         pageRange.length = [[pdfView pageForPoint:SKBottomRightPoint(scaledRect) nearest:YES] pageIndex] + 1 - pageRange.location;
     }
     
-    [transform translateXBy:mouseLoc.x - NSMinX(magRect) yBy:mouseLoc.y - NSMinY(magRect)];
-    [transform scaleBy:magnification];
-    [transform translateXBy:-mouseLoc.x yBy:-mouseLoc.y];
+    CGRect rect = CGRectMake(0.0, 0.0, NSWidth(magRect), NSHeight(magRect));
+    CGRect shadedRect = shadowColor ? CGRectOffset(CGRectInset(rect, -shadowBlurRadius, -shadowBlurRadius), -shadowOffset.width, -shadowOffset.height) : rect;
+    NSUInteger i;
     
-    image = [NSImage bitmapImageWithSize:magRect.size scale:backingScale drawingHandler:^(NSRect rect){
+    for (i = pageRange.location; i < NSMaxRange(pageRange); i++) {
+        PDFPage *page = [[pdfView document] pageAtIndex:i];
+        CGRect pageRect = NSRectToCGRect([pdfView convertRect:[page boundsForBox:box] fromPage:page]);
+        CGPoint pageOrigin = pageRect.origin;
         
-        NSRect imageRect = rect;
-        NSUInteger i;
-        CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+        pageRect = SKPixelAlignedRect(CGRectApplyAffineTransform(pageRect, t), backingScale);
         
-        if (aShadow)
-            imageRect = NSOffsetRect(NSInsetRect(imageRect, -[aShadow shadowBlurRadius], -[aShadow shadowBlurRadius]), -[aShadow shadowOffset].width, -[aShadow shadowOffset].height);
+        // only draw the page when there is something to draw
+        if (CGRectIntersectsRect(shadedRect, pageRect) == NO)
+            continue;
         
-        for (i = pageRange.location; i < NSMaxRange(pageRange); i++) {
-            PDFPage *page = [[pdfView document] pageAtIndex:i];
-            NSRect pageRect = [pdfView convertRect:[page boundsForBox:box] fromPage:page];
-            NSPoint pageOrigin = pageRect.origin;
-            NSAffineTransform *pageTransform;
-            
-            pageRect = SKTransformRect(transform, pageRect);
-            
-            // only draw the page when there is something to draw
-            if (NSIntersectsRect(imageRect, pageRect) == NO)
-                continue;
-            
-            // draw page background, simulate the private method -drawPagePre:
+        // draw page background, simulate the private method -drawPagePre:
+        CGContextSaveGState(context);
+        CGContextSetFillColorWithColor(context, CGColorGetConstantColor(kCGColorWhite));
+        if (shadowColor)
+            CGContextSetShadowWithColor(context, shadowOffset, shadowBlurRadius, shadowColor);
+        CGContextFillRect(context, pageRect);
+        CGContextRestoreGState(context);
+        if (borderColor) {
+            CGContextSaveGState(context);
+            CGContextSetFillColorWithColor(context, borderColor);
+            CGContextAddRect(context, pageRect);
+            CGContextAddRect(context, CGRectInset(pageRect, scaleFactor * magnification, scaleFactor * magnification));
+            CGContextEOFillPath(context);
+            CGContextRestoreGState(context);
+        }
+        
+        // only draw the page when there is something to draw
+        if (CGRectIntersectsRect(rect, pageRect) == NO)
+            continue;
+        
+        // draw page contents
+        CGContextSaveGState(context);
+        CGContextConcatCTM(context, CGAffineTransformScale(CGAffineTransformTranslate(t, pageOrigin.x, pageOrigin.y), scaleFactor, scaleFactor));
+        CGContextSetShouldAntialias(context, shouldAntiAlias);
+        if ([PDFView instancesRespondToSelector:@selector(drawPage:toContext:)]) {
+            CGContextSetInterpolationQuality(context, interpolation);
+            [pdfView drawPage:page toContext:context];
+        } else {
             [NSGraphicsContext saveGraphicsState];
-            [[NSColor whiteColor] setFill];
-            [aShadow set];
-            NSRectFill(SKIntegralRect(pageRect, backingScale));
-            [NSGraphicsContext restoreGraphicsState];
-            if (RUNNING_AFTER(10_13) && aShadow) {
-                [NSGraphicsContext saveGraphicsState];
-                [[NSColor colorWithGenericGamma22White:0.94 alpha:1.0] setFill];
-                NSFrameRectWithWidth(SKIntegralRect(pageRect, backingScale), magnification * scaleFactor);
-                [NSGraphicsContext restoreGraphicsState];
-            }
-            
-            // only draw the page when there is something to draw
-            if (NSIntersectsRect(rect, pageRect) == NO)
-                continue;
-            
-            // draw page contents
-            [NSGraphicsContext saveGraphicsState];
-            pageTransform = [transform copy];
-            [pageTransform translateXBy:pageOrigin.x yBy:pageOrigin.y];
-            [pageTransform scaleBy:scaleFactor];
-            [pageTransform concat];
-            [pageTransform release];
-            [[NSGraphicsContext currentContext] setShouldAntialias:shouldAntiAlias];
+            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
             [[NSGraphicsContext currentContext] setImageInterpolation:interpolation];
-            if ([PDFView instancesRespondToSelector:@selector(drawPage:toContext:)])
-                [pdfView drawPage:page toContext:context];
-            else
-                [pdfView drawPage:page];
+            [pdfView drawPage:page];
             [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
             [NSGraphicsContext restoreGraphicsState];
         }
-        
-    }];
+        CGContextRestoreGState(context);
+    }
     
-    [aLayer setContents:image];
+    CGColorRelease(shadowColor);
+    CGColorRelease(borderColor);
 }
 
 @end
