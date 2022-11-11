@@ -4370,6 +4370,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     CAShapeLayer *layer = nil;
     NSRect boxBounds = NSIntersectionRect([page boundsForBox:[self displayBox]], [self convertRect:[self visibleContentRect] toPage:page]);
     CGAffineTransform t = CGAffineTransformRotate(CGAffineTransformMakeScale([self scaleFactor], [self scaleFactor]), -M_PI_2 * [page rotation] / 90.0);
+    CGFloat r = fmin(2.0, 2.0 * [self scaleFactor]);
     layer = [CAShapeLayer layer];
     // transform and place so that the path is in page coordinates
     [layer setBounds:NSRectToCGRect(boxBounds)];
@@ -4388,8 +4389,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [layer setLineDashPattern:[activeAnnotation dashPattern]];
             [layer setLineCap:kCALineCapButt];
         }
-        [layer setShadowRadius:2.0 / [self scaleFactor]];
-        [layer setShadowOffset:CGSizeApplyAffineTransform(CGSizeMake(0.0, -2.0), CGAffineTransformInvert(t))];
+        [layer setShadowRadius:r / [self scaleFactor]];
+        [layer setShadowOffset:CGSizeApplyAffineTransform(CGSizeMake(0.0, -r), CGAffineTransformInvert(t))];
         [layer setShadowOpacity:0.33333];
     } else {
         [self setActiveAnnotation:nil];

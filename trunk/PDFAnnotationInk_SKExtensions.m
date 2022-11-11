@@ -265,23 +265,24 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
 }
 
 - (void)drawSelectionHighlightForView:(PDFView *)pdfView inContext:(CGContextRef)context {
-    [super drawSelectionHighlightForView:pdfView inContext:context];
     if (NSIsEmptyRect([self bounds]) == NO && [self isSkimNote]) {
         CGFloat scale = 1.0 / [pdfView unitWidthOnPage:[self page]];
-        NSRect bounds = [self bounds];
-        NSRect rect = NSMakeRect(0.0, 0.0, ceil(scale * NSWidth(bounds)), ceil(scale * NSHeight(bounds)));
-        bounds.size = NSMakeSize(NSWidth(rect) / scale, NSHeight(rect) / scale);
+        CGFloat r = fmin(2.0 * scale, 2.0);
         NSSize offset = NSZeroSize;
         switch ([[self page] rotation]) {
-            case 0:   offset.height = -2.0; break;
-            case 90:  offset.width = 2.0;   break;
-            case 180: offset.height = 2.0;  break;
-            case 270: offset.width = -2.0;  break;
-            default:  offset.height = -2.0; break;
+            case 0:   offset.height = -r; break;
+            case 90:  offset.width = r;   break;
+            case 180: offset.height = r;  break;
+            case 270: offset.width = -r;  break;
+            default:  offset.height = -r; break;
         }
+        NSRect bounds = NSOffsetRect(NSInsetRect([self bounds], -r / scale, -r / scale), offset.width / scale, offset.height / scale);
+        NSRect rect = NSMakeRect(0.0, 0.0, ceil(scale * NSWidth(bounds)), ceil(scale * NSHeight(bounds)));
+        bounds.size = NSMakeSize(NSWidth(rect) / scale, NSHeight(rect) / scale);
         NSImage *image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
         NSAffineTransform *transform = [NSAffineTransform transform];
+        [transform translateXBy:r - offset.width yBy:r - offset.height];
         [transform scaleBy:scale];
         [transform concat];
         NSBezierPath *path = [NSBezierPath bezierPath];
@@ -296,7 +297,7 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
             [path setLineCapStyle:NSRoundLineCapStyle];
         }
         [NSGraphicsContext saveGraphicsState];
-        [NSShadow setShadowWithColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.33333] blurRadius:2.0 offset:offset];
+        [NSShadow setShadowWithColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.33333] blurRadius:r offset:offset];
         [[NSColor colorWithGenericGamma22White:0.0 alpha:[[self color] alphaComponent]] setStroke];
         [path stroke];
         [NSGraphicsContext restoreGraphicsState];
@@ -304,10 +305,13 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
         [[NSColor blackColor] setStroke];
         [path stroke];
         [image unlockFocus];
-        CGImageRef cgImage = [image CGImageForProposedRect:&rect context:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO] hints:nil];
+        [NSGraphicsContext saveGraphicsState];
+        [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
+        [image drawInRect:bounds];
+        [NSGraphicsContext restoreGraphicsState];
         [image release];
-        CGContextDrawImage(context, NSRectToCGRect(bounds), cgImage);
     }
+    [super drawSelectionHighlightForView:pdfView inContext:context];
 }
 
 - (NSArray *)pointLists {
