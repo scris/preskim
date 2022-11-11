@@ -267,10 +267,10 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
 - (void)drawSelectionHighlightForView:(PDFView *)pdfView inContext:(CGContextRef)context {
     [super drawSelectionHighlightForView:pdfView inContext:context];
     if (NSIsEmptyRect([self bounds]) == NO && [self isSkimNote]) {
-        CGFloat scale = ceil(1.0 / [pdfView unitWidthOnPage:[self page]]);
-        NSRect b = [self bounds];
-        NSRect bounds = NSIntegralRect(b);
-        NSRect rect = NSMakeRect(0.0, 0.0, scale * NSWidth(bounds), scale * NSHeight(bounds));
+        CGFloat scale = 1.0 / [pdfView unitWidthOnPage:[self page]];
+        NSRect bounds = [self bounds];
+        NSRect rect = NSMakeRect(0.0, 0.0, ceil(scale * NSWidth(bounds)), ceil(scale * NSHeight(bounds)));
+        bounds.size = NSMakeSize(NSWidth(rect) / scale, NSHeight(rect) / scale);
         NSSize offset = NSZeroSize;
         switch ([[self page] rotation]) {
             case 0:   offset.height = -2.0; break;
@@ -283,7 +283,6 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
         [image lockFocus];
         NSAffineTransform *transform = [NSAffineTransform transform];
         [transform scaleBy:scale];
-        [transform translateXBy:NSMinX(b) - NSMinX(bounds) yBy:NSMinY(b) - NSMinY(bounds)];
         [transform concat];
         NSBezierPath *path = [NSBezierPath bezierPath];
         for (NSBezierPath *aPath in [self paths])
