@@ -151,6 +151,8 @@ static void replacement_dealloc(id self, SEL _cmd) {
     if (self) {
         [self setShouldPrint:YES];
         [self setSkimNote:YES];
+        if ([self respondsToSelector:@selector(setUserName:)])
+            [self setUserName:nil];
     }
     return self;
 
