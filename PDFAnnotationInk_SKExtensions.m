@@ -259,7 +259,7 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
     if (lineWidth < 1.0)
         lineWidth = 1.0;
     for (NSBezierPath *path in [self paths])
-        rect = NSUnionRect(rect, NSInsetRect([path nonEmptyBounds], -lineWidth, -lineWidth));
+        rect = NSUnionRect(rect, NSInsetRect([path nonEmptyBounds], -0.5 * lineWidth, -0.5 * lineWidth));
     rect.origin = SKAddPoints(rect.origin, bounds.origin);
     return NSUnionRect([super displayRectForBounds:bounds lineWidth:lineWidth], NSIntegralRect(rect));
 }
