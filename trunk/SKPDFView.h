@@ -51,7 +51,7 @@ extern NSString *SKPDFViewToolModeChangedNotification;
 extern NSString *SKPDFViewToolModeChangedNotification;
 extern NSString *SKPDFViewAnnotationModeChangedNotification;
 extern NSString *SKPDFViewTemporaryToolModeChangedNotification;
-extern NSString *SKPDFViewActiveAnnotationDidChangeNotification;
+extern NSString *SKPDFViewCurrentAnnotationChangedNotification;
 extern NSString *SKPDFViewDidAddAnnotationNotification;
 extern NSString *SKPDFViewDidRemoveAnnotationNotification;
 extern NSString *SKPDFViewDidMoveAnnotationNotification;
@@ -137,7 +137,7 @@ enum {
     
     SKTypeSelectHelper *typeSelectHelper;
     
-	PDFAnnotation *activeAnnotation;
+	PDFAnnotation *currentAnnotation;
 	PDFAnnotation *highlightAnnotation;
     
     SKTextNoteEditor *editor;
@@ -182,7 +182,7 @@ enum {
 @property (nonatomic) SKNoteType annotationMode;
 @property (nonatomic) SKTemporaryToolMode temporaryToolMode;
 @property (nonatomic) SKInteractionMode interactionMode;
-@property (nonatomic, retain) PDFAnnotation *activeAnnotation;
+@property (nonatomic, retain) PDFAnnotation *currentAnnotation;
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;
 @property (nonatomic, readonly, getter=isZooming) BOOL zooming;
 @property (nonatomic) NSRect currentSelectionRect;
@@ -227,18 +227,18 @@ enum {
 - (void)addAnnotationForContext:(id)sender;
 - (void)addAnnotationWithType:(SKNoteType)annotationType;
 - (void)addAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page;
-- (void)removeActiveAnnotation:(id)sender;
+- (void)removeCurrentAnnotation:(id)sender;
 - (void)removeThisAnnotation:(id)sender;
 - (void)removeAnnotation:(PDFAnnotation *)annotation;
 
-- (void)editActiveAnnotation:(id)sender;
+- (void)editCurrentAnnotation:(id)sender;
 - (void)editThisAnnotation:(id)sender;
 - (void)editAnnotation:(PDFAnnotation *)annotation;
 
-- (void)autoSizeActiveAnnotation:(PDFAnnotation *)annotation;
+- (void)autoSizeCurrentAnnotation:(PDFAnnotation *)annotation;
 
-- (void)selectNextActiveAnnotation:(id)sender;
-- (void)selectPreviousActiveAnnotation:(id)sender;
+- (void)selectNextCurrentAnnotation:(id)sender;
+- (void)selectPreviousCurrentAnnotation:(id)sender;
 
 - (void)scrollAnnotationToVisible:(PDFAnnotation *)annotation;
 - (void)displayLineAtPoint:(NSPoint)point inPageAtIndex:(NSUInteger)pageIndex select:(BOOL)select showReadingBar:(BOOL)showBar;

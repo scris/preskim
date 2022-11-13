@@ -157,7 +157,7 @@
 }
 
 - (void)updateColorPanel {
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     NSColor *color = nil;
     NSView *accessoryView = nil;
     
@@ -198,7 +198,7 @@
 }
 
 - (void)updateLineInspector {
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     
     if ([[self window] isMainWindow] &&[annotation hasBorder]) {
         mwcFlags.updatingLine = 1;
@@ -208,7 +208,7 @@
 }
 
 - (void)updateUtilityPanel {
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     
     if ([[self window] isMainWindow]) {
         if ([annotation isSkimNote]) {
@@ -731,7 +731,7 @@
         if ([(PDFAnnotation *)item type] || tableColumn == [ov outlineTableColumn]) {
             NSTableCellView *view = [ov makeViewWithIdentifier:[tableColumn identifier] owner:self];
             if ([[tableColumn identifier] isEqualToString:TYPE_COLUMNID])
-                [(SKAnnotationTypeImageView *)[view imageView] setHasOutline:[pdfView activeAnnotation] == item];
+                [(SKAnnotationTypeImageView *)[view imageView] setHasOutline:[pdfView currentAnnotation] == item];
             [[view textField] setDelegate:self];
             return view;
         }
@@ -949,7 +949,7 @@
     PDFAnnotation *annotation = [[self selectedNotes] lastObject];
     if (annotation) {
         [pdfView scrollAnnotationToVisible:annotation];
-        [pdfView setActiveAnnotation:annotation];
+        [pdfView setCurrentAnnotation:annotation];
     }
 }
 
@@ -1066,7 +1066,7 @@
 - (void)editNoteTextFromTable:(id)sender {
     PDFAnnotation *annotation = [sender representedObject];
     [pdfView scrollAnnotationToVisible:annotation];
-    [pdfView setActiveAnnotation:annotation];
+    [pdfView setCurrentAnnotation:annotation];
     [self showNote:annotation];
     SKNoteWindowController *noteController = (SKNoteWindowController *)[self windowControllerForNote:annotation];
     [[noteController window] makeFirstResponder:[noteController textView]];
@@ -1074,13 +1074,13 @@
 }
 
 - (void)deselectNote:(id)sender {
-    [pdfView setActiveAnnotation:nil];
+    [pdfView setCurrentAnnotation:nil];
 }
 
 - (void)selectNote:(id)sender {
     PDFAnnotation *annotation = [sender representedObject];
     [pdfView scrollAnnotationToVisible:annotation];
-    [pdfView setActiveAnnotation:annotation];
+    [pdfView setCurrentAnnotation:annotation];
 }
 
 - (void)revealNote:(id)sender {
@@ -1288,7 +1288,7 @@
                     }
                 }
                 if ([pdfView hideNotes] == NO && [[self pdfDocument] allowsNotes]) {
-                    if ([pdfView activeAnnotation] == annotation) {
+                    if ([pdfView currentAnnotation] == annotation) {
                         item = [menu addItemWithTitle:NSLocalizedString(@"Deselect", @"Menu item title") action:@selector(deselectNote:) target:self];
                         [item setRepresentedObject:annotation];
                     } else {
@@ -1655,13 +1655,13 @@ static NSArray *allMainDocumentPDFViews() {
     if (action == @selector(createNewNote:)) {
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] allowsNotes] && ([pdfView toolMode] == SKTextToolMode || [pdfView toolMode] == SKNoteToolMode) && [pdfView hideNotes] == NO;
     } else if (action == @selector(editNote:)) {
-        PDFAnnotation *annotation = [pdfView activeAnnotation];
+        PDFAnnotation *annotation = [pdfView currentAnnotation];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isEditable];
     } else if (action == @selector(autoSizeNote:)) {
-        PDFAnnotation *annotation = [pdfView activeAnnotation];
+        PDFAnnotation *annotation = [pdfView currentAnnotation];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && ([annotation isResizable] && [annotation isLine] == NO);
     } else if (action == @selector(alignLeft:) || action == @selector(alignRight:) || action == @selector(alignCenter:)) {
-        PDFAnnotation *annotation = [pdfView activeAnnotation];
+        PDFAnnotation *annotation = [pdfView currentAnnotation];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isEditable] && [annotation isText];
     } else if (action == @selector(toggleHideNotes:)) {
         if ([pdfView hideNotes])
@@ -1973,8 +1973,8 @@ static NSArray *allMainDocumentPDFViews() {
     }
 }
 
-- (void)handleDidChangeActiveAnnotationNotification:(NSNotification *)notification {
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+- (void)handleCurrentAnnotationChangedNotification:(NSNotification *)notification {
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     SKNoteOutlineView *ov = rightSideController.noteOutlineView;
     
     [self setHasOutline:NO forAnnotation:[[notification userInfo] objectForKey:SKPDFViewAnnotationKey]];
@@ -2112,8 +2112,8 @@ static NSArray *allMainDocumentPDFViews() {
                              name:SKPDFViewMagnificationChangedNotification object:pdfView];
     [nc addObserver:self selector:@selector(handleDisplayBoxChangedNotification:) 
                              name:PDFViewDisplayBoxChangedNotification object:pdfView];
-    [nc addObserver:self selector:@selector(handleDidChangeActiveAnnotationNotification:) 
-                             name:SKPDFViewActiveAnnotationDidChangeNotification object:pdfView];
+    [nc addObserver:self selector:@selector(handleCurrentAnnotationChangedNotification:)
+                             name:SKPDFViewCurrentAnnotationChangedNotification object:pdfView];
     [nc addObserver:self selector:@selector(handleDidAddAnnotationNotification:) 
                              name:SKPDFViewDidAddAnnotationNotification object:pdfView];
     [nc addObserver:self selector:@selector(handleDidRemoveAnnotationNotification:) 

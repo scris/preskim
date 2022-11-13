@@ -308,7 +308,7 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
 #pragma mark SKColorPickerDelegate
 
 - (void)colorPicker:(SKColorPicker *)colorPicker didSelectColor:(NSColor *)color {
-    PDFAnnotation *annotation = [mainController.pdfView activeAnnotation];
+    PDFAnnotation *annotation = [mainController.pdfView currentAnnotation];
     BOOL isShift = ([NSEvent standardModifierFlags] & NSShiftKeyMask) != 0;
     BOOL isAlt = ([NSEvent standardModifierFlags] & NSAlternateKeyMask) != 0;
     if ([annotation isSkimNote]) {
