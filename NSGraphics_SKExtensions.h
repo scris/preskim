@@ -48,8 +48,8 @@ extern void SKRunWithLightAppearance(void (^code)(void));
 
 #pragma mark -
 
-extern void SKDrawResizeHandle(CGContextRef context, NSPoint point, CGFloat lineWidth, BOOL active);
 extern void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat lineWidth, BOOL connected, BOOL active);
+extern void SKDrawResizeHandlePair(CGContextRef context, NSPoint point1, NSPoint point2, CGFloat lineWidth, BOOL active);
 
 #pragma mark -
 
