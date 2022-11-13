@@ -134,13 +134,6 @@ void SKFillStrokeResizeHandle(CGContextRef context, NSPoint point, CGFloat lineW
     CGContextStrokeEllipseInRect(context, rect);
 }
 
-void SKDrawResizeHandle(CGContextRef context, NSPoint point, CGFloat lineWidth, BOOL active)
-{
-    SKSetColorsForResizeHandle(context, active);
-    CGContextSetLineWidth(context, lineWidth);
-    SKFillStrokeResizeHandle(context, point, lineWidth);
-}
-
 void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat lineWidth, BOOL connected, BOOL active)
 {
     SKSetColorsForResizeHandle(context, active);
@@ -183,6 +176,14 @@ void SKDrawResizeHandles(CGContextRef context, NSRect rect, CGFloat lineWidth, B
             CGContextStrokeLineSegments(context, points, 8);
         }
     }
+}
+
+void SKDrawResizeHandlePair(CGContextRef context, NSPoint point1, NSPoint point2, CGFloat lineWidth, BOOL active)
+{
+    SKSetColorsForResizeHandle(context, active);
+    CGContextSetLineWidth(context, lineWidth);
+    SKFillStrokeResizeHandle(context, point1, lineWidth);
+    SKFillStrokeResizeHandle(context, point2, lineWidth);
 }
 
 #pragma mark -
