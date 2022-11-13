@@ -298,16 +298,14 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
         }
         [NSGraphicsContext saveGraphicsState];
         [NSShadow setShadowWithColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.33333] blurRadius:r offset:offset];
-        [[NSColor colorWithGenericGamma22White:0.0 alpha:[[self color] alphaComponent]] setStroke];
         [path stroke];
         [NSGraphicsContext restoreGraphicsState];
         [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeClear];
-        [[NSColor blackColor] setStroke];
         [path stroke];
         [image unlockFocus];
         [NSGraphicsContext saveGraphicsState];
         [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
-        [image drawInRect:bounds];
+        [image drawInRect:bounds fromRect:rect operation:NSCompositeSourceOver fraction:[[self color] alphaComponent]];
         [NSGraphicsContext restoreGraphicsState];
         [image release];
     }
