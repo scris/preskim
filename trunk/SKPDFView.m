@@ -310,7 +310,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     pdfvFlags.wantsNewUndoGroup = 0;
     pdfvFlags.cursorHidden = 0;
     pdfvFlags.useArrowCursorInPresentation = [[NSUserDefaults standardUserDefaults] boolForKey:SKUseArrowCursorInPresentationKey];
-    pdfvFlags.inKeyWindow = 0;
+    inKeyWindow = NO;
     
     laserPointerColor = [[NSUserDefaults standardUserDefaults] integerForKey:SKLaserPointerColorKey];
     
@@ -451,11 +451,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (BOOL)drawsActiveSelections {
     if (RUNNING_AFTER(10_14))
-        return pdfvFlags.inKeyWindow;
+        return atomic_load(&inKeyWindow);
     else if (RUNNING_AFTER(10_11))
         return YES;
     else
-        return (pdfvFlags.inKeyWindow && [[[self window] firstResponder] isDescendantOf:self]);
+        return (inKeyWindow && [[[self window] firstResponder] isDescendantOf:self]);
 }
 
 - (void)drawSelectionForPage:(PDFPage *)pdfPage inContext:(CGContextRef)context {
@@ -3272,7 +3272,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)handleKeyStateChangedNotification:(NSNotification *)notification {
-    pdfvFlags.inKeyWindow = [[self window] isKeyWindow];
+    atomic_store(&inKeyWindow, [[self window] isKeyWindow]);
     if (RUNNING_BEFORE(10_12) || RUNNING_AFTER(10_14)) {
         if (selectionPageIndex != NSNotFound) {
             CGFloat margin = HANDLE_SIZE / [self scaleFactor];
@@ -3316,7 +3316,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [nc removeObserver:self name:NSWindowDidResignMainNotification object:oldWindow];
     }
     if (newWindow) {
-        pdfvFlags.inKeyWindow = [newWindow isKeyWindow];
+        atomic_store(&inKeyWindow, [newWindow isKeyWindow]);
         [nc addObserver:self selector:@selector(handleKeyStateChangedNotification:) name:NSWindowDidBecomeKeyNotification object:newWindow];
         [nc addObserver:self selector:@selector(handleKeyStateChangedNotification:) name:NSWindowDidResignKeyNotification object:newWindow];
         [nc addObserver:self selector:@selector(handleMainStateChangedNotification:) name:NSWindowDidResignMainNotification object:newWindow];

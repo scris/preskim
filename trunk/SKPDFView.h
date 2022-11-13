@@ -165,12 +165,13 @@ enum {
     
     NSInteger laserPointerColor;
     
+    _Atomic(BOOL) inKeyWindow;
+    
     struct _pdfvFlags {
         unsigned int hideNotes:1;
         unsigned int wantsNewUndoGroup:1;
         unsigned int cursorHidden:1;
         unsigned int useArrowCursorInPresentation:1;
-        unsigned int inKeyWindow:1;
     } pdfvFlags;
 }
 
