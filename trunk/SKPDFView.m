@@ -490,7 +490,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     
     [pdfPage transformContext:context forBox:[self displayBox]];
     
-    [[self readingBar] drawForPage:pdfPage withBox:[self displayBox] inContext:context transform:NO];
+    [[self readingBar] drawForPage:pdfPage withBox:[self displayBox] inContext:context];
     
     if (atomic_load(&highlightLayerState) != SKLayerUse) {
         PDFAnnotation *annotation = nil;
