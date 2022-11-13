@@ -116,7 +116,7 @@ NSString *SKPDFViewAutoScalesChangedNotification = @"SKPDFViewAutoScalesChangedN
 NSString *SKPDFViewToolModeChangedNotification = @"SKPDFViewToolModeChangedNotification";
 NSString *SKPDFViewTemporaryToolModeChangedNotification = @"SKPDFViewTemporaryToolModeChangedNotification";
 NSString *SKPDFViewAnnotationModeChangedNotification = @"SKPDFViewAnnotationModeChangedNotification";
-NSString *SKPDFViewActiveAnnotationDidChangeNotification = @"SKPDFViewActiveAnnotationDidChangeNotification";
+NSString *SKPDFViewCurrentAnnotationChangedNotification = @"SKPDFViewCurrentAnnotationChangedNotification";
 NSString *SKPDFViewDidAddAnnotationNotification = @"SKPDFViewDidAddAnnotationNotification";
 NSString *SKPDFViewDidRemoveAnnotationNotification = @"SKPDFViewDidRemoveAnnotationNotification";
 NSString *SKPDFViewDidMoveAnnotationNotification = @"SKPDFViewDidMoveAnnotationNotification";
@@ -231,8 +231,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)doAutoHide;
 - (void)showNavWindow;
 
-- (void)doMoveActiveAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta;
-- (void)doResizeActiveAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta;
+- (void)doMoveCurrentAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta;
+- (void)doResizeCurrentAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta;
 - (void)doAutoSizeActiveNoteIgnoringWidth:(BOOL)ignoreWidth;
 - (void)doMoveReadingBarForKey:(unichar)eventChar;
 - (void)doResizeReadingBarForKey:(unichar)eventChar;
@@ -266,7 +266,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 @implementation SKPDFView
 
-@synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, activeAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, zooming;
+@synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, currentAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, zooming;
 @dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing;
 
 + (void)initialize {
@@ -323,7 +323,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (pacerSpeed <= 0.0)
         pacerSpeed = DEFAULT_PACER_SPEED;
     
-    activeAnnotation = nil;
+    currentAnnotation = nil;
     selectionRect = NSZeroRect;
     selectionPageIndex = NSNotFound;
     
@@ -365,7 +365,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     // we should have been cleaned up in setDelegate:nil which is called from windowWillClose:
     SKDESTROY(syncDot);
     SKDESTROY(trackingArea);
-    SKDESTROY(activeAnnotation);
+    SKDESTROY(currentAnnotation);
     SKDESTROY(typeSelectHelper);
     SKDESTROY(transitionController);
     SKDESTROY(navWindow);
@@ -495,7 +495,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (atomic_load(&highlightLayerState) != SKLayerUse) {
         PDFAnnotation *annotation = nil;
         @synchronized (self) {
-            annotation = [[activeAnnotation retain] autorelease];
+            annotation = [[currentAnnotation retain] autorelease];
         }
         
         if ([[annotation page] isEqual:pdfPage])
@@ -537,15 +537,15 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)drawLayerController:(SKLayerController *)controller inContext:(CGContextRef)context {
     if ([controller type] == SKLayerTypeNote) {
-        if (activeAnnotation == nil)
+        if (currentAnnotation == nil)
             return;
-        PDFPage *page = [activeAnnotation page];
+        PDFPage *page = [currentAnnotation page];
         NSPoint offset = SKSubstractPoints([self convertRect:[page boundsForBox:[self displayBox]]fromPage:page].origin, [self visibleContentRect].origin);
         CGContextSaveGState(context);
         CGContextTranslateCTM(context, offset.x, offset.y);
         CGContextScaleCTM(context, [self scaleFactor], [self scaleFactor]);
         [page transformContext:context forBox:[self displayBox]];
-        [activeAnnotation drawSelectionHighlightForView:self inContext:context];
+        [currentAnnotation drawSelectionHighlightForView:self inContext:context];
         CGContextRestoreGState(context);
     } else {
         NSRect rect = [controller rect];
@@ -659,8 +659,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self setTemporaryToolMode:SKNoToolMode];
         if (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) {
             if (newToolMode != SKTextToolMode) {
-                if (newToolMode != SKNoteToolMode && activeAnnotation)
-                    [self setActiveAnnotation:nil];
+                if (newToolMode != SKNoteToolMode && currentAnnotation)
+                    [self setCurrentAnnotation:nil];
                 if ([[self currentSelection] hasCharacters])
                     [self setCurrentSelection:nil];
             }
@@ -713,8 +713,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         interactionMode = newInteractionMode;
         if (interactionMode == SKPresentationMode) {
             if (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) {
-                if (activeAnnotation)
-                    [self setActiveAnnotation:nil];
+                if (currentAnnotation)
+                    [self setCurrentAnnotation:nil];
                 if ([[self currentSelection] hasCharacters])
                     [self setCurrentSelection:nil];
             } else if (toolMode == SKSelectToolMode && NSEqualRects(selectionRect, NSZeroRect) == NO) {
@@ -731,13 +731,13 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
-- (void)setActiveAnnotation:(PDFAnnotation *)newAnnotation {
-	if (newAnnotation != activeAnnotation) {
-        PDFAnnotation *wasAnnotation = activeAnnotation;
+- (void)setCurrentAnnotation:(PDFAnnotation *)newAnnotation {
+	if (newAnnotation != currentAnnotation) {
+        PDFAnnotation *wasAnnotation = currentAnnotation;
         
         // Will need to redraw old active anotation.
-        if (activeAnnotation != nil) {
-            [self setNeedsDisplayForAnnotation:activeAnnotation];
+        if (currentAnnotation != nil) {
+            [self setNeedsDisplayForAnnotation:currentAnnotation];
             NSInteger level = [[self undoManager] groupingLevel];
             if (editor && [self commitEditing] == NO)
                 [self discardEditing];
@@ -747,16 +747,16 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         
         // Assign.
         @synchronized (self) {
-            [activeAnnotation release];
-            activeAnnotation = [newAnnotation retain];
+            [currentAnnotation release];
+            currentAnnotation = [newAnnotation retain];
         }
         if (newAnnotation) {
             // Force redisplay.
-            [self setNeedsDisplayForAnnotation:activeAnnotation];
+            [self setNeedsDisplayForAnnotation:currentAnnotation];
         }
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:wasAnnotation, SKPDFViewAnnotationKey, nil];
-		[[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewActiveAnnotationDidChangeNotification object:self userInfo:userInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewCurrentAnnotationChangedNotification object:self userInfo:userInfo];
     }
 }
 
@@ -1003,7 +1003,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (pdfvFlags.hideNotes != flag) {
         pdfvFlags.hideNotes = flag;
         if (pdfvFlags.hideNotes)
-            [self setActiveAnnotation:nil];
+            [self setCurrentAnnotation:nil];
         [self requiresDisplay];
     }
 }
@@ -1280,8 +1280,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (IBAction)delete:(id)sender
 {
-	if ([activeAnnotation isSkimNote])
-        [self removeActiveAnnotation:self];
+	if ([currentAnnotation isSkimNote])
+        [self removeCurrentAnnotation:self];
     else
         NSBeep();
 }
@@ -1292,11 +1292,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     NSPasteboardItem *imageItem = nil;
     PDFAnnotation *note = nil;
     
-    if ([self hideNotes] == NO && [activeAnnotation isSkimNote]) {
-        if ([activeAnnotation isMovable])
-            note = activeAnnotation;
-        else if (attrString == nil && [activeAnnotation isMarkup])
-            attrString = [[(PDFAnnotationMarkup *)activeAnnotation selection] attributedString];
+    if ([self hideNotes] == NO && [currentAnnotation isSkimNote]) {
+        if ([currentAnnotation isMovable])
+            note = currentAnnotation;
+        else if (attrString == nil && [currentAnnotation isMarkup])
+            attrString = [[(PDFAnnotationMarkup *)currentAnnotation selection] attributedString];
     }
     
     if (toolMode == SKSelectToolMode && NSIsEmptyRect(selectionRect) == NO && selectionPageIndex != NSNotFound) {
@@ -1367,7 +1367,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [newAnnotation registerUserName];
             [self addAnnotation:newAnnotation toPage:page];
             
-            [self setActiveAnnotation:newAnnotation];
+            [self setCurrentAnnotation:newAnnotation];
 
         }
         
@@ -1439,7 +1439,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self addAnnotation:newAnnotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
-            [self setActiveAnnotation:newAnnotation];
+            [self setCurrentAnnotation:newAnnotation];
             
         } else {
             
@@ -1463,7 +1463,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (IBAction)cut:(id)sender
 {
-	if ([self hideNotes] == NO && [activeAnnotation isSkimNote]) {
+	if ([self hideNotes] == NO && [currentAnnotation isSkimNote]) {
         [self copy:sender];
         [self delete:sender];
     } else
@@ -1537,21 +1537,21 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)showColorsForThisAnnotation:(id)sender {
     PDFAnnotation *annotation = [sender representedObject];
     if (annotation)
-        [self setActiveAnnotation:annotation];
+        [self setCurrentAnnotation:annotation];
     [[NSColorPanel sharedColorPanel] orderFront:sender];
 }
 
 - (void)showLinesForThisAnnotation:(id)sender {
     PDFAnnotation *annotation = [sender representedObject];
     if (annotation)
-        [self setActiveAnnotation:annotation];
+        [self setCurrentAnnotation:annotation];
     [[[SKLineInspector sharedLineInspector] window] orderFront:sender];
 }
 
 - (void)showFontsForThisAnnotation:(id)sender {
     PDFAnnotation *annotation = [sender representedObject];
     if (annotation)
-        [self setActiveAnnotation:annotation];
+        [self setCurrentAnnotation:annotation];
     [[NSFontManager sharedFontManager] orderFrontFontPanel:sender];
 }
 
@@ -1701,15 +1701,15 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [self setToolMode:(toolMode + 1) % TOOL_MODE_COUNT];
 }
 
-- (void)moveActiveAnnotation:(id)sender {
-    [self doMoveActiveAnnotationForKey:NSRightArrowFunctionKey byAmount:[sender tag] ? 10.0 : 1.0];
+- (void)moveCurrentAnnotation:(id)sender {
+    [self doMoveCurrentAnnotationForKey:NSRightArrowFunctionKey byAmount:[sender tag] ? 10.0 : 1.0];
 }
 
-- (void)resizeActiveAnnotation:(id)sender {
-    [self doResizeActiveAnnotationForKey:NSRightArrowFunctionKey byAmount:[sender tag] ? 10.0 : 1.0];
+- (void)resizeCurrentAnnotation:(id)sender {
+    [self doResizeCurrentAnnotationForKey:NSRightArrowFunctionKey byAmount:[sender tag] ? 10.0 : 1.0];
 }
 
-- (void)autoSizeActiveAnnotation:(id)sender {
+- (void)autoSizeCurrentAnnotation:(id)sender {
     [self doAutoSizeActiveNoteIgnoringWidth:[sender tag]];
 }
 
@@ -1837,19 +1837,19 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if ((eventChar == NSDeleteCharacter || eventChar == NSDeleteFunctionKey) &&
             (modifiers == 0)) {
             [self delete:self];
-        } else if (([self toolMode] == SKTextToolMode || [self toolMode] == SKNoteToolMode) && activeAnnotation && editor == nil && IS_ENTER(eventChar) && (modifiers == 0)) {
-            [self editActiveAnnotation:self];
+        } else if (([self toolMode] == SKTextToolMode || [self toolMode] == SKNoteToolMode) && currentAnnotation && editor == nil && IS_ENTER(eventChar) && (modifiers == 0)) {
+            [self editCurrentAnnotation:self];
         } else if (([self toolMode] == SKTextToolMode || [self toolMode] == SKNoteToolMode) && 
                    (eventChar == SKEscapeCharacter) && (modifiers == NSAlternateKeyMask)) {
-            [self setActiveAnnotation:nil];
+            [self setCurrentAnnotation:nil];
         } else if (([self toolMode] == SKTextToolMode || [self toolMode] == SKNoteToolMode) && 
                    (eventChar == NSTabCharacter) && (modifiers == NSAlternateKeyMask)) {
-            [self selectNextActiveAnnotation:self];
+            [self selectNextCurrentAnnotation:self];
         // backtab is a bit inconsistent, it seems Shift+Tab gives a Shift-BackTab key event, I would have expected either Shift-Tab (as for the raw event) or BackTab (as for most shift-modified keys)
         } else if (([self toolMode] == SKTextToolMode || [self toolMode] == SKNoteToolMode) && 
                    (((eventChar == NSBackTabCharacter) && ((modifiers & ~NSShiftKeyMask) == NSAlternateKeyMask)) || 
                     ((eventChar == NSTabCharacter) && (modifiers == (NSAlternateKeyMask | NSShiftKeyMask))))) {
-            [self selectPreviousActiveAnnotation:self];
+            [self selectPreviousCurrentAnnotation:self];
         } else if ([self hasReadingBar] && IS_ARROW(eventChar) && (modifiers == moveReadingBarModifiers)) {
             [self doMoveReadingBarForKey:eventChar];
         } else if ([self hasReadingBar] && IS_UP_DOWN_ARROW(eventChar) && (modifiers == resizeReadingBarModifiers)) {
@@ -1858,12 +1858,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self setToolMode:(toolMode + (eventChar == NSRightArrowFunctionKey ? 1 : TOOL_MODE_COUNT - 1)) % TOOL_MODE_COUNT];
         } else if (IS_UP_DOWN_ARROW(eventChar) && (modifiers == (NSAlternateKeyMask | NSCommandKeyMask))) {
             [self setAnnotationMode:(annotationMode + (eventChar == NSDownArrowFunctionKey ? 1 : ANNOTATION_MODE_COUNT - 1)) % ANNOTATION_MODE_COUNT];
-        } else if ([activeAnnotation isMovable] && IS_ARROW(eventChar) && ((modifiers & ~NSShiftKeyMask) == 0)) {
-            [self doMoveActiveAnnotationForKey:eventChar byAmount:(modifiers & NSShiftKeyMask) ? 10.0 : 1.0];
-        } else if ([activeAnnotation isResizable] && IS_ARROW(eventChar) && (modifiers == (NSAlternateKeyMask | NSControlKeyMask) || modifiers == (NSShiftKeyMask | NSControlKeyMask))) {
-            [self doResizeActiveAnnotationForKey:eventChar byAmount:(modifiers & NSShiftKeyMask) ? 10.0 : 1.0];
+        } else if ([currentAnnotation isMovable] && IS_ARROW(eventChar) && ((modifiers & ~NSShiftKeyMask) == 0)) {
+            [self doMoveCurrentAnnotationForKey:eventChar byAmount:(modifiers & NSShiftKeyMask) ? 10.0 : 1.0];
+        } else if ([currentAnnotation isResizable] && IS_ARROW(eventChar) && (modifiers == (NSAlternateKeyMask | NSControlKeyMask) || modifiers == (NSShiftKeyMask | NSControlKeyMask))) {
+            [self doResizeCurrentAnnotationForKey:eventChar byAmount:(modifiers & NSShiftKeyMask) ? 10.0 : 1.0];
         // with some keyboard layouts, e.g. Japanese, the '=' character requires Shift
-        } else if ([activeAnnotation isResizable] && [activeAnnotation isLine] == NO && [activeAnnotation isInk] == NO && (eventChar == '=') && ((modifiers & ~(NSAlternateKeyMask | NSShiftKeyMask)) == NSControlKeyMask)) {
+        } else if ([currentAnnotation isResizable] && [currentAnnotation isLine] == NO && [currentAnnotation isInk] == NO && (eventChar == '=') && ((modifiers & ~(NSAlternateKeyMask | NSShiftKeyMask)) == NSControlKeyMask)) {
             [self doAutoSizeActiveNoteIgnoringWidth:(modifiers & NSAlternateKeyMask) != 0];
         } else if ([self toolMode] == SKNoteToolMode && (eventChar == 't') && (modifiers == 0)) {
             [self setAnnotationMode:SKFreeTextNote];
@@ -1895,8 +1895,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 #define IS_TABLET_EVENT(theEvent, deviceType) (([theEvent subtype] == NSTabletProximityEventSubtype || [theEvent subtype] == NSTabletPointEventSubtype) && [NSEvent currentPointingDeviceType] == deviceType)
 
 - (void)mouseDown:(NSEvent *)theEvent{
-    if ([activeAnnotation isLink])
-        [self setActiveAnnotation:nil];
+    if ([currentAnnotation isLink])
+        [self setCurrentAnnotation:nil];
     
     // 10.6 does not automatichally make us firstResponder, that's annoying
     // but we don't want an edited text note to stop editing when we're resizing it
@@ -1905,7 +1905,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     
 	NSUInteger modifiers = [theEvent standardModifierFlags];
     PDFAreaOfInterest area = [self areaOfInterestForMouse:theEvent];
-    PDFAnnotation *wasActiveAnnotation = activeAnnotation;
+    PDFAnnotation *wasCurrentAnnotation = currentAnnotation;
     
     if ((modifiers & NSCommandKeyMask) != 0)
         [self setTemporaryToolMode:SKNoToolMode];
@@ -1919,7 +1919,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_TABLET_EVENT(theEvent, NSPenPointingDevice)) {
             [[NSCursor arrowCursor] set];
             [self doDrawFreehandNoteWithEvent:theEvent];
-            [self setActiveAnnotation:nil];
+            [self setCurrentAnnotation:nil];
         } else if ((area & kPDFLinkArea)) {
             [super mouseDown:theEvent];
         } else if (([[self window] styleMask] & NSResizableWindowMask) != 0 && [NSApp willDragMouse]) {
@@ -1971,7 +1971,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         } else if (temporaryToolMode == SKInkToolMode) {
             [self doDrawFreehandNoteWithEvent:theEvent];
         } else {
-            [self setActiveAnnotation:nil];
+            [self setCurrentAnnotation:nil];
             [super mouseDown:theEvent];
             if ([[self currentSelection] hasCharacters]) {
                 [self addAnnotationWithType:(SKNoteType)temporaryToolMode];
@@ -1996,14 +1996,14 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     } else if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_TABLET_EVENT(theEvent, NSEraserPointingDevice)) {
         [self doEraseAnnotationsWithEvent:theEvent];
     } else if ([self doSelectAnnotationWithEvent:theEvent]) {
-        if ([activeAnnotation isLink]) {
+        if ([currentAnnotation isLink]) {
             [self doClickLinkWithEvent:theEvent];
-        } else if ([theEvent clickCount] == 1 && [activeAnnotation isText] && activeAnnotation == wasActiveAnnotation && [NSApp willDragMouse] == NO) {
+        } else if ([theEvent clickCount] == 1 && [currentAnnotation isText] && currentAnnotation == wasCurrentAnnotation && [NSApp willDragMouse] == NO) {
             [self editTextNoteWithEvent:theEvent];
-        } else if ([theEvent clickCount] == 2 && [activeAnnotation isEditable]) {
+        } else if ([theEvent clickCount] == 2 && [currentAnnotation isEditable]) {
             if ([self doDragMouseWithEvent:theEvent] == NO)
-                [self editActiveAnnotation:nil];
-        } else if ([activeAnnotation isMovable]) {
+                [self editCurrentAnnotation:nil];
+        } else if ([currentAnnotation isMovable]) {
             [self doDragAnnotationWithEvent:theEvent];
         } else {
             [self doDragMouseWithEvent:theEvent];
@@ -2012,14 +2012,14 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if (annotationMode == SKInkNote) {
             [self doDrawFreehandNoteWithEvent:theEvent];
         } else {
-            [self setActiveAnnotation:nil];
+            [self setCurrentAnnotation:nil];
             [self doDragAnnotationWithEvent:theEvent];
         }
     } else if ((area & SKDragArea)) {
-        [self setActiveAnnotation:nil];
+        [self setCurrentAnnotation:nil];
         [self doDragWithEvent:theEvent];
     } else if ([self doDragTextWithEvent:theEvent] == NO) {
-        [self setActiveAnnotation:nil];
+        [self setCurrentAnnotation:nil];
         [super mouseDown:theEvent];
         if ((toolMode == SKNoteToolMode && pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_MARKUP(annotationMode)) && [[self currentSelection] hasCharacters]) {
             [self addAnnotationWithType:annotationMode];
@@ -2041,9 +2041,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         // make sure the cursor is set, at least outside the pages this does not happen
         [self setCursorForMouse:theEvent];
         
-        if ([activeAnnotation isLink]) {
+        if ([currentAnnotation isLink]) {
             [[SKImageToolTipWindow sharedToolTipWindow] fadeOut];
-            [self setActiveAnnotation:nil];
+            [self setCurrentAnnotation:nil];
         }
     }
     
@@ -2231,19 +2231,19 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             
             [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
             
-            if ((annotation != activeAnnotation || [NSFontPanel sharedFontPanelExists] == NO || [[NSFontPanel sharedFontPanel] isVisible] == NO) &&
+            if ((annotation != currentAnnotation || [NSFontPanel sharedFontPanelExists] == NO || [[NSFontPanel sharedFontPanel] isVisible] == NO) &&
                 [annotation isText]) {
                 item = [menu insertItemWithTitle:[NSLocalizedString(@"Note Font", @"Menu item title") stringByAppendingEllipsis] action:@selector(showFontsForThisAnnotation:) target:self atIndex:0];
                 [item setRepresentedObject:annotation];
             }
             
-            if ((annotation != activeAnnotation || [SKLineInspector sharedLineInspectorExists] == NO || [[[SKLineInspector sharedLineInspector] window] isVisible] == NO) &&
+            if ((annotation != currentAnnotation || [SKLineInspector sharedLineInspectorExists] == NO || [[[SKLineInspector sharedLineInspector] window] isVisible] == NO) &&
                 [annotation isMarkup] == NO && [annotation isNote] == NO) {
                 item = [menu insertItemWithTitle:[NSLocalizedString(@"Note Line", @"Menu item title") stringByAppendingEllipsis] action:@selector(showLinesForThisAnnotation:) target:self atIndex:0];
                 [item setRepresentedObject:annotation];
             }
             
-            if (annotation != activeAnnotation || [NSColorPanel sharedColorPanelExists] == NO || [[NSColorPanel sharedColorPanel] isVisible] == NO) {
+            if (annotation != currentAnnotation || [NSColorPanel sharedColorPanelExists] == NO || [[NSColorPanel sharedColorPanel] isVisible] == NO) {
                 item = [menu insertItemWithTitle:[NSLocalizedString(@"Note Color", @"Menu item title") stringByAppendingEllipsis] action:@selector(showColorsForThisAnnotation:) target:self atIndex:0];
                 [item setRepresentedObject:annotation];
             }
@@ -2255,20 +2255,20 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             
             item = [menu insertItemWithTitle:NSLocalizedString(@"Remove Note", @"Menu item title") action:@selector(removeThisAnnotation:) target:self atIndex:0];
             [item setRepresentedObject:annotation];
-        } else if ([activeAnnotation isSkimNote]) {
-            SKColorMenuView *menuView = [[[SKColorMenuView alloc] initWithAnnotation:activeAnnotation] autorelease];
+        } else if ([currentAnnotation isSkimNote]) {
+            SKColorMenuView *menuView = [[[SKColorMenuView alloc] initWithAnnotation:currentAnnotation] autorelease];
             item = [menu insertItemWithTitle:@"" action:NULL target:nil atIndex:0];
             [item setView:menuView];
             
             [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
             
             if (([NSFontPanel sharedFontPanelExists] == NO || [[NSFontPanel sharedFontPanel] isVisible] == NO) &&
-                [activeAnnotation isText]) {
+                [currentAnnotation isText]) {
                 [menu insertItemWithTitle:[NSLocalizedString(@"Note Font", @"Menu item title") stringByAppendingEllipsis] action:@selector(showFontsForThisAnnotation:) target:self atIndex:0];
             }
             
             if (([SKLineInspector sharedLineInspectorExists] == NO || [[[SKLineInspector sharedLineInspector] window] isVisible] == NO) &&
-                [activeAnnotation isMarkup] == NO && [activeAnnotation isNote] == NO) {
+                [currentAnnotation isMarkup] == NO && [currentAnnotation isNote] == NO) {
                 [menu insertItemWithTitle:[NSLocalizedString(@"Current Note Line", @"Menu item title") stringByAppendingEllipsis] action:@selector(showLinesForThisAnnotation:) target:self atIndex:0];
             }
             
@@ -2276,11 +2276,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                 [menu insertItemWithTitle:[NSLocalizedString(@"Current Note Color", @"Menu item title") stringByAppendingEllipsis] action:@selector(showColorsForThisAnnotation:) target:self atIndex:0];
             }
             
-            if (editor == nil && [activeAnnotation isEditable]) {
-                [menu insertItemWithTitle:NSLocalizedString(@"Edit Current Note", @"Menu item title") action:@selector(editActiveAnnotation:) target:self atIndex:0];
+            if (editor == nil && [currentAnnotation isEditable]) {
+                [menu insertItemWithTitle:NSLocalizedString(@"Edit Current Note", @"Menu item title") action:@selector(editCurrentAnnotation:) target:self atIndex:0];
             }
             
-            [menu insertItemWithTitle:NSLocalizedString(@"Remove Current Note", @"Menu item title") action:@selector(removeActiveAnnotation:) target:self atIndex:0];
+            [menu insertItemWithTitle:NSLocalizedString(@"Remove Current Note", @"Menu item title") action:@selector(removeCurrentAnnotation:) target:self atIndex:0];
         }
         
         if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObjects:[PDFAnnotation class], [NSString class], nil] options:[NSDictionary dictionary]]) {
@@ -2290,8 +2290,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [item setAlternate:YES];
         }
         
-        if (([activeAnnotation isSkimNote] && [activeAnnotation isMovable]) || [[self currentSelection] hasCharacters]) {
-            if ([activeAnnotation isSkimNote] && [activeAnnotation isMovable])
+        if (([currentAnnotation isSkimNote] && [currentAnnotation isMovable]) || [[self currentSelection] hasCharacters]) {
+            if ([currentAnnotation isSkimNote] && [currentAnnotation isMovable])
                 [menu insertItemWithTitle:NSLocalizedString(@"Cut", @"Menu item title") action:@selector(cut:) keyEquivalent:@"" atIndex:0];
             [menu insertItemWithTitle:NSLocalizedString(@"Copy", @"Menu item title") action:@selector(copy:) keyEquivalent:@"" atIndex:0];
         }
@@ -2622,7 +2622,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
         [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
-        [self setActiveAnnotation:newAnnotation];
+        [self setCurrentAnnotation:newAnnotation];
         
         return YES;
     } else if (newAnnotation) {
@@ -2636,7 +2636,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [newAnnotation setString:@""];
         [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
-        [self setActiveAnnotation:newAnnotation];
+        [self setCurrentAnnotation:newAnnotation];
         [newAnnotation release];
         
         return YES;
@@ -2679,11 +2679,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 	if (isMarkup) {
         
         // add new markup to the active markup if it's the same type on the same page, unless we add a specific selection
-        if (noSelection && page && [[activeAnnotation page] isEqual:page] &&
-            [[activeAnnotation type] isEqualToString:(annotationType == SKHighlightNote ? SKNHighlightString : annotationType == SKUnderlineNote ? SKNUnderlineString : annotationType == SKStrikeOutNote ? SKNStrikeOutString : nil)]) {
+        if (noSelection && page && [[currentAnnotation page] isEqual:page] &&
+            [[currentAnnotation type] isEqualToString:(annotationType == SKHighlightNote ? SKNHighlightString : annotationType == SKUnderlineNote ? SKNUnderlineString : annotationType == SKStrikeOutNote ? SKNStrikeOutString : nil)]) {
             selection = [[selection copy] autorelease];
-            [selection addSelection:[(PDFAnnotationMarkup *)activeAnnotation selection]];
-            [self removeActiveAnnotation:nil];
+            [selection addSelection:[(PDFAnnotationMarkup *)currentAnnotation selection]];
+            [self removeCurrentAnnotation:nil];
         }
         
     } else if (page) {
@@ -2802,7 +2802,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
     if (page != nil && [self addAnnotationWithType:annotationType selection:selection page:page bounds:bounds]) {
         if (annotationType == SKAnchoredNote || annotationType == SKFreeTextNote)
-            [self editActiveAnnotation:self];
+            [self editCurrentAnnotation:self];
         else if (isMarkup && noSelection)
             [self setCurrentSelection:nil];
     } else NSBeep();
@@ -2833,9 +2833,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidAddAnnotationNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewPageKey, annotation, SKPDFViewAnnotationKey, nil]];
 }
 
-- (void)removeActiveAnnotation:(id)sender{
-    if ([activeAnnotation isSkimNote]) {
-        [self removeAnnotation:activeAnnotation];
+- (void)removeCurrentAnnotation:(id)sender{
+    if ([currentAnnotation isSkimNote]) {
+        [self removeAnnotation:currentAnnotation];
         [[self undoManager] setActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
     }
 }
@@ -2854,8 +2854,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     PDFPage *page = [[wasAnnotation page] retain];
     
     [[[self undoManager] prepareWithInvocationTarget:self] addAnnotation:wasAnnotation toPage:page];
-	if (activeAnnotation == annotation)
-		[self setActiveAnnotation:nil];
+	if (currentAnnotation == annotation)
+		[self setCurrentAnnotation:nil];
     [self setNeedsDisplayForAnnotation:wasAnnotation];
     [page removeAnnotation:wasAnnotation];
     [self annotationsChangedOnPage:page];
@@ -2898,40 +2898,40 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (annotation == nil || [self isEditingAnnotation:annotation])
         return;
     
-    if (activeAnnotation != annotation)
-        [self setActiveAnnotation:annotation];
-    [self editActiveAnnotation:nil];
+    if (currentAnnotation != annotation)
+        [self setCurrentAnnotation:annotation];
+    [self editCurrentAnnotation:nil];
 }
 
-- (void)editActiveAnnotation:(id)sender {
-    if (nil == activeAnnotation || [self isEditingAnnotation:activeAnnotation])
+- (void)editCurrentAnnotation:(id)sender {
+    if (nil == currentAnnotation || [self isEditingAnnotation:currentAnnotation])
         return;
     
     [self commitEditing];
     
-    if ([activeAnnotation isLink]) {
+    if ([currentAnnotation isLink]) {
         
         [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
-        PDFDestination *dest = [activeAnnotation linkDestination];
+        PDFDestination *dest = [currentAnnotation linkDestination];
         NSURL *url;
         if (dest)
             [self goToDestination:dest];
-        else if ((url = [activeAnnotation linkURL]))
+        else if ((url = [currentAnnotation linkURL]))
             [[NSWorkspace sharedWorkspace] openURL:url];
-        [self setActiveAnnotation:nil];
+        [self setCurrentAnnotation:nil];
         
-    } else if (pdfvFlags.hideNotes == NO && [activeAnnotation isEditable]) {
+    } else if (pdfvFlags.hideNotes == NO && [currentAnnotation isEditable]) {
         
-        if ([activeAnnotation isText] == NO) {
+        if ([currentAnnotation isText] == NO) {
             
             [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
             
             if ([[self delegate] respondsToSelector:@selector(PDFView:editAnnotation:)])
-                [[self delegate] PDFView:self editAnnotation:activeAnnotation];
+                [[self delegate] PDFView:self editAnnotation:currentAnnotation];
             
         } else if ([self window]) {
             
-            [self scrollAnnotationToVisible:activeAnnotation];
+            [self scrollAnnotationToVisible:currentAnnotation];
             [self editTextNoteWithEvent:nil];
             
         }
@@ -2941,14 +2941,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)editTextNoteWithEvent:(NSEvent *)theEvent {
-    if ([self isEditingAnnotation:activeAnnotation])
+    if ([self isEditingAnnotation:currentAnnotation])
         return;
     
-    editor = [[SKTextNoteEditor alloc] initWithPDFView:self annotation:(PDFAnnotationFreeText *)activeAnnotation];
+    editor = [[SKTextNoteEditor alloc] initWithPDFView:self annotation:(PDFAnnotationFreeText *)currentAnnotation];
     [[self window] makeFirstResponder:self];
     [editor layoutWithEvent:theEvent];
     
-    [self setNeedsDisplayForAnnotation:activeAnnotation];
+    [self setNeedsDisplayForAnnotation:currentAnnotation];
 }
 
 - (void)textNoteEditorDidBeginEditing:(SKTextNoteEditor *)textNoteEditor {
@@ -2959,7 +2959,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)textNoteEditorDidEndEditing:(SKTextNoteEditor *)textNoteEditor {
     SKDESTROY(editor);
     
-    [self setNeedsDisplayForAnnotation:activeAnnotation];
+    [self setNeedsDisplayForAnnotation:currentAnnotation];
     
     if ([[self delegate] respondsToSelector:@selector(PDFViewDidEndEditing:)])
         [[self delegate] PDFViewDidEndEditing:self];
@@ -2985,17 +2985,17 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
 }
 
-- (void)selectNextActiveAnnotation:(id)sender {
+- (void)selectNextCurrentAnnotation:(id)sender {
     PDFDocument *pdfDoc = [self document];
     NSInteger numberOfPages = [pdfDoc pageCount];
     NSInteger i = -1;
     NSInteger pageIndex, startPageIndex = -1;
     PDFAnnotation *annotation = nil;
     
-    if (activeAnnotation) {
+    if (currentAnnotation) {
         [self commitEditing];
-        pageIndex = [[activeAnnotation page] pageIndex];
-        i = [[[activeAnnotation page] annotations] indexOfObject:activeAnnotation];
+        pageIndex = [[currentAnnotation page] pageIndex];
+        i = [[[currentAnnotation page] annotations] indexOfObject:currentAnnotation];
     } else {
         pageIndex = [[self currentPage] pageIndex];
     }
@@ -3016,7 +3016,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
     if (annotation) {
         [self scrollAnnotationToVisible:annotation];
-        [self setActiveAnnotation:annotation];
+        [self setCurrentAnnotation:annotation];
         if ([annotation isLink] || [annotation text]) {
             NSRect bounds = [annotation bounds]; 
             NSPoint point = NSMakePoint(NSMinX(bounds) + TOOLTIP_OFFSET_FRACTION * NSWidth(bounds), NSMinY(bounds) + TOOLTIP_OFFSET_FRACTION * NSHeight(bounds));
@@ -3029,7 +3029,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
 }
 
-- (void)selectPreviousActiveAnnotation:(id)sender {
+- (void)selectPreviousCurrentAnnotation:(id)sender {
     PDFDocument *pdfDoc = [self document];
     NSInteger numberOfPages = [pdfDoc pageCount];
     NSInteger i = -1;
@@ -3037,11 +3037,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     PDFAnnotation *annotation = nil;
     NSArray *annotations = nil;
     
-    if (activeAnnotation) {
+    if (currentAnnotation) {
         [self commitEditing];
-        pageIndex = [[activeAnnotation page] pageIndex];
-        annotations = [[activeAnnotation page] annotations];
-        i = [annotations indexOfObject:activeAnnotation];
+        pageIndex = [[currentAnnotation page] pageIndex];
+        annotations = [[currentAnnotation page] annotations];
+        i = [annotations indexOfObject:currentAnnotation];
     } else {
         pageIndex = [[self currentPage] pageIndex];
         annotations = [[self currentPage] annotations];
@@ -3064,7 +3064,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
     if (annotation) {
         [self scrollAnnotationToVisible:annotation];
-        [self setActiveAnnotation:annotation];
+        [self setCurrentAnnotation:annotation];
         if ([annotation isLink] || [annotation text]) {
             NSRect bounds = [annotation bounds]; 
             NSPoint point = NSMakePoint(NSMinX(bounds) + TOOLTIP_OFFSET_FRACTION * NSWidth(bounds), NSMinY(bounds) + TOOLTIP_OFFSET_FRACTION * NSHeight(bounds));
@@ -3078,7 +3078,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (BOOL)isEditingAnnotation:(PDFAnnotation *)annotation {
-    return editor && activeAnnotation == annotation;
+    return editor && currentAnnotation == annotation;
 }
 
 - (void)scrollAnnotationToVisible:(PDFAnnotation *)annotation {
@@ -3087,7 +3087,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)setNeedsDisplayForAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
     NSRect rect = [annotation displayRect];
-    if (annotation == activeAnnotation) {
+    if (annotation == currentAnnotation) {
         CGFloat margin = ([annotation isResizable] ? HANDLE_SIZE  : 1.0) / [self scaleFactor];
         rect = NSInsetRect(rect, -margin, -margin);
     }
@@ -3279,8 +3279,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             for (PDFPage *page in [self displayedPages])
                 [self setNeedsDisplayInRect:NSInsetRect(selectionRect, -margin, -margin) ofPage:page];
         }
-        if (activeAnnotation)
-            [self setNeedsDisplayForAnnotation:activeAnnotation];
+        if (currentAnnotation)
+            [self setNeedsDisplayForAnnotation:currentAnnotation];
     }
     if ([[notification name] isEqualToString:NSWindowDidResignKeyNotification])
         [self setTemporaryToolMode:SKNoToolMode];
@@ -3372,10 +3372,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [menuItem setState:[self annotationMode] == (SKNoteType)[menuItem tag] ? NSOnState : NSOffState];
         return YES;
     } else if (action == @selector(copy:)) {
-        return ([[self currentSelection] hasCharacters] || [activeAnnotation isSkimNote] ||
+        return ([[self currentSelection] hasCharacters] || [currentAnnotation isSkimNote] ||
             (toolMode == SKSelectToolMode && NSIsEmptyRect(selectionRect) == NO && selectionPageIndex != NSNotFound && [[self document] isLocked] == NO));
     } else if (action == @selector(cut:)) {
-        if ([activeAnnotation isSkimNote] && [activeAnnotation isMovable])
+        if ([currentAnnotation isSkimNote] && [currentAnnotation isMovable])
             return YES;
         return NO;
     } else if (action == @selector(paste:)) {
@@ -3385,7 +3385,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     } else if (action == @selector(pasteAsPlainText:)) {
         return [[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObjects:[NSAttributedString class], [NSString class], nil] options:[NSDictionary dictionary]];
     } else if (action == @selector(delete:)) {
-        return [activeAnnotation isSkimNote];
+        return [currentAnnotation isSkimNote];
     } else if (action == @selector(selectAll:)) {
         return toolMode == SKTextToolMode;
     } else if (action == @selector(deselectAll:)) {
@@ -3409,14 +3409,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     } else if (action == @selector(zoomToPhysicalSize:)) {
         [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0) > 0.001) ? NSOffState : NSOnState];
         return YES;
-    } else if (action == @selector(editActiveAnnotation:)) {
-        return [[self activeAnnotation] isEditable];
-    } else if (action == @selector(moveActiveAnnotation:)) {
-        return [[self activeAnnotation] isMovable];
-    } else if (action == @selector(resizeActiveAnnotation:)) {
-        return [[self activeAnnotation] isResizable];
-    } else if (action == @selector(autoSizeActiveAnnotation:)) {
-        return [[self activeAnnotation] isResizable] && [[self activeAnnotation] isLine] == NO && [activeAnnotation isInk] == NO;
+    } else if (action == @selector(editCurrentAnnotation:)) {
+        return [[self currentAnnotation] isEditable];
+    } else if (action == @selector(moveCurrentAnnotation:)) {
+        return [[self currentAnnotation] isMovable];
+    } else if (action == @selector(resizeCurrentAnnotation:)) {
+        return [[self currentAnnotation] isResizable];
+    } else if (action == @selector(autoSizeCurrentAnnotation:)) {
+        return [[self currentAnnotation] isResizable] && [[self currentAnnotation] isLine] == NO && [currentAnnotation isInk] == NO;
     } else if (action == @selector(changeOnlyAnnotationMode:)) {
         return toolMode == SKNoteToolMode;
     } else if (action == @selector(moveReadingBar:) || action == @selector(resizeReadingBar:)) {
@@ -3490,10 +3490,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 #pragma mark Event handling
 
-- (void)doMoveActiveAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta {
-    NSRect bounds = [activeAnnotation bounds];
+- (void)doMoveCurrentAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta {
+    NSRect bounds = [currentAnnotation bounds];
     NSRect newBounds = bounds;
-    PDFPage *page = [activeAnnotation page];
+    PDFPage *page = [currentAnnotation page];
     NSRect pageBounds = [page boundsForBox:[self displayBox]];
     
     switch ([page rotation]) {
@@ -3568,20 +3568,20 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
     
     if (NSEqualRects(bounds, newBounds) == NO) {
-        [activeAnnotation setBounds:newBounds];
-        [activeAnnotation autoUpdateString];
+        [currentAnnotation setBounds:newBounds];
+        [currentAnnotation autoUpdateString];
     }
 }
 
-- (void)doResizeActiveAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta {
-    NSRect bounds = [activeAnnotation bounds];
+- (void)doResizeCurrentAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta {
+    NSRect bounds = [currentAnnotation bounds];
     NSRect newBounds = bounds;
-    PDFPage *page = [activeAnnotation page];
+    PDFPage *page = [currentAnnotation page];
     NSRect pageBounds = [page boundsForBox:[self displayBox]];
     
-    if ([activeAnnotation isLine]) {
+    if ([currentAnnotation isLine]) {
         
-        PDFAnnotationLine *annotation = (PDFAnnotationLine *)activeAnnotation;
+        PDFAnnotationLine *annotation = (PDFAnnotationLine *)currentAnnotation;
         NSPoint startPoint = SKIntegralPoint(SKAddPoints([annotation startPoint], bounds.origin));
         NSPoint endPoint = SKIntegralPoint(SKAddPoints([annotation endPoint], bounds.origin));
         NSPoint oldEndPoint = endPoint;
@@ -3811,42 +3811,42 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
         
         if (NSEqualRects(bounds, newBounds) == NO) {
-            if ([activeAnnotation isInk]) {
-                CGFloat margin = [(PDFAnnotationInk *)activeAnnotation pathInset];
+            if ([currentAnnotation isInk]) {
+                CGFloat margin = [(PDFAnnotationInk *)currentAnnotation pathInset];
                 NSMutableArray *paths = [NSMutableArray array];
                 NSAffineTransform *transform = [NSAffineTransform transform];
                 [transform translateXBy:margin yBy:margin];
                 [transform scaleXBy:fmax(1.0, NSWidth(newBounds) - 2.0 * margin) / fmax(1.0, NSWidth(bounds) - 2.0 * margin) yBy:fmax(1.0, NSHeight(newBounds) - 2.0 * margin) / fmax(1.0, NSHeight(bounds) - 2.0 * margin)];
                 [transform translateXBy:-margin yBy:-margin];
                 
-                for (NSBezierPath *path in [(PDFAnnotationInk *)activeAnnotation paths])
+                for (NSBezierPath *path in [(PDFAnnotationInk *)currentAnnotation paths])
                     [paths addObject:[transform transformBezierPath:path]];
                 
-                [(PDFAnnotationInk *)activeAnnotation setBezierPaths:paths];
+                [(PDFAnnotationInk *)currentAnnotation setBezierPaths:paths];
             }
             
-            [activeAnnotation setBounds:newBounds];
-            [activeAnnotation autoUpdateString];
+            [currentAnnotation setBounds:newBounds];
+            [currentAnnotation autoUpdateString];
         }
     }
 }
 
 - (void)doAutoSizeActiveNoteIgnoringWidth:(BOOL)ignoreWidth {
-    if ([activeAnnotation isResizable] == NO || [activeAnnotation isLine] || [activeAnnotation isInk]) {
+    if ([currentAnnotation isResizable] == NO || [currentAnnotation isLine] || [currentAnnotation isInk]) {
         NSBeep();
-    } else if ([activeAnnotation isText]) {
+    } else if ([currentAnnotation isText]) {
         
-        NSString *string = [editor currentString] ?: [activeAnnotation string];
+        NSString *string = [editor currentString] ?: [currentAnnotation string];
         if ([string length] == 0) {
             NSBeep();
             return;
         }
         
-        PDFPage *page = [activeAnnotation page];
+        PDFPage *page = [currentAnnotation page];
         NSRect pageBounds = [page boundsForBox:[self displayBox]];
-        NSRect bounds = [activeAnnotation bounds];
+        NSRect bounds = [currentAnnotation bounds];
         CGFloat width = ignoreWidth == NO ? NSWidth(bounds) : ([page rotation] % 180) ? NSHeight(pageBounds) : NSWidth(pageBounds);
-        NSSize size = SKFitTextNoteSize(string, [activeAnnotation font], width);
+        NSSize size = SKFitTextNoteSize(string, [currentAnnotation font], width);
         switch ([page rotation]) {
             case 0:
                 bounds = NSMakeRect(NSMinX(bounds), NSMaxY(bounds) - size.height, size.width, size.height);
@@ -3862,14 +3862,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 break;
         }
         bounds = SKConstrainRect(bounds, pageBounds);
-        if (NSEqualRects(bounds, [activeAnnotation bounds]) == NO)
-            [activeAnnotation setBounds:bounds];
+        if (NSEqualRects(bounds, [currentAnnotation bounds]) == NO)
+            [currentAnnotation setBounds:bounds];
         
-    } else if ([[[self currentSelection] pages] containsObject:[activeAnnotation page]]) {
+    } else if ([[[self currentSelection] pages] containsObject:[currentAnnotation page]]) {
         
-        NSRect bounds = [[self currentSelection] boundsForPage:[activeAnnotation page]];
-        CGFloat lw = [activeAnnotation lineWidth];
-        if ([[activeAnnotation type] isEqualToString:SKNCircleString]) {
+        NSRect bounds = [[self currentSelection] boundsForPage:[currentAnnotation page]];
+        CGFloat lw = [currentAnnotation lineWidth];
+        if ([[currentAnnotation type] isEqualToString:SKNCircleString]) {
             CGFloat dw, dh, w = NSWidth(bounds), h = NSHeight(bounds);
             if (h < w) {
                 dw = primaryOutset(h / w);
@@ -3879,13 +3879,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 dw = secondaryOutset(dh);
             }
             bounds = NSInsetRect(bounds, -0.5 * w * dw - lw, -0.5 * h * dh - lw);
-        } else if ([[activeAnnotation type] isEqualToString:SKNCircleString]) {
+        } else if ([[currentAnnotation type] isEqualToString:SKNCircleString]) {
             bounds = NSInsetRect(bounds, -lw, -lw);
         } else {
             NSBeep();
             return;
         }
-        [activeAnnotation setBounds:bounds];
+        [currentAnnotation setBounds:bounds];
         
     } else {
         NSBeep();
@@ -3926,23 +3926,23 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     PDFPage *newActivePage = [self pageAndPoint:&point forEvent:theEvent nearest:YES];
     
     if (newActivePage) { // newActivePage should never be nil, but just to be sure
-        if (newActivePage != [activeAnnotation page]) {
+        if (newActivePage != [currentAnnotation page]) {
             // move the annotation to the new page
-            [self moveAnnotation:activeAnnotation toPage:newActivePage];
+            [self moveAnnotation:currentAnnotation toPage:newActivePage];
         }
         
-        NSRect newBounds = [activeAnnotation bounds];
+        NSRect newBounds = [currentAnnotation bounds];
         newBounds.origin = SKIntegralPoint(SKSubstractPoints(point, offset));
         // constrain bounds inside page bounds
         newBounds = SKConstrainRect(newBounds, [newActivePage  boundsForBox:[self displayBox]]);
         
         // Change annotation's location.
-        [activeAnnotation setBounds:newBounds];
+        [currentAnnotation setBounds:newBounds];
     }
 }
 
 - (void)doResizeLineAnnotationWithEvent:(NSEvent *)theEvent fromPoint:(NSPoint)originalPagePoint originalStartPoint:(NSPoint)originalStartPoint originalEndPoint:(NSPoint)originalEndPoint resizeHandle:(SKRectEdges)resizeHandle {
-    PDFPage *page = [activeAnnotation page];
+    PDFPage *page = [currentAnnotation page];
     NSRect pageBounds = [page  boundsForBox:[self displayBox]];
     NSPoint currentPagePoint = [self convertPoint:[theEvent locationInView:self] toPage:page];
     NSPoint relPoint = SKSubstractPoints(currentPagePoint, originalPagePoint);
@@ -3983,21 +3983,21 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             newBounds.origin.y = floor(0.5 * ((startPoint.y + endPoint.y) - MIN_NOTE_SIZE));
         }
         
-        [(PDFAnnotationLine *)activeAnnotation setObservedStartPoint:SKSubstractPoints(startPoint, newBounds.origin)];
-        [(PDFAnnotationLine *)activeAnnotation setObservedEndPoint:SKSubstractPoints(endPoint, newBounds.origin)];
-        [activeAnnotation setBounds:newBounds];
+        [(PDFAnnotationLine *)currentAnnotation setObservedStartPoint:SKSubstractPoints(startPoint, newBounds.origin)];
+        [(PDFAnnotationLine *)currentAnnotation setObservedEndPoint:SKSubstractPoints(endPoint, newBounds.origin)];
+        [currentAnnotation setBounds:newBounds];
     }
 }
 
 - (void)doResizeAnnotationWithEvent:(NSEvent *)theEvent fromPoint:(NSPoint)originalPagePoint originalBounds:(NSRect)originalBounds originalPaths:(NSArray *)originalPaths margin:(CGFloat)margin resizeHandle:(SKRectEdges *)resizeHandlePtr {
-    PDFPage *page = [activeAnnotation page];
+    PDFPage *page = [currentAnnotation page];
     NSRect newBounds = originalBounds;
     NSRect pageBounds = [page  boundsForBox:[self displayBox]];
     NSPoint currentPagePoint = [self convertPoint:[theEvent locationInView:self] toPage:page];
     NSPoint relPoint = SKSubstractPoints(currentPagePoint, originalPagePoint);
     SKRectEdges resizeHandle = *resizeHandlePtr;
     CGFloat minSize = fmax(MIN_NOTE_SIZE, 2.0 * margin + 2.0);
-    BOOL isInk = [activeAnnotation isInk];
+    BOOL isInk = [currentAnnotation isInk];
     
     if (NSEqualSizes(originalBounds.size, NSZeroSize)) {
         SKRectEdges currentResizeHandle = (relPoint.x < 0.0 ? SKMinXEdgeMask : SKMaxXEdgeMask) | (relPoint.y <= 0.0 ? SKMinYEdgeMask : SKMaxYEdgeMask);
@@ -4132,10 +4132,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         for (NSBezierPath *path in originalPaths)
             [paths addObject:[transform transformBezierPath:path]];
         
-        [(PDFAnnotationInk *)activeAnnotation setBezierPaths:paths];
+        [(PDFAnnotationInk *)currentAnnotation setBezierPaths:paths];
     }
     
-    [activeAnnotation setBounds:newBounds];
+    [currentAnnotation setBounds:newBounds];
 }
 
 - (void)updateCursorForMouse:(NSEvent *)theEvent {
@@ -4143,32 +4143,32 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)doDragAnnotationWithEvent:(NSEvent *)theEvent {
-    // activeAnnotation should be movable, or nil to be added in an appropriate note tool mode
+    // currentAnnotation should be movable, or nil to be added in an appropriate note tool mode
     
     // Old (current) annotation location and click point relative to it
-    NSRect originalBounds = [activeAnnotation bounds];
-    BOOL isLine = [activeAnnotation isLine];
+    NSRect originalBounds = [currentAnnotation bounds];
+    BOOL isLine = [currentAnnotation isLine];
     NSPoint pagePoint = NSZeroPoint;
     PDFPage *page = [self pageAndPoint:&pagePoint forEvent:theEvent nearest:YES];
-    BOOL shouldAddAnnotation = activeAnnotation == nil;
+    BOOL shouldAddAnnotation = currentAnnotation == nil;
     NSPoint originalStartPoint = NSZeroPoint;
     NSPoint originalEndPoint = NSZeroPoint;
     NSArray *originalPaths = nil;
     CGFloat margin = 0.0;
     
     // Hit-test for resize box.
-    SKRectEdges resizeHandle = [activeAnnotation resizeHandleForPoint:pagePoint scaleFactor:[self scaleFactor]];
+    SKRectEdges resizeHandle = [currentAnnotation resizeHandleForPoint:pagePoint scaleFactor:[self scaleFactor]];
     
     if (RUNNING_AFTER(10_11)) {
         atomic_store(&highlightLayerState, SKLayerAdd);
-        if (activeAnnotation)
-            [self setNeedsDisplayForAnnotation:activeAnnotation];
+        if (currentAnnotation)
+            [self setNeedsDisplayForAnnotation:currentAnnotation];
     }
     
     if (shouldAddAnnotation) {
         if (annotationMode == SKAnchoredNote) {
             [self addAnnotationWithType:SKAnchoredNote selection:nil page:page bounds:SKRectFromCenterAndSquareSize(SKIntegralPoint(pagePoint), 0.0)];
-            originalBounds = [[self activeAnnotation] bounds];
+            originalBounds = [[self currentAnnotation] bounds];
         } else {
             originalBounds = SKRectFromCenterAndSquareSize(SKIntegralPoint(pagePoint), 0.0);
             if (annotationMode == SKLineNote) {
@@ -4180,11 +4180,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             }
         }
     } else if (isLine) {
-        originalStartPoint = SKIntegralPoint(SKAddPoints([(PDFAnnotationLine *)activeAnnotation startPoint], originalBounds.origin));
-        originalEndPoint = SKIntegralPoint(SKAddPoints([(PDFAnnotationLine *)activeAnnotation endPoint], originalBounds.origin));
-    } else if ([activeAnnotation isInk]) {
-        originalPaths = [[[(PDFAnnotationInk *)activeAnnotation paths] copy] autorelease];
-        margin = [(PDFAnnotationInk *)activeAnnotation pathInset];
+        originalStartPoint = SKIntegralPoint(SKAddPoints([(PDFAnnotationLine *)currentAnnotation startPoint], originalBounds.origin));
+        originalEndPoint = SKIntegralPoint(SKAddPoints([(PDFAnnotationLine *)currentAnnotation endPoint], originalBounds.origin));
+    } else if ([currentAnnotation isInk]) {
+        originalPaths = [[[(PDFAnnotationInk *)currentAnnotation paths] copy] autorelease];
+        margin = [(PDFAnnotationInk *)currentAnnotation pathInset];
     }
     
     // we move or resize the annotation in an event loop, which ensures it's enclosed in a single undo group
@@ -4205,12 +4205,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if ([theEvent type] == NSLeftMouseUp) {
             break;
         } else if ([theEvent type] == NSLeftMouseDragged) {
-            if (activeAnnotation == nil) {
+            if (currentAnnotation == nil) {
                 [self addAnnotationWithType:annotationMode selection:nil page:page bounds:SKRectFromCenterAndSquareSize(originalBounds.origin, 0.0)];
             }
             lastMouseEvent = theEvent;
             draggedAnnotation = YES;
-        } else if (activeAnnotation == nil) {
+        } else if (currentAnnotation == nil) {
             continue;
         }
         [self beginNewUndoGroupIfNeeded];
@@ -4229,16 +4229,16 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [NSCursor pop];
     }
     
-    if (activeAnnotation) {
+    if (currentAnnotation) {
         if (draggedAnnotation)
-            [activeAnnotation autoUpdateString];
+            [currentAnnotation autoUpdateString];
         
         if (shouldAddAnnotation && toolMode == SKNoteToolMode && (annotationMode == SKAnchoredNote || annotationMode == SKFreeTextNote))
-            [self editActiveAnnotation:self]; 	 
+            [self editCurrentAnnotation:self]; 	 
         
         if (RUNNING_AFTER(10_11))
             atomic_store(&highlightLayerState, SKLayerRemove);
-        [self setNeedsDisplayForAnnotation:activeAnnotation];
+        [self setNeedsDisplayForAnnotation:currentAnnotation];
     } else if (RUNNING_AFTER(10_11)) {
         atomic_store(&highlightLayerState, SKLayerNone);
         [self removeHighlightLayer];
@@ -4249,7 +4249,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)doClickLinkWithEvent:(NSEvent *)theEvent {
-	PDFAnnotation *annotation = activeAnnotation;
+	PDFAnnotation *annotation = currentAnnotation;
     PDFPage *annotationPage = [annotation page];
     NSRect bounds = [annotation bounds];
     
@@ -4262,22 +4262,22 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         NSPoint point = NSZeroPoint;
         PDFPage *page = [self pageAndPoint:&point forEvent:theEvent nearest:NO];
         if (page == annotationPage && NSPointInRect(point, bounds))
-            [self setActiveAnnotation:annotation];
+            [self setCurrentAnnotation:annotation];
         else
-            [self setActiveAnnotation:nil];
+            [self setCurrentAnnotation:nil];
 	}
     
-    if (activeAnnotation)
-        [self editActiveAnnotation:nil];
+    if (currentAnnotation)
+        [self editCurrentAnnotation:nil];
 }
 
 - (BOOL)doSelectAnnotationWithEvent:(NSEvent *)theEvent {
-    PDFAnnotation *newActiveAnnotation = nil;
+    PDFAnnotation *newCurrentAnnotation = nil;
     NSPoint point = NSZeroPoint;
     PDFPage *page = [self pageAndPoint:&point forEvent:theEvent nearest:YES];
     
-    if ([activeAnnotation page] == page && [activeAnnotation isResizable] && [activeAnnotation resizeHandleForPoint:point scaleFactor:[self scaleFactor]] != 0) {
-        newActiveAnnotation = activeAnnotation;
+    if ([currentAnnotation page] == page && [currentAnnotation isResizable] && [currentAnnotation resizeHandleForPoint:point scaleFactor:[self scaleFactor]] != 0) {
+        newCurrentAnnotation = currentAnnotation;
     } else {
         
         PDFAnnotation *linkAnnotation = nil;
@@ -4287,7 +4287,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         // Hit test for annotation.
         for (PDFAnnotation *annotation in annotations) {
             if ([annotation isSkimNote] && [annotation hitTest:point] && [self isEditingAnnotation:annotation] == NO) {
-                newActiveAnnotation = annotation;
+                newCurrentAnnotation = annotation;
                 break;
             } else if ([annotation shouldDisplay] && NSPointInRect(point, [annotation bounds]) && (toolMode == SKTextToolMode || IS_MARKUP(annotationMode)) && linkAnnotation == nil) {
                 if ([annotation isLink])
@@ -4298,64 +4298,64 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
         
         // if we did not find a Skim note, get the first link covered by another annotation to click
-        if (newActiveAnnotation == nil && linkAnnotation && foundCoveringAnnotation)
-            newActiveAnnotation = linkAnnotation;
+        if (newCurrentAnnotation == nil && linkAnnotation && foundCoveringAnnotation)
+            newCurrentAnnotation = linkAnnotation;
     }
     
-    if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && page != nil && newActiveAnnotation != nil) {
+    if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && page != nil && newCurrentAnnotation != nil) {
         BOOL isInk = toolMode == SKNoteToolMode && annotationMode == SKInkNote;
         NSUInteger modifiers = [theEvent modifierFlags];
-        if ((modifiers & NSAlternateKeyMask) && [newActiveAnnotation isMovable] &&
-            [newActiveAnnotation resizeHandleForPoint:point scaleFactor:[self scaleFactor]] == 0) {
+        if ((modifiers & NSAlternateKeyMask) && [newCurrentAnnotation isMovable] &&
+            [newCurrentAnnotation resizeHandleForPoint:point scaleFactor:[self scaleFactor]] == 0) {
             // select a new copy of the annotation
-            PDFAnnotation *newAnnotation = [[PDFAnnotation alloc] initSkimNoteWithProperties:[newActiveAnnotation SkimNoteProperties]];
+            PDFAnnotation *newAnnotation = [[PDFAnnotation alloc] initSkimNoteWithProperties:[newCurrentAnnotation SkimNoteProperties]];
             [newAnnotation registerUserName];
             [self addAnnotation:newAnnotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
-            newActiveAnnotation = newAnnotation;
+            newCurrentAnnotation = newAnnotation;
             [newAnnotation release];
-        } else if (([newActiveAnnotation isMarkup] || 
-                    (isInk && (newActiveAnnotation != activeAnnotation || (modifiers & (NSShiftKeyMask | NSAlphaShiftKeyMask))))) && 
+        } else if (([newCurrentAnnotation isMarkup] ||
+                    (isInk && (newCurrentAnnotation != currentAnnotation || (modifiers & (NSShiftKeyMask | NSAlphaShiftKeyMask))))) &&
                    [NSApp willDragMouse]) {
             // don't drag markup notes or in freehand tool mode, unless the note was previously selected, so we can select text or draw freehand strokes
-            newActiveAnnotation = nil;
-        } else if ((modifiers & NSShiftKeyMask) && activeAnnotation != newActiveAnnotation && [[activeAnnotation page] isEqual:[newActiveAnnotation page]] && [[activeAnnotation type] isEqualToString:[newActiveAnnotation type]]) {
+            newCurrentAnnotation = nil;
+        } else if ((modifiers & NSShiftKeyMask) && currentAnnotation != newCurrentAnnotation && [[currentAnnotation page] isEqual:[newCurrentAnnotation page]] && [[currentAnnotation type] isEqualToString:[newCurrentAnnotation type]]) {
             PDFAnnotation *newAnnotation = nil;
-            if ([activeAnnotation isMarkup]) {
-                NSInteger markupType = [(PDFAnnotationMarkup *)activeAnnotation markupType];
-                PDFSelection *sel = [(PDFAnnotationMarkup *)activeAnnotation selection];
-                [sel addSelection:[(PDFAnnotationMarkup *)newActiveAnnotation selection]];
+            if ([currentAnnotation isMarkup]) {
+                NSInteger markupType = [(PDFAnnotationMarkup *)currentAnnotation markupType];
+                PDFSelection *sel = [(PDFAnnotationMarkup *)currentAnnotation selection];
+                [sel addSelection:[(PDFAnnotationMarkup *)newCurrentAnnotation selection]];
                 
                 newAnnotation = [[[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:sel markupType:markupType] autorelease];
                 [newAnnotation setString:[sel cleanedString]];
-            } else if ([activeAnnotation isInk]) {
-                NSMutableArray *paths = [[(PDFAnnotationInk *)activeAnnotation pagePaths] mutableCopy];
-                [paths addObjectsFromArray:[(PDFAnnotationInk *)newActiveAnnotation pagePaths]];
-                NSString *string1 = [activeAnnotation string];
-                NSString *string2 = [newActiveAnnotation string];
+            } else if ([currentAnnotation isInk]) {
+                NSMutableArray *paths = [[(PDFAnnotationInk *)currentAnnotation pagePaths] mutableCopy];
+                [paths addObjectsFromArray:[(PDFAnnotationInk *)newCurrentAnnotation pagePaths]];
+                NSString *string1 = [currentAnnotation string];
+                NSString *string2 = [newCurrentAnnotation string];
                 
                 newAnnotation = [[[PDFAnnotationInk alloc] initSkimNoteWithPaths:paths] autorelease];
                 [newAnnotation setString:[string2 length] == 0 ? string1 : [string1 length] == 0 ? string2 : [NSString stringWithFormat:@"%@ %@", string1, string2]];
-                [newAnnotation setBorder:[activeAnnotation border]];
+                [newAnnotation setBorder:[currentAnnotation border]];
                 
                 [paths release];
             }
             if (newAnnotation) {
-                [newAnnotation setColor:[activeAnnotation color]];
+                [newAnnotation setColor:[currentAnnotation color]];
                 [newAnnotation registerUserName];
-                [self removeAnnotation:newActiveAnnotation];
-                [self removeActiveAnnotation:nil];
+                [self removeAnnotation:newCurrentAnnotation];
+                [self removeCurrentAnnotation:nil];
                 [self addAnnotation:newAnnotation toPage:page];
                 [[self undoManager] setActionName:NSLocalizedString(@"Join Notes", @"Undo action name")];
-                newActiveAnnotation = newAnnotation;
+                newCurrentAnnotation = newAnnotation;
             }
         }
     }
     
-    if (newActiveAnnotation && newActiveAnnotation != activeAnnotation)
-        [self setActiveAnnotation:newActiveAnnotation];
+    if (newCurrentAnnotation && newCurrentAnnotation != currentAnnotation)
+        [self setCurrentAnnotation:newCurrentAnnotation];
     
-    return newActiveAnnotation != nil;
+    return newCurrentAnnotation != nil;
 }
 
 - (void)doDrawFreehandNoteWithEvent:(NSEvent *)theEvent {
@@ -4382,18 +4382,18 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [layer setFillColor:NULL];
     [layer setLineJoin:kCALineJoinRound];
     [layer setLineCap:kCALineCapRound];
-    if (([theEvent modifierFlags] & (NSShiftKeyMask | NSAlphaShiftKeyMask)) && [activeAnnotation isInk] && [[activeAnnotation page] isEqual:page]) {
-        [layer setStrokeColor:[[activeAnnotation color] CGColor]];
-        [layer setLineWidth:[activeAnnotation lineWidth]];
-        if ([activeAnnotation borderStyle] == kPDFBorderStyleDashed) {
-            [layer setLineDashPattern:[activeAnnotation dashPattern]];
+    if (([theEvent modifierFlags] & (NSShiftKeyMask | NSAlphaShiftKeyMask)) && [currentAnnotation isInk] && [[currentAnnotation page] isEqual:page]) {
+        [layer setStrokeColor:[[currentAnnotation color] CGColor]];
+        [layer setLineWidth:[currentAnnotation lineWidth]];
+        if ([currentAnnotation borderStyle] == kPDFBorderStyleDashed) {
+            [layer setLineDashPattern:[currentAnnotation dashPattern]];
             [layer setLineCap:kCALineCapButt];
         }
         [layer setShadowRadius:r / [self scaleFactor]];
         [layer setShadowOffset:CGSizeApplyAffineTransform(CGSizeMake(0.0, -r), CGAffineTransformInvert(t))];
         [layer setShadowOpacity:0.33333];
     } else {
-        [self setActiveAnnotation:nil];
+        [self setCurrentAnnotation:nil];
         NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
         [layer setStrokeColor:[[sud colorForKey:SKInkNoteColorKey] CGColor]];
         [layer setLineWidth:[sud floatForKey:SKInkNoteLineWidthKey]];
@@ -4462,15 +4462,15 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
     if (bezierPath) {
         NSMutableArray *paths = [[NSMutableArray alloc] init];
-        if (activeAnnotation)
-            [paths addObjectsFromArray:[(PDFAnnotationInk *)activeAnnotation pagePaths]];
+        if (currentAnnotation)
+            [paths addObjectsFromArray:[(PDFAnnotationInk *)currentAnnotation pagePaths]];
         [paths addObject:bezierPath];
         
         PDFAnnotationInk *annotation = [[PDFAnnotationInk alloc] initSkimNoteWithPaths:paths];
-        if (activeAnnotation) {
-            [annotation setColor:[activeAnnotation color]];
-            [annotation setBorder:[activeAnnotation border]];
-            [annotation setString:[activeAnnotation string]];
+        if (currentAnnotation) {
+            [annotation setColor:[currentAnnotation color]];
+            [annotation setBorder:[currentAnnotation border]];
+            [annotation setString:[currentAnnotation string]];
         }
         [annotation registerUserName]; 
         [self addAnnotation:annotation toPage:page];
@@ -4479,14 +4479,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [paths release];
         [annotation release];
         
-        if (activeAnnotation) {
-            [self removeActiveAnnotation:nil];
-            [self setActiveAnnotation:annotation];
+        if (currentAnnotation) {
+            [self removeCurrentAnnotation:nil];
+            [self setCurrentAnnotation:annotation];
         } else if (([theEvent modifierFlags] & (NSShiftKeyMask | NSAlphaShiftKeyMask))) {
-            [self setActiveAnnotation:annotation];
+            [self setCurrentAnnotation:annotation];
         }
     } else if (([theEvent modifierFlags] & NSAlphaShiftKeyMask)) {
-        [self setActiveAnnotation:nil];
+        [self setCurrentAnnotation:nil];
     }
     
 }
@@ -5087,26 +5087,26 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         [[NSCursor arrowCursor] set];
     } else {
         menu = [NSMenu menu];
-        item = [menu addItemWithTitle:NSLocalizedString(@"Move Current Note", @"Menu item title") action:@selector(moveActiveAnnotation:) keyEquivalent:@"\uF703"];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Move Current Note", @"Menu item title") action:@selector(moveCurrentAnnotation:) keyEquivalent:@"\uF703"];
         [item setKeyEquivalentModifierMask:0];
-        item = [menu addItemWithTitle:NSLocalizedString(@"Move Current Note", @"Menu item title") action:@selector(moveActiveAnnotation:) keyEquivalent:@"\uF703"];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Move Current Note", @"Menu item title") action:@selector(moveCurrentAnnotation:) keyEquivalent:@"\uF703"];
         [item setKeyEquivalentModifierMask:NSShiftKeyMask];
         [item setTag:1];
-        item = [menu addItemWithTitle:NSLocalizedString(@"Resize Current Note", @"Menu item title") action:@selector(resizeActiveAnnotation:) keyEquivalent:@"\uF703"];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Resize Current Note", @"Menu item title") action:@selector(resizeCurrentAnnotation:) keyEquivalent:@"\uF703"];
         [item setKeyEquivalentModifierMask:NSAlternateKeyMask | NSControlKeyMask];
-        item = [menu addItemWithTitle:NSLocalizedString(@"Resize Current Note", @"Menu item title") action:@selector(resizeActiveAnnotation:) keyEquivalent:@"\uF703"];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Resize Current Note", @"Menu item title") action:@selector(resizeCurrentAnnotation:) keyEquivalent:@"\uF703"];
         [item setKeyEquivalentModifierMask:NSShiftKeyMask | NSControlKeyMask];
         [item setTag:1];
-        item = [menu addItemWithTitle:NSLocalizedString(@"Auto Size Current Note", @"Menu item title") action:@selector(autoSizeActiveAnnotation:) keyEquivalent:@"="];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Auto Size Current Note", @"Menu item title") action:@selector(autoSizeCurrentAnnotation:) keyEquivalent:@"="];
         [item setKeyEquivalentModifierMask:NSControlKeyMask];
-        item = [menu addItemWithTitle:NSLocalizedString(@"Auto Size Current Note", @"Menu item title") action:@selector(autoSizeActiveAnnotation:) keyEquivalent:@"="];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Auto Size Current Note", @"Menu item title") action:@selector(autoSizeCurrentAnnotation:) keyEquivalent:@"="];
         [item setKeyEquivalentModifierMask:NSControlKeyMask | NSAlternateKeyMask];
         [item setTag:1];
-        item = [menu addItemWithTitle:NSLocalizedString(@"Edit Current Note", @"Menu item title") action:@selector(editActiveAnnotation:) keyEquivalent:@"\r"];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Edit Current Note", @"Menu item title") action:@selector(editCurrentAnnotation:) keyEquivalent:@"\r"];
         [item setKeyEquivalentModifierMask:0];
-        item = [menu addItemWithTitle:NSLocalizedString(@"Select Next Note", @"Menu item title") action:@selector(selectNextActiveAnnotation:) keyEquivalent:@"\t"];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Select Next Note", @"Menu item title") action:@selector(selectNextCurrentAnnotation:) keyEquivalent:@"\t"];
         [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
-        item = [menu addItemWithTitle:NSLocalizedString(@"Select Previous Note", @"Menu item title") action:@selector(selectPreviousActiveAnnotation:) keyEquivalent:@"\t"];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Select Previous Note", @"Menu item title") action:@selector(selectPreviousCurrentAnnotation:) keyEquivalent:@"\t"];
         [item setKeyEquivalentModifierMask:NSShiftKeyMask | NSAlternateKeyMask];
         [menu addItem:[NSMenuItem separatorItem]];
         item = [menu addItemWithTitle:NSLocalizedString(@"Move Reading Bar", @"Menu item title") action:@selector(moveReadingBar:) keyEquivalent:@"\uF701"];
@@ -5227,11 +5227,11 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         } else if (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) {
             if (toolMode == SKNoteToolMode)
                 area &= ~kPDFLinkArea;
-            if (editor && [[activeAnnotation page] isEqual:page] && NSPointInRect(p, [activeAnnotation bounds])) {
+            if (editor && [[currentAnnotation page] isEqual:page] && NSPointInRect(p, [currentAnnotation bounds])) {
                 area = kPDFTextFieldArea;
             } else if ((area & SKReadingBarArea) == 0) {
-                if ([[activeAnnotation page] isEqual:page] && [activeAnnotation isMovable] && 
-                    ((resizeHandle = [activeAnnotation resizeHandleForPoint:p scaleFactor:[self scaleFactor]]) || [activeAnnotation hitTest:p]))
+                if ([[currentAnnotation page] isEqual:page] && [currentAnnotation isMovable] &&
+                    ((resizeHandle = [currentAnnotation resizeHandleForPoint:p scaleFactor:[self scaleFactor]]) || [currentAnnotation hitTest:p]))
                     area |= SKAreaOfInterestForResizeHandle(resizeHandle, page);
                 else if ((toolMode == SKTextToolMode || pdfvFlags.hideNotes || IS_MARKUP(annotationMode)) && area == kPDFPageArea && modifiers == 0 &&
                          [[page selectionForRect:SKRectFromCenterAndSize(p, TEXT_SELECT_MARGIN_SIZE)] hasCharacters] == NO)

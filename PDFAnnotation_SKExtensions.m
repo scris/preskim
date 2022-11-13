@@ -686,7 +686,7 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
     NSDocument *doc = [[self page] containingDocument];
     if ([doc respondsToSelector:@selector(pdfView)] == NO)
         return NO;
-    [[(SKMainDocument *)doc pdfView] setActiveAnnotation:self];
+    [[(SKMainDocument *)doc pdfView] setCurrentAnnotation:self];
     return YES;
 }
 

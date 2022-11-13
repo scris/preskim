@@ -763,8 +763,8 @@ static char SKMainWindowContentLayoutObservationContext;
     CGFloat magnification = [pdfView currentMagnification];
     NSString *message;
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayNoteBoundsKey] && NSEqualRects(rect, NSZeroRect) && [pdfView activeAnnotation])
-        rect = [[pdfView activeAnnotation] bounds];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayNoteBoundsKey] && NSEqualRects(rect, NSZeroRect) && [pdfView currentAnnotation])
+        rect = [[pdfView currentAnnotation] bounds];
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayPageBoundsKey] && NSEqualRects(rect, NSZeroRect))
         rect = [[pdfView currentPage] boundsForBox:[pdfView displayBox]];
@@ -1052,7 +1052,7 @@ static char SKMainWindowContentLayoutObservationContext;
         if (removeAllNotes) {
             [pdfView removePDFToolTipRects];
             // remove the current annotations
-            [pdfView setActiveAnnotation:nil];
+            [pdfView setCurrentAnnotation:nil];
         }
         for (annotation in [[notesToRemove copy] autorelease]) {
             [pageIndexes addIndex:[annotation pageIndex]];
@@ -1136,7 +1136,7 @@ static char SKMainWindowContentLayoutObservationContext;
             
             // make sure these will not be activated, or they can lead to a crash
             [pdfView removePDFToolTipRects];
-            [pdfView setActiveAnnotation:nil];
+            [pdfView setCurrentAnnotation:nil];
             
             // these will be invalid. If needed, the document will restore them
             [self setSearchResults:nil];
@@ -2715,7 +2715,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             }
             
             // update the various panels if necessary
-            if ([[self window] isMainWindow] && [note isEqual:[pdfView activeAnnotation]]) {
+            if ([[self window] isMainWindow] && [note isEqual:[pdfView currentAnnotation]]) {
                 if (mwcFlags.updatingColor == 0 && ([keyPath isEqualToString:SKNPDFAnnotationColorKey] || [keyPath isEqualToString:SKNPDFAnnotationInteriorColorKey])) {
                     mwcFlags.updatingColor = 1;
                     [[NSColorPanel sharedColorPanel] setColor:[note color]];

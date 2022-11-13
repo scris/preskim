@@ -324,7 +324,7 @@ static NSURL *temporaryDirectoryURL = nil;
 - (void)statusBarClicked:(id)sender {
     SKPDFView *pdfView = [(SKMainDocument *)[self document] pdfView];
     [pdfView scrollAnnotationToVisible:note];
-    [pdfView setActiveAnnotation:note];
+    [pdfView setCurrentAnnotation:note];
 }
 
 - (NSURL *)writeImageToDestination:(NSURL *)destination {

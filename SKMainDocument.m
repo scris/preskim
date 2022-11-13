@@ -1740,12 +1740,12 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 }
 
 - (PDFAnnotation *)activeNote {
-    return [[self pdfView] activeAnnotation];
+    return [[self pdfView] currentAnnotation];
 }
 
 - (void)setActiveNote:(PDFAnnotation *)note {
     if ([note isEqual:[NSNull null]] == NO && [note isSkimNote])
-        [[self pdfView] setActiveAnnotation:note];
+        [[self pdfView] setCurrentAnnotation:note];
 }
 
 - (NSTextStorage *)richText {

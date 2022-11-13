@@ -105,7 +105,7 @@
 @implementation SKMainWindowController (Actions)
 
 - (IBAction)changeColor:(id)sender{
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     if (mwcFlags.updatingColor == 0 && [self hasOverview] == NO && [annotation isSkimNote]) {
         BOOL isFill = [colorAccessoryView state] == NSOnState && [annotation hasInteriorColor];
         BOOL isText = [textColorAccessoryView state] == NSOnState && [annotation isText];
@@ -117,7 +117,7 @@
 }
 
 - (IBAction)changeFont:(id)sender{
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     if (mwcFlags.updatingFont == 0 && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
         NSFont *font = [sender convertFont:[(PDFAnnotationFreeText *)annotation font]];
         mwcFlags.updatingFont = 1;
@@ -127,7 +127,7 @@
 }
 
 - (IBAction)changeAttributes:(id)sender{
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     if (mwcFlags.updatingFontAttributes == 0 && mwcFlags.updatingColor == 0 && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
         NSColor *color = [(PDFAnnotationFreeText *)annotation fontColor];
         NSColor *newColor = [[sender convertAttributes:[NSDictionary dictionaryWithObjectsAndKeys:color, NSForegroundColorAttributeName, nil]] valueForKey:NSForegroundColorAttributeName];
@@ -140,21 +140,21 @@
 }
 
 - (IBAction)alignLeft:(id)sender {
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     if ([self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
         [(PDFAnnotationFreeText *)annotation setAlignment:NSLeftTextAlignment];
     }
 }
 
 - (IBAction)alignRight:(id)sender {
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     if ([self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
         [(PDFAnnotationFreeText *)annotation setAlignment:NSRightTextAlignment];
     }
 }
 
 - (IBAction)alignCenter:(id)sender {
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     if ([self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
         [(PDFAnnotationFreeText *)annotation setAlignment:NSCenterTextAlignment];
     }
@@ -162,7 +162,7 @@
 
 - (void)changeLineAttribute:(id)sender {
     SKLineChangeAction action = [sender currentLineChangeAction];
-    PDFAnnotation *annotation = [pdfView activeAnnotation];
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
     if (mwcFlags.updatingLine == 0 && [self hasOverview] == NO && [annotation hasBorder]) {
         mwcFlags.updatingLine = 1;
         switch (action) {
@@ -230,7 +230,7 @@
                 }
             }
             [pdfView scrollAnnotationToVisible:annotation];
-            [pdfView setActiveAnnotation:annotation];
+            [pdfView setCurrentAnnotation:annotation];
         }
     } else NSBeep();
 }
@@ -262,13 +262,13 @@
 
 - (IBAction)editNote:(id)sender{
     if ([pdfView hideNotes] == NO) {
-        [pdfView editActiveAnnotation:sender];
+        [pdfView editCurrentAnnotation:sender];
     } else NSBeep();
 }
 
 - (IBAction)autoSizeNote:(id)sender{
     if ([pdfView hideNotes] == NO) {
-        [pdfView autoSizeActiveAnnotation:sender];
+        [pdfView autoSizeCurrentAnnotation:sender];
     } else NSBeep();
 }
 
