@@ -543,11 +543,11 @@
                     </connections>
                 </customView>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="36">
-                    <rect key="frame" x="143" y="275" width="50" height="21"/>
+                    <rect key="frame" x="143" y="275" width="60" height="21"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="50" id="4RV-ZC-n5Z"/>
+                        <constraint firstAttribute="width" constant="60" id="4RV-ZC-n5Z"/>
                     </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="43">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" drawsBackground="YES" id="43">
                         <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="percent" usesGroupingSeparator="NO" lenient="YES" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" decimalSeparator="." groupingSeparator="," id="44">
                             <integer key="multiplier" value="100"/>
                             <real key="minimum" value="0.10000000000000001"/>
