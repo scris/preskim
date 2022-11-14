@@ -276,38 +276,41 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
             case 270: offset.width = -r;  break;
             default:  offset.height = -r; break;
         }
-        NSRect bounds = NSOffsetRect(NSInsetRect([self bounds], -r / scale, -r / scale), offset.width / scale, offset.height / scale);
-        NSRect rect = NSMakeRect(0.0, 0.0, ceil(scale * NSWidth(bounds)), ceil(scale * NSHeight(bounds)));
-        bounds.size = NSMakeSize(NSWidth(rect) / scale, NSHeight(rect) / scale);
-        NSImage *image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        NSAffineTransform *transform = [NSAffineTransform transform];
-        [transform translateXBy:r - offset.width yBy:r - offset.height];
-        [transform scaleBy:scale];
-        [transform concat];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        for (NSBezierPath *aPath in [self paths])
-            [path appendBezierPath:aPath];
-        [path setLineWidth:fmax(1.0, [self lineWidth])];
-        [path setLineJoinStyle:NSRoundLineJoinStyle];
-        if ([self borderStyle] == kPDFBorderStyleDashed) {
-            [path setDashPattern:[self dashPattern]];
-            [path setLineCapStyle:NSButtLineCapStyle];
-        } else {
-            [path setLineCapStyle:NSRoundLineCapStyle];
+        NSRect bounds = [self bounds];
+        NSRect rect = NSIntersectionRect(NSOffsetRect(NSInsetRect(bounds, -r / scale, -r / scale), offset.width / scale, offset.height / scale), NSRectFromCGRect(CGContextGetClipBoundingBox(context)));
+        if (NSIsEmptyRect(rect) == NO) {
+            NSRect imgRect = NSMakeRect(0.0, 0.0, ceil(scale * NSWidth(rect)), ceil(scale * NSHeight(rect)));
+            rect.size = NSMakeSize(NSWidth(imgRect) / scale, NSHeight(imgRect) / scale);
+            NSImage *image = [[NSImage alloc] initWithSize:imgRect.size];
+            [image lockFocus];
+            NSAffineTransform *transform = [NSAffineTransform transform];
+            [transform scaleBy:scale];
+            [transform translateXBy:NSMinX(bounds) - NSMinX(rect) yBy:NSMinY(bounds) - NSMinY(rect)];
+            [transform concat];
+            NSBezierPath *path = [NSBezierPath bezierPath];
+            for (NSBezierPath *aPath in [self paths])
+                [path appendBezierPath:aPath];
+            [path setLineWidth:fmax(1.0, [self lineWidth])];
+            [path setLineJoinStyle:NSRoundLineJoinStyle];
+            if ([self borderStyle] == kPDFBorderStyleDashed) {
+                [path setDashPattern:[self dashPattern]];
+                [path setLineCapStyle:NSButtLineCapStyle];
+            } else {
+                [path setLineCapStyle:NSRoundLineCapStyle];
+            }
+            [NSGraphicsContext saveGraphicsState];
+            [NSShadow setShadowWithColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.33333] blurRadius:r offset:offset];
+            [path stroke];
+            [NSGraphicsContext restoreGraphicsState];
+            [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeClear];
+            [path stroke];
+            [image unlockFocus];
+            [NSGraphicsContext saveGraphicsState];
+            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
+            [image drawInRect:rect fromRect:imgRect operation:NSCompositeSourceOver fraction:[[self color] alphaComponent]];
+            [NSGraphicsContext restoreGraphicsState];
+            [image release];
         }
-        [NSGraphicsContext saveGraphicsState];
-        [NSShadow setShadowWithColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.33333] blurRadius:r offset:offset];
-        [path stroke];
-        [NSGraphicsContext restoreGraphicsState];
-        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeClear];
-        [path stroke];
-        [image unlockFocus];
-        [NSGraphicsContext saveGraphicsState];
-        [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
-        [image drawInRect:bounds fromRect:rect operation:NSCompositeSourceOver fraction:[[self color] alphaComponent]];
-        [NSGraphicsContext restoreGraphicsState];
-        [image release];
     }
     [super drawSelectionHighlightForView:pdfView inContext:context];
 }
