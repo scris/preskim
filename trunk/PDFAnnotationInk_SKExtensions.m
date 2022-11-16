@@ -95,9 +95,12 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
     }
 }
 
+static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
+
 + (void)load {
     if (RUNNING(10_11))
         original_drawWithBox_inContext = (void (*)(id, SEL, PDFDisplayBox, CGContextRef))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(drawWithBox:inContext:), @selector(replacement_drawWithBox:inContext:));
+    CGContextGetBaseCTM_func = (typeof(CGContextGetBaseCTM_func))CFBundleGetFunctionPointerForName(CFBundleGetBundleWithIdentifier(CFSTR("com.apple.CoreGraphics")), CFSTR("CGContextGetBaseCTM"));
 }
 
 - (id)initSkimNoteWithBounds:(NSRect)bounds {
@@ -264,53 +267,88 @@ static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextR
     return NSUnionRect([super displayRectForBounds:bounds lineWidth:lineWidth], NSIntegralRect(rect));
 }
 
+- (void)drawShadowWithScale:(CGFloat)scale inContext:(CGContextRef)context {
+    NSRect bounds = [self bounds];
+    CGFloat r = fmin(2.0, 2.0 / scale);
+    CGRect rect = NSRectToCGRect(NSInsetRect(bounds, 2.0 * r, 2.0 * r));
+    CGAffineTransform t = CGAffineTransformConcat(CGContextGetCTM(context), CGAffineTransformInvert(CGContextGetBaseCTM_func(context)));
+    r = fabs(CGSizeApplyAffineTransform(CGSizeMake(r, r), t).height);
+    CGSize offset = CGSizeMake(0.0, -r);
+    t = CGAffineTransformMakeTranslation(NSMinX(bounds), NSMinY(bounds));
+    CGMutablePathRef path = CGPathCreateMutable();
+    for (NSBezierPath *aPath in [self paths])
+        CGPathAddPath(path, &t, [aPath CGPath]);
+    CGContextSaveGState(context);
+    CGContextSetAlpha(context, [[self color] alphaComponent]);
+    CGContextBeginTransparencyLayerWithRect(context, rect, NULL);
+    CGContextSetLineWidth(context, [self lineWidth]);
+    CGContextSetLineCap(context, kCGLineCapRound);
+    CGContextSetShadow(context, offset, r);
+    CGContextAddPath(context, path);
+    CGContextStrokePath(context);
+    CGContextSetShadowWithColor(context, CGSizeZero, 0.0, NULL);
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    CGContextAddPath(context, path);
+    CGContextStrokePath(context);
+    CGContextEndTransparencyLayer(context);
+    CGContextRestoreGState(context);
+    CGPathRelease(path);
+}
+
+- (void)drawFallbackShadowWithScale:(CGFloat)scale inContext:(CGContextRef)context {
+    CGFloat r = fmin(2.0 * scale, 2.0);
+    NSSize offset = NSZeroSize;
+    switch ([[self page] rotation]) {
+        case 0:   offset.height = -r; break;
+        case 90:  offset.width = r;   break;
+        case 180: offset.height = r;  break;
+        case 270: offset.width = -r;  break;
+        default:  offset.height = -r; break;
+    }
+    NSRect bounds = [self bounds];
+    NSRect rect = NSIntersectionRect(NSOffsetRect(NSInsetRect(bounds, -r / scale, -r / scale), offset.width / scale, offset.height / scale), NSRectFromCGRect(CGContextGetClipBoundingBox(context)));
+    if (NSIsEmptyRect(rect) == NO) {
+        NSRect imgRect = NSMakeRect(0.0, 0.0, ceil(scale * NSWidth(rect)), ceil(scale * NSHeight(rect)));
+        rect.size = NSMakeSize(NSWidth(imgRect) / scale, NSHeight(imgRect) / scale);
+        NSImage *image = [[NSImage alloc] initWithSize:imgRect.size];
+        [image lockFocus];
+        NSAffineTransform *transform = [NSAffineTransform transform];
+        [transform scaleBy:scale];
+        [transform translateXBy:NSMinX(bounds) - NSMinX(rect) yBy:NSMinY(bounds) - NSMinY(rect)];
+        [transform concat];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        for (NSBezierPath *aPath in [self paths])
+            [path appendBezierPath:aPath];
+        [path setLineWidth:fmax(1.0, [self lineWidth])];
+        [path setLineJoinStyle:NSRoundLineJoinStyle];
+        if ([self borderStyle] == kPDFBorderStyleDashed) {
+            [path setDashPattern:[self dashPattern]];
+            [path setLineCapStyle:NSButtLineCapStyle];
+        } else {
+            [path setLineCapStyle:NSRoundLineCapStyle];
+        }
+        [NSGraphicsContext saveGraphicsState];
+        [NSShadow setShadowWithColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.33333] blurRadius:r offset:offset];
+        [path stroke];
+        [NSGraphicsContext restoreGraphicsState];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeClear];
+        [path stroke];
+        [image unlockFocus];
+        [NSGraphicsContext saveGraphicsState];
+        [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
+        [image drawInRect:rect fromRect:imgRect operation:NSCompositeSourceOver fraction:[[self color] alphaComponent]];
+        [NSGraphicsContext restoreGraphicsState];
+        [image release];
+    }
+}
+
 - (void)drawSelectionHighlightForView:(PDFView *)pdfView inContext:(CGContextRef)context {
     if (NSIsEmptyRect([self bounds]) == NO && [self isSkimNote]) {
         CGFloat scale = 1.0 / [pdfView unitWidthOnPage:[self page]];
-        CGFloat r = fmin(2.0 * scale, 2.0);
-        NSSize offset = NSZeroSize;
-        switch ([[self page] rotation]) {
-            case 0:   offset.height = -r; break;
-            case 90:  offset.width = r;   break;
-            case 180: offset.height = r;  break;
-            case 270: offset.width = -r;  break;
-            default:  offset.height = -r; break;
-        }
-        NSRect bounds = [self bounds];
-        NSRect rect = NSIntersectionRect(NSOffsetRect(NSInsetRect(bounds, -r / scale, -r / scale), offset.width / scale, offset.height / scale), NSRectFromCGRect(CGContextGetClipBoundingBox(context)));
-        if (NSIsEmptyRect(rect) == NO) {
-            NSRect imgRect = NSMakeRect(0.0, 0.0, ceil(scale * NSWidth(rect)), ceil(scale * NSHeight(rect)));
-            rect.size = NSMakeSize(NSWidth(imgRect) / scale, NSHeight(imgRect) / scale);
-            NSImage *image = [[NSImage alloc] initWithSize:imgRect.size];
-            [image lockFocus];
-            NSAffineTransform *transform = [NSAffineTransform transform];
-            [transform scaleBy:scale];
-            [transform translateXBy:NSMinX(bounds) - NSMinX(rect) yBy:NSMinY(bounds) - NSMinY(rect)];
-            [transform concat];
-            NSBezierPath *path = [NSBezierPath bezierPath];
-            for (NSBezierPath *aPath in [self paths])
-                [path appendBezierPath:aPath];
-            [path setLineWidth:fmax(1.0, [self lineWidth])];
-            [path setLineJoinStyle:NSRoundLineJoinStyle];
-            if ([self borderStyle] == kPDFBorderStyleDashed) {
-                [path setDashPattern:[self dashPattern]];
-                [path setLineCapStyle:NSButtLineCapStyle];
-            } else {
-                [path setLineCapStyle:NSRoundLineCapStyle];
-            }
-            [NSGraphicsContext saveGraphicsState];
-            [NSShadow setShadowWithColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.33333] blurRadius:r offset:offset];
-            [path stroke];
-            [NSGraphicsContext restoreGraphicsState];
-            [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeClear];
-            [path stroke];
-            [image unlockFocus];
-            [NSGraphicsContext saveGraphicsState];
-            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
-            [image drawInRect:rect fromRect:imgRect operation:NSCompositeSourceOver fraction:[[self color] alphaComponent]];
-            [NSGraphicsContext restoreGraphicsState];
-            [image release];
-        }
+        if (CGContextGetBaseCTM_func != NULL)
+            [self drawShadowWithScale:scale inContext:context];
+        else
+            [self drawFallbackShadowWithScale:scale inContext:context];
     }
     [super drawSelectionHighlightForView:pdfView inContext:context];
 }
