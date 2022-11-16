@@ -282,7 +282,17 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     CGContextSetAlpha(context, [[self color] alphaComponent]);
     CGContextBeginTransparencyLayerWithRect(context, rect, NULL);
     CGContextSetLineWidth(context, [self lineWidth]);
-    CGContextSetLineCap(context, kCGLineCapRound);
+    if ([self borderStyle] == kPDFBorderStyleDashed) {
+        NSArray *dashPattern = [self dashPattern];
+        NSUInteger i, count = [dashPattern count];
+        CGFloat pattern[count];
+        for (i = 0; i < count; i++)
+            pattern[i] = [[dashPattern objectAtIndex:i] doubleValue];
+        CGContextSetLineDash(context, 0.0, pattern, count);
+        CGContextSetLineCap(context, kCGLineCapButt);
+    } else {
+        CGContextSetLineCap(context, kCGLineCapRound);
+    }
     CGContextSetShadow(context, offset, r);
     CGContextAddPath(context, path);
     CGContextStrokePath(context);
