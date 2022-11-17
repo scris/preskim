@@ -273,7 +273,6 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     CGRect rect = NSRectToCGRect(NSInsetRect(bounds, 2.0 * r, 2.0 * r));
     CGAffineTransform t = CGAffineTransformConcat(CGContextGetCTM(context), CGAffineTransformInvert(CGContextGetBaseCTM_func(context)));
     r = fabs(CGSizeApplyAffineTransform(CGSizeMake(r, r), t).height);
-    CGSize offset = CGSizeMake(0.0, -r);
     t = CGAffineTransformMakeTranslation(NSMinX(bounds), NSMinY(bounds));
     CGMutablePathRef path = CGPathCreateMutable();
     for (NSBezierPath *aPath in [self paths])
@@ -293,7 +292,7 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     } else {
         CGContextSetLineCap(context, kCGLineCapRound);
     }
-    CGContextSetShadow(context, offset, r);
+    CGContextSetShadow(context, CGSizeMake(0.0, -r), r);
     CGContextAddPath(context, path);
     CGContextStrokePath(context);
     CGContextSetShadowWithColor(context, CGSizeZero, 0.0, NULL);
