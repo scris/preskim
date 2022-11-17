@@ -341,8 +341,8 @@ static void (*original_dealloc)(id, SEL) = NULL;
     CGContextSetStrokeColorWithColor(context, color);
     CGContextSetLineWidth(context, lineWidth);
     for (i = 0; i < iMax; i++) {
-        NSRect rect = [pdfView backingAlignedRect:[lines rectAtIndex:i] onPage:page];
-        CGContextStrokeRect(context, CGRectInset(NSRectToCGRect(rect), -0.5 * lineWidth, -0.5 * lineWidth));
+        CGRect rect = CGContextConvertRectToUserSpace(context, CGRectIntegral(CGContextConvertRectToDeviceSpace(context, NSRectToCGRect([lines rectAtIndex:i]))));
+        CGContextStrokeRect(context, CGRectInset(rect, -0.5 * lineWidth, -0.5 * lineWidth));
     }
     CGContextRestoreGState(context);
 }

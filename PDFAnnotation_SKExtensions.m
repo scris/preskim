@@ -412,16 +412,16 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
     if (NSIsEmptyRect([self bounds]))
         return;
     if ([self isSkimNote]) {
-        NSRect rect = [pdfView backingAlignedRect:[self bounds] onPage:[self page]];
+        CGRect rect = CGContextConvertRectToUserSpace(context, CGRectIntegral(CGContextConvertRectToDeviceSpace(context, NSRectToCGRect([self bounds]))));
         CGFloat lineWidth = [pdfView unitWidthOnPage:[self page]];
         BOOL active = [pdfView drawsActiveSelections];
         CGContextSaveGState(context);
         if ([self isResizable]) {
-            SKDrawResizeHandles(context, rect, lineWidth, YES, active);
+            SKDrawResizeHandles(context, NSRectFromCGRect(rect), lineWidth, YES, active);
         } else {
             CGColorRef color = [[NSColor selectionHighlightColor:active] CGColor];
             CGContextSetStrokeColorWithColor(context, color);
-            CGContextStrokeRectWithWidth(context, CGRectInset(NSRectToCGRect(rect), -0.5 * lineWidth, -0.5 * lineWidth), lineWidth);
+            CGContextStrokeRectWithWidth(context, CGRectInset(rect, -0.5 * lineWidth, -0.5 * lineWidth), lineWidth);
         }
         CGContextRestoreGState(context);
     } else if ([self isLink]) {
