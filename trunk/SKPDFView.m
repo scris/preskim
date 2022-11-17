@@ -548,9 +548,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [currentAnnotation drawSelectionHighlightForView:self inContext:context];
         CGContextRestoreGState(context);
     } else {
-        NSRect rect = [controller rect];
-        if (NSEqualRects(rect, NSZeroRect))
+        CGRect rect = NSRectToCGRect([controller rect]);
+        if (CGRectEqualToRect(rect, NSZeroRect))
             return;
+        rect = CGRectInset(CGContextConvertRectToUserSpace(context, CGRectIntegral(CGContextConvertRectToDeviceSpace(context, NSRectToCGRect(rect)))), 0.5, 0.5);
         CGContextSaveGState(context);
         CGContextSetStrokeColorWithColor(context, CGColorGetConstantColor(kCGColorBlack));
         CGContextSetLineWidth(context, 1.0);
@@ -1024,8 +1025,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             if (highlightLayerController == nil)
                 [self makeHighlightLayerForType:SKLayerTypeRect];
             
-            NSRect rect = [self backingAlignedRect:[self convertRect:[highlightAnnotation bounds] fromPage:[highlightAnnotation page]] options:NSAlignAllEdgesOutward];
-            [highlightLayerController setRect:NSInsetRect(rect, -0.5, -0.5)];
+            NSRect rect = [self convertRect:[highlightAnnotation bounds] fromPage:[highlightAnnotation page]];
+            [highlightLayerController setRect:NSInsetRect(rect, -1.0, -1.0)];
         } else if (highlightLayerController) {
             [self removeHighlightLayer];
         }
@@ -4876,7 +4877,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         // intersect with the bounds, project on the bounds if necessary and allow zero width or height
         selRect = SKIntersectionRect(selRect, [[self documentView] bounds]);
         
-        [highlightLayerController setRect:NSInsetRect(NSIntegralRect([self convertRect:selRect fromView:[self documentView]]), 0.5, 0.5)];
+        [highlightLayerController setRect:[self convertRect:selRect fromView:[self documentView]]];
         [[highlightLayerController layer] setNeedsDisplay];
     }
     
