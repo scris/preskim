@@ -549,13 +549,18 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         CGContextRestoreGState(context);
     } else {
         CGRect rect = NSRectToCGRect([controller rect]);
-        if (CGRectEqualToRect(rect, NSZeroRect))
+        if (CGRectIsEmpty(rect))
             return;
-        rect = CGRectInset(CGContextConvertRectToUserSpace(context, CGRectIntegral(CGContextConvertRectToDeviceSpace(context, NSRectToCGRect(rect)))), 0.5, 0.5);
+        rect = CGContextConvertRectToUserSpace(context, CGRectIntegral(CGContextConvertRectToDeviceSpace(context, NSRectToCGRect(rect))));
         CGContextSaveGState(context);
-        CGContextSetStrokeColorWithColor(context, CGColorGetConstantColor(kCGColorBlack));
-        CGContextSetLineWidth(context, 1.0);
-        CGContextStrokeRect(context, NSRectToCGRect(rect));
+        if (CGRectGetWidth(rect) > 1.0 && CGRectGetHeight(rect) > 1.0) {
+            CGContextSetStrokeColorWithColor(context, CGColorGetConstantColor(kCGColorBlack));
+            CGContextSetLineWidth(context, 1.0);
+            CGContextStrokeRect(context, CGRectInset(rect, 0.5, 0.5 ));
+        } else {
+            CGContextSetFillColorWithColor(context, CGColorGetConstantColor(kCGColorBlack));
+            CGContextFillRect(context, rect);
+        }
         CGContextRestoreGState(context);
     }
 }
