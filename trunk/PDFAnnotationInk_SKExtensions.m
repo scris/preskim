@@ -353,11 +353,10 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
 
 - (void)drawSelectionHighlightWithLineWidth:(CGFloat)lineWidth active:(BOOL)active inContext:(CGContextRef)context {
     if (NSIsEmptyRect([self bounds]) == NO && [self isSkimNote]) {
-        CGFloat scale = 1.0 / lineWidth;
         if (CGContextGetBaseCTM_func != NULL)
-            [self drawShadowWithScale:scale inContext:context];
+            [self drawShadowWithLineWidth:lineWidth inContext:context];
         else
-            [self drawFallbackShadowWithScale:scale inContext:context];
+            [self drawFallbackShadowWithLineWidth:lineWidth inContext:context];
     }
     [super drawSelectionHighlightWithLineWidth:lineWidth active:active inContext:context];
 }
