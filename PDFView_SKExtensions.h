@@ -64,8 +64,6 @@
 - (NSUInteger)currentPageIndexAndPoint:(NSPoint *)point rotated:(BOOL *)rotated;
 - (void)goToPageAtIndex:(NSUInteger)pageIndex point:(NSPoint)point;
 
-- (CGFloat)unitWidthOnPage:(PDFPage *)page;
-
 @property (nonatomic, readonly) BOOL drawsActiveSelections;
 
 + (NSColor *)defaultBackgroundColor;

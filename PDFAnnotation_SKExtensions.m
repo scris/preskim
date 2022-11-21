@@ -408,13 +408,11 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
     return [self isResizable] ? SKResizeHandleForPointFromRect(point, [self bounds], 4.0 / scaleFactor) : 0;
 }
 
-- (void)drawSelectionHighlightForView:(PDFView *)pdfView inContext:(CGContextRef)context {
+- (void)drawSelectionHighlightWithLineWidth:(CGFloat)lineWidth active:(BOOL)active inContext:(CGContextRef)context {
     if (NSIsEmptyRect([self bounds]))
         return;
     if ([self isSkimNote]) {
         CGRect rect = CGContextConvertRectToUserSpace(context, CGRectIntegral(CGContextConvertRectToDeviceSpace(context, NSRectToCGRect([self bounds]))));
-        CGFloat lineWidth = [pdfView unitWidthOnPage:[self page]];
-        BOOL active = [pdfView drawsActiveSelections];
         CGContextSaveGState(context);
         if ([self isResizable]) {
             SKDrawResizeHandles(context, NSRectFromCGRect(rect), lineWidth, YES, active);
