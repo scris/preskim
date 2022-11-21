@@ -267,9 +267,9 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     return NSUnionRect([super displayRectForBounds:bounds lineWidth:lineWidth], NSIntegralRect(rect));
 }
 
-- (void)drawShadowWithScale:(CGFloat)scale inContext:(CGContextRef)context {
+- (void)drawShadowWithLineWidth:(CGFloat)lineWidth inContext:(CGContextRef)context {
     NSRect bounds = [self bounds];
-    CGFloat r = fmin(2.0, 2.0 / scale);
+    CGFloat r = fmin(2.0, 2.0 * lineWidth);
     CGRect rect = NSRectToCGRect(NSInsetRect(bounds, 2.0 * r, 2.0 * r));
     CGAffineTransform t = CGAffineTransformConcat(CGContextGetCTM(context), CGAffineTransformInvert(CGContextGetBaseCTM_func(context)));
     r = fabs(CGSizeApplyAffineTransform(CGSizeMake(r, r), t).height);
@@ -304,8 +304,8 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     CGPathRelease(path);
 }
 
-- (void)drawFallbackShadowWithScale:(CGFloat)scale inContext:(CGContextRef)context {
-    CGFloat r = fmin(2.0 * scale, 2.0);
+- (void)drawFallbackShadowWithLineWidth:(CGFloat)lineWidth inContext:(CGContextRef)context {
+    CGFloat r = fmin(2.0 / lineWidth, 2.0);
     NSSize offset = NSZeroSize;
     switch ([[self page] rotation]) {
         case 0:   offset.height = -r; break;
@@ -315,14 +315,14 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
         default:  offset.height = -r; break;
     }
     NSRect bounds = [self bounds];
-    NSRect rect = NSIntersectionRect(NSOffsetRect(NSInsetRect(bounds, -r / scale, -r / scale), offset.width / scale, offset.height / scale), NSRectFromCGRect(CGContextGetClipBoundingBox(context)));
+    NSRect rect = NSIntersectionRect(NSOffsetRect(NSInsetRect(bounds, -r * lineWidth, -r * lineWidth), offset.width * lineWidth, offset.height * lineWidth), NSRectFromCGRect(CGContextGetClipBoundingBox(context)));
     if (NSIsEmptyRect(rect) == NO) {
-        NSRect imgRect = NSMakeRect(0.0, 0.0, ceil(scale * NSWidth(rect)), ceil(scale * NSHeight(rect)));
-        rect.size = NSMakeSize(NSWidth(imgRect) / scale, NSHeight(imgRect) / scale);
+        NSRect imgRect = NSMakeRect(0.0, 0.0, ceil(NSWidth(rect) / lineWidth), ceil(NSHeight(rect) / lineWidth));
+        rect.size = NSMakeSize(NSWidth(imgRect) * lineWidth, NSHeight(imgRect) * lineWidth);
         NSImage *image = [[NSImage alloc] initWithSize:imgRect.size];
         [image lockFocus];
         NSAffineTransform *transform = [NSAffineTransform transform];
-        [transform scaleBy:scale];
+        [transform scaleBy:1.0 / lineWidth];
         [transform translateXBy:NSMinX(bounds) - NSMinX(rect) yBy:NSMinY(bounds) - NSMinY(rect)];
         [transform concat];
         NSBezierPath *path = [NSBezierPath bezierPath];
