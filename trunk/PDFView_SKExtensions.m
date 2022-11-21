@@ -283,10 +283,6 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 
 #pragma clang diagnostic pop
 
-- (CGFloat)unitWidthOnPage:(PDFPage *)page {
-    return NSWidth([self convertRect:NSMakeRect(0.0, 0.0, 1.0, 1.0) toPage:page]);
-}
-
 - (BOOL)drawsActiveSelections {
     if (RUNNING_AFTER(10_14))
         return [[self window] isKeyWindow];

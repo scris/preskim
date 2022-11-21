@@ -351,15 +351,15 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     }
 }
 
-- (void)drawSelectionHighlightForView:(PDFView *)pdfView inContext:(CGContextRef)context {
+- (void)drawSelectionHighlightWithLineWidth:(CGFloat)lineWidth active:(BOOL)active inContext:(CGContextRef)context {
     if (NSIsEmptyRect([self bounds]) == NO && [self isSkimNote]) {
-        CGFloat scale = 1.0 / [pdfView unitWidthOnPage:[self page]];
+        CGFloat scale = 1.0 / lineWidth;
         if (CGContextGetBaseCTM_func != NULL)
             [self drawShadowWithScale:scale inContext:context];
         else
             [self drawFallbackShadowWithScale:scale inContext:context];
     }
-    [super drawSelectionHighlightForView:pdfView inContext:context];
+    [super drawSelectionHighlightWithLineWidth:lineWidth active:active inContext:context];
 }
 
 - (NSArray *)pointLists {

@@ -458,6 +458,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         return (inKeyWindow && [[[self window] firstResponder] isDescendantOf:self]);
 }
 
+- (CGFloat)unitWidthOnPage:(PDFPage *)page {
+    return NSWidth([self convertRect:NSMakeRect(0.0, 0.0, 1.0, 1.0) toPage:page]);
+}
+
 - (void)drawSelectionForPage:(PDFPage *)pdfPage inContext:(CGContextRef)context {
     NSRect rect;
     NSUInteger pageIndex;
@@ -467,7 +471,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
     if (pageIndex != NSNotFound) {
         NSRect bounds = [pdfPage boundsForBox:[self displayBox]];
-        CGFloat lineWidth = [self unitWidthOnPage:pdfPage];
         CGColorRef color = CGColorCreateGenericGray(0.0, 0.6);
         CGContextSetFillColorWithColor(context, color);
         CGColorRelease(color);
@@ -481,7 +484,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             CGColorRelease(color);
             CGContextFillRect(context, NSRectToCGRect(rect));
         }
-        SKDrawResizeHandles(context, rect, lineWidth, NO, [self drawsActiveSelections]);
+        SKDrawResizeHandles(context, rect, [self unitWidthOnPage:pdfPage], NO, [self drawsActiveSelections]);
     }
 }
 
@@ -499,7 +502,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
         
         if ([[annotation page] isEqual:pdfPage])
-            [annotation drawSelectionHighlightForView:self inContext:context];
+            [annotation drawSelectionHighlightWithLineWidth:[self unitWidthOnPage:pdfPage] active:[self drawsActiveSelections] inContext:context];
     }
     
     [self drawSelectionForPage:pdfPage inContext:context];
@@ -540,12 +543,13 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if (currentAnnotation == nil)
             return;
         PDFPage *page = [currentAnnotation page];
-        NSPoint offset = SKSubstractPoints([self convertRect:[page boundsForBox:[self displayBox]]fromPage:page].origin, [self visibleContentRect].origin);
+        NSPoint offset = SKSubstractPoints([self convertRect:[page boundsForBox:[self displayBox]] fromPage:page].origin, [self visibleContentRect].origin);
+        CGFloat scaleFactor = [self scaleFactor];
         CGContextSaveGState(context);
         CGContextTranslateCTM(context, offset.x, offset.y);
-        CGContextScaleCTM(context, [self scaleFactor], [self scaleFactor]);
+        CGContextScaleCTM(context, scaleFactor, scaleFactor);
         [page transformContext:context forBox:[self displayBox]];
-        [currentAnnotation drawSelectionHighlightForView:self inContext:context];
+        [currentAnnotation drawSelectionHighlightWithLineWidth:1.0 / scaleFactor active:[self drawsActiveSelections] inContext:context];
         CGContextRestoreGState(context);
     } else {
         CGRect rect = NSRectToCGRect([controller rect]);
