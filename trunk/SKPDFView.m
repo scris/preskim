@@ -472,6 +472,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (pageIndex != NSNotFound) {
         NSRect bounds = [pdfPage boundsForBox:[self displayBox]];
         CGColorRef color = CGColorCreateGenericGray(0.0, 0.6);
+        rect = CGContextConvertRectToUserSpace(context, CGRectIntegral(CGContextConvertRectToDeviceSpace(context, rect)));
         CGContextSetFillColorWithColor(context, color);
         CGColorRelease(color);
         CGContextBeginPath(context);
