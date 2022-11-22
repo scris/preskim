@@ -40,6 +40,7 @@
 #import "PDFPage_SKExtensions.h"
 #import "PDFDocument_SKExtensions.h"
 #import "NSDocument_SKExtensions.h"
+#import "NSString_SKExtensions.h"
 
 
 @interface PDFOutline (SKPrivateDeclarations)
@@ -63,6 +64,10 @@
         return [NSString stringWithFormat:@"%lu", (unsigned long)([(PDFActionRemoteGoTo *)[self action] pageIndex] + 1)];
     else
         return nil;
+}
+
+- (NSString *)cleanedLabel {
+    return [[self label] stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines];
 }
 
 - (NSInteger)deepestLevel {
