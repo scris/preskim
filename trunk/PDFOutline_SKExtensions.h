@@ -45,6 +45,8 @@
 - (PDFPage *)page;
 - (NSString *)pageLabel;
 
+- (NSString *)cleanedLabel;
+
 - (NSInteger)deepestLevel;
 
 - (void)clearDocument;

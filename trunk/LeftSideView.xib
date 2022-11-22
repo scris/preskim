@@ -179,10 +179,10 @@
                                                     <font key="font" metaFont="cellTitle"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                    <connections>
-                                                        <binding destination="7fi-B8-Xao" name="value" keyPath="objectValue.label" id="YCg-E2-E9T"/>
-                                                    </connections>
                                                 </textFieldCell>
+                                                <connections>
+                                                    <binding destination="7fi-B8-Xao" name="value" keyPath="objectValue.label" id="KuG-zV-D6t"/>
+                                                </connections>
                                             </textField>
                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LvG-Ae-Zsn">
                                                 <rect key="frame" x="36" y="28" width="0.0" height="0.0"/>
@@ -259,7 +259,7 @@
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                                 <connections>
-                                                    <binding destination="E5O-BA-vGf" name="value" keyPath="objectValue.label.stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines" id="G4t-B4-BI3"/>
+                                                    <binding destination="E5O-BA-vGf" name="value" keyPath="objectValue.cleanedLabel" id="c7l-xI-mQd"/>
                                                 </connections>
                                             </textField>
                                         </subviews>
