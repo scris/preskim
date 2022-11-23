@@ -65,6 +65,8 @@
 		<false/>
 		<key>SKTableFontSize</key>
 		<real>12</real>
+		<key>SKSequentialPageNumbering</key>
+		<false/>
 		<key>SKGreekingThreshold</key>
 		<real>3</real>
 		<key>SKShouldAntiAlias</key>
@@ -251,6 +253,7 @@
 			<string>SKThumbnailSize</string>
 			<string>SKSnapshotThumbnailSize</string>
 			<string>SKTableFontSize</string>
+			<string>SKSequentialPageNumbering</string>
 			<string>SKShouldAntiAlias</string>
 			<string>SKInterpolationQuality</string>
 			<string>SKGreekingThreshold</string>

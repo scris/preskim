@@ -139,6 +139,8 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
     NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
     if ([key isEqualToString:@"transitionName"])
         keyPaths = [keyPaths setByAddingObjectsFromSet:[NSSet setWithObjects:@"transitionStyle", nil]];
+    else if ([key isEqualToString:@"label"])
+        keyPaths = [keyPaths setByAddingObjectsFromSet:[NSSet setWithObjects:@"thumbnail.label", @"toThumbnail.label", nil]];
     return keyPaths;
 }
 

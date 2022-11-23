@@ -82,6 +82,7 @@
 #import "SKNotePrefs.h"
 #import "SKDisplayPrefs.h"
 #import "NSData_SKExtensions.h"
+#import "PDFPage_SKExtensions.h"
 
 #define WEBSITE_URL @"https://skim-app.sourceforge.io/"
 #define WIKI_URL    @"https://sourceforge.net/p/skim-app/wiki/"
@@ -110,7 +111,9 @@
 #define SKLineInteriorString    @"LineInterior"
 #define SKFreeTextFontString    @"FreeTextFont"
 
-NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
+static char SKApplicationControllerDefaultsObservationContext;
+
+NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
 
 #if SDK_BEFORE(10_12)
 @interface NSApplication (SKSierraDeclarations)
@@ -231,6 +234,8 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
     [NSColor makeHighlightColors];
     [NSValueTransformer registerCustomTransformers];
     [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
+    [PDFPage setUsesSequentialPageNumbering:[[NSUserDefaults standardUserDefaults] boolForKey:SKSequentialPageNumberingKey]];
+    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKSequentialPageNumberingKey context:&SKApplicationControllerDefaultsObservationContext];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification{
@@ -429,6 +434,19 @@ NSString *SKFavoriteColorListName = @"Skim Favorite Colors";
 }
 
 - (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(id *)target action:(SEL *)action { return NO; }
+
+#pragma mark KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == &SKApplicationControllerDefaultsObservationContext) {
+        if ([[keyPath substringFromIndex:7] isEqualToString:SKSequentialPageNumberingKey]) {
+            [PDFPage setUsesSequentialPageNumbering:[[NSUserDefaults standardUserDefaults] boolForKey:SKSequentialPageNumberingKey]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:SKPageLabelsChangedNotification object:nil];
+        }
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
 
 #pragma mark Scripting support
 

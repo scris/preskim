@@ -49,6 +49,8 @@
 
 - (NSInteger)deepestLevel;
 
+- (void)pageLabelDidUpdate;
+
 - (void)clearDocument;
 
 - (NSScriptObjectSpecifier *)objectSpecifier;

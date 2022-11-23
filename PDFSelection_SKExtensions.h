@@ -45,7 +45,6 @@
 + (PDFSelection *)selectionByAddingSelections:(NSArray *)selections;
 
 // the search table columns bind to these methods for display
-- (NSString *)firstPageLabel;
 - (NSString *)cleanedString;
 - (NSAttributedString *)contextString;
 

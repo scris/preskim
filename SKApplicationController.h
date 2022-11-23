@@ -40,6 +40,8 @@
 #import "SKApplication.h"
 #import "HIDRemote.h"
 
+extern NSString *SKPageLabelsChangedNotification;
+
 @class SKBookmark, SKDownload;
 
 @interface SKApplicationController : NSObject <SKApplicationDelegate, HIDRemoteDelegate, NSMenuDelegate> {

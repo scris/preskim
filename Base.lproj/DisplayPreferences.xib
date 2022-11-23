@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,10 +18,10 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="1">
-            <rect key="frame" x="0.0" y="0.0" width="310" height="497"/>
+            <rect key="frame" x="0.0" y="0.0" width="310" height="519"/>
             <subviews>
                 <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2" userLabel="Pages:">
-                    <rect key="frame" x="57" y="432" width="45" height="16"/>
+                    <rect key="frame" x="57" y="454" width="45" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Pages:" id="50">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -29,7 +29,7 @@
                     </textFieldCell>
                 </textField>
                 <slider toolTip="Set the size of the thumbnails" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Pages Slider">
-                    <rect key="frame" x="106" y="423" width="149" height="28"/>
+                    <rect key="frame" x="106" y="445" width="149" height="28"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="145" id="qgP-5J-aJm"/>
                     </constraints>
@@ -43,7 +43,7 @@
                     </connections>
                 </slider>
                 <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="Snapshots:">
-                    <rect key="frame" x="30" y="403" width="72" height="16"/>
+                    <rect key="frame" x="30" y="425" width="72" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Snapshots:" id="48">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -51,7 +51,7 @@
                     </textFieldCell>
                 </textField>
                 <slider toolTip="Set the size of the thumbnails" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5" userLabel="Snapshots Slider">
-                    <rect key="frame" x="106" y="394" width="149" height="28"/>
+                    <rect key="frame" x="106" y="416" width="149" height="28"/>
                     <sliderCell key="cell" alignment="left" minValue="32" maxValue="256" doubleValue="128" tickMarkPosition="above" numberOfTickMarks="8" sliderType="linear" id="47">
                         <font key="font" usesAppearanceFont="YES"/>
                     </sliderCell>
@@ -61,7 +61,7 @@
                     </connections>
                 </slider>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7">
-                    <rect key="frame" x="18" y="461" width="106" height="16"/>
+                    <rect key="frame" x="18" y="483" width="106" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Thumbnail sizes:" id="45">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -69,7 +69,7 @@
                     </textFieldCell>
                 </textField>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="8">
-                    <rect key="frame" x="12" y="388" width="286" height="5"/>
+                    <rect key="frame" x="12" y="410" width="286" height="5"/>
                 </box>
                 <button toolTip="Render smooth text" horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9">
                     <rect key="frame" x="30" y="265" width="110" height="18"/>
@@ -264,7 +264,7 @@
                     <rect key="frame" x="12" y="344" width="286" height="5"/>
                 </box>
                 <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="28" userLabel="Table font size:">
-                    <rect key="frame" x="18" y="361" width="96" height="16"/>
+                    <rect key="frame" x="18" y="383" width="96" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Table font size:" id="32">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -272,7 +272,7 @@
                     </textFieldCell>
                 </textField>
                 <comboBox toolTip="Font size to use for text tables" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="29">
-                    <rect key="frame" x="120" y="355" width="57" height="25"/>
+                    <rect key="frame" x="120" y="377" width="57" height="25"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="54" id="Z65-EK-ep7"/>
                     </constraints>
@@ -328,7 +328,7 @@
                     </connections>
                 </popUpButton>
                 <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zFV-1L-vhR">
-                    <rect key="frame" x="259" y="403" width="23" height="14"/>
+                    <rect key="frame" x="259" y="425" width="23" height="14"/>
                     <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="128" id="4iK-zh-FL0">
                         <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="10" id="utF-fT-SUs"/>
                         <font key="font" metaFont="message" size="11"/>
@@ -340,7 +340,7 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1tA-YI-NyE">
-                    <rect key="frame" x="259" y="432" width="25" height="14"/>
+                    <rect key="frame" x="259" y="454" width="25" height="14"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="21" id="eiR-QN-2VC"/>
                     </constraints>
@@ -354,6 +354,16 @@
                         <binding destination="61" name="value" keyPath="values.SKThumbnailSize" id="T2a-so-1eu"/>
                     </connections>
                 </textField>
+                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7Ys-eG-2p2">
+                    <rect key="frame" x="18" y="358" width="206" height="18"/>
+                    <buttonCell key="cell" type="check" title="Use sequential page numbers" bezelStyle="regularSquare" imagePosition="left" inset="2" id="nKD-U9-8NX">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="61" name="value" keyPath="values.SKSequentialPageNumbering" id="ixi-zE-DlW"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="PI5-BG-4vr" secondAttribute="trailing" constant="20" symbolic="YES" id="2VR-Qe-R36"/>
@@ -368,13 +378,14 @@
                 <constraint firstItem="10" firstAttribute="firstBaseline" secondItem="11" secondAttribute="firstBaseline" id="A4P-yg-cFS"/>
                 <constraint firstItem="11" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="32" id="C9K-ue-rUM"/>
                 <constraint firstItem="16" firstAttribute="top" secondItem="13" secondAttribute="bottom" constant="8" symbolic="YES" id="CGC-ZG-p4E"/>
-                <constraint firstItem="27" firstAttribute="top" secondItem="29" secondAttribute="bottom" constant="12" id="Ddc-6c-LT0"/>
                 <constraint firstItem="adG-Xp-L6g" firstAttribute="trailing" secondItem="8" secondAttribute="trailing" id="EAN-XP-49C"/>
                 <constraint firstAttribute="trailing" secondItem="17" secondAttribute="trailing" priority="251" constant="20" symbolic="YES" id="EKm-dJ-S9l"/>
                 <constraint firstItem="15" firstAttribute="leading" secondItem="16" secondAttribute="trailing" constant="20" id="EWQ-EF-gxT"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="7Ys-eG-2p2" secondAttribute="trailing" constant="20" symbolic="YES" id="EkY-RB-q2b"/>
                 <constraint firstItem="20" firstAttribute="trailing" secondItem="8" secondAttribute="trailing" id="Erg-JQ-DIu"/>
                 <constraint firstItem="17" firstAttribute="bottom" secondItem="16" secondAttribute="bottom" id="GEj-xG-KbM"/>
                 <constraint firstItem="22" firstAttribute="leading" secondItem="7" secondAttribute="leading" id="GKF-gV-6kX"/>
+                <constraint firstItem="7Ys-eG-2p2" firstAttribute="top" secondItem="29" secondAttribute="bottom" constant="6" id="GS3-On-Bpz"/>
                 <constraint firstItem="27" firstAttribute="trailing" secondItem="8" secondAttribute="trailing" id="Gmn-Fq-nfa"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="13" secondAttribute="trailing" constant="20" symbolic="YES" id="H0l-36-ov4"/>
                 <constraint firstItem="13" firstAttribute="leading" secondItem="7" secondAttribute="leading" id="HGO-vt-4T2"/>
@@ -432,6 +443,7 @@
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="10" secondAttribute="trailing" constant="20" symbolic="YES" id="fZW-ES-5O1"/>
                 <constraint firstItem="adG-Xp-L6g" firstAttribute="top" secondItem="23" secondAttribute="bottom" constant="12" id="g12-Fn-IgK"/>
                 <constraint firstItem="2" firstAttribute="top" secondItem="7" secondAttribute="bottom" constant="13" id="g1t-N7-zQ8"/>
+                <constraint firstItem="7Ys-eG-2p2" firstAttribute="leading" secondItem="7" secondAttribute="leading" id="g53-hK-KGm"/>
                 <constraint firstItem="I3F-RC-rb4" firstAttribute="leading" secondItem="9" secondAttribute="leading" id="h10-9A-aqx"/>
                 <constraint firstItem="5" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" id="h1O-fP-a8T"/>
                 <constraint firstItem="17" firstAttribute="width" secondItem="16" secondAttribute="width" id="hQh-ss-ctw"/>
@@ -454,6 +466,7 @@
                 <constraint firstItem="27" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="uly-Qr-8sO"/>
                 <constraint firstItem="4" firstAttribute="top" secondItem="2" secondAttribute="bottom" constant="13" id="vCV-Nx-hqf"/>
                 <constraint firstItem="hIe-uh-wfz" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="32" id="vNI-CW-q2U"/>
+                <constraint firstItem="27" firstAttribute="top" secondItem="7Ys-eG-2p2" secondAttribute="bottom" constant="12" id="yhv-VH-kgB"/>
             </constraints>
             <point key="canvasLocation" x="138" y="153.5"/>
         </customView>

@@ -233,9 +233,6 @@ static char SKMainWindowContentLayoutObservationContext;
 
 + (void)initialize {
     SKINITIALIZE;
-    
-    [PDFPage setUsesSequentialPageNumbering:[[NSUserDefaults standardUserDefaults] boolForKey:SKSequentialPageNumberingKey]];
-    
     [self defineFullScreenGlobalVariables];
 }
 
@@ -920,6 +917,39 @@ static char SKMainWindowContentLayoutObservationContext;
         [self setLeftSidePaneState:SKSidePaneStateThumbnail];
 
     [leftSideController.button setEnabled:outlineRoot != nil forSegment:SKSidePaneStateOutline];
+}
+
+- (void)updatePageLabels {
+    // called when changing between sequantial or logical page numbering
+    // update page labels, also update the size of the table columns displaying the labels
+    
+    NSArray *newPageLabels = [[pdfView document] pageLabels];
+    if ([newPageLabels isEqualToArray:pageLabels])
+        return;
+    
+    [self willChangeValueForKey:PAGELABELS_KEY];
+    [pageLabels setArray:newPageLabels];
+    [self didChangeValueForKey:PAGELABELS_KEY];
+    
+    [self updatePageLabel];
+    
+    NSEnumerator *thumbnailEnum = [thumbnails objectEnumerator];
+    for (NSString *label in pageLabels)
+        [[thumbnailEnum nextObject] setLabel:label];
+    
+    PDFDocument *pdfDoc = [pdfView document];
+    NSUInteger i, iMax = [pdfDoc pageCount];
+    for (i = 0; i < iMax; i++) {
+        PDFPage *page = [pdfDoc pageAtIndex:i];
+        [page willChangeValueForKey:@"displayLabel"];
+        [page didChangeValueForKey:@"displayLabel"];
+    }
+    
+    [[pdfDoc outlineRoot] pageLabelDidUpdate];
+    
+    [[self snapshots] makeObjectsPerformSelector:@selector(updatePageLabel)];
+    
+    [self updatePageColumnWidthForTableViews:[NSArray arrayWithObjects:leftSideController.thumbnailTableView, rightSideController.snapshotTableView, leftSideController.tocOutlineView, rightSideController.noteOutlineView, leftSideController.findTableView, leftSideController.groupedFindTableView, nil]];
 }
 
 #pragma mark Notes and Widgets
