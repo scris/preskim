@@ -136,8 +136,10 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
     // load the default values for the user defaults
     NSURL *initialUserDefaultsURL = [[NSBundle mainBundle] URLForResource:INITIAL_USER_DEFAULTS_FILENAME withExtension:@"plist"];
     NSDictionary *initialUserDefaultsDict = [NSDictionary dictionaryWithContentsOfURL:initialUserDefaultsURL];
-    NSDictionary *initialValuesDict = [initialUserDefaultsDict objectForKey:REGISTERED_DEFAULTS_KEY];
+    NSMutableDictionary *initialValuesDict = [[[initialUserDefaultsDict objectForKey:REGISTERED_DEFAULTS_KEY] mutableCopy] autorelease];
     NSArray *resettableUserDefaultsKeys;
+    
+    [initialValuesDict setValue:NSFullUserName() forKey:SKUserNameKey];
     
     // set them in the standard user defaults
     [[NSUserDefaults standardUserDefaults] registerDefaults:initialValuesDict];
@@ -151,10 +153,9 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
     // in the shared user defaults controller
     
     resettableUserDefaultsKeys = [[[initialUserDefaultsDict objectForKey:RESETTABLE_KEYS_KEY] allValues] valueForKeyPath:@"@unionOfArrays.self"];
-    initialValuesDict = [initialValuesDict dictionaryWithValuesForKeys:resettableUserDefaultsKeys];
     
     // Set the initial values in the shared user defaults controller 
-    [[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:initialValuesDict];
+    [[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:[initialValuesDict dictionaryWithValuesForKeys:resettableUserDefaultsKeys]];
     
     if (RUNNING(10_11)) {
         // Disable ATS on El Capitan, as forwarding is blocked, even if it is an htpps address
