@@ -151,6 +151,10 @@
 		<integer>0</integer>
 		<key>SKInkNoteDashPattern</key>
 		<array/>
+		<key>SKUseUserName</key>
+		<true/>
+		<key>SKUserName</key>
+		<string></string>
 		<key>SKAutoCheckFileUpdate</key>
 		<false/>
 		<key>SKAutoReloadFileUpdate</key>
@@ -303,6 +307,8 @@
 			<string>SKInkNoteLineWidth</string>
 			<string>SKInkNoteLineStyle</string>
 			<string>SKInkNoteDashPattern</string>
+			<string>SKUseUserName</string>
+			<string>SKUserName</string>
 		</array>
 		<key>SyncPreferences</key>
 		<array>

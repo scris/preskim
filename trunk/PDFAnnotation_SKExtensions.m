@@ -66,9 +66,6 @@
 #import "SKRuntime.h"
 #import "SKAnnotationTypeImageCell.h"
 
-#define SKUseUserNameKey @"SKUseUserName"
-#define SKUserNameKey @"SKUserName"
-
 
 NSString *SKPDFAnnotationScriptingBorderStyleKey = @"scriptingBorderStyle";
 NSString *SKPDFAnnotationScriptingColorKey = @"scriptingColor";
