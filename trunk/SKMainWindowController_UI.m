@@ -91,6 +91,7 @@
 #import "NSImage_SKExtensions.h"
 #import "NSObject_SKExtensions.h"
 #import "NSPasteboard_SKExtensions.h"
+#import "SKApplicationController.h"
 
 #define NOTES_KEY       @"notes"
 #define SNAPSHOTS_KEY   @"snapshots"
@@ -127,6 +128,7 @@
 
 - (void)goToSelectedOutlineItem:(id)sender;
 
+- (void)updatePageLabels;
 - (void)updatePageLabel;
 
 - (void)updateNoteFilterPredicate;
@@ -555,7 +557,7 @@
         [rowIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
             PDFSelection *match = [results objectAtIndex:idx];
             [string appendString:@"* "];
-            [string appendFormat:NSLocalizedString(@"Page %@", @""), [match firstPageLabel]];
+            [string appendFormat:NSLocalizedString(@"Page %@", @""), [[match safeFirstPage] displayLabel]];
             [string appendFormat:@": %@\n", [[match contextString] string]];
         }];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
@@ -2092,6 +2094,10 @@ static NSArray *allMainDocumentPDFViews() {
     }
 }
 
+- (void)handlePageLabelsChangedNotification:(NSNotification *)notification {
+    [self updatePageLabels];
+}
+
 #pragma mark Observer registration
 
 - (void)registerForNotifications {
@@ -2129,8 +2135,11 @@ static NSArray *allMainDocumentPDFViews() {
     [nc addObserver:self selector:@selector(observeUndoManagerCheckpoint:) 
                              name:NSUndoManagerCheckpointNotification object:[[self document] undoManager]];
     //  SKDocumentController
-    [nc addObserver:self selector:@selector(handleWillRemoveDocumentNotification:) 
+    [nc addObserver:self selector:@selector(handleWillRemoveDocumentNotification:)
                              name:SKDocumentControllerWillRemoveDocumentNotification object:nil];
+    // PDFPage
+    [nc addObserver:self selector:@selector(handlePageLabelsChangedNotification:)
+                             name:SKPageLabelsChangedNotification object:nil];
     
     // SKScroller
     if (RUNNING_BEFORE(10_12))

@@ -180,6 +180,10 @@ static char SKSnaphotWindowAppObservationContext;
     [self setString:mutableString];
 }
 
+- (void)updatePageLabel {
+    [self setPageLabel:[[pdfView currentPage] displayLabel]];
+}
+
 - (void)handlePageChangedNotification:(NSNotification *)notification {
     [self setPageLabel:[[pdfView currentPage] displayLabel]];
     [self handlePDFViewFrameChangedNotification:nil];

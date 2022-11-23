@@ -74,11 +74,6 @@
     return selection;
 }
 
-// returns the label of the first page (if the selection spans multiple pages)
-- (NSString *)firstPageLabel { 
-    return [[self safeFirstPage] displayLabel];
-}
-
 static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelection *nextLine) {
     NSUInteger l = [string length];
     unichar ch = [string characterAtIndex:l - 1];

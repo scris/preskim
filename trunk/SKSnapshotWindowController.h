@@ -84,6 +84,8 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
 
 - (void)redisplay;
 
+- (void)updatePageLabel;
+
 - (NSImage *)thumbnailWithSize:(CGFloat)size;
 
 - (NSAttributedString *)thumbnailAttachmentWithSize:(CGFloat)size;

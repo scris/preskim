@@ -55,7 +55,7 @@
 @property (nonatomic, assign) id <SKThumbnailDelegate> delegate;
 @property (nonatomic, getter=isDirty) BOOL dirty;
 @property (nonatomic, retain) NSImage *image;
-@property (nonatomic, readonly) NSString *label;
+@property (nonatomic, retain) NSString *label;
 @property (nonatomic, readonly) NSUInteger pageIndex;
 @property (nonatomic, readonly) NSSize size;
 @property (nonatomic, readonly) PDFPage *page;

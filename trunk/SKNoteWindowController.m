@@ -63,6 +63,7 @@
 #import "NSPasteboard_SKExtensions.h"
 #import "NSAttributedString_SKExtensions.h"
 #import "SKTextUndoManager.h"
+#import "SKApplicationController.h"
 
 #define EM_DASH_CHARACTER (unichar)0x2014
 
@@ -80,6 +81,11 @@ static char SKNoteWindowNoteObservationContext;
 @end
 
 #pragma mark -
+
+@interface SKNoteWindowController (SKPrivate)
+- (void)handleApplicationWillTerminate:(NSNotification *)notification;
+- (void)handlePageLabelsChangedNotification:(NSNotification *)notification;
+@end
 
 @implementation SKNoteWindowController
 
@@ -122,12 +128,6 @@ static NSImage *noteIcons[7] = {nil, nil, nil, nil, nil, nil, nil};
 
 static NSURL *temporaryDirectoryURL = nil;
 
-- (void)handleApplicationWillTerminate:(NSNotification *)notification {
-    if ([temporaryDirectoryURL checkResourceIsReachableAndReturnError:NULL])
-        [[NSFileManager defaultManager] removeItemAtURL:temporaryDirectoryURL error:NULL];
-    SKDESTROY(temporaryDirectoryURL);
-}
-
 + (NSURL *)temporaryDirectoryURL {
     if (temporaryDirectoryURL == nil) {
         char *template = strdup([[NSTemporaryDirectory() stringByAppendingPathComponent:@"Skim.XXXXXX"] fileSystemRepresentation]);
@@ -159,6 +159,7 @@ static NSURL *temporaryDirectoryURL = nil;
         [note addObserver:self forKeyPath:SKNPDFAnnotationStringKey options:0 context:&SKNoteWindowNoteObservationContext];
         if ([self isNoteType])
             [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[[self class] fontKeysToObserve] context:&SKNoteWindowDefaultsObservationContext];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePageLabelsChangedNotification:) name:SKPageLabelsChangedNotification object:nil];
     }
     return self;
 }
@@ -278,6 +279,16 @@ static NSURL *temporaryDirectoryURL = nil;
     [[self window] setDelegate:nil];
     [imageView setDelegate:nil];
     [textView setDelegate:nil];
+}
+
+- (void)handleApplicationWillTerminate:(NSNotification *)notification {
+    if ([temporaryDirectoryURL checkResourceIsReachableAndReturnError:NULL])
+        [[NSFileManager defaultManager] removeItemAtURL:temporaryDirectoryURL error:NULL];
+    SKDESTROY(temporaryDirectoryURL);
+}
+
+- (void)handlePageLabelsChangedNotification:(NSNotification *)notification {
+    [self updateStatusMessage];
 }
 
 - (void)setDocument:(NSDocument *)document {
