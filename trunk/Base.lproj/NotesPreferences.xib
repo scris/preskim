@@ -453,8 +453,8 @@
                     <rect key="frame" x="12" y="51" width="475" height="5"/>
                 </box>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="13u-D5-CVu">
-                    <rect key="frame" x="18" y="21" width="121" height="18"/>
-                    <buttonCell key="cell" type="check" title="Add user name:" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="dzK-t8-Ju5">
+                    <rect key="frame" x="18" y="21" width="134" height="18"/>
+                    <buttonCell key="cell" type="check" title="Add author name:" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="dzK-t8-Ju5">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -462,8 +462,8 @@
                         <binding destination="84" name="value" keyPath="values.SKUseUserName" id="0yT-hb-T8A"/>
                     </connections>
                 </button>
-                <textField toolTip="User name to use for new notes" horizontalHuggingPriority="249" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aFo-jV-JaA">
-                    <rect key="frame" x="147" y="20" width="332" height="21"/>
+                <textField toolTip="Author name to use for new notes" horizontalHuggingPriority="249" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aFo-jV-JaA">
+                    <rect key="frame" x="160" y="20" width="319" height="21"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="r7M-le-DDo">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
