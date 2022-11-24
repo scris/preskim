@@ -45,7 +45,7 @@
 @implementation SKNotePrefs
 
 @synthesize type;
-@dynamic name, scriptingColor, scriptingInteriorColor, lineWidth, scriptingBorderStyle, dashPattern, scriptingStartLineStyle, scriptingEndLineStyle, fontName, fontSize, scriptingFontColor, scriptingAlignment, scriptingIconType, scriptingProperties;
+@dynamic name, scriptingColor, scriptingInteriorColor, lineWidth, scriptingBorderStyle, dashPattern, scriptingStartLineStyle, scriptingEndLineStyle, fontName, fontSize, scriptingFontColor, scriptingAlignment, scriptingIconType, scriptingUserName, scriptingProperties;
 
 static NSDictionary *alternateTypeNames = nil;
 static NSDictionary *colorKeys = nil;
@@ -64,20 +64,20 @@ static NSDictionary *propertyKeys = nil;
     lineStyleKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKFreeTextNoteLineStyleKey, SKNFreeTextString, SKCircleNoteLineStyleKey, SKNCircleString, SKSquareNoteLineStyleKey, SKNSquareString, SKLineNoteLineStyleKey, SKNLineString, SKInkNoteLineStyleKey, SKNInkString, nil];
     dashPatternKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKFreeTextNoteDashPatternKey, SKNFreeTextString, SKCircleNoteDashPatternKey, SKNCircleString, SKSquareNoteDashPatternKey, SKNSquareString, SKLineNoteDashPatternKey, SKNLineString, SKInkNoteDashPatternKey, SKNInkString, nil];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    NSArray *array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", @"fontName", @"fontSize", @"scriptingFontColor", @"scriptingAlignment", nil];
+    NSArray *array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", @"fontName", @"fontSize", @"scriptingFontColor", @"scriptingAlignment", nil];
     [dict setObject:array forKey:SKNFreeTextString];
-    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"fontName", @"fontSize", @"scriptingIconType", nil];
+    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"fontName", @"fontSize", @"scriptingIconType", nil];
     [dict setObject:array forKey:SKNNoteString];
-    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", nil];
+    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", nil];
     [dict setObject:array forKey:SKNCircleString];
     [dict setObject:array forKey:SKNSquareString];
-    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", nil];
+    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", nil];
     [dict setObject:array forKey:SKNHighlightString];
     [dict setObject:array forKey:SKNUnderlineString];
     [dict setObject:array forKey:SKNStrikeOutString];
-    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", @"scriptingStartLineStyle", @"scriptingEndLineStyle", nil];
+    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", @"scriptingStartLineStyle", @"scriptingEndLineStyle", nil];
     [dict setObject:array forKey:SKNLineString];
-    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", nil];
+    array = [NSArray arrayWithObjects:@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", nil];
     [dict setObject:array forKey:SKNInkString];
     propertyKeys = [dict copy];
 }
@@ -109,6 +109,22 @@ static NSDictionary *propertyKeys = nil;
 
 - (NSString *)name {
     return type;
+}
+
+- (NSString *)scriptingUserName {
+    if ([[NSUserDefaults standardUserDefaults] stringForKey:SKUseUserNameKey])
+        return [[NSUserDefaults standardUserDefaults] stringForKey:SKUserNameKey];
+    else
+        return nil;
+}
+
+- (void)stScriptingUserNamee:(NSString *)name {
+    if ([name length] == 0) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:SKUseUserNameKey];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:SKUseUserNameKey];
+        [[NSUserDefaults standardUserDefaults] setObject:name forKey:SKUserNameKey];
+    }
 }
 
 - (NSColor *)scriptingColor {
