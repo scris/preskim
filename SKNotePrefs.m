@@ -118,11 +118,11 @@ static NSDictionary *propertyKeys = nil;
         return nil;
 }
 
-- (void)stScriptingUserNamee:(NSString *)name {
+- (void)setScriptingUserName:(NSString *)name {
     if ([name length] == 0) {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:SKUseUserNameKey];
     } else {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:SKUseUserNameKey];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SKUseUserNameKey];
         [[NSUserDefaults standardUserDefaults] setObject:name forKey:SKUserNameKey];
     }
 }
