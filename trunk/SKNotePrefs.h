@@ -57,6 +57,7 @@
 @property (nonatomic, retain) NSColor *scriptingFontColor;
 @property (nonatomic) NSTextAlignment scriptingAlignment;
 @property (nonatomic) PDFTextAnnotationIconType scriptingIconType;
+@property (nonatomic, retain) NSString *scriptingUserName;
 @property (nonatomic, retain) NSDictionary *scriptingProperties;
 
 - (id)initWithType:(NSString *)aType;
