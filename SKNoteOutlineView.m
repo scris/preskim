@@ -129,18 +129,6 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     [super mouseDown:theEvent];
 }
 
-- (void)keyDown:(NSEvent *)theEvent {
-    unichar eventChar = [theEvent firstCharacter];
-	NSUInteger modifiers = [theEvent standardModifierFlags];
-    
-    [super keyDown:theEvent];
-    
-    if ((eventChar == NSDownArrowFunctionKey || eventChar == NSUpArrowFunctionKey) && modifiers == NSCommandKeyMask &&
-        [[self delegate] respondsToSelector:@selector(outlineViewCommandKeyPressedDuringNavigation:)]) {
-        [[self delegate] outlineViewCommandKeyPressedDuringNavigation:self];
-    }
-}
-
 - (void)toggleTableColumn:(id)sender {
     NSTableColumn *tc = [self tableColumnWithIdentifier:[sender representedObject]];
     [tc setHidden:[tc isHidden] == NO];

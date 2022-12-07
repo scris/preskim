@@ -947,14 +947,6 @@
     return nil;
 }
 
-- (void)outlineViewCommandKeyPressedDuringNavigation:(NSOutlineView *)ov {
-    PDFAnnotation *annotation = [[self selectedNotes] lastObject];
-    if (annotation) {
-        [pdfView scrollAnnotationToVisible:annotation];
-        [pdfView setCurrentAnnotation:annotation];
-    }
-}
-
 - (NSArray *)outlineView:(NSOutlineView *)ov typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)typeSelectHelper {
     if ([ov isEqual:rightSideController.noteOutlineView]) {
         NSInteger i, count = [rightSideController.noteOutlineView numberOfRows];
