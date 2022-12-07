@@ -76,7 +76,6 @@
 - (void)handleGoToScriptCommand:(NSScriptCommand *)command;
 
 + (NSRect)bounds:(NSRect)rect forBox:(PDFDisplayBox)box onPage:(PDFPage *)aPage;
-- (NSRect)currentBoundsForBox:(PDFDisplayBox)box;
 
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box active:(BOOL)active;

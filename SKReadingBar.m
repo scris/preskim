@@ -357,10 +357,6 @@
     return rect;
 }
 
-- (NSRect)currentBoundsForBox:(PDFDisplayBox)box {
-    return [[self class] bounds:[self currentBounds] forBox:box onPage:[self page]];
-}
-
 - (void)drawForPage:(PDFPage *)pdfPage withBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
     BOOL invert = [[NSUserDefaults standardUserDefaults] boolForKey:SKReadingBarInvertKey];
     
@@ -383,6 +379,7 @@
                 CGContextFillRect(context, NSRectToCGRect(SKSliceRect(bounds, NSMinX(rect) - NSMinX(bounds), NSMinXEdge)));
             }
         } else {
+            rect = [[self class] bounds:rect forBox:box onPage:pdfPage];
             CGContextSetBlendMode(context, kCGBlendModeMultiply);
             CGContextFillRect(context, NSRectToCGRect(rect));
         }
