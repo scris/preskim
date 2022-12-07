@@ -231,6 +231,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)doAutoHide;
 - (void)showNavWindow;
 
+- (void)setNeedsDisplayForReadingBarBounds:(NSRect)rect onPage:(PDFPage *)page;
+
 - (void)doMoveCurrentAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta;
 - (void)doResizeCurrentAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta;
 - (void)doAutoSizeActiveNoteIgnoringWidth:(BOOL)ignoreWidth;
@@ -1086,7 +1088,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKReadingBarInvertKey])
         [self requiresDisplay];
     else
-        [self setNeedsDisplayInRect:[SKReadingBar bounds:bounds forBox:[self displayBox] onPage:page] ofPage:page];
+        [self setNeedsDisplayForReadingBarBounds:bounds onPage:page];
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewReadingBarDidChangeNotification object:self userInfo:userInfo];
 }
 
@@ -1127,9 +1129,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
     
     if (oldPage)
-        [self setNeedsDisplayInRect:[SKReadingBar bounds:oldBounds forBox:[self displayBox] onPage:oldPage] ofPage:oldPage];
+        [self setNeedsDisplayForReadingBarBounds:oldBounds onPage:oldPage];
     if (newPage)
-        [self setNeedsDisplayInRect:[SKReadingBar bounds:newBounds forBox:[self displayBox] onPage:newPage] ofPage:newPage];
+        [self setNeedsDisplayForReadingBarBounds:newBounds onPage:newPage];
     
     NSDictionary *userInfo = newPage ? [NSDictionary dictionaryWithObjectsAndKeys:newPage, SKPDFViewNewPageKey, oldPage, SKPDFViewOldPageKey, nil] : [NSDictionary dictionaryWithObjectsAndKeys:oldPage, SKPDFViewOldPageKey, nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewReadingBarDidChangeNotification object:self userInfo:userInfo];
@@ -3106,6 +3108,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [self annotationsChangedOnPage:page];
 }
 
+- (void)setNeedsDisplayForReadingBarBounds:(NSRect)rect onPage:(PDFPage *)page {
+    [self setNeedsDisplayInRect:[SKReadingBar bounds:rect forBox:[self displayBox] onPage:page] ofPage:page];
+}
+
 - (void)requiresDisplay {
     [super requiresDisplay];
     [loupeController updateContents];
@@ -3143,12 +3149,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                     SKReadingBar *aReadingBar = [[SKReadingBar alloc] initWithPage:page line:line delegate:self];
                     [self setReadingBar:aReadingBar];
                     [aReadingBar release];
-                    if (invert) {
+                    if (invert)
                         [self requiresDisplay];
-                    } else {
-                        PDFPage *aPage = [readingBar page];
-                        [self setNeedsDisplayInRect:[SKReadingBar bounds:[readingBar currentBounds] forBox:[self displayBox] onPage:aPage] ofPage:aPage];
-                    }
+                    else
+                        [self setNeedsDisplayForReadingBarBounds:[readingBar currentBounds] onPage:[readingBar page]];
                     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[readingBar page], SKPDFViewNewPageKey, nil];
                     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewReadingBarDidChangeNotification object:self userInfo:userInfo];
                 } else {
@@ -3452,7 +3456,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 if ([key isEqualToString:SKReadingBarInvertKey] || [[NSUserDefaults standardUserDefaults] boolForKey:SKReadingBarInvertKey])
                     [self requiresDisplay];
                 else
-                    [self setNeedsDisplayInRect:[SKReadingBar bounds:[readingBar currentBounds] forBox:[self displayBox] onPage:page] ofPage:page];
+                    [self setNeedsDisplayForReadingBarBounds:[readingBar currentBounds] onPage:page];
                 [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewReadingBarDidChangeNotification
                     object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewOldPageKey, page, SKPDFViewNewPageKey, nil]];
             }
