@@ -889,7 +889,8 @@ static char SKMainWindowContentLayoutObservationContext;
     [self resetThumbnails];
     [self allSnapshotsNeedUpdate];
     [rightSideController.noteOutlineView reloadData];
-    
+    [leftSideController.thumbnailTableView reloadTypeSelectStrings];
+
     [self updatePageColumnWidthForTableViews:[NSArray arrayWithObjects:leftSideController.thumbnailTableView, rightSideController.snapshotTableView, leftSideController.tocOutlineView, rightSideController.noteOutlineView, leftSideController.findTableView, leftSideController.groupedFindTableView, nil]];
     
     PDFOutline *outlineRoot = [[pdfView document] outlineRoot];
@@ -932,6 +933,8 @@ static char SKMainWindowContentLayoutObservationContext;
     [self didChangeValueForKey:PAGELABELS_KEY];
     
     [self updatePageLabel];
+    
+    [leftSideController.thumbnailTableView reloadTypeSelectStrings];
     
     NSEnumerator *thumbnailEnum = [thumbnails objectEnumerator];
     for (NSString *label in pageLabels)
