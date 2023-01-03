@@ -45,10 +45,13 @@
 
 @implementation SKExportAccessoryController
 
-@synthesize labelField, hasExportOptions, allowsEmbeddedOption;
+@synthesize labelField, formatPopUpButton, lastSelectedFileType, savePanel, hasExportOptions, allowsEmbeddedOption;
 
 - (void)dealloc {
     SKDESTROY(labelField);
+    SKDESTROY(formatPopUpButton);
+    SKDESTROY(lastSelectedFileType);
+    SKDESTROY(savePanel);
     [super dealloc];
 }
 

@@ -154,11 +154,6 @@ enum {
 - (NSString *)passwordUsedForUnlocking;
 @end
 
-@interface NSDocument (SKPrivateDeclarations)
-// private method used as the action for the file format popup in the save panel, decalred so we can override
-- (void)changeSaveType:(id)sender;
-@end
-
 @interface SKMainDocument (SKPrivate)
 
 - (void)tryToUnlockDocument:(PDFDocument *)document;
@@ -330,13 +325,19 @@ enum {
     mdFlags.exportOption = option;
 }
 
-- (void)updateExportAccessoryView {
-    NSString *typeName = [self fileTypeFromLastRunSavePanel];
-    if ([self canAttachNotesForType:typeName] == NO) {
+- (NSString *)fileTypeFromLastRunSavePanel {
+    return [exportAccessoryController lastSelectedFileType] ?: [super fileTypeFromLastRunSavePanel];
+}
+
+- (void)changeExportType:(id)sender {
+    NSString *type = [[sender selectedItem] representedObject];
+    [exportAccessoryController setLastSelectedFileType:type];
+    [[exportAccessoryController savePanel] setAllowedFileTypes:[NSArray arrayWithObjects:[self fileNameExtensionForType:type saveOperation:NSSaveToOperation], nil]];
+    if ([self canAttachNotesForType:type] == NO) {
         [exportAccessoryController setHasExportOptions:NO];
     } else {
         [exportAccessoryController setHasExportOptions:YES];
-        if ([[NSWorkspace sharedWorkspace] type:typeName conformsToType:SKPDFDocumentType] && ([[self pdfDocument] isLocked] == NO && [[self pdfDocument] allowsPrinting])) {
+        if ([[NSWorkspace sharedWorkspace] type:type conformsToType:SKPDFDocumentType] && ([[self pdfDocument] isLocked] == NO && [[self pdfDocument] allowsPrinting])) {
             [exportAccessoryController setAllowsEmbeddedOption:YES];
         } else {
             [exportAccessoryController setAllowsEmbeddedOption:NO];
@@ -346,36 +347,35 @@ enum {
     }
 }
 
-- (void)changeSaveType:(id)sender {
-    if ([NSDocument instancesRespondToSelector:_cmd])
-        [super changeSaveType:sender];
-    if (mdFlags.exportUsingPanel && exportAccessoryController)
-        [self updateExportAccessoryView];
-}
-
 - (BOOL)prepareSavePanel:(NSSavePanel *)savePanel {
     BOOL success = [super prepareSavePanel:savePanel];
     if (success && mdFlags.exportUsingPanel) {
-        NSPopUpButton *formatPopup = [[savePanel accessoryView] descendantOfClass:[NSPopUpButton class]];
-        if (formatPopup) {
-            NSString *lastExportedType = [[NSUserDefaults standardUserDefaults] stringForKey:SKLastExportedTypeKey];
-            NSInteger lastExportedOption = [[NSUserDefaults standardUserDefaults] integerForKey:SKLastExportedOptionKey];
-            if (lastExportedType) {
-                NSInteger idx = [formatPopup indexOfItemWithRepresentedObject:lastExportedType];
-                if (idx != -1 && idx != [formatPopup indexOfSelectedItem]) {
-                    [formatPopup selectItemAtIndex:idx];
-                    [formatPopup sendAction:[formatPopup action] to:[formatPopup target]];
-                    [savePanel setAllowedFileTypes:[NSArray arrayWithObjects:[self fileNameExtensionForType:lastExportedType saveOperation:NSSaveToOperation], nil]];
-                }
-            }
-            mdFlags.exportOption = lastExportedOption;
-            
-            exportAccessoryController = [[SKExportAccessoryController alloc] init];
-            [exportAccessoryController addFormatPopUpButton:formatPopup];
-            [exportAccessoryController setRepresentedObject:self];
-            [savePanel setAccessoryView:[exportAccessoryController view]];
-            [self updateExportAccessoryView];
+        exportAccessoryController = [[SKExportAccessoryController alloc] init];
+        [exportAccessoryController setRepresentedObject:self];
+        [exportAccessoryController setSavePanel:savePanel];
+        [exportAccessoryController view];
+        
+        NSPopUpButton *formatPopUpButton = [exportAccessoryController formatPopUpButton];
+        NSDocumentController *controller = [NSDocumentController sharedDocumentController];
+        for (NSString *type in [self writableTypesForSaveOperation:NSSaveToOperation]) {
+            [formatPopUpButton addItemWithTitle:[controller displayNameForType:type]];
+            [[formatPopUpButton lastItem] setRepresentedObject:type];
         }
+        [formatPopUpButton setAction:@selector(changeExportType:)];
+        [formatPopUpButton setTarget:self];
+        [savePanel setAccessoryView:[exportAccessoryController view]];
+        
+        NSString *lastExportedType = [[NSUserDefaults standardUserDefaults] stringForKey:SKLastExportedTypeKey];
+        NSInteger lastExportedOption = [[NSUserDefaults standardUserDefaults] integerForKey:SKLastExportedOptionKey];
+        if (lastExportedType == nil) {
+            lastExportedType = [self fileType];
+            lastExportedType = SKExportOptionDefault;
+        }
+        mdFlags.exportOption = lastExportedOption;
+        NSInteger idx = [formatPopUpButton indexOfItemWithRepresentedObject:lastExportedType];
+        [formatPopUpButton selectItemAtIndex:MAX(idx, 0)];
+        // update the last selected type and option view
+        [self changeExportType:formatPopUpButton];
     }
     return success;
 }
