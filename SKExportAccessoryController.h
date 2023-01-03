@@ -54,6 +54,4 @@
 @property (nonatomic, retain) NSSavePanel *savePanel;
 @property (nonatomic) BOOL hasExportOptions, allowsEmbeddedOption;
 
-- (void)addFormatPopUpButton:(NSPopUpButton *)popupButton;
-
 @end
