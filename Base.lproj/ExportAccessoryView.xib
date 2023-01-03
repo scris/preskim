@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <development version="8000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SKExportAccessoryController">
             <connections>
+                <outlet property="formatPopUpButton" destination="EWp-ej-3vC" id="xxG-aL-TWG"/>
                 <outlet property="labelField" destination="10" id="19"/>
                 <outlet property="view" destination="8" id="9"/>
             </connections>
@@ -88,20 +88,31 @@
                                 </binding>
                             </connections>
                         </button>
+                        <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EWp-ej-3vC">
+                            <rect key="frame" x="97" y="80" width="39" height="25"/>
+                            <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="fpk-LB-WD1">
+                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="menu"/>
+                                <menu key="menu" id="rOm-lD-S5h"/>
+                            </popUpButtonCell>
+                        </popUpButton>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="Ie8-eu-nzt" firstAttribute="leading" secondItem="10" secondAttribute="trailing" constant="8" id="25X-5u-bsK"/>
+                        <constraint firstItem="EWp-ej-3vC" firstAttribute="leading" secondItem="10" secondAttribute="trailing" constant="8" symbolic="YES" id="6ii-7f-jkl"/>
                         <constraint firstAttribute="bottom" secondItem="jzZ-2J-7Au" secondAttribute="bottom" constant="15" id="7lF-nZ-7co"/>
                         <constraint firstItem="10" firstAttribute="top" secondItem="Tq4-J6-s5D" secondAttribute="top" constant="15" id="7sk-S0-N1F"/>
                         <constraint firstItem="FkY-eF-M8Y" firstAttribute="top" secondItem="Ie8-eu-nzt" secondAttribute="bottom" constant="6" symbolic="YES" id="JKw-I5-fZw"/>
                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="jzZ-2J-7Au" secondAttribute="trailing" constant="20" symbolic="YES" id="KYQ-Oo-7fs"/>
                         <constraint firstItem="Ie8-eu-nzt" firstAttribute="top" secondItem="10" secondAttribute="bottom" constant="12" id="QhH-lG-TWd"/>
                         <constraint firstItem="10" firstAttribute="leading" secondItem="Tq4-J6-s5D" secondAttribute="leading" constant="20" symbolic="YES" id="SEr-mo-hKt"/>
+                        <constraint firstItem="EWp-ej-3vC" firstAttribute="firstBaseline" secondItem="10" secondAttribute="firstBaseline" id="adA-Lb-Obs"/>
                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="FkY-eF-M8Y" secondAttribute="trailing" constant="20" symbolic="YES" id="cwr-zv-wum"/>
                         <constraint firstAttribute="trailing" secondItem="jzZ-2J-7Au" secondAttribute="trailing" priority="249" constant="20" symbolic="YES" id="d0I-AW-kP0"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="EWp-ej-3vC" secondAttribute="trailing" constant="20" symbolic="YES" id="f8N-EB-tDl"/>
                         <constraint firstItem="FkY-eF-M8Y" firstAttribute="leading" secondItem="Ie8-eu-nzt" secondAttribute="leading" id="gMf-aj-Q4f"/>
                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Ie8-eu-nzt" secondAttribute="trailing" constant="20" symbolic="YES" id="gaH-Z8-Zgz"/>
                         <constraint firstItem="jzZ-2J-7Au" firstAttribute="top" secondItem="FkY-eF-M8Y" secondAttribute="bottom" constant="6" symbolic="YES" id="sqr-Ab-Aql"/>
+                        <constraint firstItem="Ie8-eu-nzt" firstAttribute="leading" secondItem="EWp-ej-3vC" secondAttribute="leading" id="v4h-RA-DZi"/>
                         <constraint firstItem="jzZ-2J-7Au" firstAttribute="leading" secondItem="Ie8-eu-nzt" secondAttribute="leading" id="xy3-gJ-nBq"/>
                     </constraints>
                 </customView>
