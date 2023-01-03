@@ -326,12 +326,11 @@ enum {
 }
 
 - (NSString *)fileTypeFromLastRunSavePanel {
-    return [exportAccessoryController lastSelectedFileType] ?: [super fileTypeFromLastRunSavePanel];
+    return [exportAccessoryController selectedFileType] ?: [super fileTypeFromLastRunSavePanel];
 }
 
 - (void)changeExportType:(id)sender {
-    NSString *type = [[sender selectedItem] representedObject];
-    [exportAccessoryController setLastSelectedFileType:type];
+    NSString *type = [exportAccessoryController selectedFileType];
     [[exportAccessoryController savePanel] setAllowedFileTypes:[NSArray arrayWithObjects:[self fileNameExtensionForType:type saveOperation:NSSaveToOperation], nil]];
     if ([self canAttachNotesForType:type] == NO) {
         [exportAccessoryController setHasExportOptions:NO];

@@ -40,18 +40,15 @@
 
 
 @interface SKExportAccessoryController : NSViewController {
-    NSTextField *labelField;
     NSPopUpButton *formatPopUpButton;
-    NSString *lastSelectedFileType;
     NSSavePanel *savePanel;
     BOOL hasExportOptions, allowsEmbeddedOptions;
 }
 
-@property (nonatomic, retain) IBOutlet NSTextField *labelField;
 @property (nonatomic, retain) IBOutlet NSPopUpButton *formatPopUpButton;
 
-@property (nonatomic, retain) NSString *lastSelectedFileType;
-@property (nonatomic, retain) NSSavePanel *savePanel;
 @property (nonatomic) BOOL hasExportOptions, allowsEmbeddedOption;
+@property (nonatomic, readonly) NSString *selectedFileType;
+@property (nonatomic, retain) NSSavePanel *savePanel;
 
 @end
