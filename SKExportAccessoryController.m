@@ -45,18 +45,21 @@
 
 @implementation SKExportAccessoryController
 
-@synthesize labelField, formatPopUpButton, lastSelectedFileType, savePanel, hasExportOptions, allowsEmbeddedOption;
+@synthesize formatPopUpButton, savePanel, hasExportOptions, allowsEmbeddedOption;
+@dynamic selectedFileType;
 
 - (void)dealloc {
-    SKDESTROY(labelField);
     SKDESTROY(formatPopUpButton);
-    SKDESTROY(lastSelectedFileType);
     SKDESTROY(savePanel);
     [super dealloc];
 }
 
 - (NSString *)nibName {
     return @"ExportAccessoryView";
+}
+
+- (NSString *)selectedFileType {
+    return [[[self formatPopUpButton] selectedItem] representedObject];
 }
 
 @end
