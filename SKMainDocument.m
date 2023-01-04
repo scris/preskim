@@ -352,7 +352,7 @@ enum {
         exportAccessoryController = [[SKExportAccessoryController alloc] init];
         [exportAccessoryController setRepresentedObject:self];
         [exportAccessoryController setSavePanel:savePanel];
-        [exportAccessoryController view];
+        NSView *accessoryView = [exportAccessoryController view];
         
         NSPopUpButton *formatPopUpButton = [exportAccessoryController formatPopUpButton];
         NSDocumentController *controller = [NSDocumentController sharedDocumentController];
@@ -362,7 +362,7 @@ enum {
         }
         [formatPopUpButton setAction:@selector(changeExportType:)];
         [formatPopUpButton setTarget:self];
-        [savePanel setAccessoryView:[exportAccessoryController view]];
+        [savePanel setAccessoryView:accessoryView];
         
         NSString *lastExportedType = [[NSUserDefaults standardUserDefaults] stringForKey:SKLastExportedTypeKey];
         NSInteger lastExportedOption = [[NSUserDefaults standardUserDefaults] integerForKey:SKLastExportedOptionKey];
