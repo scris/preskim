@@ -331,7 +331,7 @@ enum {
 
 - (void)changeExportType:(id)sender {
     NSString *type = [exportAccessoryController selectedFileType];
-    [[exportAccessoryController savePanel] setAllowedFileTypes:[NSArray arrayWithObjects:[self fileNameExtensionForType:type saveOperation:NSSaveToOperation], nil]];
+    [[exportAccessoryController savePanel] setAllowedFileTypes:[NSArray arrayWithObjects:RUNNING_AFTER(10_15) ? type : [self fileNameExtensionForType:type saveOperation:NSSaveToOperation], nil]];
     if ([self canAttachNotesForType:type] == NO) {
         [exportAccessoryController setHasExportOptions:NO];
     } else {
