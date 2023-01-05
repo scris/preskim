@@ -366,12 +366,12 @@ enum {
         
         NSString *lastExportedType = [[NSUserDefaults standardUserDefaults] stringForKey:SKLastExportedTypeKey];
         NSInteger lastExportedOption = [[NSUserDefaults standardUserDefaults] integerForKey:SKLastExportedOptionKey];
-        if (lastExportedType == nil) {
-            lastExportedType = [self fileType];
+        NSInteger idx = lastExportedType ? [formatPopUpButton indexOfItemWithRepresentedObject:lastExportedType] : -1;
+        if (idx == -1) {
+            idx = [formatPopUpButton indexOfItemWithRepresentedObject:[self fileType]];
             lastExportedType = SKExportOptionDefault;
         }
         mdFlags.exportOption = lastExportedOption;
-        NSInteger idx = [formatPopUpButton indexOfItemWithRepresentedObject:lastExportedType];
         [formatPopUpButton selectItemAtIndex:MAX(idx, 0)];
         // update the last selected type and option view
         [self changeExportType:formatPopUpButton];
