@@ -369,9 +369,9 @@ enum {
         NSInteger idx = lastExportedType ? [formatPopUpButton indexOfItemWithRepresentedObject:lastExportedType] : -1;
         if (idx == -1) {
             idx = [formatPopUpButton indexOfItemWithRepresentedObject:[self fileType]];
-            lastExportedType = SKExportOptionDefault;
+            lastExportedOption = SKExportOptionDefault;
         }
-        mdFlags.exportOption = lastExportedOption;
+        [self setExportOption:lastExportedOption];
         [formatPopUpButton selectItemAtIndex:MAX(idx, 0)];
         // update the last selected type and option view
         [self changeExportType:formatPopUpButton];
