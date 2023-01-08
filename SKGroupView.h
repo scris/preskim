@@ -4,7 +4,7 @@
 //
 //  Created by Christiaan Hofman on 11/07/2022.
 /*
- This software is Copyright (c) 2022
+ This software is Copyright (c) 2022-2023
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
