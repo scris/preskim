@@ -3,7 +3,7 @@
 //  SkimTransitions
 //
 //  Created by Christiaan Hofman on 22/05/2019.
-//  Copyright © 2019-2022 Skim. All rights reserved.
+//  Copyright © 2019-2023 Skim. All rights reserved.
 //
 
 #import "SKTCubeTransition.h"
