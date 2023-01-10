@@ -7,7 +7,6 @@
 //
 
 #import "SKTPageTurnTransition.h"
-#import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
 
 #define kCIInputTopLeftKey @"inputTopLeft"

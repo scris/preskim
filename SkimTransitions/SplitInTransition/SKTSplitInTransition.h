@@ -6,7 +6,7 @@
 //  Copyright Christiaan Hofman 2019-2023. All rights reserved.
 
 #import <Foundation/Foundation.h>
-#import <QuartzCore/QuartzCore.h>
+#import <CoreImage/CoreImage.h>
 
 
 @interface SKTSplitInTransition : CIFilter
