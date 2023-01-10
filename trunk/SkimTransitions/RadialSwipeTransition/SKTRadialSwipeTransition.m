@@ -7,7 +7,6 @@
 //
 
 #import "SKTRadialSwipeTransition.h"
-#import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
 
 #define kCIInputRadius0Key @"inputRadius0"

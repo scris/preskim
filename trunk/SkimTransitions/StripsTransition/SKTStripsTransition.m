@@ -7,7 +7,6 @@
 //
 
 #import "SKTStripsTransition.h"
-#import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
 #import "SKTPluginLoader.h"
 

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <QuartzCore/QuartzCore.h>
+#import <CoreImage/CoreImage.h>
 
 @interface SKTSwapTransition : CIFilter {
     CIImage      *inputImage;

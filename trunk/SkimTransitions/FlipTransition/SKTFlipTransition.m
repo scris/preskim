@@ -7,7 +7,6 @@
 //
 
 #import "SKTFlipTransition.h"
-#import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
 
 #define kCIInputTopLeftKey @"inputTopLeft"

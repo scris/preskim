@@ -7,7 +7,6 @@
 //
 
 #import "SKTRevealTransition.h"
-#import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
 
 @implementation SKTRevealTransition

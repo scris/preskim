@@ -7,7 +7,6 @@
 //
 
 #import "SKTHoleTransition.h"
-#import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
 #import "SKTPluginLoader.h"
 

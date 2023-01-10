@@ -7,7 +7,6 @@
 //
 
 #import "SKTWarpFadeTransition.h"
-#import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
 
 @implementation SKTWarpFadeTransition
