@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		CE399C2327B32B6200B454EB /* SKTTransitions.cikernel in Resources */ = {isa = PBXBuildFile; fileRef = CE399C2227B32B6200B454EB /* SKTTransitions.cikernel */; };
+		CE9C4B90296D6AAA001D73C6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9C4B8F296D6AAA001D73C6 /* QuartzCore.framework */; platformFilter = maccatalyst; };
 		CEB35B4022A32FA70033E232 /* SKTRadialSwipeTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB35B3E22A32FA70033E232 /* SKTRadialSwipeTransition.m */; };
 		CEB35B4122A32FA70033E232 /* SKTRadialSwipeTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEB35B3F22A32FA70033E232 /* SKTRadialSwipeTransition.h */; };
 		CEBE8F0B22A19E850082E34C /* SKTPixelateTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = CEBE8F0922A19E850082E34C /* SKTPixelateTransition.h */; };
@@ -65,6 +66,7 @@
 
 /* Begin PBXFileReference section */
 		CE399C2227B32B6200B454EB /* SKTTransitions.cikernel */ = {isa = PBXFileReference; lastKnownFileType = text; path = SKTTransitions.cikernel; sourceTree = "<group>"; };
+		CE9C4B8F296D6AAA001D73C6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CEB35B3E22A32FA70033E232 /* SKTRadialSwipeTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTRadialSwipeTransition.m; sourceTree = "<group>"; };
 		CEB35B3F22A32FA70033E232 /* SKTRadialSwipeTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTRadialSwipeTransition.h; sourceTree = "<group>"; };
 		CEBE8F0922A19E850082E34C /* SKTPixelateTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTPixelateTransition.h; sourceTree = "<group>"; };
@@ -138,12 +140,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE9C4B90296D6AAA001D73C6 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE9C4B8E296D6AAA001D73C6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CE9C4B8F296D6AAA001D73C6 /* QuartzCore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CEB35B3D22A32FA70033E232 /* RadialSwipeTransition */ = {
 			isa = PBXGroup;
 			children = (
@@ -197,6 +208,7 @@
 				CEF89FCF22993B29007E4AB2 /* WarpSwitchTransition */,
 				CEF89FD422996716007E4AB2 /* ZoomTransition */,
 				CEDA027F2295829B00881DE1 /* Products */,
+				CE9C4B8E296D6AAA001D73C6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
