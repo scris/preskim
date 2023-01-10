@@ -37,7 +37,6 @@
  */
 
 #import "SKDownload.h"
-#import <ApplicationServices/ApplicationServices.h>
 #import "NSFileManager_SKExtensions.h"
 #import "SKDownloadController.h"
 #import "SKStringConstants.h"
