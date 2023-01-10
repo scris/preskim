@@ -9,7 +9,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="SKExportAccessoryController">
             <connections>
                 <outlet property="formatPopUpButton" destination="EWp-ej-3vC" id="xxG-aL-TWG"/>
-                <outlet property="labelField" destination="10" id="19"/>
                 <outlet property="view" destination="8" id="9"/>
             </connections>
         </customObject>

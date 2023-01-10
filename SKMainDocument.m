@@ -346,6 +346,10 @@ enum {
     }
 }
 
+- (BOOL)shouldRunSavePanelWithAccessoryView {
+    return [super shouldRunSavePanelWithAccessoryView] && mdFlags.exportUsingPanel == 0;
+}
+
 - (BOOL)prepareSavePanel:(NSSavePanel *)savePanel {
     BOOL success = [super prepareSavePanel:savePanel];
     if (success && mdFlags.exportUsingPanel) {
