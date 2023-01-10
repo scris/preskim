@@ -7,7 +7,6 @@
 //
 
 #import "SKTCubeTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 
 #define kCIInputTopLeftKey @"inputTopLeft"
 #define kCIInputTopRightKey @"inputTopRight"

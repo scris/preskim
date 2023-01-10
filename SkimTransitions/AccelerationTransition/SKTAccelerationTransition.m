@@ -7,7 +7,6 @@
 //
 
 #import "SKTAccelerationTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 
 #define kCIInputRectangleKey @"inputRectangle"
 #define kCIInputAmountKey @"inputAmount"

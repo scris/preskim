@@ -7,7 +7,6 @@
 //
 
 #import "SKTSplitOutTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 #import "SKTPluginLoader.h"
 
 @implementation SKTSplitOutTransition

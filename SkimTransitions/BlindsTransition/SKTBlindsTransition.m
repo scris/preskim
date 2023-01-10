@@ -7,7 +7,6 @@
 //
 
 #import "SKTBlindsTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 #import "SKTPluginLoader.h"
 
 @implementation SKTBlindsTransition

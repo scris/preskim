@@ -7,7 +7,6 @@
 //
 
 #import "SKTBoxInTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 #import "SKTPluginLoader.h"
 
 @implementation SKTBoxInTransition

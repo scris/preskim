@@ -7,7 +7,6 @@
 //
 
 #import "SKTSlideTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 
 #define kCIInputRectangleKey @"inputRectangle"
 

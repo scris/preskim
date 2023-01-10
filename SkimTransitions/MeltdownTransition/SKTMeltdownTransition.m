@@ -7,7 +7,6 @@
 //
 
 #import "SKTMeltdownTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 #import "SKTPluginLoader.h"
 
 #define kCIInputAmountKey @"inputAmount"

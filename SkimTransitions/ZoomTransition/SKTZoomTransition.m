@@ -7,7 +7,6 @@
 //
 
 #import "SKTZoomTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 
 @implementation SKTZoomTransition
 

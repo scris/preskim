@@ -7,8 +7,6 @@
 //
 
 #import "SKTPixelateTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
-
 
 @implementation SKTPixelateTransition
 

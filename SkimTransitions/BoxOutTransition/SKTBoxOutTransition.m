@@ -7,7 +7,6 @@
 //
 
 #import "SKTBoxOutTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 #import "SKTPluginLoader.h"
 
 @implementation SKTBoxOutTransition
