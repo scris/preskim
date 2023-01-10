@@ -6,6 +6,7 @@
 //  Copyright © 2019-2023 Skim. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import <CoreImage/CoreImage.h>
 
 @interface SKTPlugInLoader : NSObject <CIPlugInRegistration>
