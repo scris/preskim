@@ -37,7 +37,6 @@
  */
 
 #import "SKFDFParser.h"
-#import <ApplicationServices/ApplicationServices.h>
 #import "NSScanner_SKExtensions.h"
 #import "NSGeometry_SKExtensions.h"
 #import "SKStringConstants.h"
