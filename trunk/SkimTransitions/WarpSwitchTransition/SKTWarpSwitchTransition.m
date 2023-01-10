@@ -7,7 +7,6 @@
 //
 
 #import "SKTWarpSwitchTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 
 @implementation SKTWarpSwitchTransition
 

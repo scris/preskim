@@ -7,7 +7,6 @@
 //
 
 #import "SKTPinchTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 
 @implementation SKTPinchTransition
 

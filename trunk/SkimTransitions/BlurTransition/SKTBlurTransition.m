@@ -7,7 +7,6 @@
 //
 
 #import "SKTBlurTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 
 #define kCIInputRectangleKey @"inputRectangle"
 

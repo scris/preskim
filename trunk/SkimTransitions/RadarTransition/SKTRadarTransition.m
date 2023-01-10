@@ -7,7 +7,6 @@
 //
 
 #import "SKTRadarTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 #import "SKTPluginLoader.h"
 
 @implementation SKTRadarTransition

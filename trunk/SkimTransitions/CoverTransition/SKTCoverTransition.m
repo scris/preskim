@@ -7,7 +7,6 @@
 //
 
 #import "SKTCoverTransition.h"
-#import <ApplicationServices/ApplicationServices.h>
 
 @implementation SKTCoverTransition
 
