@@ -349,6 +349,11 @@ enum {
 - (BOOL)prepareSavePanel:(NSSavePanel *)savePanel {
     BOOL success = [super prepareSavePanel:savePanel];
     if (success && mdFlags.exportUsingPanel) {
+        NSString *lastExportedType = [[NSUserDefaults standardUserDefaults] stringForKey:SKLastExportedTypeKey];
+        NSInteger lastExportedOption = [[NSUserDefaults standardUserDefaults] integerForKey:SKLastExportedOptionKey];
+        
+        mdFlags.exportOption = lastExportedOption;
+        
         exportAccessoryController = [[SKExportAccessoryController alloc] init];
         [exportAccessoryController setRepresentedObject:self];
         [exportAccessoryController setSavePanel:savePanel];
@@ -364,14 +369,11 @@ enum {
         [formatPopUpButton setTarget:self];
         [savePanel setAccessoryView:accessoryView];
         
-        NSString *lastExportedType = [[NSUserDefaults standardUserDefaults] stringForKey:SKLastExportedTypeKey];
-        NSInteger lastExportedOption = [[NSUserDefaults standardUserDefaults] integerForKey:SKLastExportedOptionKey];
         NSInteger idx = lastExportedType ? [formatPopUpButton indexOfItemWithRepresentedObject:lastExportedType] : -1;
         if (idx == -1) {
             idx = [formatPopUpButton indexOfItemWithRepresentedObject:[self fileType]];
-            lastExportedOption = SKExportOptionDefault;
+            [self setExportOption:SKExportOptionDefault];
         }
-        [self setExportOption:lastExportedOption];
         [formatPopUpButton selectItemAtIndex:MAX(idx, 0)];
         // update the last selected type and option view
         [self changeExportType:formatPopUpButton];
