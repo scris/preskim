@@ -986,13 +986,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)document:(PDFDocument *)pdfDocument didFindWidgetsOnPage:(PDFPage *)page {
     NSArray *array = [page widgets];
-    if ([array count]) {
-        if ([widgets containsObject:[array firstObject]])
-            return;
-        if (widgets == nil)
-            widgets = [[NSMutableArray alloc] init];
-        if (widgetValues == nil)
-            widgetValues = [[NSMapTable strongToStrongObjectsMapTable] retain];
+    if ([array count] && widgets && [widgets containsObject:[array firstObject]] == NO) {
         [widgets addObjectsFromArray:array];
         [self startObservingNotes:array];
         for (PDFAnnotation *annotation in array) {
