@@ -84,10 +84,10 @@
 
 - (NSArray *)annotations {
     NSArray *annotations = [super annotations];
-    if (atomic_load(&didGetWidgets) == NO && [NSThread isMainThread]) {
+    if ([NSThread isMainThread] && didGetWidgets == NO) {
         PDFDocument *doc = [self document];
         if (doc && [doc isLocked] == NO) {
-            atomic_store(&didGetWidgets, YES);
+            didGetWidgets = YES;
             for (PDFAnnotation *annotation in annotations) {
                 if ([annotation isWidget]) {
                     if (widgets == nil)
