@@ -56,4 +56,5 @@
 @protocol SKPDFDocumentDelegate <PDFDocumentDelegate>
 @optional
 - (void)document:(PDFDocument *)document didUnlockWithPassword:(NSString *)password;
+- (void)document:(PDFDocument *)document didFindWidgetsOnPage:(PDFPage *)page;
 @end

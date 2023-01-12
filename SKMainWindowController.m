@@ -958,60 +958,77 @@ static char SKMainWindowContentLayoutObservationContext;
 #pragma mark Notes and Widgets
 
 - (void)makeWidgets {
-    widgets = NSCreateMapTable(NSIntegerMapKeyCallBacks, NSObjectMapValueCallBacks, 0);
+    [widgets release];
+    widgets = [[NSMutableArray alloc] init];
+    [widgetValues release];
+    widgetValues = [[NSMapTable strongToStrongObjectsMapTable] retain];
     PDFDocument *pdfDoc = [self pdfDocument];
     NSUInteger i, iMax = [pdfDoc pageCount];
     for (i = 0; i < iMax; i++) {
         PDFPage *page = [pdfDoc pageAtIndex:i];
         NSMutableArray *array = nil;
-        for (PDFAnnotation *annotation in [page annotations]) {
+        for (PDFAnnotation *annotation in [page widgets]) {
             if ([annotation isWidget]) {
                 if (array == nil)
                     array = [NSMutableArray array];
                 [array addObject:annotation];
+                id value = [annotation objectValue];
+                if (value)
+                    [widgetValues setObject:value forKey:annotation];
             }
         }
         if (array) {
-            NSMapInsert(widgets, (const void *)i, (const void *)array);
+            [widgets addObjectsFromArray:array];
             [self startObservingNotes:array];
         }
     }
-    [self registerWidgetValues];
 }
 
-- (void)clearWidgets {
-    if (widgets) {
-        NSMapEnumerator enumerator = NSEnumerateMapTable(widgets);
-        NSArray *array;
-        while (NSNextMapEnumeratorPair(&enumerator, NULL, (void **)&array))
-            [self stopObservingNotes:array];
-        NSEndMapTableEnumeration(&enumerator);
-        SKDESTROY(widgets);
+- (void)document:(PDFDocument *)pdfDocument didFindWidgetsOnPage:(PDFPage *)page {
+    NSArray *array = [page widgets];
+    if ([array count]) {
+        if ([widgets containsObject:[array firstObject]])
+            return;
+        if (widgets == nil)
+            widgets = [[NSMutableArray alloc] init];
+        if (widgetValues == nil)
+            widgetValues = [[NSMapTable strongToStrongObjectsMapTable] retain];
+        [widgets addObjectsFromArray:array];
+        [self startObservingNotes:array];
+        for (PDFAnnotation *annotation in array) {
+            id value = [annotation objectValue];
+            if (value)
+                [widgetValues setObject:value forKey:annotation];
+        }
     }
 }
 
+- (void)clearWidgets {
+    if ([widgets count])
+        [self stopObservingNotes:widgets];
+    SKDESTROY(widgets);
+    SKDESTROY(widgetValues);
+}
+
 - (void)setWidgetValues:(NSMapTable *)newWidgetValues {
-    if (newWidgetValues != widgetValues) {
-        if (widgetValues)
-            [[[self document] undoManager] registerUndoWithTarget:self selector:@selector(setWidgetValues:) object:widgetValues];
-        [widgetValues release];
+    if (widgetValues) {
+        [[[self document] undoManager] registerUndoWithTarget:self selector:@selector(setWidgetValues:) object:[[widgetValues copy] autorelease]];
+        for (PDFAnnotation *widget in newWidgetValues) {
+            [widgetValues setObject:[newWidgetValues objectForKey:widget] forKey:widget];
+        }
+    } else {
         widgetValues = [newWidgetValues retain];
     }
 }
 
 - (void)registerWidgetValues {
-    NSMapTable *values = [[[NSMapTable alloc] initWithKeyOptions:NSMapTableStrongMemory | NSMapTableObjectPointerPersonality valueOptions:NSMapTableStrongMemory | NSMapTableObjectPointerPersonality capacity:0] autorelease];
+    NSMapTable *values = [NSMapTable strongToStrongObjectsMapTable];
     if (widgets) {
-        NSMapEnumerator enumerator = NSEnumerateMapTable(widgets);
-        NSArray *array;
-        while (NSNextMapEnumeratorPair(&enumerator, NULL, (void **)&array)) {
-            for (PDFAnnotation *widget in array) {
-                id value = [widget objectValue];
-                if (value)
-                    [values setObject:value forKey:widget];
-            }
+        for (PDFAnnotation *widget in widgets) {
+            id value = [widget objectValue];
+            if (value)
+                [values setObject:value forKey:widget];
         }
-        NSEndMapTableEnumeration(&enumerator);
     }
     [self setWidgetValues:values];
 }
@@ -1022,7 +1039,13 @@ static char SKMainWindowContentLayoutObservationContext;
         NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
         SKNPDFWidgetType widgetType = [[dict objectForKey:SKNPDFAnnotationWidgetTypeKey] integerValue];
         NSString *fieldName = [dict objectForKey:SKNPDFAnnotationFieldNameKey] ?: @"";
-        for (PDFAnnotation *widget in (NSArray *)NSMapGet(widgets, (const void *)pageIndex)) {
+        PDFPage *page = [[self pdfDocument] pageAtIndex:pageIndex];
+        NSArray *pageWidgets = [page widgets];
+        if (pageWidgets == nil) {
+            [page annotations];
+            pageWidgets = [page widgets];
+        }
+        for (PDFAnnotation *widget in pageWidgets) {
             if ([widget widgetType] == widgetType &&
                 [([widget fieldName] ?: @"") isEqualToString:fieldName] &&
                 NSEqualRects(NSIntegralRect([widget bounds]), bounds)) {
@@ -1040,17 +1063,12 @@ static char SKMainWindowContentLayoutObservationContext;
         return placeholderWidgetProperties;
     NSMutableArray *properties = [NSMutableArray array];
     if (widgets) {
-        NSMapEnumerator enumerator = NSEnumerateMapTable(widgets);
-        NSArray *array;
-        while (NSNextMapEnumeratorPair(&enumerator, NULL, (void **)&array)) {
-            for (PDFAnnotation *widget in array) {
-                id value = [widget objectValue];
-                id origValue = [widgetValues objectForKey:widget];
-                if ([(value ?: @"") isEqual:(origValue ?: @"")] == NO)
-                    [properties addObject:[widget SkimNoteProperties]];
-            }
+        for (PDFAnnotation *widget in widgets) {
+            id value = [widget objectValue];
+            id origValue = [widgetValues objectForKey:widget];
+            if ([(value ?: @"") isEqual:(origValue ?: @"")] == NO)
+                [properties addObject:[widget SkimNoteProperties]];
         }
-        NSEndMapTableEnumeration(&enumerator);
     }
     return properties;
 }
@@ -1177,7 +1195,6 @@ static char SKMainWindowContentLayoutObservationContext;
             [self removeAllObjectsFromNotes];
             [self setThumbnails:nil];
             [self clearWidgets];
-            SKDESTROY(widgetValues);
             SKDESTROY(placeholderPdfDocument);
             SKDESTROY(placeholderWidgetProperties);
 

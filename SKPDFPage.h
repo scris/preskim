@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
+#import <stdatomic.h>
 
 
 @interface SKPDFPage : PDFPage {
@@ -45,5 +46,7 @@
     NSInteger intrinsicRotation;
     NSInteger characterDirectionAngle;
     NSInteger lineDirectionAngle;
+    _Atomic(BOOL) didGetWidgets;
+    NSMutableArray *widgets;
 }
 @end

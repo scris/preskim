@@ -110,7 +110,7 @@ enum {
     NSMutableArray                      *notes;
     NSMapTable                          *rowHeights;
     
-    NSMapTable                          *widgets;
+    NSMutableArray                      *widgets;
     NSMapTable                          *widgetValues;
     
     NSMutableArray                      *snapshots;

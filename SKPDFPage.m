@@ -42,6 +42,8 @@
 #import "NSGeometry_SKExtensions.h"
 #import "SKPDFView.h"
 #import "PDFPage_SKExtensions.h"
+#import "PDFAnnotation_SKExtensions.h"
+#import "SKPDFDocument.h"
 
 
 @interface PDFPage (SKPrivateDeclarations)
@@ -49,6 +51,11 @@
 @end
 
 @implementation SKPDFPage
+
+- (void)dealloc {
+    SKDESTROY(widgets);
+    [super dealloc];
+}
 
 // On Sierra the PDFView is set on the PDFPage, but we don't want the secondary or snapshot PDFView to steal us away
 - (void)setView:(PDFView *)view {
@@ -69,6 +76,30 @@
     if (box == kPDFDisplayBoxCropBox)
         foregroundBox = NSZeroRect;
     [super setBounds:bounds forBox:box];
+}
+
+- (NSArray *)widgets {
+    return widgets;
+}
+
+- (NSArray *)annotations {
+    NSArray *annotations = [super annotations];
+    if (atomic_load(&didGetWidgets) == NO && [NSThread isMainThread]) {
+        PDFDocument *doc = [self document];
+        if (doc && [doc isLocked] == NO) {
+            atomic_store(&didGetWidgets, YES);
+            for (PDFAnnotation *annotation in annotations) {
+                if ([annotation isWidget]) {
+                    if (widgets == nil)
+                        widgets = [[NSMutableArray alloc] init];
+                    [widgets addObject:annotation];
+                }
+            }
+            if (widgets && [[doc delegate] respondsToSelector:@selector(document:didFindWidgetsOnPage:)])
+                [[(SKPDFDocument *)doc delegate] document:doc didFindWidgetsOnPage:self];
+        }
+    }
+    return annotations;
 }
 
 - (void)addAnnotation:(PDFAnnotation *)annotation {
