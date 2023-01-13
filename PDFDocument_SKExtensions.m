@@ -62,10 +62,10 @@
     if (start < end) {
         NSUInteger i;
         end = MIN(end, start + len);
-        for (i = start; i < end; i++)
-            stackbuf[i] = [self pageAtIndex:i];
         state->itemsPtr = stackbuf;
-        state->state = i;
+        state->state = end;
+        for (i = 0; i < end - start; i++)
+            stackbuf[i] = [self pageAtIndex:i + start];
         return end - start;
     } else {
         return 0;
