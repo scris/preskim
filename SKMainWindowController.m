@@ -957,6 +957,16 @@ static char SKMainWindowContentLayoutObservationContext;
 
 #pragma mark Notes and Widgets
 
+- (void)registerWidgets:(NSArray *)array {
+    [widgets addObjectsFromArray:array];
+    [self startObservingNotes:array];
+    for (PDFAnnotation *annotation in array) {
+        id value = [annotation objectValue];
+        if (value)
+            [widgetValues setObject:value forKey:annotation];
+    }
+}
+
 - (void)makeWidgets {
     [widgets release];
     widgets = [[NSMutableArray alloc] init];
@@ -967,28 +977,14 @@ static char SKMainWindowContentLayoutObservationContext;
     NSUInteger i, iMax = [pdfDoc pageCount];
     for (i = 0; i < iMax; i++)
         [array addObjectsFromArray:[[pdfDoc pageAtIndex:i] widgets]];
-    if ([array count]) {
-        [widgets addObjectsFromArray:array];
-        [self startObservingNotes:array];
-        for (PDFAnnotation *annotation in array) {
-            id value = [annotation objectValue];
-            if (value)
-                [widgetValues setObject:value forKey:annotation];
-        }
-    }
+    if ([array count])
+        [self registerWidgets:array];
 }
 
 - (void)document:(PDFDocument *)pdfDocument didFindWidgetsOnPage:(PDFPage *)page {
     NSArray *array = [page widgets];
-    if ([array count] && widgets && [widgets containsObject:[array firstObject]] == NO) {
-        [widgets addObjectsFromArray:array];
-        [self startObservingNotes:array];
-        for (PDFAnnotation *annotation in array) {
-            id value = [annotation objectValue];
-            if (value)
-                [widgetValues setObject:value forKey:annotation];
-        }
-    }
+    if ([array count] && widgets && [widgets containsObject:[array firstObject]] == NO)
+        [self registerWidgets:array];
 }
 
 - (void)clearWidgets {
