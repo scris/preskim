@@ -962,24 +962,18 @@ static char SKMainWindowContentLayoutObservationContext;
     widgets = [[NSMutableArray alloc] init];
     [widgetValues release];
     widgetValues = [[NSMapTable strongToStrongObjectsMapTable] retain];
+    NSMutableArray *array = [NSMutableArray array];
     PDFDocument *pdfDoc = [self pdfDocument];
     NSUInteger i, iMax = [pdfDoc pageCount];
-    for (i = 0; i < iMax; i++) {
-        PDFPage *page = [pdfDoc pageAtIndex:i];
-        NSMutableArray *array = nil;
-        for (PDFAnnotation *annotation in [page widgets]) {
-            if ([annotation isWidget]) {
-                if (array == nil)
-                    array = [NSMutableArray array];
-                [array addObject:annotation];
-                id value = [annotation objectValue];
-                if (value)
-                    [widgetValues setObject:value forKey:annotation];
-            }
-        }
-        if (array) {
-            [widgets addObjectsFromArray:array];
-            [self startObservingNotes:array];
+    for (i = 0; i < iMax; i++)
+        [array addObjectsFromArray:[[pdfDoc pageAtIndex:i] widgets]];
+    if ([array count]) {
+        [widgets addObjectsFromArray:array];
+        [self startObservingNotes:array];
+        for (PDFAnnotation *annotation in array) {
+            id value = [annotation objectValue];
+            if (value)
+                [widgetValues setObject:value forKey:annotation];
         }
     }
 }
