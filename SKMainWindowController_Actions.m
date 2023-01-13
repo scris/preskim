@@ -744,11 +744,8 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
 - (IBAction)resetCrop:(id)sender {
     NSPointerArray *rectArray = [NSPointerArray rectPointerArray];
     BOOL hasChanges = NO;
-    PDFDocument *pdfDoc = [pdfView document];
-    NSInteger i, iMax = [[pdfView document] pageCount];
     
-    for (i = 0; i < iMax; i++) {
-        PDFPage *page = [pdfDoc pageAtIndex:i] ;
+    for (PDFPage *page in [pdfView document]) {
         NSRect rect = NSRectFromCGRect(CGPDFPageGetBoxRect([page pageRef], kCGPDFCropBox));
         if (hasChanges == NO && NSEqualRects(rect, [page boundsForBox:kPDFDisplayBoxCropBox]) == NO)
             hasChanges = YES;

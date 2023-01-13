@@ -1121,14 +1121,11 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 - (void)convertNotesUsingPDFDocument:(PDFDocument *)pdfDocWithoutNotes {
     [[self mainWindowController] beginProgressSheetWithMessage:[NSLocalizedString(@"Converting notes", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:0];
     
-    PDFDocument *pdfDoc = [self pdfDocument];
-    NSInteger i, count = [pdfDoc pageCount];
     NSMapTable *offsets = nil;
     NSMutableArray *annotations = nil;
     NSMutableArray *noteDicts = nil;
 
-    for (i = 0; i < count; i++) {
-        PDFPage *page = [pdfDoc pageAtIndex:i];
+    for (PDFPage *page in [self pdfDocument]) {
         NSPoint pageOrigin = [page boundsForBox:kPDFDisplayBoxMediaBox].origin;
         
         for (PDFAnnotation *annotation in [[[page annotations] copy] autorelease]) {
@@ -1164,10 +1161,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         
         dispatch_async(queue, ^{
             
-            NSInteger j, jMax = [pdfDocWithoutNotes pageCount];
-            
-            for (j = 0; j < jMax; j++) {
-                PDFPage *page = [pdfDocWithoutNotes pageAtIndex:j];
+            for (PDFPage *page in pdfDocWithoutNotes) {
                 NSArray *notes = [[page annotations] copy];
                 
                 for (PDFAnnotation *annotation in notes) {
@@ -1254,10 +1248,8 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 }
 
 - (BOOL)hasConvertibleAnnotations {
-    PDFDocument *pdfDoc = [self pdfDocument];
-    NSInteger i, count = [pdfDoc pageCount];
-    for (i = 0; i < count; i++) {
-        for (PDFAnnotation *annotation in [[pdfDoc pageAtIndex:i] annotations]) {
+    for (PDFPage *page in [self pdfDocument]) {
+        for (PDFAnnotation *annotation in [page annotations]) {
             if ([annotation isSkimNote] == NO && [annotation isConvertibleAnnotation])
                 return YES;
         }

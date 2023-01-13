@@ -54,6 +54,24 @@
 
 @implementation PDFDocument (SKExtensions)
 
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len {
+    NSUInteger start = state->state;
+    NSUInteger end = [self pageCount];
+    if (start == 0)
+        state->mutationsPtr = &state->extra[0];
+    if (start < end) {
+        NSUInteger i;
+        end = MIN(end, start + len);
+        for (i = start; i < end; i++)
+            stackbuf[i] = [self pageAtIndex:i];
+        state->itemsPtr = stackbuf;
+        state->state = i;
+        return end - start;
+    } else {
+        return 0;
+    }
+}
+
 - (NSArray *)pageLabels {
     NSUInteger pageCount = [self pageCount];
     NSMutableArray *pageLabels = [NSMutableArray array];
