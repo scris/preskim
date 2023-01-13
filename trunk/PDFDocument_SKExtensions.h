@@ -44,7 +44,7 @@ typedef struct _SKLanguageDirectionAngles {
     NSInteger lineDirection;
 } SKLanguageDirectionAngles;
 
-@interface PDFDocument (SKExtensions)
+@interface PDFDocument (SKExtensions) <NSFastEnumeration>
 - (NSArray *)pageLabels;
 - (NSArray *)fileIDStrings;
 - (NSDictionary *)initialSettings;

@@ -579,10 +579,7 @@ static char SKMainWindowContentLayoutObservationContext;
 - (NSArray *)changedCropBoxes {
     NSMutableArray *cropBoxes = [NSMutableArray array];
     BOOL hasCrop = NO;
-    PDFDocument *pdfDoc = [self pdfDocument];
-    NSUInteger i, iMax = [pdfDoc pageCount];
-    for (i = 0; i < iMax; i++) {
-        PDFPage *page = [pdfDoc pageAtIndex:i];
+    for (PDFPage *page in [self pdfDocument]) {
         NSRect bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
         NSRect origBounds = NSRectFromCGRect(CGPDFPageGetBoxRect([page pageRef], kCGPDFCropBox));
         if (NSEqualRects(bounds, origBounds)) {
@@ -940,10 +937,8 @@ static char SKMainWindowContentLayoutObservationContext;
     for (NSString *label in pageLabels)
         [[thumbnailEnum nextObject] setLabel:label];
     
-    PDFDocument *pdfDoc = [pdfView document];
-    NSUInteger i, iMax = [pdfDoc pageCount];
-    for (i = 0; i < iMax; i++) {
-        PDFPage *page = [pdfDoc pageAtIndex:i];
+    PDFDocument *pdfDoc = [self pdfDocument];
+    for (PDFPage *page in pdfDoc) {
         [page willChangeValueForKey:@"displayLabel"];
         [page didChangeValueForKey:@"displayLabel"];
     }
