@@ -709,7 +709,7 @@ static SKDownloadController *sharedDownloadController = nil;
     else
         return nil;
     if (downloadsForTasks == nil)
-        downloadsForTasks = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
+        downloadsForTasks = [[NSMapTable strongToStrongObjectsMapTable] retain];
     [downloadsForTasks setObject:download forKey:task];
     [task resume];
     return task;

@@ -997,12 +997,10 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)registerWidgetValues {
     NSMapTable *values = [NSMapTable strongToStrongObjectsMapTable];
-    if (widgets) {
-        for (PDFAnnotation *widget in widgets) {
-            id value = [widget objectValue];
-            if (value)
-                [values setObject:value forKey:widget];
-        }
+    for (PDFAnnotation *widget in widgets) {
+        id value = [widget objectValue];
+        if (value)
+            [values setObject:value forKey:widget];
     }
     [self setWidgetValues:values];
 }
@@ -2642,7 +2640,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             
             if (undoGroupOldPropertiesPerNote == nil) {
                 // We haven't recorded changes for any notes at all since the last undo manager checkpoint. Get ready to start collecting them. We don't want to copy the PDFAnnotations though.
-                undoGroupOldPropertiesPerNote = [[NSMapTable alloc] initWithKeyOptions:NSMapTableWeakMemory | NSMapTableObjectPointerPersonality valueOptions:NSMapTableStrongMemory | NSMapTableObjectPointerPersonality capacity:0];
+                undoGroupOldPropertiesPerNote = [[NSMapTable weakToStrongObjectsMapTable] retain];
                 // Register an undo operation for any note property changes that are going to be coalesced between now and the next invocation of -observeUndoManagerCheckpoint:.
                 [undoManager registerUndoWithTarget:self selector:@selector(setNoteProperties:) object:undoGroupOldPropertiesPerNote];
                 // Don't set the undo action name during undoing and redoing

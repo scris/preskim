@@ -122,7 +122,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
 
 + (void)load {
     original_dealloc = (void (*)(id, SEL))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(dealloc), @selector(replacement_dealloc));
-    extraIvarsTable = [[NSMapTable alloc] initWithKeyOptions:NSMapTableWeakMemory | NSMapTableObjectPointerPersonality valueOptions:NSMapTableStrongMemory | NSMapTableObjectPointerPersonality capacity:0];
+    extraIvarsTable = [[NSMapTable weakToStrongObjectsMapTable] retain];
 }
 
 + (NSColor *)defaultSkimNoteColorForMarkupType:(NSInteger)markupType
