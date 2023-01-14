@@ -967,9 +967,8 @@ static char SKMainWindowContentLayoutObservationContext;
     widgets = [[NSMutableArray alloc] init];
     [widgetValues release];
     widgetValues = [[NSMapTable strongToStrongObjectsMapTable] retain];
-    NSMutableArray *array = [NSMutableArray array];
-    [widgets addObjectsFromArray:[[self pdfDocument] widgets]];
-    if ([widgets count])
+    NSArray *array = [[self pdfDocument] widgets];
+    if ([array count])
         [self registerWidgets:array];
 }
 
