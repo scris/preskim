@@ -72,7 +72,7 @@
         NSUInteger frontIndex = NSNotFound, lowestOrder = NSNotFound, lowestIndex = NSNotFound;
         NSWindow *frontWindow = nil;
         NSWindow *window = nil;
-        NSPointerArray *tabbedWindows = [[NSPointerArray alloc] initWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
+        NSPointerArray *tabbedWindows = [NSPointerArray strongObjectsPointerArray];
         
         for (NSString *orderString in orderStrings) {
             NSUInteger order = (NSUInteger)[orderString integerValue];
@@ -109,8 +109,6 @@
             if (RUNNING_AFTER(10_12))
                 [frontWindow setValue:frontWindow forKeyPath:@"tabGroup.selectedWindow"];
         }
-        
-        [tabbedWindows release];
     }
 }
 
