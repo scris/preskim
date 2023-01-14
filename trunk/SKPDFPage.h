@@ -46,6 +46,5 @@
     NSInteger characterDirectionAngle;
     NSInteger lineDirectionAngle;
     BOOL didGetWidgets;
-    NSMutableArray *widgets;
 }
 @end

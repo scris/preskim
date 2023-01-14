@@ -52,11 +52,6 @@
 
 @implementation SKPDFPage
 
-- (void)dealloc {
-    SKDESTROY(widgets);
-    [super dealloc];
-}
-
 // On Sierra the PDFView is set on the PDFPage, but we don't want the secondary or snapshot PDFView to steal us away
 - (void)setView:(PDFView *)view {
     if ([PDFPage instancesRespondToSelector:_cmd] && (view == nil || [view isKindOfClass:[SKPDFView class]]))
@@ -78,16 +73,13 @@
     [super setBounds:bounds forBox:box];
 }
 
-- (NSArray *)widgets {
-    return widgets;
-}
-
 - (NSArray *)annotations {
     NSArray *annotations = [super annotations];
     if ([NSThread isMainThread] && didGetWidgets == NO) {
         PDFDocument *doc = [self document];
-        if (doc && [doc isLocked] == NO) {
+        if (doc && [doc isLocked] == NO && [doc respondsToSelector:@selector(foundWidgets:onPage:)]) {
             didGetWidgets = YES;
+            NSMutableArray *widgets = nil;
             for (PDFAnnotation *annotation in annotations) {
                 if ([annotation isWidget]) {
                     if (widgets == nil)
@@ -95,8 +87,8 @@
                     [widgets addObject:annotation];
                 }
             }
-            if (widgets && [[doc delegate] respondsToSelector:@selector(document:didFindWidgetsOnPage:)])
-                [[(SKPDFDocument *)doc delegate] document:doc didFindWidgetsOnPage:self];
+            if (widgets)
+                [(SKPDFDocument *)doc foundWidgets:widgets onPage:self];
         }
     }
     return annotations;
