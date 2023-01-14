@@ -544,10 +544,6 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
     return NO;
 }
 
-- (NSArray *)widgets {
-    return nil;
-}
-
 - (NSAffineTransform *)affineTransformForBox:(PDFDisplayBox)box {
     NSRect bounds = [self boundsForBox:box];
     NSAffineTransform *transform = [NSAffineTransform transform];

@@ -51,11 +51,12 @@
 
 @implementation SKPDFDocument
 
-@synthesize containingDocument;
+@synthesize containingDocument, widgets;
 
 - (void)dealloc {
     containingDocument = nil;
     SKZONEDESTROY(languageDirectionAngles);
+    SKDESTROY(widgets);
     [super dealloc];
 }
 
@@ -102,6 +103,16 @@
     selection = [super findString:string fromSelection:selection withOptions:options];
     [self setDelegate:delegate];
     return selection;
+}
+
+- (void)foundWidgets:(NSArray *)newWidgets onPage:(PDFPage *)page {
+    if ([newWidgets count]) {
+        if (widgets == nil)
+            widgets = [[NSMutableArray alloc] init];
+        [widgets addObjectsFromArray:newWidgets];
+        if ([[self delegate] respondsToSelector:@selector(document:didFindWidgets:onPage:)])
+            [[self delegate] document:self didFindWidgets:newWidgets onPage:page];
+    }
 }
 
 #if SDK_BEFORE(10_13)

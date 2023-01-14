@@ -968,18 +968,14 @@ static char SKMainWindowContentLayoutObservationContext;
     [widgetValues release];
     widgetValues = [[NSMapTable strongToStrongObjectsMapTable] retain];
     NSMutableArray *array = [NSMutableArray array];
-    PDFDocument *pdfDoc = [self pdfDocument];
-    NSUInteger i, iMax = [pdfDoc pageCount];
-    for (i = 0; i < iMax; i++)
-        [array addObjectsFromArray:[[pdfDoc pageAtIndex:i] widgets]];
-    if ([array count])
+    [widgets addObjectsFromArray:[[self pdfDocument] widgets]];
+    if ([widgets count])
         [self registerWidgets:array];
 }
 
-- (void)document:(PDFDocument *)pdfDocument didFindWidgetsOnPage:(PDFPage *)page {
-    NSArray *array = [page widgets];
-    if ([array count] && widgets && [widgets containsObject:[array firstObject]] == NO)
-        [self registerWidgets:array];
+- (void)document:(PDFDocument *)document didFindWidgets:(NSArray *)newWidgets onPage:(PDFPage *)page {
+    if ([newWidgets count] && widgets && [widgets containsObject:[newWidgets firstObject]] == NO)
+        [self registerWidgets:newWidgets];
 }
 
 - (void)clearWidgets {
@@ -1018,19 +1014,14 @@ static char SKMainWindowContentLayoutObservationContext;
         NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
         SKNPDFWidgetType widgetType = [[dict objectForKey:SKNPDFAnnotationWidgetTypeKey] integerValue];
         NSString *fieldName = [dict objectForKey:SKNPDFAnnotationFieldNameKey] ?: @"";
-        PDFPage *page = [[self pdfDocument] pageAtIndex:pageIndex];
-        NSArray *pageWidgets = [page widgets];
-        if (pageWidgets == nil) {
-            [page annotations];
-            pageWidgets = [page widgets];
-        }
-        for (PDFAnnotation *widget in pageWidgets) {
-            if ([widget widgetType] == widgetType &&
-                [([widget fieldName] ?: @"") isEqualToString:fieldName] &&
-                NSEqualRects(NSIntegralRect([widget bounds]), bounds)) {
+        for (PDFAnnotation *annotation in [[[self pdfDocument] pageAtIndex:pageIndex] annotations]) {
+            if ([annotation isWidget] &&
+                [annotation widgetType] == widgetType &&
+                [([annotation fieldName] ?: @"") isEqualToString:fieldName] &&
+                NSEqualRects(NSIntegralRect([annotation bounds]), bounds)) {
                 id value = [dict objectForKey:widgetType == kSKNPDFWidgetTypeButton ? SKNPDFAnnotationStateKey : SKNPDFAnnotationStringValueKey];
-                if ([([widget objectValue] ?: @"") isEqual:(value ?: @"")] == NO)
-                    [(PDFAnnotationTextWidget *)widget setObjectValue:value];
+                if ([([annotation objectValue] ?: @"") isEqual:(value ?: @"")] == NO)
+                    [annotation setObjectValue:value];
                 break;
             }
         }
