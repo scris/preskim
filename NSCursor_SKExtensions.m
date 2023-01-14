@@ -225,7 +225,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)laserPointerCursorWithColor:(NSInteger)color {
     static NSPointerArray *laserPointerCursors = nil;
     if (laserPointerCursors == nil) {
-        laserPointerCursors = [[NSPointerArray alloc] initWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
+        laserPointerCursors = [[NSPointerArray strongObjectsPointerArray] retain];
         [laserPointerCursors setCount:7];
     }
     NSCursor *cursor = (id)[laserPointerCursors pointerAtIndex:color % 7];
