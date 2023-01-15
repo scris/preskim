@@ -489,6 +489,8 @@
     [printInfo release];
     [[printOperation printPanel] setOptions:NSPrintPanelShowsCopies | NSPrintPanelShowsPageRange | NSPrintPanelShowsPaperSize | NSPrintPanelShowsOrientation | NSPrintPanelShowsScaling | NSPrintPanelShowsPreview];
     
+    [printOperation setJobTitle:[self displayName]];
+    
     if (printOperation == nil && outError)
         *outError = [NSError printDocumentErrorWithLocalizedDescription:nil];
     
