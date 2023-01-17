@@ -2219,9 +2219,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				CEDA05792295BE8B00881DE1 /* PBXTargetDependency */,
 				CE7DC75B0E0928D700D6D76D /* PBXTargetDependency */,
 				CE2BD8610BD4144000A5F4DB /* PBXTargetDependency */,
+				CEDA05792295BE8B00881DE1 /* PBXTargetDependency */,
 				CEFD68710C01D3E50027B933 /* PBXTargetDependency */,
 				CE816A030D70F8F7008D807D /* PBXTargetDependency */,
 				CE7DC7E20E093C1A00D6D76D /* PBXTargetDependency */,
