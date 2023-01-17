@@ -31,12 +31,9 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <AppKit/AppKit.h>
-#include <CoreFoundation/CoreFoundation.h>
-#include <CoreServices/CoreServices.h>
-#include <QuickLook/QuickLook.h>
 #import <Foundation/Foundation.h>
-#import <QuartzCore/QuartzCore.h>
+#import <AppKit/AppKit.h>
+#include <QuickLook/QuickLook.h>
 #import "SKQLConverter.h"
 
 // Same size as [[NSPrintInfo sharedPrintInfo] paperSize] on my system
