@@ -52,6 +52,6 @@ typedef struct _SKLanguageDirectionAngles {
 - (BOOL)allowsNotes;
 - (BOOL)realAllowsCommenting;
 - (NSDocument *)containingDocument;
-- (NSArray *)widgets;
+- (NSArray *)detectedWidgets;
 - (void)setContainingDocument:(NSDocument *)document;
 @end

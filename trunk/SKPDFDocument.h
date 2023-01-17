@@ -45,13 +45,13 @@
 @interface SKPDFDocument : PDFDocument {
     SKLanguageDirectionAngles *languageDirectionAngles;
     NSDocument *containingDocument;
-    NSMutableArray *widgets;
+    NSMutableArray *detectedWidgets;
 }
 @property (nonatomic, assign) NSDocument *containingDocument;
-@property (nonatomic, readonly) NSArray *widgets;
+@property (nonatomic, readonly) NSArray *detectedWidgets;
 - (id <SKPDFDocumentDelegate>)delegate;
 - (void)setDelegate:(id <SKPDFDocumentDelegate>)newDelegate;
-- (void)foundWidgets:(NSArray *)newWidgets onPage:(PDFPage *)page;
+- (void)detectedWidgets:(NSArray *)newWidgets onPage:(PDFPage *)page;
 @end
 
 #pragma mark -
@@ -59,5 +59,5 @@
 @protocol SKPDFDocumentDelegate <PDFDocumentDelegate>
 @optional
 - (void)document:(PDFDocument *)document didUnlockWithPassword:(NSString *)password;
-- (void)document:(PDFDocument *)document didFindWidgets:(NSArray *)widgets onPage:(PDFPage *)page;
+- (void)document:(PDFDocument *)document didDetectWidgets:(NSArray *)widgets onPage:(PDFPage *)page;
 @end
