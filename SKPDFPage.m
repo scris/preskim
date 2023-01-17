@@ -77,7 +77,7 @@
     NSArray *annotations = [super annotations];
     if ([NSThread isMainThread] && didGetWidgets == NO) {
         PDFDocument *doc = [self document];
-        if (doc && [doc isLocked] == NO && [doc respondsToSelector:@selector(foundWidgets:onPage:)]) {
+        if (doc && [doc isLocked] == NO && [doc respondsToSelector:@selector(detectedWidgets:onPage:)]) {
             didGetWidgets = YES;
             NSMutableArray *widgets = nil;
             for (PDFAnnotation *annotation in annotations) {
@@ -88,7 +88,7 @@
                 }
             }
             if (widgets)
-                [(SKPDFDocument *)doc foundWidgets:widgets onPage:self];
+                [(SKPDFDocument *)doc detectedWidgets:widgets onPage:self];
         }
     }
     return annotations;

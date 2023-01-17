@@ -296,6 +296,6 @@ static inline NSInteger angleForDirection(NSLocaleLanguageDirection direction, B
 
 - (void)setContainingDocument:(NSDocument *)document  {}
 
-- (NSArray *)widgets { return nil; }
+- (NSArray *)detectedWidgets { return nil; }
 
 @end

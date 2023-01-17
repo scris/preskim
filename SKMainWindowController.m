@@ -967,12 +967,12 @@ static char SKMainWindowContentLayoutObservationContext;
     widgets = [[NSMutableArray alloc] init];
     [widgetValues release];
     widgetValues = [[NSMapTable strongToStrongObjectsMapTable] retain];
-    NSArray *array = [[self pdfDocument] widgets];
+    NSArray *array = [[self pdfDocument] detectedWidgets];
     if ([array count])
         [self registerWidgets:array];
 }
 
-- (void)document:(PDFDocument *)document didFindWidgets:(NSArray *)newWidgets onPage:(PDFPage *)page {
+- (void)document:(PDFDocument *)document didDetectWidgets:(NSArray *)newWidgets onPage:(PDFPage *)page {
     if ([newWidgets count] && widgets && [widgets containsObject:[newWidgets firstObject]] == NO)
         [self registerWidgets:newWidgets];
 }
