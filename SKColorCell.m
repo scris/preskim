@@ -72,7 +72,7 @@
 }
 
 - (void)setObjectValue:(id)anObject {
-    if ([anObject isKindOfClass:[NSColor class]]) {
+    if ([anObject isKindOfClass:[NSColor class]] || anObject == nil) {
         if (color != anObject) {
             [color release];
             color = [anObject retain];
@@ -96,7 +96,7 @@
         rect.origin.y += [controlView isFlipped] ? floor(offset) - 1.0 : ceil(offset) + 1.0;
         rect.size.height = height;
         [safeColor drawSwatchInRoundedRect:rect];
-    } else if ([safeColor alphaComponent] > 0.0) {
+    } else if (safeColor && [safeColor alphaComponent] > 0.0) {
         [safeColor drawSwatchInRect:cellFrame];
     } else {
         [[NSColor whiteColor] setFill];
