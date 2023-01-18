@@ -103,12 +103,13 @@
                                                             <rect key="frame" x="0.0" y="-3" width="21" height="23"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="sVs-LE-rAz" customClass="SKAnnotationTypeImageCell"/>
                                                             <connections>
-                                                                <binding destination="E1b-NS-HOF" name="value" keyPath="objectValue.type" id="kNb-1A-kUk">
+                                                                <binding destination="E1b-NS-HOF" name="toolTip" keyPath="objectValue.type.typeName" id="zRB-h8-XKB"/>
+                                                                <binding destination="E1b-NS-HOF" name="value" keyPath="objectValue.type" id="Nm4-sv-rEC">
                                                                     <dictionary key="options">
+                                                                        <bool key="NSConditionallySetsEnabled" value="NO"/>
                                                                         <string key="NSValueTransformerName">SKTypeImage</string>
                                                                     </dictionary>
                                                                 </binding>
-                                                                <binding destination="E1b-NS-HOF" name="toolTip" keyPath="objectValue.type.typeName" id="zRB-h8-XKB"/>
                                                             </connections>
                                                         </imageView>
                                                     </subviews>
@@ -141,7 +142,11 @@
                                                             <rect key="frame" x="0.0" y="-3" width="16" height="23"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="2Ol-23-qRN" customClass="SKColorCell"/>
                                                             <connections>
-                                                                <binding destination="iKT-7I-wCa" name="value" keyPath="objectValue.color" id="ihI-HE-FXc"/>
+                                                                <binding destination="iKT-7I-wCa" name="value" keyPath="objectValue.color" id="xIN-23-0OA">
+                                                                    <dictionary key="options">
+                                                                        <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                                                    </dictionary>
+                                                                </binding>
                                                             </connections>
                                                         </imageView>
                                                     </subviews>
