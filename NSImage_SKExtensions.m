@@ -53,6 +53,7 @@ NSString *SKImageNameUnderlineNote = @"UnderlineNote";
 NSString *SKImageNameStrikeOutNote = @"StrikeOutNote";
 NSString *SKImageNameLineNote = @"LineNote";
 NSString *SKImageNameInkNote = @"InkNote";
+NSString *SKImageNameWidgetNote = @"Widget";
 
 NSString *SKImageNameToolbarPageUp = @"ToolbarPageUp";
 NSString *SKImageNameToolbarPageDown = @"ToolbarPageDown";
@@ -1420,6 +1421,13 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     
     APPLY_NOTE_TYPES(MAKE_NOTE_IMAGE);
     
+    MAKE_IMAGE(SKImageNameWidgetNote, YES, 21.0, 19.0,
+        [[NSColor blackColor] setStroke];
+        [NSBezierPath strokeRect:NSMakeRect(1.5, 2.5, 16.0, 10.0)];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeCopy];
+        drawTextNote();
+    );
+    
     [[self imageNamed:SKImageNameTextNote] setAccessibilityDescription:[SKNFreeTextString typeName]];
     [[self imageNamed:SKImageNameAnchoredNote] setAccessibilityDescription:[SKNNoteString typeName]];
     [[self imageNamed:SKImageNameCircleNote] setAccessibilityDescription:[SKNCircleString typeName]];
@@ -1429,6 +1437,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     [[self imageNamed:SKImageNameStrikeOutNote] setAccessibilityDescription:[SKNStrikeOutString typeName]];
     [[self imageNamed:SKImageNameLineNote] setAccessibilityDescription:[SKNLineString typeName]];
     [[self imageNamed:SKImageNameInkNote] setAccessibilityDescription:[SKNInkString typeName]];
+    [[self imageNamed:SKImageNameWidgetNote] setAccessibilityDescription:[SKNWidgetString typeName]];
 }
 
 + (void)makeAdornImages {

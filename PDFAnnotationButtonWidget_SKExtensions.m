@@ -42,6 +42,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @implementation PDFAnnotationButtonWidget (SKExtensions)
 
+- (id)initSkimNoteWithProperties:(NSDictionary *)dict{
+    self = [super initSkimNoteWithProperties:dict];
+    if (self) {
+        NSNumber *state = [dict objectForKey:SKNPDFAnnotationStateKey];
+        if ([state respondsToSelector:@selector(integerValue)])
+            [self setIconType:[state integerValue]];
+    }
+    return self;
+}
+
 - (id)objectValue {
     return [NSNumber numberWithInteger:[self state]];
 }
@@ -65,6 +75,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     if (keys == nil)
         keys = [[NSSet alloc] initWithObjects:SKNPDFAnnotationStateKey, nil];
     return keys;
+}
+#pragma mark Scripting support
+
+- (id)textContents {
+    return [[[NSTextStorage alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)[self state]]] autorelease];
 }
 
 @end

@@ -42,6 +42,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @implementation PDFAnnotationTextWidget (SKExtensions)
 
+- (id)initSkimNoteWithProperties:(NSDictionary *)dict{
+    self = [super initSkimNoteWithProperties:dict];
+    if (self) {
+        Class stringClass = [NSString class];
+        NSString *stringValue = [dict objectForKey:SKNPDFAnnotationStringValueKey];
+        if ([stringValue isKindOfClass:stringClass])
+            [self setStringValue:stringValue];
+    }
+    return self;
+}
+
 - (id)objectValue {
     return [self stringValue];
 }
@@ -61,6 +72,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     if (keys == nil)
         keys = [[NSSet alloc] initWithObjects:SKNPDFAnnotationStringValueKey, nil];
     return keys;
+}
+
+#pragma mark Scripting support
+
+- (id)textContents {
+    return [[[NSTextStorage alloc] initWithString:[self stringValue] ?: @""] autorelease];
 }
 
 @end

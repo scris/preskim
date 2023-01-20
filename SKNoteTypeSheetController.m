@@ -42,7 +42,7 @@
 #import "NSMenu_SKExtensions.h"
 #import <SkimNotes/SkimNotes.h>
 
-#define NOTETYPES_COUNT 9
+#define NOTETYPES_COUNT (NSUInteger)([noteTypeMenu numberOfItems] - 3)
 
 @interface SKNoteTypeSheetController (Private)
 - (void)toggleDisplayNoteType:(id)sender;
@@ -55,11 +55,11 @@
 @synthesize delegate, noteTypeMenu;
 @dynamic noteTypes;
 
-- (id)init {
+- (id)initIncludingWidgets:(BOOL)includeWidgets {
     self = [super initWithWindowNibName:@"NoteTypeSheet"];
     if (self) {
         noteTypeMenu = [[NSMenu alloc] init];
-        NSArray *noteTypes = [NSArray arrayWithObjects:SKNFreeTextString, SKNNoteString, SKNCircleString, SKNSquareString, SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNLineString, SKNInkString, nil];
+        NSArray *noteTypes = [NSArray arrayWithObjects:SKNFreeTextString, SKNNoteString, SKNCircleString, SKNSquareString, SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNLineString, SKNInkString, includeWidgets ? SKNWidgetString : nil, nil];
         NSMenuItem *menuItem;
         NSInteger tag = 0;
         for (NSString *type in noteTypes) {
@@ -73,6 +73,10 @@
         [noteTypeMenu addItemWithTitle:[NSLocalizedString(@"Select", @"Menu item title") stringByAppendingEllipsis] action:@selector(selectNoteTypes:) target:self];
     }
     return self;
+}
+
+- (id)init {
+    return [self initIncludingWidgets:NO];
 }
 
 - (void)dealloc {
@@ -91,9 +95,10 @@
 
 - (void)windowDidLoad {
     NSUInteger i;
-    for (i = 0; i < NOTETYPES_COUNT; i++)
+    for (i = 0; i < NOTETYPES_COUNT; i++) {
         [[self switchForTag:i] setTitle:[[noteTypeMenu itemAtIndex:i] title]];
-    //[matrix sizeToFit];
+        [[self switchForTag:i] setHidden:NO];
+    }
 }
 
 - (NSArray *)noteTypes {

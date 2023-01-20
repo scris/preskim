@@ -1364,6 +1364,10 @@
                 description="Freehand.">
                 <cocoa string-value="Ink"/>
             </enumerator>
+            <enumerator name="widget note" code="NInk"
+                description="Widget.">
+                <cocoa string-value="Widget"/>
+            </enumerator>
         </enumeration>
 
         <enumeration name="text alignment" code="TAlE">
