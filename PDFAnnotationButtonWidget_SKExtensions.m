@@ -60,6 +60,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     [self setState:[newObjectValue integerValue]];
 }
 
+- (NSString *)string {
+    return [NSString stringWithFormat:@"%ld", (long)[self state]];
+}
+
 - (SKNPDFWidgetType)widgetType {
     return kSKNPDFWidgetTypeButton;
 }
@@ -75,11 +79,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     if (keys == nil)
         keys = [[NSSet alloc] initWithObjects:SKNPDFAnnotationStateKey, nil];
     return keys;
-}
-#pragma mark Scripting support
-
-- (id)textContents {
-    return [[[NSTextStorage alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)[self state]]] autorelease];
 }
 
 @end
