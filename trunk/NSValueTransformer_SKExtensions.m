@@ -186,6 +186,8 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
         return [NSImage imageNamed:SKImageNameLineNote];
     else if ([type isEqualToString:SKNInkString])
         return [NSImage imageNamed:SKImageNameInkNote];
+    else if ([type isEqualToString:SKNWidgetString])
+        return [NSImage imageNamed:SKImageNameWidgetNote];
     else
         return nil;
 }

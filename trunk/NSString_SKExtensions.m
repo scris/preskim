@@ -116,7 +116,7 @@ CFStringRef SKStringCreateByCollapsingAndTrimmingWhitespaceAndNewlines(CFAllocat
 @implementation NSString (SKExtensions)
 
 - (NSNumber *)noteTypeOrder {
-    NSInteger order = 9;
+    NSInteger order = 10;
     if ([self isEqualToString:SKNFreeTextString])
         order = 0;
     else if ([self isEqualToString:SKNNoteString] || [self isEqualToString:SKNTextString])
@@ -135,6 +135,8 @@ CFStringRef SKStringCreateByCollapsingAndTrimmingWhitespaceAndNewlines(CFAllocat
         order = 7;
     else if ([self isEqualToString:SKNInkString])
         order = 8;
+    else if ([self isEqualToString:SKNWidgetString])
+        order = 9;
     return [NSNumber numberWithInteger:order];
 }
 
@@ -308,6 +310,8 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
         return NSLocalizedString(@"Line", @"Description for export");
     else if ([self isEqualToString:SKNInkString])
         return NSLocalizedString(@"Freehand", @"Description for export");
+    else if ([self isEqualToString:SKNWidgetString])
+        return NSLocalizedString(@"Widget", @"Description for export");
     else
         return self;
 }

@@ -47,6 +47,7 @@ extern NSString *SKImageNameUnderlineNote;
 extern NSString *SKImageNameStrikeOutNote;
 extern NSString *SKImageNameLineNote;
 extern NSString *SKImageNameInkNote;
+extern NSString *SKImageNameWidgetNote;
 
 extern NSString *SKImageNameToolbarPageUp;
 extern NSString *SKImageNameToolbarPageDown;

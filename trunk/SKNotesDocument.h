@@ -51,7 +51,7 @@
     SKStatusBar *statusBar;
     NSDictionary *toolbarItems;
     NSArray *notes;
-    NSArray *widgets;
+    NSArray *unsupportedNotes;
     PDFDocument *pdfDocument;
     NSURL *sourceFileURL;
     NSMapTable *rowHeights;

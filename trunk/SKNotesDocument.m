@@ -120,7 +120,7 @@
     [outlineView setDelegate:nil];
     [outlineView setDataSource:nil];
     SKDESTROY(notes);
-    SKDESTROY(widgets);
+    SKDESTROY(unsupportedNotes);
     SKDESTROY(pdfDocument);
     SKDESTROY(sourceFileURL);
 	SKDESTROY(rowHeights);
@@ -190,7 +190,7 @@
     
     [outlineView setTypeSelectHelper:[SKTypeSelectHelper typeSelectHelperWithMatchOption:SKSubstringMatch]];
     
-    noteTypeSheetController = [[SKNoteTypeSheetController alloc] init];
+    noteTypeSheetController = [[SKNoteTypeSheetController alloc] initIncludingWidgets:YES];
     [noteTypeSheetController setDelegate:self];
     
     menu = [[outlineView headerView] menu];
@@ -333,7 +333,7 @@
     
     if (array) {
         NSMutableArray *newNotes = [NSMutableArray arrayWithCapacity:[array count]];
-        NSMutableArray *newWidgets = [NSMutableArray arrayWithCapacity:[array count]];
+        NSMutableArray *newUnsupportedNotes = [NSMutableArray arrayWithCapacity:[array count]];
 
         [self willChangeValueForKey:PAGES_KEY];
         [pdfDocument autorelease];
@@ -343,6 +343,15 @@
         
         for (NSDictionary *dict in array) {
             PDFAnnotation *note = [[PDFAnnotation alloc] initSkimNoteWithProperties:dict];
+            if (note == nil && [[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString]) {
+                switch ([[dict objectForKey:SKNPDFAnnotationWidgetTypeKey] integerValue]) {
+                    case kSKNPDFWidgetTypeText: note = [PDFAnnotationTextWidget alloc]; break;
+                    case kSKNPDFWidgetTypeButton: note = [PDFAnnotationButtonWidget alloc]; break;
+                    case kSKNPDFWidgetTypeChoice: note = [PDFAnnotationChoiceWidget alloc]; break;
+                    default: break;
+                }
+                note = [note initSkimNoteWithProperties:dict];
+            }
             if (note) {
                 PDFPage *page;
                 NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
@@ -357,7 +366,7 @@
                 [newNotes addObject:note];
                 [note release];
             } else {
-                [newWidgets addObject:dict];
+                [newUnsupportedNotes addObject:dict];
             }
         }
         [self didChangeValueForKey:PAGES_KEY];
@@ -369,8 +378,8 @@
         notes = [newNotes copy];
         [self didChangeValueForKey:NOTES_KEY];
         
-        [widgets release];
-        widgets = [newWidgets count] ? [newWidgets copy] : nil;
+        [unsupportedNotes release];
+        unsupportedNotes = [newUnsupportedNotes count] ? [newUnsupportedNotes copy] : nil;
         
         [outlineView reloadData];
         didRead = YES;
@@ -454,8 +463,8 @@
 
 - (NSArray *)SkimNoteProperties {
     NSArray *array = [super SkimNoteProperties];
-    if ([widgets count])
-        array = [array arrayByAddingObjectsFromArray:widgets];
+    if ([unsupportedNotes count])
+        array = [array arrayByAddingObjectsFromArray:unsupportedNotes];
     return array;
 }
 
