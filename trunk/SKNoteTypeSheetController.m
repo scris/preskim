@@ -42,7 +42,7 @@
 #import "NSMenu_SKExtensions.h"
 #import <SkimNotes/SkimNotes.h>
 
-#define NOTETYPES_COUNT (NSUInteger)([noteTypeMenu numberOfItems] - 3)
+#define NOTETYPES_COUNT ([noteTypeMenu numberOfItems] - 3)
 
 @interface SKNoteTypeSheetController (Private)
 - (void)toggleDisplayNoteType:(id)sender;
@@ -94,7 +94,7 @@
 }
 
 - (void)windowDidLoad {
-    NSUInteger i;
+    NSInteger i;
     for (i = 0; i < NOTETYPES_COUNT; i++) {
         [[self switchForTag:i] setTitle:[[noteTypeMenu itemAtIndex:i] title]];
         [[self switchForTag:i] setHidden:NO];
@@ -103,7 +103,7 @@
 
 - (NSArray *)noteTypes {
     NSMutableArray *types = [NSMutableArray array];
-    NSUInteger i;
+    NSInteger i;
     for (i = 0; i < NOTETYPES_COUNT; i++) {
         NSMenuItem *item = [noteTypeMenu itemAtIndex:i];
         if ([item state] == NSOnState)
@@ -117,7 +117,7 @@
     NSPredicate *typePredicate = nil;
     NSPredicate *searchPredicate = nil;
     NSArray *types = [self noteTypes];
-    if ([types count] < NOTETYPES_COUNT) {
+    if ((NSInteger)[types count] < NOTETYPES_COUNT) {
         NSExpression *lhs = [NSExpression expressionForKeyPath:@"type"];
         NSExpression *rhs = [NSExpression expressionForConstantValue:types];
         typePredicate = [NSComparisonPredicate predicateWithLeftExpression:lhs rightExpression:rhs modifier:NSDirectPredicateModifier type:NSInPredicateOperatorType options:0];
@@ -151,7 +151,7 @@
 }
 
 - (void)displayAllNoteTypes:(id)sender {
-    NSUInteger i;
+    NSInteger i;
     for (i = 0; i < NOTETYPES_COUNT; i++)
         [[noteTypeMenu itemAtIndex:i] setState:NSOnState];
     [delegate noteTypeSheetControllerNoteTypesDidChange:self];
@@ -160,13 +160,13 @@
 - (void)selectNoteTypes:(id)sender {
     [self window];
     
-    NSUInteger i;
+    NSInteger i;
     for (i = 0; i < NOTETYPES_COUNT; i++)
         [[self switchForTag:i] setState:[[noteTypeMenu itemAtIndex:i] state]];
 	
     [self beginSheetModalForWindow:[delegate windowForNoteTypeSheetController:self] completionHandler:^(NSInteger result) {
             if (result == NSModalResponseOK) {
-                NSUInteger idx;
+                NSInteger idx;
                 for (idx = 0; idx < NOTETYPES_COUNT; idx++)
                     [[noteTypeMenu itemAtIndex:idx] setState:[[self switchForTag:idx] state]];
                 [delegate noteTypeSheetControllerNoteTypesDidChange:self];
