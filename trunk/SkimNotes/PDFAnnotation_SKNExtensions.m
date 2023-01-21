@@ -873,12 +873,32 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 
 @implementation PDFAnnotationTextWidget (SKNExtensions)
 
+- (id)initSkimNoteWithProperties:(NSDictionary *)dict{
+    self = [super initSkimNoteWithProperties:dict];
+    if (self) {
+        Class stringClass = [NSString class];
+        NSString *stringValue = [dict objectForKey:SKNPDFAnnotationStringValueKey];
+        if ([stringValue isKindOfClass:stringClass])
+            [self setStringValue:stringValue];
+    }
+    return self;
+}
+
 - (NSDictionary *)SkimNoteProperties {
-    NSMutableDictionary *dict = [self genericSkimNoteProperties];
+    PDFPage *page = [self page];
+    NSUInteger pageIndex = page ? [[page document] indexForPage:page] : NSNotFound;
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:5];
+    [dict setValue:[self type] forKey:SKNPDFAnnotationTypeKey];
+    [dict setValue:NSStringFromRect([self bounds]) forKey:SKNPDFAnnotationBoundsKey];
+    [dict setValue:[NSNumber numberWithUnsignedInteger:pageIndex == NSNotFound ? 0 : pageIndex] forKey:SKNPDFAnnotationPageIndexKey];
     [dict setValue:[NSNumber numberWithInteger:kSKNPDFWidgetTypeText] forKey:SKNPDFAnnotationWidgetTypeKey];
     [dict setValue:[self fieldName] forKey:SKNPDFAnnotationFieldNameKey];
     [dict setValue:[self stringValue] forKey:SKNPDFAnnotationStringValueKey];
     return dict;
+}
+
+- (NSString *)string {
+    return [self stringValue];
 }
 
 @end
@@ -887,12 +907,31 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 
 @implementation PDFAnnotationButtonWidget (SKNExtensions)
 
+- (id)initSkimNoteWithProperties:(NSDictionary *)dict{
+    self = [super initSkimNoteWithProperties:dict];
+    if (self) {
+        NSNumber *state = [dict objectForKey:SKNPDFAnnotationStateKey];
+        if ([state respondsToSelector:@selector(integerValue)])
+            [self setIconType:[state integerValue]];
+    }
+    return self;
+}
+
 - (NSDictionary *)SkimNoteProperties {
-    NSMutableDictionary *dict = [self genericSkimNoteProperties];
+    PDFPage *page = [self page];
+    NSUInteger pageIndex = page ? [[page document] indexForPage:page] : NSNotFound;
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:5];
+    [dict setValue:[self type] forKey:SKNPDFAnnotationTypeKey];
+    [dict setValue:NSStringFromRect([self bounds]) forKey:SKNPDFAnnotationBoundsKey];
+    [dict setValue:[NSNumber numberWithUnsignedInteger:pageIndex == NSNotFound ? 0 : pageIndex] forKey:SKNPDFAnnotationPageIndexKey];
     [dict setValue:[NSNumber numberWithInteger:kSKNPDFWidgetTypeButton] forKey:SKNPDFAnnotationWidgetTypeKey];
     [dict setValue:[self fieldName] forKey:SKNPDFAnnotationFieldNameKey];
     [dict setValue:[NSNumber numberWithInteger:[self state]] forKey:SKNPDFAnnotationStateKey];
     return dict;
+}
+
+- (NSString *)string {
+    return [NSString stringWithFormat:@"%ld", (long)[self state]];
 }
 
 @end
@@ -901,12 +940,32 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 
 @implementation PDFAnnotationChoiceWidget (SKNExtensions)
 
+- (id)initSkimNoteWithProperties:(NSDictionary *)dict{
+    self = [super initSkimNoteWithProperties:dict];
+    if (self) {
+        Class stringClass = [NSString class];
+        NSString *stringValue = [dict objectForKey:SKNPDFAnnotationStringValueKey];
+        if ([stringValue isKindOfClass:stringClass])
+            [self setStringValue:stringValue];
+    }
+    return self;
+}
+
 - (NSDictionary *)SkimNoteProperties {
-    NSMutableDictionary *dict = [self genericSkimNoteProperties];
+    PDFPage *page = [self page];
+    NSUInteger pageIndex = page ? [[page document] indexForPage:page] : NSNotFound;
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:5];
+    [dict setValue:[self type] forKey:SKNPDFAnnotationTypeKey];
+    [dict setValue:NSStringFromRect([self bounds]) forKey:SKNPDFAnnotationBoundsKey];
+    [dict setValue:[NSNumber numberWithUnsignedInteger:pageIndex == NSNotFound ? 0 : pageIndex] forKey:SKNPDFAnnotationPageIndexKey];
     [dict setValue:[NSNumber numberWithInteger:kSKNPDFWidgetTypeChoice] forKey:SKNPDFAnnotationWidgetTypeKey];
     [dict setValue:[self fieldName] forKey:SKNPDFAnnotationFieldNameKey];
     [dict setValue:[self stringValue] forKey:SKNPDFAnnotationStringValueKey];
     return dict;
+}
+
+- (NSString *)string {
+    return [self stringValue];
 }
 
 @end
