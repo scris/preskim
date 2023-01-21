@@ -912,7 +912,7 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
     if (self) {
         NSNumber *state = [dict objectForKey:SKNPDFAnnotationStateKey];
         if ([state respondsToSelector:@selector(integerValue)])
-            [self setIconType:[state integerValue]];
+            [self setState:[state integerValue]];
     }
     return self;
 }
