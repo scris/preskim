@@ -42,27 +42,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @implementation PDFAnnotationChoiceWidget (SKExtensions)
 
-- (id)initSkimNoteWithProperties:(NSDictionary *)dict{
-    self = [super initSkimNoteWithProperties:dict];
-    if (self) {
-        Class stringClass = [NSString class];
-        NSString *stringValue = [dict objectForKey:SKNPDFAnnotationStringValueKey];
-        if ([stringValue isKindOfClass:stringClass])
-            [self setStringValue:stringValue];
-    }
-    return self;
-}
-
 - (id)objectValue {
     return [self stringValue];
 }
 
 - (void)setObjectValue:(id)newObjectValue {
     [self setStringValue:newObjectValue];
-}
-
-- (NSString *)string {
-    return [self stringValue];
 }
 
 - (SKNPDFWidgetType)widgetType {
