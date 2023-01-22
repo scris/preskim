@@ -557,9 +557,8 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
     
     [pdfView setNeedsRewind:YES];
     
-    NSInteger i, count = [[pdfView document] pageCount];
-    for (i = 0; i < count; i++)
-        [[[pdfView document] pageAtIndex:i] setRotation:[[[pdfView document] pageAtIndex:i] rotation] + rotation];
+    for (PDFPage *page in [pdfView document])
+        [page setRotation:[page rotation] + rotation];
     [pdfView layoutDocumentView];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
