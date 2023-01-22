@@ -153,8 +153,6 @@ static void replacement_dealloc(id self, SEL _cmd) {
         [self setSkimNote:YES];
         if ([self respondsToSelector:@selector(setUserName:)])
             [self setUserName:nil];
-        if ([self respondsToSelector:@selector(setModificationDate:)])
-            [self setModificationDate:nil];
     }
     return self;
 
@@ -882,6 +880,8 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
         NSString *stringValue = [dict objectForKey:SKNPDFAnnotationStringValueKey];
         if ([stringValue isKindOfClass:stringClass])
             [self setStringValue:stringValue];
+        if ([self respondsToSelector:@selector(setModificationDate:)])
+            [self setModificationDate:nil];
     }
     return self;
 }
@@ -915,6 +915,8 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
         NSNumber *state = [dict objectForKey:SKNPDFAnnotationStateKey];
         if ([state respondsToSelector:@selector(integerValue)])
             [self setState:[state integerValue]];
+        if ([self respondsToSelector:@selector(setModificationDate:)])
+            [self setModificationDate:nil];
     }
     return self;
 }
@@ -949,6 +951,8 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
         NSString *stringValue = [dict objectForKey:SKNPDFAnnotationStringValueKey];
         if ([stringValue isKindOfClass:stringClass])
             [self setStringValue:stringValue];
+        if ([self respondsToSelector:@selector(setModificationDate:)])
+            [self setModificationDate:nil];
     }
     return self;
 }
