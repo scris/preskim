@@ -153,6 +153,8 @@ static void replacement_dealloc(id self, SEL _cmd) {
         [self setSkimNote:YES];
         if ([self respondsToSelector:@selector(setUserName:)])
             [self setUserName:nil];
+        if ([self respondsToSelector:@selector(setModificationDate:)])
+            [self setModificationDate:nil];
     }
     return self;
 
