@@ -82,7 +82,7 @@
 }
 
 - (NSData *)RTFRepresentation {
-    return [self RTFFromRange:NSMakeRange(0, [self length]) documentAttributes:[NSDictionary dictionaryWithObjectsAndKeys:NSRTFTextDocumentType, NSDocumentTypeDocumentAttribute, nil]];
+    return [self RTFFromRange:NSMakeRange(0, [self length]) documentAttributes:@{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType}];
 }
 
 #pragma mark Scripting support
@@ -155,7 +155,7 @@
 
 - (void)setScriptingRTF:(id)data {
     if (data) {
-        NSAttributedString *attrString = [[NSAttributedString alloc] initWithData:data options:[NSDictionary dictionary] documentAttributes:NULL error:NULL];
+        NSAttributedString *attrString = [[NSAttributedString alloc] initWithData:data options:@{} documentAttributes:NULL error:NULL];
         if (attrString)
             [self setAttributedString:attrString];
         [attrString release];

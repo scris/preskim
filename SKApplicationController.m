@@ -146,7 +146,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
     
     NSURL *downloadsURL = [[NSFileManager defaultManager] URLForDirectory:NSDownloadsDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:NULL];
     if (downloadsURL)
-        [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObject:[[downloadsURL path] stringByAbbreviatingWithTildeInPath] forKey:SKDownloadsDirectoryKey]];
+        [[NSUserDefaults standardUserDefaults] registerDefaults:@{SKDownloadsDirectoryKey:[[downloadsURL path] stringByAbbreviatingWithTildeInPath]}];
     
     // if your application supports resetting a subset of the defaults to 
     // factory values, you should set those values 
@@ -160,7 +160,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
     if (RUNNING(10_11)) {
         // Disable ATS on El Capitan, as forwarding is blocked, even if it is an htpps address
         @try{
-            [(NSMutableDictionary *)[[NSBundle mainBundle] infoDictionary] setObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"NSAllowsArbitraryLoads"] forKey:@"NSAppTransportSecurity"];
+            [(NSMutableDictionary *)[[NSBundle mainBundle] infoDictionary] setObject:@{@"NSAllowsArbitraryLoads":@YES} forKey:@"NSAppTransportSecurity"];
         }
         @catch(id e) {}
     }
@@ -558,7 +558,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
 
 - (NSAttributedString *)valueInRichTextFormatWithName:(NSString *)name {
     NSData *data = [[[NSData alloc] initWithHexString:name] autorelease];
-    return data ? [[[NSAttributedString alloc] initWithData:data options:[NSDictionary dictionary] documentAttributes:NULL error:NULL] autorelease] : nil;
+    return data ? [[[NSAttributedString alloc] initWithData:data options:@{} documentAttributes:NULL error:NULL] autorelease] : nil;
 }
 
 - (NSArray *)favoriteColors {

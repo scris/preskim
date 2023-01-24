@@ -107,7 +107,7 @@ static char SKFontWellFontSizeObservationContext;
     [super setAction:@selector(changeActive:)];
     [super setTarget:self];
     bindingInfo = [[NSMutableDictionary alloc] init];
-    [self registerForDraggedTypes:[NSArray arrayWithObjects:SKNSFontPanelDescriptorsPboardType, SKNSFontPanelFamiliesPboardType, NSPasteboardTypeColor, nil]];
+    [self registerForDraggedTypes:@[SKNSFontPanelDescriptorsPboardType, SKNSFontPanelFamiliesPboardType, NSPasteboardTypeColor]];
 }
 
 - (id)initWithFrame:(NSRect)frame {

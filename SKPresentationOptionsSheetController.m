@@ -104,7 +104,7 @@ static char *SKTransitionPropertiesObservationContext;
 
 - (void)dealloc {
     SKENSURE_MAIN_THREAD(
-        [self stopObservingTransitions:[NSArray arrayWithObject:transition]];
+        [self stopObservingTransitions:@[transition]];
         [self stopObservingTransitions:transitions];
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         [[self window] setDelegate:nil];
@@ -138,7 +138,7 @@ static char *SKTransitionPropertiesObservationContext;
             [documents addObject:doc];
     }
     NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES] autorelease];
-    [documents sortUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    [documents sortUsingDescriptors:@[sortDescriptor]];
     
     for (doc in documents) {
         [notesDocumentPopUpButton addItemWithTitle:[doc displayName]];
@@ -178,7 +178,7 @@ static char *SKTransitionPropertiesObservationContext;
         [transition setDuration:[info duration]];
         [transition setShouldRestrict:[info shouldRestrict]];
     }
-    [self startObservingTransitions:[NSArray arrayWithObject:transition]];
+    [self startObservingTransitions:@[transition]];
     
     // collapse the table, it is already hidden
     [boxLeadingConstraint setConstant:BOX_OFFSET];
@@ -426,7 +426,7 @@ static char *SKTransitionPropertiesObservationContext;
         frame.origin.x -= screenPoint.x - [session draggingLocation].x;
         frame.origin.y -= screenPoint.y - [session draggingLocation].y;
         NSArray *classes = [NSArray arrayWithObjects:[SKTransitionInfo class], nil];
-        [session enumerateDraggingItemsWithOptions:0 forView:nil classes:classes searchOptions:[NSDictionary dictionary] usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
+        [session enumerateDraggingItemsWithOptions:0 forView:nil classes:classes searchOptions:@{} usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
             [draggingItem setImageComponentsProvider:^{
                 NSMutableArray *components = [NSMutableArray array];
                 NSUInteger i, iMax = [view numberOfColumns];
@@ -450,7 +450,7 @@ static char *SKTransitionPropertiesObservationContext;
 }
 
 - (NSDragOperation)tableView:(NSTableView *)tv validateDrop:(id < NSDraggingInfo >)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)operation {
-    if ([[info draggingPasteboard] canReadObjectForClasses:[NSArray arrayWithObject:[SKTransitionInfo class]] options:[NSDictionary dictionary]]) {
+    if ([[info draggingPasteboard] canReadObjectForClasses:@[[SKTransitionInfo class]] options:@{}]) {
         if (operation == NSTableViewDropAbove)
             [tv setDropRow:-1 dropOperation:NSTableViewDropOn];
         return NSDragOperationEvery;
@@ -461,7 +461,7 @@ static char *SKTransitionPropertiesObservationContext;
 - (BOOL)tableView:(NSTableView *)tv acceptDrop:(id < NSDraggingInfo >)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)operation {
     NSPasteboard *pboard = [info draggingPasteboard];
     if (operation == NSTableViewDropOn) {
-        NSArray *infos = [pboard readObjectsForClasses:[NSArray arrayWithObject:[SKTransitionInfo class]] options:[NSDictionary dictionary]];
+        NSArray *infos = [pboard readObjectsForClasses:@[[SKTransitionInfo class]] options:@{}];
         if ([infos count] > 0) {
             NSDictionary *properties = [[infos objectAtIndex:0] properties];
             if (row == -1)
@@ -498,13 +498,13 @@ static char *SKTransitionPropertiesObservationContext;
 }
 
 - (void)tableView:(NSTableView *)tv pasteFromPasteboard:(NSPasteboard *)pboard {
-    NSArray *infos = [pboard readObjectsForClasses:[NSArray arrayWithObject:[SKTransitionInfo class]] options:[NSDictionary dictionary]];
+    NSArray *infos = [pboard readObjectsForClasses:@[[SKTransitionInfo class]] options:@{}];
     if ([infos count] > 0)
         [[transitions objectsAtIndexes:[tableView selectedRowIndexes]] setValue:[[infos objectAtIndex:0] properties] forKey:PROPERTIES_KEY];
 }
 
 - (BOOL)tableView:(NSTableView *)tv canPasteFromPasteboard:(NSPasteboard *)pboard {
-    return ([tableView selectedRow] != -1 && [pboard canReadObjectForClasses:[NSArray arrayWithObject:[SKTransitionInfo class]] options:[NSDictionary dictionary]]);
+    return ([tableView selectedRow] != -1 && [pboard canReadObjectForClasses:@[[SKTransitionInfo class]] options:@{}]);
 }
 
 - (void)tableView:(NSTableView *)tv deleteRowsWithIndexes:(NSIndexSet *)rowIndexes {

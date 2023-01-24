@@ -161,7 +161,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
             }
             
             bookmarkRoot = [[SKBookmark alloc] initRootWithChildrenProperties:bookmarksCache];
-            [self startObservingBookmarks:[NSArray arrayWithObject:bookmarkRoot]];
+            [self startObservingBookmarks:@[bookmarkRoot]];
             
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(handleApplicationWillTerminateNotification:)
@@ -182,7 +182,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 }
 
 - (void)dealloc {
-    [self stopObservingBookmarks:[NSArray arrayWithObject:bookmarkRoot]];
+    [self stopObservingBookmarks:@[bookmarkRoot]];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     SKDESTROY(bookmarkRoot);
     SKDESTROY(previousSession);
@@ -220,7 +220,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     
     [outlineView setTypeSelectHelper:[SKTypeSelectHelper typeSelectHelper]];
     
-    [outlineView registerForDraggedTypes:[NSArray arrayWithObjects:SKPasteboardTypeBookmarkRow, (NSString *)kUTTypeFileURL, NSFilenamesPboardType, nil]];
+    [outlineView registerForDraggedTypes:@[SKPasteboardTypeBookmarkRow, (NSString *)kUTTypeFileURL, NSFilenamesPboardType]];
     
     [outlineView setDraggingSourceOperationMask:NSDragOperationMove forLocal:YES];
     [outlineView setDraggingSourceOperationMask:NSDragOperationDelete forLocal:NO];
@@ -231,8 +231,8 @@ static NSUInteger maxRecentDocumentsCount = 0;
     
     [outlineView sizeToFit];
     
-    NSArray *sendTypes = [NSArray arrayWithObject:(NSString *)kUTTypeFileURL];
-    [NSApp registerServicesMenuSendTypes:sendTypes returnTypes:[NSArray array]];
+    NSArray *sendTypes = @[(NSString *)kUTTypeFileURL];
+    [NSApp registerServicesMenuSendTypes:sendTypes returnTypes:@[]];
 }
 
 - (void)updateStatus {
@@ -253,7 +253,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 - (void)saveBookmarksData {
     if (bookmarksCache == nil)
         bookmarksCache = [[[bookmarkRoot children] valueForKey:@"properties"] retain];
-    NSDictionary *bookmarksDictionary = [NSDictionary dictionaryWithObjectsAndKeys:bookmarksCache, BOOKMARKS_KEY, [recentDocuments valueForKey:@"properties"], RECENTDOCUMENTS_KEY, nil];
+    NSDictionary *bookmarksDictionary = @{BOOKMARKS_KEY:bookmarksCache, RECENTDOCUMENTS_KEY:[recentDocuments valueForKey:@"properties"]};
     [[NSUserDefaults standardUserDefaults] setPersistentDomain:bookmarksDictionary forName:SKBookmarksIdentifier];
 }
 
@@ -382,7 +382,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (void)insertBookmark:(SKBookmark *)bookmark atIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent animate:(BOOL)animate {
     [outlineView beginUpdates];
-    [self insertBookmarks:[NSArray arrayWithObjects:bookmark, nil] atIndexes:[NSIndexSet indexSetWithIndex:anIndex] ofBookmark:parent animate:animate];
+    [self insertBookmarks:@[bookmark] atIndexes:[NSIndexSet indexSetWithIndex:anIndex] ofBookmark:parent animate:animate];
     [outlineView endUpdates];
 }
 
@@ -394,7 +394,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (void)replaceBookmarkAtIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent withBookmark:(SKBookmark *)bookmark animate:(BOOL)animate {
     [outlineView beginUpdates];
-    [self replaceBookmarksAtIndexes:[NSIndexSet indexSetWithIndex:anIndex] ofBookmark:parent withBookmarks:[NSArray arrayWithObjects:bookmark, nil] animate:animate];
+    [self replaceBookmarksAtIndexes:[NSIndexSet indexSetWithIndex:anIndex] ofBookmark:parent withBookmarks:@[bookmark] animate:animate];
     [outlineView endUpdates];
 }
 
@@ -876,8 +876,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
 
 - (void)outlineView:(NSOutlineView *)ov updateDraggingItemsForDrag:(id<NSDraggingInfo>)draggingInfo {
     if ([draggingInfo draggingSource] != ov) {
-        NSArray *classes = [NSArray arrayWithObjects:[NSURL class], nil];
-        NSDictionary *searchOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSPasteboardURLReadingFileURLsOnlyKey, nil];
+        NSDictionary *searchOptions = @{NSPasteboardURLReadingFileURLsOnlyKey:@YES};
         NSTableColumn *tableColumn = [ov outlineTableColumn];
         NSTableCellView *view = [ov makeViewWithIdentifier:[tableColumn identifier] owner:self];
         __block NSInteger validCount = 0;
@@ -885,8 +884,8 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
         [view setFrame:frame];
         frame.origin = [draggingInfo draggingLocation];
         
-        [draggingInfo enumerateDraggingItemsWithOptions:NSDraggingItemEnumerationClearNonenumeratedImages forView:ov classes:classes searchOptions:searchOptions usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
-            SKBookmark *bookmark = [[SKBookmark bookmarksForURLs:[NSArray arrayWithObjects:[draggingItem item], nil]] firstObject];
+        [draggingInfo enumerateDraggingItemsWithOptions:NSDraggingItemEnumerationClearNonenumeratedImages forView:ov classes:@[[NSURL class]] searchOptions:searchOptions usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
+            SKBookmark *bookmark = [[SKBookmark bookmarksForURLs:@[[draggingItem item]]] firstObject];
             if (bookmark) {
                 [draggingItem setImageComponentsProvider:^{
                     [view setObjectValue:bookmark];
@@ -907,7 +906,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
     NSDragOperation dragOp = NSDragOperationNone;
     if (anIndex != NSOutlineViewDropOnItemIndex) {
         NSPasteboard *pboard = [info draggingPasteboard];
-        if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:SKPasteboardTypeBookmarkRow, nil]] &&
+        if ([pboard canReadItemWithDataConformingToTypes:@[SKPasteboardTypeBookmarkRow]] &&
             [info draggingSource] == ov) {
             if (NO == [item isDescendantOfArray:draggedBookmarks])
                 dragOp = NSDragOperationMove;
@@ -921,7 +920,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
 - (BOOL)outlineView:(NSOutlineView *)ov acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(NSInteger)anIndex {
     NSPasteboard *pboard = [info draggingPasteboard];
     
-    if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:SKPasteboardTypeBookmarkRow, nil]] &&
+    if ([pboard canReadItemWithDataConformingToTypes:@[SKPasteboardTypeBookmarkRow]] &&
         [info draggingSource] == ov) {
         NSMutableArray *movedBookmarks = [NSMutableArray array];
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
@@ -1174,21 +1173,19 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
-    return [NSArray arrayWithObjects:
-        SKBookmarksNewFolderToolbarItemIdentifier, 
+    return @[SKBookmarksNewFolderToolbarItemIdentifier,
         SKBookmarksNewSeparatorToolbarItemIdentifier, 
-        SKBookmarksDeleteToolbarItemIdentifier, nil];
+        SKBookmarksDeleteToolbarItemIdentifier];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
-    return [NSArray arrayWithObjects: 
-        SKBookmarksNewFolderToolbarItemIdentifier, 
+    return @[SKBookmarksNewFolderToolbarItemIdentifier,
         SKBookmarksNewSeparatorToolbarItemIdentifier, 
 		SKBookmarksDeleteToolbarItemIdentifier, 
         NSToolbarFlexibleSpaceItemIdentifier, 
 		NSToolbarSpaceItemIdentifier, 
 		NSToolbarSeparatorItemIdentifier, 
-		NSToolbarCustomizeToolbarItemIdentifier, nil];
+		NSToolbarCustomizeToolbarItemIdentifier];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
@@ -1212,8 +1209,8 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     NSTouchBar *touchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
     [touchBar setCustomizationIdentifier:SKBookmarksTouchBarIdentifier];
     [touchBar setDelegate:self];
-    [touchBar setCustomizationAllowedItemIdentifiers:[NSArray arrayWithObjects:SKTouchBarItemIdentifierNewFolder, SKTouchBarItemIdentifierNewSeparator, SKTouchBarItemIdentifierDelete, SKTouchBarItemIdentifierPreview, @"NSTouchBarItemIdentifierFlexibleSpace", nil]];
-    [touchBar setDefaultItemIdentifiers:[NSArray arrayWithObjects:SKTouchBarItemIdentifierNewFolder, SKTouchBarItemIdentifierNewSeparator, @"NSTouchBarItemIdentifierFixedSpaceLarge", SKTouchBarItemIdentifierDelete, SKTouchBarItemIdentifierPreview, nil]];
+    [touchBar setCustomizationAllowedItemIdentifiers:@[SKTouchBarItemIdentifierNewFolder, SKTouchBarItemIdentifierNewSeparator, SKTouchBarItemIdentifierDelete, SKTouchBarItemIdentifierPreview, @"NSTouchBarItemIdentifierFlexibleSpace"]];
+    [touchBar setDefaultItemIdentifiers:@[SKTouchBarItemIdentifierNewFolder, SKTouchBarItemIdentifierNewSeparator, @"NSTouchBarItemIdentifierFixedSpaceLarge", SKTouchBarItemIdentifierDelete, SKTouchBarItemIdentifierPreview]];
     return touchBar;
 }
 

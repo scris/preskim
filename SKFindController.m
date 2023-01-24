@@ -82,7 +82,7 @@
 - (void)windowDidBecomeKey:(NSNotification *)notification {
     NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSFindPboard];
     if (lastChangeCount < [findPboard changeCount]) {
-        NSArray *strings = [findPboard readObjectsForClasses:[NSArray arrayWithObject:[NSString class]] options:[NSDictionary dictionary]];
+        NSArray *strings = [findPboard readObjectsForClasses:@[[NSString class]] options:@{}];
         if ([strings count] > 0) {
             [self setFindString:[strings objectAtIndex:0]];
             lastChangeCount = [findPboard changeCount];
@@ -99,7 +99,7 @@
     if (didChange) {
         NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSFindPboard];
         [findPboard clearContents];
-        [findPboard writeObjects:[NSArray arrayWithObjects:(findString ?: @""), nil]];
+        [findPboard writeObjects:@[(findString ?: @"")]];
         lastChangeCount = [findPboard changeCount];
         didChange = NO;
     }

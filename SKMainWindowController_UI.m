@@ -411,7 +411,7 @@
         } else {
             NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
             [item setString:(NSString *)kUTTypeTIFF forType:(NSString *)kPasteboardTypeFilePromiseContent];
-            [item setDataProvider:snapshot forTypes:[NSArray arrayWithObjects:(NSString *)kPasteboardTypeFileURLPromise, NSPasteboardTypeTIFF, nil]];
+            [item setDataProvider:snapshot forTypes:@[(NSString *)kPasteboardTypeFileURLPromise, NSPasteboardTypeTIFF]];
             return item;
         }
     }
@@ -428,8 +428,8 @@
             NSRect frame = [view convertRectToScreen:[view bounds]];
             frame.origin.x -= screenPoint.x - [session draggingLocation].x;
             frame.origin.y -= screenPoint.y - [session draggingLocation].y;
-            NSArray *classes = [NSArray arrayWithObjects:[NSPasteboardItem class], nil];
-            [session enumerateDraggingItemsWithOptions:0 forView:nil classes:classes searchOptions:[NSDictionary dictionary] usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
+            NSArray *classes = @[[NSPasteboardItem class]];
+            [session enumerateDraggingItemsWithOptions:0 forView:nil classes:classes searchOptions:@{} usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
                 [draggingItem setImageComponentsProvider:^{
                     return [view draggingImageComponents];
                 }];
@@ -562,7 +562,7 @@
         }];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeObjects:[NSArray arrayWithObjects:string, nil]];
+        [pboard writeObjects:@[string]];
     } else if ([tv isEqual:leftSideController.groupedFindTableView]) {
         NSMutableString *string = [NSMutableString string];
         NSArray *results = [leftSideController.groupedFindArrayController arrangedObjects];
@@ -577,7 +577,7 @@
         }];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeObjects:[NSArray arrayWithObjects:string, nil]];
+        [pboard writeObjects:@[string]];
     }
 }
 
@@ -704,7 +704,7 @@
     NSDragOperation dragOp = NSDragOperationNone;
     if ([ov isEqual:rightSideController.noteOutlineView]) {
         NSPasteboard *pboard = [info draggingPasteboard];
-        if ([pboard canReadObjectForClasses:[NSArray arrayWithObject:[NSColor class]] options:[NSDictionary dictionary]] &&
+        if ([pboard canReadObjectForClasses:@[[NSColor class]] options:@{}] &&
             anIndex == NSOutlineViewDropOnItemIndex && [(PDFAnnotation *)item type] != nil)
             dragOp = NSDragOperationEvery;
     }
@@ -714,7 +714,7 @@
 - (BOOL)outlineView:(NSOutlineView *)ov acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(NSInteger)anIndex {
     if ([ov isEqual:rightSideController.noteOutlineView]) {
         NSPasteboard *pboard = [info draggingPasteboard];
-        if ([pboard canReadObjectForClasses:[NSArray arrayWithObject:[NSColor class]] options:[NSDictionary dictionary]]) {
+        if ([pboard canReadObjectForClasses:@[[NSColor class]] options:@{}]) {
             BOOL isShift = ([NSEvent standardModifierFlags] & NSShiftKeyMask) != 0;
             BOOL isAlt = ([NSEvent standardModifierFlags] & NSAlternateKeyMask) != 0;
             [item setColor:[NSColor colorFromPasteboard:pboard] alternate:isAlt updateDefaults:isShift];
@@ -924,9 +924,9 @@
         
         [pboard clearContents];
         if (isAttributed)
-            [pboard writeObjects:[NSArray arrayWithObjects:attrString, nil]];
+            [pboard writeObjects:@[attrString]];
         else
-            [pboard writeObjects:[NSArray arrayWithObjects:[attrString string], nil]];
+            [pboard writeObjects:@[[attrString string]]];
         if ([copiedItems count] > 0)
             [pboard writeObjects:copiedItems];
     }
@@ -1003,7 +1003,7 @@
         if (skimURL != nil) {
             NSPasteboard *pboard = [NSPasteboard generalPasteboard];
             [pboard clearContents];
-            [pboard writeURLs:[NSArray arrayWithObjects:skimURL, nil] names:[NSArray arrayWithObjects:[[self document] displayName], nil]];
+            [pboard writeURLs:@[skimURL] names:[NSArray arrayWithObjects:[[self document] displayName], nil]];
         }
     }
 }

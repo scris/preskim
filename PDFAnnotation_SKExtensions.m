@@ -99,7 +99,7 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 }
 
 + (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
-    return [NSArray arrayWithObjects:SKPasteboardTypeSkimNote, nil];
+    return @[SKPasteboardTypeSkimNote];
 }
 
 + (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
@@ -122,7 +122,7 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 }
 
 - (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
-    return [NSArray arrayWithObjects:SKPasteboardTypeSkimNote, nil];
+    return @[SKPasteboardTypeSkimNote];
 }
 
 - (id)pasteboardPropertyListForType:(NSString *)type {

@@ -223,7 +223,7 @@ static NSDictionary *oldStyleNames = nil;
         NSMutableArray *names = [NSMutableArray arrayWithObjects:
             @"", nil];
         if (SKCoreImageTransition > 1) {
-            [names addObjectsFromArray:[NSArray arrayWithObjects:
+            [names addObjectsFromArray:@[
                @"CoreGraphics SKTransitionFade",
                @"CoreGraphics SKTransitionZoom",
                @"CoreGraphics SKTransitionReveal",
@@ -232,7 +232,7 @@ static NSDictionary *oldStyleNames = nil;
                @"CoreGraphics SKTransitionSwap",
                @"CoreGraphics SKTransitionCube",
                @"CoreGraphics SKTransitionWarpSwitch",
-               @"CoreGraphics SKTransitionWarpFlip", nil]];
+               @"CoreGraphics SKTransitionWarpFlip"]];
         }
         // get our transitions
         NSURL *transitionsURL = [[[NSBundle mainBundle] builtInPlugInsURL] URLByAppendingPathComponent:TRANSITIONS_PLUGIN isDirectory:YES];
@@ -405,7 +405,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         [transitionView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         CAAnimation *animation = [CABasicAnimation animation];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-        [transitionView setAnimations:[NSDictionary dictionaryWithObjectsAndKeys:animation, @"progress", nil]];
+        [transitionView setAnimations:@{@"progress":animation}];
     }
     
     [transitionView setImage:image];

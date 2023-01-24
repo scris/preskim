@@ -200,13 +200,13 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
                                    charactersIgnoringModifiers:@""
                                                      isARepeat:NO
                                                        keyCode:0];
-            [editor interpretKeyEvents:[NSArray arrayWithObject:dummyKeyEvent]];
+            [editor interpretKeyEvents:@[dummyKeyEvent]];
         }
         [editor setString:@""];
     }
     
     // Append the new character to the search string
-    [editor interpretKeyEvents:[NSArray arrayWithObject:keyEvent]];
+    [editor interpretKeyEvents:@[keyEvent]];
     [searchString release];
     searchString = [[editor string] retain];
     

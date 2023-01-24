@@ -60,7 +60,7 @@
         if ([selection isKindOfClass:[NSArray class]] == NO)
             selection = [NSArray arrayWithObjects:selection, nil];
         doc = [[[selection firstObject] page] containingDocument];
-    } else if ([dP isEqual:[NSArray array]]) {
+    } else if ([dP isEqual:@[]]) {
         doc = [self evaluatedSubjects];
     } else {
         selection = [PDFSelection selectionWithSpecifier:dP];
@@ -81,7 +81,7 @@
         } else if (pdfView) {
             [pdfView setCurrentSelection:nil];
         } else {
-            [doc setNoteSelection:[NSArray array]];
+            [doc setNoteSelection:@[]];
         }
     }
     

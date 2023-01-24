@@ -131,11 +131,11 @@
         NSPredicate *stringPredicate = [NSComparisonPredicate predicateWithLeftExpression:lhs rightExpression:rhs modifier:NSDirectPredicateModifier type:NSInPredicateOperatorType options:options];
         rhs = [NSExpression expressionForKeyPath:@"textString"];
         NSPredicate *textPredicate = [NSComparisonPredicate predicateWithLeftExpression:lhs rightExpression:rhs modifier:NSDirectPredicateModifier type:NSInPredicateOperatorType options:options];
-        searchPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:[NSArray arrayWithObjects:stringPredicate, textPredicate, nil]];
+        searchPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:@[stringPredicate, textPredicate]];
     }
     if (typePredicate) {
         if (searchPredicate)
-            filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:typePredicate, searchPredicate, nil]];
+            filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[typePredicate, searchPredicate]];
         else
             filterPredicate = typePredicate;
     } else if (searchPredicate) {

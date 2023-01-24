@@ -203,7 +203,7 @@ CGPSConverterCallbacks SKPSConverterCallbacks = {
 static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *supportedTools) {
     NSString *commandPath = [[NSUserDefaults standardUserDefaults] stringForKey:defaultKey];
     NSString *commandName = [commandPath lastPathComponent];
-    NSArray *paths = [NSArray arrayWithObjects:@"/Library/TeX/texbin", @"/usr/texbin", @"/sw/bin", @"/opt/local/bin", @"/usr/local/bin", nil];
+    NSArray *paths = @[@"/Library/TeX/texbin", @"/usr/texbin", @"/sw/bin", @"/opt/local/bin", @"/usr/local/bin"];
     NSInteger i = 0, iMax = [paths count];
     NSFileManager *fm = [NSFileManager defaultManager];
     NSEnumerator *toolEnum = [supportedTools objectEnumerator];
@@ -258,12 +258,12 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
         if ([ws type:fileType conformsToType:SKDVIDocumentType]) {
             static NSString *dviToolPath = nil;
             if (dviToolPath == nil)
-                dviToolPath = createToolPathForCommand(SKDviConversionCommandKey, [NSArray arrayWithObjects:@"dvipdfmx", @"dvipdfm", @"dvipdf", @"dvips", nil]);
+                dviToolPath = createToolPathForCommand(SKDviConversionCommandKey, @[@"dvipdfmx", @"dvipdfm", @"dvipdf", @"dvips"]);
             toolPath = dviToolPath;
         } else if ([ws type:fileType conformsToType:SKXDVDocumentType]) {
             static NSString *xdvToolPath = nil;
             if (xdvToolPath == nil)
-                xdvToolPath = createToolPathForCommand(SKXdvConversionCommandKey, [NSArray arrayWithObjects:@"xdvipdfmx", @"xdv2pdf", nil]);
+                xdvToolPath = createToolPathForCommand(SKXdvConversionCommandKey, @[@"xdvipdfmx", @"xdv2pdf"]);
             toolPath = xdvToolPath;
         }
         if (toolPath) {
@@ -338,7 +338,7 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
 - (NSTouchBar *)makeTouchBar {
     NSTouchBar *touchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
     [touchBar setDelegate:self];
-    [touchBar setDefaultItemIdentifiers:[NSArray arrayWithObjects:@"NSTouchBarItemIdentifierFlexibleSpace", SKTouchBarItemIdentifierCancel, @"NSTouchBarItemIdentifierFixedSpaceLarge", nil]];
+    [touchBar setDefaultItemIdentifiers:@[@"NSTouchBarItemIdentifierFlexibleSpace", SKTouchBarItemIdentifierCancel, @"NSTouchBarItemIdentifierFixedSpaceLarge"]];
     return touchBar;
 }
 

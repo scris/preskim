@@ -80,7 +80,7 @@
 
 - (id)selectionSpecifier {
     PDFSelection *sel = [page selectionForRect:NSInsetRect([self bounds], -1.0, -1.0)];
-    return [sel hasCharacters] ? [sel objectSpecifiers] : [NSArray array];
+    return [sel hasCharacters] ? [sel objectSpecifiers] : @[];
 }
 
 - (NSScriptObjectSpecifier *)objectSpecifier {

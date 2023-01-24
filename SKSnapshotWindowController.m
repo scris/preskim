@@ -121,7 +121,7 @@ static char SKSnaphotWindowAppObservationContext;
         [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
     [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
     [self updateWindowLevel];
-    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[NSArray arrayWithObjects:SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey, nil] context:&SKSnaphotWindowDefaultsObservationContext];
+    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:@[SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey] context:&SKSnaphotWindowDefaultsObservationContext];
     if (RUNNING_AFTER(10_13))
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKSnaphotWindowAppObservationContext];
     // the window is initialially exposed. The windowDidExpose notification is useless, it has nothing to do with showing the window
@@ -227,7 +227,7 @@ static char SKSnaphotWindowAppObservationContext;
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[NSArray arrayWithObjects:SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey, nil] context:&SKSnaphotWindowDefaultsObservationContext]; }
+    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:@[SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey] context:&SKSnaphotWindowDefaultsObservationContext]; }
     @catch (id e) {}
     if (RUNNING_AFTER(10_13)) {
         @try { [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:&SKSnaphotWindowAppObservationContext]; }
@@ -401,7 +401,7 @@ static char SKSnaphotWindowAppObservationContext;
 }
 
 - (NSDictionary *)currentSetup {
-    return [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:[self pageIndex]], PAGE_KEY, NSStringFromRect([self bounds]), RECT_KEY, [NSNumber numberWithDouble:[pdfView scaleFactor]], SCALEFACTOR_KEY, [NSNumber numberWithBool:[pdfView autoFits]], AUTOFITS_KEY, [NSNumber numberWithBool:[[self window] isVisible]], HASWINDOW_KEY, NSStringFromRect([[self window] frame]), WINDOWFRAME_KEY, nil];
+    return @{PAGE_KEY:[NSNumber numberWithUnsignedInteger:[self pageIndex]], RECT_KEY:NSStringFromRect([self bounds]), SCALEFACTOR_KEY:[NSNumber numberWithDouble:[pdfView scaleFactor]], AUTOFITS_KEY:[NSNumber numberWithBool:[pdfView autoFits]], HASWINDOW_KEY:[NSNumber numberWithBool:[[self window] isVisible]], WINDOWFRAME_KEY:NSStringFromRect([[self window] frame])};
 }
 
 #pragma mark Actions

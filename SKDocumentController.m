@@ -108,7 +108,7 @@ NSString *SKDocumentControllerDocumentKey = @"document";
 
 - (void)removeDocument:(NSDocument *)document {
     [[NSNotificationCenter defaultCenter] postNotificationName:SKDocumentControllerWillRemoveDocumentNotification 
-            object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:document, SKDocumentControllerDocumentKey, nil]];
+                                                        object:self userInfo:@{SKDocumentControllerDocumentKey:document}];
     [super removeDocument:document];
     [[NSNotificationCenter defaultCenter] postNotificationName:SKDocumentControllerDidRemoveDocumentNotification 
             object:self userInfo:nil];
@@ -196,7 +196,7 @@ static BOOL isEncapsulatedPostScriptData(NSData *data) {
 static NSData *convertTIFFDataToPDF(NSData *tiffData)
 {
     // this should accept any image data types we're likely to run across, but PICT returns a zero size image
-    CGImageSourceRef imsrc = CGImageSourceCreateWithData((CFDataRef)tiffData, (CFDictionaryRef)[NSDictionary dictionaryWithObject:(id)kUTTypeTIFF forKey:(id)kCGImageSourceTypeIdentifierHint]);
+    CGImageSourceRef imsrc = CGImageSourceCreateWithData((CFDataRef)tiffData, (CFDictionaryRef)@{(id)kCGImageSourceTypeIdentifierHint:(id)kUTTypeTIFF});
 
     NSMutableData *pdfData = nil;
     
@@ -248,20 +248,20 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
     NSData *data = nil;
     NSString *type = nil;
     
-    if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypePDF, nil]]) {
+    if ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypePDF]]) {
         [pboard types];
         data = [pboard dataForType:NSPasteboardTypePDF];
         type = SKPDFDocumentType;
-    } else if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:SKPasteboardTypePostScript, nil]]) {
+    } else if ([pboard canReadItemWithDataConformingToTypes:@[SKPasteboardTypePostScript]]) {
         [pboard types];
         data = [pboard dataForType:SKPasteboardTypePostScript];
         type = isEncapsulatedPostScriptData(data) ? SKEncapsulatedPostScriptDocumentType : SKPostScriptDocumentType;
-    } else if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypeTIFF, nil]]) {
+    } else if ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeTIFF]]) {
         [pboard types];
         data = convertTIFFDataToPDF([pboard dataForType:NSPasteboardTypeTIFF]);
         type = SKPDFDocumentType;
     } else {
-        NSArray *images = [pboard readObjectsForClasses:[NSArray arrayWithObject:[NSImage class]] options:[NSDictionary dictionary]];
+        NSArray *images = [pboard readObjectsForClasses:@[[NSImage class]] options:@{}];
         if ([images count] > 0) {
             data = convertTIFFDataToPDF([[images objectAtIndex:0] TIFFRepresentation]);
             type = SKPDFDocumentType;
@@ -380,7 +380,7 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
                 if (tabs) {
                     if (tabInfos == nil)
                         tabInfos = [[NSMutableArray alloc] init];
-                    [tabInfos addObject:[NSArray arrayWithObjects:tabs, [NSNumber numberWithUnsignedInteger:i], nil]];
+                    [tabInfos addObject:@[tabs, [NSNumber numberWithUnsignedInteger:i]]];
                 }
             }
             
@@ -426,7 +426,7 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
             if (hasSetup)
                 setup = [bookmark properties];
             else if ([bookmark pageIndex] != NSNotFound)
-                setup = [NSDictionary dictionaryWithObject:[bookmark pageNumber] forKey:@"page"];
+                setup = @{@"page":[bookmark pageNumber]};
             [self openDocumentWithContentsOfURL:fileURL display:hasSetup == NO completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error){
                 if (document && setup) {
                     if (hasSetup) {
@@ -650,7 +650,7 @@ static inline NSDictionary *optionsFromFragmentAndEvent(NSString *fragment) {
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
     if ([anItem action] == @selector(newDocumentFromClipboard:)) {
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
-        return [pboard canReadObjectForClasses:[NSArray arrayWithObject:[NSImage class]] options:[NSDictionary dictionary]] ||
+        return [pboard canReadObjectForClasses:@[[NSImage class]] options:@{}] ||
                [NSURL canReadURLFromPasteboard:pboard];
     } else if ([[SKDocumentController superclass] instancesRespondToSelector:_cmd]) {
         return [super validateUserInterfaceItem:anItem];
@@ -663,7 +663,7 @@ static inline NSDictionary *optionsFromFragmentAndEvent(NSString *fragment) {
     if ([fileExtensions count] == 0) {
         NSString *fileExtension = [[SKTemplateManager sharedManager] fileNameExtensionForTemplateType:documentTypeName];
         if (fileExtension)
-            fileExtensions = [NSArray arrayWithObject:fileExtension];
+            fileExtensions = @[fileExtension];
 	}
     return fileExtensions;
 }

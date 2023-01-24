@@ -98,7 +98,7 @@
     layer = [[CALayer alloc] init];
     [layer setCornerRadius:LOUPE_RADIUS];
     [layer setMasksToBounds:YES];
-    [layer setActions:[NSDictionary dictionaryWithObjectsAndKeys:[NSNull null], @"contents", nil]];
+    [layer setActions:@{@"contents":[NSNull null]}];
     [layer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
     [layer setFrame:NSRectToCGRect([pdfView bounds])];
     if (RUNNING_BEFORE(10_14)) {
@@ -164,7 +164,7 @@
             [window setContentView:view];
             [view addSubview:loupeView];
             [view setContentFilters:SKColorEffectFilters()];
-            [loupeView setContentFilters:[NSArray array]];
+            [loupeView setContentFilters:@[]];
             [loupeView release];
             if (NSIsEmptyRect([view bounds]) == NO)
                 [view setMaskImage:[NSImage maskImageWithSize:[view bounds].size cornerRadius:LOUPE_RADIUS]];

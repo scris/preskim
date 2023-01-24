@@ -86,7 +86,7 @@
     [lineLineWell bind:SKLineWellEndLineStyleKey toObject:sudc withKeyPath:VALUES_KEY_PATH(SKLineNoteEndLineStyleKey) options:nil];
     BIND_LINE_WELL(inkLineWell, Ink, SKLineWellDisplayStyleSimpleLine);
     
-    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:SKUnarchiveColorTransformerName, NSValueTransformerNameBindingOption, nil];
+    NSDictionary *options = @{NSValueTransformerNameBindingOption:SKUnarchiveColorTransformerName};
     [textFontWell setHasTextColor:YES];
     [textFontWell bind:@"textColor" toObject:sudc withKeyPath:VALUES_KEY_PATH(SKFreeTextNoteFontColorKey) options:options];
 }

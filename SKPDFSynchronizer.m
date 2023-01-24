@@ -328,12 +328,12 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
                 NSSortDescriptor *lineSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"line" ascending:YES] autorelease];
                 NSSortDescriptor *xSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"x" ascending:YES] autorelease];
                 NSSortDescriptor *ySortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"y" ascending:NO] autorelease];
-                NSArray *lineSortDescriptors = [NSArray arrayWithObjects:lineSortDescriptor, nil];
+                NSArray *lineSortDescriptors = @[lineSortDescriptor];
                 
                 for (array in [lines objectEnumerator])
                     [array sortUsingDescriptors:lineSortDescriptors];
                 [pages makeObjectsPerformSelector:@selector(sortUsingDescriptors:)
-                                       withObject:[NSArray arrayWithObjects:ySortDescriptor, xSortDescriptor, nil]];
+                                       withObject:@[ySortDescriptor, xSortDescriptor]];
                 
                 rv = [self shouldKeepRunning];
             }

@@ -449,7 +449,7 @@ enum {
     [absoluteURL getResourceValue:&isLocked forKey:NSURLIsUserImmutableKey error:NULL];
     
     if (permissions && ([permissions shortValue] & S_IWUSR) == 0)
-        [fm setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:[permissions shortValue] | S_IWUSR], NSFilePosixPermissions, nil] ofItemAtPath:[absoluteURL path] error:NULL];
+        [fm setAttributes:@{NSFilePosixPermissions:[NSNumber numberWithUnsignedInteger:[permissions shortValue] | S_IWUSR]} ofItemAtPath:[absoluteURL path] error:NULL];
     else
         permissions = nil;
     if ([isLocked boolValue])
@@ -475,7 +475,7 @@ enum {
         [eam setExtendedAttributeNamed:PRESENTATION_OPTIONS_KEY toPropertyListValue:options atPath:[absoluteURL path] options:flags error:NULL];
     
     if (permissions)
-        [fm setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:permissions, NSFilePosixPermissions, nil] ofItemAtPath:[absoluteURL path] error:NULL];
+        [fm setAttributes:@{NSFilePosixPermissions:permissions} ofItemAtPath:[absoluteURL path] error:NULL];
     if (isLocked)
         [absoluteURL setResourceValue:isLocked forKey:NSURLIsUserImmutableKey error:NULL];
     
@@ -566,7 +566,7 @@ enum {
         NSURL *fileURL = [self fileURL];
         // we move everything that's not ours out of the way, so we can preserve version control info
         NSSet *ourExtensions = [NSSet setWithObjects:@"pdf", @"skim", @"fdf", @"txt", @"text", @"rtf", @"plist", nil];
-        for (NSURL *url in [fm contentsOfDirectoryAtURL:fileURL includingPropertiesForKeys:[NSArray array] options:0 error:NULL]) {
+        for (NSURL *url in [fm contentsOfDirectoryAtURL:fileURL includingPropertiesForKeys:@[] options:0 error:NULL]) {
             if ([ourExtensions containsObject:[[url pathExtension] lowercaseString]] == NO) {
                 if (tmpURL == nil)
                     tmpURL = [fm URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:fileURL create:YES error:NULL];
@@ -608,7 +608,7 @@ enum {
         } else if (tmpURL) {
             // move extra package content like version info to the new location
             NSFileManager *fm = [NSFileManager defaultManager];
-            for (NSURL *url in [fm contentsOfDirectoryAtURL:tmpURL includingPropertiesForKeys:[NSArray array] options:0 error:NULL])
+            for (NSURL *url in [fm contentsOfDirectoryAtURL:tmpURL includingPropertiesForKeys:@[] options:0 error:NULL])
                 [fm moveItemAtURL:url toURL:[absoluteURL URLByAppendingPathComponent:[url lastPathComponent] isDirectory:NO] error:NULL];
         }
     } else if ([attributes count]) {
@@ -627,7 +627,7 @@ enum {
     if ([name isCaseInsensitiveEqual:BUNDLE_DATA_FILENAME])
         name = [name stringByAppendingString:@"1"];
     NSData *data;
-    NSFileWrapper *fileWrapper = [[NSFileWrapper alloc] initDirectoryWithFileWrappers:[NSDictionary dictionary]];
+    NSFileWrapper *fileWrapper = [[NSFileWrapper alloc] initDirectoryWithFileWrappers:@{}];
     NSDictionary *info = [[SKInfoWindowController sharedInstance] infoForDocument:self];
     NSDictionary *options = [[self mainWindowController] presentationOptions];
     if (options) {
@@ -1045,7 +1045,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         }
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeURLs:[NSArray arrayWithObjects:skimURL, nil] names:[NSArray arrayWithObject:[self displayName]]];
+        [pboard writeURLs:@[skimURL] names:[NSArray arrayWithObjects:[self displayName], nil]];
     } else {
         NSBeep();
     }
@@ -1101,7 +1101,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     }
     
     [oPanel setDirectoryURL:[fileURL URLByDeletingLastPathComponent]];
-    [oPanel setAllowedFileTypes:[NSArray arrayWithObjects:SKNotesDocumentType, nil]];
+    [oPanel setAllowedFileTypes:@[SKNotesDocumentType]];
     [oPanel beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSInteger result){
             if (result == NSFileHandlingPanelOKButton) {
                 NSURL *notesURL = [[oPanel URLs] objectAtIndex:0];
@@ -1339,7 +1339,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 - (IBAction)moveToTrash:(id)sender {
     NSURL *fileURL = [self fileURL];
     if ([fileURL checkResourceIsReachableAndReturnError:NULL]) {
-        [[NSWorkspace sharedWorkspace] recycleURLs:[NSArray arrayWithObjects:fileURL, nil] completionHandler:^(NSDictionary *newuRLs, NSError *error){
+        [[NSWorkspace sharedWorkspace] recycleURLs:@[fileURL] completionHandler:^(NSDictionary *newuRLs, NSError *error){
             if (error == nil)
                 [self close];
             else
@@ -1609,7 +1609,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 }
 
 - (NSArray *)tags {
-    return [[self mainWindowController] tags] ?: [NSArray array];
+    return [[self mainWindowController] tags] ?: @[];
 }
 
 - (double)rating {
@@ -1765,7 +1765,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 
 - (id)selectionSpecifier {
     PDFSelection *sel = [[self pdfView] currentSelection];
-    return [sel hasCharacters] ? [sel objectSpecifiers] : [NSArray array];
+    return [sel hasCharacters] ? [sel objectSpecifiers] : @[];
 }
 
 - (void)setSelectionSpecifier:(id)specifier {
@@ -2086,7 +2086,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
             specifier = [selection objectSpecifiers];
     }
     
-    return specifier ?: [NSArray array];
+    return specifier ?: @[];
 }
 
 - (void)handleEditScriptCommand:(NSScriptCommand *)command {

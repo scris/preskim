@@ -132,7 +132,7 @@
                         
                         NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:object] autorelease];
                         [dragItem setDraggingFrame:bounds contents:dragImage];
-                        [self beginDraggingSessionWithItems:[NSArray arrayWithObjects:dragItem, nil] event:theEvent source:self];
+                        [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
                     }
                     keepOn = NO;
                     break;

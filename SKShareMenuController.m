@@ -67,10 +67,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     NSURL *fileURL = [doc fileURL];
     NSArray *services = nil;
     if (fileURL) {
-        services = [NSSharingService sharingServicesForItems:[NSArray arrayWithObjects:fileURL, nil]];
+        services = [NSSharingService sharingServicesForItems:@[fileURL]];
         SKAttachmentEmailer *emailer = [[[SKAttachmentEmailer alloc] init] autorelease];
         if (emailer && [[services valueForKey:@"title"] containsObject:[emailer title]] == NO && [emailer permissionToComposeMessage])
-            services = services ? [services arrayByAddingObject:emailer] : [NSArray arrayWithObjects:emailer, nil];
+            services = services ? [services arrayByAddingObject:emailer] : @[emailer];
     }
     if ([services count] == 0) {
         [menu addItemWithTitle:NSLocalizedString(@"No Document", @"Menu item title") action:NULL keyEquivalent:@""];

@@ -89,9 +89,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 static inline NSArray *defaultKeysToObserve() {
     if (RUNNING_AFTER(10_13))
-        return [NSArray arrayWithObjects:SKInvertColorsInDarkModeKey, SKSepiaToneKey, nil];
+        return @[SKInvertColorsInDarkModeKey, SKSepiaToneKey];
     else
-        return [NSArray arrayWithObjects:SKSepiaToneKey, nil];
+        return @[SKSepiaToneKey];
 }
 
 // make sure we don't use the same method name as a superclass or a subclass

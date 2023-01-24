@@ -139,7 +139,7 @@ static Class SKBookmarkClass = Nil;
         NSString *label = nil;
         [url getResourceValue:&label forKey:NSURLLocalizedNameKey error:NULL];
         if ([[NSWorkspace sharedWorkspace] type:fileType conformsToType:SKFolderDocumentType]) {
-            NSArray *children = [self bookmarksForURLs:[fm contentsOfDirectoryAtURL:url includingPropertiesForKeys:[NSArray array] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL]];
+            NSArray *children = [self bookmarksForURLs:[fm contentsOfDirectoryAtURL:url includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL]];
             if ([children count] && (bookmark = [[self alloc] initFolderWithChildren:children label:label])) {
                 [array addObject:bookmark];
                 [bookmark release];
@@ -229,7 +229,7 @@ static Class SKBookmarkClass = Nil;
 
 - (BOOL)hasSetup { return NO; }
 
-- (NSArray *)containingBookmarks { return [NSArray array]; }
+- (NSArray *)containingBookmarks { return @[]; }
 
 - (NSArray *)children { return nil; }
 - (NSUInteger)countOfChildren { return 0; }
@@ -601,7 +601,7 @@ static Class SKBookmarkClass = Nil;
 }
 
 - (NSArray *)containingBookmarks {
-    return [NSArray arrayWithObject:self];
+    return @[self];
 }
 
 @end
@@ -786,7 +786,7 @@ static Class SKBookmarkClass = Nil;
             {
                 NSArray *aChildren = nil;
                 if (aURL) {
-                    aChildren = [SKBookmark bookmarksForURLs:[[NSFileManager defaultManager] contentsOfDirectoryAtURL:aURL includingPropertiesForKeys:[NSArray array] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL]];
+                    aChildren = [SKBookmark bookmarksForURLs:[[NSFileManager defaultManager] contentsOfDirectoryAtURL:aURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL]];
                     if (aLabel == nil)
                         [aURL getResourceValue:&aLabel forKey:NSURLLocalizedNameKey error:NULL];
                 }

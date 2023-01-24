@@ -546,7 +546,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
     [page setRotation:[page rotation] + rotation];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
-            object:[pdfView document] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SKPDFPageActionRotate, SKPDFPageActionKey, page, SKPDFPagePageKey, nil]];
+                                                        object:[pdfView document] userInfo:@{SKPDFPageActionKey:SKPDFPageActionRotate, SKPDFPagePageKey:page}];
 }
 
 - (void)rotateAllBy:(NSInteger)rotation {
@@ -562,7 +562,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
     [pdfView layoutDocumentView];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
-            object:[pdfView document] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SKPDFPageActionRotate, SKPDFPageActionKey, nil]];
+                                                        object:[pdfView document] userInfo:@{SKPDFPageActionKey:SKPDFPageActionRotate}];
 }
 
 - (IBAction)rotateRight:(id)sender {
@@ -593,7 +593,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
     [page setBounds:rect forBox:kPDFDisplayBoxCropBox];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
-            object:[pdfView document] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SKPDFPageActionCrop, SKPDFPageActionKey, page, SKPDFPagePageKey, nil]];
+                                                        object:[pdfView document] userInfo:@{SKPDFPageActionKey:SKPDFPageActionCrop, SKPDFPagePageKey:page}];
     
     // make sure we show the crop box
     [pdfView setDisplayBox:kPDFDisplayBoxCropBox];
@@ -627,7 +627,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
     [[self document] undoableActionIsDiscardable];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
-            object:[pdfView document] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SKPDFPageActionCrop, SKPDFPageActionKey, nil]];
+                                                        object:[pdfView document] userInfo:@{SKPDFPageActionKey:SKPDFPageActionCrop}];
     
     // make sure we show the crop box
     [pdfView setDisplayBox:kPDFDisplayBoxCropBox];
@@ -1206,7 +1206,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
                 [findController findForward:forward];
             } else {
                 NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSFindPboard];
-                NSArray *strings = [findPboard readObjectsForClasses:[NSArray arrayWithObject:[NSString class]] options:[NSDictionary dictionary]];
+                NSArray *strings = [findPboard readObjectsForClasses:@[[NSString class]] options:@{}];
                 if ([strings count] > 0)
                     findString = [strings objectAtIndex:0];
                 if ([findString length] > 0)

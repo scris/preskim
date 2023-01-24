@@ -182,10 +182,10 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
         controlView = topBar;
         [controlView setTranslatesAutoresizingMaskIntoConstraints:NO];
         
-        NSArray *constraints = [NSArray arrayWithObjects:
+        NSArray *constraints = @[
              [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:CONTROL_HEIGHT],
              [NSLayoutConstraint constraintWithItem:scalePopUpButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:5.0],
-             [NSLayoutConstraint constraintWithItem:scalePopUpButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil];
+             [NSLayoutConstraint constraintWithItem:scalePopUpButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:controlView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
         [NSLayoutConstraint activateConstraints:constraints];
         [self updateTrackingAreas];
     }
@@ -200,13 +200,13 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     [controlView setFrame:rect];
     [controlView setAlphaValue:0.0];
     [self addSubview:controlView positioned:NSWindowAbove relativeTo:nil];
-    NSArray *constraints = [NSArray arrayWithObjects:
+    NSArray *constraints = @[
         [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0], nil];
+        [NSLayoutConstraint constraintWithItem:controlView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0]];
     [NSLayoutConstraint activateConstraints:constraints];
     [[controlView animator] setAlphaValue:1.0];
-    NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([NSArray arrayWithObjects:[controlView subviews], nil]), NSAccessibilityUIElementsKey, nil]);
+    NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildren([controlView subviews]), NSAccessibilityUIElementsKey, nil]);
 }
 
 - (void)hideControlView {
@@ -513,7 +513,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     
     NSPasteboard *pboard = [NSPasteboard generalPasteboard];
     [pboard clearContents];
-    [pboard writeObjects:[NSArray arrayWithObjects:mutableString, nil]];
+    [pboard writeObjects:@[mutableString]];
 }
 
 // we don't want to steal the printDocument: action from the responder chain

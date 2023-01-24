@@ -78,7 +78,7 @@
 
 - (BOOL)isAccessibilityElement { return NO; }
 
-- (NSArray *)accessibilityChildren { return [NSArray array]; }
+- (NSArray *)accessibilityChildren { return @[]; }
 
 - (NSTimeInterval)fadeInDuration { return FADE_IN_DURATION; }
 

@@ -726,7 +726,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         } else if ([identifier isEqualToString:SKDocumentToolbarColorSwatchItemIdentifier]) {
             
             NSValueTransformer *transformer = [NSValueTransformer valueTransformerForName:SKUnarchiveColorArrayTransformerName];
-            NSDictionary *options = [NSDictionary dictionaryWithObject:transformer forKey:NSValueTransformerBindingOption];
+            NSDictionary *options = @{NSValueTransformerBindingOption:transformer};
             [colorSwatch bind:@"colors" toObject:[NSUserDefaultsController sharedUserDefaultsController] withKeyPath:[@"values." stringByAppendingString:SKSwatchColorsKey] options:options];
             [colorSwatch sizeToFit];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleColorSwatchColorsChangedNotification:)
@@ -800,7 +800,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [item2 setViewWithSizes:pacerSpeedField];
             SKToolbarItem *item3 = [[[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedStepperItemIdentifier] autorelease];
             [item3 setViewWithSizes:pacerSpeedStepper];
-            [group setSubitems:[NSArray arrayWithObjects:item1, item2, item3, nil]];
+            [group setSubitems:@[item1, item2, item3]];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarColorsItemIdentifier]) {
             
@@ -909,19 +909,17 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
-    return [NSArray arrayWithObjects:
-        SKDocumentToolbarPreviousNextItemIdentifier, 
+    return @[SKDocumentToolbarPreviousNextItemIdentifier,
         SKDocumentToolbarPageNumberItemIdentifier, 
         SKDocumentToolbarBackForwardItemIdentifier, 
         SKDocumentToolbarZoomInActualOutItemIdentifier, 
         SKDocumentToolbarToolModeItemIdentifier, 
-        SKDocumentToolbarNewNoteItemIdentifier, nil];
+        SKDocumentToolbarNewNoteItemIdentifier];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
     if (RUNNING_BEFORE(10_13))
-        return [NSArray arrayWithObjects:
-            SKDocumentToolbarPreviousNextItemIdentifier,
+        return @[SKDocumentToolbarPreviousNextItemIdentifier,
             SKDocumentToolbarPreviousNextFirstLastItemIdentifier,
             SKDocumentToolbarPreviousItemIdentifier,
             SKDocumentToolbarPageNumberItemIdentifier,
@@ -966,9 +964,8 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             NSToolbarFlexibleSpaceItemIdentifier,
             NSToolbarSpaceItemIdentifier,
             NSToolbarSeparatorItemIdentifier,
-            SKDocumentToolbarCustomizeItemIdentifier, nil];
-    return [NSArray arrayWithObjects:
-        SKDocumentToolbarPreviousNextItemIdentifier,
+            SKDocumentToolbarCustomizeItemIdentifier];
+    return @[SKDocumentToolbarPreviousNextItemIdentifier,
         SKDocumentToolbarPreviousNextFirstLastItemIdentifier,
         SKDocumentToolbarPreviousItemIdentifier,
         SKDocumentToolbarPageNumberItemIdentifier,
@@ -1015,7 +1012,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         NSToolbarFlexibleSpaceItemIdentifier,
         NSToolbarSpaceItemIdentifier,
         NSToolbarSeparatorItemIdentifier,
-        SKDocumentToolbarCustomizeItemIdentifier, nil];
+        SKDocumentToolbarCustomizeItemIdentifier];
 }
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)toolbarItem {

@@ -274,8 +274,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 + (void)initialize {
     SKINITIALIZE;
     
-    NSArray *sendTypes = [NSArray arrayWithObjects:NSPasteboardTypePDF, NSPasteboardTypeTIFF, NSPasteboardTypeString, NSPasteboardTypeRTF, nil];
-    [NSApp registerServicesMenuSendTypes:sendTypes returnTypes:[NSArray array]];
+    NSArray *sendTypes = @[NSPasteboardTypePDF, NSPasteboardTypeTIFF, NSPasteboardTypeString, NSPasteboardTypeRTF];
+    [NSApp registerServicesMenuSendTypes:sendTypes returnTypes:@[]];
     
     NSNumber *moveReadingBarModifiersNumber = [[NSUserDefaults standardUserDefaults] objectForKey:SKMoveReadingBarModifiersKey];
     NSNumber *resizeReadingBarModifiersNumber = [[NSUserDefaults standardUserDefaults] objectForKey:SKResizeReadingBarModifiersKey];
@@ -284,7 +284,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (resizeReadingBarModifiersNumber)
         resizeReadingBarModifiers = [resizeReadingBarModifiersNumber integerValue];
     
-    [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Double-click to edit.", @"Default text for new text note"), SKDefaultFreeTextNoteContentsKey, NSLocalizedString(@"New note", @"Default text for new anchored note"), SKDefaultAnchoredNoteContentsKey, nil]];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:@{SKDefaultFreeTextNoteContentsKey:NSLocalizedString(@"Double-click to edit.", @"Default text for new text note"), SKDefaultAnchoredNoteContentsKey:NSLocalizedString(@"New note", @"Default text for new anchored note")}];
     
     
     useToolModeCursors = [[NSUserDefaults standardUserDefaults] boolForKey:SKUseToolModeCursorsKey];
@@ -294,7 +294,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 + (NSArray *)defaultKeysToObserve {
-    return [NSArray arrayWithObjects:SKReadingBarColorKey, SKReadingBarInvertKey, nil];
+    return @[SKReadingBarColorKey, SKReadingBarInvertKey];
 }
 
 - (void)commonInitialization {
@@ -337,7 +337,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     trackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect owner:self userInfo:nil];
     [self addTrackingArea:trackingArea];
     
-    [self registerForDraggedTypes:[NSArray arrayWithObjects:NSPasteboardTypeColor, SKPasteboardTypeLineStyle, nil]];
+    [self registerForDraggedTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]];
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(handlePageChangedNotification:)
@@ -768,7 +768,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self setNeedsDisplayForAnnotation:currentAnnotation];
         }
         
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:wasAnnotation, SKPDFViewAnnotationKey, nil];
+        NSDictionary *userInfo = wasAnnotation ? @{SKPDFViewAnnotationKey:wasAnnotation} : nil;
 		[[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewCurrentAnnotationChangedNotification object:self userInfo:userInfo];
     }
 }
@@ -1342,11 +1342,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [pboard clearContents];
         
         if ([attrString length] > 0)
-            [pboard writeObjects:[NSArray arrayWithObject:attrString]];
+            [pboard writeObjects:@[attrString]];
         if (imageItem)
-            [pboard writeObjects:[NSArray arrayWithObject:imageItem]];
+            [pboard writeObjects:@[imageItem]];
         if (note)
-            [pboard writeObjects:[NSArray arrayWithObject:note]];
+            [pboard writeObjects:@[note]];
         
     } else {
         [super copy:sender];
@@ -1360,12 +1360,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
     
     NSPasteboard *pboard = [NSPasteboard generalPasteboard];
-    NSDictionary *options = [NSDictionary dictionary];
+    NSDictionary *options = @{};
     NSArray *newAnnotations = nil;
     PDFPage *page;
     
     if (isPlainText == NO)
-        newAnnotations = [pboard readObjectsForClasses:[NSArray arrayWithObject:[PDFAnnotation class]] options:options];
+        newAnnotations = [pboard readObjectsForClasses:@[[PDFAnnotation class]] options:options];
     
     if ([newAnnotations count] > 0) {
         
@@ -1391,9 +1391,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         id str = nil;
         
         if (isPlainText || preferNote)
-            str = [[pboard readObjectsForClasses:[NSArray arrayWithObjects:[NSAttributedString class], [NSString class], nil] options:options] firstObject];
+            str = [[pboard readObjectsForClasses:@[[NSAttributedString class], [NSString class]] options:options] firstObject];
         else
-            str = [[pboard readObjectsForClasses:[NSArray arrayWithObjects:[NSString class], nil] options:options] firstObject];
+            str = [[pboard readObjectsForClasses:@[[NSString class]] options:options] firstObject];
         
         
         if (str) {
@@ -1440,7 +1440,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                     attrString = [[[NSMutableAttributedString alloc] initWithAttributedString:str] autorelease];
                 if (isPlainText || [str isKindOfClass:[NSString class]]) {
                     NSFont *font = [[NSUserDefaults standardUserDefaults] fontForNameKey:SKAnchoredNoteFontNameKey sizeKey:SKAnchoredNoteFontSizeKey];
-                    [attrString setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil] range:NSMakeRange(0, [attrString length])];
+                    if (font)
+                        [attrString setAttributes:@{NSFontAttributeName:font} range:NSMakeRange(0, [attrString length])];
                 }
                 [(SKNPDFAnnotationNote *)newAnnotation setText:attrString];
             } else {
@@ -2296,7 +2297,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [menu insertItemWithTitle:NSLocalizedString(@"Remove Current Note", @"Menu item title") action:@selector(removeCurrentAnnotation:) target:self atIndex:0];
         }
         
-        if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObjects:[PDFAnnotation class], [NSString class], nil] options:[NSDictionary dictionary]]) {
+        if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}]) {
             [menu insertItemWithTitle:NSLocalizedString(@"Paste", @"Menu item title") action:@selector(paste:) keyEquivalent:@"" atIndex:0];
             item = [menu insertItemWithTitle:NSLocalizedString(@"Paste", @"Menu item title") action:@selector(alternatePaste:) keyEquivalent:@"" atIndex:1];
             [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
@@ -2368,7 +2369,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [page setRotation:[page rotation] + rotation];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
-            object:[self document] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SKPDFPageActionRotate, SKPDFPageActionKey, page, SKPDFPagePageKey, nil]];
+                                                        object:[self document] userInfo:@{SKPDFPageActionKey:SKPDFPageActionRotate, SKPDFPagePageKey:page}];
 }
 
 - (void)beginGestureWithEvent:(NSEvent *)theEvent {
@@ -2428,7 +2429,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender {
     NSDragOperation dragOp = NSDragOperationNone;
     NSPasteboard *pboard = [sender draggingPasteboard];
-    if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypeColor, SKPasteboardTypeLineStyle, nil]]) {
+    if ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]]) {
         return [self draggingUpdated:sender];
     } else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd]) {
         dragOp = [super draggingEntered:sender];
@@ -2439,7 +2440,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender {
     NSDragOperation dragOp = NSDragOperationNone;
     NSPasteboard *pboard = [sender draggingPasteboard];
-    if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypeColor, SKPasteboardTypeLineStyle, nil]]) {
+    if ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]]) {
         NSPoint location = [self convertPoint:[sender draggingLocation] fromView:nil];
         PDFPage *page = [self pageForPoint:location nearest:NO];
         if (page) {
@@ -2450,7 +2451,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             while (i-- > 0) {
                 annotation = [annotations objectAtIndex:i];
                 if ([annotation isSkimNote] && [annotation hitTest:location] &&
-                    ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypeColor, nil]] || [annotation hasBorder])) {
+                    ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor]] || [annotation hasBorder])) {
                     [self setHighlightAnnotation:annotation];
                     dragOp = NSDragOperationGeneric;
                     break;
@@ -2467,7 +2468,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender {
     NSPasteboard *pboard = [sender draggingPasteboard];
-    if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypeColor, SKPasteboardTypeLineStyle, nil]])
+    if ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]])
         [self setHighlightAnnotation:nil];
     else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd])
         [super draggingExited:sender];
@@ -2476,9 +2477,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender {
     BOOL performedDrag = NO;
     NSPasteboard *pboard = [sender draggingPasteboard];
-    if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypeColor, SKPasteboardTypeLineStyle, nil]]) {
+    if ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]]) {
         if (highlightAnnotation) {
-            if ([pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSPasteboardTypeColor, nil]]) {
+            if ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor]]) {
                 BOOL isShift = ([NSEvent standardModifierFlags] & NSShiftKeyMask) != 0;
                 BOOL isAlt = ([NSEvent standardModifierFlags] & NSAlternateKeyMask) != 0;
                 [highlightAnnotation setColor:[NSColor colorFromPasteboard:pboard] alternate:isAlt updateDefaults:isShift];
@@ -2843,7 +2844,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [self setNeedsDisplayForAnnotation:annotation];
     [self annotationsChangedOnPage:page];
     [self resetPDFToolTipRects];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidAddAnnotationNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:page, SKPDFViewPageKey, annotation, SKPDFViewAnnotationKey, nil]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidAddAnnotationNotification object:self userInfo:@{SKPDFViewPageKey:page, SKPDFViewAnnotationKey:annotation}];
 }
 
 - (void)removeCurrentAnnotation:(id)sender{
@@ -2878,7 +2879,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [self resetPDFToolTipRects];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidRemoveAnnotationNotification object:self
-        userInfo:[NSDictionary dictionaryWithObjectsAndKeys:wasAnnotation, SKPDFViewAnnotationKey, page, SKPDFViewPageKey, nil]];
+                                                      userInfo:@{SKPDFViewAnnotationKey:wasAnnotation, SKPDFViewPageKey:page}];
     [wasAnnotation release];
     [page release];
 }
@@ -2899,7 +2900,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [self resetPDFToolTipRects];
     if ([self isEditingAnnotation:annotation])
         [editor layoutWithEvent:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidMoveAnnotationNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldPage, SKPDFViewOldPageKey, page, SKPDFViewNewPageKey, annotation, SKPDFViewAnnotationKey, nil]];                
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidMoveAnnotationNotification object:self userInfo:@{SKPDFViewOldPageKey:oldPage, SKPDFViewNewPageKey:page, SKPDFViewAnnotationKey:annotation}];                
     [oldPage release];
 }
 
@@ -3396,11 +3397,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             return YES;
         return NO;
     } else if (action == @selector(paste:)) {
-        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObjects:[PDFAnnotation class], [NSString class], nil] options:[NSDictionary dictionary]];
+        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}];
     } else if (action == @selector(alternatePaste:)) {
-        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObjects:[PDFAnnotation class], [NSAttributedString class], [NSString class], nil] options:[NSDictionary dictionary]];
+        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(pasteAsPlainText:)) {
-        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObjects:[NSAttributedString class], [NSString class], nil] options:[NSDictionary dictionary]];
+        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObjects:[NSAttributedString class], [NSString class], nil] options:@{}];
     } else if (action == @selector(delete:)) {
         return [currentAnnotation isSkimNote];
     } else if (action == @selector(selectAll:)) {

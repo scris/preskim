@@ -65,7 +65,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
 - (void)dealloc {
     if (RUNNING_AFTER(10_13)) {
         @try {
-            [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:[NSArray arrayWithObjects:SKBackgroundColorKey, SKFullScreenBackgroundColorKey, SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey, nil] context:&SKDisplayPreferencesDefaultsObservationContext];
+            [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:@[SKBackgroundColorKey, SKFullScreenBackgroundColorKey, SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,] context:&SKDisplayPreferencesDefaultsObservationContext];
         }
         @catch(id e) {}
     }
@@ -90,8 +90,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
     [super viewDidLoad];
     
     NSValueTransformer *transformer = [NSValueTransformer valueTransformerForName:SKUnarchiveColorArrayTransformerName];
-    NSDictionary *options = [NSDictionary dictionaryWithObject:transformer forKey:NSValueTransformerBindingOption];
-    [colorSwatch bind:@"colors" toObject:[NSUserDefaultsController sharedUserDefaultsController] withKeyPath:[@"values." stringByAppendingString:SKSwatchColorsKey] options:options];
+    [colorSwatch bind:@"colors" toObject:[NSUserDefaultsController sharedUserDefaultsController] withKeyPath:[@"values." stringByAppendingString:SKSwatchColorsKey] options:@{NSValueTransformerBindingOption:transformer}];
     [colorSwatch sizeToFit];
     [colorSwatch setSelects:YES];
     [colorSwatch setFrame:NSOffsetRect([colorSwatch frame], 0.0, 1.0)];
@@ -108,7 +107,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
         
         [self updateBackgroundColors];
         
-        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:[NSArray arrayWithObjects:SKBackgroundColorKey, SKFullScreenBackgroundColorKey, SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey, nil] context:&SKDisplayPreferencesDefaultsObservationContext];
+        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:@[SKBackgroundColorKey, SKFullScreenBackgroundColorKey, SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey] context:&SKDisplayPreferencesDefaultsObservationContext];
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKDisplayPreferencesDefaultsObservationContext];
     }
 }
