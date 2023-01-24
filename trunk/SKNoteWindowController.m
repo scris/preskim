@@ -118,7 +118,7 @@ static NSImage *noteIcons[7] = {nil, nil, nil, nil, nil, nil, nil};
 }
 
 + (NSArray *)fontKeysToObserve {
-    return [NSArray arrayWithObjects:SKAnchoredNoteFontNameKey, SKAnchoredNoteFontSizeKey, nil];
+    return @[SKAnchoredNoteFontNameKey, SKAnchoredNoteFontSizeKey];
 }
 
 + (void)initialize {
@@ -214,7 +214,7 @@ static NSURL *temporaryDirectoryURL = nil;
         
         NSDictionary *options = nil;
         if (RUNNING_AFTER(10_13))
-            options = [NSDictionary dictionaryWithObjectsAndKeys:[[[SKAddTextColorTransformer alloc] init] autorelease], NSValueTransformerBindingOption, nil];
+            options = @{NSValueTransformerBindingOption:[[[SKAddTextColorTransformer alloc] init] autorelease]};
         [textView bind:@"attributedString" toObject:noteController withKeyPath:@"selection.text" options:options];
         
         for (NSMenuItem *item in [iconTypePopUpButton itemArray])
@@ -412,7 +412,7 @@ static NSURL *temporaryDirectoryURL = nil;
         } else {
             NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
             [item setString:(NSString *)kUTTypeTIFF forType:(NSString *)kPasteboardTypeFilePromiseContent];
-            [item setDataProvider:self forTypes:[NSArray arrayWithObjects:(NSString *)kPasteboardTypeFileURLPromise, NSPasteboardTypeTIFF, nil]];
+            [item setDataProvider:self forTypes:@[(NSString *)kPasteboardTypeFileURLPromise, NSPasteboardTypeTIFF]];
             return item;
         }
     } else return nil;
@@ -489,7 +489,7 @@ static NSURL *temporaryDirectoryURL = nil;
         NSFileManager *fm = [NSFileManager defaultManager];
         NSURL *tmpDirURL = [previewURL URLByDeletingLastPathComponent];
         [fm removeItemAtURL:previewURL error:NULL];
-        if ([[fm contentsOfDirectoryAtURL:tmpDirURL includingPropertiesForKeys:[NSArray array] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL] count] == 0)
+        if ([[fm contentsOfDirectoryAtURL:tmpDirURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL] count] == 0)
             [fm removeItemAtURL:tmpDirURL error:NULL];
         SKDESTROY(previewURL);
     }

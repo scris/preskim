@@ -334,7 +334,7 @@ static NSSet *keysAffectedByStatus = nil;
 
 - (void)moveToTrash {
     if ([self canRemove] && fileURL)
-        [[NSWorkspace sharedWorkspace] recycleURLs:[NSArray arrayWithObjects:fileURL, nil] completionHandler:NULL];
+        [[NSWorkspace sharedWorkspace] recycleURLs:@[fileURL] completionHandler:NULL];
 }
 
 - (BOOL)canCancel {

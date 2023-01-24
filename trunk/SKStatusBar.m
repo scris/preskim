@@ -88,11 +88,11 @@
         [rightField setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addSubview:rightField];
         
-        [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
+        [NSLayoutConstraint activateConstraints:@[
              [NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:LEFT_MARGIN],
              [NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0],
              [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:rightField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:RIGHT_MARGIN],
-            [NSLayoutConstraint constraintWithItem:rightField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil]];
+            [NSLayoutConstraint constraintWithItem:rightField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]]];
         
         iconView = nil;
 		progressIndicator = nil;
@@ -149,17 +149,17 @@
     if (visible) {
         [[view window] setContentBorderThickness:statusHeight forEdge:NSMinYEdge];
         [contentView addSubview:self];
-        constraints = [NSArray arrayWithObjects:
+        constraints = @[
             [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:animate ? -statusHeight : 0.0],
-            [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
+            [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
         [bottomConstraint setActive:NO];
         [NSLayoutConstraint activateConstraints:constraints];
         [contentView layoutSubtreeIfNeeded];
         bottomConstraint = [constraints objectAtIndex:2];
     } else {
-        constraints = [NSArray arrayWithObjects:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
+        constraints = @[[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
     }
     
     if (animate) {
@@ -282,11 +282,11 @@
             [iconView setTranslatesAutoresizingMaskIntoConstraints:NO];
             [self addSubview:iconView];
             [[self constraintWithFirstItem:leftField firstAttribute:NSLayoutAttributeLeading] setActive:NO];
-            [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
+            [NSLayoutConstraint activateConstraints:@[
                  [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:LEFT_MARGIN],
                  [NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:iconView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:SEPARATION],
                  [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:1.0],
-                 [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:iconView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0], nil]];
+                 [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:iconView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0]]];
         }
         [iconView setImage:icon];
     } else if (iconView) {
@@ -324,10 +324,10 @@
             [progressIndicator setTranslatesAutoresizingMaskIntoConstraints:NO];
             [self addSubview:progressIndicator];
             [[self constraintWithSecondItem:rightField secondAttribute:NSLayoutAttributeTrailing] setActive:NO];
-            [NSLayoutConstraint activateConstraints:[NSArray arrayWithObjects:
+            [NSLayoutConstraint activateConstraints:@[
                  [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:progressIndicator attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:RIGHT_MARGIN],
                  [NSLayoutConstraint constraintWithItem:progressIndicator attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:rightField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:SEPARATION],
-                 [NSLayoutConstraint constraintWithItem:progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0], nil]];
+                 [NSLayoutConstraint constraintWithItem:progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]]];
 		}
 		[progressIndicator setIndeterminate:style == SKProgressIndicatorStyleIndeterminate];
 	}

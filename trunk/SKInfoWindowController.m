@@ -209,16 +209,16 @@ static NSString *SKFileSizeStringForFileURL(NSURL *fileURL, unsigned long long *
     unsigned long long size, logicalSize = 0;
     BOOL isDir = NO;
     NSMutableString *string = [NSMutableString string];
-    NSDictionary *values = [fileURL resourceValuesForKeys:[NSArray arrayWithObjects:NSURLTotalFileSizeKey, NSURLTotalFileAllocatedSizeKey, NSURLIsDirectoryKey, nil] error:NULL];
+    NSDictionary *values = [fileURL resourceValuesForKeys:@[NSURLTotalFileSizeKey, NSURLTotalFileAllocatedSizeKey, NSURLIsDirectoryKey] error:NULL];
     
     logicalSize = [[values objectForKey:NSURLTotalFileSizeKey] unsignedLongLongValue];
     size = [[values objectForKey:NSURLTotalFileAllocatedSizeKey] unsignedLongLongValue];
     isDir = [[values objectForKey:NSURLIsDirectoryKey] boolValue];
     
     if (isDir) {
-        NSDirectoryEnumerator *dirEnum = [[NSFileManager defaultManager] enumeratorAtURL:fileURL includingPropertiesForKeys:[NSArray arrayWithObjects:NSURLTotalFileSizeKey, NSURLTotalFileAllocatedSizeKey, nil] options:0 errorHandler:NULL];
+        NSDirectoryEnumerator *dirEnum = [[NSFileManager defaultManager] enumeratorAtURL:fileURL includingPropertiesForKeys:@[NSURLTotalFileSizeKey, NSURLTotalFileAllocatedSizeKey] options:0 errorHandler:NULL];
         for (NSURL *subFileURL in dirEnum) {
-            values = [subFileURL resourceValuesForKeys:[NSArray arrayWithObjects:NSURLTotalFileSizeKey, NSURLTotalFileAllocatedSizeKey, NSURLIsDirectoryKey, nil] error:NULL];
+            values = [subFileURL resourceValuesForKeys:@[NSURLTotalFileSizeKey, NSURLTotalFileAllocatedSizeKey, NSURLIsDirectoryKey] error:NULL];
             logicalSize += [[values objectForKey:NSURLTotalFileSizeKey] unsignedLongLongValue];
             size += [[values objectForKey:NSURLTotalFileAllocatedSizeKey] unsignedLongLongValue];
         }
@@ -294,7 +294,7 @@ NSString *SKSizeString(NSSize size, NSSize altSize) {
     [dictionary setValue:[NSNumber numberWithUnsignedLongLong:physicalSize] forKey:SKInfoPhysicalSizeKey];
     [dictionary setValue:[NSNumber numberWithUnsignedLongLong:logicalSize] forKey:SKInfoLogicalSizeKey];
     if ([doc respondsToSelector:@selector(tags)])
-        [dictionary setValue:[(SKMainDocument *)doc tags] ?: [NSArray array] forKey:SKInfoTagsKey];
+        [dictionary setValue:[(SKMainDocument *)doc tags] ?: @[] forKey:SKInfoTagsKey];
     if ([doc respondsToSelector:@selector(rating)])
         [dictionary setValue:[NSNumber numberWithDouble:[(SKMainDocument *)doc rating]] forKey:SKInfoRatingKey];
     

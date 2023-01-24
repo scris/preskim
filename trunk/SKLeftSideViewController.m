@@ -145,7 +145,7 @@
     [[[groupedFindTableView tableColumnWithIdentifier:RELEVANCE_COLUMNID] dataCell] setEnabled:NO];
     
     NSSortDescriptor *countDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKGroupedSearchResultCountKey ascending:NO] autorelease];
-    [groupedFindArrayController setSortDescriptors:[NSArray arrayWithObjects:countDescriptor, nil]];
+    [groupedFindArrayController setSortDescriptors:@[countDescriptor]];
     
     [thumbnailTableView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:NO];
     

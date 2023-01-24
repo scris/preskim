@@ -218,7 +218,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
     for (PDFPage *page in [selection pages]) {
         PDFAnnotation *annotation = [[self alloc] initSkimNoteWithSelection:selection forPage:page markupType:type];
         if (annotation) {
-            [annotations addObject:[NSArray arrayWithObjects:annotation, page, nil]];
+            [annotations addObject:@[annotation, page]];
             [annotation release];
         }
     }
@@ -426,7 +426,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
 
 - (id)selectionSpecifier {
     PDFSelection *sel = [self selection];
-    return [sel hasCharacters] ? [sel objectSpecifiers] : [NSArray array];
+    return [sel hasCharacters] ? [sel objectSpecifiers] : @[];
 }
 
 - (NSArray *)scriptingPointLists {

@@ -69,14 +69,14 @@ static id (*original_initWithString)(id, SEL, id) = NULL;
 }
 
 + (BOOL)canReadURLFromPasteboard:(NSPasteboard *)pboard {
-    return [pboard canReadObjectForClasses:[NSArray arrayWithObject:[SKURL class]] options:[NSDictionary dictionary]] ||
-           [pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSURLPboardType, NSFilenamesPboardType, nil]];
+    return [pboard canReadObjectForClasses:@[[SKURL class]] options:@{}] ||
+           [pboard canReadItemWithDataConformingToTypes:@[NSURLPboardType, NSFilenamesPboardType]];
 }
 
 + (NSArray *)readURLsFromPasteboard:(NSPasteboard *)pboard {
-    NSArray *URLs = [pboard readObjectsForClasses:[NSArray arrayWithObject:[SKURL class]] options:[NSDictionary dictionary]];
+    NSArray *URLs = [pboard readObjectsForClasses:@[[SKURL class]] options:@{}];
     if ([URLs count] == 0) {
-        NSString *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSURLPboardType, NSFilenamesPboardType, nil]];
+        NSString *type = [pboard availableTypeFromArray:@[NSURLPboardType, NSFilenamesPboardType]];
         if ([type isEqualToString:NSURLPboardType]) {
             URLs = [NSArray arrayWithObjects:[NSURL URLFromPasteboard:pboard], nil];
         } else if ([type isEqualToString:NSFilenamesPboardType]) {
@@ -93,12 +93,12 @@ static id (*original_initWithString)(id, SEL, id) = NULL;
 }
 
 + (BOOL)canReadFileURLFromPasteboard:(NSPasteboard *)pboard {
-    return [pboard canReadObjectForClasses:[NSArray arrayWithObject:[NSURL class]] options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSPasteboardURLReadingFileURLsOnlyKey, nil]] ||
-           [pboard canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:NSFilenamesPboardType, nil]];
+    return [pboard canReadObjectForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey:@YES}] ||
+           [pboard canReadItemWithDataConformingToTypes:@[NSFilenamesPboardType]];
 }
 
 + (NSArray *)readFileURLsFromPasteboard:(NSPasteboard *)pboard {
-    NSArray *fileURLs = [pboard readObjectsForClasses:[NSArray arrayWithObject:[NSURL class]] options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSPasteboardURLReadingFileURLsOnlyKey, nil]];
+    NSArray *fileURLs = [pboard readObjectsForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey:@YES}];
     if ([fileURLs count] == 0 && [[pboard types] containsObject:NSFilenamesPboardType]) {
         NSArray *filenames = [pboard propertyListForType:NSFilenamesPboardType];
         if ([filenames count]  > 0) {
@@ -289,7 +289,7 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
 }
 
 - (NSAttributedString *)linkedText {
-    return [[[NSAttributedString alloc] initWithString:[self absoluteString] attributes:[NSDictionary dictionaryWithObject:self forKey:NSLinkAttributeName]] autorelease];
+    return [[[NSAttributedString alloc] initWithString:[self absoluteString] attributes:@{NSLinkAttributeName:self}] autorelease];
 }
 
 - (NSAttributedString *)linkedFileName {
@@ -303,7 +303,7 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
         else
             fileName = [[NSFileManager defaultManager] displayNameAtPath:fileName];
     }
-    return [[[NSAttributedString alloc] initWithString:([self isFileURL] ? [[NSFileManager defaultManager] displayNameAtPath:[self path]] : [self absoluteString]) attributes:[NSDictionary dictionaryWithObject:self forKey:NSLinkAttributeName]] autorelease];
+    return [[[NSAttributedString alloc] initWithString:([self isFileURL] ? [[NSFileManager defaultManager] displayNameAtPath:[self path]] : [self absoluteString]) attributes:@{NSLinkAttributeName:self}] autorelease];
 }
 
 @end
@@ -313,7 +313,7 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
 @implementation SKURL
 
 + (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
-    return [NSArray arrayWithObjects:(NSString *)kUTTypeURL, (NSString *)kUTTypeFileURL, NSPasteboardTypeString, nil];
+    return @[(NSString *)kUTTypeURL, (NSString *)kUTTypeFileURL, NSPasteboardTypeString];
 }
 
 + (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {

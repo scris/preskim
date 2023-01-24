@@ -191,7 +191,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 #pragma clang diagnostic ignored "-Wpartial-availability"
     [sel setColor:[NSColor findHighlightColor]];
 #pragma clang diagnostic pop
-    NSArray *selections = [NSArray arrayWithObject:sel];
+    NSArray *selections = @[sel];
     [sel release];
     return [[self destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections label:nil];
 }

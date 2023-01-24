@@ -47,9 +47,9 @@ static char SKThumbnailImageViewDefaultsObservationContext;
 
 static inline NSArray *defaultKeysToObserve() {
     if (RUNNING_AFTER(10_13))
-        return [NSArray arrayWithObjects:SKInvertColorsInDarkModeKey, SKSepiaToneKey, nil];
+        return @[SKInvertColorsInDarkModeKey, SKSepiaToneKey];
     else
-        return [NSArray arrayWithObjects:SKSepiaToneKey, nil];
+        return @[SKSepiaToneKey];
 }
 
 - (void)commonInit {

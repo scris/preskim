@@ -325,11 +325,11 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     NSShadow *aShadow = [[NSShadow alloc] init];
     [aShadow setShadowColor:[NSColor blackColor]];
     [aShadow setShadowBlurRadius:2.0];
-    NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:
-        [NSFont boldSystemFontOfSize:15.0], NSFontAttributeName, 
-        [NSColor whiteColor], NSForegroundColorAttributeName, 
-        [NSParagraphStyle defaultClippingParagraphStyle], NSParagraphStyleAttributeName, 
-        aShadow, NSShadowAttributeName, nil];
+    NSDictionary *attrs = @{NSFontAttributeName:
+        [NSFont boldSystemFontOfSize:15.0],
+                            NSForegroundColorAttributeName:[NSColor whiteColor],
+                            NSParagraphStyleAttributeName:[NSParagraphStyle defaultClippingParagraphStyle],
+                            NSShadowAttributeName:aShadow};
     [aShadow release];
     return [[[NSAttributedString alloc] initWithString:stringValue attributes:attrs] autorelease];
 }

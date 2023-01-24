@@ -420,7 +420,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             
             NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:item] autorelease];
             [dragItem setDraggingFrame:rect contents:dragImage];
-            [self beginDraggingSessionWithItems:[NSArray arrayWithObjects:dragItem, nil] event:theEvent source:self];
+            [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
         }
         
     } else {
@@ -440,7 +440,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     if (skimURL != nil) {
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeURLs:[NSArray arrayWithObjects:skimURL, nil] names:[NSArray arrayWithObjects:[[[[self window] windowController] document] displayName], nil]];
+        [pboard writeURLs:@[skimURL] names:[NSArray arrayWithObjects:[[[[self window] windowController] document] displayName], nil]];
     }
 }
 

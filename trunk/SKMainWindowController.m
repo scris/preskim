@@ -668,7 +668,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [setup addEntriesFromDictionary:[self currentPDFSettings]];
     } else {
         [setup addEntriesFromDictionary:savedNormalSetup];
-        [setup removeObjectsForKeys:[NSArray arrayWithObjects:HASHORIZONTALSCROLLER_KEY, HASVERTICALSCROLLER_KEY, AUTOHIDESSCROLLERS_KEY, DRAWSBACKGROUND_KEY, LOCKED_KEY, nil]];
+        [setup removeObjectsForKeys:@[HASHORIZONTALSCROLLER_KEY, HASVERTICALSCROLLER_KEY, AUTOHIDESSCROLLERS_KEY, DRAWSBACKGROUND_KEY, LOCKED_KEY]];
     }
     
     return setup;
@@ -888,7 +888,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [rightSideController.noteOutlineView reloadData];
     [leftSideController.thumbnailTableView reloadTypeSelectStrings];
 
-    [self updatePageColumnWidthForTableViews:[NSArray arrayWithObjects:leftSideController.thumbnailTableView, rightSideController.snapshotTableView, leftSideController.tocOutlineView, rightSideController.noteOutlineView, leftSideController.findTableView, leftSideController.groupedFindTableView, nil]];
+    [self updatePageColumnWidthForTableViews:@[leftSideController.thumbnailTableView, rightSideController.snapshotTableView, leftSideController.tocOutlineView, rightSideController.noteOutlineView, leftSideController.findTableView, leftSideController.groupedFindTableView]];
     
     PDFOutline *outlineRoot = [[pdfView document] outlineRoot];
     
@@ -1386,7 +1386,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [notes insertObject:note atIndex:theIndex];
 
     // Start observing the just-inserted notes so that, when they're changed, we can record undo operations.
-    [self startObservingNotes:[NSArray arrayWithObject:note]];
+    [self startObservingNotes:@[note]];
 }
 
 - (void)insertNotes:(NSArray *)newNotes atIndexes:(NSIndexSet *)theIndexes {
@@ -1406,7 +1406,7 @@ static char SKMainWindowContentLayoutObservationContext;
     NSMapRemove(rowHeights, note);
     
     // Stop observing the removed notes
-    [self stopObservingNotes:[NSArray arrayWithObject:note]];
+    [self stopObservingNotes:@[note]];
     
     [notes removeObjectAtIndex:theIndex];
 }
@@ -1665,7 +1665,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [scrollView setAutohidesScrollers:YES];
         [scrollView setDocumentView:overviewView];
         [scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [overviewView setBackgroundColors:[NSArray arrayWithObjects:[NSColor clearColor], nil]];
+        [overviewView setBackgroundColors:@[[NSColor clearColor]]];
         [scrollView setDrawsBackground:NO];
         overviewContentView = [[NSVisualEffectView alloc] init];
         [overviewContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -1690,11 +1690,11 @@ static char SKMainWindowContentLayoutObservationContext;
     NSView *oldView = isPresentation ? pdfView : splitView;
     NSView *contentView = [oldView superview];
     BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
-    NSArray *constraints = [NSArray arrayWithObjects:
+    NSArray *constraints = @[
         [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:overviewContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:mwcFlags.fullSizeContent || isPresentation ? contentView : [[self window] contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
+        [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:overviewContentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
     
     [overviewContentView setFrame:[oldView frame]];
     [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
@@ -1756,11 +1756,11 @@ static char SKMainWindowContentLayoutObservationContext;
     NSView *newView = isMainWindow ? splitView : pdfView;
     NSView *contentView = [overviewContentView superview];
     BOOL hasStatus = isMainWindow && [statusBar isVisible];
-    NSArray *constraints = [NSArray arrayWithObjects:
+    NSArray *constraints = @[
         [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:mwcFlags.fullSizeContent || isMainWindow == NO ? contentView : [mainWindow contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0], nil];
+        [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
     
     if (animate) {
         BOOL hasLayer = [contentView wantsLayer] || [contentView layer] != nil;
@@ -1911,10 +1911,10 @@ static char SKMainWindowContentLayoutObservationContext;
         NSArray *constraints = nil;
         
         [contentView addSubview:findBar];
-        constraints = [NSArray arrayWithObjects:
+        constraints = @[
             [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:findBar attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:animate ? titleBarHeight - barHeight : titleBarHeight], nil];
+            [NSLayoutConstraint constraintWithItem:findBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:animate ? titleBarHeight - barHeight : titleBarHeight]];
         [NSLayoutConstraint activateConstraints:constraints];
         if (mwcFlags.fullSizeContent == NO) {
             [[contentView constraintWithFirstItem:pdfSplitView firstAttribute:NSLayoutAttributeTop] setActive:NO];
@@ -2450,11 +2450,11 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 
 - (void)registerAsObserver {
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:
-        [NSArray arrayWithObjects:SKBackgroundColorKey, SKFullScreenBackgroundColorKey,
+        @[SKBackgroundColorKey, SKFullScreenBackgroundColorKey,
                                   SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,
                                   SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
                                   SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
-                                  SKTableFontSizeKey, nil]
+                                  SKTableFontSizeKey]
         context:&SKMainWindowDefaultsObservationContext];
     if (RUNNING_AFTER(10_13))
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKMainWindowAppObservationContext];
@@ -2465,11 +2465,11 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 - (void)unregisterAsObserver {
     @try {
         [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:
-         [NSArray arrayWithObjects:SKBackgroundColorKey, SKFullScreenBackgroundColorKey,
+         @[SKBackgroundColorKey, SKFullScreenBackgroundColorKey,
                                    SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,
                                    SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
                                    SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
-          SKTableFontSizeKey, nil] context:&SKMainWindowDefaultsObservationContext];
+          SKTableFontSizeKey] context:&SKMainWindowDefaultsObservationContext];
     }
     @catch (id e) {}
     if (RUNNING_AFTER(10_13)) {

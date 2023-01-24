@@ -464,7 +464,7 @@ static NSArray *characterRangesAndContainersForSpecifier(NSScriptObjectSpecifier
         
         NSArray *containers = [specifier objectsByEvaluatingSpecifier];
         if (containers && [containers isKindOfClass:[NSArray class]] == NO)
-            containers = [NSArray arrayWithObject:containers];
+            containers = @[containers];
         if ([containers count] == 0)
             return nil;
         
@@ -501,9 +501,9 @@ static NSArray *characterRangesAndContainersForSpecifier(NSScriptObjectSpecifier
         if (specifier == nil)
             return nil;
         else if ([specifier isKindOfClass:[NSArray class]] == NO)
-            specifier = [NSArray arrayWithObject:specifier];
+            specifier = @[specifier];
     } else if ([specifier isKindOfClass:[NSArray class]] == NO) {
-        specifier = [NSArray arrayWithObject:specifier];
+        specifier = @[specifier];
     }
     
     NSMutableArray *selections = [NSMutableArray array];

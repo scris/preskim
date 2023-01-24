@@ -63,7 +63,7 @@ BOOL SKHasDarkAppearance(id object) {
             appearance = [(id<NSAppearanceCustomization>)object effectiveAppearance];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-        return [[appearance bestMatchFromAppearancesWithNames:[NSArray arrayWithObjects:@"NSAppearanceNameAqua", @"NSAppearanceNameDarkAqua", nil]] isEqualToString:@"NSAppearanceNameDarkAqua"];
+        return [[appearance bestMatchFromAppearancesWithNames:@[@"NSAppearanceNameAqua", @"NSAppearanceNameDarkAqua"]] isEqualToString:@"NSAppearanceNameDarkAqua"];
 #pragma clang diagnostic pop
     }
     return NO;
@@ -78,7 +78,7 @@ BOOL SKHasHighContrastDarkAppearance(id object) {
             appearance = [(id<NSAppearanceCustomization>)object effectiveAppearance];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-        return [[appearance bestMatchFromAppearancesWithNames:[NSArray arrayWithObjects:@"NSAppearanceNameDarkAqua", @"NSAppearanceNameAccessibilityDarkAqua", nil]] isEqualToString:@"NSAppearanceNameAccessibilityDarkAqua"];
+        return [[appearance bestMatchFromAppearancesWithNames:@[@"NSAppearanceNameDarkAqua", @"NSAppearanceNameAccessibilityDarkAqua"]] isEqualToString:@"NSAppearanceNameAccessibilityDarkAqua"];
 #pragma clang diagnostic pop
     }
     return NO;

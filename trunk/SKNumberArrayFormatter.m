@@ -76,9 +76,9 @@
  
 - (NSString *)stringForObjectValue:(id)obj {
     if ([obj isKindOfClass:[NSString class]])
-        obj = [NSArray array];
+        obj = @[];
     if ([obj isKindOfClass:[NSNumber class]])
-        obj = [NSArray arrayWithObjects:obj, nil];
+        obj = @[obj];
     
     NSMutableString *string = [NSMutableString string];
     

@@ -105,9 +105,8 @@
         case kPDFPrintPageScaleToFit: autoScaling = NSLocalizedString(@"Scale Each Page", @"Print panel setting"); break;
         case kPDFPrintPageScaleDownToFit: autoScaling = NSLocalizedString(@"Only Scale Down Large Pages", @"Print panel setting"); break;
     }
-    return [NSArray arrayWithObjects:
-            [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Page Auto Rotation", @"Print panel setting description"), NSPrintPanelAccessorySummaryItemNameKey, autoRotation, NSPrintPanelAccessorySummaryItemDescriptionKey, nil], 
-            [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Page Auto Scaling", @"Print panel setting description"), NSPrintPanelAccessorySummaryItemNameKey, autoScaling, NSPrintPanelAccessorySummaryItemDescriptionKey, nil], nil];
+    return @[@{NSPrintPanelAccessorySummaryItemNameKey:NSLocalizedString(@"Page Auto Rotation", @"Print panel setting description"), NSPrintPanelAccessorySummaryItemDescriptionKey:autoRotation},
+            @{NSPrintPanelAccessorySummaryItemNameKey:NSLocalizedString(@"Page Auto Scaling", @"Print panel setting description"), NSPrintPanelAccessorySummaryItemDescriptionKey:autoScaling}];
 }
 
 @end

@@ -80,7 +80,7 @@
             NSNumber *isDir = nil;
             [appSupportURL getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:NULL];
             if ([isDir boolValue]) {
-                for (NSURL *url in [fm contentsOfDirectoryAtURL:templatesURL includingPropertiesForKeys:[NSArray array] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL]) {
+                for (NSURL *url in [fm contentsOfDirectoryAtURL:templatesURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL]) {
                     NSString *file = [url lastPathComponent];
                     if ([[file stringByDeletingPathExtension] isEqualToString:@"notesTemplate"] == NO &&
                         [templates containsObject:file] == NO) {

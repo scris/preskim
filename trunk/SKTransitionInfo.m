@@ -68,7 +68,7 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
 }
 
 + (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
-    return [NSArray arrayWithObjects:SKPasteboardTypeTransition, nil];
+    return @[SKPasteboardTypeTransition];
 }
 
 + (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
@@ -78,7 +78,7 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
 }
 
 - (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
-    return [NSArray arrayWithObjects:SKPasteboardTypeTransition, nil];
+    return @[SKPasteboardTypeTransition];
 }
 
 - (id)pasteboardPropertyListForType:(NSString *)type {
@@ -102,10 +102,9 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
 }
 
 - (NSDictionary *)properties {
-    return [NSDictionary dictionaryWithObjectsAndKeys:
-                ([SKTransitionController nameForStyle:transitionStyle] ?: @""), SKStyleNameKey,
-                [NSNumber numberWithDouble:duration], SKDurationKey,
-                [NSNumber numberWithBool:shouldRestrict], SKShouldRestrictKey, nil];
+    return @{SKStyleNameKey:([SKTransitionController nameForStyle:transitionStyle] ?: @""),
+             SKDurationKey:[NSNumber numberWithDouble:duration],
+             SKShouldRestrictKey:[NSNumber numberWithBool:shouldRestrict]};
 }
 
 - (void)setProperties:(NSDictionary *)dictionary {

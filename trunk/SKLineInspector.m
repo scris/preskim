@@ -372,8 +372,7 @@ static SKLineInspector *sharedLineInspector = nil;
     
     [responder performSelector:selector withObject:self];
     
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:action], ACTION_KEY, nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKLineInspectorLineAttributeDidChangeNotification object:self userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKLineInspectorLineAttributeDidChangeNotification object:self userInfo:@{ACTION_KEY:[NSNumber numberWithInteger:action]}];
     
     currentLineChangeAction = SKNoLineChangeAction;
 }

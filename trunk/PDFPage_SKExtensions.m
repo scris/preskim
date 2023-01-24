@@ -163,7 +163,7 @@ static BOOL usesSequentialPageNumbering = NO;
 
 - (NSImage *)thumbnailWithSize:(CGFloat)aSize forBox:(PDFDisplayBox)box readingBar:(SKReadingBar *)readingBar {
     CGFloat shadowBlurRadius = round(aSize / 32.0);
-    NSArray *highlights = readingBar ? [NSArray arrayWithObject:readingBar] : nil;
+    NSArray *highlights = readingBar ? @[readingBar] : nil;
     return  [self thumbnailWithSize:aSize forBox:box shadowBlurRadius:shadowBlurRadius highlights:highlights];
 }
 
@@ -365,7 +365,7 @@ static BOOL usesSequentialPageNumbering = NO;
             NSString *pdfType = [[self document] allowsPrinting] ? NSPasteboardTypePDF : nil;
             NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
             [item setString:fileUTI forType:(NSString *)kPasteboardTypeFilePromiseContent];
-            [item setDataProvider:self forTypes:[NSArray arrayWithObjects:(NSString *)kPasteboardTypeFileURLPromise, NSPasteboardTypeTIFF, pdfType, nil]];
+            [item setDataProvider:self forTypes:@[(NSString *)kPasteboardTypeFileURLPromise, NSPasteboardTypeTIFF, pdfType]];
             return item;
         }
     }
@@ -381,7 +381,7 @@ static BOOL usesSequentialPageNumbering = NO;
         [pboardItem setData:tiffData forType:NSPasteboardTypeTIFF];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeObjects:[NSArray arrayWithObjects:pboardItem, nil]];
+        [pboard writeObjects:@[pboardItem]];
     }
 }
 
@@ -594,7 +594,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
         [self setRotation:angle];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
-                object:[self document] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SKPDFPageActionKey, SKPDFPageActionKey, self, SKPDFPagePageKey, nil]];
+                                                            object:[self document] userInfo:@{SKPDFPageActionKey:SKPDFPageActionRotate, SKPDFPagePageKey:self}];
     }
 }
 
@@ -618,7 +618,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
         [self setBounds:newBounds forBox:kPDFDisplayBoxCropBox];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
-                object:[self document] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SKPDFPageActionCrop, SKPDFPageActionKey, self, SKPDFPagePageKey, nil]];
+                                                            object:[self document] userInfo:@{SKPDFPageActionKey:SKPDFPageActionCrop, SKPDFPagePageKey:self}];
     }
 }
 
@@ -642,7 +642,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
         [self setBounds:newBounds forBox:kPDFDisplayBoxMediaBox];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
-                object:[self document] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SKPDFPageActionResize, SKPDFPageActionKey, self, SKPDFPagePageKey, nil]];
+                                                            object:[self document] userInfo:@{SKPDFPageActionKey:SKPDFPageActionResize, SKPDFPagePageKey:self}];
     }
 }
 

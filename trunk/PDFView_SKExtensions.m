@@ -192,7 +192,7 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     
     NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:[[self currentSelection] attributedString]] autorelease];
     [dragItem setDraggingFrame:dragFrame contents:dragImage];
-    [self beginDraggingSessionWithItems:[NSArray arrayWithObjects:dragItem, nil] event:theEvent source:self];
+    [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
 
     return YES;
 }

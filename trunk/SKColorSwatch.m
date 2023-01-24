@@ -328,7 +328,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow {
     NSWindow *oldWindow = [self window];
-    NSArray *names = [NSArray arrayWithObjects:NSWindowDidBecomeMainNotification, NSWindowDidResignMainNotification, NSWindowDidBecomeKeyNotification, NSWindowDidResignKeyNotification, nil];
+    NSArray *names = @[NSWindowDidBecomeMainNotification, NSWindowDidResignMainNotification, NSWindowDidBecomeKeyNotification, NSWindowDidResignKeyNotification];
     if (oldWindow) {
         for (NSString *name in names)
             [[NSNotificationCenter defaultCenter] removeObserver:self name:name object:oldWindow];
@@ -389,7 +389,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
                     
                     NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:color] autorelease];
                     [dragItem setDraggingFrame:rect contents:image];
-                    [self beginDraggingSessionWithItems:[NSArray arrayWithObjects:dragItem, nil] event:theEvent source:self];
+                    [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
                     
                     keepOn = NO;
                     break;
@@ -794,7 +794,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     if ([self selects] == NO)
         return nil;
     else if (selectedIndex == -1)
-        return [NSArray array];
+        return @[];
     else
         return NSAccessibilityUnignoredChildrenForOnlyChild([itemViews objectAtIndex:selectedIndex]);
 }

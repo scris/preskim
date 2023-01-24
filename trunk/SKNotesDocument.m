@@ -185,7 +185,7 @@
 
     NSSortDescriptor *indexSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES] autorelease];
     NSSortDescriptor *stringSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] autorelease];
-    [arrayController setSortDescriptors:[NSArray arrayWithObjects:indexSortDescriptor, stringSortDescriptor, nil]];
+    [arrayController setSortDescriptors:@[indexSortDescriptor, stringSortDescriptor]];
     [outlineView reloadData];
     
     [outlineView setTypeSelectHelper:[SKTypeSelectHelper typeSelectHelperWithMatchOption:SKSubstringMatch]];
@@ -786,9 +786,9 @@
     
     [pboard clearContents];
     if (isAttributed)
-        [pboard writeObjects:[NSArray arrayWithObjects:attrString, nil]];
+        [pboard writeObjects:@[attrString]];
     else
-        [pboard writeObjects:[NSArray arrayWithObjects:[attrString string], nil]];
+        [pboard writeObjects:@[[attrString string]]];
     if ([copiedItems count] > 0)
         [pboard writeObjects:copiedItems];
 }
@@ -942,21 +942,19 @@
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
-    return [NSArray arrayWithObjects:
-        SKNotesDocumentSearchToolbarItemIdentifier, 
+    return @[SKNotesDocumentSearchToolbarItemIdentifier,
         NSToolbarFlexibleSpaceItemIdentifier, 
-        SKNotesDocumentOpenPDFToolbarItemIdentifier, nil];
+        SKNotesDocumentOpenPDFToolbarItemIdentifier];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
-    return [NSArray arrayWithObjects: 
-        SKNotesDocumentSearchToolbarItemIdentifier, 
+    return @[SKNotesDocumentSearchToolbarItemIdentifier,
         SKNotesDocumentOpenPDFToolbarItemIdentifier, 
         NSToolbarPrintItemIdentifier, 
         NSToolbarFlexibleSpaceItemIdentifier, 
 		NSToolbarSpaceItemIdentifier, 
 		NSToolbarSeparatorItemIdentifier, 
-		NSToolbarCustomizeToolbarItemIdentifier, nil];
+		NSToolbarCustomizeToolbarItemIdentifier];
 }
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)toolbarItem {

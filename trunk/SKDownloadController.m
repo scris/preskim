@@ -159,7 +159,7 @@ static SKDownloadController *sharedDownloadController = nil;
     
     [tableView setTypeSelectHelper:[SKTypeSelectHelper typeSelectHelper]];
     
-    [tableView registerForDraggedTypes:[NSArray arrayWithObjects:(NSString *)kUTTypeURL, (NSString *)kUTTypeFileURL, NSURLPboardType, NSFilenamesPboardType, NSPasteboardTypeString, nil]];
+    [tableView registerForDraggedTypes:@[(NSString *)kUTTypeURL, (NSString *)kUTTypeFileURL, NSURLPboardType, NSFilenamesPboardType, NSPasteboardTypeString]];
     
     [tableView setSupportsQuickLook:YES];
 }
@@ -244,14 +244,14 @@ static SKDownloadController *sharedDownloadController = nil;
 
 - (void)insertObject:(SKDownload *)download inDownloadsAtIndex:(NSUInteger)anIndex {
     [downloads insertObject:download atIndex:anIndex];
-    [self startObservingDownloads:[NSArray arrayWithObject:download]];
+    [self startObservingDownloads:@[download]];
     [download start];
     [self updateClearButton];
 }
 
 - (void)removeObjectFromDownloadsAtIndex:(NSUInteger)anIndex {
     SKDownload *download = [downloads objectAtIndex:anIndex];
-    [self endObservingDownloads:[NSArray arrayWithObject:download]];
+    [self endObservingDownloads:@[download]];
     [download cancel];
     [downloads removeObjectAtIndex:anIndex];
     [self updateClearButton];
@@ -432,7 +432,7 @@ static SKDownloadController *sharedDownloadController = nil;
     [view setFrame:frame];
     frame.origin = [draggingInfo draggingLocation];
     __block NSInteger validCount = 0;
-    [draggingInfo enumerateDraggingItemsWithOptions:NSDraggingItemEnumerationClearNonenumeratedImages forView:tv classes:[NSArray arrayWithObjects:[NSURL class], nil] searchOptions:[NSDictionary dictionary] usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
+    [draggingInfo enumerateDraggingItemsWithOptions:NSDraggingItemEnumerationClearNonenumeratedImages forView:tv classes:@[[NSURL class]] searchOptions:@{} usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
         if ([[draggingItem item] isKindOfClass:[NSURL class]]) {
             SKDownload *download = [[[SKDownload alloc] initWithURL:[draggingItem item]] autorelease];
             [draggingItem setImageComponentsProvider:^{
@@ -614,17 +614,15 @@ static SKDownloadController *sharedDownloadController = nil;
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
-    return [NSArray arrayWithObjects:
-            SKDownloadsToolbarClearItemIdentifier,
+    return @[SKDownloadsToolbarClearItemIdentifier,
             NSToolbarFlexibleSpaceItemIdentifier,
-            SKDownloadsToolbarPreferencesItemIdentifier, nil];
+            SKDownloadsToolbarPreferencesItemIdentifier];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
-    return [NSArray arrayWithObjects:
-            SKDownloadsToolbarPreferencesItemIdentifier,
+    return @[SKDownloadsToolbarPreferencesItemIdentifier,
             NSToolbarFlexibleSpaceItemIdentifier,
-            SKDownloadsToolbarClearItemIdentifier, nil];
+            SKDownloadsToolbarClearItemIdentifier];
 }
 
 #pragma mark Quick Look Panel Support

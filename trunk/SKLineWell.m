@@ -85,7 +85,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     lwFlags.canActivate = 1;
     lwFlags.existsActiveLineWell = 0;
     
-    [self registerForDraggedTypes:[NSArray arrayWithObjects:SKPasteboardTypeLineStyle, nil]];
+    [self registerForDraggedTypes:@[SKPasteboardTypeLineStyle]];
 }
 
 - (id)initWithFrame:(NSRect)frame {
@@ -348,7 +348,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
             
             NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:item] autorelease];
             [dragItem setDraggingFrame:[self bounds] contents:[self dragImage]];
-            [self beginDraggingSessionWithItems:[NSArray arrayWithObjects:dragItem, nil] event:theEvent source:self];
+            [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
         } else if ([self isActive]) {
             [self deactivate];
         } else {
@@ -392,7 +392,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
         lwFlags.existsActiveLineWell = 0;
         
         [nc postNotificationName:SKLineWellWillBecomeActiveNotification object:self
-                        userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:exclusive], EXCLUSIVE_KEY, nil]];
+                        userInfo:@{EXCLUSIVE_KEY:[NSNumber numberWithBool:exclusive]}];
         
         if (lwFlags.existsActiveLineWell) {
             [self takeValueForKey:SKLineWellLineWidthKey from:inspector];
@@ -568,7 +568,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
 #pragma mark NSDraggingDestination protocol 
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender {
-    if ([self isEnabled] && [sender draggingSource] != self && [[sender draggingPasteboard] canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:SKPasteboardTypeLineStyle, nil]]) {
+    if ([self isEnabled] && [sender draggingSource] != self && [[sender draggingPasteboard] canReadItemWithDataConformingToTypes:@[SKPasteboardTypeLineStyle]]) {
         [self setHighlighted:YES];
         [self setNeedsDisplay:YES];
         return NSDragOperationEvery;
@@ -577,14 +577,14 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender {
-    if ([self isEnabled] && [sender draggingSource] != self && [[sender draggingPasteboard] canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:SKPasteboardTypeLineStyle, nil]]) {
+    if ([self isEnabled] && [sender draggingSource] != self && [[sender draggingPasteboard] canReadItemWithDataConformingToTypes:@[SKPasteboardTypeLineStyle]]) {
         [self setHighlighted:NO];
         [self setNeedsDisplay:YES];
     }
 }
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender {
-    return [self isEnabled] && [sender draggingSource] != self && [[sender draggingPasteboard] canReadItemWithDataConformingToTypes:[NSArray arrayWithObjects:SKPasteboardTypeLineStyle, nil]];
+    return [self isEnabled] && [sender draggingSource] != self && [[sender draggingPasteboard] canReadItemWithDataConformingToTypes:@[SKPasteboardTypeLineStyle]];
 } 
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender{

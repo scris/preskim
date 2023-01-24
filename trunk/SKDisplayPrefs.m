@@ -78,14 +78,13 @@
 }
 
 - (void)setPdfViewSettings:(NSDictionary *)settings {
-    if (settings == nil)
-        settings = [NSDictionary dictionary];
     NSMutableDictionary *setup = [NSMutableDictionary dictionary];
     if (fullScreen == NO || [settings count] > 0) {
         [setup addEntriesFromDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultPDFDisplaySettingsKey]];
         if (fullScreen)
             [setup addEntriesFromDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey]];
-        [setup addEntriesFromDictionary:settings];
+        if ([settings count] > 0)
+            [setup addEntriesFromDictionary:settings];
     }
     [[NSUserDefaults standardUserDefaults] setObject:setup forKey:fullScreen ? SKDefaultFullScreenPDFDisplaySettingsKey : SKDefaultPDFDisplaySettingsKey];
 }

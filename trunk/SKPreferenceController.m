@@ -148,11 +148,11 @@ static SKPreferenceController *sharedPrefenceController = nil;
         
         [panesButton setSelectedSegment:[preferencePanes indexOfObject:currentPane]];
         
-        NSArray *constraints = [NSArray arrayWithObjects:
+        NSArray *constraints = @[
             [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:BOTTOM_MARGIN],
             [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0], nil];
+            [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0]];
         [[constraints lastObject] setPriority:NSLayoutPriorityDefaultLow];
         
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey]) {
@@ -216,11 +216,11 @@ static SKPreferenceController *sharedPrefenceController = nil;
     
     [[window contentView] addSubview:view];
     
-    NSArray *constraints = [NSArray arrayWithObjects:
+    NSArray *constraints = @[
         [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:BOTTOM_MARGIN],
         [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0], nil];
+        [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0]];
     [[constraints lastObject] setPriority:NSLayoutPriorityDefaultLow];
     [NSLayoutConstraint activateConstraints:constraints];
 }
@@ -367,7 +367,7 @@ static SKPreferenceController *sharedPrefenceController = nil;
 - (NSTouchBar *)makeTouchBar {
     NSTouchBar *touchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
     [touchBar setDelegate:self];
-    [touchBar setDefaultItemIdentifiers:[NSArray arrayWithObjects:SKTouchBarItemIdentifierPanes, @"NSTouchBarItemIdentifierFixedSpaceSmall", SKTouchBarItemIdentifierReset, SKTouchBarItemIdentifierResetAll, nil]];
+    [touchBar setDefaultItemIdentifiers:@[SKTouchBarItemIdentifierPanes, @"NSTouchBarItemIdentifierFixedSpaceSmall", SKTouchBarItemIdentifierReset, SKTouchBarItemIdentifierResetAll]];
     return touchBar;
 }
 

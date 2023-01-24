@@ -125,7 +125,7 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
     if (image) {
         [self setBackgroundImage:image];
         
-        [[self contentView] setContentFilters:isOpaque ? SKColorEffectFilters() : [NSArray array]];
+        [[self contentView] setContentFilters:isOpaque ? SKColorEffectFilters() : @[]];
         
         contentRect.size = [image size];
         contentRect.origin.x = fmin(thePoint.x, NSMaxX(screenRect) - NSWidth(contentRect));

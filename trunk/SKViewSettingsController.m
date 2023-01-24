@@ -55,7 +55,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 - (NSArray *)persistentKeys {
-    return [NSArray arrayWithObjects:@"autoScales", @"scaleFactor", @"displayMode", @"displayDirection", @"displaysAsBook", @"displaysRTL", @"displaysPageBreaks", @"displayBox", nil];
+    return @[@"autoScales", @"scaleFactor", @"displayMode", @"displayDirection", @"displaysAsBook", @"displaysRTL", @"displaysPageBreaks", @"displayBox"];
 }
 
 - (id)initWithSettings:(NSDictionary *)settings defaultSettings:(NSDictionary *)aDefaultSettings {
@@ -124,7 +124,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 - (NSDictionary *)settings {
     if (custom == NO)
-        return [NSDictionary dictionary];
+        return @{};
     [[self window] makeFirstResponder:[self window]];
     return [self dictionaryWithValuesForKeys:[self persistentKeys]];
 }

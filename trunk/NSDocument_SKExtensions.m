@@ -237,7 +237,7 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
         NSURL *templateURL = [[SKTemplateManager sharedManager] URLForTemplateType:typeName];
         NSDictionary *docAttributes = nil;
         NSError *error = nil;
-        NSAttributedString *templateAttrString = [[NSAttributedString alloc] initWithURL:templateURL options:[NSDictionary dictionary] documentAttributes:&docAttributes error:NULL];
+        NSAttributedString *templateAttrString = [[NSAttributedString alloc] initWithURL:templateURL options:@{} documentAttributes:&docAttributes error:NULL];
         NSAttributedString *attrString = [SKTemplateParser attributedStringByParsingTemplateAttributedString:templateAttrString usingObject:self];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableExportAttributesKey] == NO) {
             NSMutableDictionary *mutableAttributes = [[docAttributes mutableCopy] autorelease];
@@ -257,7 +257,7 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
     if ([[SKTemplateManager sharedManager] isRichTextBundleTemplateType:typeName]) {
         NSURL *templateURL = [[SKTemplateManager sharedManager] URLForTemplateType:typeName];
         NSDictionary *docAttributes = nil;
-        NSAttributedString *templateAttrString = [[NSAttributedString alloc] initWithURL:templateURL options:[NSDictionary dictionary] documentAttributes:&docAttributes error:NULL];
+        NSAttributedString *templateAttrString = [[NSAttributedString alloc] initWithURL:templateURL options:@{} documentAttributes:&docAttributes error:NULL];
         NSAttributedString *attrString = [SKTemplateParser attributedStringByParsingTemplateAttributedString:templateAttrString usingObject:self];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableExportAttributesKey] == NO) {
             NSMutableDictionary *mutableAttributes = [[docAttributes mutableCopy] autorelease];
