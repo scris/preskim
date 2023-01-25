@@ -1003,7 +1003,7 @@
         if (skimURL != nil) {
             NSPasteboard *pboard = [NSPasteboard generalPasteboard];
             [pboard clearContents];
-            [pboard writeURLs:@[skimURL] names:[NSArray arrayWithObjects:[[self document] displayName], nil]];
+            [pboard writeURLs:@[skimURL] names:@[[[self document] displayName]]];
         }
     }
 }

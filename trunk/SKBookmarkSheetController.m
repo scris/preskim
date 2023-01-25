@@ -75,7 +75,7 @@
     SKBookmark *root = [bookmarkController bookmarkRoot];
     [self window];
     [folderPopUp removeAllItems];
-    [self addMenuItemsForBookmarks:[NSArray arrayWithObjects:root, nil] level:0 toMenu:[folderPopUp menu]];
+    [self addMenuItemsForBookmarks:@[root] level:0 toMenu:[folderPopUp menu]];
     [folderPopUp selectItemAtIndex:0];
 }
 

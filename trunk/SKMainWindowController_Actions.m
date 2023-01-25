@@ -843,13 +843,14 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
 - (IBAction)search:(id)sender {
     
     PDFDocument *pdfDoc = [pdfView document];
+    NSString *searchString = [sender stringValue];
     
     // cancel any previous find to remove those results, or else they stay around
     if ([pdfDoc isFinding])
         [pdfDoc cancelFindString];
     [pdfView setHighlightedSelections:nil];
     
-    if ([[sender stringValue] isEqualToString:@""]) {
+    if ([searchString length] == 0) {
         
         if (mwcFlags.leftSidePaneState == SKSidePaneStateThumbnail)
             [self displayThumbnailViewAnimating:YES];
@@ -858,7 +859,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
     } else {
         NSInteger options = mwcFlags.caseInsensitiveSearch ? NSCaseInsensitiveSearch : 0;
         if (mwcFlags.wholeWordSearch) {
-            NSScanner *scanner = [NSScanner scannerWithString:[sender stringValue]];
+            NSScanner *scanner = [NSScanner scannerWithString:searchString];
             NSMutableArray *words = [NSMutableArray array];
             NSString *word;
             [scanner setCharactersToBeSkipped:nil];
@@ -885,7 +886,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
         
         NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSFindPboard];
         [findPboard clearContents];
-        [findPboard writeObjects:[NSArray arrayWithObjects:[sender stringValue], nil]];
+        [findPboard writeObjects:@[searchString]];
     }
 }
 
@@ -894,10 +895,11 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
         [self updateNoteFilterPredicate];
     else
         [self updateSnapshotFilterPredicate];
-    if ([[sender stringValue] length]) {
+    NSString *searchString = [sender stringValue];
+    if ([searchString length]) {
         NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSFindPboard];
         [findPboard clearContents];
-        [findPboard writeObjects:[NSArray arrayWithObjects:[sender stringValue], nil]];
+        [findPboard writeObjects:@[searchString]];
     }
 }
 
@@ -1225,7 +1227,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
             } else {
                 NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSFindPboard];
                 [findPboard clearContents];
-                [findPboard writeObjects:[NSArray arrayWithObjects:findString, nil]];
+                [findPboard writeObjects:@[findString]];
             }
             break;
         default:

@@ -760,11 +760,11 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     if ([[self currentSelection] hasCharacters]) {
         if ([types containsObject:NSPasteboardTypeRTF] || [types containsObject:NSRTFPboardType]) {
             [pboard clearContents];
-            [pboard writeObjects:[NSArray arrayWithObjects:[[self currentSelection] attributedString], nil]];
+            [pboard writeObjects:@[[[self currentSelection] attributedString]]];
             return YES;
         } else if ([types containsObject:NSPasteboardTypeString] || [types containsObject:NSStringPboardType]) {
             [pboard clearContents];
-            [pboard writeObjects:[NSArray arrayWithObjects:[[self currentSelection] string], nil]];
+            [pboard writeObjects:@[[[self currentSelection] string]]];
             return YES;
         }
     }

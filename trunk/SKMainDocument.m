@@ -655,7 +655,7 @@ enum {
 - (NSTask *)taskForWritingArchiveAtURL:(NSURL *)targetURL fromURL:(NSURL *)sourceURL {
     NSTask *task = [[[NSTask alloc] init] autorelease];
     [task setLaunchPath:@"/usr/bin/tar"];
-    [task setArguments:[NSArray arrayWithObjects:@"-czf", [targetURL path], [sourceURL lastPathComponent], nil]];
+    [task setArguments:@[@"-czf", [targetURL path], [sourceURL lastPathComponent]]];
     [task setCurrentDirectoryPath:[[sourceURL URLByDeletingLastPathComponent] path]];
     [task setStandardOutput:[NSFileHandle fileHandleWithNullDevice]];
     [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
@@ -1045,7 +1045,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         }
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeURLs:@[skimURL] names:[NSArray arrayWithObjects:[self displayName], nil]];
+        [pboard writeURLs:@[skimURL] names:@[[self displayName]]];
     } else {
         NSBeep();
     }
@@ -1325,7 +1325,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                 }
             }];
     } else {
-        NSArray *items = [NSArray arrayWithObjects:targetFileURL, nil];
+        NSArray *items = @[targetFileURL];
         NSSharingService *service = [sender representedObject];
         if ([service canPerformWithItems:items]) {
             [service setSubject:[self displayName]];
@@ -1538,7 +1538,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
         NSTask *task = [[[NSTask alloc] init] autorelease];
         [task setLaunchPath:@"/bin/sh"];
         [task setCurrentDirectoryPath:[file stringByDeletingLastPathComponent]];
-        [task setArguments:[NSArray arrayWithObjects:@"-c", cmdString, nil]];
+        [task setArguments:@[@"-c", cmdString]];
         [task setStandardOutput:[NSFileHandle fileHandleWithNullDevice]];
         [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
         @try {

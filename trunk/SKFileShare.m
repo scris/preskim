@@ -56,11 +56,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 - (void)shareFileURL {
-    NSArray *items = [NSArray arrayWithObjects:[self fileURL], nil];
-    if ([[self sharingService] canPerformWithItems:items])
-        [[self sharingService] performWithItems:items];
-    else
-        [self finishWithSuccess:NO];
+    NSURL *fileURL = [self fileURL];
+    if (fileURL) {
+        NSArray *items = @[fileURL];
+        if ([[self sharingService] canPerformWithItems:items]) {
+            [[self sharingService] performWithItems:items];
+            return;
+        }
+    }
+    [self finishWithSuccess:NO];
 }
 
 - (void)taskFinished:(NSNotification *)notification {
