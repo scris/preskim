@@ -57,18 +57,25 @@
     // chewable items are automatically cleaned up at restart, and it's hidden from the user
     static NSURL *chewableItemsDirectoryURL = nil;
     if (chewableItemsDirectoryURL == nil) {
+        NSURL *chewableURL = nil;
         FSRef chewableRef;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         if (noErr == FSFindFolder(kUserDomain, kChewableItemsFolderType, TRUE, &chewableRef)) {
-            NSURL *chewableURL = (NSURL *)CFURLCreateFromFSRef(kCFAllocatorDefault, &chewableRef);
+            chewableURL = (NSURL *)CFURLCreateFromFSRef(kCFAllocatorDefault, &chewableRef);
 #pragma clang diagnostic pop
-            NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
-            chewableItemsDirectoryURL = [[chewableURL URLByAppendingPathComponent:appName isDirectory:YES] copy];
-            if ([chewableItemsDirectoryURL checkResourceIsReachableAndReturnError:NULL] == NO)
-                [self createDirectoryAtPath:[chewableItemsDirectoryURL path] withIntermediateDirectories:NO attributes:nil error:NULL];
-            [chewableURL release];
-       }
+        } else {
+            char *template = strdup([[NSTemporaryDirectory() stringByAppendingPathComponent:@"Skim.XXXXXX"] fileSystemRepresentation]);
+            const char *tempPath = mkdtemp(template);
+            NSString *tmpPath = [self stringWithFileSystemRepresentation:tempPath length:strlen(tempPath)];
+            chewableURL = [[NSURL alloc] initFileURLWithPath:tmpPath];
+            free(template);
+        }
+        NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+        chewableItemsDirectoryURL = [[chewableURL URLByAppendingPathComponent:appName isDirectory:YES] copy];
+        if ([chewableItemsDirectoryURL checkResourceIsReachableAndReturnError:NULL] == NO)
+            [self createDirectoryAtPath:[chewableItemsDirectoryURL path] withIntermediateDirectories:NO attributes:nil error:NULL];
+        [chewableURL release];
     }
     
     NSURL *uniqueURL = nil;
