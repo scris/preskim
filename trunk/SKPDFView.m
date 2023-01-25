@@ -409,7 +409,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (void)resetPDFToolTipRects {
-    [self removePDFToolTipRects];return;
+    [self removePDFToolTipRects];
     
     if ([self document] && [self window] && interactionMode != SKPresentationMode) {
         NSRect visibleRect = [self visibleContentRect];
