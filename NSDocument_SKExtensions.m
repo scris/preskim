@@ -85,11 +85,15 @@ NSString *SKDocumentFileURLDidChangeNotification = @"SKDocumentFileURLDidChangeN
     if (fileURL) {
         NSURLComponents *components = [[NSURLComponents alloc] initWithURL:fileURL resolvingAgainstBaseURL:NO];
         [components setScheme:@"skim"];
-        NSURL  *skimURL = [components URL];
+        NSURL *skimURL = [components URL];
         [components release];
-        NSPasteboard *pboard = [NSPasteboard generalPasteboard];
-        [pboard clearContents];
-        [pboard writeURLs:[NSArray arrayWithObjects:skimURL, nil] names:[NSArray arrayWithObjects:[self displayName], nil]];
+        if (skimURL) {
+            NSPasteboard *pboard = [NSPasteboard generalPasteboard];
+            [pboard clearContents];
+            [pboard writeURLs:@[skimURL] names:@[[self displayName]]];
+        } else {
+            NSBeep();
+        }
     } else {
         NSBeep();
     }
@@ -195,9 +199,14 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
 }
 
 - (void)share:(id)sender {
-    NSSharingService *service = [sender representedObject];
-    [service setSubject:[self displayName]];
-    [service performWithItems:[NSArray arrayWithObjects:[self fileURL], nil]];
+    NSURL *fileURL = [self fileURL];
+    if (fileURL) {
+        NSSharingService *service = [sender representedObject];
+        [service setSubject:[self displayName]];
+        [service performWithItems:@[fileURL]];
+    } else {
+        NSBeep();
+    }
 }
 
 #pragma mark PDF Document

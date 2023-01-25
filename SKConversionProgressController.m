@@ -271,7 +271,7 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
             NSURL *tmpDirURL = [[NSFileManager defaultManager] URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:aURL create:YES error:NULL];
             BOOL outputPS = [commandName isEqualToString:@"dvips"];
             NSURL *outFileURL = [tmpDirURL URLByAppendingPathComponent:[aURL lastPathComponentReplacingPathExtension:outputPS ? @"ps" : @"pdf"] isDirectory:NO];
-            NSArray *arguments = [commandName isEqualToString:@"dvipdf"] ? [NSArray arrayWithObjects:[aURL path], [outFileURL path], nil] : [NSArray arrayWithObjects:@"-o", [outFileURL path], [aURL path], nil];
+            NSArray *arguments = [commandName isEqualToString:@"dvipdf"] ? @[[aURL path], [outFileURL path]] : @[@"-o", [outFileURL path], [aURL path]];
             
             task = [[NSTask alloc] init];
             [task setLaunchPath:toolPath];

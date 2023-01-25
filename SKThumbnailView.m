@@ -440,7 +440,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     if (skimURL != nil) {
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeURLs:@[skimURL] names:[NSArray arrayWithObjects:[[[[self window] windowController] document] displayName], nil]];
+        [pboard writeURLs:@[skimURL] names:@[[[[[self window] windowController] document] displayName]]];
     }
 }
 

@@ -2547,11 +2547,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if ([[self currentSelection] hasCharacters]) {
         if ([types containsObject:NSPasteboardTypeRTF] || [types containsObject:NSRTFPboardType]) {
             [pboard clearContents];
-            [pboard writeObjects:[NSArray arrayWithObjects:[[self currentSelection] attributedString], nil]];
+            [pboard writeObjects:@[[[self currentSelection] attributedString]]];
             return YES;
         } else if ([types containsObject:NSPasteboardTypeString] || [types containsObject:NSStringPboardType]) {
             [pboard clearContents];
-            [pboard writeObjects:[NSArray arrayWithObjects:[[self currentSelection] string], nil]];
+            [pboard writeObjects:@[[[self currentSelection] string]]];
             return YES;
         }
     }
@@ -3401,7 +3401,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     } else if (action == @selector(alternatePaste:)) {
         return [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(pasteAsPlainText:)) {
-        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObjects:[NSAttributedString class], [NSString class], nil] options:@{}];
+        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(delete:)) {
         return [currentAnnotation isSkimNote];
     } else if (action == @selector(selectAll:)) {

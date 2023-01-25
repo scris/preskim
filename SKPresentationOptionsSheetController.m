@@ -333,7 +333,7 @@ static char *SKTransitionPropertiesObservationContext;
 }
 
 - (NSArray *)currentTransitions {
-    return separate ? transitions : [NSArray arrayWithObjects:transition, nil];
+    return separate ? transitions : @[transition];
 }
 
 - (NSArray *)pageTransitions {
@@ -425,8 +425,7 @@ static char *SKTransitionPropertiesObservationContext;
         NSRect frame = [view convertRectToScreen:[view bounds]];
         frame.origin.x -= screenPoint.x - [session draggingLocation].x;
         frame.origin.y -= screenPoint.y - [session draggingLocation].y;
-        NSArray *classes = [NSArray arrayWithObjects:[SKTransitionInfo class], nil];
-        [session enumerateDraggingItemsWithOptions:0 forView:nil classes:classes searchOptions:@{} usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
+        [session enumerateDraggingItemsWithOptions:0 forView:nil classes:@[[SKTransitionInfo class]] searchOptions:@{} usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
             [draggingItem setImageComponentsProvider:^{
                 NSMutableArray *components = [NSMutableArray array];
                 NSUInteger i, iMax = [view numberOfColumns];
@@ -490,7 +489,7 @@ static char *SKTransitionPropertiesObservationContext;
 - (void)tableView:(NSTableView *)tv copyRowsWithIndexes:(NSIndexSet *)rowIndexes {
     NSPasteboard *pboard = [NSPasteboard generalPasteboard];
     [pboard clearContents];
-    [pboard writeObjects:[NSArray arrayWithObjects:[transitions objectAtIndex:[rowIndexes firstIndex]], nil]];
+    [pboard writeObjects:@[[transitions objectAtIndex:[rowIndexes firstIndex]]]];
 }
 
 - (BOOL)tableView:(NSTableView *)tv canCopyRowsWithIndexes:(NSIndexSet *)rowIndexes {
@@ -522,7 +521,7 @@ static char *SKTransitionPropertiesObservationContext;
 - (NSTouchBar *)makeTouchBar {
     NSTouchBar *touchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
     [touchBar setDelegate:self];
-    [touchBar setDefaultItemIdentifiers:[NSArray arrayWithObjects:@"NSTouchBarItemIdentifierFlexibleSpace", SKTouchBarItemIdentifierCancel, SKTouchBarItemIdentifierOK, @"NSTouchBarItemIdentifierFixedSpaceLarge", nil]];
+    [touchBar setDefaultItemIdentifiers:@[@"NSTouchBarItemIdentifierFlexibleSpace", SKTouchBarItemIdentifierCancel, SKTouchBarItemIdentifierOK, @"NSTouchBarItemIdentifierFixedSpaceLarge"]];
     return touchBar;
 }
 
