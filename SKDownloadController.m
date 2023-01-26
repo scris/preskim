@@ -166,7 +166,7 @@ static SKDownloadController *sharedDownloadController = nil;
 
 - (void)handleApplicationWillTerminateNotification:(NSNotification *)notification  {
     [downloads makeObjectsPerformSelector:@selector(cancel) withObject:nil];
-    NSDictionary *downloadsDictionary = [NSDictionary dictionaryWithObjectsAndKeys:[downloads valueForKey:@"properties"], DOWNLOADS_KEY, nil];
+    NSDictionary *downloadsDictionary = @{DOWNLOADS_KEY:[downloads valueForKey:@"properties"]};
     [[NSUserDefaults standardUserDefaults] setPersistentDomain:downloadsDictionary forName:SKDownloadsIdentifier];
 }
 
