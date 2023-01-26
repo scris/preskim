@@ -908,7 +908,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
 #pragma mark -
 
 @implementation NSNumber (SKTemplateParser)
-- (BOOL)isNotEmpty { return [self isEqualToNumber:[NSNumber numberWithBool:NO]] == NO && [self isEqualToNumber:[NSNumber numberWithInteger:0]] == NO; }
+- (BOOL)isNotEmpty { return [self isEqualToNumber:@NO] == NO && [self isEqualToNumber:@0] == NO; }
 @end
 
 #pragma mark -

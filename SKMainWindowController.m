@@ -566,7 +566,7 @@ static char SKMainWindowContentLayoutObservationContext;
     
     if ([[pdfView document] isLocked]) {
         [window makeFirstResponder:[pdfView descendantOfClass:[NSSecureTextField class]]];
-        [savedNormalSetup setObject:[NSNumber numberWithBool:YES] forKey:LOCKED_KEY];
+        [savedNormalSetup setObject:@YES forKey:LOCKED_KEY];
     } else {
         [savedNormalSetup removeAllObjects];
     }
@@ -2942,7 +2942,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 }
 
 - (void)updateThumbnailsAtPageIndexes:(NSIndexSet *)indexSet {
-    [[thumbnails objectsAtIndexes:indexSet] setValue:[NSNumber numberWithBool:YES] forKey:@"dirty"];
+    [[thumbnails objectsAtIndexes:indexSet] setValue:@YES forKey:@"dirty"];
 }
 
 - (void)allThumbnailsNeedUpdate {

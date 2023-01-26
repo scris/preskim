@@ -183,19 +183,19 @@
                 [settings setObject:[NSNumber numberWithInteger:kPDFDisplaySinglePage] forKey:@"displayMode"];
             } else if (0 == strcmp(pageLayout, "OneColumn")) {
                 [settings setObject:[NSNumber numberWithInteger:kPDFDisplaySinglePageContinuous] forKey:@"displayMode"];
-                [settings setObject:[NSNumber numberWithInteger:0] forKey:@"displayDirection"];
+                [settings setObject:@0 forKey:@"displayDirection"];
             } else if (0 == strcmp(pageLayout, "TwoColumnLeft")) {
                 [settings setObject:[NSNumber numberWithInteger:kPDFDisplayTwoUpContinuous] forKey:@"displayMode"];
-                [settings setObject:[NSNumber numberWithBool:NO] forKey:@"displaysAsBook"];
+                [settings setObject:@NO forKey:@"displaysAsBook"];
             } else if (0 == strcmp(pageLayout, "TwoColumnRight")) {
                 [settings setObject:[NSNumber numberWithInteger:kPDFDisplayTwoUpContinuous] forKey:@"displayMode"];
-                [settings setObject:[NSNumber numberWithBool:YES] forKey:@"displaysAsBook"];
+                [settings setObject:@YES forKey:@"displaysAsBook"];
             } else if (0 == strcmp(pageLayout, "TwoPageLeft")) {
                 [settings setObject:[NSNumber numberWithInteger:kPDFDisplayTwoUp] forKey:@"displayMode"];
-                [settings setObject:[NSNumber numberWithBool:NO] forKey:@"displaysAsBook"];
+                [settings setObject:@NO forKey:@"displaysAsBook"];
             } else if (0 == strcmp(pageLayout, "TwoPageRight")) {
                 [settings setObject:[NSNumber numberWithInteger:kPDFDisplayTwoUp] forKey:@"displayMode"];
-                [settings setObject:[NSNumber numberWithBool:YES] forKey:@"displaysAsBook"];
+                [settings setObject:@YES forKey:@"displaysAsBook"];
             }
         }
         if (CGPDFDictionaryGetDictionary(catalog, "ViewerPreferences", &viewerPrefs)) {
@@ -204,9 +204,9 @@
             CGPDFBoolean fitWindow = false;
             if (CGPDFDictionaryGetName(viewerPrefs, "Direction", &direction)) {
                 if (0 == strcmp(direction, "L2R"))
-                    [settings setObject:[NSNumber numberWithBool:NO] forKey:@"displaysRTL"];
+                    [settings setObject:@NO forKey:@"displaysRTL"];
                 else if (0 == strcmp(direction, "R2L"))
-                    [settings setObject:[NSNumber numberWithBool:YES] forKey:@"displaysRTL"];
+                    [settings setObject:@YES forKey:@"displaysRTL"];
             }
             if (CGPDFDictionaryGetName(viewerPrefs, "ViewArea", &viewArea)) {
                 if (0 == strcmp(viewArea, "CropBox"))

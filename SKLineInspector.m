@@ -430,9 +430,9 @@ static SKLineInspector *sharedLineInspector = nil;
 
 - (void)setNilValueForKey:(NSString *)key {
     if ([key isEqualToString:LINEWIDTH_KEY]) {
-        [self setValue:[NSNumber numberWithDouble:0.0] forKey:key];
+        [self setValue:@0.0 forKey:key];
     } else if ([key isEqualToString:STYLE_KEY] || [key isEqualToString:STARTLINESTYLE_KEY] || [key isEqualToString:ENDLINESTYLE_KEY]) {
-        [self setValue:[NSNumber numberWithInteger:0] forKey:key];
+        [self setValue:@0 forKey:key];
     } else {
         [super setNilValueForKey:key];
     }
