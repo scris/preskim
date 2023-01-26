@@ -204,7 +204,7 @@ static char SKFontWellFontSizeObservationContext;
 
 - (void)changeAttributesFromFontManager:(id)sender {
     if ([self isActive] && [self hasTextColor]) {
-        [self setTextColor:[[sender convertAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[self textColor], NSForegroundColorAttributeName, nil]] valueForKey:NSForegroundColorAttributeName]];
+        [self setTextColor:[[sender convertAttributes:@{NSForegroundColorAttributeName:[self textColor] ?: [NSColor blackColor]}] valueForKey:NSForegroundColorAttributeName]];
         [self notifyBinding:TEXTCOLOR_KEY];
         [self sendAction:[self action] to:[self target]];
     }
