@@ -80,6 +80,8 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 
 #pragma mark Notes
 
+- (BOOL)hasNotes;
+
 - (NSArray *)notes;
 
 - (NSArray *)SkimNoteProperties;

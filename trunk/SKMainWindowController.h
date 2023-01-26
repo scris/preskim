@@ -232,6 +232,8 @@ enum {
 
 @property (nonatomic, readonly) NSArray *widgetProperties;
 
+@property (nonatomic, readonly) BOOL hasNotes;
+
 - (NSArray *)notes;
 - (NSUInteger)countOfNotes;
 - (PDFAnnotation *)objectInNotesAtIndex:(NSUInteger)theIndex;
