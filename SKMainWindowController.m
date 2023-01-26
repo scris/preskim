@@ -1082,6 +1082,13 @@ static char SKMainWindowContentLayoutObservationContext;
         if (removeAllNotes)
             [self removeAllObjectsFromNotes];
     }
+    if (notesToRemove && autoUpdate == NO && widgets) {
+        for (PDFAnnotation *widget in widgets) {
+            id origValue = [widgetValues objectForKey:widget];
+            if ([([widget objectValue] ?: @"") isEqual:(origValue ?: @"")] == NO)
+                [widget setObjectValue:origValue];
+        }
+    }
     
     // create new annotations from the dictionary and add them to their page and to the document
     for (NSDictionary *dict in noteDicts) {
