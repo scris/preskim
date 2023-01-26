@@ -453,7 +453,7 @@ enum {
     else
         permissions = nil;
     if ([isLocked boolValue])
-        [absoluteURL setResourceValue:[NSNumber numberWithBool:NO] forKey:NSURLIsUserImmutableKey error:NULL];
+        [absoluteURL setResourceValue:@NO forKey:NSURLIsUserImmutableKey error:NULL];
     else
         isLocked = nil;
     
@@ -1015,7 +1015,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     
     // NSPrintProtected is a private key that disables the items in the PDF popup of the Print panel, and is set for encrypted documents
     if ([pdfDoc isEncrypted])
-        [[[printOperation printInfo] dictionary] setValue:[NSNumber numberWithBool:NO] forKey:@"NSPrintProtected"];
+        [[[printOperation printInfo] dictionary] setValue:@NO forKey:@"NSPrintProtected"];
     
     NSPrintPanel *printPanel = [printOperation printPanel];
     [printPanel setOptions:NSPrintPanelShowsCopies | NSPrintPanelShowsPageRange | NSPrintPanelShowsPaperSize | NSPrintPanelShowsOrientation | NSPrintPanelShowsScaling | NSPrintPanelShowsPreview];

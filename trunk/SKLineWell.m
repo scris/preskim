@@ -521,7 +521,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
 - (void)setNilValueForKey:(NSString *)key {
     if ([key isEqualToString:SKLineWellLineWidthKey] || [key isEqualToString:SKLineWellStyleKey] || 
         [key isEqualToString:SKLineWellStartLineStyleKey] || [key isEqualToString:SKLineWellEndLineStyleKey]) {
-        [self setValue:[NSNumber numberWithInteger:0] forKey:key];
+        [self setValue:@0 forKey:key];
     } else {
         [super setNilValueForKey:key];
     }
