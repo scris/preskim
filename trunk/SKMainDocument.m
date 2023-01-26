@@ -1080,7 +1080,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     NSButton *replaceNotesCheckButton = nil;
     NSView *readNotesAccessoryView = nil;
     
-    if ([[[self mainWindowController] notes] count]) {
+    if ([self hasNotes]) {
         replaceNotesCheckButton = [[[NSButton alloc] init] autorelease];
         [replaceNotesCheckButton setButtonType:NSSwitchButton];
         [replaceNotesCheckButton setTitle:NSLocalizedString(@"Replace existing notes", @"Check button title")];
