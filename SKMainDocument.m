@@ -499,7 +499,7 @@ enum {
     }
     
     if (writeNotesOK) {
-        if ([[self notes] count] > 0)
+        if ([self hasNotes])
             writeNotesOK = [super writeSafelyToURL:absoluteURL ofType:SKNotesDocumentType forSaveOperation:NSSaveToOperation error:NULL];
         else if (fileExists)
             writeNotesOK = [[NSFileManager defaultManager] removeItemAtURL:absoluteURL error:NULL];
@@ -639,7 +639,7 @@ enum {
         [fileWrapper addRegularFileWithContents:data preferredFilename:[BUNDLE_DATA_FILENAME stringByAppendingPathExtension:@"txt"]];
     if ((data = [NSPropertyListSerialization dataWithPropertyList:info format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL]))
         [fileWrapper addRegularFileWithContents:data preferredFilename:[BUNDLE_DATA_FILENAME stringByAppendingPathExtension:@"plist"]];
-    if ([[self notes] count] > 0) {
+    if ([self hasNotes]) {
         if ((data = [self notesData]))
             [fileWrapper addRegularFileWithContents:data preferredFilename:[name stringByAppendingPathExtension:@"skim"]];
         if ((data = [[self notesString] dataUsingEncoding:NSUTF8StringEncoding]))
@@ -1281,7 +1281,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 }
 
 - (IBAction)share:(id)sender {
-    BOOL shouldArchive = ([[self notes] count] > 0 || [[[self mainWindowController] presentationOptions] count] > 0 || [[[self mainWindowController] widgetProperties] count] > 0);
+    BOOL shouldArchive = ([self hasNotes] || [[[self mainWindowController] presentationOptions] count] > 0 || [[[self mainWindowController] widgetProperties] count] > 0);
     
     NSString *typeName = [self fileType];
     if (shouldArchive == NO && [typeName isEqualToString:SKPDFBundleDocumentType])
@@ -1671,6 +1671,10 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 }
 
 #pragma mark Scripting support
+
+- (BOOL)hasNotes {
+    return [[self mainWindowController] hasNotes];
+}
 
 - (NSArray *)notes {
     return [[self mainWindowController] notes];

@@ -229,7 +229,7 @@ static char SKMainWindowContentLayoutObservationContext;
 @implementation SKMainWindowController
 
 @synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, statusBar, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
-@dynamic pdfDocument, presentationOptions, selectedNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
+@dynamic pdfDocument, presentationOptions, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -1368,6 +1368,18 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (CGFloat)rightSideWidth {
     return [self rightSidePaneIsOpen] ? NSWidth([rightSideContentView frame]) : 0.0;
+}
+
+- (BOOL)hasNotes {
+    if ([notes count] > 0)
+        return YES;
+    if ([placeholderWidgetProperties count] > 0)
+        return YES;
+    for (PDFAnnotation *widget in widgets) {
+        if ([([widget objectValue] ?: @"") isEqual:([widgetValues objectForKey:widget] ?: @"")] == NO)
+            return YES;
+    }
+    return NO;
 }
 
 - (NSArray *)notes {

@@ -216,7 +216,7 @@ enum { SKFileUpdateOptionYes=NSAlertFirstButtonReturn, SKFileUpdateOptionNo=NSAl
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWindowDidEndSheetNotification:) 
                                                          name:NSWindowDidEndSheetNotification object:docWindow];
         } else if (canUpdateFromURL(fileURL)) {
-            BOOL documentHasEdits = [document isDocumentEdited] || [[document notes] count] > 0;
+            BOOL documentHasEdits = [document isDocumentEdited] || [document hasNotes];
             if (fucFlags.autoUpdate && documentHasEdits == NO) {
                 // tried queuing this with a delayed perform/cancel previous, but revert takes long enough that the cancel was never used
                 [self updateWithOption:SKFileUpdateOptionYes];

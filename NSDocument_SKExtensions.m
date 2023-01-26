@@ -217,6 +217,8 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
 
 #pragma mark Notes
 
+- (BOOL)hasNotes { return [[self notes] count] > 0; }
+
 - (NSArray *)notes { return nil; }
 
 - (NSArray *)SkimNoteProperties {
