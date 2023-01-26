@@ -1040,12 +1040,13 @@ static char SKMainWindowContentLayoutObservationContext;
     return properties;
 }
 
-- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove autoUpdate:(BOOL)autoUpdate {
+- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove {
     PDFAnnotation *annotation;
     PDFDocument *pdfDoc = [pdfView document];
     NSMutableArray *notesToAdd = [NSMutableArray array];
     NSMutableArray *widgetProperties = [NSMutableArray array];
     NSMutableIndexSet *pageIndexes = [NSMutableIndexSet indexSet];
+    BOOL isConvert = [notesToRemove count] > 0 && [[notesToRemove firstObject] isSkimNote] == NO;
     
     if ([pdfDoc allowsNotes] == NO && [noteDicts count] > 0) {
         // there should not be any notesToRemove at this point
@@ -1082,7 +1083,7 @@ static char SKMainWindowContentLayoutObservationContext;
         if (removeAllNotes)
             [self removeAllObjectsFromNotes];
     }
-    if (notesToRemove && autoUpdate == NO && widgets) {
+    if (notesToRemove && isConvert == NO && widgets) {
         for (PDFAnnotation *widget in widgets) {
             id origValue = [widgetValues objectForKey:widget];
             if ([([widget objectValue] ?: @"") isEqual:(origValue ?: @"")] == NO)
@@ -1104,7 +1105,7 @@ static char SKMainWindowContentLayoutObservationContext;
             [pageIndexes addIndex:pageIndex];
             PDFPage *page = [pdfDoc pageAtIndex:pageIndex];
             [pdfView addAnnotation:annotation toPage:page];
-            if (autoUpdate && [[annotation contents] length] == 0)
+            if (isConvert && [[annotation contents] length] == 0)
                 [annotation autoUpdateString];
             [notesToAdd addObject:annotation];
             [annotation release];
