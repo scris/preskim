@@ -201,7 +201,7 @@ enum {
     
     [[self mainWindowController] setPdfDocument:pdfDoc];
     
-    [[self mainWindowController] addAnnotationsFromDictionaries:[tmpData noteDicts] removeAnnotations:[self notes] autoUpdate:NO];
+    [[self mainWindowController] addAnnotationsFromDictionaries:[tmpData noteDicts] removeAnnotations:[self notes]];
     
     if ([tmpData presentationOptions])
         [[self mainWindowController] setPresentationOptions:[tmpData presentationOptions]];
@@ -1065,7 +1065,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     }
     
     if (array) {
-        [[self mainWindowController] addAnnotationsFromDictionaries:array removeAnnotations:replace ? [self notes] : nil autoUpdate:NO];
+        [[self mainWindowController] addAnnotationsFromDictionaries:array removeAnnotations:replace ? [self notes] : nil];
         [[self undoManager] setActionName:replace ? NSLocalizedString(@"Replace Notes", @"Undo action name") : NSLocalizedString(@"Add Notes", @"Undo action name")];
     } else
         NSBeep();
@@ -1183,7 +1183,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                [[self mainWindowController] addAnnotationsFromDictionaries:noteDicts removeAnnotations:annotations autoUpdate:YES];
+                [[self mainWindowController] addAnnotationsFromDictionaries:noteDicts removeAnnotations:annotations];
                 
                 [[self mainWindowController] registerWidgetValues];
                 
