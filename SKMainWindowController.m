@@ -995,16 +995,6 @@ static char SKMainWindowContentLayoutObservationContext;
     }
 }
 
-- (void)registerWidgetValues {
-    NSMapTable *values = [NSMapTable strongToStrongObjectsMapTable];
-    for (PDFAnnotation *widget in widgets) {
-        id value = [widget objectValue];
-        if (value)
-            [values setObject:value forKey:widget];
-    }
-    [self setWidgetValues:values];
-}
-
 - (void)changeWidgetsFromDictionaries:(NSArray *)widgetDicts {
     for (NSDictionary *dict in widgetDicts) {
         NSRect bounds = NSIntegralRect(NSRectFromString([dict objectForKey:SKNPDFAnnotationBoundsKey]));
@@ -1125,8 +1115,16 @@ static char SKMainWindowContentLayoutObservationContext;
             [self makeWidgets];
         if ([widgetProperties count])
             [self changeWidgetsFromDictionaries:widgetProperties];
-        if (isConvert)
-            [self registerWidgetValues];
+        if (isConvert) {
+            NSMapTable *values = [NSMapTable strongToStrongObjectsMapTable];
+            for (PDFAnnotation *widget in widgets) {
+                id value = [widget objectValue];
+                if (value)
+                    [values setObject:value forKey:widget];
+            }
+            if ([values count])
+                [self setWidgetValues:values];
+        }
     }
     
     // make sure we clear the undo handling
