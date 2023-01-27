@@ -56,9 +56,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 - (void)shareFileURL {
-    NSURL *fileURL = [self fileURL];
-    if (fileURL) {
-        NSArray *items = @[fileURL];
+    NSURL *url = [self fileURL];
+    if (url) {
+        NSArray *items = @[url];
         if ([[self sharingService] canPerformWithItems:items]) {
             [[self sharingService] performWithItems:items];
             return;
