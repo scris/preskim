@@ -662,7 +662,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/bin/headerdoc2html -o $TARGET_BUILD_DIR/SkimNotes\\ Documentation $SRCROOT/*.{hdoc,h}\n/usr/bin/gatherheaderdoc $TARGET_BUILD_DIR/SkimNotes\\ Documentation\nexit 0";
+			shellScript = "/usr/bin/headerdoc2html -o $TARGET_BUILD_DIR/SkimNotes\\ Documentation $SRCROOT/*.{hdoc,h}\n/usr/bin/gatherheaderdoc $TARGET_BUILD_DIR/SkimNotes\\ Documentation\nexit 0\n";
 		};
 		CEBA2EA10E0673B60000B2E6 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
