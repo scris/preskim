@@ -332,8 +332,6 @@ enum {
 
 - (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove;
 
-- (void)registerWidgetValues;
-
 - (void)applySetup:(NSDictionary *)setup;
 - (NSDictionary *)currentSetup;
 - (void)applyPDFSettings:(NSDictionary *)setup rewind:(BOOL)rewind;

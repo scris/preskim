@@ -1125,6 +1125,8 @@ static char SKMainWindowContentLayoutObservationContext;
             [self makeWidgets];
         if ([widgetProperties count])
             [self changeWidgetsFromDictionaries:widgetProperties];
+        if (isConvert)
+            [self registerWidgetValues];
     }
     
     // make sure we clear the undo handling

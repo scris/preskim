@@ -1185,8 +1185,6 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                 
                 [[self mainWindowController] addAnnotationsFromDictionaries:noteDicts removeAnnotations:annotations];
                 
-                [[self mainWindowController] registerWidgetValues];
-                
                 [self setPDFData:data pageOffsets:offsets];
                 
                 [[self undoManager] setActionName:NSLocalizedString(@"Convert Notes", @"Undo action name")];
