@@ -1084,10 +1084,10 @@ static char SKMainWindowContentLayoutObservationContext;
     // create new annotations from the dictionary and add them to their page and to the document
     for (NSDictionary *dict in noteDicts) {
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
         if ((annotation = [[PDFAnnotation alloc] initSkimNoteWithProperties:dict])) {
             // this is only to make sure markup annotations generate the lineRects, for thread safety
             [annotation boundsOrder];
+            NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
             if (pageIndex == NSNotFound)
                 pageIndex = 0;
             else if (pageIndex >= [pdfDoc pageCount])
