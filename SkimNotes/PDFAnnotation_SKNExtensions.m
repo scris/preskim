@@ -373,7 +373,7 @@ static inline PDFLineStyle SKNPDFLineStyleFromAnnotationValue(id value) {
                 [dict setValue:date forKey:SKNPDFAnnotationModificationDateKey];
         }
         
-        if ([dict objectForKey:SKNPDFAnnotationUserNameKey] == nil && (value = [self valueForAnnotationKey:@"/Contents"]))
+        if ([dict objectForKey:SKNPDFAnnotationContentsKey] == nil && (value = [self valueForAnnotationKey:@"/Contents"]))
             [dict setValue:value forKey:SKNPDFAnnotationContentsKey];
         
         if ([dict objectForKey:SKNPDFAnnotationUserNameKey] == nil && (value = [self valueForAnnotationKey:@"/T"]))
