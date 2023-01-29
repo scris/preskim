@@ -124,6 +124,8 @@ static inline NSColor *SKNColorFromArray(NSArray *array) {
 
 #if !defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_13
 @interface PDFAnnotation (SKNHighSierraDeclarations)
+- (NSInteger)buttonWidgetState;
+- (NSString *)widgetStringValue;
 @end
 #endif
 
@@ -474,6 +476,22 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 }
 
 - (NSString *)string {
+    if ([[self type] isEqualToString:SKNWidgetString]) {
+        if ([self respondsToSelector:@selector(valueForAnnotationKey:)]) {
+            if (SKNPDFWidgetTypeFromAnnotationValue([self valueForAnnotationKey:@"/FT"]) == kSKNPDFWidgetTypeButton) {
+                if ([self respondsToSelector:@selector(buttonWidgetState)])
+                    return [NSString stringWithFormat:@"%ld", (long)[self buttonWidgetState]];
+                else if ([self respondsToSelector:@selector(valueForAnnotationKey:)])
+                    return [[self valueForAnnotationKey:@"/V"] isEqual:@"Off"] ? @"0" : @"1";
+            } else {
+                if ([self respondsToSelector:@selector(widgetStringValue)])
+                    return [self widgetStringValue];
+                else if ([self respondsToSelector:@selector(valueForAnnotationKey:)])
+                    return [self valueForAnnotationKey:@"/V"];
+            }
+        }
+        return nil;
+    }
     return [self contents];
 }
 
