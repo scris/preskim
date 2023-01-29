@@ -122,6 +122,11 @@ static inline NSColor *SKNColorFromArray(NSArray *array) {
 @end
 #endif
 
+#if !defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_13
+@interface PDFAnnotation (SKNHighSierraDeclarations)
+@end
+#endif
+
 @implementation PDFAnnotation (SKNExtensions)
 
 static NSHashTable *SkimNotes = nil;
@@ -255,23 +260,6 @@ static void replacement_dealloc(id self, SEL _cmd) {
     return dict;
 }
 
-static inline PDFBorderStyle SKNPDFBorderStyleFromAnnotationValue(id value) {
-    if ([value isKindOfClass:[NSString class]] == NO)
-        return kPDFBorderStyleSolid;
-    if ([value isEqualToString:@"/S"])
-        return kPDFBorderStyleSolid;
-    else if ([value isEqualToString:@"/D"])
-        return kPDFBorderStyleDashed;
-    else if ([value isEqualToString:@"/B"])
-        return kPDFBorderStyleBeveled;
-    else if ([value isEqualToString:@"/I"])
-        return kPDFBorderStyleInset;
-    else if ([value isEqualToString:@"/U"])
-        return kPDFBorderStyleUnderline;
-    else
-        return kPDFBorderStyleSolid;
-}
-
 static inline NSColor *SKNColorFromAnnotationValue(id value) {
     if ([value isKindOfClass:[NSColor class]])
         return value;
@@ -301,7 +289,6 @@ static inline PDFTextAnnotationIconType SKNIconTypeFromAnnotationValue(id value)
         return kPDFTextAnnotationIconNote;
 }
 
-
 static inline PDFLineStyle SKNPDFLineStyleFromAnnotationValue(id value) {
     if ([value isKindOfClass:[NSString class]] == NO)
         return kPDFLineStyleNone;
@@ -321,86 +308,50 @@ static inline PDFLineStyle SKNPDFLineStyleFromAnnotationValue(id value) {
         return kPDFLineStyleNone;
 }
 
+static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
+    if ([value isKindOfClass:[NSString class]] == NO)
+        return kSKNPDFWidgetTypeUnknown;
+    if ([value isEqualToString:@"/Tx"])
+        return kSKNPDFWidgetTypeText;
+    else if ([value isEqualToString:@"/Btn"])
+        return kSKNPDFWidgetTypeButton;
+    else if ([value isEqualToString:@"/Choice"])
+        return kSKNPDFWidgetTypeChoice;
+    else
+        return kSKNPDFWidgetTypeUnknown;
+}
+
 - (NSDictionary *)SkimNoteProperties{
     NSMutableDictionary *dict = [self genericSkimNoteProperties];
     
     if ([self respondsToSelector:@selector(valueForAnnotationKey:)]) {
+        NSString *type = [self type];
         NSRect bounds = [self bounds];
         id value = nil;
         Class arrayClass = [NSArray class];
-        Class dictClass = [NSDictionary class];
-        Class dateClass = [NSDate class];
         Class stringClass = [NSString class];
-        
-        if ([dict objectForKey:SKNPDFAnnotationLineWidthKey] == nil) {
-            if ((value = [self valueForAnnotationKey:@"/BS"])) {
-                if ([value isKindOfClass:dictClass]) {
-                    [dict setValue:[NSNumber numberWithFloat:[[value objectForKey:@"/W"] floatValue]] forKey:SKNPDFAnnotationLineWidthKey];
-                    [dict setValue:[NSNumber numberWithInteger:SKNPDFBorderStyleFromAnnotationValue([value objectForKey:@"/S"])] forKey:SKNPDFAnnotationBorderStyleKey];
-                    [dict setValue:[value objectForKey:@"/D"] forKey:SKNPDFAnnotationDashPatternKey];
-                }
-            } else if ((value = [self valueForAnnotationKey:@"/Border"])) {
-                if ([value isKindOfClass:arrayClass] && [value count] >= 3) {
-                    [dict setValue:[NSNumber numberWithFloat:[[value objectAtIndex:2] floatValue]] forKey:SKNPDFAnnotationLineWidthKey];
-                    if ([value count] == 3) {
-                        [dict setValue:[NSNumber numberWithInteger:kPDFBorderStyleSolid] forKey:SKNPDFAnnotationBorderStyleKey];
-                    } else {
-                        [dict setValue:[NSNumber numberWithInteger:kPDFBorderStyleDashed] forKey:SKNPDFAnnotationBorderStyleKey];
-                        [dict setValue:[value objectAtIndex:3] forKey:SKNPDFAnnotationDashPatternKey];
-                    }
-                }
-            }
-        }
-        
-        if ([dict objectForKey:SKNPDFAnnotationModificationDateKey] == nil && (value = [self valueForAnnotationKey:@"/M"])) {
-            NSDate *date = nil;
-            if ([value isKindOfClass:stringClass]) {
-                NSMutableString *string = [value mutableCopy];
-                if ([string hasPrefix:@"D:"])
-                    [string deleteCharactersInRange:NSMakeRange(0, 2)];
-                [string replaceOccurrencesOfString:@"'" withString:@"" options:0 range:NSMakeRange(0, [string length])];
-                if ([string hasSuffix:@"Z0000"])
-                    [string replaceCharactersInRange:NSMakeRange([string length] - 5, 1) withString:@"+"];
-                else if ([string length] == 14)
-                    [string appendString:@"+0000"];
-                NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                [formatter setDateFormat:@"yyyyMMddHHmmssZZ"];
-                value = [formatter dateFromString:string];
-                [formatter release];
-                [string release];
-            }
-            if ([value isKindOfClass:dateClass])
-                [dict setValue:date forKey:SKNPDFAnnotationModificationDateKey];
-        }
-        
-        if ([dict objectForKey:SKNPDFAnnotationContentsKey] == nil && (value = [self valueForAnnotationKey:@"/Contents"]))
-            [dict setValue:value forKey:SKNPDFAnnotationContentsKey];
-        
-        if ([dict objectForKey:SKNPDFAnnotationUserNameKey] == nil && (value = [self valueForAnnotationKey:@"/T"]))
-            [dict setValue:value forKey:SKNPDFAnnotationUserNameKey];
-        
-        if ([dict objectForKey:SKNPDFAnnotationColorKey] == nil && (value = [self valueForAnnotationKey:@"/C"]))
-            [dict setValue:SKNColorFromAnnotationValue(value) forKey:SKNPDFAnnotationColorKey];
         
         if ([dict objectForKey:SKNPDFAnnotationInteriorColorKey] == nil && (value = [self valueForAnnotationKey:@"/IC"]))
             [dict setValue:SKNColorFromAnnotationValue(value) forKey:SKNPDFAnnotationInteriorColorKey];
         
-        if ((value = [self valueForAnnotationKey:@"/Name"]))
+        if ([type isEqualToString:SKNTextString] && (value = [self valueForAnnotationKey:@"/Name"]))
             [dict setValue:[NSNumber numberWithInteger:SKNIconTypeFromAnnotationValue(value)] forKey:SKNPDFAnnotationIconTypeKey];
         
-        if ((value = [self valueForAnnotationKey:@"/LE"])) {
-            if ([value isKindOfClass:arrayClass] && [value count] == 2) {
-                [dict setValue:[NSNumber numberWithInteger:SKNPDFLineStyleFromAnnotationValue([value objectAtIndex:0])] forKey:SKNPDFAnnotationStartLineStyleKey];
-                [dict setValue:[NSNumber numberWithInteger:SKNPDFLineStyleFromAnnotationValue([value objectAtIndex:1])] forKey:SKNPDFAnnotationEndLineStyleKey];
+        if ([type isEqualToString:SKNLineString]) {
+            if ((value = [self valueForAnnotationKey:@"/LE"])) {
+                if ([value isKindOfClass:arrayClass] && [value count] == 2) {
+                    [dict setValue:[NSNumber numberWithInteger:SKNPDFLineStyleFromAnnotationValue([value objectAtIndex:0])] forKey:SKNPDFAnnotationStartLineStyleKey];
+                    [dict setValue:[NSNumber numberWithInteger:SKNPDFLineStyleFromAnnotationValue([value objectAtIndex:1])] forKey:SKNPDFAnnotationEndLineStyleKey];
+                }
             }
-        }
-        
-        if ((value = [self valueForAnnotationKey:@"/L"])) {
-            if ([value isKindOfClass:arrayClass] && [value count] == 4) {
-                NSPoint p = NSMakePoint([[value objectAtIndex:0] floatValue] - NSMinX(bounds), [[value objectAtIndex:1] floatValue] - NSMinY(bounds));
-                [dict setValue:NSStringFromPoint(p) forKey:SKNPDFAnnotationStartPointKey];
-                p = NSMakePoint([[value objectAtIndex:2] floatValue] - NSMinX(bounds), [[value objectAtIndex:3] floatValue] - NSMinY(bounds));
-                [dict setValue:NSStringFromPoint(p) forKey:SKNPDFAnnotationEndPointKey];
+            
+            if ((value = [self valueForAnnotationKey:@"/L"])) {
+                if ([value isKindOfClass:arrayClass] && [value count] == 4) {
+                    NSPoint p = NSMakePoint([[value objectAtIndex:0] floatValue] - NSMinX(bounds), [[value objectAtIndex:1] floatValue] - NSMinY(bounds));
+                    [dict setValue:NSStringFromPoint(p) forKey:SKNPDFAnnotationStartPointKey];
+                    p = NSMakePoint([[value objectAtIndex:2] floatValue] - NSMinX(bounds), [[value objectAtIndex:3] floatValue] - NSMinY(bounds));
+                    [dict setValue:NSStringFromPoint(p) forKey:SKNPDFAnnotationEndPointKey];
+                }
             }
         }
         
@@ -436,32 +387,72 @@ static inline PDFLineStyle SKNPDFLineStyleFromAnnotationValue(id value) {
             }
         }
         
-        if ((value = [self valueForAnnotationKey:@"/Q"])) {
-            NSInteger align = [value integerValue];
-            [dict setValue:[NSNumber numberWithInteger:align == 1 ? NSCenterTextAlignment : align == 2 ? NSRightTextAlignment : NSLeftTextAlignment] forKey:SKNPDFAnnotationAlignmentKey];
+        if ([type isEqualToString:SKNFreeTextString]) {
+            if ((value = [self valueForAnnotationKey:@"/Q"])) {
+                NSInteger align = [value integerValue];
+                [dict setValue:[NSNumber numberWithInteger:align == 1 ? NSCenterTextAlignment : align == 2 ? NSRightTextAlignment : NSLeftTextAlignment] forKey:SKNPDFAnnotationAlignmentKey];
+            }
+            
+            NSFont *font = nil;
+            if ([self respondsToSelector:@selector(font)]) {
+                font = [(PDFAnnotationFreeText *)self font];
+            }
+            if (font == nil && (value = [self valueForAnnotationKey:@"/DA"])) {
+                NSScanner *scanner = [[NSScanner alloc] initWithString:value];
+                NSString *fontName;
+                double fontSize;
+                if ([scanner scanUpToString:@"Tf" intoString:NULL] && [scanner isAtEnd] == NO) {
+                    NSUInteger location = [scanner scanLocation];
+                    NSRange r = [value rangeOfString:@"/" options:NSBackwardsSearch range:NSMakeRange(0, location)];
+                    if (r.location != NSNotFound) {
+                        [scanner setScanLocation:NSMaxRange(r)];
+                        if ([scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&fontName] &&
+                            [scanner scanDouble:&fontSize] &&
+                            [scanner scanString:@"Tf" intoString:NULL] &&
+                            [scanner scanLocation] == location + 2) {
+                            font = [NSFont fontWithName:fontName size:fontSize];
+                        }
+                    }
+                }
+                [scanner release];
+            }
+            if (font)
+                [dict setObject:font forKey:SKNPDFAnnotationFontKey];
+            
+            if ([self respondsToSelector:@selector(fontColor)]) {
+                NSColor *fontColor = [(PDFAnnotationFreeText *)self fontColor];
+                if (fontColor)
+                    [dict setObject:fontColor forKey:SKNPDFAnnotationFontColorKey];
+            }
         }
         
-        if ((value = [self valueForAnnotationKey:@"/DA"])) {
-            NSScanner *scanner = [[NSScanner alloc] initWithString:value];
-            NSString *fontName;
-            double fontSize;
-            if ([scanner scanUpToString:@"Tf" intoString:NULL] && [scanner isAtEnd] == NO) {
-                NSUInteger location = [scanner scanLocation];
-                NSRange r = [value rangeOfString:@"/" options:NSBackwardsSearch range:NSMakeRange(0, location)];
-                if (r.location != NSNotFound) {
-                    [scanner setScanLocation:NSMaxRange(r)];
-                    if ([scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&fontName] &&
-                        [scanner scanDouble:&fontSize] &&
-                        [scanner scanString:@"Tf" intoString:NULL] &&
-                        [scanner scanLocation] == location + 2) {
-                        NSFont *font = [NSFont fontWithName:fontName size:fontSize];
-                        if (font)
-                            [dict setObject:font forKey:SKNPDFAnnotationFontKey];
+        if ([type isEqualToString:SKNWidgetString]) {
+            [dict setValue:nil forKey:SKNPDFAnnotationContentsKey];
+            [dict setValue:nil forKey:SKNPDFAnnotationModificationDateKey];
+            [dict setValue:nil forKey:SKNPDFAnnotationUserNameKey];
+            
+            SKNPDFWidgetType widgetType = kSKNPDFWidgetTypeUnknown;
+            if ((value = [self valueForAnnotationKey:@"/FT"])) {
+                widgetType = SKNPDFWidgetTypeFromAnnotationValue(value);
+            }
+            [dict setObject:[NSNumber numberWithInteger:widgetType] forKey:SKNPDFAnnotationWidgetTypeKey];
+            
+            if ((value = [self valueForAnnotationKey:@"/NM"])) {
+                if ([value isKindOfClass:stringClass]) {
+                    [dict setObject:value forKey:SKNPDFAnnotationFieldNameKey];
+                }
+            }
+            
+            if ((value = [self valueForAnnotationKey:@"/V"])) {
+                if ([value isKindOfClass:stringClass]) {
+                    if (widgetType == kSKNPDFWidgetTypeButton) {
+                        [dict setObject:[NSNumber numberWithInteger:[value isEqualToString:@"Off"] ? 0 : 1] forKey:SKNPDFAnnotationStateKey];
+                    } else {
+                        [dict setObject:value forKey:SKNPDFAnnotationFieldNameKey];
                     }
                 }
             }
-            [scanner release];
-        }
+       }
     }
     
     return dict;
