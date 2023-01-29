@@ -315,7 +315,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         return kSKNPDFWidgetTypeText;
     else if ([value isEqualToString:@"/Btn"])
         return kSKNPDFWidgetTypeButton;
-    else if ([value isEqualToString:@"/Choice"])
+    else if ([value isEqualToString:@"/Ch"])
         return kSKNPDFWidgetTypeChoice;
     else
         return kSKNPDFWidgetTypeUnknown;
