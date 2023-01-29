@@ -81,7 +81,8 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 #if SDK_BEFORE(12)
 @interface PDFAnnotation (SKSierraDeclarations)
 - (id)valueForAnnotationKey:(NSString *)key;
-- (void)setValue:(id)value forAnnotationKey:(NSString *)key;
+- (BOOL)setValue:(id)value forAnnotationKey:(NSString *)key;
+- (BOOL)removeValueForAnnotationKey:(NSString *)key;
 @end
 #endif
 
@@ -391,8 +392,10 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
         } else {
             if ([self respondsToSelector:@selector(setWidgetStringValue:)])
                 [self setWidgetStringValue:newObjectValue];
-            else if ([self respondsToSelector:@selector(setValue:forAnnotationKey:)])
+            else if ([newObjectValue isKindOfClass:[NSString class]] && [self respondsToSelector:@selector(setValue:forAnnotationKey:)])
                 [self setValue:newObjectValue forAnnotationKey:@"/V"];
+            else if ([self respondsToSelector:@selector(removeValueForAnnotationKey:)])
+                [self removeValueForAnnotationKey:@"/V"];
         }
 #pragma clang diagnostic pop
     } else if ([newObjectValue isKindOfClass:[NSString class]]) {
