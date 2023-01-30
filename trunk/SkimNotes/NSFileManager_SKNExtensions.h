@@ -41,7 +41,7 @@
     @abstract    An <code>NSFileManager</code> category to read and write Skim notes.
     @discussion  This header file provides API for an <code>NSFileManager</code> category to read and write Skim notes.
 */
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 /*!
  @enum        SKNSkimNotesWritingOptions

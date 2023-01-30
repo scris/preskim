@@ -37,10 +37,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		CE1412881229B73100C9EBA0 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D6A5FE840307C02AAC07 /* AppKit.framework */; };
 		CE1412891229B73100C9EBA0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
-		CE1413C11229B74800C9EBA0 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F649B0E34FAC300E07E76 /* Quartz.framework */; };
 		CE1414151229B74F00C9EBA0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA2D1A0E05A61F0000B2E6 /* libbz2.dylib */; };
 		CE1414231229B80300C9EBA0 /* skimpdf.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1414221229B80300C9EBA0 /* skimpdf.m */; };
 		CE1414261229B8AD00C9EBA0 /* SKNExtendedAttributeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B640E05675E0000B2E6 /* SKNExtendedAttributeManager.m */; };
@@ -49,7 +47,6 @@
 		CE1414291229B8B300C9EBA0 /* PDFAnnotation_SKNExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B700E0568430000B2E6 /* PDFAnnotation_SKNExtensions.m */; };
 		CE14142A1229B8B400C9EBA0 /* PDFDocument_SKNExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2BE10E0587EB0000B2E6 /* PDFDocument_SKNExtensions.m */; };
 		CE14142B1229B8B500C9EBA0 /* SKNPDFAnnotationNote.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B8C0E0569010000B2E6 /* SKNPDFAnnotationNote.m */; };
-		CE1F649C0E34FAC300E07E76 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F649B0E34FAC300E07E76 /* Quartz.framework */; };
 		CE1F64E20E34FF7F00E07E76 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		CE1F64E30E34FF8000E07E76 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D6A5FE840307C02AAC07 /* AppKit.framework */; };
 		CE268622169DB35200B36A1E /* SkimNotesBase.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CEA5F53D0E2CED0E00F65088 /* SkimNotesBase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -67,7 +64,6 @@
 		CEA5F5510E2CEE0200F65088 /* SKNExtendedAttributeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CEBA2B630E05675E0000B2E6 /* SKNExtendedAttributeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEA5F5520E2CEE0300F65088 /* SKNExtendedAttributeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B640E05675E0000B2E6 /* SKNExtendedAttributeManager.m */; };
 		CEA5F5530E2CEE0E00F65088 /* SkimNotes.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE3907AF0E082C460015B0B7 /* SkimNotes.strings */; };
-		CEA5F5560E2CEE7C00F65088 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		CEA5F5570E2CEE7E00F65088 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA2D1A0E05A61F0000B2E6 /* libbz2.dylib */; };
 		CEBA2B5E0E0566DF0000B2E6 /* SKNAgentListener.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B5B0E0566DF0000B2E6 /* SKNAgentListener.m */; };
 		CEBA2B5F0E0566DF0000B2E6 /* skimnotes.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B5D0E0566DF0000B2E6 /* skimnotes.m */; };
@@ -92,6 +88,13 @@
 		CEDB9B040E2EA0200057FD09 /* skimnotes in Resources */ = {isa = PBXBuildFile; fileRef = CEBA2B550E0566B00000B2E6 /* skimnotes */; };
 		CEDB9B060E2EA0450057FD09 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		CEDB9B210E2EA2F30057FD09 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB9B200E2EA2F30057FD09 /* main.m */; };
+		CEF57FE129881B7A00594EC0 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FCF2988170B00594EC0 /* PDFKit.framework */; };
+		CEF57FE229881BC000594EC0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD12988171C00594EC0 /* Foundation.framework */; };
+		CEF57FE329881BCF00594EC0 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD32988172600594EC0 /* AppKit.framework */; };
+		CEF57FE429881BE500594EC0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD12988171C00594EC0 /* Foundation.framework */; };
+		CEF57FE529881BF700594EC0 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FCF2988170B00594EC0 /* PDFKit.framework */; };
+		CEF57FE629881C0500594EC0 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD32988172600594EC0 /* AppKit.framework */; };
+		CEF57FE729881C2300594EC0 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FCF2988170B00594EC0 /* PDFKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -227,6 +230,13 @@
 		CEDB9AFE0E2E9F8A0057FD09 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		CEDB9B0D0E2EA1380057FD09 /* SkimNotes-App.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SkimNotes-App.xcconfig"; sourceTree = "<group>"; };
 		CEDB9B200E2EA2F30057FD09 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CEF57FCF2988170B00594EC0 /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
+		CEF57FD12988171C00594EC0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		CEF57FD32988172600594EC0 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		CEF57FD7298817CB00594EC0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		CEF57FD92988180700594EC0 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		CEF57FDB2988181100594EC0 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		CEF57FDE2988184800594EC0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CEF877D211905CED006436A2 /* pl */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/SkimNotes.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -235,9 +245,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */,
+				CEF57FE329881BCF00594EC0 /* AppKit.framework in Frameworks */,
+				CEF57FE229881BC000594EC0 /* Foundation.framework in Frameworks */,
 				CEBA2D1C0E05A61F0000B2E6 /* libbz2.dylib in Frameworks */,
-				CE1F649C0E34FAC300E07E76 /* Quartz.framework in Frameworks */,
+				CEF57FE129881B7A00594EC0 /* PDFKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,7 +258,7 @@
 			files = (
 				CE1412891229B73100C9EBA0 /* Foundation.framework in Frameworks */,
 				CE1412881229B73100C9EBA0 /* AppKit.framework in Frameworks */,
-				CE1413C11229B74800C9EBA0 /* Quartz.framework in Frameworks */,
+				CEF57FE729881C2300594EC0 /* PDFKit.framework in Frameworks */,
 				CE1414151229B74F00C9EBA0 /* libbz2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -256,7 +267,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEA5F5560E2CEE7C00F65088 /* Cocoa.framework in Frameworks */,
+				CEF57FE629881C0500594EC0 /* AppKit.framework in Frameworks */,
+				CEF57FE529881BF700594EC0 /* PDFKit.framework in Frameworks */,
+				CEF57FE429881BE500594EC0 /* Foundation.framework in Frameworks */,
 				CEA5F5570E2CEE7E00F65088 /* libbz2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -312,6 +325,7 @@
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				CEBA30790E06DC4C0000B2E6 /* Configurations */,
+				CEF57FCE2988170B00594EC0 /* Frameworks */,
 			);
 			name = SkimNotes;
 			sourceTree = "<group>";
@@ -450,6 +464,20 @@
 				CEDB9AFA0E2E9F7E0057FD09 /* SKNDocument.xib */,
 			);
 			name = "Test App Resources";
+			sourceTree = "<group>";
+		};
+		CEF57FCE2988170B00594EC0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CEF57FDE2988184800594EC0 /* QuartzCore.framework */,
+				CEF57FDB2988181100594EC0 /* Cocoa.framework */,
+				CEF57FD92988180700594EC0 /* Quartz.framework */,
+				CEF57FD7298817CB00594EC0 /* CoreGraphics.framework */,
+				CEF57FD32988172600594EC0 /* AppKit.framework */,
+				CEF57FD12988171C00594EC0 /* Foundation.framework */,
+				CEF57FCF2988170B00594EC0 /* PDFKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
