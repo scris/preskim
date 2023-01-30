@@ -429,9 +429,9 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         }
         
         if ([type isEqualToString:SKNWidgetString]) {
-            [dict setValue:nil forKey:SKNPDFAnnotationContentsKey];
-            [dict setValue:nil forKey:SKNPDFAnnotationModificationDateKey];
-            [dict setValue:nil forKey:SKNPDFAnnotationUserNameKey];
+            [dict removeObjectForKey:SKNPDFAnnotationContentsKey];
+            [dict removeObjectForKey:SKNPDFAnnotationModificationDateKey];
+            [dict removeObjectForKey:SKNPDFAnnotationUserNameKey];
             
             SKNPDFWidgetType widgetType = kSKNPDFWidgetTypeUnknown;
             if ((value = [self valueForAnnotationKey:@"/FT"])) {
