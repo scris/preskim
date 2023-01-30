@@ -41,8 +41,8 @@
     @abstract    A concrete <code>PDFAnnotation</code> subclass representing a Skim anchored note.
     @discussion  This header file declares API for a concrete <code>PDFAnnotation</code> class representing a Skim anchored note.
 */
-#import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
+#import <Foundation/Foundation.h>
+#import <PDFKit/PDFKit.h>
 
 /*!
     @discussion  Global string for annotation text key.

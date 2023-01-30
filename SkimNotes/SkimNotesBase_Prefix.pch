@@ -3,7 +3,8 @@
 //
 
 #ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
+    #import <Foundation/Foundation.h>
+    #import <AppKit/AppKit.h>
     
     #define SKNLocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key, @"SkimNotes", [NSBundle bundleWithIdentifier:@"net.sourceforge.skim-app.framework.SkimNotesBase"], comment)
 #endif

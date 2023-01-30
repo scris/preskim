@@ -41,8 +41,8 @@
     @abstract    An <code>PDFAnnotation</code> category to manage Skim notes.
     @discussion  This header file provides API for an <code>PDFAnnotation</code> categories to convert Skim note dictionaries to <code>PDFAnnotations</code> and back.
 */
-#import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
+#import <Foundation/Foundation.h>
+#import <PDFKit/PDFKit.h>
 
 /*!
     @discussion  Global string for Free Text note type.

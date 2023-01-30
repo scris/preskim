@@ -3,8 +3,9 @@
 //
 
 #ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
-    #import <Quartz/Quartz.h>
+    #import <Foundation/Foundation.h>
+    #import <AppKit/AppKit.h>
+    #import <PDFKit/PDFKit.h>
     
     #define SKNLocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key, @"SkimNotes", [NSBundle bundleWithIdentifier:@"net.sourceforge.skim-app.framework.SkimNotes"], comment)
 #endif

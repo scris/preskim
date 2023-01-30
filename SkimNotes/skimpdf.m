@@ -37,7 +37,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <Quartz/Quartz.h>
+#import <PDFKit/PDFKit.h>
 #import "NSFileManager_SKNExtensions.h"
 #import "PDFDocument_SKNExtensions.h"
 #import "PDFAnnotation_SKNExtensions.h"
