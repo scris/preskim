@@ -436,7 +436,9 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 
 - (BOOL)isLink { return [[self type] isEqualToString:@"Link"]; }
 
-- (BOOL)isWidget { return [[self type] isEqualToString:SKNWidgetString]; }
+- (BOOL)isWidget {
+    return [[self type] isEqualToString:SKNWidgetString] && [self widgetType] != kSKNPDFWidgetTypeUnknown;
+}
 
 - (BOOL)isResizable { return NO; }
 
