@@ -73,6 +73,8 @@ NSString *SKPDFAnnotationScriptingInteriorColorKey = @"scriptingInteriorColor";
     return fdfString;
 }
 
+- (BOOL)isWidget { return NO; }
+
 - (BOOL)isResizable { return [self isSkimNote]; }
 
 - (BOOL)isMovable { return [self isSkimNote]; }

@@ -347,6 +347,8 @@ static void (*original_dealloc)(id, SEL) = NULL;
 
 - (BOOL)isMarkup { return YES; }
 
+- (BOOL)isWidget { return NO; }
+
 - (BOOL)hasBorder { return NO; }
 
 - (BOOL)isConvertibleAnnotation { return YES; }
