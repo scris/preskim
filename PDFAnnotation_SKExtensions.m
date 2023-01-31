@@ -385,7 +385,7 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
         if ([self widgetType] == kSKNPDFWidgetTypeButton) {
-            if ([self respondsToSelector:@selector(setButtonWidgedState:)])
+            if ([self respondsToSelector:@selector(setButtonWidgetState:)])
                 [self setButtonWidgetState:[newObjectValue integerValue]];
             else if ([self respondsToSelector:@selector(setValue:forAnnotationKey:)])
                 [self setValue:[newObjectValue integerValue] == 0 ? @"Off" : @"Yes" forAnnotationKey:@"/V"];
