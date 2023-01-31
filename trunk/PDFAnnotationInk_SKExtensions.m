@@ -189,6 +189,8 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
 
 - (BOOL)isInk { return YES; }
 
+- (BOOL)isWidget { return NO; }
+
 - (BOOL)isResizable { return YES; }
 
 - (BOOL)isMovable { return [self isSkimNote]; }
