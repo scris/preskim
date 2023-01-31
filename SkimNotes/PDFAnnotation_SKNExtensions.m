@@ -358,11 +358,21 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         }
         
         if ((value = [self valueForAnnotationKey:@"/QuadPoints"])) {
-            if ([value isKindOfClass:arrayClass] && [value count] % 8 == 0) {
+            if ([value isKindOfClass:arrayClass] && [value count] % 4 == 0) {
+                Class numberClass = [NSNumber class];
                 NSMutableArray *quadPoints = [NSMutableArray array];
                 NSUInteger i, iMax = [value count];
-                for (i = 0; i < iMax; i += 2) {
-                    NSPoint p = NSMakePoint([[value objectAtIndex:i] floatValue] - NSMinX(bounds), [[value objectAtIndex:i + 1] floatValue] - NSMinY(bounds));
+                for (i = 0; i < iMax; i++) {
+                    NSValue *val = [value objectAtIndex:i];
+                    NSPoint p;
+                    if ([val isKindOfClass:numberClass])
+                        p = NSMakePoint([(NSNumber *)val floatValue], [(NSNumber *)[value objectAtIndex:++i] floatValue]);
+                    else if ([val respondsToSelector:@selector(pointValue)])
+                        p = [val pointValue];
+                    else
+                        continue;
+                    p.x -= NSMinX(bounds);
+                    p.y -= NSMinY(bounds);
                     [quadPoints addObject:NSStringFromPoint(p)];
                 }
                 [dict setValue:quadPoints forKey:SKNPDFAnnotationQuadrilateralPointsKey];
@@ -371,19 +381,29 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         
         if ((value = [self valueForAnnotationKey:@"/InkList"])) {
             if ([value isKindOfClass:arrayClass]) {
+                Class pathClass = [NSBezierPath class];
                 NSMutableArray *pointLists = [NSMutableArray array];
                 NSUInteger i, iMax = [value count];
                 for (i = 0; i < iMax; i++) {
-                    NSArray *array = [value objectAtIndex:i];
-                    if ([array isKindOfClass:arrayClass] && [array count] % 2 == 0) {
-                        NSMutableArray *points = [NSMutableArray array];
-                        NSUInteger j, jMax = [array count];
+                    id path = [value objectAtIndex:i];
+                    NSMutableArray *points = [NSMutableArray array];
+                    if ([path isKindOfClass:pathClass]) {
+                        NSInteger i, iMax = [path elementCount];
+                        for (i = 0; i < iMax; i++) {
+                            NSPoint p[3];
+                            if (NSCurveToBezierPathElement == [path elementAtIndex:i associatedPoints:p])
+                                [points addObject:NSStringFromPoint(p[2])];
+                            else
+                                [points addObject:NSStringFromPoint(p[0])];
+                        }
+                    } else if ([path isKindOfClass:arrayClass] && [path count] % 2 == 0) {
+                        NSUInteger j, jMax = [path count];
                         for (j = 0; j < jMax; j += 2) {
-                            NSPoint p = NSMakePoint([[array objectAtIndex:j] floatValue] - NSMinX(bounds), [[array objectAtIndex:j + 1] floatValue] - NSMinY(bounds));
+                            NSPoint p = NSMakePoint([[path objectAtIndex:j] floatValue] - NSMinX(bounds), [[path objectAtIndex:j + 1] floatValue] - NSMinY(bounds));
                             [points addObject:NSStringFromPoint(p)];
                         }
-                        [pointLists addObject:points];
                     }
+                    [pointLists addObject:points];
                 }
                 [dict setValue:pointLists forKey:SKNPDFAnnotationPointListsKey];
             }
