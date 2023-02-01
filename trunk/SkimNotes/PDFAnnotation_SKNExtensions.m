@@ -441,11 +441,29 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             if (font)
                 [dict setObject:font forKey:SKNPDFAnnotationFontKey];
             
+            NSColor *fontColor = nil;
             if ([self respondsToSelector:@selector(fontColor)]) {
-                NSColor *fontColor = [(PDFAnnotationFreeText *)self fontColor];
-                if (fontColor)
-                    [dict setObject:fontColor forKey:SKNPDFAnnotationFontColorKey];
+                fontColor = [(PDFAnnotationFreeText *)self fontColor];
             }
+            if (fontColor == nil && (value = [self valueForAnnotationKey:@"/DA"])) {
+                NSUInteger end = [value rangeOfString:@"rg"].location;
+                if (end != NSNotFound) {
+                    NSCharacterSet *numberChars = [NSCharacterSet characterSetWithCharactersInString:@"0123456789. "];
+                    NSUInteger start = end;
+                    while (start > 0 && [numberChars characterIsMember:[value characterAtIndex:start--]]) {}
+                    if (start < end) {
+                        NSScanner *scanner = [[NSScanner alloc] initWithString:[value substringWithRange:NSMakeRange(start, end - start)]];
+                        CGFloat c;
+                        NSMutableArray *array = [NSMutableArray array];
+                        while ([scanner scanDouble:&c])
+                            [array addObject:[NSNumber numberWithDouble:c]];
+                        fontColor = SKNColorFromArray(array);
+                        [scanner release];
+                    }
+                }
+            }
+            if (fontColor)
+                [dict setObject:fontColor forKey:SKNPDFAnnotationFontColorKey];
         }
         
         if ([type isEqualToString:SKNWidgetString]) {
