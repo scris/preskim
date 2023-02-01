@@ -336,7 +336,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         if ([dict objectForKey:SKNPDFAnnotationInteriorColorKey] == nil && (value = [self valueForAnnotationKey:@"/IC"]))
             [dict setValue:SKNColorFromAnnotationValue(value) forKey:SKNPDFAnnotationInteriorColorKey];
         
-        if ([type isEqualToString:SKNTextString] && (value = [self valueForAnnotationKey:@"/Name"]))
+        if (([type isEqualToString:SKNTextString] || [type isEqualToString:SKNNoteString]) && (value = [self valueForAnnotationKey:@"/Name"]))
             [dict setValue:[NSNumber numberWithInteger:SKNIconTypeFromAnnotationValue(value)] forKey:SKNPDFAnnotationIconTypeKey];
         
         if ([type isEqualToString:SKNLineString]) {
