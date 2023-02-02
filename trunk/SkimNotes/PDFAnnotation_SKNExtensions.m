@@ -477,7 +477,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             }
             [dict setObject:[NSNumber numberWithInteger:widgetType] forKey:SKNPDFAnnotationWidgetTypeKey];
             
-            if ((value = [self valueForAnnotationKey:@"/NM"])) {
+            if ((value = [self valueForAnnotationKey:@"/T"])) {
                 if ([value isKindOfClass:stringClass]) {
                     [dict setObject:value forKey:SKNPDFAnnotationFieldNameKey];
                 }
