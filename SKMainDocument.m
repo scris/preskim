@@ -1730,7 +1730,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 }
 
 - (void)setCurrentPage:(PDFPage *)page {
-    return [[self pdfView] goToPage:page];
+    [[self pdfView] goToPage:page];
 }
 
 - (NSData *)currentQDPoint {
