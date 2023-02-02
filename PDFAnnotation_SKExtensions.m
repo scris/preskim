@@ -362,65 +362,14 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 - (SKNoteText *)noteText { return nil; }
 
 - (id)objectValue {
-    if ([[self type] isEqualToString:SKNWidgetString]) {
-        if ([self widgetType] == kSKNPDFWidgetTypeButton) {
-            if ([self respondsToSelector:@selector(buttonWidgetState)])
-                return [NSNumber numberWithInteger:[self buttonWidgetState]];
-            else if ([self respondsToSelector:@selector(valueForAnnotationKey:)])
-                return [NSNumber numberWithInteger:[[self valueForAnnotationKey:@"/V"] isEqual:@"Off"] ? 0 : 1];
-        } else {
-            if ([self respondsToSelector:@selector(widgetStringValue)])
-                return [self widgetStringValue];
-            else if ([self respondsToSelector:@selector(valueForAnnotationKey:)])
-                return [self valueForAnnotationKey:@"/V"];
-        }
-        return nil;
-    } else {
-        return [self string];
-    }
+    return [self string];
 }
 
 - (void)setObjectValue:(id)newObjectValue {
-    if ([[self type] isEqualToString:SKNWidgetString]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        if ([self widgetType] == kSKNPDFWidgetTypeButton) {
-            if ([self respondsToSelector:@selector(setButtonWidgetState:)])
-                [self setButtonWidgetState:[newObjectValue integerValue]];
-            else if ([self respondsToSelector:@selector(setValue:forAnnotationKey:)])
-                [self setValue:[newObjectValue integerValue] == 0 ? @"Off" : @"Yes" forAnnotationKey:@"/V"];
-        } else {
-            if ([self respondsToSelector:@selector(setWidgetStringValue:)])
-                [self setWidgetStringValue:newObjectValue];
-            else if ([newObjectValue isKindOfClass:[NSString class]] && [self respondsToSelector:@selector(setValue:forAnnotationKey:)])
-                [self setValue:newObjectValue forAnnotationKey:@"/V"];
-            else if ([self respondsToSelector:@selector(removeValueForAnnotationKey:)])
-                [self removeValueForAnnotationKey:@"/V"];
-        }
-#pragma clang diagnostic pop
-    } else if ([newObjectValue isKindOfClass:[NSString class]]) {
-        [self setString:newObjectValue];
-    }
+    [self setString:newObjectValue];
 }
 
-- (SKNPDFWidgetType)widgetType {
-    if ([[self type] isEqualToString:SKNWidgetString]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        if ([self respondsToSelector:@selector(valueForAnnotationKey:)]) {
-            NSString *ft = [self valueForAnnotationKey:@"/FT"];
-            if ([ft isEqualToString:@"/Tx"])
-                return kSKNPDFWidgetTypeText;
-            else if ([ft isEqualToString:@"/Btn"])
-                return kSKNPDFWidgetTypeButton;
-            else if ([ft isEqualToString:@"/Ch"])
-                return kSKNPDFWidgetTypeChoice;
-        }
-#pragma clang diagnostic pop
-    }
-    return kSKNPDFWidgetTypeUnknown;
-    
-}
+- (SKNPDFWidgetType)widgetType { return kSKNPDFWidgetTypeUnknown; }
 
 - (NSString *)textString { return nil; }
 
@@ -436,9 +385,7 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 
 - (BOOL)isLink { return [[self type] isEqualToString:@"Link"]; }
 
-- (BOOL)isWidget {
-    return [[self type] isEqualToString:SKNWidgetString] && [self widgetType] != kSKNPDFWidgetTypeUnknown;
-}
+- (BOOL)isWidget {return NO; }
 
 - (BOOL)isResizable { return NO; }
 
