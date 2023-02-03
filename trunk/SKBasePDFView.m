@@ -276,7 +276,7 @@ static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
 static inline BOOL hasVerticalLayout(PDFView *pdfView) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-    return RUNNING_AFTER(10_12) && [pdfView displayDirection] == kPDFDisplayDirectionVertical && ([pdfView displayMode] & kPDFDisplaySinglePageContinuous);
+    return RUNNING_AFTER(10_11) && [pdfView displayDirection] == kPDFDisplayDirectionVertical && ([pdfView displayMode] & kPDFDisplaySinglePageContinuous);
 #pragma clang diagnostic pop
 }
 
