@@ -1730,7 +1730,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 }
 
 - (void)setCurrentPage:(PDFPage *)page {
-    [[self pdfView] goToPage:page];
+    [[self pdfView] goToCurrentPage:page];
 }
 
 - (NSData *)currentQDPoint {
@@ -2020,7 +2020,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
             NSPoint point = [(NSData *)pointData pointValueAsQDPoint];
             [[self pdfView] goToDestination:[[[PDFDestination alloc] initWithPage:(PDFPage *)location atPoint:point] autorelease]];
         } else {
-            [[self pdfView] goToPage:(PDFPage *)location];
+            [[self pdfView] goToCurrentPage:(PDFPage *)location];
         }
     } else if ([location isKindOfClass:[PDFAnnotation class]]) {
            [[self pdfView] scrollAnnotationToVisible:(PDFAnnotation *)location];

@@ -487,7 +487,7 @@
         if (mwcFlags.updatingThumbnailSelection == 0) {
             NSInteger row = [leftSideController.thumbnailTableView selectedRow];
             if (row != -1)
-                [pdfView goToPage:[[pdfView document] pageAtIndex:row]];
+                [pdfView goToCurrentPage:[[pdfView document] pageAtIndex:row]];
             
             if ([self interactionMode] == SKPresentationMode && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHidePresentationContentsKey])
                 [self hideSideWindow];
@@ -1921,7 +1921,7 @@ static NSArray *allMainDocumentPDFViews() {
         NSInteger offset = [self presentationNotesOffset];
         pageIndex = (NSUInteger)MAX(0, MIN((NSInteger)[pdfDoc pageCount], (NSInteger)pageIndex + offset));
         if ([self presentationNotesDocument] == [self document])
-            [[presentationPreview pdfView] goToPage:[pdfDoc pageAtIndex:pageIndex]];
+            [[presentationPreview pdfView] goToCurrentPage:[pdfDoc pageAtIndex:pageIndex]];
         else
             [[self presentationNotesDocument] setCurrentPage:[pdfDoc pageAtIndex:pageIndex]];
     }

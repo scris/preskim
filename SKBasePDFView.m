@@ -385,7 +385,7 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     }
 }
 
-- (void)goToPage:(PDFPage *)page {
+- (void)goToCurrentPage:(PDFPage *)page {
     if (hasHorizontalLayout(self)) {
         [self horizontallyGoToPage:page];
     } else {

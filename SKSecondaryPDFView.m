@@ -357,7 +357,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 }
 
 - (void)pagePopUpAction:(id)sender {
-    [self goToPage:[[self document] pageAtIndex:[sender indexOfSelectedItem]]];
+    [self goToCurrentPage:[[self document] pageAtIndex:[sender indexOfSelectedItem]]];
     if (transientControlView)
         [self hideControlView];
 }

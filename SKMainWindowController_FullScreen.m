@@ -438,7 +438,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [self fadeInFullScreenView];
     
     if ([[[self pdfView] currentPage] isEqual:page] == NO)
-        [[self pdfView] goToPage:page];
+        [[self pdfView] goToCurrentPage:page];
     
     mwcFlags.isSwitchingFullScreen = 0;
     
@@ -481,7 +481,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [pdfView requiresDisplay];
     
     if ([[[self pdfView] currentPage] isEqual:page] == NO)
-        [[self pdfView] goToPage:page];
+        [[self pdfView] goToCurrentPage:page];
     
     mwcFlags.isSwitchingFullScreen = 0;
     
