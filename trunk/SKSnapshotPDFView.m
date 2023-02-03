@@ -474,7 +474,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 }
 
 - (void)goToPage:(PDFPage *)aPage {
-    [super goToCurrentPage:aPage];
+    [super goToPage:aPage];
     [self resetAutoFitRectIfNeeded];
 }
 
