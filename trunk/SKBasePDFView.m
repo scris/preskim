@@ -298,7 +298,7 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     }
     pageBounds = [self convertRect:[self convertRect:pageBounds fromPage:page] toView:clipView];
     bounds.origin.x = fmin(fmax(fmin(NSMidX(pageBounds) - 0.5 * NSWidth(bounds), NSMinX(pageBounds)), NSMinX(docRect)), NSMaxX(docRect) - NSWidth(bounds));
-    [super goToPage:page];
+    [self goToPage:page];
     [clipView scrollToPoint:bounds.origin];
 }
 
@@ -306,7 +306,8 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     NSScrollView *scrollView = [self scrollView];
     CGFloat inset = [scrollView contentInsets].top;
     NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
-    if (NSMinY(pageRect) <= NSMidY([self bounds]) - 0.5 * inset)
+    CGFloat midY = NSMidY([self bounds]) - 0.5 * inset;
+    if (NSMinY(pageRect) <= midY && NSMaxY(pageRect) >= midY)
         return;
     NSClipView *clipView = [scrollView contentView];
     NSRect bounds = [clipView bounds];
@@ -389,7 +390,7 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     if (hasHorizontalLayout(self)) {
         [self horizontallyGoToPage:page];
     } else {
-        [super goToPage:page];
+        [self goToPage:page];
         if (hasVerticalLayout(self))
             [self verticallyGoToPage:page];
    }
