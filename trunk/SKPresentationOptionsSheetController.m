@@ -269,6 +269,7 @@ static char *SKTransitionPropertiesObservationContext;
         if ([undoManager canUndo]) {
             SKTransitionController *transitionController = [[controller pdfView] transitionController];
             [transitionController setTransition:transition];
+            [transitionController setPageTransitions:[self pageTransitions]];
             [[controller undoManager] setActionName:NSLocalizedString(@"Change Transitions", @"Undo action name")];
         }
         [controller setPresentationNotesDocument:[self notesDocument]];
