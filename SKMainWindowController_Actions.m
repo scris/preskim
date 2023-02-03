@@ -1157,7 +1157,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
         [pdfSplitView setPosition:position ofDividerAtIndex:0 animate:YES];
         
         if (page) {
-            [secondaryPdfView goToCurrentPage:page];
+            [secondaryPdfView goToPage:page];
             point = [secondaryPdfView convertPoint:[secondaryPdfView convertPoint:[pdfView convertPoint:point toPage:page] fromPage:page] toView:[secondaryPdfView documentView]];
             if ([[[secondaryPdfView scrollView] contentView] isFlipped] == fixedAtBottom)
                 point.y -= ([[secondaryPdfView documentView] isFlipped] == fixedAtBottom ? 1.0 : -1.0) * NSHeight([[secondaryPdfView documentView] visibleRect]);

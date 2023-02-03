@@ -1743,7 +1743,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)scrollToPage:(PDFPage *)page {
     if ([self isPageAtIndexDisplayed:[page pageIndex]] == NO) {
-        [self goToCurrentPage:page];
+        [self goToPage:page];
         return;
     }
     PDFDisplayMode mode = [self extendedDisplayMode];
@@ -3137,7 +3137,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         BOOL shouldHideReadingBar = NO;
         
         if (wasPageDisplayed == NO)
-            [self goToCurrentPage:page];
+            [self goToPage:page];
         
         if (interactionMode != SKPresentationMode) {
             if (showBar) {
