@@ -782,7 +782,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         PDFPage *page = [self currentPage];
         [super setDisplayMode:mode];
         if (page && [page isEqual:[self currentPage]] == NO)
-            [self goToPage:page];
+            [self goToCurrentPage:page];
         [self resetPDFToolTipRects];
         [editor layoutWithEvent:nil];
     }
@@ -824,7 +824,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [super setDisplayMode:mode];
         [self _setDisplaysHorizontally:horizontal];
         if (page && [page isEqual:[self currentPage]] == NO)
-            [self goToPage:page];
+            [self goToCurrentPage:page];
         [self resetPDFToolTipRects];
         [editor layoutWithEvent:nil];
     }
@@ -852,7 +852,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         PDFPage *page = [self currentPage];
         [self _setDisplaysHorizontally:flag];
         if (page && [page isEqual:[self currentPage]] == NO)
-            [self goToPage:page];
+            [self goToCurrentPage:page];
         [self resetPDFToolTipRects];
         [editor layoutWithEvent:nil];
     }
@@ -883,7 +883,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         // on 10.15 this does not relayout the view...
         [self layoutDocumentView];
         if (page && [page isEqual:[self currentPage]] == NO)
-            [self goToPage:page];
+            [self goToCurrentPage:page];
         [self resetPDFToolTipRects];
         [editor layoutWithEvent:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDisplaysRTLChangedNotification object:self];
@@ -904,7 +904,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         PDFPage *page = [self currentPage];
         [super setDisplayBox:box];
         if (page && [page isEqual:[self currentPage]] == NO)
-            [self goToPage:page];
+            [self goToCurrentPage:page];
         [self resetPDFToolTipRects];
         [editor layoutWithEvent:nil];
     }
@@ -923,7 +923,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         PDFPage *page = [self currentPage];
         [super setDisplaysAsBook:asBook];
         if (page && [page isEqual:[self currentPage]] == NO)
-            [self goToPage:page];
+            [self goToCurrentPage:page];
         [self resetPDFToolTipRects];
         [editor layoutWithEvent:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDisplaysAsBookChangedNotification object:self];
@@ -1743,7 +1743,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)scrollToPage:(PDFPage *)page {
     if ([self isPageAtIndexDisplayed:[page pageIndex]] == NO) {
-        [self goToPage:page];
+        [self goToCurrentPage:page];
         return;
     }
     PDFDisplayMode mode = [self extendedDisplayMode];
@@ -3137,7 +3137,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         BOOL shouldHideReadingBar = NO;
         
         if (wasPageDisplayed == NO)
-            [self goToPage:page];
+            [self goToCurrentPage:page];
         
         if (interactionMode != SKPresentationMode) {
             if (showBar) {

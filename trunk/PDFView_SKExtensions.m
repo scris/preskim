@@ -225,6 +225,10 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     [destination release];
 }
 
+- (void)goToCurrentPage:(PDFPage *)page {
+    [self goToPage:page];
+}
+
 - (NSRange)displayedPageIndexRange {
     NSUInteger pageCount = [[self document] pageCount];
     PDFDisplayMode displayMode = [self displayMode];

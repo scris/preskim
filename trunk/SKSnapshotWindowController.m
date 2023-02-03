@@ -323,7 +323,7 @@ static char SKSnaphotWindowAppObservationContext;
     }
     
     [[self window] setFrame:NSIntegralRect(frame) display:NO animate:NO];
-    [pdfView goToPage:page];
+    [pdfView goToCurrentPage:page];
     
     if (autoFits) {
         [pdfView setAutoFits:autoFits];

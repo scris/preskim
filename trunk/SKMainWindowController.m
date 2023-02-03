@@ -512,7 +512,7 @@ static char SKMainWindowContentLayoutObservationContext;
             if (pointString)
                 [pdfView goToPageAtIndex:pageIndex point:NSPointFromString(pointString)];
             else
-                [pdfView goToPage:[[pdfView document] pageAtIndex:pageIndex]];
+                [pdfView goToCurrentPage:[[pdfView document] pageAtIndex:pageIndex]];
             [lastViewedPages setCount:0];
             [lastViewedPages addPointer:(void *)pageIndex];
             [pdfView resetHistory];
@@ -642,7 +642,7 @@ static char SKMainWindowContentLayoutObservationContext;
             if (pointString)
                 [pdfView goToPageAtIndex:pageIndex point:NSPointFromString(pointString)];
             else
-                [pdfView goToPage:[[pdfView document] pageAtIndex:pageIndex]];
+                [pdfView goToCurrentPage:[[pdfView document] pageAtIndex:pageIndex]];
         }
     }
 }
@@ -731,7 +731,7 @@ static char SKMainWindowContentLayoutObservationContext;
                 pointString = [NSString stringWithFormat:@"{%@}", pointString];
             [pdfView goToPageAtIndex:page - 1 point:NSPointFromString(pointString)];
         } else if ((NSInteger)[[pdfView currentPage] pageIndex] != page) {
-            [pdfView goToPage:[[pdfView document] pageAtIndex:page - 1]];
+            [pdfView goToCurrentPage:[[pdfView document] pageAtIndex:page - 1]];
         }
     }
     if ([searchString length] > 0) {
@@ -1235,7 +1235,7 @@ static char SKMainWindowContentLayoutObservationContext;
                     [savedNormalSetup setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
                 } else {
                     if (rotated)
-                        [pdfView goToPage:[document pageAtIndex:pageIndex]];
+                        [pdfView goToCurrentPage:[document pageAtIndex:pageIndex]];
                     else
                         [pdfView goToPageAtIndex:pageIndex point:point];
                 }
@@ -1244,7 +1244,7 @@ static char SKMainWindowContentLayoutObservationContext;
                 if (secondaryPageIndex >= [document pageCount])
                     secondaryPageIndex = [document pageCount] - 1;
                 if (secondaryRotated)
-                    [secondaryPdfView goToPage:[document pageAtIndex:secondaryPageIndex]];
+                    [secondaryPdfView goToCurrentPage:[document pageAtIndex:secondaryPageIndex]];
                 else
                     [secondaryPdfView goToPageAtIndex:secondaryPageIndex point:secondaryPoint];
             }
@@ -1284,7 +1284,7 @@ static char SKMainWindowContentLayoutObservationContext;
     }
     NSUInteger idx = [pageLabels indexOfObject:label];
     if (idx != NSNotFound && [[pdfView currentPage] pageIndex] != idx)
-        [pdfView goToPage:[[pdfView document] pageAtIndex:idx]];
+        [pdfView goToCurrentPage:[[pdfView document] pageAtIndex:idx]];
 }
 
 - (BOOL)validatePageLabel:(id *)value error:(NSError **)error {
@@ -2017,7 +2017,7 @@ static char SKMainWindowContentLayoutObservationContext;
                     rect = NSUnionRect(rect, [sel boundsForPage:page]);
             }
             rect = NSIntersectionRect(NSInsetRect(rect, -FIND_RESULT_MARGIN, -FIND_RESULT_MARGIN), [page boundsForBox:kPDFDisplayBoxCropBox]);
-            [pdfView goToPage:page];
+            [pdfView goToCurrentPage:page];
             [pdfView goToRect:rect onPage:page];
         }
         
@@ -2149,7 +2149,7 @@ static char SKMainWindowContentLayoutObservationContext;
         if (pointString)
             [pdfView goToPageAtIndex:pageIndex point:NSPointFromString(pointString)];
         else
-            [pdfView goToPage:[[pdfView document] pageAtIndex:pageIndex]];
+            [pdfView goToCurrentPage:[[pdfView document] pageAtIndex:pageIndex]];
         [lastViewedPages setCount:0];
         [lastViewedPages addPointer:(void *)pageIndex];
         [pdfView resetHistory];
@@ -2633,7 +2633,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         if ([indexes count] == 1 && mwcFlags.updatingThumbnailSelection == 0) {
             NSUInteger pageIndex = [indexes firstIndex];
             if ([[pdfView currentPage] pageIndex] != pageIndex)
-                [pdfView goToPage:[[pdfView document] pageAtIndex:pageIndex]];
+                [pdfView goToCurrentPage:[[pdfView document] pageAtIndex:pageIndex]];
         } else if ([indexes count] == 0) {
             [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
         }
