@@ -1029,6 +1029,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     return transitionController;
 }
 
+- (void)prepareTransitionView {
+    [transitionController prepareViewIfNeeded];
+}
+
 - (void)setHighlightAnnotation:(PDFAnnotation *)annotation {
     if (annotation != highlightAnnotation) {
         [highlightAnnotation release];
