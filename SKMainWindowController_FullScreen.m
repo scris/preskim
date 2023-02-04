@@ -63,7 +63,6 @@
 #import "NSScreen_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "SKStatusBar.h"
-#import "SKTransitionController.h"
 
 #define MAINWINDOWFRAME_KEY         @"windowFrame"
 #define LEFTSIDEPANEWIDTH_KEY       @"leftSidePaneWidth"
@@ -440,7 +439,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     [self fadeInFullScreenView];
     
-    [[pdfView transitionController] prepareViewIfNeeded];
+    [pdfView prepareTransitionView];
     
     if ([[[self pdfView] currentPage] isEqual:page] == NO)
         [[self pdfView] goToCurrentPage:page];
