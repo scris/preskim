@@ -450,6 +450,17 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     [tView setImage:nil];
 }
 
+- (void)prepareViewIfNeeded {
+    if (transitionView == nil && [self hasTransition]) {
+        NSRect bounds = [view bounds];
+        CGFloat imageScale = 1.0;
+        CIImage *image = [self currentImageForRect:bounds scale:&imageScale];
+        CGRect cgBounds = scaleRect(bounds, imageScale);
+        [self showTransitionViewForRect:bounds image:image extent:cgBounds];
+        [self performSelector:@selector(removeTransitionView) withObject:nil afterDelay:0.0];
+    }
+}
+
 - (void)animateForRect:(NSRect)rect from:(NSUInteger)fromIndex to:(NSUInteger)toIndex change:(NSRect (^)(void))change {
     if (animating) {
         change();

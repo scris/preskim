@@ -63,6 +63,7 @@
 #import "NSScreen_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "SKStatusBar.h"
+#import "SKTransitionController.h"
 
 #define MAINWINDOWFRAME_KEY         @"windowFrame"
 #define LEFTSIDEPANEWIDTH_KEY       @"leftSidePaneWidth"
@@ -323,6 +324,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [pdfView activateConstraintsToSuperview];
     [pdfView layoutDocumentView];
     [pdfView requiresDisplay];
+    [[pdfView transitionController] prepareViewIfNeeded];
     [fullScreenWindow makeFirstResponder:pdfView];
     [fullScreenWindow recalculateKeyViewLoop];
     [fullScreenWindow setDelegate:self];
