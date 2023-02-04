@@ -219,8 +219,10 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [scrollView setHasHorizontalScroller:NO];
     [scrollView setHasVerticalScroller:NO];
     [scrollView setDrawsBackground:NO];
-    if (mwcFlags.fullSizeContent)
+    if (mwcFlags.fullSizeContent) {
         [scrollView setAutomaticallyAdjustsContentInsets:YES];
+        [scrollView setContentInsets:NSEdgeInsetsZero];
+    }
     
     [pdfView setCurrentSelection:nil];
     if ([pdfView hasReadingBar])
