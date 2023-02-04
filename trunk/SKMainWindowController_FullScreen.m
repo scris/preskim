@@ -324,7 +324,6 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [pdfView activateConstraintsToSuperview];
     [pdfView layoutDocumentView];
     [pdfView requiresDisplay];
-    [[pdfView transitionController] prepareViewIfNeeded];
     [fullScreenWindow makeFirstResponder:pdfView];
     [fullScreenWindow recalculateKeyViewLoop];
     [fullScreenWindow setDelegate:self];
@@ -440,6 +439,8 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [self enterPresentationMode];
     
     [self fadeInFullScreenView];
+    
+    [[pdfView transitionController] prepareViewIfNeeded];
     
     if ([[[self pdfView] currentPage] isEqual:page] == NO)
         [[self pdfView] goToCurrentPage:page];
