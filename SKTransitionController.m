@@ -453,6 +453,8 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 
 - (void)prepareViewIfNeeded {
     if ([self hasTransition]) {
+        // shortly add the transition view with the current image
+        // this prevents a flickering at the first transition
         NSRect bounds = [view bounds];
         CGFloat imageScale = 1.0;
         CIImage *image = [self currentImageForRect:bounds scale:&imageScale];
