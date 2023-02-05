@@ -420,6 +420,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     [transitionView removeFromSuperview];
     [transitionView setFilter:nil];
     [transitionView setImage:nil];
+    [transitionView setAlphaValue:1.0];
 }
 
 - (void)showTransitionWindowForRect:(NSRect)rect image:(CIImage *)image extent:(CGRect)extent {
@@ -457,6 +458,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         CIImage *image = [self currentImageForRect:bounds scale:&imageScale];
         CGRect cgBounds = scaleRect(bounds, imageScale);
         [self showTransitionViewForRect:bounds image:image extent:cgBounds];
+        [transitionView setAlphaValue:0.0];
         [self performSelector:@selector(removeTransitionView) withObject:nil afterDelay:0.0];
     }
 }
