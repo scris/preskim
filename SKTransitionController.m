@@ -452,7 +452,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 }
 
 - (void)prepareViewIfNeeded {
-    if (transitionView == nil && [self hasTransition]) {
+    if ([self hasTransition]) {
         NSRect bounds = [view bounds];
         CGFloat imageScale = 1.0;
         CIImage *image = [self currentImageForRect:bounds scale:&imageScale];
