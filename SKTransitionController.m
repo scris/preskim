@@ -420,7 +420,6 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     [transitionView removeFromSuperview];
     [transitionView setFilter:nil];
     [transitionView setImage:nil];
-    [transitionView setAlphaValue:1.0];
 }
 
 - (void)showTransitionWindowForRect:(NSRect)rect image:(CIImage *)image extent:(CGRect)extent {
@@ -449,20 +448,6 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     [[window parentWindow] removeChildWindow:window];
     [window orderOut:nil];
     [tView setImage:nil];
-}
-
-- (void)prepareViewIfNeeded {
-    if ([self hasTransition]) {
-        // shortly add the transition view with the current image
-        // this prevents a flickering at the first transition
-        NSRect bounds = [view bounds];
-        CGFloat imageScale = 1.0;
-        CIImage *image = [self currentImageForRect:bounds scale:&imageScale];
-        CGRect cgBounds = scaleRect(bounds, imageScale);
-        [self showTransitionViewForRect:bounds image:image extent:cgBounds];
-        [transitionView setAlphaValue:0.0];
-        [self performSelector:@selector(removeTransitionView) withObject:nil afterDelay:0.0];
-    }
 }
 
 - (void)animateForRect:(NSRect)rect from:(NSUInteger)fromIndex to:(NSUInteger)toIndex change:(NSRect (^)(void))change {
@@ -788,8 +773,22 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 - (void)setProgress:(CGFloat)newProgress {
     if (filter) {
         [filter setValue:[NSNumber numberWithDouble:newProgress] forKey:kCIInputTimeKey];
-        [self setImage:[filter outputImage]];
-        [[[self subviews] firstObject] setNeedsDisplay:YES];
+        [image release];
+        image = [[filter outputImage] retain];
+        NSView *metalView = [[self subviews] firstObject];
+        [metalView setAlphaValue:1.0];
+        [metalView setNeedsDisplay:YES];
+        [self setNeedsDisplay:YES];
+    }
+}
+
+- (void)setImage:(CIImage *)newImage {
+    if (newImage != image) {
+        [image release];
+        image = [newImage retain];
+        NSView *metalView = [[self subviews] firstObject];
+        [metalView setAlphaValue:0.0];
+        [metalView setNeedsDisplay:YES];
     }
 }
 
@@ -820,5 +819,13 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 }
 
 - (void)mtkView:(MTKView *)view drawableSizeWillChange:(CGSize)size {}
+
+- (void)drawRect:(NSRect)rect {
+    if ([[[self subviews] firstObject] alphaValue] <= 0.0) {
+        [[NSColor blackColor] setFill];
+        NSRectFill(rect);
+        [image drawInRect:[self bounds] fromRect:extent operation:NSCompositeSourceOver fraction:1.0];
+    }
+}
 
 @end

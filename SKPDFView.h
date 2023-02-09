@@ -202,8 +202,6 @@ enum {
 
 - (void)togglePacer;
 
-- (void)prepareTransitionView;
-
 - (IBAction)delete:(id)sender;
 - (IBAction)paste:(id)sender;
 - (IBAction)alternatePaste:(id)sender;
