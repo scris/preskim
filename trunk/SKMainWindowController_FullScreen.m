@@ -439,8 +439,6 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     [self fadeInFullScreenView];
     
-    [pdfView prepareTransitionView];
-    
     if ([[[self pdfView] currentPage] isEqual:page] == NO)
         [[self pdfView] goToCurrentPage:page];
     

@@ -65,6 +65,4 @@
 
 - (void)animateForRect:(NSRect)rect from:(NSUInteger)fromIndex to:(NSUInteger)toIndex change:(NSRect (^)(void))change;
 
-- (void)prepareViewIfNeeded;
-
 @end
