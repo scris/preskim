@@ -142,6 +142,7 @@ static OSStatus (*CGSReleaseTransition_func)(const CGSConnection cid, int transi
 #pragma mark -
 
 @interface SKMetalTransitionView : NSView <SKTransitionView, MTKViewDelegate> {
+    MTKView *metalView;
     CIImage *image;
     CGRect extent;
     CIFilter *filter;
@@ -741,15 +742,14 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     self = [super initWithFrame:frameRect];
     if (self && [MTKView class]) {
         id<MTLDevice> device = MTLCreateSystemDefaultDevice();
-        MTKView *view = [[MTKView alloc] initWithFrame:[self bounds] device:device];
-        [view setFramebufferOnly:NO];
-        [view setEnableSetNeedsDisplay:YES];
-        [view setPaused:YES];
-        [view setClearColor:MTLClearColorMake(0.0, 0.0, 0.0, 1.0)];
-        [view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [view setDelegate:self];
-        [self addSubview:view];
-        [view release];
+        metalView = [[MTKView alloc] initWithFrame:[self bounds] device:device];
+        [metalView setFramebufferOnly:NO];
+        [metalView setEnableSetNeedsDisplay:YES];
+        [metalView setPaused:YES];
+        [metalView setClearColor:MTLClearColorMake(0.0, 0.0, 0.0, 1.0)];
+        [metalView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+        [metalView setDelegate:self];
+        [self addSubview:metalView];
         commandQueue = [device newCommandQueue];
         context = [[CIContext contextWithMTLDevice:device] retain];
         CFRelease(device);
@@ -758,6 +758,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 }
 
 - (void)dealloc {
+    SKDESTROY(metalView);
     SKDESTROY(image);
     SKDESTROY(filter);
     SKDESTROY(commandQueue);
@@ -775,7 +776,6 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         [filter setValue:[NSNumber numberWithDouble:newProgress] forKey:kCIInputTimeKey];
         [image release];
         image = [[filter outputImage] retain];
-        NSView *metalView = [[self subviews] firstObject];
         [metalView setAlphaValue:1.0];
         [metalView setNeedsDisplay:YES];
         [self setNeedsDisplay:YES];
@@ -786,7 +786,6 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     if (newImage != image) {
         [image release];
         image = [newImage retain];
-        NSView *metalView = [[self subviews] firstObject];
         [metalView setAlphaValue:0.0];
         [metalView setNeedsDisplay:YES];
     }
@@ -821,7 +820,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 - (void)mtkView:(MTKView *)view drawableSizeWillChange:(CGSize)size {}
 
 - (void)drawRect:(NSRect)rect {
-    if ([[[self subviews] firstObject] alphaValue] <= 0.0) {
+    if ([metalView alphaValue] <= 0.0) {
         [[NSColor blackColor] setFill];
         NSRectFill(rect);
         [image drawInRect:[self bounds] fromRect:extent operation:NSCompositeSourceOver fraction:1.0];
