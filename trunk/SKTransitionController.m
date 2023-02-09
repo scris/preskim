@@ -776,9 +776,11 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         [filter setValue:[NSNumber numberWithDouble:newProgress] forKey:kCIInputTimeKey];
         [image release];
         image = [[filter outputImage] retain];
-        [metalView setAlphaValue:1.0];
+        if ([metalView alphaValue] <= 0.0) {
+            [self setNeedsDisplay:YES];
+            [metalView setAlphaValue:1.0];
+        }
         [metalView setNeedsDisplay:YES];
-        [self setNeedsDisplay:YES];
     }
 }
 
