@@ -5,7 +5,7 @@
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
     #import <AppKit/AppKit.h>
-    #import <PDFKit/PDFKit.h>
-    
+    #import <Quartz/Quartz.h>
+
     #define SKNLocalizedString(key, comment) key
 #endif
