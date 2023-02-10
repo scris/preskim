@@ -388,10 +388,10 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                     id path = [value objectAtIndex:i];
                     NSMutableArray *points = [NSMutableArray array];
                     if ([path isKindOfClass:pathClass]) {
-                        NSInteger i, iMax = [path elementCount];
-                        for (i = 0; i < iMax; i++) {
+                        NSInteger j, jMax = [path elementCount];
+                        for (j = 0; j < jMax; j++) {
                             NSPoint p[3];
-                            if (NSCurveToBezierPathElement == [path elementAtIndex:i associatedPoints:p])
+                            if (NSCurveToBezierPathElement == [path elementAtIndex:j associatedPoints:p])
                                 [points addObject:NSStringFromPoint(p[2])];
                             else
                                 [points addObject:NSStringFromPoint(p[0])];
