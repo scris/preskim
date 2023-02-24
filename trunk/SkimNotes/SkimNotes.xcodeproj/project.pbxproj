@@ -52,7 +52,6 @@
 		CE0C361429A9361D0056897C /* PDFDocument_SKNExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2BE10E0587EB0000B2E6 /* PDFDocument_SKNExtensions.m */; };
 		CE0C361529A9361D0056897C /* SKNUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37768B0E2FC26100261604 /* SKNUtilities.m */; };
 		CE0C361729A9361D0056897C /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD92988180700594EC0 /* Quartz.framework */; };
-		CE0C361829A9361D0056897C /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD32988172600594EC0 /* AppKit.framework */; };
 		CE0C361929A9361D0056897C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD12988171C00594EC0 /* Foundation.framework */; };
 		CE0C361A29A9361D0056897C /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA2D1A0E05A61F0000B2E6 /* libbz2.dylib */; };
 		CE0C362229A9362B0056897C /* SkimNotesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA5F5490E2CED6D00F65088 /* SkimNotesBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -64,7 +63,6 @@
 		CE0C362A29A9362B0056897C /* SKNExtendedAttributeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B640E05675E0000B2E6 /* SKNExtendedAttributeManager.m */; };
 		CE0C362B29A9362B0056897C /* SKNUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37768B0E2FC26100261604 /* SKNUtilities.m */; };
 		CE0C362D29A9362B0056897C /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD92988180700594EC0 /* Quartz.framework */; };
-		CE0C362E29A9362B0056897C /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD32988172600594EC0 /* AppKit.framework */; };
 		CE0C362F29A9362B0056897C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD12988171C00594EC0 /* Foundation.framework */; };
 		CE0C363029A9362B0056897C /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA2D1A0E05A61F0000B2E6 /* libbz2.dylib */; };
 		CE1412881229B73100C9EBA0 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D6A5FE840307C02AAC07 /* AppKit.framework */; };
@@ -95,6 +93,8 @@
 		CEA5F5520E2CEE0300F65088 /* SKNExtendedAttributeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B640E05675E0000B2E6 /* SKNExtendedAttributeManager.m */; };
 		CEA5F5530E2CEE0E00F65088 /* SkimNotes.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE3907AF0E082C460015B0B7 /* SkimNotes.strings */; };
 		CEA5F5570E2CEE7E00F65088 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA2D1A0E05A61F0000B2E6 /* libbz2.dylib */; };
+		CEB20D9A29A973A500086B9E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEB20D9929A973A400086B9E /* UIKit.framework */; };
+		CEB20D9B29A973B100086B9E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEB20D9929A973A400086B9E /* UIKit.framework */; };
 		CEBA2B5E0E0566DF0000B2E6 /* SKNAgentListener.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B5B0E0566DF0000B2E6 /* SKNAgentListener.m */; };
 		CEBA2B5F0E0566DF0000B2E6 /* skimnotes.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B5D0E0566DF0000B2E6 /* skimnotes.m */; };
 		CEBA2B650E05675E0000B2E6 /* SKNExtendedAttributeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B640E05675E0000B2E6 /* SKNExtendedAttributeManager.m */; };
@@ -233,6 +233,7 @@
 		CEA5F5490E2CED6D00F65088 /* SkimNotesBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkimNotesBase.h; sourceTree = "<group>"; };
 		CEA5F54C0E2CEDC400F65088 /* SkimNotesBase_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkimNotesBase_Prefix.pch; sourceTree = "<group>"; };
 		CEA5F5E40E2D0FDB00F65088 /* SkimNotes.hdoc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SkimNotes.hdoc; sourceTree = "<group>"; };
+		CEB20D9929A973A400086B9E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/iOSSupport/System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		CEB540910F261E9D00723C1F /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/SkimNotes.strings; sourceTree = "<group>"; };
 		CEBA2B550E0566B00000B2E6 /* skimnotes */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = skimnotes; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEBA2B5A0E0566DF0000B2E6 /* SKNAgentListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKNAgentListener.h; sourceTree = "<group>"; };
@@ -291,9 +292,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE0C361729A9361D0056897C /* Quartz.framework in Frameworks */,
-				CE0C361829A9361D0056897C /* AppKit.framework in Frameworks */,
 				CE0C361929A9361D0056897C /* Foundation.framework in Frameworks */,
 				CE0C361A29A9361D0056897C /* libbz2.dylib in Frameworks */,
+				CEB20D9A29A973A500086B9E /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,9 +303,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE0C362D29A9362B0056897C /* Quartz.framework in Frameworks */,
-				CE0C362E29A9362B0056897C /* AppKit.framework in Frameworks */,
 				CE0C362F29A9362B0056897C /* Foundation.framework in Frameworks */,
 				CE0C363029A9362B0056897C /* libbz2.dylib in Frameworks */,
+				CEB20D9B29A973B100086B9E /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,6 +530,7 @@
 		CEF57FCE2988170B00594EC0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CEB20D9929A973A400086B9E /* UIKit.framework */,
 				CEF57FDE2988184800594EC0 /* QuartzCore.framework */,
 				CEF57FDB2988181100594EC0 /* Cocoa.framework */,
 				CEF57FD92988180700594EC0 /* Quartz.framework */,
@@ -1080,6 +1082,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE0C363629A936790056897C /* SkimNotes-Framework-iOS.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/System/iOSSupport/System/Library/Frameworks",
+				);
 			};
 			name = Debug;
 		};
@@ -1087,6 +1093,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE0C363629A936790056897C /* SkimNotes-Framework-iOS.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/System/iOSSupport/System/Library/Frameworks",
+				);
 			};
 			name = Release;
 		};
@@ -1094,6 +1104,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE0C363729A936790056897C /* SkimNotesBase-Framework-iOS.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/System/iOSSupport/System/Library/Frameworks",
+				);
 			};
 			name = Debug;
 		};
@@ -1101,6 +1115,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE0C363729A936790056897C /* SkimNotesBase-Framework-iOS.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/System/iOSSupport/System/Library/Frameworks",
+				);
 			};
 			name = Release;
 		};
