@@ -47,7 +47,7 @@
  @enum        SKNSkimNotesWritingOptions
  @abstract    Options for writing Skim notes.
  @discussion  These options can be passed to the main methods for writing Skim notes to extended attributes or to file.
- @constant    SKNSkimNotesWritingPlist      Write plist data rather than archived data.
+ @constant    SKNSkimNotesWritingPlist      Write plist data rather than archived data.  Always implied on iOS.
  @constant    SKNSkimNotesWritingSyncable   Hint to add a syncable flag to the attribute names if available, when writing to extended attributes.
  */
 enum {
@@ -216,7 +216,7 @@ extern NSArray *SKNSkimNotesFromData(NSData *data);
     @abstract   Returns data for the Skim notes.
     @discussion Can return the data as archived data, or as universal plist data.
     @param      notes An array of dictionaries containing Skim note properties, as returned by the properties of a <code>PDFAnnotation</code>.
-    @param      asPlist Whether to create universal plist data rather than archived data.
+    @param      asPlist Whether to create universal plist data rather than archived data.  Always returns plist data on iOS.
     @result     A data representation of the notes.
 */
 extern NSData *SKNDataFromSkimNotes(NSArray *notes, BOOL asPlist);

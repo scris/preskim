@@ -44,6 +44,13 @@
 #import <Foundation/Foundation.h>
 #import <Quartz/Quartz.h>
 
+#ifndef PDFRect
+#define PDFRect NSRect
+#endif
+#ifndef PDFKitPlatformBezierPath
+#define PDFKitPlatformBezierPath NSBezierPath
+#endif
+
 /*!
     @discussion  Global string for Free Text note type.
 */
@@ -246,18 +253,29 @@ enum {
 typedef NSInteger SKNPDFWidgetType;
 
 /*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
+    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects on macOS.
     @discussion  Methods from this category are used by the <code>PDFDocument (SKNExtensions)</code> category to add new annotations from Skim notes.
 */
 @interface PDFAnnotation (SKNExtensions)
 
+#if !defined(PDFKIT_PLATFORM_IOS)
 /*!
-    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim note.
+    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim note on macOS.
     @discussion This method can be implemented in subclasses to provide default properties for Skim notes.
     @param      bounds The bounding box of the annotation, in page space.
     @result     An initialized Skim note annotation instance, or <code>NULL</code> if the object could not be initialized.
 */
 - (id)initSkimNoteWithBounds:(NSRect)bounds;
+#endif
+
+/*!
+    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim noteon iOS.
+    @discussion On macOS this returns a subclasses initialized with <code>initSkimNoteWithBounds:</code>.
+    @param      bounds The bounding box of the annotation, in page space.
+    @param      type The type of the note .
+    @result     An initialized Skim note annotation instance, or <code>NULL</code> if the object could not be initialized.
+*/
+- (id)initSkimNoteWithBounds:(PDFRect)bounds forType:(NSString *)type;
 
 /*!
     @abstract   Initializes a new Skim note annotation with the given properties.
@@ -302,9 +320,47 @@ typedef NSInteger SKNPDFWidgetType;
 */
 - (void)setString:(NSString *)newString;
 
+/*!
+    @abstract   Method to get the points from a path of an Ink Skim note.
+    @param      path The bezier path for which to get the points.
+    @discussion This method gets the points between which the path interpolates.
+    @result     An array of point strings.
+*/
++ (NSArray *)pointsFromSkimNotePath:(PDFKitPlatformBezierPath *)path;
+
+/*!
+    @abstract   Method to set the points from a path of an Ink Skim note.
+    @param      path The bezier path for which to set the points.
+    @param      points The points wrapped in strings or values.
+    @discussion This method sets the elements to cubic curves interpolating between the points.  It rebuilds a path appropriate for a Skim note.
+*/
++ (void)setPoints:(NSArray *)points ofSkimNotePath:(PDFKitPlatformBezierPath *)path;
+
+#if !defined(PDFKIT_PLATFORM_IOS)
+/*!
+    @abstract   Method to add a point to a path, to be used to build the path for a Skim note.
+    @param      point The point to add to the path.
+    @param      path The bezier path to add the point to.
+    @discussion This method adds a cubic curve element to path to point.  It is used to build up paths for the Skim note from the points.  This method is only available on macOS.
+*/
++ (void)addPoint:(NSPoint)point toSkimNotesPath:(NSBezierPath *)path;
+#endif
+
 @end
 
 #pragma mark -
+
+@interface PDFAnnotation (SKNOptional)
+/*!
+    @abstract   Optional method to set default values for a new Skim note created using <code>initSkimNoteWithBounds:forType:</code> or <code>initSkimNoteWithProperties:</code>.
+    @discussion This optional method can be implemented in another category to provide a default values for Skim notes.  On macOS you can also override <code>initSkimNoteWithBounds:</code> in the subclasses to provide default values, or implement this method in the subclasses.  This method is not implemented by default.
+*/
+- (void)setDefaultSkimNoteProperties;
+@end
+
+#pragma mark -
+
+#if !defined(PDFKIT_PLATFORM_IOS)
 
 /*!
     @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
@@ -379,13 +435,6 @@ typedef NSInteger SKNPDFWidgetType;
     @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a text annotation.
 */
 @interface PDFAnnotationInk (SKNExtensions)
-/*!
-    @abstract   Method to add a point to a path, to be used to build the path for a Skim note.
-    @param      point The point to add to the path.
-    @param      path The bezier path to add the point to.
-    @discussion This method adds a cubic curve element to path to point.  It is used to build up paths for the Skim note from the points.  This is used in <code>initSkimNoteWithProperties:</code>.
-*/
-+ (void)addPoint:(NSPoint)point toSkimNotesPath:(NSBezierPath *)path;
 @end
 
 #pragma mark -
@@ -414,3 +463,5 @@ typedef NSInteger SKNPDFWidgetType;
 */
 @interface PDFAnnotationChoiceWidget (SKNExtensions)
 @end
+
+#endif
