@@ -38,7 +38,10 @@
 #import <Foundation/Foundation.h>
 
 
+#pragma clang diagnostics push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 @interface SKNAgentListener : NSObject <NSConnectionDelegate>
+#pragma clang diagnostics pop
 {
     NSConnection *connection;
 }

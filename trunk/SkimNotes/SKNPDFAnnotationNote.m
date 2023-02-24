@@ -44,6 +44,8 @@ NSString *SKNPDFAnnotationImageKey = @"image";
 
 NSSize SKNPDFAnnotationNoteSize = {16.0, 16.0};
 
+#if !defined(PDFKIT_PLATFORM_IOS)
+
 static inline void drawIconComment(CGContextRef context, NSRect bounds);
 static inline void drawIconKey(CGContextRef context, NSRect bounds);
 static inline void drawIconNote(CGContextRef context, NSRect bounds);
@@ -52,16 +54,8 @@ static inline void drawIconNewParagraph(CGContextRef context, NSRect bounds);
 static inline void drawIconParagraph(CGContextRef context, NSRect bounds);
 static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 
-#if !defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_13
-#ifndef NSAppKitVersionNumber10_12
-#define NSAppKitVersionNumber10_12 1504
-#endif
-#endif
-#if !defined(MAC_OS_X_VERSION_10_15) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_15
-#ifndef NSAppKitVersionNumber10_14
-#define NSAppKitVersionNumber10_14 1671
-#endif
-#endif
+#define SKNAppKitVersionNumber10_12 1504
+#define SKNAppKitVersionNumber10_14 1671
 
 #if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_12
 @interface PDFAnnotation (SKNSierraDeclarations)
@@ -72,11 +66,14 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 @end
 #endif
 
-@interface PDFAnnotation (SKNPrivateDeclarations)
-- (NSMutableDictionary *)genericSkimNoteProperties;
+@interface SKNPDFAnnotationNote (SKNPrivate)
+- (void)textDidChange:(NSNotification *)notification;
 @end
 
-@interface SKNPDFAnnotationNote () <NSTextStorageDelegate>
+#endif
+
+@interface PDFAnnotation (SKNPrivateDeclarations)
+- (NSMutableDictionary *)genericSkimNoteProperties;
 @end
 
 @implementation SKNPDFAnnotationNote
@@ -89,32 +86,39 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
         [contents appendString:@"  "];
         [contents appendString:[text string]];
     }
-    [self setContents:contents];
+    [super setContents:contents];
 }
 
+#if !defined(PDFKIT_PLATFORM_IOS)
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (id)initWithBounds:(NSRect)bounds {
+#pragma clang diagnostic pop
     self = [super initWithBounds:bounds];
     if (self) {
         textStorage = [[NSTextStorage allocWithZone:[self zone]] init];
-        [textStorage setDelegate:self];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextStorageDidProcessEditingNotification object:textStorage];
         text = [[NSAttributedString alloc] init];
     }
     return self;
 }
+
+#endif
 
 - (id)initSkimNoteWithProperties:(NSDictionary *)dict{
     self = [super initSkimNoteWithProperties:dict];
     if (self) {
         Class attrStringClass = [NSAttributedString class];
         Class stringClass = [NSString class];
-        Class imageClass = [NSImage class];
+        Class imageClass = [PDFKitPlatformImage class];
         Class dataClass = [NSData class];
         NSAttributedString *aText = [dict objectForKey:SKNPDFAnnotationTextKey];
-        NSImage *anImage = [dict objectForKey:SKNPDFAnnotationImageKey];
+        PDFKitPlatformImage *anImage = [dict objectForKey:SKNPDFAnnotationImageKey];
         if ([anImage isKindOfClass:imageClass])
             image = [anImage retain];
         else if ([anImage isKindOfClass:dataClass])
-            image = [[NSImage alloc] initWithData:(NSData *)anImage];
+            image = [[PDFKitPlatformImage alloc] initWithData:(NSData *)anImage];
         if ([aText isKindOfClass:stringClass])
             aText = [[[NSAttributedString alloc] initWithString:(NSString *)aText] autorelease];
         else if ([aText isKindOfClass:dataClass])
@@ -127,8 +131,11 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 }
 
 - (void)dealloc {
-    [string release];
+#if !defined(PDFKIT_PLATFORM_IOS)
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [textStorage release];
+#endif
+    [string release];
     [text release];
     [image release];
     [texts release];
@@ -154,35 +161,39 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 - (void)setString:(NSString *)newString {
     if (string != newString) {
         [string release];
-        string = [newString retain];
+        string = [newString copy];
         // update the contents to string + text
         [self updateContents];
     }
 }
 
-- (NSImage *)image {
+- (PDFKitPlatformImage *)image {
     return image;
 }
 
-- (void)setImage:(NSImage *)newImage {
+- (void)setImage:(PDFKitPlatformImage *)newImage {
     if (image != newImage) {
         [image release];
         image = [newImage retain];
     }
 }
 
-// changes to text are made through textStorage, this allows Skim to provide edits through AppleScript, which works directly on the textStorage
-// KVO is triggered manually when the textStorage is edited, either through setText: or through some other means, e.g. through AppleScript
-+ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
-    if ([key isEqualToString:SKNPDFAnnotationTextKey])
-        return NO;
-    else
-        return [super automaticallyNotifiesObserversForKey:key];
-}
-
 - (NSAttributedString *)text {
     return text;
 }
+
+#if defined(PDFKIT_PLATFORM_IOS)
+
+- (void)setText:(NSAttributedString *)newText {
+    if (text != newText) {
+        [text release];
+        text = [newText copy];
+        // update the contents to string + text
+        [self updateContents];
+    }
+}
+
+#else
 
 - (void)setText:(NSAttributedString *)newText {
     if (textStorage != newText) {
@@ -194,7 +205,19 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
     }
 }
 
-- (void)textStorageDidProcessEditing:(NSNotification *)notification {
+// changes to text are made through textStorage, this allows Skim to provide edits through AppleScript, which works directly on the textStorage
+// KVO is triggered manually when the textStorage is edited, either through setText: or through some other means, e.g. through AppleScript
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
+    if ([key isEqualToString:SKNPDFAnnotationTextKey])
+        return NO;
+    else
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        return [super automaticallyNotifiesObserversForKey:key];
+#pragma clang diagnostic pop
+}
+
+- (void)textDidChange:(NSNotification *)notification {
     // texts should be an array of objects wrapping the text of the note, used by Skim to provide a data source for the children in the outlineView
     [texts makeObjectsPerformSelector:@selector(willChangeValueForKey:) withObject:SKNPDFAnnotationTextKey];
     // trigger KVO manually
@@ -210,7 +233,7 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 
 // private method called by -drawWithBox: before to 10.12, made public on 10.12, now calling -drawWithBox:
 - (void)drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
-    if (floor(NSAppKitVersionNumber) < NSAppKitVersionNumber10_12 || floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_14 || [self hasAppearanceStream]) {
+    if (floor(NSAppKitVersionNumber) < SKNAppKitVersionNumber10_12 || floor(NSAppKitVersionNumber) > SKNAppKitVersionNumber10_14 || [self hasAppearanceStream]) {
         [super drawWithBox:box inContext:context];
     } else {
         // on 10.12 draws based on the type rather than the (super)class
@@ -220,7 +243,7 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
         CGContextSaveGState(context);
         [[self page] transformContext:context forBox:box];
         if (NSWidth(bounds) > 2.0 && NSHeight(bounds) > 2.0) {
-            CGContextSetFillColorWithColor(context, [[(id)self color] CGColor]);
+            CGContextSetFillColorWithColor(context, [[self color] CGColor]);
             CGContextSetStrokeColorWithColor(context, CGColorGetConstantColor(kCGColorBlack));
             CGContextSetLineWidth(context, 1.0);
             CGContextSetLineCap(context, kCGLineCapButt);
@@ -244,7 +267,11 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
     }
 }
 
+#endif
+
 @end
+
+#if !defined(PDFKIT_PLATFORM_IOS)
 
 static inline void drawIconComment(CGContextRef context, NSRect bounds) {
     bounds = NSInsetRect(bounds, 0.5, 0.5);
@@ -389,3 +416,5 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds) {
     CGContextClosePath(context);
     CGContextDrawPath(context, kCGPathFillStroke);
 }
+
+#endif

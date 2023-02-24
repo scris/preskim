@@ -41,6 +41,34 @@
 #import "SKNPDFAnnotationNote.h"
 #import "NSFileManager_SKNExtensions.h"
 
+#if defined(PDFKIT_PLATFORM_IOS)
+
+#define SKNRectFromString(string)   CGRectFromString(string)
+#define SKNEqualRects(rect1, rect2) CGRectEqual(CGRectIntegral(rect1), CGRectIntegral(rect2))
+
+#else
+
+#ifndef PDFRect
+#define PDFRect NSRect
+#endif
+
+#define SKNRectFromString(string)   NSRectFromString(string)
+#define SKNEqualRects(rect1, rect2) NSEqualRects(NSIntegralRect(rect1), NSIntegralRect(rect2))
+
+#if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_12
+@interface PDFAnnotation (SKNSierraDeclarations)
+- (id)valueForAnnotationKey:(NSString *)key;
+@end
+#endif
+
+#if !defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_13
+@interface PDFAnnotation (SKNHighSierraDeclarations)
+- (void)setButtonWidgetState:(NSInteger)state;
+- (void)setWidgetStringValue:(NSString *)stringValue;
+@end
+#endif
+
+#endif
 
 @implementation PDFDocument (SKNExtensions)
 
@@ -67,14 +95,37 @@
 }
 
 static inline SKNPDFWidgetType SKNWidgetTypeForAnnotation(PDFAnnotation *annotation) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if ([annotation isKindOfClass:[PDFAnnotationTextWidget class]])
         return kSKNPDFWidgetTypeText;
     else if ([annotation isKindOfClass:[PDFAnnotationButtonWidget class]])
         return kSKNPDFWidgetTypeButton;
     else if ([annotation isKindOfClass:[PDFAnnotationChoiceWidget class]])
         return kSKNPDFWidgetTypeChoice;
+    else if ([annotation respondsToSelector:@selector(valueForAnnotationKey:)] == NO)
+        return kSKNPDFWidgetTypeUnknown;
+#pragma clang diagnostic pop
+    NSString *ft = [annotation valueForAnnotationKey:@"/FT"];
+    if ([ft isKindOfClass:[NSString class]] == NO)
+        return kSKNPDFWidgetTypeUnknown;
+    else if ([ft isEqualToString:@"/Tx"])
+        return kSKNPDFWidgetTypeText;
+    else if ([ft isEqualToString:@"/Btn"])
+        return kSKNPDFWidgetTypeButton;
+    else if ([ft isEqualToString:@"/Ch"])
+        return kSKNPDFWidgetTypeChoice;
     else
         return kSKNPDFWidgetTypeUnknown;
+}
+
+static inline NSString *SKNFieldNameForAnnotation(PDFAnnotation *annotation) {
+    if ([annotation respondsToSelector:@selector(fieldName)])
+        return [(id)annotation fieldName];
+    else if ([annotation respondsToSelector:@selector(valueForAnnotationKey:)])
+        return [annotation valueForAnnotationKey:@"/T"];
+    else
+        return nil;
 }
 
 - (NSArray *)addSkimNotesWithProperties:(NSArray *)noteDicts {
@@ -88,7 +139,33 @@ static inline SKNPDFWidgetType SKNWidgetTypeForAnnotation(PDFAnnotation *annotat
     // create new annotations from the dictionary and add them to their page and to the document
     while (dict = [e nextObject]) {
         NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
-        if ((annotation = [[PDFAnnotation alloc] initSkimNoteWithProperties:dict])) {
+        if ([[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString]) {
+            if (pageIndex >= [self pageCount])
+                continue;
+            PDFPage *page = [self pageAtIndex:pageIndex];
+            PDFRect bounds = SKNRectFromString([dict objectForKey:SKNPDFAnnotationBoundsKey]);
+            SKNPDFWidgetType widgetType = [[dict objectForKey:SKNPDFAnnotationWidgetTypeKey] integerValue];
+            NSString *fieldName = [dict objectForKey:SKNPDFAnnotationFieldNameKey] ?: @"";
+            for (annotation in [page annotations]) {
+                if ([[annotation type] isEqualToString:SKNWidgetString] &&
+                    SKNWidgetTypeForAnnotation(annotation) == widgetType &&
+                    [fieldName isEqualToString:(SKNFieldNameForAnnotation(annotation) ?: @"")] &&
+                    SKNEqualRects([annotation bounds], bounds)) {
+                    if (widgetType == kSKNPDFWidgetTypeButton) {
+                        if ([annotation respondsToSelector:@selector(setButtonWidgetState:)])
+                            [annotation setButtonWidgetState:[[dict objectForKey:SKNPDFAnnotationStateKey] integerValue]];
+                        else if ([annotation respondsToSelector:@selector(setState:)])
+                            [(id)annotation setState:[[dict objectForKey:SKNPDFAnnotationStateKey] integerValue]];
+                    } else {
+                        if ([annotation respondsToSelector:@selector(setWidgetStringValue:)])
+                            [annotation setWidgetStringValue:[dict objectForKey:SKNPDFAnnotationStringValueKey]];
+                        else if ([annotation respondsToSelector:@selector(setStringValue:)])
+                            [(id)annotation setStringValue:[dict objectForKey:SKNPDFAnnotationStringValueKey]];
+                    }
+                    break;
+                }
+            }
+        } else if ((annotation = [[PDFAnnotation alloc] initSkimNoteWithProperties:dict])) {
             if (pageIndex == NSNotFound || pageIndex == INT_MAX)
                 pageIndex = 0;
             else if (pageIndex >= [self pageCount])
@@ -97,24 +174,6 @@ static inline SKNPDFWidgetType SKNWidgetTypeForAnnotation(PDFAnnotation *annotat
             [page addAnnotation:annotation];
             [notes addObject:annotation];
             [annotation release];
-        } else if ([[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString] &&
-                   pageIndex >= 0 && pageIndex < [self pageCount]) {
-            PDFPage *page = [self pageAtIndex:pageIndex];
-            NSRect bounds = NSIntegralRect(NSRectFromString([dict objectForKey:SKNPDFAnnotationBoundsKey]));
-            SKNPDFWidgetType widgetType = [[dict objectForKey:SKNPDFAnnotationWidgetTypeKey] integerValue];
-            NSString *fieldName = [dict objectForKey:SKNPDFAnnotationFieldNameKey] ?: @"";
-            for (annotation in [page annotations]) {
-                if ([[annotation type] isEqualToString:SKNWidgetString] &&
-                    SKNWidgetTypeForAnnotation(annotation) == widgetType &&
-                    [fieldName isEqualToString:([(PDFAnnotationTextWidget *)annotation fieldName] ?: @"")] &&
-                    NSEqualRects(NSIntegralRect([annotation bounds]), bounds)) {
-                    if (widgetType == kSKNPDFWidgetTypeButton)
-                        [(PDFAnnotationButtonWidget *)annotation setState:[[dict objectForKey:SKNPDFAnnotationStateKey] integerValue]];
-                    else
-                        [(PDFAnnotationTextWidget *)annotation setStringValue:[dict objectForKey:SKNPDFAnnotationStringValueKey]];
-                    break;
-                }
-            }
         }
     }
     
