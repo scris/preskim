@@ -98,6 +98,11 @@
     if (NSContainsRect(foregroundBox, [annotation bounds]) == NO)
         foregroundBox = NSZeroRect;
     [super addAnnotation:annotation];
+    PDFAnnotation *popup = [annotation popup];
+    if (popup && [annotation isSkimNote]) {
+        [super removeAnnotation:popup];
+        [annotation setPopup:nil];
+    }
 }
 
 - (void)removeAnnotation:(PDFAnnotation *)annotation {
