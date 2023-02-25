@@ -102,6 +102,8 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
 // override these Leopard methods to avoid showing the standard tool tips over our own
 - (NSString *)toolTip { return @""; }
 
+- (PDFAnnotationPopup *)popup { return nil; }
+
 - (BOOL)hasNoteText { return YES; }
 
 - (SKNoteText *)noteText {
