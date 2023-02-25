@@ -49,6 +49,10 @@
 
 NSString *SKPDFAnnotationRichTextKey = @"richText";
 
+@interface SKNPDFAnnotationNote (SKPrivateDeclarations)
+- (NSTextStorage *)mutableText;
+@end
+
 @implementation SKNPDFAnnotationNote (SKExtensions)
 
 + (NSDictionary *)textToNoteSkimNoteProperties:(NSDictionary *)properties {
@@ -138,16 +142,16 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
 }
 
 - (id)richText {
-    return textStorage;
+    return [self mutableText];
 }
 
 - (void)setRichText:(id)newText {
-    if ([self isEditable] && newText != textStorage) {
+    if ([self isEditable] && newText != [self mutableText]) {
         // We are willing to accept either a string or an attributed string.
         if ([newText isKindOfClass:[NSAttributedString class]])
-            [textStorage replaceCharactersInRange:NSMakeRange(0, [textStorage length]) withAttributedString:newText];
+            [[self mutableText] replaceCharactersInRange:NSMakeRange(0, [[self mutableText] length]) withAttributedString:newText];
         else
-            [textStorage replaceCharactersInRange:NSMakeRange(0, [textStorage length]) withString:newText];
+            [[self mutableText] replaceCharactersInRange:NSMakeRange(0, [[self mutableText] length]) withString:newText];
     }
 }
 
