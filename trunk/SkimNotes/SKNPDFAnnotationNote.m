@@ -67,7 +67,7 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 #endif
 
 @interface SKNPDFAnnotationNote (SKNPrivate)
-- (void)textDidChange:(NSNotification *)notification;
+- (NSTextStorage *)mutableText;
 @end
 
 #endif
@@ -88,23 +88,6 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
     }
     [super setContents:contents];
 }
-
-#if !defined(PDFKIT_PLATFORM_IOS)
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-- (id)initWithBounds:(NSRect)bounds {
-#pragma clang diagnostic pop
-    self = [super initWithBounds:bounds];
-    if (self) {
-        textStorage = [[NSTextStorage allocWithZone:[self zone]] init];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextStorageDidProcessEditingNotification object:textStorage];
-        text = [[NSAttributedString alloc] init];
-    }
-    return self;
-}
-
-#endif
 
 - (id)initSkimNoteWithProperties:(NSDictionary *)dict{
     self = [super initSkimNoteWithProperties:dict];
@@ -196,7 +179,7 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 #else
 
 - (void)setText:(NSAttributedString *)newText {
-    if (textStorage != newText) {
+    if ([self mutableText] != newText) {
         // edit the textStorage, this will trigger KVO and update the text automatically
         if (newText)
             [textStorage replaceCharactersInRange:NSMakeRange(0, [textStorage length]) withAttributedString:newText];
@@ -224,11 +207,19 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
     [self willChangeValueForKey:SKNPDFAnnotationTextKey];
     // update the text
     [text release];
-    text = [[NSAttributedString allocWithZone:[self zone]] initWithAttributedString:textStorage];
+    text = [[NSAttributedString alloc] initWithAttributedString:textStorage];
     [self didChangeValueForKey:SKNPDFAnnotationTextKey];
     [texts makeObjectsPerformSelector:@selector(didChangeValueForKey:) withObject:SKNPDFAnnotationTextKey];
     // update the contents to string + text
     [self updateContents];
+}
+
+- (NSTextStorage *)mutableText {
+    if (textStorage == nil) {
+        textStorage = [[NSTextStorage alloc] init];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextStorageDidProcessEditingNotification object:textStorage];
+    }
+    return textStorage;
 }
 
 // private method called by -drawWithBox: before to 10.12, made public on 10.12, now calling -drawWithBox:
