@@ -89,6 +89,7 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
         [self setIconType:[[NSUserDefaults standardUserDefaults] integerForKey:SKAnchoredNoteIconTypeKey]];
         [texts release];
         texts = [[NSArray alloc] initWithObjects:[[[SKNoteText alloc] initWithNote:self] autorelease], nil];
+        [self setPopup:nil];
     }
     return self;
 }
@@ -101,8 +102,6 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
 
 // override these Leopard methods to avoid showing the standard tool tips over our own
 - (NSString *)toolTip { return @""; }
-
-- (PDFAnnotationPopup *)popup { return nil; }
 
 - (BOOL)hasNoteText { return YES; }
 
