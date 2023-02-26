@@ -172,20 +172,22 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
         [fdfString appendFDFName:SKFDFAnnotationColorKey];
         [fdfString appendFormat:@"[%f %f %f]", r, g, b];
     }
-    [fdfString appendFDFName:SKFDFAnnotationBorderStylesKey];
-    [fdfString appendString:@"<<"];
-    if (border && [border lineWidth] > 0.0) {
-        [fdfString appendFDFName:SKFDFAnnotationLineWidthKey];
-        [fdfString appendFormat:@" %f", [border lineWidth]];
-        [fdfString appendFDFName:SKFDFAnnotationBorderStyleKey];
-        [fdfString appendFDFName:SKFDFBorderStyleFromPDFBorderStyle([border style])];
-        [fdfString appendFDFName:SKFDFAnnotationDashPatternKey];
-        [fdfString appendFormat:@"[%@]", [[[border dashPattern] valueForKey:@"stringValue"] componentsJoinedByString:@" "]];
-    } else {
-        [fdfString appendFDFName:SKFDFAnnotationLineWidthKey];
-        [fdfString appendString:@" 0.0"];
+    if (border) {
+        [fdfString appendFDFName:SKFDFAnnotationBorderStylesKey];
+        [fdfString appendString:@"<<"];
+        if ([border lineWidth] > 0.0) {
+            [fdfString appendFDFName:SKFDFAnnotationLineWidthKey];
+            [fdfString appendFormat:@" %f", [border lineWidth]];
+            [fdfString appendFDFName:SKFDFAnnotationBorderStyleKey];
+            [fdfString appendFDFName:SKFDFBorderStyleFromPDFBorderStyle([border style])];
+            [fdfString appendFDFName:SKFDFAnnotationDashPatternKey];
+            [fdfString appendFormat:@"[%@]", [[[border dashPattern] valueForKey:@"stringValue"] componentsJoinedByString:@" "]];
+        } else {
+            [fdfString appendFDFName:SKFDFAnnotationLineWidthKey];
+            [fdfString appendString:@" 0.0"];
+        }
+        [fdfString appendString:@">>"];
     }
-    [fdfString appendString:@">>"];
     [fdfString appendFDFName:SKFDFAnnotationContentsKey];
     [fdfString appendString:@"("];
     if (contents)
