@@ -46,11 +46,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 - (NSString *)fdfString {
     NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
-    [fdfString appendFDFName:SKFDFFieldTypeKey];
+    [fdfString appendFDFName:SKFDFAnnotationFieldTypeKey];
     [fdfString appendFDFName:SKFDFFieldTypeText];
-    [fdfString appendFDFName:SKFDFFieldNameKey];
+    [fdfString appendFDFName:SKFDFAnnotationFieldNameKey];
     [fdfString appendFormat:@"(%@)", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
-    [fdfString appendFDFName:SKFDFFieldValueKey];
+    [fdfString appendFDFName:SKFDFAnnotationFieldValueKey];
     [fdfString appendFormat:@"(%@)", [[[self stringValue] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
     return fdfString;
 }

@@ -69,11 +69,11 @@ extern SKFDFString SKFDFAnnotationLineStylesKey;
 extern SKFDFString SKFDFAnnotationLinePointsKey;
 extern SKFDFString SKFDFAnnotationInkListKey;
 extern SKFDFString SKFDFAnnotationQuadrilateralPointsKey;
+extern SKFDFString SKFDFAnnotationFieldNameKey;
+extern SKFDFString SKFDFAnnotationFieldTypeKey;
+extern SKFDFString SKFDFAnnotationFieldValueKey;
 extern SKFDFString SKFDFDefaultAppearanceKey;
 extern SKFDFString SKFDFDefaultStyleKey;
-extern SKFDFString SKFDFFieldNameKey;
-extern SKFDFString SKFDFFieldTypeKey;
-extern SKFDFString SKFDFFieldValueKey;
 
 extern SKFDFString SKFDFAnnotation;
 
