@@ -39,8 +39,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import "PDFAnnotationChoiceWidget_SKExtensions.h"
 #import "PDFAnnotation_SKExtensions.h"
 #import <SkimNotes/SkimNotes.h>
+#import "SKFDFParser.h"
+#import "NSString_SKExtensions.h"
 
 @implementation PDFAnnotationChoiceWidget (SKExtensions)
+
+- (NSString *)fdfString {
+    NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
+    [fdfString appendFDFName:"/FT"];
+    [fdfString appendFDFName:"/Ch"];
+    [fdfString appendFDFName:"/T"];
+    [fdfString appendFormat:@"(%@)", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
+    [fdfString appendFDFName:"/V"];
+    [fdfString appendFormat:@"(%@)", [[[self stringValue] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
+    return fdfString;
+}
 
 - (id)objectValue {
     return [self stringValue];

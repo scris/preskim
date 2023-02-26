@@ -39,8 +39,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import "PDFAnnotationButtonWidget_SKExtensions.h"
 #import "PDFAnnotation_SKExtensions.h"
 #import <SkimNotes/SkimNotes.h>
+#import "SKFDFParser.h"
+#import "NSString_SKExtensions.h"
 
 @implementation PDFAnnotationButtonWidget (SKExtensions)
+
+- (NSString *)fdfString {
+    NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
+    [fdfString appendFDFName:"/FT"];
+    [fdfString appendFDFName:"/Btn"];
+    [fdfString appendFDFName:"/T"];
+    [fdfString appendFormat:@"(%@)", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
+    [fdfString appendFDFName:"/V"];
+    [fdfString appendFormat:@"/%@", [self state] == NSOnState ? @"On" : @"Off"];
+    return fdfString;
+}
 
 - (id)objectValue {
     return [NSNumber numberWithInteger:[self state]];
