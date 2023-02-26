@@ -7,3 +7,5 @@ SUPPORTED_PLATFORMS = iphonesimulator iphoneos
 SDKROOT = iphoneos
 
 IPHONEOS_DEPLOYMENT_TARGET = 11.0
+
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(SDKROOT)/System/iOSSupport/System/Library/Frameworks
