@@ -8,7 +8,7 @@ DYLIB_CURRENT_VERSION = 1.5.2
 FRAMEWORK_VERSION = A
 INFOPLIST_FILE = Info.plist
 PRODUCT_NAME = SkimNotes
-PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.skim-app.framework.SkimNotes
+PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.skim-app.framework.${PRODUCT_NAME}
 
 GCC_PRECOMPILE_PREFIX_HEADER = YES
 GCC_PREFIX_HEADER = SkimNotes_Prefix.pch
