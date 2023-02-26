@@ -100,7 +100,7 @@ SKFDFString SKFDFLineStyleOpenArrow = "OpenArrow";
 SKFDFString SKFDFLineStyleClosedArrow = "ClosedArrow";
 
 SKFDFString SKFDFFieldTypeText = "Tx";
-SKFDFString SKFdFFieldTypeButton = "Btn";
+SKFDFString SKFDFFieldTypeButton = "Btn";
 SKFDFString SKFDFFieldTypeChoice = "Ch";
 
 static BOOL SKFDFEqualStrings(SKFDFString string1, SKFDFString string2) {
