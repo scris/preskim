@@ -73,6 +73,9 @@ SKFDFString SKFDFAnnotationInkListKey = "InkList";
 SKFDFString SKFDFAnnotationQuadrilateralPointsKey = "QuadPoints";
 SKFDFString SKFDFDefaultAppearanceKey = "DA";
 SKFDFString SKFDFDefaultStyleKey = "DS";
+SKFDFString SKFDFFieldNameKey = "T";
+SKFDFString SKFDFFieldTypeKey = "FT";
+SKFDFString SKFDFFieldValueKey = "V";
 
 SKFDFString SKFDFAnnotation = "Annot";
 
@@ -95,6 +98,10 @@ SKFDFString SKFDFLineStyleCircle = "Circle";
 SKFDFString SKFDFLineStyleDiamond = "Diamond";
 SKFDFString SKFDFLineStyleOpenArrow = "OpenArrow";
 SKFDFString SKFDFLineStyleClosedArrow = "ClosedArrow";
+
+SKFDFString SKFDFFieldTypeText = "Tx";
+SKFDFString SKFdFFieldTypeButton = "Btn";
+SKFDFString SKFDFFieldTypeChoice = "Ch";
 
 static BOOL SKFDFEqualStrings(SKFDFString string1, SKFDFString string2) {
     return strcmp(string1, string2) == 0;

@@ -71,6 +71,9 @@ extern SKFDFString SKFDFAnnotationInkListKey;
 extern SKFDFString SKFDFAnnotationQuadrilateralPointsKey;
 extern SKFDFString SKFDFDefaultAppearanceKey;
 extern SKFDFString SKFDFDefaultStyleKey;
+extern SKFDFString SKFDFFieldNameKey;
+extern SKFDFString SKFDFFieldTypeKey;
+extern SKFDFString SKFDFFieldValueKey;
 
 extern SKFDFString SKFDFAnnotation;
 
@@ -93,6 +96,10 @@ extern SKFDFString SKFDFLineStyleCircle;
 extern SKFDFString SKFDFLineStyleDiamond;
 extern SKFDFString SKFDFLineStyleOpenArrow;
 extern SKFDFString SKFDFLineStyleClosedArrow;
+
+extern SKFDFString SKFDFFieldTypeText;
+extern SKFDFString SKFDFFieldTypeButton;
+extern SKFDFString SKFDFFieldTypeChoice;
 
 extern PDFBorderStyle SKPDFBorderStyleFromFDFBorderStyle(SKFDFString name);
 extern SKFDFString SKFDFBorderStyleFromPDFBorderStyle(PDFBorderStyle borderStyle);
