@@ -51,7 +51,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     [fdfString appendFDFName:"/T"];
     [fdfString appendFormat:@"(%@)", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
     [fdfString appendFDFName:"/V"];
-    [fdfString appendFormat:@"/%@", [self state] == NSOnState ? @"On" : @"Off"];
+    [fdfString appendFormat:@"/%@", [self state] == NSOnState ? [self onStateValue] : @"Off"];
     return fdfString;
 }
 
