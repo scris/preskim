@@ -1144,7 +1144,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CEDB9B0D0E2EA1380057FD09 /* SkimNotes-App.xcconfig */;
 			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.skim-app.framework.${PRODUCT_NAME}";
 			};
 			name = Debug;
 		};
@@ -1152,7 +1151,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CEDB9B0D0E2EA1380057FD09 /* SkimNotes-App.xcconfig */;
 			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.skim-app.framework.${PRODUCT_NAME}";
 			};
 			name = Release;
 		};
