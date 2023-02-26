@@ -126,6 +126,8 @@ NSString *SKNPDFAnnotationStateKey = @"state";
 NSString *SKNPDFAnnotationWidgetTypeKey = @"widgetType";
 NSString *SKNPDFAnnotationFieldNameKey = @"fieldName";
 
+#define SKNSquigglyString @"Squiggly"
+
 #if defined(PDFKIT_PLATFORM_IOS)
 
 static inline UIColor *SKNColorFromArray(NSArray *array) {
@@ -225,7 +227,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         return [PDFAnnotationCircle class];
     else if ([type isEqualToString:SKNSquareString])
         return [PDFAnnotationSquare class];
-    else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString])
+    else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNSquigglyString])
         return [PDFAnnotationMarkup class];
     else if ([type isEqualToString:SKNLineString])
         return [PDFAnnotationLine class];
@@ -281,7 +283,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         if ([[self class] isSubclassOfClass:[PDFAnnotationMarkup class]]) {
 #pragma clang diagnostic pop
             NSInteger markupType = kPDFMarkupTypeHighlight;
-            if ([type isEqualToString:SKNUnderlineString])
+            if ([type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNSquigglyString])
                 markupType = kPDFMarkupTypeUnderline;
             else if ([type isEqualToString:SKNStrikeOutString])
                 markupType = kPDFMarkupTypeStrikeOut;
@@ -432,7 +434,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
                 [self setAlignment:[alignment integerValue]];
         }
         
-        if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString]) {
+        if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNSquigglyString]) {
             NSArray *pointStrings = [dict objectForKey:SKNPDFAnnotationQuadrilateralPointsKey];
             NSMutableArray *pointValues = [[NSMutableArray alloc] initWithCapacity:[pointStrings count]];
             NSUInteger i, iMax = [pointStrings count];
@@ -647,7 +649,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             }
         }
         
-        if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString]) {
+        if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNSquigglyString]) {
             if ([self respondsToSelector:@selector(quadrilateralPoints)]) {
                 NSArray *quadPoints = [(id)self quadrilateralPoints];
                 if (quadPoints) {
