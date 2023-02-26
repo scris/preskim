@@ -188,11 +188,12 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
         }
         [fdfString appendString:@">>"];
     }
-    [fdfString appendFDFName:SKFDFAnnotationContentsKey];
-    [fdfString appendString:@"("];
-    if (contents)
+    if (contents) {
+        [fdfString appendFDFName:SKFDFAnnotationContentsKey];
+        [fdfString appendString:@"("];
         [fdfString appendString:[[contents lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
-    [fdfString appendString:@")"];
+        [fdfString appendString:@")"];
+    }
     if (modDate) {
         [fdfString appendFDFName:SKFDFAnnotationModificationDateKey];
         [fdfString appendFormat:@"(%@)", [modDate PDFDescription]];
