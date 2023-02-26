@@ -71,11 +71,11 @@ SKFDFString SKFDFAnnotationLineStylesKey = "LE";
 SKFDFString SKFDFAnnotationLinePointsKey = "L";
 SKFDFString SKFDFAnnotationInkListKey = "InkList";
 SKFDFString SKFDFAnnotationQuadrilateralPointsKey = "QuadPoints";
+SKFDFString SKFDFAnnotationFieldNameKey = "T";
+SKFDFString SKFDFAnnotationFieldTypeKey = "FT";
+SKFDFString SKFDFAnnotationFieldValueKey = "V";
 SKFDFString SKFDFDefaultAppearanceKey = "DA";
 SKFDFString SKFDFDefaultStyleKey = "DS";
-SKFDFString SKFDFFieldNameKey = "T";
-SKFDFString SKFDFFieldTypeKey = "FT";
-SKFDFString SKFDFFieldValueKey = "V";
 
 SKFDFString SKFDFAnnotation = "Annot";
 
