@@ -41,6 +41,7 @@
 #if (defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 
 #import <UIKit/UIKit.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 #define SKIMNOTES_PLATFORM_IOS
 
@@ -141,7 +142,7 @@ NSData *SKNSkimRTFNotes(NSArray *noteDicts) {
         }
     }
     [attrString fixAttributesInRange:NSMakeRange(0, [attrString length])];
-    return [attrString RTFFromRange:NSMakeRange(0, [attrString length]) documentAttributes:[NSDictionary dictionaryWithObjectsAndKeys:NSRTFTextDocumentType, NSDocumentTypeDocumentAttribute, nil]];
+    return [attrString dataFromRange:NSMakeRange(0, [attrString length]) documentAttributes:[NSDictionary dictionaryWithObjectsAndKeys:NSRTFTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
 }
 
 #pragma mark -
@@ -269,7 +270,7 @@ NSArray *SKNSkimNotesFromData(NSData *data) {
                         NSNumber *fontSize = [dict objectForKey:NOTE_FONT_SIZE_KEY];
                         if ([value isKindOfClass:[NSString class]]) {
                             CGFloat pointSize = [fontSize isKindOfClass:[NSNumber class]] ? [fontSize doubleValue] : 0.0;
-                            value = [SKNFont fontWithName:value size:pointSize] ?: [SKNFont userFontOfSize:pointSize];
+                            value = [SKNFont fontWithName:value size:pointSize] ?: [SKNFont fontWithName:@"Helvetica" size:pointSize];
                             [dict setObject:value forKey:NOTE_FONT_KEY];
                         }
                         [dict removeObjectForKey:NOTE_FONT_NAME_KEY];
@@ -312,11 +313,10 @@ NSArray *SKNSkimNotesFromData(NSData *data) {
 NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
     NSData *data = nil;
     if (noteDicts) {
-#if defined(SKIMNOTES_PLATFORM_IOS)
-        if (1) {
-#else
-        if (asPlist) {
+#if defined(PDFKIT_PLATFORM_IOS)
+        asPlist = YES;
 #endif
+        if (asPlist) {
             NSMutableArray *array = [[NSMutableArray alloc] init];
             NSMapTable *colors = nil;
             for (NSDictionary *noteDict in noteDicts) {
@@ -346,10 +346,14 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
                 }
                 if ((value = [dict objectForKey:NOTE_TEXT_KEY])) {
                     if ([value isKindOfClass:[NSAttributedString class]]) {
+#if !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_11) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_11)
                         if ([value containsAttachments]) {
-                            value = [value RTFDFromRange:NSMakeRange(0, [value length]) documentAttributes:[NSDictionary dictionary]];
+#else
+                        if ([value containsAttachmentsInRange:NSMakeRange(0, [value length])]) {
+#endif
+                            value = [value dataFromRange:NSMakeRange(0, [value length]) documentAttributes:[NSDictionary dictionaryWithObjectsAndKeys:NSRTFDTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
                         } else {
-                            value = [value RTFFromRange:NSMakeRange(0, [value length]) documentAttributes:[NSDictionary dictionary]];
+                            value = [value dataFromRange:NSMakeRange(0, [value length]) documentAttributes:[NSDictionary dictionaryWithObjectsAndKeys:NSRTFTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
                         }
                         [dict setObject:value forKey:NOTE_TEXT_KEY];
                     } else if ([value isKindOfClass:[NSData class]] == NO) {

@@ -38,19 +38,23 @@
 
 #import "PDFAnnotation_SKNExtensions.h"
 #import "SKNPDFAnnotationNote.h"
-#import <objc/objc-runtime.h>
 #import <tgmath.h>
 
 #if defined(PDFKIT_PLATFORM_IOS)
 
+#import <CoreGraphics/CoreGraphics.h>
+#import <objc/runtime.h>
+
 #define SKNMakePoint(x, y)          CGPointMake(x, y)
 #define SKNPointFromString(string)  CGPointFromString(string)
-#define SKNStringFromPoint(point)   NSStringFromCCGPoint(point)
+#define SKNStringFromPoint(point)   NSStringFromCGPoint(point)
 #define SKNRectFromString(string)   CGRectFromString(string)
 #define SKNStringFromRect(point)    NSStringFromCGRect(point)
 #define SKNPointFromValue(value)    [value CGPointValue]
 
 #else
+
+#import <objc/objc-runtime.h>
 
 #if !defined(PDFKIT_PLATFORM_OSX)
 
@@ -358,7 +362,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         Class arrayClass = [NSArray class];
         Class dateClass = [NSDate class];
         NSString *contents = [dict objectForKey:SKNPDFAnnotationContentsKey];
-        NSColor *color = [dict objectForKey:SKNPDFAnnotationColorKey];
+        PDFKitPlatformColor *color = [dict objectForKey:SKNPDFAnnotationColorKey];
         NSDate *modificationDate = [dict objectForKey:SKNPDFAnnotationModificationDateKey];
         NSString *userName = [dict objectForKey:SKNPDFAnnotationUserNameKey];
         NSNumber *lineWidth = [dict objectForKey:SKNPDFAnnotationLineWidthKey];
@@ -404,9 +408,9 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
             NSNumber *startLineStyle = [dict objectForKey:SKNPDFAnnotationStartLineStyleKey];
             NSNumber *endLineStyle = [dict objectForKey:SKNPDFAnnotationEndLineStyleKey];
             if ([startPoint isKindOfClass:stringClass])
-                [self setStartPoint:NSPointFromString(startPoint)];
+                [self setStartPoint:SKNPointFromString(startPoint)];
             if ([endPoint isKindOfClass:stringClass])
-                [self setEndPoint:NSPointFromString(endPoint)];
+                [self setEndPoint:SKNPointFromString(endPoint)];
             if ([startLineStyle respondsToSelector:@selector(integerValue)])
                 [self setStartLineStyle:[startLineStyle integerValue]];
             if ([endLineStyle respondsToSelector:@selector(integerValue)])
@@ -461,8 +465,8 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
                 for (i = 0; i < iMax; i++) {
                     NSArray *pointStrings = [pointLists objectAtIndex:i];
                     if ([pointStrings isKindOfClass:arrayClass]) {
-                        NSBezierPath *path = [[NSBezierPath alloc] init];
-                        SKNSkimNotePathSetPoints(path, pointStrings);
+                        PDFKitPlatformBezierPath *path = [[PDFKitPlatformBezierPath alloc] init];
+                        [[self class] setPoints:pointStrings ofSkimNotePath:path];
                         [self addBezierPath:path];
                         [path release];
                     }
@@ -533,7 +537,7 @@ static inline PDFKitPlatformColor *SKNColorFromAnnotationValue(id value) {
         c[i] = [[value objectAtIndex:i] doubleValue];
     CGColorSpaceRef cs = [value count] < 3 ? CGColorSpaceCreateDeviceGray() : [value count] < 4 ? CGColorSpaceCreateDeviceRGB() : CGColorSpaceCreateDeviceCMYK();
     CGColorRef cgColor = CGColorCreate(cs, c);
-    CIColor *color = [CIColor colorWithCGColor:cgColor];
+    UIColor *color = [UIColor colorWithCGColor:cgColor];
     CGColorRelease(cgColor);
     CGColorSpaceRelease(cs);
     return color;
@@ -603,7 +607,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     
     if ([self respondsToSelector:@selector(valueForAnnotationKey:)]) {
         NSString *type = [self type];
-        NSRect bounds = [self bounds];
+        PDFRect bounds = [self bounds];
         id value = nil;
         Class arrayClass = [NSArray class];
         Class stringClass = [NSString class];
@@ -637,14 +641,14 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             }
             
             if ([self respondsToSelector:@selector(startPoint)] && [self respondsToSelector:@selector(endPoint)]) {
-                [dict setValue:NSStringFromPoint([(id)self startPoint]) forKey:SKNPDFAnnotationStartPointKey];
-                [dict setValue:NSStringFromPoint([(id)self endPoint]) forKey:SKNPDFAnnotationEndPointKey];
+                [dict setValue:SKNStringFromPoint([(id)self startPoint]) forKey:SKNPDFAnnotationStartPointKey];
+                [dict setValue:SKNStringFromPoint([(id)self endPoint]) forKey:SKNPDFAnnotationEndPointKey];
             } else if ((value = [self valueForAnnotationKey:@"/L"])) {
                 if ([value isKindOfClass:arrayClass] && [value count] == 4) {
                     PDFPoint p = SKNMakePoint([[value objectAtIndex:0] doubleValue] - bounds.origin.x, [[value objectAtIndex:1] doubleValue] - bounds.origin.y);
-                    [dict setValue:NSStringFromPoint(p) forKey:SKNPDFAnnotationStartPointKey];
+                    [dict setValue:SKNStringFromPoint(p) forKey:SKNPDFAnnotationStartPointKey];
                     p = SKNMakePoint([[value objectAtIndex:2] doubleValue] - bounds.origin.x, [[value objectAtIndex:3] doubleValue] - bounds.origin.y);
-                    [dict setValue:NSStringFromPoint(p) forKey:SKNPDFAnnotationEndPointKey];
+                    [dict setValue:SKNStringFromPoint(p) forKey:SKNPDFAnnotationEndPointKey];
                 }
             }
         }
@@ -656,7 +660,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                     NSUInteger i, iMax = [quadPoints count];
                     NSMutableArray *quadPointStrings = [[NSMutableArray alloc] initWithCapacity:iMax];
                     for (i = 0; i < iMax; i++)
-                        [quadPointStrings addObject:NSStringFromPoint([[quadPoints objectAtIndex:i] pointValue])];
+                        [quadPointStrings addObject:SKNStringFromPoint(SKNPointFromValue([quadPoints objectAtIndex:i]))];
                     [dict setValue:quadPointStrings forKey:SKNPDFAnnotationQuadrilateralPointsKey];
                     [quadPointStrings release];
                 }
@@ -692,7 +696,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                     NSUInteger i, iMax = [paths count];
                     NSMutableArray *pointLists = [[NSMutableArray alloc] initWithCapacity:iMax];
                     for (i = 0; i < iMax; i++) {
-                        NSBezierPath *path = [paths objectAtIndex:i];
+                        PDFKitPlatformBezierPath *path = [paths objectAtIndex:i];
                         NSArray *pointStrings = [selfClass pointsFromSkimNotePath:path];
                         if ([pointStrings count])
                             [pointLists addObject:pointStrings];
@@ -945,7 +949,11 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                 controlPoint2.y -= diff1.y / (3.0 * (d0 + d2));
             }
             
+#if defined(PDFKIT_PLATFORM_IOS)
+            [path addCurveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
+#else
             [path curveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
+#endif
             
             controlPoint1 = prevPoint;
             if (d1 > 0.0) {
@@ -955,10 +963,17 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         }
     }
     
+#if defined(PDFKIT_PLATFORM_IOS)
+    if (iMax == 2)
+        [path addLineToPoint:point];
+    else if (iMax > 2)
+        [path addCurveToPoint:point controlPoint1:controlPoint1 controlPoint2:point];
+#else
     if (iMax == 2)
         [path lineToPoint:point];
     else if (iMax > 2)
         [path curveToPoint:point controlPoint1:controlPoint1 controlPoint2:point];
+#endif
 }
 
 #if !defined(PDFKIT_PLATFORM_IOS)

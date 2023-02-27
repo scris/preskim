@@ -43,8 +43,10 @@
 
 #if defined(PDFKIT_PLATFORM_IOS)
 
+#import <CoreGraphics/CoreGraphics.h>
+
 #define SKNRectFromString(string)   CGRectFromString(string)
-#define SKNEqualRects(rect1, rect2) CGRectEqual(CGRectIntegral(rect1), CGRectIntegral(rect2))
+#define SKNEqualRects(rect1, rect2) CGRectEqualToRect(CGRectIntegral(rect1), CGRectIntegral(rect2))
 
 #else
 
@@ -95,6 +97,7 @@
 }
 
 static inline SKNPDFWidgetType SKNWidgetTypeForAnnotation(PDFAnnotation *annotation) {
+#if !defined(PDFKIT_PLATFORM_IOS)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if ([annotation isKindOfClass:[PDFAnnotationTextWidget class]])
@@ -106,6 +109,7 @@ static inline SKNPDFWidgetType SKNWidgetTypeForAnnotation(PDFAnnotation *annotat
     else if ([annotation respondsToSelector:@selector(valueForAnnotationKey:)] == NO)
         return kSKNPDFWidgetTypeUnknown;
 #pragma clang diagnostic pop
+#endif
     NSString *ft = [annotation valueForAnnotationKey:@"/FT"];
     if ([ft isKindOfClass:[NSString class]] == NO)
         return kSKNPDFWidgetTypeUnknown;
@@ -154,13 +158,17 @@ static inline NSString *SKNFieldNameForAnnotation(PDFAnnotation *annotation) {
                     if (widgetType == kSKNPDFWidgetTypeButton) {
                         if ([annotation respondsToSelector:@selector(setButtonWidgetState:)])
                             [annotation setButtonWidgetState:[[dict objectForKey:SKNPDFAnnotationStateKey] integerValue]];
+#if !defined(PDFKIT_PLATFORM_IOS)
                         else if ([annotation respondsToSelector:@selector(setState:)])
                             [(id)annotation setState:[[dict objectForKey:SKNPDFAnnotationStateKey] integerValue]];
+#endif
                     } else {
                         if ([annotation respondsToSelector:@selector(setWidgetStringValue:)])
                             [annotation setWidgetStringValue:[dict objectForKey:SKNPDFAnnotationStringValueKey]];
+#if !defined(PDFKIT_PLATFORM_IOS)
                         else if ([annotation respondsToSelector:@selector(setStringValue:)])
                             [(id)annotation setStringValue:[dict objectForKey:SKNPDFAnnotationStringValueKey]];
+#endif
                     }
                     break;
                 }
