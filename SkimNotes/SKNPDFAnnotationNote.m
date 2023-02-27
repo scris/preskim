@@ -119,11 +119,11 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 #if !defined(PDFKIT_PLATFORM_IOS)
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [textStorage release];
+    [texts release];
 #endif
     [string release];
     [text release];
     [image release];
-    [texts release];
     [super dealloc];
 }
 
