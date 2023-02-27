@@ -38,12 +38,12 @@
 
 #import "PDFAnnotation_SKNExtensions.h"
 #import "SKNPDFAnnotationNote.h"
+#import <objc/runtime.h>
 #import <tgmath.h>
 
 #if defined(PDFKIT_PLATFORM_IOS)
 
 #import <CoreGraphics/CoreGraphics.h>
-#import <objc/runtime.h>
 
 #define SKNMakePoint(x, y)          CGPointMake(x, y)
 #define SKNPointFromString(string)  CGPointFromString(string)
@@ -54,7 +54,6 @@
 
 #else
 
-#import <objc/objc-runtime.h>
 
 #if !defined(PDFKIT_PLATFORM_OSX)
 
