@@ -42,10 +42,13 @@
     @discussion  This header file declares API for a concrete <code>PDFAnnotation</code> class representing a Skim anchored note.
 */
 #import <Foundation/Foundation.h>
-#import <Quartz/Quartz.h>
+#import <PDFKit/PDFKit.h>
 
 #ifndef PDFKitPlatformImage
 #define PDFKitPlatformImage NSImage
+#endif
+#ifndef PDFSize
+#define PDFSize NSSize
 #endif
 
 /*!
@@ -60,7 +63,7 @@ extern NSString *SKNPDFAnnotationImageKey;
 /*!
     @discussion  Default size of an anchored note.
 */
-extern NSSize SKNPDFAnnotationNoteSize;
+extern PDFSize SKNPDFAnnotationNoteSize;
 
 /*!
     @abstract    A concrete <code>PDFAnnotation</code> subclass, a subclass of <code>PDFAnnotationText</code>, representing a Skim anchored note.

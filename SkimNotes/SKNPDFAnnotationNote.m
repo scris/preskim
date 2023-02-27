@@ -42,9 +42,11 @@
 NSString *SKNPDFAnnotationTextKey = @"text";
 NSString *SKNPDFAnnotationImageKey = @"image";
 
-NSSize SKNPDFAnnotationNoteSize = {16.0, 16.0};
+PDFSize SKNPDFAnnotationNoteSize = {16.0, 16.0};
 
 #if !defined(PDFKIT_PLATFORM_IOS)
+
+#import <CoreGraphics/CoreGraphics.h>
 
 static inline void drawIconComment(CGContextRef context, NSRect bounds);
 static inline void drawIconKey(CGContextRef context, NSRect bounds);
