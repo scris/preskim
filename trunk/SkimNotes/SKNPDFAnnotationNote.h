@@ -80,11 +80,11 @@ extern PDFSize SKNPDFAnnotationNoteSize;
 {
     NSString *string;
     PDFKitPlatformImage *image;
+    NSAttributedString *text;
 #if !defined(PDFKIT_PLATFORM_IOS)
     NSTextStorage *textStorage;
-#endif
-    NSAttributedString *text;
     NSArray *texts;
+#endif
 }
 
 /*!
