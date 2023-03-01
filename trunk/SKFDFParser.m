@@ -41,7 +41,7 @@
 #import "NSGeometry_SKExtensions.h"
 #import "SKStringConstants.h"
 #import <SkimNotes/SkimNotes.h>
-#import "SKNPDFAnnotationNote_SKExtensions.h"
+#import "PDFAnnotation_SKExtensions.h"
 
 SKFDFString SKFDFFDFKey = "FDF";
 SKFDFString SKFDFAnnotationsKey = "Annots";
@@ -256,7 +256,7 @@ SKFDFString SKFDFLineStyleFromPDFLineStyle(PDFLineStyle lineStyle) {
         NSSet *validTypes = [NSSet setWithObjects:SKNFreeTextString, SKNNoteString, SKNCircleString, SKNSquareString, SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNLineString, SKNInkString, nil];
         NSString *type = [dictionary objectForKey:SKNPDFAnnotationTypeKey];
         if ([type isEqualToString:SKNTextString]) {
-            [dictionary setDictionary:[SKNPDFAnnotationNote textToNoteSkimNoteProperties:dictionary]];
+            [dictionary setDictionary:[PDFAnnotation textToNoteSkimNoteProperties:dictionary]];
         } else if ([validTypes containsObject:type] == NO) {
             success = NO;
         }

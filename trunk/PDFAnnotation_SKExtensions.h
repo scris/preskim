@@ -66,6 +66,8 @@ extern NSString *SKPasteboardTypeSkimNote;
 
 + (NSArray *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection forType:(NSString *)type;
 
++ (NSDictionary *)textToNoteSkimNoteProperties:(NSDictionary *)properties;
+
 - (NSString *)fdfString;
 
 - (NSUInteger)pageIndex;

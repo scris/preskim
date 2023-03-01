@@ -1137,7 +1137,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                 [annotations addObject:annotation];
                 NSDictionary *properties = [annotation SkimNoteProperties];
                 if ([[annotation type] isEqualToString:SKNTextString])
-                    properties = [SKNPDFAnnotationNote textToNoteSkimNoteProperties:properties];
+                    properties = [PDFAnnotation textToNoteSkimNoteProperties:properties];
                 if (noteDicts == nil)
                     noteDicts = [[NSMutableArray alloc] init];
                 [noteDicts addObject:properties];
