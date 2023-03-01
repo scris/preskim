@@ -132,50 +132,38 @@ NSString *SKNPDFAnnotationFieldNameKey = @"fieldName";
 
 #define SKNSquigglyString @"Squiggly"
 
+static PDFKitPlatformColor *SKNColorFromArray(NSArray *array) {
+    if ([array count] > 2) {
+        CGFloat c[4] = {0.0, 0.0, 0.0, 1.0};
+        NSUInteger i;
+        for (i = 0; i < MAX([array count], 4); i++)
+            c[i] = [[array objectAtIndex:i] doubleValue];
 #if defined(PDFKIT_PLATFORM_IOS)
-
-static inline UIColor *SKNColorFromArray(NSArray *array) {
-    if ([array count] > 2) {
-        CGFloat c[4] = {0.0, 0.0, 0.0, 1.0};
-        NSUInteger i;
-        for (i = 0; i < MAX([array count], 4); i++)
-            c[i] = [[array objectAtIndex:i] doubleValue];
         return [UIColor colorWithRed:c[0] green:c[1] blue:c[2] alpha:c[3]];
-    } else if ([array count] > 0) {
-        CGFloat white = 0.0, alpha = 1.0;
-        white = [[array objectAtIndex:0] doubleValue];
-        if ([array count] == 2)
-            alpha = [[array objectAtIndex:1] doubleValue];
-        return [UIColor colorWithWhite:white alpha:alpha];
-    } else {
-        return [UIColor clearColor];
-    }
-}
-
 #else
-
-static inline NSColor *SKNColorFromArray(NSArray *array) {
-    if ([array count] > 2) {
-        CGFloat c[4] = {0.0, 0.0, 0.0, 1.0};
-        NSUInteger i;
-        for (i = 0; i < MAX([array count], 4); i++)
-            c[i] = [[array objectAtIndex:i] doubleValue];
         return [NSColor colorWithColorSpace:[NSColorSpace sRGBColorSpace] components:c count:4];
+#endif
     } else if ([array count] > 0) {
         CGFloat c[2] = {0.0, 1.0};
         c[0] = [[array objectAtIndex:0] doubleValue];
         if ([array count] == 2)
             c[1] = [[array objectAtIndex:1] doubleValue];
+#if defined(PDFKIT_PLATFORM_IOS)
+        return [UIColor colorWithWhite:c[0] alpha:c[1]];
+#else
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
         if ([NSColorSpace respondsToSelector:@selector(genericGamma22GrayColorSpace)] == NO)
             return [NSColor colorWithColorSpace:[NSColorSpace genericGrayColorSpace] components:c count:2];
         else
 #endif
         return [NSColor colorWithColorSpace:[NSColorSpace genericGamma22GrayColorSpace] components:c count:2];
+#endif
     } else {
-        return [NSColor clearColor];
+        return [PDFKitPlatformColor clearColor];
     }
 }
+
+#if !defined(PDFKIT_PLATFORM_IOS)
 
 #if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_12
 @interface PDFAnnotation (SKNSierraDeclarations)
@@ -527,7 +515,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     return dict;
 }
 
-static inline PDFKitPlatformColor *SKNColorFromAnnotationValue(id value) {
+static PDFKitPlatformColor *SKNColorFromAnnotationValue(id value) {
     if ([value isKindOfClass:[PDFKitPlatformColor class]])
         return value;
     else if ([value isKindOfClass:[NSArray class]] == NO || [value count] == 0)
