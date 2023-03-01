@@ -339,7 +339,7 @@ static NSURL *temporaryDirectoryURL = nil;
 }
 
 - (NSURL *)writeImageToDestination:(NSURL *)destination {
-    NSImage *image = [self isNoteType] ? [(SKNPDFAnnotationNote *)note image] : nil;
+    NSImage *image = [self isNoteType] ? [note image] : nil;
     if (image) {
         NSString *name = [note string];
         if ([name length] == 0)
@@ -404,7 +404,7 @@ static NSURL *temporaryDirectoryURL = nil;
 #pragma mark SKDragImageView delegate protocol
 
 - (id<NSPasteboardWriting>)draggedObjectForDragImageView:(SKDragImageView *)view {
-    NSImage *image = [self isNoteType] ? [(SKNPDFAnnotationNote *)note image] : nil;
+    NSImage *image = [self isNoteType] ? [note image] : nil;
     if (image) {
         Class promiseClass = NSClassFromString(@"NSFilePromiseProvider");
         if (promiseClass) {
@@ -433,7 +433,7 @@ static NSURL *temporaryDirectoryURL = nil;
         if (fileURL)
             [item setString:[fileURL absoluteString] forType:type];
     } else if ([type isEqualToString:NSPasteboardTypeTIFF]) {
-        NSImage *image = [self isNoteType] ? [(SKNPDFAnnotationNote *)note image] : nil;
+        NSImage *image = [self isNoteType] ? [note image] : nil;
         [item setData:[image TIFFRepresentation] forType:type];
     }
 }
@@ -446,7 +446,7 @@ static NSURL *temporaryDirectoryURL = nil;
 
 - (void)filePromiseProvider:(NSFilePromiseProvider *)filePromiseProvider writePromiseToURL:(NSURL *)fileURL completionHandler:(void (^)(NSError *))completionHandler {
     NSError *error = nil;
-    NSImage *image = [self isNoteType] ? [(SKNPDFAnnotationNote *)note image] : nil;
+    NSImage *image = [self isNoteType] ? [note image] : nil;
     [[image TIFFRepresentation] writeToURL:fileURL options:NSDataWritingAtomic error:&error];
     completionHandler(error);
 }

@@ -45,7 +45,6 @@
 #import "SKMainWindowController_FullScreen.h"
 #import "SKPDFDocument.h"
 #import "PDFAnnotation_SKExtensions.h"
-#import "SKNPDFAnnotationNote_SKExtensions.h"
 #import "SKConversionProgressController.h"
 #import "SKFindController.h"
 #import "NSUserDefaultsController_SKExtensions.h"
