@@ -45,8 +45,7 @@ extern NSString *SKPDFAnnotationSelectionSpecifierKey;
 
 @interface PDFAnnotationMarkup (SKExtensions)
 
-- (id)initSkimNoteWithSelection:(PDFSelection *)selection markupType:(NSInteger)type;
-+ (NSArray *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection markupType:(NSInteger)type;
+- (id)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type;
 
 - (PDFSelection *)selection;
 

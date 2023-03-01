@@ -1086,7 +1086,7 @@ static char SKMainWindowContentLayoutObservationContext;
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         if ([[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString]) {
             [widgetProperties addObject:dict];
-        } else if ((annotation = [[PDFAnnotation alloc] initSkimNoteWithProperties:dict])) {
+        } else if ((annotation = [PDFAnnotation newSkimNoteWithProperties:dict])) {
             // this is only to make sure markup annotations generate the lineRects, for thread safety
             [annotation boundsOrder];
             NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];

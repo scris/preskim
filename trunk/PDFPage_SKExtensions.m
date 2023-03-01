@@ -732,19 +732,12 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
         } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNUnderlineString ]) {
             id selSpec = contentsValue ?: [[[[NSScriptCommand currentCommand] arguments] objectForKey:@"KeyDictionary"] objectForKey:SKPDFAnnotationSelectionSpecifierKey];
             PDFSelection *selection = [selSpec isKindOfClass:[PDFSelection class]] ? selSpec : selSpec ? [PDFSelection selectionWithSpecifier:selSpec] : nil;
-            NSInteger markupType = 0;
             [props removeObjectForKey:SKPDFAnnotationSelectionSpecifierKey];
             if (selSpec == nil) {
                 [[NSScriptCommand currentCommand] setScriptErrorNumber:NSRequiredArgumentsMissingScriptError]; 
                 [[NSScriptCommand currentCommand] setScriptErrorString:@"New markup notes need a selection."];
             } else if (selection) {
-                if ([type isEqualToString:SKNHighlightString])
-                    markupType = kPDFMarkupTypeHighlight;
-                else if ([type isEqualToString:SKNUnderlineString])
-                    markupType = kPDFMarkupTypeUnderline;
-                else if ([type isEqualToString:SKNStrikeOutString])
-                    markupType = kPDFMarkupTypeStrikeOut;
-                annotation = [[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:selection markupType:markupType];
+                annotation = [PDFAnnotation newSkimNoteWithSelection:selection forType:type];
                 if ([props objectForKey:SKPDFAnnotationScriptingTextContentsKey] == nil)
                     [props setValue:[selection cleanedString] forKey:SKPDFAnnotationScriptingTextContentsKey];
             }
@@ -769,14 +762,14 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
                                 qdPoint.h = [[pt objectAtIndex:1] intValue];
                                 point = SKNSPointFromQDPoint(qdPoint);
                             } else continue;
-                            [PDFAnnotationInk addPoint:point toSkimNotesPath:path];
+                            [PDFAnnotation addPoint:point toSkimNotesPath:path];
                         }
                         if ([path elementCount] > 1)
                             [paths addObject:path];
                         [path release];
                     }
                 }
-                annotation = [[PDFAnnotationInk alloc] initSkimNoteWithPaths:paths];
+                annotation = [PDFAnnotation newSkimNoteWithPaths:paths];
                 [paths release];
             }
         } else {
@@ -787,16 +780,8 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
                 bounds.size = SKNPDFAnnotationNoteSize;
             bounds = NSIntegralRect(SKRectFromCenterAndSize(SKIntegralPoint(SKCenterPoint([self boundsForBox:kPDFDisplayBoxCropBox])), bounds.size));
             
-            if ([type isEqualToString:SKNFreeTextString]) {
-                annotation = [[PDFAnnotationFreeText alloc] initSkimNoteWithBounds:bounds];
-            } else if ([type isEqualToString:SKNNoteString]) {
-                annotation = [[SKNPDFAnnotationNote alloc] initSkimNoteWithBounds:bounds];
-            } else if ([type isEqualToString:SKNCircleString]) {
-                annotation = [[PDFAnnotationCircle alloc] initSkimNoteWithBounds:bounds];
-            } else if ([type isEqualToString:SKNSquareString]) {
-                annotation = [[PDFAnnotationSquare alloc] initSkimNoteWithBounds:bounds];
-            } else if ([type isEqualToString:SKNLineString]) {
-                annotation = [[PDFAnnotationLine alloc] initSkimNoteWithBounds:bounds];
+            if ([[NSSet setWithObjects:SKNFreeTextString, SKNNoteString, SKNCircleString, SKNSquareString, SKNLineString, nil] containsObject:type]) {
+                annotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];
             } else {
                 [[NSScriptCommand currentCommand] setScriptErrorNumber:NSRequiredArgumentsMissingScriptError]; 
                 [[NSScriptCommand currentCommand] setScriptErrorString:@"New notes need a type."];

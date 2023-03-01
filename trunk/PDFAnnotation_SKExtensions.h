@@ -56,6 +56,16 @@ extern NSString *SKPasteboardTypeSkimNote;
 
 @interface PDFAnnotation (SKExtensions) <NSPasteboardReading, NSPasteboardWriting>
 
++ (PDFAnnotation *)newSkimNoteWithBounds:(NSRect)bounds forType:(NSString *)type;
+
++ (PDFAnnotation *)newSkimNoteWithProperties:(NSDictionary *)dict;
+
++ (PDFAnnotation *)newSkimNoteWithPaths:(NSArray *)paths;
+
++ (PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forType:(NSString *)type;
+
++ (NSArray *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection forType:(NSString *)type;
+
 - (NSString *)fdfString;
 
 - (NSUInteger)pageIndex;
