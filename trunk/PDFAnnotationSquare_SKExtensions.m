@@ -48,18 +48,15 @@
 
 @implementation PDFAnnotationSquare (SKExtensions)
 
-- (id)initSkimNoteWithBounds:(NSRect)bounds {
-    self = [super initSkimNoteWithBounds:bounds];
-    if (self) {
-        NSColor *color = [[NSUserDefaults standardUserDefaults] colorForKey:SKSquareNoteInteriorColorKey];
-        if ([color alphaComponent] > 0.0)
-            [self setInteriorColor:color];
-        [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKSquareNoteColorKey]];
-        [[self border] setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKSquareNoteLineWidthKey]];
-        [[self border] setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKSquareNoteDashPatternKey]];
-        [[self border] setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKSquareNoteLineStyleKey]];
-    }
-    return self;
+- (void)setDefaultSkimNoteProperties {
+    NSColor *color = [[NSUserDefaults standardUserDefaults] colorForKey:SKSquareNoteInteriorColorKey];
+    if ([color alphaComponent] > 0.0)
+        [self setInteriorColor:color];
+    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKSquareNoteColorKey]];
+    [[self border] setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKSquareNoteLineWidthKey]];
+    [[self border] setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKSquareNoteDashPatternKey]];
+    [[self border] setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKSquareNoteLineStyleKey]];
+
 }
 
 - (NSString *)fdfString {

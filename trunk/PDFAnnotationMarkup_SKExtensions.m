@@ -125,18 +125,16 @@ static void (*original_dealloc)(id, SEL) = NULL;
     extraIvarsTable = [[NSMapTable weakToStrongObjectsMapTable] retain];
 }
 
-+ (NSColor *)defaultSkimNoteColorForMarkupType:(NSInteger)markupType
-{
-    switch (markupType) {
-        case kPDFMarkupTypeUnderline:
-            return [[NSUserDefaults standardUserDefaults] colorForKey:SKUnderlineNoteColorKey];
-        case kPDFMarkupTypeStrikeOut:
-            return [[NSUserDefaults standardUserDefaults] colorForKey:SKStrikeOutNoteColorKey];
-        case kPDFMarkupTypeHighlight:
-            return [[NSUserDefaults standardUserDefaults] colorForKey:SKHighlightNoteColorKey];
+- (void)setDefaultSkimNoteProperties {
+    NSString *key = nil;
+    switch ([self markupType]) {
+        case kPDFMarkupTypeUnderline: key = SKUnderlineNoteColorKey; break;
+        case kPDFMarkupTypeStrikeOut: key = SKStrikeOutNoteColorKey; break;
+        default: key = SKHighlightNoteColorKey; break;
     }
-    return nil;
+    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:key]];
 }
+
 
 - (SKPDFAnnotationMarkupExtraIvars *)extraIvars {
     SKPDFAnnotationMarkupExtraIvars *extraIvars = nil;

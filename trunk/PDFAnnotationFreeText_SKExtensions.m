@@ -50,29 +50,25 @@ NSString *SKPDFAnnotationScriptingAlignmentKey = @"scriptingAlignment";
 
 @implementation PDFAnnotationFreeText (SKExtensions)
 
-- (id)initSkimNoteWithBounds:(NSRect)bounds {
-    self = [super initSkimNoteWithBounds:bounds];
-    if (self) {
-        NSFont *font = [[NSUserDefaults standardUserDefaults] fontForNameKey:SKFreeTextNoteFontNameKey sizeKey:SKFreeTextNoteFontSizeKey];
-        if (font)
-            [self setFont:font];
-        [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKFreeTextNoteColorKey]];
-        [self setFontColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKFreeTextNoteFontColorKey]];
-        [self setAlignment:[[NSUserDefaults standardUserDefaults] integerForKey:SKFreeTextNoteAlignmentKey]];
-        PDFBorder *border = [[PDFBorder allocWithZone:[self zone]] init];
-        [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKFreeTextNoteLineWidthKey]];
-        [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKFreeTextNoteDashPatternKey]];
-        [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKFreeTextNoteLineStyleKey]];
-        if ([border lineWidth] > 0.0) {
-            [self setBorder:border];
-        } else {
-            [self setBorder:nil];
-            // on 10.12 you can't set the border to nil, so set its lineWidth to 0
-            [[self border] setLineWidth:0.0];
-        }
-        [border release];
+- (void)setDefaultSkimNoteProperties {
+    NSFont *font = [[NSUserDefaults standardUserDefaults] fontForNameKey:SKFreeTextNoteFontNameKey sizeKey:SKFreeTextNoteFontSizeKey];
+    if (font)
+        [self setFont:font];
+    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKFreeTextNoteColorKey]];
+    [self setFontColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKFreeTextNoteFontColorKey]];
+    [self setAlignment:[[NSUserDefaults standardUserDefaults] integerForKey:SKFreeTextNoteAlignmentKey]];
+    PDFBorder *border = [[PDFBorder allocWithZone:[self zone]] init];
+    [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKFreeTextNoteLineWidthKey]];
+    [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKFreeTextNoteDashPatternKey]];
+    [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKFreeTextNoteLineStyleKey]];
+    if ([border lineWidth] > 0.0) {
+        [self setBorder:border];
+    } else {
+        [self setBorder:nil];
+        // on 10.12 you can't set the border to nil, so set its lineWidth to 0
+        [[self border] setLineWidth:0.0];
     }
-    return self;
+    [border release];
 }
 
 static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
