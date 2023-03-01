@@ -39,7 +39,6 @@
 #import "PDFAnnotationText_SKExtensions.h"
 #import <SkimNotes/SkimNotes.h>
 #import "PDFAnnotation_SKExtensions.h"
-#import "SKNPDFAnnotationNote_SKExtensions.h"
 #import "SKFDFParser.h"
 
 
