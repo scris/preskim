@@ -246,7 +246,9 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
 - (id)initSkimNoteWithBounds:(PDFRect)bounds forType:(NSString *)type {
     if ([type hasPrefix:@"/"])
         type = [type substringFromIndex:1];
+    
 #if defined(PDFKIT_PLATFORM_IOS)
+    
     if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString]) {
         if ([self isMemberOfClass:[PDFAnnotation class]]) {
             // replace by our subclass
@@ -264,11 +266,10 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         [self setShouldPrint:YES];
         [self setSkimNote:YES];
         [self setUserName:nil];
-        
-        if ([self respondsToSelector:@selector(setDefaultSkimNoteProperties)])
-            [self setDefaultSkimNoteProperties];
     }
+    
 #else
+    
     if ([self isMemberOfClass:[PDFAnnotation class]]) {
         
         // generic, initalize the class for the type in the dictionary
@@ -280,29 +281,30 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
 #pragma clang diagnostic pop
         self = [annotationClass alloc];
     }
+    
     self = [self initSkimNoteWithBounds:bounds];
-    if (self) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        if ([[self class] isSubclassOfClass:[PDFAnnotationMarkup class]]) {
+    if ([[self class] isSubclassOfClass:[PDFAnnotationMarkup class]]) {
 #pragma clang diagnostic pop
-            NSInteger markupType = kPDFMarkupTypeHighlight;
-            if ([type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNSquigglyString])
-                markupType = kPDFMarkupTypeUnderline;
-            else if ([type isEqualToString:SKNStrikeOutString])
-                markupType = kPDFMarkupTypeStrikeOut;
-            [(id)self setMarkupType:markupType];
-            if ([[self class] respondsToSelector:@selector(defaultSkimNoteColorForMarkupType:)]) {
-                NSColor *color = [[self class] defaultSkimNoteColorForMarkupType:markupType];
-                if (color)
-                    [self setColor:color];
-            }
+        NSInteger markupType = kPDFMarkupTypeHighlight;
+        if ([type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNSquigglyString])
+            markupType = kPDFMarkupTypeUnderline;
+        else if ([type isEqualToString:SKNStrikeOutString])
+            markupType = kPDFMarkupTypeStrikeOut;
+        [(id)self setMarkupType:markupType];
+        if ([[self class] respondsToSelector:@selector(defaultSkimNoteColorForMarkupType:)]) {
+            NSColor *color = [[self class] defaultSkimNoteColorForMarkupType:markupType];
+            if (color)
+                [self setColor:color];
         }
-        
-        if ([self respondsToSelector:@selector(setDefaultSkimNoteProperties)])
-            [self setDefaultSkimNoteProperties];
     }
+    
 #endif
+    
+    if ([self respondsToSelector:@selector(setDefaultSkimNoteProperties)])
+        [self setDefaultSkimNoteProperties];
+    
     return self;
 }
 

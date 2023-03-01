@@ -157,7 +157,7 @@ static inline BOOL SKNIsNumberArray(id array) {
     return YES;
 }
 
-static NSArray *SKNCreateArrayFromColor(SKNColor *color, NSMapTable **colors) {
+static NSArray *SKNCreateArrayFromColor(SKNColor *color, NSMapTable **colors, NSMutableSet **arrays) {
     if ([color isKindOfClass:[SKNColor class]]) {
         NSArray *array = [*colors objectForKey:color];
         if (array == nil) {
@@ -195,7 +195,14 @@ static NSArray *SKNCreateArrayFromColor(SKNColor *color, NSMapTable **colors) {
         }
         return array;
     } else if (SKNIsNumberArray(color)) {
-        return [(NSArray *)color retain];
+        NSArray *array = [*arrays member:color];
+        if (array == nil) {
+            if (*arrays == nil)
+                *arrays = [[NSMutableSet alloc] init];
+            [*arrays addObject:color];
+            array = (NSArray *)color;
+        }
+        return [array retain];
     } else {
         return nil;
     }
@@ -319,21 +326,22 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
         if (asPlist) {
             NSMutableArray *array = [[NSMutableArray alloc] init];
             NSMapTable *colors = nil;
+            NSMutableSet *arrays = nil;
             for (NSDictionary *noteDict in noteDicts) {
                 NSMutableDictionary *dict = [noteDict mutableCopy];
                 id value;
                 if ((value = [dict objectForKey:NOTE_COLOR_KEY])) {
-                    value = SKNCreateArrayFromColor(value, &colors);
+                    value = SKNCreateArrayFromColor(value, &colors, &arrays);
                     [dict setObject:value forKey:NOTE_COLOR_KEY];
                     [value release];
                 }
                 if ((value = [dict objectForKey:NOTE_INTERIOR_COLOR_KEY])) {
-                    value = SKNCreateArrayFromColor(value, &colors);
+                    value = SKNCreateArrayFromColor(value, &colors, &arrays);
                     [dict setObject:value forKey:NOTE_INTERIOR_COLOR_KEY];
                     [value release];
                 }
                 if ((value = [dict objectForKey:NOTE_FONT_COLOR_KEY])) {
-                    value = SKNCreateArrayFromColor(value, &colors);
+                    value = SKNCreateArrayFromColor(value, &colors, &arrays);
                     [dict setObject:value forKey:NOTE_FONT_COLOR_KEY];
                     [value release];
                 }
@@ -385,6 +393,7 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
             data = [NSPropertyListSerialization dataWithPropertyList:array format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
             [array release];
             [colors release];
+            [arrays release];
         } else {
             data = [NSKeyedArchiver archivedDataWithRootObject:noteDicts];
         }
