@@ -160,26 +160,23 @@ static inline void addLineTipToPath(CGMutablePathRef path, NSPoint point, CGFloa
         original_setBounds = (void (*)(id, SEL, NSRect))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(setBounds:), @selector(replacement_setBounds:));
 }
 
-- (id)initSkimNoteWithBounds:(NSRect)bounds {
-    self = [super initSkimNoteWithBounds:bounds];
-    if (self) { 	 
-        [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKLineNoteColorKey]]; 	 
-        NSColor *color = [[NSUserDefaults standardUserDefaults] colorForKey:SKLineNoteInteriorColorKey];
-        if ([color alphaComponent] > 0.0)
-            [self setInteriorColor:color];
-        [self setStartLineStyle:[[NSUserDefaults standardUserDefaults] integerForKey:SKLineNoteStartLineStyleKey]]; 	 
-        [self setEndLineStyle:[[NSUserDefaults standardUserDefaults] integerForKey:SKLineNoteEndLineStyleKey]]; 	 
-        [self setStartPoint:NSMakePoint(0.0, 0.0)]; 	 
-        [self setEndPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))]; 	 
-        PDFBorder *border = [[PDFBorder allocWithZone:[self zone]] init]; 	 
-        [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKLineNoteLineWidthKey]]; 	 
-        [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKLineNoteDashPatternKey]]; 	 
-        [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKLineNoteLineStyleKey]]; 	 
-        [self setBorder:[border lineWidth] > 0.0 ? border : nil]; 	 
-        [border release]; 	 
-    } 	 
-    return self; 	 
-} 	 
+- (void)setDefaultSkimNoteProperties {
+    NSRect bounds = [self bounds];
+    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKLineNoteColorKey]];
+    NSColor *color = [[NSUserDefaults standardUserDefaults] colorForKey:SKLineNoteInteriorColorKey];
+    if ([color alphaComponent] > 0.0)
+        [self setInteriorColor:color];
+    [self setStartLineStyle:[[NSUserDefaults standardUserDefaults] integerForKey:SKLineNoteStartLineStyleKey]];
+    [self setEndLineStyle:[[NSUserDefaults standardUserDefaults] integerForKey:SKLineNoteEndLineStyleKey]];
+    [self setStartPoint:NSMakePoint(0.0, 0.0)];
+    [self setEndPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))];
+    PDFBorder *border = [[PDFBorder allocWithZone:[self zone]] init];
+    [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKLineNoteLineWidthKey]];
+    [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKLineNoteDashPatternKey]];
+    [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKLineNoteLineStyleKey]];
+    [self setBorder:[border lineWidth] > 0.0 ? border : nil];
+    [border release];
+}
 
 - (NSString *)fdfString {
     NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];

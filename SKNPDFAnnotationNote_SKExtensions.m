@@ -82,16 +82,12 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
     return properties;
 }
 
-- (id)initSkimNoteWithBounds:(NSRect)bounds {
-    self = [super initSkimNoteWithBounds:bounds];
-    if (self) {
-        [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKAnchoredNoteColorKey]];
-        [self setIconType:[[NSUserDefaults standardUserDefaults] integerForKey:SKAnchoredNoteIconTypeKey]];
-        [texts release];
-        texts = [[NSArray alloc] initWithObjects:[[[SKNoteText alloc] initWithNote:self] autorelease], nil];
-        [self setPopup:nil];
-    }
-    return self;
+- (void)setDefaultSkimNoteProperties {
+    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKAnchoredNoteColorKey]];
+    [self setIconType:[[NSUserDefaults standardUserDefaults] integerForKey:SKAnchoredNoteIconTypeKey]];
+    [texts release];
+    texts = [[NSArray alloc] initWithObjects:[[[SKNoteText alloc] initWithNote:self] autorelease], nil];
+    [self setPopup:nil];
 }
 
 - (BOOL)isNote { return YES; }

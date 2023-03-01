@@ -47,17 +47,6 @@ NSString *SKPDFAnnotationScriptingIconTypeKey = @"scriptingIconType";
 
 @implementation PDFAnnotationText (SKExtensions)
 
-- (id)initSkimNoteWithBounds:(NSRect)bounds {
-    if ([self isMemberOfClass:[PDFAnnotationText class]]) {
-        NSZone *zone = [self zone];
-        [[self initWithBounds:NSZeroRect] release];
-        self = [[SKNPDFAnnotationNote allocWithZone:zone] initSkimNoteWithBounds:bounds];
-    } else {
-        self = [super initSkimNoteWithBounds:bounds];
-    }
-    return self;
-}
-
 - (NSString *)fdfString {
     NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
     [fdfString appendFDFName:SKFDFAnnotationIconTypeKey];

@@ -103,19 +103,15 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     CGContextGetBaseCTM_func = (typeof(CGContextGetBaseCTM_func))CFBundleGetFunctionPointerForName(CFBundleGetBundleWithIdentifier(CFSTR("com.apple.CoreGraphics")), CFSTR("CGContextGetBaseCTM"));
 }
 
-- (id)initSkimNoteWithBounds:(NSRect)bounds {
-    self = [super initSkimNoteWithBounds:bounds];
-    if (self) {
-        [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKInkNoteColorKey]];
-        PDFBorder *border = [[PDFBorder allocWithZone:[self zone]] init];
-        [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKInkNoteLineWidthKey]];
-        [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKInkNoteDashPatternKey]];	 
-        [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKInkNoteLineStyleKey]];
-        [self setBorder:[border lineWidth] > 0.0 ? border : nil];
-        [border release];
-    }
-    return self;
-} 	 
+- (void)setDefaultSkimNoteProperties {
+    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKInkNoteColorKey]];
+    PDFBorder *border = [[PDFBorder allocWithZone:[self zone]] init];
+    [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKInkNoteLineWidthKey]];
+    [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKInkNoteDashPatternKey]];
+    [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKInkNoteLineStyleKey]];
+    [self setBorder:[border lineWidth] > 0.0 ? border : nil];
+    [border release];
+}
 
 - (CGFloat)pathInset {
     NSRect bounds = NSZeroRect;

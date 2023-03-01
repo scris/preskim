@@ -202,7 +202,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     bounds = NSInsetRect(NSIntegralRect(bounds), -8.0, -8.0);
     [transform translateXBy:-NSMinX(bounds) yBy:-NSMinY(bounds)];
     
-    PDFAnnotation *annotation = [[PDFAnnotationInk alloc] initSkimNoteWithBounds:bounds];
+    PDFAnnotation *annotation = [[PDFAnnotationInk alloc] initSkimNoteWithBounds:bounds forType:SKNInkString];
     for (path in paths)
         [(PDFAnnotationInk *)annotation addBezierPath:[transform transformBezierPath:path]];
     return annotation;
