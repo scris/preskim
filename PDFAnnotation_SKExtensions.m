@@ -149,6 +149,65 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
     return nil;
 }
 
+static inline Class SKAnnotationClassForType(NSString *type) {
+    if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString])
+        return [SKNPDFAnnotationNote class];
+    else if ([type isEqualToString:SKNFreeTextString])
+        return [PDFAnnotationFreeText class];
+    else if ([type isEqualToString:SKNCircleString])
+        return [PDFAnnotationCircle class];
+    else if ([type isEqualToString:SKNSquareString])
+        return [PDFAnnotationSquare class];
+    else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString])
+        return [PDFAnnotationMarkup class];
+    else if ([type isEqualToString:SKNLineString])
+        return [PDFAnnotationLine class];
+    else if ([type isEqualToString:SKNInkString])
+        return [PDFAnnotationInk class];
+    else
+        return Nil;
+}
+
++ (PDFAnnotation *)newSkimNoteWithBounds:(NSRect)bounds forType:(NSString *)type {
+    return [[SKAnnotationClassForType(type) alloc] initSkimNoteWithBounds:bounds forType:type];
+}
+
++ (PDFAnnotation *)newSkimNoteWithProperties:(NSDictionary *)dict {
+    return [[SKAnnotationClassForType([dict objectForKey:SKNPDFAnnotationTypeKey]) alloc] initSkimNoteWithProperties:dict];
+}
+
++ (PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forType:(NSString *)type {
+    return [[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:selection forPage:nil forType:type];
+}
+
++ (NSArray *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection forType:(NSString *)type {
+    NSMutableArray *annotations = [NSMutableArray array];
+    for (PDFPage *page in [selection pages]) {
+        PDFAnnotation *annotation = [[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:selection forPage:page forType:type];
+        if (annotation) {
+            [annotations addObject:@[annotation, page]];
+            [annotation release];
+        }
+    }
+    return [annotations count] > 0 ? annotations : nil;
+}
+
++ (PDFAnnotation *)newSkimNoteWithPaths:(NSArray *)paths {
+    NSRect bounds = NSZeroRect;
+    NSAffineTransform *transform = [NSAffineTransform transform];
+    NSBezierPath *path;
+    
+    for (path in paths)
+        bounds = NSUnionRect(bounds, [path nonEmptyBounds]);
+    bounds = NSInsetRect(NSIntegralRect(bounds), -8.0, -8.0);
+    [transform translateXBy:-NSMinX(bounds) yBy:-NSMinY(bounds)];
+    
+    PDFAnnotation *annotation = [[PDFAnnotationInk alloc] initSkimNoteWithBounds:bounds];
+    for (path in paths)
+        [(PDFAnnotationInk *)annotation addBezierPath:[transform transformBezierPath:path]];
+    return annotation;
+}
+
 - (NSString *)fdfString {
     NSMutableString *fdfString = [NSMutableString string];
     NSRect bounds = [self bounds];

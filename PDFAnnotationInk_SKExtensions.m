@@ -117,24 +117,6 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     return self;
 } 	 
 
-- (id)initSkimNoteWithPaths:(NSArray *)paths {
-    NSRect bounds = NSZeroRect;
-    NSAffineTransform *transform = [NSAffineTransform transform];
-    NSBezierPath *path;
-    
-    for (path in paths)
-        bounds = NSUnionRect(bounds, [path nonEmptyBounds]);
-    bounds = NSInsetRect(NSIntegralRect(bounds), -8.0, -8.0);
-    [transform translateXBy:-NSMinX(bounds) yBy:-NSMinY(bounds)];
-    
-    self = [self initSkimNoteWithBounds:bounds];
-    if (self) {
-        for (path in paths)
-            [self addBezierPath:[transform transformBezierPath:path]];
-    }
-    return self;
-}
-
 - (CGFloat)pathInset {
     NSRect bounds = NSZeroRect;
     NSSize size = [self bounds].size;

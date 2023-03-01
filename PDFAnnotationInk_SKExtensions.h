@@ -44,8 +44,6 @@ extern NSString *SKPDFAnnotationScriptingPointListsKey;
 
 @interface PDFAnnotationInk (SKExtensions)
 
-- (id)initSkimNoteWithPaths:(NSArray *)paths;
-
 - (CGFloat)pathInset;
 
 - (NSArray *)bezierPaths;

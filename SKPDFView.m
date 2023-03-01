@@ -1432,7 +1432,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             PDFAnnotation *newAnnotation = nil;
             
             if (preferNote) {
-                newAnnotation = [[[SKNPDFAnnotationNote alloc] initSkimNoteWithBounds:bounds] autorelease];
+                newAnnotation = [[PDFAnnotation newSkimNoteWithBounds:bounds forType:SKNNoteString] autorelease];
                 NSMutableAttributedString *attrString = nil;
                 if ([str isKindOfClass:[NSString class]])
                     attrString = [[[NSMutableAttributedString alloc] initWithString:str] autorelease];
@@ -1445,7 +1445,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                 }
                 [(SKNPDFAnnotationNote *)newAnnotation setText:attrString];
             } else {
-                newAnnotation = [[[PDFAnnotationFreeText alloc] initSkimNoteWithBounds:bounds] autorelease];
+                newAnnotation = [[PDFAnnotation newSkimNoteWithBounds:bounds forType:SKNFreeTextString] autorelease];
                 [newAnnotation setString:str];
             }
             
@@ -2587,40 +2587,50 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         text = nil;
     
     // Create annotation and add to page.
+    NSString *type = nil;
+    BOOL isMarkup = NO;
     switch (annotationType) {
         case SKFreeTextNote:
-            newAnnotation = [[PDFAnnotationFreeText alloc] initSkimNoteWithBounds:bounds];
+            type = SKNFreeTextString;
             break;
         case SKAnchoredNote:
-            newAnnotation = [[SKNPDFAnnotationNote alloc] initSkimNoteWithBounds:bounds];
+            type = SKNNoteString;
             break;
         case SKCircleNote:
-            newAnnotation = [[PDFAnnotationCircle alloc] initSkimNoteWithBounds:bounds];
+            type = SKNCircleString;
             break;
         case SKSquareNote:
-            newAnnotation = [[PDFAnnotationSquare alloc] initSkimNoteWithBounds:bounds];
+            type = SKNSquareString;
             break;
         case SKHighlightNote:
-            newAnnotations = [PDFAnnotationMarkup SkimNotesAndPagesWithSelection:selection markupType:kPDFMarkupTypeHighlight];
+            type = SKNHighlightString;
+            isMarkup = YES;
             break;
         case SKUnderlineNote:
-            newAnnotations = [PDFAnnotationMarkup SkimNotesAndPagesWithSelection:selection markupType:kPDFMarkupTypeUnderline];
+            type = SKNUnderlineString;
+            isMarkup = YES;
             break;
         case SKStrikeOutNote:
-            newAnnotations = [PDFAnnotationMarkup SkimNotesAndPagesWithSelection:selection markupType:kPDFMarkupTypeStrikeOut];
+            type = SKNStrikeOutString;
+            isMarkup = YES;
             break;
         case SKLineNote:
-            newAnnotation = [[PDFAnnotationLine alloc] initSkimNoteWithBounds:bounds];
+            type = SKNLineString;
             break;
         case SKInkNote:
             // we need a drawn path to add an ink note
             break;
     }
     
-    if ([newAnnotations count] == 1) {
-        newAnnotation = [[[newAnnotations firstObject] firstObject] retain];
-        page = [[newAnnotations firstObject] lastObject];
-        newAnnotations = nil;
+    if (isMarkup) {
+        newAnnotations = [PDFAnnotation SkimNotesAndPagesWithSelection:selection forType:type];
+        if ([newAnnotations count] == 1) {
+            newAnnotation = [[[newAnnotations firstObject] firstObject] retain];
+            page = [[newAnnotations firstObject] lastObject];
+            newAnnotations = nil;
+        }
+    } else if (type) {
+        newAnnotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];
     }
     
     if ([newAnnotations count] > 0) {
@@ -4327,7 +4337,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if ((modifiers & NSAlternateKeyMask) && [newCurrentAnnotation isMovable] &&
             [newCurrentAnnotation resizeHandleForPoint:point scaleFactor:[self scaleFactor]] == 0) {
             // select a new copy of the annotation
-            PDFAnnotation *newAnnotation = [[PDFAnnotation alloc] initSkimNoteWithProperties:[newCurrentAnnotation SkimNoteProperties]];
+            PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithProperties:[newCurrentAnnotation SkimNoteProperties]];
             [newAnnotation registerUserName];
             [self addAnnotation:newAnnotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
@@ -4341,11 +4351,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         } else if ((modifiers & NSShiftKeyMask) && currentAnnotation != newCurrentAnnotation && [[currentAnnotation page] isEqual:[newCurrentAnnotation page]] && [[currentAnnotation type] isEqualToString:[newCurrentAnnotation type]]) {
             PDFAnnotation *newAnnotation = nil;
             if ([currentAnnotation isMarkup]) {
-                NSInteger markupType = [(PDFAnnotationMarkup *)currentAnnotation markupType];
+                NSString *type = [currentAnnotation type];
                 PDFSelection *sel = [(PDFAnnotationMarkup *)currentAnnotation selection];
                 [sel addSelection:[(PDFAnnotationMarkup *)newCurrentAnnotation selection]];
                 
-                newAnnotation = [[[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:sel markupType:markupType] autorelease];
+                newAnnotation = [[PDFAnnotation newSkimNoteWithSelection:sel forType:type] autorelease];
                 [newAnnotation setString:[sel cleanedString]];
             } else if ([currentAnnotation isInk]) {
                 NSMutableArray *paths = [[(PDFAnnotationInk *)currentAnnotation pagePaths] mutableCopy];
@@ -4353,7 +4363,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 NSString *string1 = [currentAnnotation string];
                 NSString *string2 = [newCurrentAnnotation string];
                 
-                newAnnotation = [[[PDFAnnotationInk alloc] initSkimNoteWithPaths:paths] autorelease];
+                newAnnotation = [[PDFAnnotation newSkimNoteWithPaths:paths] autorelease];
                 [newAnnotation setString:[string2 length] == 0 ? string1 : [string1 length] == 0 ? string2 : [NSString stringWithFormat:@"%@ %@", string1, string2]];
                 [newAnnotation setBorder:[currentAnnotation border]];
                 
@@ -4444,7 +4454,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 bezierPath = [NSBezierPath bezierPath];
                 [bezierPath moveToPoint:point];
             } else if (wantsBreak && NO == NSEqualPoints(point, [bezierPath associatedPointForElementAtIndex:[bezierPath elementCount] - 2])) {
-                [PDFAnnotationInk addPoint:point toSkimNotesPath:bezierPath];
+                [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
             }
             
             point = [self convertPoint:[theEvent locationInView:self] toPage:page];
@@ -4459,7 +4469,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 }
                 [bezierPath setAssociatedPoints:points atIndex:eltCount - 1];
             } else {
-                [PDFAnnotationInk addPoint:point toSkimNotesPath:bezierPath];
+                [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
             }
             
             wasOption = isOption;
@@ -4485,7 +4495,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [paths addObjectsFromArray:[(PDFAnnotationInk *)currentAnnotation pagePaths]];
         [paths addObject:bezierPath];
         
-        PDFAnnotationInk *annotation = [[PDFAnnotationInk alloc] initSkimNoteWithPaths:paths];
+        PDFAnnotation *annotation = [PDFAnnotation newSkimNoteWithPaths:paths];
         if (currentAnnotation) {
             [annotation setColor:[currentAnnotation color]];
             [annotation setBorder:[currentAnnotation border]];

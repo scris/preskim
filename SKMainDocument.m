@@ -1908,7 +1908,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
         NSMutableArray *copiedValue = [[NSMutableArray alloc] init];
         for (PDFAnnotation *annotation in value) {
             if ([annotation isMovable] && [[annotation page] document] == [self pdfDocument]) {
-                PDFAnnotation *copiedAnnotation = [[PDFAnnotation alloc] initSkimNoteWithProperties:[annotation SkimNoteProperties]];
+                PDFAnnotation *copiedAnnotation = [PDFAnnotation newSkimNoteWithProperties:[annotation SkimNoteProperties]];
                 [copiedAnnotation registerUserName];
                 if ([copiedAnnotation respondsToSelector:@selector(setPage:)])
                     [copiedAnnotation performSelector:@selector(setPage:) withObject:[annotation page]];

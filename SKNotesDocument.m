@@ -342,7 +342,7 @@
         [pdfDocument setContainingDocument:self];
         
         for (NSDictionary *dict in array) {
-            PDFAnnotation *note = [[PDFAnnotation alloc] initSkimNoteWithProperties:dict];
+            PDFAnnotation *note = [PDFAnnotation newSkimNoteWithProperties:dict];
             if (note == nil && [[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString]) {
                 switch ([[dict objectForKey:SKNPDFAnnotationWidgetTypeKey] integerValue]) {
                     case kSKNPDFWidgetTypeText: note = [PDFAnnotationTextWidget alloc]; break;

@@ -151,24 +151,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
     return extraIvars;
 }
 
-- (id)initSkimNoteWithBounds:(NSRect)bounds markupType:(NSInteger)type {
-    self = [super initSkimNoteWithBounds:bounds];
-    if (self) {
-        [self setMarkupType:type];
-        
-        NSColor *color = [[self class] defaultSkimNoteColorForMarkupType:type];
-        if (color)
-            [self setColor:color];
-    }
-    return self;
-}
-
-- (id)initSkimNoteWithBounds:(NSRect)bounds {
-    self = [self initSkimNoteWithBounds:bounds markupType:kPDFMarkupTypeHighlight];
-    return self;
-}
-
-- (id)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page markupType:(NSInteger)type {
+- (id)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type {
     if (page == nil)
         page = [selection safeFirstPage];
     NSRect bounds = NSZeroRect;
@@ -188,7 +171,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
         [[self initWithBounds:NSZeroRect] release];
         self = nil;
     } else {
-        self = [self initSkimNoteWithBounds:bounds markupType:type];
+        self = [self initSkimNoteWithBounds:bounds forType:type];
         if (self) {
             NSInteger lineAngle = [page lineDirectionAngle];
             NSMutableArray *quadPoints = [[NSMutableArray alloc] init];
@@ -202,22 +185,6 @@ static void (*original_dealloc)(id, SEL) = NULL;
         }
     }
     return self;
-}
-
-- (id)initSkimNoteWithSelection:(PDFSelection *)selection markupType:(NSInteger)type {
-    return [self initSkimNoteWithSelection:selection forPage:nil markupType:type];
-}
-
-+ (NSArray *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection markupType:(NSInteger)type {
-    NSMutableArray *annotations = [NSMutableArray array];
-    for (PDFPage *page in [selection pages]) {
-        PDFAnnotation *annotation = [[self alloc] initSkimNoteWithSelection:selection forPage:page markupType:type];
-        if (annotation) {
-            [annotations addObject:@[annotation, page]];
-            [annotation release];
-        }
-    }
-    return [annotations count] > 0 ? annotations : nil;
 }
 
 - (NSString *)fdfString {
