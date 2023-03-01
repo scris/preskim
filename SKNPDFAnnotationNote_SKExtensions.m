@@ -55,33 +55,6 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
 
 @implementation SKNPDFAnnotationNote (SKExtensions)
 
-+ (NSDictionary *)textToNoteSkimNoteProperties:(NSDictionary *)properties {
-    if ([[properties objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNTextString]) {
-        NSMutableDictionary *mutableProperties = [[properties mutableCopy] autorelease];
-        NSRect bounds = NSRectFromString([properties objectForKey:SKNPDFAnnotationBoundsKey]);
-        NSString *contents = [properties objectForKey:SKNPDFAnnotationContentsKey];
-        [mutableProperties setObject:SKNNoteString forKey:SKNPDFAnnotationTypeKey];
-        bounds.origin.y = NSMaxY(bounds) - SKNPDFAnnotationNoteSize.height;
-        bounds.size = SKNPDFAnnotationNoteSize;
-        [mutableProperties setObject:NSStringFromRect(bounds) forKey:SKNPDFAnnotationBoundsKey];
-        if (contents) {
-            NSRange r = [contents rangeOfString:@"  "];
-            NSRange r1 = [contents rangeOfString:@"\n"];
-            if (r1.location < r.location)
-                r = r1;
-            if (NSMaxRange(r) < [contents length]) {
-                NSFont *font = [[NSUserDefaults standardUserDefaults] fontForNameKey:SKAnchoredNoteFontNameKey sizeKey:SKAnchoredNoteFontSizeKey];
-                NSAttributedString *attrString = [[[NSAttributedString alloc] initWithString:[contents substringFromIndex:NSMaxRange(r)]
-                                                    attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]] autorelease];
-                [mutableProperties setObject:attrString forKey:SKNPDFAnnotationTextKey];
-                [mutableProperties setObject:[contents substringToIndex:r.location] forKey:SKNPDFAnnotationContentsKey];
-            }
-        }
-        return mutableProperties;
-    }
-    return properties;
-}
-
 - (void)setDefaultSkimNoteProperties {
     [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKAnchoredNoteColorKey]];
     [self setIconType:[[NSUserDefaults standardUserDefaults] integerForKey:SKAnchoredNoteIconTypeKey]];
