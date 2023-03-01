@@ -171,39 +171,34 @@ static void (*original_dealloc)(id, SEL) = NULL;
 - (id)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page markupType:(NSInteger)type {
     if (page == nil)
         page = [selection safeFirstPage];
-    NSRect bounds = [selection hasCharacters] ? [selection boundsForPage:page] : NSZeroRect;
-    if ([selection hasCharacters] == NO || NSIsEmptyRect(bounds)) {
+    NSRect bounds = NSZeroRect;
+    NSPointerArray *lines = nil;
+    if ([selection hasCharacters]) {
+        for (PDFSelection *sel in [selection selectionsByLine]) {
+            NSRect lineRect = [sel boundsForPage:page];
+            if (NSIsEmptyRect(lineRect) == NO && [[sel string] rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet]].length) {
+                if (lines == nil)
+                    lines = [[NSPointerArray alloc] initForRectPointers];
+                [lines addPointer:&lineRect];
+                bounds = NSUnionRect(lineRect, bounds);
+            }
+        }
+    }
+    if (lines == nil) {
         [[self initWithBounds:NSZeroRect] release];
         self = nil;
     } else {
         self = [self initSkimNoteWithBounds:bounds markupType:type];
         if (self) {
             NSInteger lineAngle = [page lineDirectionAngle];
-            NSRect newBounds = NSZeroRect;
-            NSPointerArray *lines = nil;
-            for (PDFSelection *sel in [selection selectionsByLine]) {
-                NSRect lineRect = [sel boundsForPage:page];
-                if (NSIsEmptyRect(lineRect) == NO && [[sel string] rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet]].length) {
-                    if (lines == nil)
-                        lines = [[NSPointerArray alloc] initForRectPointers];
-                    [lines addPointer:&lineRect];
-                    newBounds = NSUnionRect(lineRect, newBounds);
-                }
-            } 
-            if (lines == nil) {
-                [self release];
-                self = nil;
-            } else {
-                NSMutableArray *quadPoints = [[NSMutableArray alloc] init];
-                NSUInteger i, iMax = [lines count];
-                for (i = 0; i < iMax; i++)
-                    addQuadPointsWithBounds(quadPoints, [lines rectAtIndex:i], newBounds.origin, lineAngle);
-                [self setBounds:newBounds];
-                [self setQuadrilateralPoints:quadPoints];
-                [[self extraIvars] setLineRects:lines];
-                [quadPoints release];
-                [lines release];
-            }
+            NSMutableArray *quadPoints = [[NSMutableArray alloc] init];
+            NSUInteger i, iMax = [lines count];
+            for (i = 0; i < iMax; i++)
+                addQuadPointsWithBounds(quadPoints, [lines rectAtIndex:i], bounds.origin, lineAngle);
+            [self setQuadrilateralPoints:quadPoints];
+            [[self extraIvars] setLineRects:lines];
+            [quadPoints release];
+            [lines release];
         }
     }
     return self;
