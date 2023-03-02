@@ -44,7 +44,6 @@
 #import "PDFSelection_SKExtensions.h"
 #import "NSUserDefaults_SKExtensions.h"
 
-NSString *SKPDFAnnotationScriptingInteriorColorKey = @"scriptingInteriorColor";
 
 @implementation PDFAnnotationCircle (SKExtensions)
 

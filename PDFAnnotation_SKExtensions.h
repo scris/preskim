@@ -47,6 +47,7 @@ extern NSString *SKPDFAnnotationScriptingColorKey;
 extern NSString *SKPDFAnnotationScriptingModificationDateKey;
 extern NSString *SKPDFAnnotationScriptingUserNameKey;
 extern NSString *SKPDFAnnotationScriptingTextContentsKey;
+extern NSString *SKPDFAnnotationScriptingInteriorColorKey;
 
 extern NSString *SKPDFAnnotationBoundsOrderKey;
 
