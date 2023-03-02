@@ -72,6 +72,7 @@ NSString *SKPDFAnnotationScriptingColorKey = @"scriptingColor";
 NSString *SKPDFAnnotationScriptingModificationDateKey = @"scriptingModificationDate";
 NSString *SKPDFAnnotationScriptingUserNameKey = @"scriptingUserName";
 NSString *SKPDFAnnotationScriptingTextContentsKey = @"textContents";
+NSString *SKPDFAnnotationScriptingInteriorColorKey = @"interiorColor";
 
 NSString *SKPDFAnnotationBoundsOrderKey = @"boundsOrder";
 
