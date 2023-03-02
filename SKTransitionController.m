@@ -427,7 +427,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     SKTransitionView *tView = (SKTransitionView *)[window contentView];
     if (window == nil) {
         tView = [[[SKTransitionView alloc] init] autorelease];
-        window = [[NSWindow alloc] initWithContentRect:NSZeroRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+        window = [[NSWindow alloc] initWithContentRect:NSZeroRect styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
         [window setReleasedWhenClosed:NO];
         [window setIgnoresMouseEvents:YES];
         [window setBackgroundColor:[NSColor blackColor]];
@@ -606,7 +606,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 - (void)drawRect:(NSRect)rect {
     [[NSColor blackColor] setFill];
     NSRectFill(rect);
-    [image drawInRect:[self bounds] fromRect:extent operation:NSCompositeSourceOver fraction:1.0];
+    [image drawInRect:[self bounds] fromRect:extent operation:NSCompositingOperationSourceOver fraction:1.0];
 }
 
 @end
@@ -825,7 +825,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     if ([metalView alphaValue] <= 0.0) {
         [[NSColor blackColor] setFill];
         NSRectFill(rect);
-        [image drawInRect:[self bounds] fromRect:extent operation:NSCompositeSourceOver fraction:1.0];
+        [image drawInRect:[self bounds] fromRect:extent operation:NSCompositingOperationSourceOver fraction:1.0];
     }
 }
 

@@ -53,7 +53,7 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
 }
 
 - (void)sendEvent:(NSEvent *)anEvent {
-    if ([anEvent type] == NSApplicationDefined && [anEvent subtype] == SKRemoteButtonEvent) {
+    if ([anEvent type] == NSEventTypeApplicationDefined && [anEvent subtype] == SKRemoteButtonEvent) {
         id target = [self targetForAction:@selector(remoteButtonPressed:)];
         if (target == nil) {
             target = [[NSDocumentController sharedDocumentController] currentDocument];
@@ -64,8 +64,8 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
             [target remoteButtonPressed:anEvent];
             return;
         }
-    } else if ([anEvent type] == NSTabletProximity) {
-        [NSEvent setCurrentPointingDeviceType:[anEvent isEnteringProximity] ? [anEvent pointingDeviceType] : NSUnknownPointingDevice];
+    } else if ([anEvent type] == NSEventTypeTabletProximity) {
+        [NSEvent setCurrentPointingDeviceType:[anEvent isEnteringProximity] ? [anEvent pointingDeviceType] : NSPointingDeviceTypeUnknown];
     }
     [super sendEvent:anEvent];
 }
@@ -89,7 +89,7 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
 }
 
 - (BOOL)willDragMouse {
-    return NSLeftMouseDragged == [[self nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask) untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:NO] type];
+    return NSEventTypeLeftMouseDragged == [[self nextEventMatchingMask:(NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged) untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:NO] type];
 }
 
 - (id <SKApplicationDelegate>)delegate { return (id <SKApplicationDelegate>)[super delegate]; }

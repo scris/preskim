@@ -126,7 +126,7 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 - (void)doPdfsyncWithEvent:(NSEvent *)theEvent {
     // eat up mouseDragged/mouseUp events, so we won't get their event handlers
     while (YES) {
-        if ([[[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask] type] == NSLeftMouseUp)
+        if ([[[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged] type] == NSEventTypeLeftMouseUp)
             break;
     }
     
@@ -152,8 +152,8 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     
 	while (YES) {
         
-		theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
-        if ([theEvent type] == NSLeftMouseUp)
+		theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
+        if ([theEvent type] == NSEventTypeLeftMouseUp)
             break;
         
         // convert takes flipping and scaling into account
@@ -185,7 +185,7 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
         return NO;
     
     NSImage *dragImage = [NSImage bitmapImageWithSize:NSMakeSize(32.0, 32.0) scale:[self backingScale] drawingHandler:^(NSRect rect){
-        [[[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kClippingTextType)] drawInRect:rect fromRect:rect operation:NSCompositeCopy fraction:1.0 respectFlipped:YES hints:nil];
+        [[[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kClippingTextType)] drawInRect:rect fromRect:rect operation:NSCompositingOperationCopy fraction:1.0 respectFlipped:YES hints:nil];
     }];
     
     NSRect dragFrame = SKRectFromCenterAndSize([theEvent locationInView:self], [dragImage size]);
@@ -316,7 +316,7 @@ static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *d
 - (BOOL)accessibilityPerformShowMenu {
     NSRect rect = [self visibleContentRect];
     NSPoint point = NSMakePoint(NSMidX(rect), floor(NSMinY(rect) + 0.75 * NSHeight(rect)));
-    NSEvent *event = [NSEvent mouseEventWithType:NSRightMouseDown
+    NSEvent *event = [NSEvent mouseEventWithType:NSEventTypeRightMouseDown
                                         location:[self convertPoint:point toView:nil]
                                    modifierFlags:0
                                        timestamp:0

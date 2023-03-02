@@ -73,9 +73,9 @@ NSString *SKPDFAnnotationScriptingAlignmentKey = @"scriptingAlignment";
 
 static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
     switch (alignment) {
-        case NSLeftTextAlignment: return @"left";
-        case NSRightTextAlignment: return @"right";
-        case NSCenterTextAlignment: return @"center";
+        case NSTextAlignmentLeft: return @"left";
+        case NSTextAlignmentRight: return @"right";
+        case NSTextAlignmentCenter: return @"center";
         default: return @"left";
     }
 }

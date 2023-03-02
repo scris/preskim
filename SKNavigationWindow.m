@@ -244,7 +244,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 }
 
 - (id)init {
-    self = [super initWithContentRect:NSZeroRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:YES];
+    self = [super initWithContentRect:NSZeroRect styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:YES];
     if (self) {
 		[self setBackgroundColor:[NSColor clearColor]];
 		[self setOpaque:NO];

@@ -126,18 +126,18 @@
             [[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
         else
             [[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
-    } else if ((eventChar == SKSpaceCharacter) && modifierFlags == NSShiftKeyMask) {
+    } else if ((eventChar == SKSpaceCharacter) && modifierFlags == NSEventModifierFlagShift) {
         if (supportsQuickLook == NO)
             [[self enclosingScrollView] pageUp:nil];
-    } else if (eventChar == NSHomeFunctionKey && (modifierFlags & ~NSFunctionKeyMask) == 0) {
+    } else if (eventChar == NSHomeFunctionKey && (modifierFlags & ~NSEventModifierFlagFunction) == 0) {
         [self scrollToBeginningOfDocument:nil];
-    } else if (eventChar == NSEndFunctionKey && (modifierFlags & ~NSFunctionKeyMask) == 0) {
+    } else if (eventChar == NSEndFunctionKey && (modifierFlags & ~NSEventModifierFlagFunction) == 0) {
         [self scrollToEndOfDocument:nil];
 	} else if ((eventChar == NSDeleteCharacter || eventChar == NSDeleteFunctionKey) && modifierFlags == 0 && [self canDelete]) {
         [self delete:self];
-    } else if (eventChar == NSLeftArrowFunctionKey && (modifierFlags & ~(NSFunctionKeyMask | NSNumericPadKeyMask)) == (NSCommandKeyMask | NSAlternateKeyMask)) {
+    } else if (eventChar == NSLeftArrowFunctionKey && (modifierFlags & ~(NSEventModifierFlagFunction | NSEventModifierFlagNumericPad)) == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
         [self collapseItem:nil collapseChildren:YES];
-    } else if (eventChar == NSRightArrowFunctionKey && (modifierFlags & ~(NSFunctionKeyMask | NSNumericPadKeyMask)) == (NSCommandKeyMask | NSAlternateKeyMask)) {
+    } else if (eventChar == NSRightArrowFunctionKey && (modifierFlags & ~(NSEventModifierFlagFunction | NSEventModifierFlagNumericPad)) == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
         [self expandItem:nil expandChildren:YES];
     } else if ([typeSelectHelper handleEvent:theEvent] == NO) {
         [super keyDown:theEvent];

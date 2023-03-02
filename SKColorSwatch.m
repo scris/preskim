@@ -366,9 +366,9 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         
         BOOL keepOn = YES;
         while (keepOn) {
-            theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
+            theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
             switch ([theEvent type]) {
-                case NSLeftMouseDragged:
+                case NSEventTypeLeftMouseDragged:
                 {
                     if ([self isEnabled])
                         [[itemViews objectAtIndex:i] setHighlighted:NO];
@@ -394,7 +394,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
                     keepOn = NO;
                     break;
                 }
-                case NSLeftMouseUp:
+                case NSEventTypeLeftMouseUp:
                     if ([self isEnabled]) {
                         if ([self selects]) {
                             if (selectedIndex != -1 && selectedIndex == i)
@@ -716,7 +716,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender {
     NSPoint mouseLoc = [self convertPoint:[sender draggingLocation] fromView:nil];
-    BOOL isCopy = ([NSEvent standardModifierFlags] & NSDeviceIndependentModifierFlagsMask) == NSAlternateKeyMask;
+    BOOL isCopy = ([NSEvent standardModifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask) == NSEventModifierFlagOption;
     BOOL isMove = [sender draggingSource] == self && isCopy == NO;
     NSInteger i = isCopy || isMove ? [self insertionIndexAtPoint:mouseLoc] : [self colorIndexAtPoint:mouseLoc];
     NSDragOperation dragOp = isCopy ? NSDragOperationCopy : NSDragOperationGeneric;
@@ -738,7 +738,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     NSPasteboard *pboard = [sender draggingPasteboard];
     NSColor *color = [NSColor colorFromPasteboard:pboard];
     NSPoint mouseLoc = [self convertPoint:[sender draggingLocation] fromView:nil];
-    BOOL isCopy = ([NSEvent standardModifierFlags] & NSDeviceIndependentModifierFlagsMask) == NSAlternateKeyMask;
+    BOOL isCopy = ([NSEvent standardModifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask) == NSEventModifierFlagOption;
     BOOL isMove = [sender draggingSource] == self && isCopy == NO;
     NSInteger i = isCopy || isMove ? [self insertionIndexAtPoint:mouseLoc] : [self colorIndexAtPoint:mouseLoc];
     if ([self isEnabled] && i != -1 &&

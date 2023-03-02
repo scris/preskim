@@ -74,7 +74,7 @@
         [leftField setDrawsBackground:NO];
         [leftField setEditable:NO];
         [leftField setSelectable:NO];
-        [leftField setControlSize:NSSmallControlSize];
+        [leftField setControlSize:NSControlSizeSmall];
         [leftField setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addSubview:leftField];
         
@@ -84,7 +84,7 @@
         [rightField setDrawsBackground:NO];
         [rightField setEditable:NO];
         [rightField setSelectable:NO];
-        [rightField setControlSize:NSSmallControlSize];
+        [rightField setControlSize:NSControlSizeSmall];
         [rightField setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addSubview:rightField];
         
@@ -317,7 +317,7 @@
 			return;
 		if (progressIndicator == nil) {
             progressIndicator = [[NSProgressIndicator alloc] init];
-            [progressIndicator setControlSize:NSSmallControlSize];
+            [progressIndicator setControlSize:NSControlSizeSmall];
             [progressIndicator setDisplayedWhenStopped:YES];
             [progressIndicator setUsesThreadedAnimation:YES];
             [progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
@@ -387,8 +387,8 @@
     if ([self action]) {
         NSRect bounds = [self bounds];
         BOOL inside = YES;
-        while ([theEvent type] != NSLeftMouseUp) {
-            theEvent = [[self window] nextEventMatchingMask: NSLeftMouseDraggedMask | NSLeftMouseUpMask | NSMouseEnteredMask | NSMouseExitedMask];
+        while ([theEvent type] != NSEventTypeLeftMouseUp) {
+            theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseDragged | NSEventMaskLeftMouseUp | NSEventMaskMouseEntered | NSEventMaskMouseExited];
             inside = NSMouseInRect([theEvent locationInView:self], bounds, [self isFlipped]);
             if (inside != [(SKStatusTextFieldCell *)[self cell] isUnderlined]) {
                 [(SKStatusTextFieldCell *)[self cell] setUnderlined:inside];

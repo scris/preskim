@@ -109,7 +109,7 @@
     if (mwcFlags.updatingColor == 0 && [self hasOverview] == NO && [annotation isSkimNote]) {
         BOOL isFill = [colorAccessoryView state] == NSOnState && [annotation hasInteriorColor];
         BOOL isText = [textColorAccessoryView state] == NSOnState && [annotation isText];
-        BOOL isShift = ([NSEvent standardModifierFlags] & NSShiftKeyMask) != 0;
+        BOOL isShift = ([NSEvent standardModifierFlags] & NSEventModifierFlagShift) != 0;
         mwcFlags.updatingColor = 1;
         [annotation setColor:[sender color] alternate:isFill || isText updateDefaults:isShift];
         mwcFlags.updatingColor = 0;
@@ -142,21 +142,21 @@
 - (IBAction)alignLeft:(id)sender {
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     if ([self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
-        [(PDFAnnotationFreeText *)annotation setAlignment:NSLeftTextAlignment];
+        [(PDFAnnotationFreeText *)annotation setAlignment:NSTextAlignmentLeft];
     }
 }
 
 - (IBAction)alignRight:(id)sender {
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     if ([self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
-        [(PDFAnnotationFreeText *)annotation setAlignment:NSRightTextAlignment];
+        [(PDFAnnotationFreeText *)annotation setAlignment:NSTextAlignmentRight];
     }
 }
 
 - (IBAction)alignCenter:(id)sender {
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     if ([self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
-        [(PDFAnnotationFreeText *)annotation setAlignment:NSCenterTextAlignment];
+        [(PDFAnnotationFreeText *)annotation setAlignment:NSTextAlignmentCenter];
     }
 }
 

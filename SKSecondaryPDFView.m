@@ -169,7 +169,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         // create it        
         scalePopUpButton = [[NSPopUpButton allocWithZone:[self zone]] initWithFrame:NSMakeRect(0.0, 0.0, CONTROL_HEIGHT, CONTROL_HEIGHT) pullsDown:NO];
         
-        [[scalePopUpButton cell] setControlSize:NSSmallControlSize];
+        [[scalePopUpButton cell] setControlSize:NSControlSizeSmall];
 		[scalePopUpButton setBordered:NO];
 		[scalePopUpButton setEnabled:YES];
 		[scalePopUpButton setRefusesFirstResponder:YES];
@@ -211,7 +211,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         // create it        
         pagePopUpButton = [[NSPopUpButton allocWithZone:[self zone]] initWithFrame:NSMakeRect(0.0, 0.0, CONTROL_HEIGHT, CONTROL_HEIGHT) pullsDown:NO];
         
-        [[pagePopUpButton cell] setControlSize:NSSmallControlSize];
+        [[pagePopUpButton cell] setControlSize:NSControlSizeSmall];
 		[pagePopUpButton setBordered:NO];
 		[pagePopUpButton setEnabled:YES];
 		[pagePopUpButton setRefusesFirstResponder:YES];
@@ -597,7 +597,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     if (i != -1) {
         [[menu itemAtIndex:i] setAction:@selector(doActualSize:)];
         item = [menu insertItemWithTitle:NSLocalizedString(@"Physical Size", @"Menu item title") action:@selector(doPhysicalSize:) target:self atIndex:i + 1];
-        [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
         [item setAlternate:YES];
     }
     
@@ -638,7 +638,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 }
 
 - (void)keyDown:(NSEvent *)theEvent {
-    if ([theEvent firstCharacter] == '?' && ([theEvent standardModifierFlags] & ~NSShiftKeyMask) == 0) {
+    if ([theEvent firstCharacter] == '?' && ([theEvent standardModifierFlags] & ~NSEventModifierFlagShift) == 0) {
         [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(showControlView) object:nil];
         if ([controlView superview]) {
             [controlView removeFromSuperview];
@@ -685,15 +685,15 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 	
     NSUInteger modifiers = [theEvent standardModifierFlags];
 	
-	if (modifiers == NSCommandKeyMask) {
+	if (modifiers == NSEventModifierFlagCommand) {
         
         [[NSCursor arrowCursor] push];
         
         // eat up mouseDragged/mouseUp events, so we won't get their event handlers
         NSEvent *lastEvent = theEvent;
         while (YES) {
-            lastEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
-            if ([lastEvent type] == NSLeftMouseUp)
+            lastEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
+            if ([lastEvent type] == NSEventTypeLeftMouseUp)
                 break;
         }
         
@@ -704,7 +704,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         PDFPage *page = [self pageAndPoint:&location forEvent:theEvent nearest:YES];
         [synchronizedPDFView goToDestination:[[[PDFDestination alloc] initWithPage:page atPoint:location] autorelease]];
         
-    } else if (modifiers == (NSCommandKeyMask | NSShiftKeyMask)) {
+    } else if (modifiers == (NSEventModifierFlagCommand | NSEventModifierFlagShift)) {
         
         [self doPdfsyncWithEvent:theEvent];
         
@@ -731,7 +731,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     
     if ([controlView superview] && NSMouseInRect([theEvent locationInView:controlView], [controlView bounds], [controlView isFlipped])) {
         area = kPDFNoArea;
-    } else if ((modifiers & ~NSShiftKeyMask) == NSCommandKeyMask) {
+    } else if ((modifiers & ~NSEventModifierFlagShift) == NSEventModifierFlagCommand) {
         area = (area & kPDFPageArea) | SKSpecialToolArea;
     } else if ([self selectsText] == NO) {
         area = (area & kPDFPageArea) | SKDragArea;

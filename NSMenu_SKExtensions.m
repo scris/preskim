@@ -144,7 +144,7 @@
     } else {
         NSImage *newImage = [[NSImage alloc] initWithSize:dstSize];
         [newImage lockFocus];
-        [image drawInRect:(NSRect){NSZeroPoint, dstSize} fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
+        [image drawInRect:(NSRect){NSZeroPoint, dstSize} fromRect:NSZeroRect operation:NSCompositingOperationCopy fraction:1.0];
         [newImage unlockFocus];
         [self setImage:newImage];
         [newImage release];

@@ -38,18 +38,18 @@
 
 #import "NSEvent_SKExtensions.h"
 
-#define SKStandardModifierFlagsMask (NSCommandKeyMask | NSAlternateKeyMask | NSShiftKeyMask | NSControlKeyMask)
+#define SKStandardModifierFlagsMask (NSEventModifierFlagCommand | NSEventModifierFlagOption | NSEventModifierFlagShift | NSEventModifierFlagControl)
 
 @implementation NSEvent (SKExtensions)
 
-static NSPointingDeviceType currentPointingDeviceType = NSUnknownPointingDevice;
+static NSPointingDeviceType currentPointingDeviceType = NSPointingDeviceTypeUnknown;
 
 + (NSUInteger)standardModifierFlags {
     return [self modifierFlags] & SKStandardModifierFlagsMask;
 }
 
 - (NSUInteger)deviceIndependentModifierFlags {
-    return [self modifierFlags] & NSDeviceIndependentModifierFlagsMask;
+    return [self modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
 }
 
 - (NSUInteger)standardModifierFlags {

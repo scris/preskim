@@ -440,8 +440,8 @@ static Class SKBookmarkClass = Nil;
             icon = [NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect) {
                 [[NSColor darkGrayColor] setFill];
                 [NSBezierPath fillRect:NSMakeRect(8.0, 0.0, 8.0, 8.0)];
-                [badge drawInRect:NSMakeRect(8.0, 0.0, 8.0, 8.0) fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
-                [icon drawInRect:rect fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1.0];
+                [badge drawInRect:NSMakeRect(8.0, 0.0, 8.0, 8.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
+                [icon drawInRect:rect fromRect:NSZeroRect operation:NSCompositingOperationDestinationOver fraction:1.0];
                 return YES;
             }];
             if (type)
@@ -462,8 +462,8 @@ static Class SKBookmarkClass = Nil;
                 NSImage *genericDocImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericDocumentIcon)];
                 NSImage *questionMark = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kQuestionMarkIcon)];
                 icon = [NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect) {
-                    [genericDocImage drawInRect:rect fromRect:NSZeroRect operation:NSCompositeCopy fraction:0.7];
-                    [questionMark drawInRect:NSMakeRect(3.0, 2.0, 10.0, 10.0) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.7];
+                    [genericDocImage drawInRect:rect fromRect:NSZeroRect operation:NSCompositingOperationCopy fraction:0.7];
+                    [questionMark drawInRect:NSMakeRect(3.0, 2.0, 10.0, 10.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.7];
                     return YES;
                 }];
             }

@@ -259,7 +259,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     
     if ([self isActive]) {
         [NSGraphicsContext saveGraphicsState];
-        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeMultiply];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationMultiply];
         [[NSColor selectedControlColor] setFill];
         [NSBezierPath fillRect:NSInsetRect(bounds, 1.0, 1.0)];
         [NSGraphicsContext restoreGraphicsState];
@@ -307,7 +307,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
             [[[NSColor textColor] colorWithAlphaComponent:0.6] setStroke];
             [NSBezierPath strokeRect:NSInsetRect(rect, 0.5, 0.5)];
             rect = NSInsetRect(rect, 1.0, 1.0);
-            [imageRep drawInRect:rect fromRect:rect operation:NSCompositeSourceOver fraction:1.0 respectFlipped:NO hints:nil];
+            [imageRep drawInRect:rect fromRect:rect operation:NSCompositingOperationSourceOver fraction:1.0 respectFlipped:NO hints:nil];
         }];
     });
     
@@ -331,11 +331,11 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     if ([self isEnabled]) {
         [self setHighlighted:YES];
         [self setNeedsDisplay:YES];
-        NSUInteger modifiers = [theEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask;
-        theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
+        NSUInteger modifiers = [theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
+        theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
         [self setHighlighted:NO];
         [self setNeedsDisplay:YES];
-        if ([theEvent type] == NSLeftMouseDragged) {
+        if ([theEvent type] == NSEventTypeLeftMouseDragged) {
             NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                 [NSNumber numberWithDouble:lineWidth], SKLineWellLineWidthKey, [NSNumber numberWithInteger:style], SKLineWellStyleKey, dashPattern, SKLineWellDashPatternKey, nil];
             if ([self displayStyle] == SKLineWellDisplayStyleLine) {
@@ -352,7 +352,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
         } else if ([self isActive]) {
             [self deactivate];
         } else {
-            [self activate:(modifiers & NSShiftKeyMask) == 0];
+            [self activate:(modifiers & NSEventModifierFlagShift) == 0];
         }
     }
 }

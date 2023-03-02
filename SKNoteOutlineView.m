@@ -112,9 +112,9 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
                 
                 [[NSCursor resizeUpDownCursor] push];
                 
-                while ([theEvent type] != NSLeftMouseUp) {
-                    theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
-                    if ([theEvent type] == NSLeftMouseDragged) {
+                while ([theEvent type] != NSEventTypeLeftMouseUp) {
+                    theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
+                    if ([theEvent type] == NSEventTypeLeftMouseDragged) {
                         CGFloat currentHeight = fmax([self rowHeight], round(startHeight + [theEvent locationInView:self].y - mouseLoc.y));
                         [[self delegate] outlineView:self setHeight:currentHeight ofRowByItem:item];
                         [self noteHeightOfRowChanged:row animating:NO];

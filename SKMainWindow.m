@@ -47,10 +47,10 @@
 @synthesize disableConstrainedFrame;
 
 - (void)sendEvent:(NSEvent *)theEvent {
-    if ([theEvent type] == NSLeftMouseDown || [theEvent type] == NSRightMouseDown || [theEvent type] == NSKeyDown) {
+    if ([theEvent type] == NSEventTypeLeftMouseDown || [theEvent type] == NSEventTypeRightMouseDown || [theEvent type] == NSEventTypeKeyDown) {
         if ([[self delegate] respondsToSelector:@selector(window:willSendEvent:)])
             [[self delegate] window:self willSendEvent:theEvent];
-    } else if ([theEvent type] == NSScrollWheel && ([theEvent modifierFlags] & NSAlternateKeyMask)) {
+    } else if ([theEvent type] == NSEventTypeScrollWheel && ([theEvent modifierFlags] & NSEventModifierFlagOption)) {
         NSResponder *target = (NSResponder *)[[self contentView] hitTest:[theEvent locationInWindow]] ?: (NSResponder *)self;
         while (target && [target respondsToSelector:@selector(magnifyWheel:)] == NO)
             target = [target nextResponder];
@@ -63,7 +63,7 @@
 }
 
 - (void)keyDown:(NSEvent *)event {
-    if (RUNNING_AFTER(10_12) && [event standardModifierFlags] == (NSCommandKeyMask | NSAlternateKeyMask)) {
+    if (RUNNING_AFTER(10_12) && [event standardModifierFlags] == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
         unichar eventChar = [event firstCharacter];
         if (eventChar >= '1' && eventChar <= '9') {
 #pragma clang diagnostic push

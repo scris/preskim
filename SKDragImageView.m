@@ -114,11 +114,11 @@
     BOOL isInside = YES;
     NSPoint mouseLoc;
     while(keepOn){
-        theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
+        theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
         mouseLoc = [theEvent locationInView:self];
         isInside = [self mouse:mouseLoc inRect:[self bounds]];
         switch ([theEvent type]) {
-            case NSLeftMouseDragged:
+            case NSEventTypeLeftMouseDragged:
                 if(isInside && [delegate respondsToSelector:@selector(draggedObjectForDragImageView:)]) {
                     id<NSPasteboardWriting> object = [delegate draggedObjectForDragImageView:self];
                     if (object) {
@@ -137,7 +137,7 @@
                     keepOn = NO;
                     break;
                 }
-            case NSLeftMouseUp:
+            case NSEventTypeLeftMouseUp:
                 keepOn = NO;
                 break;
             default:

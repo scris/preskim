@@ -45,7 +45,7 @@
 
 - (id)initWithScreen:(NSScreen *)screen level:(NSInteger)level isMain:(BOOL)flag {
     NSRect screenFrame = [(screen ?: [NSScreen mainScreen]) frame];
-    self = [self initWithContentRect:screenFrame styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+    self = [self initWithContentRect:screenFrame styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
     if (self) {
         isMain = flag;
         [self setBackgroundColor:[NSColor blackColor]];
@@ -102,7 +102,7 @@
 }
 
 - (void)sendEvent:(NSEvent *)theEvent {
-    if ([theEvent type] == NSRightMouseDown || ([theEvent type] == NSLeftMouseDown && ([theEvent modifierFlags] & NSControlKeyMask))) {
+    if ([theEvent type] == NSEventTypeRightMouseDown || ([theEvent type] == NSEventTypeLeftMouseDown && ([theEvent modifierFlags] & NSEventModifierFlagControl))) {
         if ([[self windowController] respondsToSelector:@selector(handleRightMouseDown:)] && [[self windowController] handleRightMouseDown:theEvent])
             return;
     }

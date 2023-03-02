@@ -497,7 +497,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [openPanel setCanChooseDirectories:YES];
     [openPanel setAllowedFileTypes:types];
     [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result){
-            if (result == NSFileHandlingPanelOKButton) {
+            if (result == NSModalResponseOK) {
                 NSArray *newBookmarks = [SKBookmark bookmarksForURLs:[openPanel URLs]];
                 if ([newBookmarks count] > 0) {
                     SKBookmark *item = nil;
@@ -601,7 +601,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     }
     [item setRepresentedObject:bookmark];
     if (isAlternate) {
-        [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
         [item setAlternate:YES];
         [item setImageAndSize:[bookmark alternateIcon]];
     } else {
@@ -1317,7 +1317,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
 }
 
 - (BOOL)previewPanel:(QLPreviewPanel *)panel handleEvent:(NSEvent *)event {
-    if ([event type] == NSKeyDown) {
+    if ([event type] == NSEventTypeKeyDown) {
         [outlineView keyDown:event];
         return YES;
     }

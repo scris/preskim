@@ -144,7 +144,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
 }
 
 - (BOOL)handleEvent:(NSEvent *)keyEvent {
-    if ([keyEvent type] != NSKeyDown) {
+    if ([keyEvent type] != NSEventTypeKeyDown) {
         return NO;
     } else if ([self isSearchEvent:keyEvent]) {
         [self searchWithEvent:keyEvent];
@@ -190,7 +190,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
         [editor setDelegate:self];
         if ([editor hasMarkedText]) {
             // we pass a dummy key event to the field editor to clear any hanging dead keys (marked text)
-            NSEvent *dummyKeyEvent = [NSEvent keyEventWithType:NSKeyDown
+            NSEvent *dummyKeyEvent = [NSEvent keyEventWithType:NSEventTypeKeyDown
                                                       location:NSZeroPoint
                                                  modifierFlags:0
                                                      timestamp:0
@@ -238,7 +238,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
 }
 
 - (BOOL)isSearchEvent:(NSEvent *)keyEvent {
-    if ([keyEvent deviceIndependentModifierFlags] & ~NSShiftKeyMask & ~NSAlternateKeyMask & ~NSAlphaShiftKeyMask & ~NSNumericPadKeyMask)
+    if ([keyEvent deviceIndependentModifierFlags] & ~NSEventModifierFlagShift & ~NSEventModifierFlagOption & ~NSEventModifierFlagCapsLock & ~NSEventModifierFlagNumericPad)
         return NO;
     
     NSCharacterSet *invalidCharacters = isProcessing ? [NSCharacterSet controlCharacterSet] : nonAlphanumericCharacterSet;

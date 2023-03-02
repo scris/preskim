@@ -151,6 +151,58 @@ typedef NS_ENUM(NSInteger, NSWindowTabbingMode) {
     NSWindowTabbingModeDisallowed
 };
 
+#define NSEventModifierFlagShift        NSShiftKeyMask
+#define NSEventModifierFlagControl      NSControlKeyMask
+#define NSEventModifierFlagOption       NSAlternateKeyMask
+#define NSEventModifierFlagCommand      NSCommandKeyMask
+#define NSEventModifierFlagCapsLock     NSAlphaShiftKeyMask
+#define NSEventModifierFlagNumericPad   NSNumericPadKeyMask
+#define NSEventModifierFlagFunction     NSFunctionKeyMask
+#define NSEventModifierFlagDeviceIndependentFlagsMask NSDeviceIndependentModifierFlagsMask
+
+#define NSEventTypeKeyDown              NSKeyDown
+#define NSEventTypeLeftMouseDown        NSLeftMouseDown
+#define NSEventTypeLeftMouseUp          NSLeftMouseUp
+#define NSEventTypeLeftMouseDragged     NSLeftMouseDragged
+#define NSEventTypeMouseMoved           NSMouseMoved
+#define NSEventTypeRightMouseDown       NSRightMouseDown
+#define NSEventTypeScrollWheel          NSScrollWheel
+#define NSEventTypeTabletProximity      NSTabletProximity
+#define NSEventTypeApplicationDefined   NSApplicationDefined
+
+#define NSEventMaskLeftMouseUp          NSLeftMouseUpMask
+#define NSEventMaskLeftMouseDragged     NSLeftMouseDraggedMask
+#define NSEventMaskMouseEntered         NSMouseEnteredMask
+#define NSEventMaskMouseExited          NSMouseExitedMask
+#define NSEventMaskFlagsChanged         NSFlagsChangedMask
+#define NSEventMaskPeriodic             NSPeriodicMask
+
+#define NSEventSubtypeTabletProximity   NSTabletProximityEventSubtype
+#define NSEventSubtypeTabletPoint       NSTabletPointEventSubtype
+
+#define NSPointingDeviceTypePen         NSPenPointingDevice
+#define NSPointingDeviceTypeEraser      NSEraserPointingDevice
+#define NSPointingDeviceTypeUnknown     NSUnknownPointingDevice
+
+#define NSTextAlignmentLeft             NSLeftTextAlignment
+#define NSTextAlignmentRight            NSTextAlignmentRight
+#define NSTextAlignmentCenter           NSCenterTextAlignment
+
+#define NSControlSizeSmall              NSSmallControlSize
+
+#define NSCompositingOperationClear             NSCompositeClear
+#define NSCompositingOperationCopy              NSCompositeCopy
+#define NSCompositingOperationSourceOver        NSCompositeSourceOver
+#define NSCompositingOperationDestinationOver   NSCompositeDestinationOver
+#define NSCompositingOperationDestinationAtop   NSCompositeDestinationAtop
+#define NSCompositingOperationMultiply          NSCompositeMultiply
+
+#define NSWindowStyleMaskBorderless             NSBorderlessWindowMask
+#define NSWindowStyleMaskResizable              NSResizableWindowMask
+#define NSWindowStyleMaskTitled                 NSTitledWindowMask
+#define NSWindowStyleMaskFullScreen             NSFullScreenWindowMask
+#define NSWindowStyleMaskFullSizeContentView    NSFullSizeContentViewWindowMask
+
 @interface NSWindow (SKSierraDeclarations)
 + (NSWindowUserTabbingPreference)userTabbingPreference;
 - (NSArray *)tabbedWindows;
@@ -187,6 +239,13 @@ typedef NS_ENUM(NSInteger, NSWindowTabbingMode) {
 @interface NSVisualEffectView (SKSierraDeclarations)
 @property (getter=isEmphasized) BOOL emphasized;
 @end
+
+#endif
+
+#if SDK_BEFORE(10_13)
+
+#define NSModalResponseOK       NSFileHandlingPanelOKButton
+#define NSModalResponseCancel   NSFileHandlingPanelCancelButton
 
 #endif
 

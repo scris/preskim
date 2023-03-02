@@ -508,7 +508,7 @@ static NSURL *temporaryDirectoryURL = nil;
 }
 
 - (BOOL)previewPanel:(QLPreviewPanel *)panel handleEvent:(NSEvent *)event {
-    if ([event type] == NSKeyDown) {
+    if ([event type] == NSEventTypeKeyDown) {
         [imageView keyDown:event];
         return YES;
     }

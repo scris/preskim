@@ -330,7 +330,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
 - (void)keyDown:(NSEvent *)theEvent {
     unichar eventChar = [theEvent firstCharacter];
     NSUInteger modifiers = [theEvent standardModifierFlags];
-    if ((eventChar == '=' || eventChar == NSUpArrowFunctionKey || eventChar == NSDownArrowFunctionKey || eventChar == NSLeftArrowFunctionKey || eventChar == NSRightArrowFunctionKey) && (modifiers & ~(NSAlternateKeyMask | NSShiftKeyMask)) == NSControlKeyMask)
+    if ((eventChar == '=' || eventChar == NSUpArrowFunctionKey || eventChar == NSDownArrowFunctionKey || eventChar == NSLeftArrowFunctionKey || eventChar == NSRightArrowFunctionKey) && (modifiers & ~(NSEventModifierFlagOption | NSEventModifierFlagShift)) == NSEventModifierFlagControl)
         [[self nextResponder] keyDown:theEvent];
     else
         [super keyDown:theEvent];

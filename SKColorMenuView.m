@@ -148,13 +148,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         [self setHoveredIndex:idx];
         NSRect rect = [self rectAtIndex:idx];
         while (YES) {
-            theEvent = [[self window] nextEventMatchingMask:NSLeftMouseUpMask | NSLeftMouseDraggedMask];
+            theEvent = [[self window] nextEventMatchingMask:NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
             BOOL inside = NSPointInRect([theEvent locationInView:self], rect);
             [self setHoveredIndex:inside ? idx : NSNotFound];
-            if ([theEvent type] == NSLeftMouseUp) {
+            if ([theEvent type] == NSEventTypeLeftMouseUp) {
                 if (inside) {
-                    BOOL isShift = ([theEvent modifierFlags] & NSShiftKeyMask) != 0;
-                    BOOL isAlt = ([theEvent modifierFlags] & NSAlternateKeyMask) != 0;
+                    BOOL isShift = ([theEvent modifierFlags] & NSEventModifierFlagShift) != 0;
+                    BOOL isAlt = ([theEvent modifierFlags] & NSEventModifierFlagOption) != 0;
                     [annotation setColor:[colors objectAtIndex:idx] alternate:isAlt updateDefaults:isShift];
                     [[[self enclosingMenuItem] menu] cancelTracking];
                 }

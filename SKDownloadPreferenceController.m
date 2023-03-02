@@ -81,7 +81,7 @@
         [openPanel setPrompt:NSLocalizedString(@"Select", @"Button title")];
         [openPanel setDirectoryURL:downloadsFolderURL];
         [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result){
-                if (result == NSFileHandlingPanelOKButton) {
+                if (result == NSModalResponseOK) {
                     [[NSUserDefaults standardUserDefaults] setObject:[[[openPanel URL] path] stringByAbbreviatingWithTildeInPath] forKey:SKDownloadsDirectoryKey];
                     [self updateDownloadsFolderPopUp];
                 }

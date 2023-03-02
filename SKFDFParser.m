@@ -135,18 +135,18 @@ SKFDFString SKFDFBorderStyleFromPDFBorderStyle(PDFBorderStyle borderStyle) {
 
 NSTextAlignment SKPDFFreeTextAnnotationAlignmentFromFDFFreeTextAnnotationAlignment(NSInteger anInt) {
     switch (anInt) {
-        case 0: return NSLeftTextAlignment;
-        case 1: return NSCenterTextAlignment;
-        case 2: return NSRightTextAlignment;
-        default: return NSLeftTextAlignment;
+        case 0: return NSTextAlignmentLeft;
+        case 1: return NSTextAlignmentCenter;
+        case 2: return NSTextAlignmentRight;
+        default: return NSTextAlignmentLeft;
     }
 }
 
 NSInteger SKFDFFreeTextAnnotationAlignmentFromPDFFreeTextAnnotationAlignment(NSTextAlignment alignment) {
     switch (alignment) {
-        case NSLeftTextAlignment: return 0;
-        case NSRightTextAlignment: return 2;
-        case NSCenterTextAlignment: return 1;
+        case NSTextAlignmentLeft: return 0;
+        case NSTextAlignmentRight: return 2;
+        case NSTextAlignmentCenter: return 1;
         default: return 0;
     }
 }
