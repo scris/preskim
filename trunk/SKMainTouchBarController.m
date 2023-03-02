@@ -309,8 +309,8 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
 
 - (void)colorPicker:(SKColorPicker *)colorPicker didSelectColor:(NSColor *)color {
     PDFAnnotation *annotation = [mainController.pdfView currentAnnotation];
-    BOOL isShift = ([NSEvent standardModifierFlags] & NSShiftKeyMask) != 0;
-    BOOL isAlt = ([NSEvent standardModifierFlags] & NSAlternateKeyMask) != 0;
+    BOOL isShift = ([NSEvent standardModifierFlags] & NSEventModifierFlagShift) != 0;
+    BOOL isAlt = ([NSEvent standardModifierFlags] & NSEventModifierFlagOption) != 0;
     if ([annotation isSkimNote]) {
         [annotation setColor:color alternate:isAlt updateDefaults:isShift];
     } else {
@@ -361,7 +361,7 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
         if (tag == 0) {
             [mainController.pdfView zoomOut:sender];
         } else if (tag == 1) {
-            ([NSEvent standardModifierFlags] & NSAlternateKeyMask) ? [mainController.pdfView setPhysicalScaleFactor:1.0] : [mainController.pdfView setScaleFactor:1.0];
+            ([NSEvent standardModifierFlags] & NSEventModifierFlagOption) ? [mainController.pdfView setPhysicalScaleFactor:1.0] : [mainController.pdfView setScaleFactor:1.0];
         } else if (tag == 2) {
             [mainController.pdfView zoomIn:sender];
         }

@@ -102,12 +102,12 @@
             [[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
         else
             [[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
-    } else if ((eventChar == SKSpaceCharacter) && modifierFlags == NSShiftKeyMask) {
+    } else if ((eventChar == SKSpaceCharacter) && modifierFlags == NSEventModifierFlagShift) {
         if (supportsQuickLook == NO)
             [[self enclosingScrollView] pageUp:nil];
-    } else if (eventChar == NSHomeFunctionKey && (modifierFlags & ~NSFunctionKeyMask) == 0) {
+    } else if (eventChar == NSHomeFunctionKey && (modifierFlags & ~NSEventModifierFlagFunction) == 0) {
         [self scrollToBeginningOfDocument:nil];
-    } else if (eventChar == NSEndFunctionKey && (modifierFlags & ~NSFunctionKeyMask) == 0) {
+    } else if (eventChar == NSEndFunctionKey && (modifierFlags & ~NSEventModifierFlagFunction) == 0) {
         [self scrollToEndOfDocument:nil];
 	} else if (eventChar == NSLeftArrowFunctionKey && modifierFlags == 0) {
         [self moveLeft:nil];
@@ -121,7 +121,7 @@
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([self imageToolTipLayout] != SKTableImageToolTipNone)
         [[SKImageToolTipWindow sharedToolTipWindow] remove];
-    if ([self allowsMultipleSelection] == NO && ([theEvent modifierFlags] & NSCommandKeyMask) && [[self delegate] respondsToSelector:@selector(tableView:commandSelectRow:)]) {
+    if ([self allowsMultipleSelection] == NO && ([theEvent modifierFlags] & NSEventModifierFlagCommand) && [[self delegate] respondsToSelector:@selector(tableView:commandSelectRow:)]) {
         NSInteger row = [self rowAtPoint:[theEvent locationInView:self]];
         if (row != -1 && [[self delegate] tableView:self commandSelectRow:row])
             return;

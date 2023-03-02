@@ -152,7 +152,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     
     [image lockFocus];
     
-    [pageImage drawInRect:targetRect fromRect:sourceRect operation:NSCompositeCopy fraction:1.0];
+    [pageImage drawInRect:targetRect fromRect:sourceRect operation:NSCompositingOperationCopy fraction:1.0];
     
     CGFloat radius = 0.5 * NSHeight(labelRect);
     NSBezierPath *path = [NSBezierPath bezierPath];

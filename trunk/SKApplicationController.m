@@ -390,7 +390,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
             remoteScrolling = !remoteScrolling;
             [self showRemoteSwitchIndication];
         } else {
-            NSEvent *theEvent = [NSEvent otherEventWithType:NSApplicationDefined
+            NSEvent *theEvent = [NSEvent otherEventWithType:NSEventTypeApplicationDefined
                                                    location:NSZeroPoint
                                               modifierFlags:0
                                                   timestamp:[[NSProcessInfo processInfo] systemUptime]

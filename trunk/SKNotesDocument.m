@@ -452,7 +452,7 @@
 }
 
 - (SKInteractionMode)interactionMode  {
-    return ([[self window] styleMask] & NSFullScreenWindowMask) == 0 ? SKNormalMode : SKFullScreenMode;
+    return ([[self window] styleMask] & NSWindowStyleMaskFullScreen) == 0 ? SKNormalMode : SKFullScreenMode;
 }
 
 - (SKInteractionMode)systemInteractionMode  {
@@ -703,7 +703,7 @@
 
 - (void)outlineView:(NSOutlineView *)ov didClickTableColumn:(NSTableColumn *)tableColumn {
     NSTableColumn *oldTableColumn = [ov highlightedTableColumn];
-    NSTableColumn *newTableColumn = ([NSEvent modifierFlags] & NSCommandKeyMask) ? nil : [ov highlightedTableColumn];
+    NSTableColumn *newTableColumn = ([NSEvent modifierFlags] & NSEventModifierFlagCommand) ? nil : [ov highlightedTableColumn];
     NSMutableArray *sortDescriptors = nil;
     BOOL ascending = YES;
     if ([oldTableColumn isEqual:newTableColumn]) {
@@ -869,11 +869,11 @@
             [item setRepresentedObject:items];
             item = [menu addItemWithTitle:[items count] == 1 ? NSLocalizedString(@"Auto Size Row", @"Menu item title") : NSLocalizedString(@"Auto Size Rows", @"Menu item title") action:@selector(resetHeightOfNoteRows:) target:self];
             [item setRepresentedObject:items];
-            [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+            [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
             [item setAlternate:YES];
             [menu addItemWithTitle:NSLocalizedString(@"Auto Size All", @"Menu item title") action:@selector(autoSizeNoteRows:) target:self];
             item = [menu addItemWithTitle:NSLocalizedString(@"Auto Size All", @"Menu item title") action:@selector(resetHeightOfNoteRows:) target:self];
-            [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+            [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
             [item setAlternate:YES];
             [menu addItemWithTitle:NSLocalizedString(@"Automatically Resize", @"Menu item title") action:@selector(toggleAutoResizeNoteRows:) target:self];
         }

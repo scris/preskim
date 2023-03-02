@@ -1154,7 +1154,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (IBAction)zoomActualPhysical:(id)sender {
-    ([NSEvent standardModifierFlags] & NSAlternateKeyMask) ? [mainController.pdfView setPhysicalScaleFactor:1.0] : [mainController.pdfView setScaleFactor:1.0];
+    ([NSEvent standardModifierFlags] & NSEventModifierFlagOption) ? [mainController.pdfView setPhysicalScaleFactor:1.0] : [mainController.pdfView setScaleFactor:1.0];
 }
 
 - (IBAction)zoomInActualOut:(id)sender {
@@ -1162,7 +1162,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     if (tag == -1)
         [mainController.pdfView zoomOut:sender];
     else if (tag == 0)
-        ([NSEvent standardModifierFlags] & NSAlternateKeyMask) ? [mainController.pdfView setPhysicalScaleFactor:1.0] : [mainController.pdfView setScaleFactor:1.0];
+        ([NSEvent standardModifierFlags] & NSEventModifierFlagOption) ? [mainController.pdfView setPhysicalScaleFactor:1.0] : [mainController.pdfView setScaleFactor:1.0];
     else if (tag == 1)
         [mainController.pdfView zoomIn:sender];
 }
@@ -1291,8 +1291,8 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 - (IBAction)selectColor:(id)sender {
     PDFAnnotation *annotation = [mainController.pdfView currentAnnotation];
     NSColor *newColor = [sender respondsToSelector:@selector(color)] ? [sender color] : [sender respondsToSelector:@selector(representedObject)] ? [sender representedObject] : nil;
-    BOOL isShift = ([NSEvent standardModifierFlags] & NSShiftKeyMask) != 0;
-    BOOL isAlt = ([NSEvent standardModifierFlags] & NSAlternateKeyMask) != 0;
+    BOOL isShift = ([NSEvent standardModifierFlags] & NSEventModifierFlagShift) != 0;
+    BOOL isAlt = ([NSEvent standardModifierFlags] & NSEventModifierFlagOption) != 0;
     if (isAlt == NO && [sender respondsToSelector:@selector(isAlternate)])
         isAlt = [sender isAlternate];
     if ([annotation isSkimNote]) {

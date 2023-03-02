@@ -677,7 +677,7 @@ static SKDownloadController *sharedDownloadController = nil;
 }
 
 - (BOOL)previewPanel:(QLPreviewPanel *)panel handleEvent:(NSEvent *)event {
-    if ([event type] == NSKeyDown) {
+    if ([event type] == NSEventTypeKeyDown) {
         [tableView keyDown:event];
         return YES;
     }

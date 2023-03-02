@@ -150,7 +150,7 @@
     NSButton *button = [[NSButton alloc] init];
     [button setButtonType:NSSwitchButton];
     [button setTitle:title];
-    [[button cell] setControlSize:NSSmallControlSize];
+    [[button cell] setControlSize:NSControlSizeSmall];
     [button setTarget:self];
     [button setAction:@selector(changeColorProperty:)];
     [button sizeToFit];
@@ -285,7 +285,7 @@
 }
 
 - (void)windowDidMove:(NSNotification *)notification {
-    if ([[notification object] isEqual:[self window]] && [[self window] styleMask] == NSBorderlessWindowMask) {
+    if ([[notification object] isEqual:[self window]] && [[self window] styleMask] == NSWindowStyleMaskBorderless) {
         NSScreen *screen = [[self window] screen];
         NSRect screenFrame = [screen frame];
         if (NSEqualRects(screenFrame, [[self window] frame]) == NO) {
@@ -319,7 +319,7 @@
     [[SKImageToolTipWindow sharedToolTipWindow] orderOut:nil];
     
     if ([pdfView temporaryToolMode] != SKNoToolMode && [pdfView window] == sender) {
-        if ([event type] == NSLeftMouseDown) {
+        if ([event type] == NSEventTypeLeftMouseDown) {
             NSView *view = [pdfView hitTest:[event locationInView:pdfView]];
             if ([view isDescendantOf:[pdfView documentView]] == NO || [view isKindOfClass:[NSTextView class]])
                 [pdfView setTemporaryToolMode:SKNoToolMode];
@@ -714,8 +714,8 @@
     if ([ov isEqual:rightSideController.noteOutlineView]) {
         NSPasteboard *pboard = [info draggingPasteboard];
         if ([pboard canReadObjectForClasses:@[[NSColor class]] options:@{}]) {
-            BOOL isShift = ([NSEvent standardModifierFlags] & NSShiftKeyMask) != 0;
-            BOOL isAlt = ([NSEvent standardModifierFlags] & NSAlternateKeyMask) != 0;
+            BOOL isShift = ([NSEvent standardModifierFlags] & NSEventModifierFlagShift) != 0;
+            BOOL isAlt = ([NSEvent standardModifierFlags] & NSEventModifierFlagOption) != 0;
             [item setColor:[NSColor colorFromPasteboard:pboard] alternate:isAlt updateDefaults:isShift];
             return YES;
         }
@@ -754,7 +754,7 @@
 - (void)outlineView:(NSOutlineView *)ov didClickTableColumn:(NSTableColumn *)tableColumn {
     if ([ov isEqual:rightSideController.noteOutlineView]) {
         NSTableColumn *oldTableColumn = [ov highlightedTableColumn];
-        NSTableColumn *newTableColumn = ([NSEvent modifierFlags] & NSCommandKeyMask) ? nil : tableColumn;
+        NSTableColumn *newTableColumn = ([NSEvent modifierFlags] & NSEventModifierFlagCommand) ? nil : tableColumn;
         NSMutableArray *sortDescriptors = nil;
         BOOL ascending = YES;
         if ([oldTableColumn isEqual:newTableColumn]) {
@@ -1276,7 +1276,7 @@
                         [item setRepresentedObject:annotation];
                         item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editThisAnnotation:) target:pdfView];
                         [item setRepresentedObject:annotation];
-                        [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+                        [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
                         [item setAlternate:YES];
                     }
                 }
@@ -1302,11 +1302,11 @@
             [item setRepresentedObject:items];
             item = [menu addItemWithTitle:[items count] == 1 ? NSLocalizedString(@"Undo Auto Size Row", @"Menu item title") : NSLocalizedString(@"Undo Auto Size Rows", @"Menu item title") action:@selector(resetHeightOfNoteRows:) target:self];
             [item setRepresentedObject:items];
-            [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+            [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
             [item setAlternate:YES];
             [menu addItemWithTitle:NSLocalizedString(@"Auto Size All", @"Menu item title") action:@selector(autoSizeNoteRows:) target:self];
             item = [menu addItemWithTitle:NSLocalizedString(@"Undo Auto Size All", @"Menu item title") action:@selector(resetHeightOfNoteRows:) target:self];
-            [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+            [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
             [item setAlternate:YES];
             [menu addItemWithTitle:NSLocalizedString(@"Automatically Resize", @"Menu item title") action:@selector(toggleAutoResizeNoteRows:) target:self];
         }

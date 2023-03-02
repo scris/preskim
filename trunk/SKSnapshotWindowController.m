@@ -306,7 +306,7 @@ static char SKSnaphotWindowAppObservationContext;
     PDFPage *page = [pdfDocument pageAtIndex:pageNum];
     NSRect frame = [pdfView convertRect:rect fromPage:page];
     frame = [pdfView convertRect:frame toView:nil];
-    frame = [NSWindow frameRectForContentRect:frame styleMask:[window styleMask] & ~NSFullSizeContentViewWindowMask];
+    frame = [NSWindow frameRectForContentRect:frame styleMask:[window styleMask] & ~NSWindowStyleMaskFullSizeContentView];
     
     if (openType == SKSnapshotOpenNormal) {
         [self setWindowFrameAutosaveNameOrCascade:SKSnapshotWindowFrameAutosaveName];

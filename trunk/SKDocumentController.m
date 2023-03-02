@@ -130,7 +130,7 @@ NSString *SKDocumentControllerDocumentKey = @"document";
     }
     [super beginOpenPanel:openPanel forTypes:inTypes completionHandler:^(NSInteger result) {
         completionHandler(result);
-        if (shouldResetTab && result == NSFileHandlingPanelCancelButton)
+        if (shouldResetTab && result == NSModalResponseCancel)
             [self _setTabPlusButtonWasClicked:NO];
     }];
 }

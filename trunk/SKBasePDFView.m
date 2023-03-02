@@ -189,8 +189,8 @@ static inline NSArray *defaultKeysToObserve() {
         unichar eventChar = [theEvent firstCharacter];
         NSUInteger modifiers = [theEvent standardModifierFlags];
         
-        if ((eventChar == SKSpaceCharacter) && ((modifiers & ~NSShiftKeyMask) == 0)) {
-            eventChar = modifiers == NSShiftKeyMask ? NSPageUpFunctionKey : NSPageDownFunctionKey;
+        if ((eventChar == SKSpaceCharacter) && ((modifiers & ~NSEventModifierFlagShift) == 0)) {
+            eventChar = modifiers == NSEventModifierFlagShift ? NSPageUpFunctionKey : NSPageDownFunctionKey;
             modifiers = 0;
         }
         

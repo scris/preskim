@@ -71,7 +71,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
 }
 
 - (id)initWithView:(NSView *)view {
-    self = [super initWithContentRect:NSMakeRect(0.0, 0.0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+    self = [super initWithContentRect:NSMakeRect(0.0, 0.0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
     if (self) {
 		[self setBackgroundColor:[NSColor clearColor]];
 		[self setOpaque:NO];
@@ -177,9 +177,9 @@ static CGFloat WINDOW_OFFSET = 8.0;
     [mainContentView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
 	while (keepGoing) {
-		theEvent = [self nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSMouseEnteredMask | NSMouseExitedMask];
+		theEvent = [self nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged | NSEventMaskMouseEntered | NSEventMaskMouseExited];
 		switch ([theEvent type]) {
-			case NSLeftMouseDragged:
+			case NSEventTypeLeftMouseDragged:
             {
 				NSPoint	newLocation = [theEvent locationOnScreen];
                 NSRect newFrame = initialFrame;
@@ -190,7 +190,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
 			}
 				break;
 				
-			case NSLeftMouseUp:
+			case NSEventTypeLeftMouseUp:
 				keepGoing = NO;
 				break;
 				

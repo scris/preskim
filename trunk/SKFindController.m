@@ -137,7 +137,7 @@
 }
 
 - (IBAction)find:(id)sender {
-    BOOL forward = [sender isKindOfClass:[NSSegmentedControl class]] ? [sender selectedSegment] == 1 : ([NSEvent modifierFlags] & NSShiftKeyMask) == 0;
+    BOOL forward = [sender isKindOfClass:[NSSegmentedControl class]] ? [sender selectedSegment] == 1 : ([NSEvent modifierFlags] & NSEventModifierFlagShift) == 0;
     [self findForward:forward];
 }
 

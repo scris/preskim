@@ -144,8 +144,8 @@ NSString *SKPDFViewNewPageKey = @"newPage";
 
 static char SKPDFViewDefaultsObservationContext;
 
-static NSUInteger moveReadingBarModifiers = NSAlternateKeyMask;
-static NSUInteger resizeReadingBarModifiers = NSAlternateKeyMask | NSShiftKeyMask;
+static NSUInteger moveReadingBarModifiers = NSEventModifierFlagOption;
+static NSUInteger resizeReadingBarModifiers = NSEventModifierFlagOption | NSEventModifierFlagShift;
 
 static BOOL useToolModeCursors = NO;
 
@@ -1250,7 +1250,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (IBAction)goToNextPage:(id)sender {
-    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSCommandKeyMask | NSAlternateKeyMask)) {
+    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
         [self setToolMode:([self toolMode] + 1) % TOOL_MODE_COUNT];
         return;
     }
@@ -1262,7 +1262,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (IBAction)goToPreviousPage:(id)sender {
-    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSCommandKeyMask | NSAlternateKeyMask)) {
+    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
         [self setToolMode:([self toolMode] + TOOL_MODE_COUNT - 1) % TOOL_MODE_COUNT];
         return;
     }
@@ -1274,7 +1274,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (IBAction)goToFirstPage:(id)sender {
-    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSCommandKeyMask | NSAlternateKeyMask)) {
+    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
         [self setAnnotationMode:([self annotationMode] + ANNOTATION_MODE_COUNT - 1) % ANNOTATION_MODE_COUNT];
         return;
     } else {
@@ -1283,7 +1283,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (IBAction)goToLastPage:(id)sender {
-    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSCommandKeyMask | NSAlternateKeyMask)) {
+    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
         [self setAnnotationMode:([self annotationMode] + 1) % ANNOTATION_MODE_COUNT];
         return;
     } else {
@@ -1839,9 +1839,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self toggleLaserPointer:nil];
         } else if (pdfvFlags.useArrowCursorInPresentation == 0 && (eventChar == 'c') && (modifiers == 0)) {
             [self nextLaserPointerColor:nil];
-        } else if (pdfvFlags.useArrowCursorInPresentation == 0 && (eventChar == 'C') && ((modifiers & ~NSShiftKeyMask) == 0)) {
+        } else if (pdfvFlags.useArrowCursorInPresentation == 0 && (eventChar == 'C') && ((modifiers & ~NSEventModifierFlagShift) == 0)) {
             [self previousLaserPointerColor:nil];
-        } else if ((eventChar == '?') && ((modifiers & ~NSShiftKeyMask) == 0)) {
+        } else if ((eventChar == '?') && ((modifiers & ~NSEventModifierFlagShift) == 0)) {
             [self showHelpMenu];
         } else {
             [super keyDown:theEvent];
@@ -1854,31 +1854,31 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         } else if (([self toolMode] == SKTextToolMode || [self toolMode] == SKNoteToolMode) && currentAnnotation && editor == nil && IS_ENTER(eventChar) && (modifiers == 0)) {
             [self editCurrentAnnotation:self];
         } else if (([self toolMode] == SKTextToolMode || [self toolMode] == SKNoteToolMode) && 
-                   (eventChar == SKEscapeCharacter) && (modifiers == NSAlternateKeyMask)) {
+                   (eventChar == SKEscapeCharacter) && (modifiers == NSEventModifierFlagOption)) {
             [self setCurrentAnnotation:nil];
         } else if (([self toolMode] == SKTextToolMode || [self toolMode] == SKNoteToolMode) && 
-                   (eventChar == NSTabCharacter) && (modifiers == NSAlternateKeyMask)) {
+                   (eventChar == NSTabCharacter) && (modifiers == NSEventModifierFlagOption)) {
             [self selectNextCurrentAnnotation:self];
         // backtab is a bit inconsistent, it seems Shift+Tab gives a Shift-BackTab key event, I would have expected either Shift-Tab (as for the raw event) or BackTab (as for most shift-modified keys)
         } else if (([self toolMode] == SKTextToolMode || [self toolMode] == SKNoteToolMode) && 
-                   (((eventChar == NSBackTabCharacter) && ((modifiers & ~NSShiftKeyMask) == NSAlternateKeyMask)) || 
-                    ((eventChar == NSTabCharacter) && (modifiers == (NSAlternateKeyMask | NSShiftKeyMask))))) {
+                   (((eventChar == NSBackTabCharacter) && ((modifiers & ~NSEventModifierFlagShift) == NSEventModifierFlagOption)) || 
+                    ((eventChar == NSTabCharacter) && (modifiers == (NSEventModifierFlagOption | NSEventModifierFlagShift))))) {
             [self selectPreviousCurrentAnnotation:self];
         } else if ([self hasReadingBar] && IS_ARROW(eventChar) && (modifiers == moveReadingBarModifiers)) {
             [self doMoveReadingBarForKey:eventChar];
         } else if ([self hasReadingBar] && IS_UP_DOWN_ARROW(eventChar) && (modifiers == resizeReadingBarModifiers)) {
             [self doResizeReadingBarForKey:eventChar];
-        } else if (IS_LEFT_RIGHT_ARROW(eventChar) && (modifiers == (NSAlternateKeyMask | NSCommandKeyMask))) {
+        } else if (IS_LEFT_RIGHT_ARROW(eventChar) && (modifiers == (NSEventModifierFlagOption | NSEventModifierFlagCommand))) {
             [self setToolMode:(toolMode + (eventChar == NSRightArrowFunctionKey ? 1 : TOOL_MODE_COUNT - 1)) % TOOL_MODE_COUNT];
-        } else if (IS_UP_DOWN_ARROW(eventChar) && (modifiers == (NSAlternateKeyMask | NSCommandKeyMask))) {
+        } else if (IS_UP_DOWN_ARROW(eventChar) && (modifiers == (NSEventModifierFlagOption | NSEventModifierFlagCommand))) {
             [self setAnnotationMode:(annotationMode + (eventChar == NSDownArrowFunctionKey ? 1 : ANNOTATION_MODE_COUNT - 1)) % ANNOTATION_MODE_COUNT];
-        } else if ([currentAnnotation isMovable] && IS_ARROW(eventChar) && ((modifiers & ~NSShiftKeyMask) == 0)) {
-            [self doMoveCurrentAnnotationForKey:eventChar byAmount:(modifiers & NSShiftKeyMask) ? 10.0 : 1.0];
-        } else if ([currentAnnotation isResizable] && IS_ARROW(eventChar) && (modifiers == (NSAlternateKeyMask | NSControlKeyMask) || modifiers == (NSShiftKeyMask | NSControlKeyMask))) {
-            [self doResizeCurrentAnnotationForKey:eventChar byAmount:(modifiers & NSShiftKeyMask) ? 10.0 : 1.0];
+        } else if ([currentAnnotation isMovable] && IS_ARROW(eventChar) && ((modifiers & ~NSEventModifierFlagShift) == 0)) {
+            [self doMoveCurrentAnnotationForKey:eventChar byAmount:(modifiers & NSEventModifierFlagShift) ? 10.0 : 1.0];
+        } else if ([currentAnnotation isResizable] && IS_ARROW(eventChar) && (modifiers == (NSEventModifierFlagOption | NSEventModifierFlagControl) || modifiers == (NSEventModifierFlagShift | NSEventModifierFlagControl))) {
+            [self doResizeCurrentAnnotationForKey:eventChar byAmount:(modifiers & NSEventModifierFlagShift) ? 10.0 : 1.0];
         // with some keyboard layouts, e.g. Japanese, the '=' character requires Shift
-        } else if ([currentAnnotation isResizable] && [currentAnnotation isLine] == NO && [currentAnnotation isInk] == NO && (eventChar == '=') && ((modifiers & ~(NSAlternateKeyMask | NSShiftKeyMask)) == NSControlKeyMask)) {
-            [self doAutoSizeActiveNoteIgnoringWidth:(modifiers & NSAlternateKeyMask) != 0];
+        } else if ([currentAnnotation isResizable] && [currentAnnotation isLine] == NO && [currentAnnotation isInk] == NO && (eventChar == '=') && ((modifiers & ~(NSEventModifierFlagOption | NSEventModifierFlagShift)) == NSEventModifierFlagControl)) {
+            [self doAutoSizeActiveNoteIgnoringWidth:(modifiers & NSEventModifierFlagOption) != 0];
         } else if ([self toolMode] == SKNoteToolMode && (eventChar == 't') && (modifiers == 0)) {
             [self setAnnotationMode:SKFreeTextNote];
         } else if ([self toolMode] == SKNoteToolMode && (eventChar == 'n') && (modifiers == 0)) {
@@ -1897,7 +1897,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self setAnnotationMode:SKLineNote];
         } else if ([self toolMode] == SKNoteToolMode && (eventChar == 'f') && (modifiers == 0)) {
             [self setAnnotationMode:SKInkNote];
-        } else if ((eventChar == '?') && ((modifiers & ~NSShiftKeyMask) == 0)) {
+        } else if ((eventChar == '?') && ((modifiers & ~NSEventModifierFlagShift) == 0)) {
             [self showHelpMenu];
         } else if ([typeSelectHelper handleEvent:theEvent] == NO) {
             [super keyDown:theEvent];
@@ -1906,7 +1906,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
-#define IS_TABLET_EVENT(theEvent, deviceType) (([theEvent subtype] == NSTabletProximityEventSubtype || [theEvent subtype] == NSTabletPointEventSubtype) && [NSEvent currentPointingDeviceType] == deviceType)
+#define IS_TABLET_EVENT(theEvent, deviceType) (([theEvent subtype] == NSEventSubtypeTabletProximity || [theEvent subtype] == NSEventSubtypeTabletPoint) && [NSEvent currentPointingDeviceType] == deviceType)
 
 - (void)mouseDown:(NSEvent *)theEvent{
     if ([currentAnnotation isLink])
@@ -1921,7 +1921,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     PDFAreaOfInterest area = [self areaOfInterestForMouse:theEvent];
     PDFAnnotation *wasCurrentAnnotation = currentAnnotation;
     
-    if ((modifiers & NSCommandKeyMask) != 0)
+    if ((modifiers & NSEventModifierFlagCommand) != 0)
         [self setTemporaryToolMode:SKNoToolMode];
     
     if ([[self document] isLocked]) {
@@ -1930,13 +1930,13 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     } else if (interactionMode == SKPresentationMode) {
         [self setTemporaryToolMode:SKNoToolMode];
         BOOL didHideMouse = pdfvFlags.cursorHidden;
-        if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_TABLET_EVENT(theEvent, NSPenPointingDevice)) {
+        if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_TABLET_EVENT(theEvent, NSPointingDeviceTypePen)) {
             [[NSCursor arrowCursor] set];
             [self doDrawFreehandNoteWithEvent:theEvent];
             [self setCurrentAnnotation:nil];
         } else if ((area & kPDFLinkArea)) {
             [super mouseDown:theEvent];
-        } else if (([[self window] styleMask] & NSResizableWindowMask) != 0 && [NSApp willDragMouse]) {
+        } else if (([[self window] styleMask] & NSWindowStyleMaskResizable) != 0 && [NSApp willDragMouse]) {
             [[NSCursor closedHandCursor] set];
             [self doDragWindowWithEvent:theEvent];
         } else {
@@ -1950,17 +1950,17 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self updateCursorForMouse:nil];
             [self performSelectorOnce:@selector(doAutoHideCursor) afterDelay:AUTO_HIDE_DELAY];
         }
-    } else if (modifiers == NSCommandKeyMask) {
+    } else if (modifiers == NSEventModifierFlagCommand) {
         BOOL wantsLoupe = [loupeController hide];
         [self doSelectSnapshotWithEvent:theEvent];
         if (wantsLoupe)
             [loupeController update];
-    } else if (modifiers == (NSCommandKeyMask | NSShiftKeyMask)) {
+    } else if (modifiers == (NSEventModifierFlagCommand | NSEventModifierFlagShift)) {
         BOOL wantsLoupe = [loupeController hide];
         [self doPdfsyncWithEvent:theEvent];
         if (wantsLoupe)
             [loupeController update];
-    } else if (modifiers == (NSCommandKeyMask | NSAlternateKeyMask)) {
+    } else if (modifiers == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
         BOOL wantsLoupe = [loupeController hide];
         [self doMarqueeZoomWithEvent:theEvent];
         if (wantsLoupe)
@@ -1976,7 +1976,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [loupeController update];
     } else if ((area & kPDFPageArea) == 0) {
         [self doDragWithEvent:theEvent];
-    } else if (temporaryToolMode != SKNoToolMode && (modifiers & NSCommandKeyMask) == 0) {
+    } else if (temporaryToolMode != SKNoToolMode && (modifiers & NSEventModifierFlagCommand) == 0) {
         BOOL wantsLoupe = [loupeController hide];
         if (temporaryToolMode == SKZoomToolMode) {
             [self doMarqueeZoomWithEvent:theEvent];
@@ -2007,7 +2007,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     } else if (toolMode == SKMagnifyToolMode) {
         [self setCurrentSelection:nil];
         [self doMagnifyWithEvent:theEvent];
-    } else if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_TABLET_EVENT(theEvent, NSEraserPointingDevice)) {
+    } else if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_TABLET_EVENT(theEvent, NSPointingDeviceTypeEraser)) {
         [self doEraseAnnotationsWithEvent:theEvent];
     } else if ([self doSelectAnnotationWithEvent:theEvent]) {
         if ([currentAnnotation isLink]) {
@@ -2143,7 +2143,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     i = [menu indexOfItemWithTarget:self andAction:NSSelectorFromString(@"_setActualSize:")];
     if (i != -1) {
         item = [menu insertItemWithTitle:NSLocalizedString(@"Physical Size", @"Menu item title") action:@selector(zoomToPhysicalSize:) target:self atIndex:i + 1];
-        [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
         [item setAlternate:YES];
     }
     
@@ -2300,7 +2300,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}]) {
             [menu insertItemWithTitle:NSLocalizedString(@"Paste", @"Menu item title") action:@selector(paste:) keyEquivalent:@"" atIndex:0];
             item = [menu insertItemWithTitle:NSLocalizedString(@"Paste", @"Menu item title") action:@selector(alternatePaste:) keyEquivalent:@"" atIndex:1];
-            [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+            [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
             [item setAlternate:YES];
         }
         
@@ -2480,8 +2480,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]]) {
         if (highlightAnnotation) {
             if ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor]]) {
-                BOOL isShift = ([NSEvent standardModifierFlags] & NSShiftKeyMask) != 0;
-                BOOL isAlt = ([NSEvent standardModifierFlags] & NSAlternateKeyMask) != 0;
+                BOOL isShift = ([NSEvent standardModifierFlags] & NSEventModifierFlagShift) != 0;
+                BOOL isAlt = ([NSEvent standardModifierFlags] & NSEventModifierFlagOption) != 0;
                 [highlightAnnotation setColor:[NSColor colorFromPasteboard:pboard] alternate:isAlt updateDefaults:isShift];
                 performedDrag = YES;
             } else if ([highlightAnnotation hasBorder]) {
@@ -3983,7 +3983,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     draggedPoint->x = floor(draggedPoint->x);
     draggedPoint->y = floor(draggedPoint->y);
     
-    if (([theEvent modifierFlags] & NSShiftKeyMask)) {
+    if (([theEvent modifierFlags] & NSEventModifierFlagShift)) {
         NSPoint *fixedPoint = (resizeHandle & SKMinXEdgeMask) ? &endPoint : &startPoint;
         NSPoint diffPoint = SKSubstractPoints(*draggedPoint, *fixedPoint);
         CGFloat dx = fabs(diffPoint.x), dy = fabs(diffPoint.y);
@@ -4036,7 +4036,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
     }
     
-    if (([theEvent modifierFlags] & NSShiftKeyMask) == 0) {
+    if (([theEvent modifierFlags] & NSEventModifierFlagShift) == 0) {
         
         if ((resizeHandle & SKMaxXEdgeMask)) {
             newBounds.size.width += relPoint.x;
@@ -4152,7 +4152,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         CGFloat sy = fmax(1.0, NSHeight(newBounds) - 2.0 * margin) / fmax(1.0, NSHeight(originalBounds) - 2.0 * margin);
         
         [transform translateXBy:margin yBy:margin];
-        if (([theEvent modifierFlags] & NSShiftKeyMask))
+        if (([theEvent modifierFlags] & NSEventModifierFlagShift))
             [transform scaleBy:fmin(sx, sy)];
         else
             [transform scaleXBy:sx yBy:sy];
@@ -4220,20 +4220,20 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     BOOL draggedAnnotation = NO;
     NSEvent *lastMouseEvent = theEvent;
     NSPoint offset = SKSubstractPoints(pagePoint, originalBounds.origin);
-    NSUInteger eventMask = NSLeftMouseUpMask | NSLeftMouseDraggedMask;
+    NSUInteger eventMask = NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged;
     
     [self setCursorForAreaOfInterest:SKAreaOfInterestForResizeHandle(resizeHandle, page)];
     if (resizeHandle == 0) {
         [[NSCursor closedHandCursor] push];
         [NSEvent startPeriodicEventsAfterDelay:0.1 withPeriod:0.1];
-        eventMask |= NSPeriodicMask;
+        eventMask |= NSEventMaskPeriodic;
     }
     
     while (YES) {
         theEvent = [[self window] nextEventMatchingMask:eventMask];
-        if ([theEvent type] == NSLeftMouseUp) {
+        if ([theEvent type] == NSEventTypeLeftMouseUp) {
             break;
-        } else if ([theEvent type] == NSLeftMouseDragged) {
+        } else if ([theEvent type] == NSEventTypeLeftMouseDragged) {
             if (currentAnnotation == nil) {
                 [self addAnnotationWithType:annotationMode selection:nil page:page bounds:SKRectFromCenterAndSquareSize(originalBounds.origin, 0.0)];
             }
@@ -4283,9 +4283,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     NSRect bounds = [annotation bounds];
     
     while (YES) {
-		theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
+		theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
         
-        if ([theEvent type] == NSLeftMouseUp)
+        if ([theEvent type] == NSEventTypeLeftMouseUp)
             break;
         
         NSPoint point = NSZeroPoint;
@@ -4334,7 +4334,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && page != nil && newCurrentAnnotation != nil) {
         BOOL isInk = toolMode == SKNoteToolMode && annotationMode == SKInkNote;
         NSUInteger modifiers = [theEvent modifierFlags];
-        if ((modifiers & NSAlternateKeyMask) && [newCurrentAnnotation isMovable] &&
+        if ((modifiers & NSEventModifierFlagOption) && [newCurrentAnnotation isMovable] &&
             [newCurrentAnnotation resizeHandleForPoint:point scaleFactor:[self scaleFactor]] == 0) {
             // select a new copy of the annotation
             PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithProperties:[newCurrentAnnotation SkimNoteProperties]];
@@ -4344,11 +4344,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             newCurrentAnnotation = newAnnotation;
             [newAnnotation release];
         } else if (([newCurrentAnnotation isMarkup] ||
-                    (isInk && (newCurrentAnnotation != currentAnnotation || (modifiers & (NSShiftKeyMask | NSAlphaShiftKeyMask))))) &&
+                    (isInk && (newCurrentAnnotation != currentAnnotation || (modifiers & (NSEventModifierFlagShift | NSEventModifierFlagCapsLock))))) &&
                    [NSApp willDragMouse]) {
             // don't drag markup notes or in freehand tool mode, unless the note was previously selected, so we can select text or draw freehand strokes
             newCurrentAnnotation = nil;
-        } else if ((modifiers & NSShiftKeyMask) && currentAnnotation != newCurrentAnnotation && [[currentAnnotation page] isEqual:[newCurrentAnnotation page]] && [[currentAnnotation type] isEqualToString:[newCurrentAnnotation type]]) {
+        } else if ((modifiers & NSEventModifierFlagShift) && currentAnnotation != newCurrentAnnotation && [[currentAnnotation page] isEqual:[newCurrentAnnotation page]] && [[currentAnnotation type] isEqualToString:[newCurrentAnnotation type]]) {
             PDFAnnotation *newAnnotation = nil;
             if ([currentAnnotation isMarkup]) {
                 NSString *type = [currentAnnotation type];
@@ -4392,7 +4392,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     PDFPage *page = [self pageAndPoint:&point forEvent:theEvent nearest:YES];
     NSWindow *window = [self window];
     BOOL wasMouseCoalescingEnabled = [NSEvent isMouseCoalescingEnabled];
-    BOOL isOption = ([theEvent modifierFlags] & NSAlternateKeyMask) != 0;
+    BOOL isOption = ([theEvent modifierFlags] & NSEventModifierFlagOption) != 0;
     BOOL wasOption = NO;
     BOOL wantsBreak = isOption;
     NSBezierPath *bezierPath = nil;
@@ -4411,7 +4411,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [layer setFillColor:NULL];
     [layer setLineJoin:kCALineJoinRound];
     [layer setLineCap:kCALineCapRound];
-    if (([theEvent modifierFlags] & (NSShiftKeyMask | NSAlphaShiftKeyMask)) && [currentAnnotation isInk] && [[currentAnnotation page] isEqual:page]) {
+    if (([theEvent modifierFlags] & (NSEventModifierFlagShift | NSEventModifierFlagCapsLock)) && [currentAnnotation isInk] && [[currentAnnotation page] isEqual:page]) {
         [layer setStrokeColor:[[currentAnnotation color] CGColor]];
         [layer setLineWidth:[currentAnnotation lineWidth]];
         if ([currentAnnotation borderStyle] == kPDFBorderStyleDashed) {
@@ -4438,17 +4438,17 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
     // don't coalesce mouse event from mouse while drawing,
     // but not from tablets because those fire very rapidly and lead to serious delays
-    if ([NSEvent currentPointingDeviceType] == NSUnknownPointingDevice)
+    if ([NSEvent currentPointingDeviceType] == NSPointingDeviceTypeUnknown)
         [NSEvent setMouseCoalescingEnabled:NO];
     
     while (YES) {
-        theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
+        theEvent = [window nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged];
         
-        if ([theEvent type] == NSLeftMouseUp) {
+        if ([theEvent type] == NSEventTypeLeftMouseUp) {
             
             break;
             
-        } else if ([theEvent type] == NSLeftMouseDragged) {
+        } else if ([theEvent type] == NSEventTypeLeftMouseDragged) {
             
             if (bezierPath == nil) {
                 bezierPath = [NSBezierPath bezierPath];
@@ -4477,7 +4477,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             
             [layer setPath:[bezierPath CGPath]];
             
-        } else if ((([theEvent modifierFlags] & NSAlternateKeyMask) != 0) != isOption) {
+        } else if ((([theEvent modifierFlags] & NSEventModifierFlagOption) != 0) != isOption) {
             
             isOption = isOption == NO;
             wantsBreak = isOption || wasOption;
@@ -4511,10 +4511,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (currentAnnotation) {
             [self removeCurrentAnnotation:nil];
             [self setCurrentAnnotation:annotation];
-        } else if (([theEvent modifierFlags] & (NSShiftKeyMask | NSAlphaShiftKeyMask))) {
+        } else if (([theEvent modifierFlags] & (NSEventModifierFlagShift | NSEventModifierFlagCapsLock))) {
             [self setCurrentAnnotation:annotation];
         }
-    } else if (([theEvent modifierFlags] & NSAlphaShiftKeyMask)) {
+    } else if (([theEvent modifierFlags] & NSEventModifierFlagCapsLock)) {
         [self setCurrentAnnotation:nil];
     }
     
@@ -4522,8 +4522,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)doEraseAnnotationsWithEvent:(NSEvent *)theEvent {
     while (YES) {
-        theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
-        if ([theEvent type] == NSLeftMouseUp)
+        theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
+        if ([theEvent type] == NSEventTypeLeftMouseUp)
             break;
         
         NSPoint point = NSZeroPoint;
@@ -4578,8 +4578,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
 	while (YES) {
         
-		theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
-        if ([theEvent type] == NSLeftMouseUp)
+		theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
+        if ([theEvent type] == NSEventTypeLeftMouseUp)
             break;
 		
         // we must be dragging
@@ -4608,7 +4608,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         if (resizeHandle == 0) {
             newRect.origin = SKAddPoints(newRect.origin, delta);
-        } else if (([theEvent modifierFlags] & NSShiftKeyMask)) {
+        } else if (([theEvent modifierFlags] & NSEventModifierFlagShift)) {
             CGFloat width = NSWidth(newRect);
             CGFloat height = NSHeight(newRect);
             CGFloat square;
@@ -4745,11 +4745,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
 	while (YES) {
 		
-        theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask];
+        theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged | NSEventMaskPeriodic];
 		
-        if ([theEvent type] == NSLeftMouseUp)
+        if ([theEvent type] == NSEventTypeLeftMouseUp)
             break;
-        if ([theEvent type] == NSLeftMouseDragged) {
+        if ([theEvent type] == NSEventTypeLeftMouseDragged) {
             lastMouseEvent = theEvent;
             isDoubleClick = NO;
         }
@@ -4804,7 +4804,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [NSEvent stopPeriodicEvents];
     
     if (isDoubleClick) {
-        if (([lastMouseEvent modifierFlags] & NSShiftKeyMask) != 0)
+        if (([lastMouseEvent modifierFlags] & NSEventModifierFlagShift) != 0)
             [readingBar goToPreviousLine];
         else
             [readingBar goToNextLine];
@@ -4846,8 +4846,8 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     
 	while (YES) {
 		
-        theEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
-		if ([theEvent type] == NSLeftMouseUp)
+        theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
+		if ([theEvent type] == NSEventTypeLeftMouseUp)
             break;
         
         // dragging
@@ -4880,12 +4880,12 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     [self makeHighlightLayerForType:SKLayerTypeRect];
     
     while (YES) {
-        theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask];
+        theEvent = [window nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged];
         
-        if ([theEvent type] == NSLeftMouseUp)
+        if ([theEvent type] == NSEventTypeLeftMouseUp)
             break;
         
-        if ([theEvent type] == NSLeftMouseDragged) {
+        if ([theEvent type] == NSEventTypeLeftMouseDragged) {
             // change mouseLoc
             [[[self scrollView] contentView] autoscroll:theEvent];
             mouseLoc = [theEvent locationInWindow];
@@ -4897,7 +4897,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         currentPoint = [[self documentView] convertPoint:mouseLoc fromView:nil];
         
         // center around startPoint when holding down the Shift key
-        if (([theEvent modifierFlags] & NSShiftKeyMask))
+        if (([theEvent modifierFlags] & NSEventModifierFlagShift))
             selRect = SKRectFromCenterAndPoint(startPoint, currentPoint);
         else
             selRect = SKRectFromPoints(startPoint, currentPoint);
@@ -5017,20 +5017,20 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         NSInteger startLevel = MAX(1, [theEvent clickCount]);
         
         [theEvent retain];
-        while ([theEvent type] != NSLeftMouseUp) {
+        while ([theEvent type] != NSEventTypeLeftMouseUp) {
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
             
-            if ([theEvent type] != NSLeftMouseUp && [theEvent type] != NSLeftMouseDragged) {
+            if ([theEvent type] != NSEventTypeLeftMouseUp && [theEvent type] != NSEventTypeLeftMouseDragged) {
                 // set up the currentLevel and magnification
                 NSUInteger modifierFlags = [theEvent modifierFlags];
-                CGFloat newMagnification = (modifierFlags & NSAlternateKeyMask) ? LARGE_MAGNIFICATION : (modifierFlags & NSControlKeyMask) ? SMALL_MAGNIFICATION : DEFAULT_MAGNIFICATION;
-                if ((modifierFlags & NSShiftKeyMask))
+                CGFloat newMagnification = (modifierFlags & NSEventModifierFlagOption) ? LARGE_MAGNIFICATION : (modifierFlags & NSEventModifierFlagControl) ? SMALL_MAGNIFICATION : DEFAULT_MAGNIFICATION;
+                if ((modifierFlags & NSEventModifierFlagShift))
                     newMagnification = 1.0 / newMagnification;
                 if (fabs([loupeController magnification] - newMagnification) > 0.0001) {
                     [loupeController setMagnification:newMagnification];
                     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewMagnificationChangedNotification object:self];
                 }
-                [loupeController setLevel:(modifierFlags & NSCommandKeyMask) ? startLevel + 1 : startLevel];
+                [loupeController setLevel:(modifierFlags & NSEventModifierFlagCommand) ? startLevel + 1 : startLevel];
             }
             
             [loupeController update];
@@ -5041,7 +5041,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
                 break;
             
             [theEvent release];
-            theEvent = [[window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSFlagsChangedMask] retain];
+            theEvent = [[window nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged] retain];
         }
         [theEvent release];
         
@@ -5070,7 +5070,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     BOOL didDrag = NO;;
     // eat up mouseDragged/mouseUp events, so we won't get their event handlers
     while (YES) {
-        if ([[[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask] type] == NSLeftMouseUp)
+        if ([[[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged] type] == NSEventTypeLeftMouseUp)
             break;
         didDrag = YES;
     }
@@ -5082,8 +5082,8 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     NSRect frame = [window frame];
     NSPoint offset = SKSubstractPoints(frame.origin, [theEvent locationOnScreen]);
     while (YES) {
-        theEvent = [window nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
-        if ([theEvent type] == NSLeftMouseUp)
+        theEvent = [window nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
+        if ([theEvent type] == NSEventTypeLeftMouseUp)
              break;
         frame.origin = SKAddPoints([theEvent locationOnScreen], offset);
         [window setFrame:SKConstrainRect(frame, [[window screen] frame]) display:YES];
@@ -5119,24 +5119,24 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         item = [menu addItemWithTitle:NSLocalizedString(@"Move Current Note", @"Menu item title") action:@selector(moveCurrentAnnotation:) keyEquivalent:@"\uF703"];
         [item setKeyEquivalentModifierMask:0];
         item = [menu addItemWithTitle:NSLocalizedString(@"Move Current Note", @"Menu item title") action:@selector(moveCurrentAnnotation:) keyEquivalent:@"\uF703"];
-        [item setKeyEquivalentModifierMask:NSShiftKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagShift];
         [item setTag:1];
         item = [menu addItemWithTitle:NSLocalizedString(@"Resize Current Note", @"Menu item title") action:@selector(resizeCurrentAnnotation:) keyEquivalent:@"\uF703"];
-        [item setKeyEquivalentModifierMask:NSAlternateKeyMask | NSControlKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagOption | NSEventModifierFlagControl];
         item = [menu addItemWithTitle:NSLocalizedString(@"Resize Current Note", @"Menu item title") action:@selector(resizeCurrentAnnotation:) keyEquivalent:@"\uF703"];
-        [item setKeyEquivalentModifierMask:NSShiftKeyMask | NSControlKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagShift | NSEventModifierFlagControl];
         [item setTag:1];
         item = [menu addItemWithTitle:NSLocalizedString(@"Auto Size Current Note", @"Menu item title") action:@selector(autoSizeCurrentAnnotation:) keyEquivalent:@"="];
-        [item setKeyEquivalentModifierMask:NSControlKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagControl];
         item = [menu addItemWithTitle:NSLocalizedString(@"Auto Size Current Note", @"Menu item title") action:@selector(autoSizeCurrentAnnotation:) keyEquivalent:@"="];
-        [item setKeyEquivalentModifierMask:NSControlKeyMask | NSAlternateKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagControl | NSEventModifierFlagOption];
         [item setTag:1];
         item = [menu addItemWithTitle:NSLocalizedString(@"Edit Current Note", @"Menu item title") action:@selector(editCurrentAnnotation:) keyEquivalent:@"\r"];
         [item setKeyEquivalentModifierMask:0];
         item = [menu addItemWithTitle:NSLocalizedString(@"Select Next Note", @"Menu item title") action:@selector(selectNextCurrentAnnotation:) keyEquivalent:@"\t"];
-        [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
         item = [menu addItemWithTitle:NSLocalizedString(@"Select Previous Note", @"Menu item title") action:@selector(selectPreviousCurrentAnnotation:) keyEquivalent:@"\t"];
-        [item setKeyEquivalentModifierMask:NSShiftKeyMask | NSAlternateKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagShift | NSEventModifierFlagOption];
         [menu addItem:[NSMenuItem separatorItem]];
         item = [menu addItemWithTitle:NSLocalizedString(@"Move Reading Bar", @"Menu item title") action:@selector(moveReadingBar:) keyEquivalent:@"\uF701"];
         [item setKeyEquivalentModifierMask:moveReadingBarModifiers];
@@ -5144,7 +5144,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         [item setKeyEquivalentModifierMask:resizeReadingBarModifiers];
         [menu addItem:[NSMenuItem separatorItem]];
         item = [menu addItemWithTitle:NSLocalizedString(@"Tool Mode", @"Menu item title") action:@selector(nextToolMode:) keyEquivalent:@"\uF703"];
-        [item setKeyEquivalentModifierMask:NSCommandKeyMask | NSAlternateKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagCommand | NSEventModifierFlagOption];
         item = [menu addItemWithTitle:NSLocalizedString(@"Text Note", @"Menu item title") action:@selector(changeOnlyAnnotationMode:) keyEquivalent:@"t"];
         [item setKeyEquivalentModifierMask:0];
         [item setTag:SKFreeTextNote];
@@ -5215,9 +5215,9 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         area = kPDFNoArea;
     } else if (interactionMode == SKPresentationMode) {
         area &= (kPDFPageArea | kPDFLinkArea);
-    } else if ((modifiers == NSCommandKeyMask || modifiers == (NSCommandKeyMask | NSShiftKeyMask) || modifiers == (NSCommandKeyMask | NSAlternateKeyMask))) {
+    } else if ((modifiers == NSEventModifierFlagCommand || modifiers == (NSEventModifierFlagCommand | NSEventModifierFlagShift) || modifiers == (NSEventModifierFlagCommand | NSEventModifierFlagOption))) {
         area = (area & kPDFPageArea) | SKSpecialToolArea;
-    } else if ((modifiers & NSCommandKeyMask) == 0 && temporaryToolMode != SKNoToolMode) {
+    } else if ((modifiers & NSEventModifierFlagCommand) == 0 && temporaryToolMode != SKNoToolMode) {
         area = (area & kPDFPageArea) | SKTemporaryToolArea;
     } else {
 
@@ -5313,14 +5313,14 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     else if (toolMode == SKSelectToolMode && (area & kPDFPageArea))
         [[NSCursor crosshairCursor] set];
     else if (toolMode == SKMagnifyToolMode && (area & kPDFPageArea))
-        [(([NSEvent standardModifierFlags] & NSShiftKeyMask) ? [NSCursor zoomOutCursor] : [NSCursor zoomInCursor]) set];
+        [(([NSEvent standardModifierFlags] & NSEventModifierFlagShift) ? [NSCursor zoomOutCursor] : [NSCursor zoomInCursor]) set];
     else
         [super setCursorForAreaOfInterest:area & ~kPDFIconArea];
 }
 
 - (void)setCursorForMouse:(NSEvent *)theEvent {
     if (theEvent == nil)
-        theEvent = [NSEvent mouseEventWithType:NSMouseMoved
+        theEvent = [NSEvent mouseEventWithType:NSEventTypeMouseMoved
                                       location:[[self window] mouseLocationOutsideOfEventStream]
                                  modifierFlags:[NSEvent standardModifierFlags]
                                      timestamp:0

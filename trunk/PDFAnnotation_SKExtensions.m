@@ -781,7 +781,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 }
 
 - (NSTextAlignment)scriptingAlignment {
-    return NSLeftTextAlignment;
+    return NSTextAlignmentLeft;
 }
 
 - (PDFBorderStyle)scriptingBorderStyle {
@@ -854,7 +854,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
         return NO;
     PDFView *pdfView = [(SKMainDocument *)doc pdfView];
     NSPoint point = SKCenterPoint([pdfView convertRect:[self bounds] fromPage:[self page]]);
-    NSEvent *event = [NSEvent mouseEventWithType:NSRightMouseDown
+    NSEvent *event = [NSEvent mouseEventWithType:NSEventTypeRightMouseDown
                                         location:[pdfView convertPoint:point toView:nil]
                                    modifierFlags:0
                                        timestamp:0

@@ -221,7 +221,7 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
             fileImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericDocumentIcon)];
         NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(16.0, 16.0)];
         [image lockFocus];
-        [fileImage drawInRect:NSMakeRect(0.0, 0.0, 16.0, 16.0) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
+        [fileImage drawInRect:NSMakeRect(0.0, 0.0, 16.0, 16.0) fromRect:NSZeroRect operation:NSCompositingOperationCopy fraction:1.0];
         [image unlockFocus];
         if (typeIconWrappers == nil)
             typeIconWrappers = [[NSMutableDictionary alloc] init];

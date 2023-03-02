@@ -403,7 +403,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [window setToolbarStyle:NSWindowToolbarStyleExpanded];
 #pragma clang diagnostic pop
     
-    [window setStyleMask:[window styleMask] | NSFullSizeContentViewWindowMask];
+    [window setStyleMask:[window styleMask] | NSWindowStyleMaskFullSizeContentView];
     if (mwcFlags.fullSizeContent) {
         titleBarHeight = NSHeight([window frame]) - NSHeight([window contentLayoutRect]);
         [leftSideController setTopInset:titleBarHeight];
@@ -2914,9 +2914,9 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             type = @"PDF";
 
         [pageImage lockFocus];
-        [[NSImage stampForType:type] drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        [[NSImage stampForType:type] drawInRect:rect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
         if (isLocked)
-            [[[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kLockedBadgeIcon)] drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.5];
+            [[[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kLockedBadgeIcon)] drawInRect:rect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.5];
         [pageImage unlockFocus];
         
         [pageLabels enumerateObjectsUsingBlock:^(id label, NSUInteger i, BOOL *stop) {

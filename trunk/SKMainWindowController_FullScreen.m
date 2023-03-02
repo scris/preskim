@@ -252,7 +252,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     }
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKResizablePresentationKey]) {
-        [[self window] setStyleMask:[[self window] styleMask] | NSResizableWindowMask];
+        [[self window] setStyleMask:[[self window] styleMask] | NSWindowStyleMaskResizable];
         [[self window] setHasShadow:YES];
     }
     
@@ -520,7 +520,7 @@ static inline CGFloat fullScreenOffset(NSWindow *window) {
     if (autoHideToolbarInFullScreen)
         offset = NSHeight([window frame]) - NSHeight([window contentLayoutRect]);
     else if ([[window toolbar] isVisible] == NO)
-        offset = NSHeight([NSWindow frameRectForContentRect:NSZeroRect styleMask:NSTitledWindowMask]);
+        offset = NSHeight([NSWindow frameRectForContentRect:NSZeroRect styleMask:NSWindowStyleMaskTitled]);
     else if (fullScreenToolbarOffset > 0.0)
         offset = fullScreenToolbarOffset;
     else if (RUNNING_AFTER(10_15))
@@ -637,7 +637,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     NSRect frame = NSRectFromString(frameString);
     NSRect startFrame = [window frame];
     [(SKMainWindow *)window setDisableConstrainedFrame:YES];
-    [window setStyleMask:[window styleMask] & ~NSFullScreenWindowMask];
+    [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
     for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
         if ([view isKindOfClass:[NSControl class]])
             [view setAlphaValue:0.0];

@@ -1102,7 +1102,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     [oPanel setDirectoryURL:[fileURL URLByDeletingLastPathComponent]];
     [oPanel setAllowedFileTypes:@[SKNotesDocumentType]];
     [oPanel beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSInteger result){
-            if (result == NSFileHandlingPanelOKButton) {
+            if (result == NSModalResponseOK) {
                 NSURL *notesURL = [[oPanel URLs] objectAtIndex:0];
                 BOOL replace = (replaceNotesCheckButton && [replaceNotesCheckButton state] == NSOnState);
                 [self readNotesFromURL:notesURL replace:replace];

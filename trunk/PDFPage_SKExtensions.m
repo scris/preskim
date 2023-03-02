@@ -302,7 +302,7 @@ static BOOL usesSequentialPageNumbering = NO;
     
     NSImage *image = [[[NSImage alloc] initWithSize:destRect.size] autorelease];
     [image lockFocus];
-    [pageImage drawInRect:destRect fromRect:sourceRect operation:NSCompositeCopy fraction:1.0];
+    [pageImage drawInRect:destRect fromRect:sourceRect operation:NSCompositingOperationCopy fraction:1.0];
     [image unlockFocus];
     
     return [image TIFFRepresentation];

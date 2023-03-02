@@ -84,7 +84,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     [labelView setDrawsBackground:NO];
     [labelView setEditable:NO];
     [labelView setSelectable:NO];
-    [labelView setAlignment:NSCenterTextAlignment];
+    [labelView setAlignment:NSTextAlignmentCenter];
     [labelView setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
     rect = NSInsetRect(bounds, TEXT_MARGIN, TEXT_SPACE);
     rect.size.height = [[labelView cell] cellSize].height;

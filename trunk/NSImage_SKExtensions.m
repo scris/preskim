@@ -879,7 +879,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path appendBezierPathWithOvalInRect:NSMakeRect(10.5, 10.0, 6.0, 6.0)];
         [path fill];
         [NSGraphicsContext saveGraphicsState];
-        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeClear];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationClear];
         [[NSBezierPath bezierPathWithOvalInRect:NSMakeRect(9.8, 5.8, 7.4, 7.4)] stroke];
         path = [NSBezierPath bezierPath];
         [path appendBezierPathWithArcWithCenter:NSMakePoint(13.5, 9.5) radius:1.8 startAngle:45.0 endAngle:225.0];
@@ -943,7 +943,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     MAKE_IMAGE(SKImageNameToolbarFonts, YES, 27.0, 20.0,
         [[NSColor blackColor] setFill];
         [NSBezierPath fillRect:NSMakeRect(4.0, 1.0, 19.0, 19.0)];
-        [[NSImage imageNamed:NSImageNameFontPanel] drawInRect:NSMakeRect(4.0, 1.0, 19.0, 19.0) fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
+        [[NSImage imageNamed:NSImageNameFontPanel] drawInRect:NSMakeRect(4.0, 1.0, 19.0, 19.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
     );
     
     MAKE_IMAGE(SKImageNameToolbarLines, YES, 27.0, 20.0,
@@ -958,7 +958,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [[NSColor blackColor] setFill];
         [NSBezierPath fillRect:NSMakeRect(4.0, 1.0, 19.0, 19.0)];
         NSImage *customizeImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kToolbarCustomizeIcon)];
-        [customizeImage drawInRect:NSMakeRect(4.0, 1.0, 19.0, 19.0) fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
+        [customizeImage drawInRect:NSMakeRect(4.0, 1.0, 19.0, 19.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
     );
     
     MAKE_IMAGE(SKImageNameToolbarPrint, YES, 27.0, 20.0, 
@@ -1303,7 +1303,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path appendBezierPathWithOvalInRect:NSMakeRect(10.5, 10.0, 6.0, 6.0)];
         [path fill];
         [NSGraphicsContext saveGraphicsState];
-        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeClear];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationClear];
         [[NSBezierPath bezierPathWithOvalInRect:NSMakeRect(9.8, 5.8, 7.4, 7.4)] stroke];
         path = [NSBezierPath bezierPath];
         [path appendBezierPathWithArcWithCenter:NSMakePoint(13.5, 9.5) radius:1.8 startAngle:45.0 endAngle:225.0];
@@ -1375,20 +1375,20 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
 + (void)makeColoredToolbarImages {
 
     MAKE_IMAGE(SKImageNameToolbarColors, NO, 27.0, 20.0,
-        [[NSImage imageNamed:NSImageNameColorPanel] drawInRect:NSMakeRect(4.0, 1.0, 19.0, 19.0) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
+        [[NSImage imageNamed:NSImageNameColorPanel] drawInRect:NSMakeRect(4.0, 1.0, 19.0, 19.0) fromRect:NSZeroRect operation:NSCompositingOperationCopy fraction:1.0];
     );
     
     MAKE_IMAGE(SKImageNameGeneralPreferences, NO, 32.0, 32.0,
         NSImage *generalImage = [NSImage imageNamed:NSImageNamePreferencesGeneral];
-        [generalImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
+        [generalImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationCopy fraction:1.0];
     );
     
     MAKE_IMAGE(SKImageNameDisplayPreferences, NO, 32.0, 32.0,
         NSImage *fontImage = [NSImage imageNamed:NSImageNameFontPanel];
         NSImage *colorImage = [NSImage imageNamed:NSImageNameColorPanel];
         NSRectFill(NSMakeRect(0.0, 0.0, 21.0, 29.0));
-        [fontImage drawInRect:NSMakeRect(-4.0, 0.0, 29.0, 29.0) fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
-        [colorImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1.0];
+        [fontImage drawInRect:NSMakeRect(-4.0, 0.0, 29.0, 29.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
+        [colorImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationOver fraction:1.0];
     );
     
     MAKE_IMAGE(SKImageNameNotesPreferences, NO, 32.0, 32.0, 
@@ -1396,10 +1396,10 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithSRGBRed:1.0 green:0.939 blue:0.495 alpha:1.0] endingColor:[NSColor colorWithSRGBRed:1.0 green:0.976 blue:0.810 alpha:1.0]] autorelease];
         [[NSColor blackColor] setFill];
         [NSBezierPath fillRect:NSMakeRect(2.0, 0.0, 28.0, 32.0)];
-        [clippingImage drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
-        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeMultiply];
+        [clippingImage drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationMultiply];
         [gradient drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) angle:90.0];
-        [clippingImage drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
+        [clippingImage drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
     );
     
     MAKE_IMAGE(SKImageNameSyncPreferences, NO, 32.0, 32.0,
@@ -1407,8 +1407,8 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         NSImage *genericDocImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericDocumentIcon)];
         [[NSColor colorWithSRGBRed:0.3 green:0.45 blue:0.65 alpha:1.0] set];
         NSRectFill(NSMakeRect(11.0, 10.0, 10.0, 12.0));
-        [refreshImage drawInRect:NSMakeRect(11.0, 10.0, 10.0, 12.0) fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
-        [genericDocImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1.0];
+        [refreshImage drawInRect:NSMakeRect(11.0, 10.0, 10.0, 12.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
+        [genericDocImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationOver fraction:1.0];
     );
 }
 
@@ -1424,7 +1424,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     MAKE_IMAGE(SKImageNameWidgetNote, YES, 21.0, 19.0,
         [[NSColor blackColor] setStroke];
         [NSBezierPath strokeRect:NSMakeRect(1.5, 2.5, 16.0, 10.0)];
-        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeCopy];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationCopy];
         drawTextNote();
     );
     
@@ -1814,7 +1814,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
             [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
         [NSBezierPath fillRect:NSMakeRect(2.0, 14.0, 28.0, 4.0)];
         [NSGraphicsContext restoreGraphicsState];
-        [[[NSCursor openHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        [[[NSCursor openHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
     );
         
     MAKE_VECTOR_IMAGE(SKImageNameClosedHandBarCursor, NO, 32.0, 32.0,
@@ -1824,7 +1824,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
             [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
         [NSBezierPath fillRect:NSMakeRect(2.0, 14.0, 28.0, 4.0)];
         [NSGraphicsContext restoreGraphicsState];
-        [[[NSCursor closedHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        [[[NSCursor closedHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
     );
     
     } else {
@@ -1832,13 +1832,13 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     MAKE_VECTOR_IMAGE(SKImageNameOpenHandBarCursor, NO, size.width, size.width,
         [[NSColor blackColor] setFill];
         [NSBezierPath fillRect:NSMakeRect(0.0, 9.0 / 16.0 * size.height, size.width, 3.0 / 16.0 * size.height)];
-        [[[NSCursor openHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, size.width, size.height) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        [[[NSCursor openHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, size.width, size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
     );
     
     MAKE_VECTOR_IMAGE(SKImageNameClosedHandBarCursor, NO, size.width, size.width,
         [[NSColor blackColor] setFill];
         [NSBezierPath fillRect:NSMakeRect(0.0, 6.0 / 16.0 * size.height, size.width, 3.0 / 16.0 * size.height)];
-        [[[NSCursor closedHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, size.width, size.height) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        [[[NSCursor closedHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, size.width, size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
     );
     
     }
@@ -2201,7 +2201,7 @@ static void drawAddBadge() {
     [addPath appendBezierPathWithRect:NSMakeRect(16.0, 4.0, 5.0, 1.0)];
     [addPath appendBezierPathWithRect:NSMakeRect(18.0, 2.0, 1.0, 5.0)];
     [NSGraphicsContext saveGraphicsState];
-    [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeCopy];
+    [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationCopy];
     [[NSColor colorWithGenericGamma22White:0.0 alpha:0.6] setFill];
     [addPath fill];
     [NSGraphicsContext restoreGraphicsState];
@@ -2226,7 +2226,7 @@ static inline void translate(CGFloat dx, CGFloat dy) {
 
 static inline void drawPageBackgroundInRect(NSRect rect) {
     [NSGraphicsContext saveGraphicsState];
-    [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeCopy];
+    [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationCopy];
     [[NSColor colorWithGenericGamma22White:0.0 alpha:0.25] setFill];
     [NSBezierPath fillRect:rect];
     [NSGraphicsContext restoreGraphicsState];
@@ -2234,7 +2234,7 @@ static inline void drawPageBackgroundInRect(NSRect rect) {
 
 static inline void drawArrowCursor() {
     NSImage *arrowCursor = [[NSCursor arrowCursor] image];
-    [arrowCursor drawAtPoint:NSMakePoint(0.0, 42.0 - [arrowCursor size].height) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+    [arrowCursor drawAtPoint:NSMakePoint(0.0, 42.0 - [arrowCursor size].height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
 }
 
 static void evaluateLaserPointer(void *info, const CGFloat *in, CGFloat *out) {

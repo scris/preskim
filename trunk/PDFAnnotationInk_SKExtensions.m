@@ -320,12 +320,12 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
         [NSShadow setShadowWithColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.33333] blurRadius:r offset:offset];
         [path stroke];
         [NSGraphicsContext restoreGraphicsState];
-        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositeClear];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationClear];
         [path stroke];
         [image unlockFocus];
         [NSGraphicsContext saveGraphicsState];
         [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
-        [image drawInRect:rect fromRect:imgRect operation:NSCompositeSourceOver fraction:[[self color] alphaComponent]];
+        [image drawInRect:rect fromRect:imgRect operation:NSCompositingOperationSourceOver fraction:[[self color] alphaComponent]];
         [NSGraphicsContext restoreGraphicsState];
         [image release];
     }

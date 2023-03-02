@@ -51,7 +51,7 @@
 @dynamic fadeInDuration, fadeOutDuration, backgroundImage;
 
 - (id)initWithContentRect:(NSRect)contentRect {
-    self = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+    self = [super initWithContentRect:contentRect styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
     if (self) {
         defaultAlphaValue = ALPHA_VALUE;
         autoHideTimeInterval = AUTO_HIDE_TIME_INTERVAL;
