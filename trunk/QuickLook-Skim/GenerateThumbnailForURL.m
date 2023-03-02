@@ -51,13 +51,13 @@ static void drawBackgroundAndApplicationIconInCurrentContext(QLThumbnailRequestR
 {
     [[NSColor whiteColor] setFill];
     NSRect pageRect = { NSZeroPoint, _paperSize };
-    NSRectFillUsingOperation(pageRect, NSCompositingOperationSourceOver);
+    NSRectFillUsingOperation(pageRect, NSCompositeSourceOver);
     
     NSURL *iconURL = (NSURL *)CFBundleCopyResourceURL(QLThumbnailRequestGetGeneratorBundle(thumbnail), CFSTR("Skim"), CFSTR("icns"), NULL);
     NSImage *appIcon = [[NSImage alloc] initWithContentsOfFile:[iconURL path]];
     [iconURL release];
     
-    [appIcon drawInRect:_iconRect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.3];
+    [appIcon drawInRect:_iconRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.3];
     [appIcon release];    
 }
 
