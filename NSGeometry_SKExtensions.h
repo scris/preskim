@@ -170,10 +170,10 @@ extern SKRectEdges SKResizeHandleForPointFromRect(NSPoint point, NSRect rect, CG
 static inline
 Rect SKQDRectFromNSRect(NSRect nsRect) {
     Rect qdRect;
-    qdRect.left = round(NSMinX(nsRect));
-    qdRect.bottom = round(NSMinY(nsRect));
-    qdRect.right = round(NSMaxX(nsRect));
-    qdRect.top = round(NSMaxY(nsRect));
+    qdRect.left = (short)round(NSMinX(nsRect));
+    qdRect.bottom = (short)round(NSMinY(nsRect));
+    qdRect.right = (short)round(NSMaxX(nsRect));
+    qdRect.top = (short)round(NSMaxY(nsRect));
     return qdRect;
 }
 
@@ -191,8 +191,8 @@ NSRect SKNSRectFromQDRect(Rect qdRect) {
 static inline
 Point SKQDPointFromNSPoint(NSPoint nsPoint) {
     Point qdPoint;
-    qdPoint.h = round(nsPoint.x);
-    qdPoint.v = round(nsPoint.y);
+    qdPoint.h = (short)round(nsPoint.x);
+    qdPoint.v = (short)round(nsPoint.y);
     return qdPoint;
 }
 

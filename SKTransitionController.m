@@ -703,7 +703,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     if (needsReshape) {
         [[self openGLContext] update];
         
-        glViewport(0, 0, CGRectGetWidth(rect), CGRectGetHeight(rect));
+        glViewport(0, 0, (GLint)CGRectGetWidth(rect), (GLint)CGRectGetHeight(rect));
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();

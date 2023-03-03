@@ -106,8 +106,8 @@ static BOOL usesSequentialPageNumbering = NO;
     NSRect bounds = [self boundsForBox:box];
     NSBitmapImageRep *imageRep;
     imageRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
-                                                       pixelsWide:NSWidth(bounds) 
-                                                       pixelsHigh:NSHeight(bounds) 
+                                                       pixelsWide:(NSInteger)NSWidth(bounds)
+                                                       pixelsHigh:(NSInteger)NSHeight(bounds)
                                                     bitsPerSample:8 
                                                   samplesPerPixel:4
                                                          hasAlpha:YES 
@@ -511,11 +511,11 @@ static inline BOOL pointAboveRect(NSPoint point, NSRect rect, NSInteger lineDire
 
 static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect pageBounds) {
     switch (angle) {
-        case 0:   return NSMinX(bounds);
-        case 90:  return NSMinY(bounds);
-        case 180: return NSMaxX(pageBounds) - NSMaxX(bounds);
-        case 270: return NSMaxY(pageBounds) - NSMaxY(bounds);
-        default:  return NSMinX(bounds);
+        case 0:   return (NSInteger)NSMinX(bounds);
+        case 90:  return (NSInteger)NSMinY(bounds);
+        case 180: return (NSInteger)(NSMaxX(pageBounds) - NSMaxX(bounds));
+        case 270: return (NSInteger)(NSMaxY(pageBounds) - NSMaxY(bounds));
+        default:  return (NSInteger)NSMinX(bounds);
     }
 }
 
