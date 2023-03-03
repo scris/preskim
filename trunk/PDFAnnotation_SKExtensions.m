@@ -463,6 +463,8 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 - (SKNoteText *)noteText { return nil; }
 
+- (PDFSelection *)selection { return nil; }
+
 - (id)objectValue {
     if ([[self type] isEqualToString:SKNWidgetString]) {
         if ([self widgetType] == kSKNPDFWidgetTypeButton) {
