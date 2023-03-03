@@ -48,7 +48,10 @@
         @try { color = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
         @catch (id e) {}
         if (color == nil) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             @try { color = [NSUnarchiver unarchiveObjectWithData:data]; }
+#pragma clang diagnostic pop
             @catch (id e) {}
         }
         if ([color isKindOfClass:[NSColor class]] == NO)
