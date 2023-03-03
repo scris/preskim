@@ -151,6 +151,8 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 }
 
 static inline Class SKAnnotationClassForType(NSString *type) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString])
         return [SKNPDFAnnotationNote class];
     else if ([type isEqualToString:SKNFreeTextString])
@@ -167,6 +169,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
         return [PDFAnnotationInk class];
     else
         return Nil;
+#pragma clang diagnostic pop
 }
 
 + (PDFAnnotation *)newSkimNoteWithBounds:(NSRect)bounds forType:(NSString *)type {
@@ -178,13 +181,19 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 }
 
 + (PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forType:(NSString *)type {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     return [[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:selection forPage:nil forType:type];
+#pragma clang diagnostic pop
 }
 
 + (NSArray *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection forType:(NSString *)type {
     NSMutableArray *annotations = [NSMutableArray array];
     for (PDFPage *page in [selection pages]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         PDFAnnotation *annotation = [[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:selection forPage:page forType:type];
+#pragma clang diagnostic pop
         if (annotation) {
             [annotations addObject:@[annotation, page]];
             [annotation release];
@@ -203,7 +212,10 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     bounds = NSInsetRect(NSIntegralRect(bounds), -8.0, -8.0);
     [transform translateXBy:-NSMinX(bounds) yBy:-NSMinY(bounds)];
     
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     PDFAnnotation *annotation = [[PDFAnnotationInk alloc] initSkimNoteWithBounds:bounds forType:SKNInkString];
+#pragma clang diagnostic pop
     for (path in paths)
         [(PDFAnnotationInk *)annotation addBezierPath:[transform transformBezierPath:path]];
     return annotation;
@@ -657,6 +669,8 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 - (NSDictionary *)scriptingProperties {
     static NSSet *allCustomScriptingKeys = nil;
     if (allCustomScriptingKeys == nil) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         NSMutableSet *customScriptingKeys = [NSMutableSet set];
         [customScriptingKeys unionSet:[PDFAnnotationCircle customScriptingKeys]];
         [customScriptingKeys unionSet:[PDFAnnotationSquare customScriptingKeys]];
@@ -666,6 +680,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
         [customScriptingKeys unionSet:[PDFAnnotationLine customScriptingKeys]];
         [customScriptingKeys unionSet:[PDFAnnotationInk customScriptingKeys]];
         allCustomScriptingKeys = [customScriptingKeys copy];
+#pragma clang diagnostic pop
     }
     // remove all custom properties that are not valid for this class
     NSMutableDictionary *properties = [[[super scriptingProperties] mutableCopy] autorelease];

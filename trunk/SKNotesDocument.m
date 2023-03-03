@@ -344,12 +344,15 @@
         for (NSDictionary *dict in array) {
             PDFAnnotation *note = [PDFAnnotation newSkimNoteWithProperties:dict];
             if (note == nil && [[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 switch ([[dict objectForKey:SKNPDFAnnotationWidgetTypeKey] integerValue]) {
                     case kSKNPDFWidgetTypeText: note = [PDFAnnotationTextWidget alloc]; break;
                     case kSKNPDFWidgetTypeButton: note = [PDFAnnotationButtonWidget alloc]; break;
                     case kSKNPDFWidgetTypeChoice: note = [PDFAnnotationChoiceWidget alloc]; break;
                     default: break;
                 }
+#pragma clang diagnostic pop
                 note = [note initSkimNoteWithProperties:dict];
             }
             if (note) {

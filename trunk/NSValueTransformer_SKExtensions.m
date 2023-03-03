@@ -109,7 +109,10 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
     @try { color = [NSKeyedUnarchiver unarchiveObjectWithData:value]; }
     @catch (id e) {}
     if (color == nil) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         @try { color = [NSUnarchiver unarchiveObjectWithData:value]; }
+#pragma clang diagnostic pop
         @catch (id e) {}
     }
     if ([color isKindOfClass:[NSColor class]] == NO)
