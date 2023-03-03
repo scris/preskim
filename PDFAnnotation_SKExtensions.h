@@ -86,6 +86,8 @@ extern NSString *SKPasteboardTypeSkimNote;
 - (BOOL)hasNoteText;
 - (SKNoteText *)noteText;
 
+- (PDFSelection *)selection;
+
 - (id)objectValue;
 - (void)setObjectValue:(id)newObjectValue;
 

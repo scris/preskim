@@ -1309,7 +1309,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if ([currentAnnotation isMovable])
             note = currentAnnotation;
         else if (attrString == nil && [currentAnnotation isMarkup])
-            attrString = [[(PDFAnnotationMarkup *)currentAnnotation selection] attributedString];
+            attrString = [[currentAnnotation selection] attributedString];
     }
     
     if (toolMode == SKSelectToolMode && NSIsEmptyRect(selectionRect) == NO && selectionPageIndex != NSNotFound) {
@@ -2706,7 +2706,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (noSelection && page && [[currentAnnotation page] isEqual:page] &&
             [[currentAnnotation type] isEqualToString:(annotationType == SKHighlightNote ? SKNHighlightString : annotationType == SKUnderlineNote ? SKNUnderlineString : annotationType == SKStrikeOutNote ? SKNStrikeOutString : nil)]) {
             selection = [[selection copy] autorelease];
-            [selection addSelection:[(PDFAnnotationMarkup *)currentAnnotation selection]];
+            [selection addSelection:[currentAnnotation selection]];
             [self removeCurrentAnnotation:nil];
         }
         
@@ -4352,8 +4352,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             PDFAnnotation *newAnnotation = nil;
             if ([currentAnnotation isMarkup]) {
                 NSString *type = [currentAnnotation type];
-                PDFSelection *sel = [(PDFAnnotationMarkup *)currentAnnotation selection];
-                [sel addSelection:[(PDFAnnotationMarkup *)newCurrentAnnotation selection]];
+                PDFSelection *sel = [currentAnnotation selection];
+                [sel addSelection:[newCurrentAnnotation selection]];
                 
                 newAnnotation = [[PDFAnnotation newSkimNoteWithSelection:sel forType:type] autorelease];
                 [newAnnotation setString:[sel cleanedString]];
