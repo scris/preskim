@@ -128,7 +128,7 @@ static char SKGeneralPreferencesUpdaterObservationContext;
 
 - (void)synchronizeUpdateInterval {
     [self willChangeValueForKey:UPDATEINTERVAL_KEY];
-    updateInterval = [[SUUpdater sharedUpdater] automaticallyChecksForUpdates] ? [[SUUpdater sharedUpdater] updateCheckInterval] : 0;
+    updateInterval = (NSInteger)[[SUUpdater sharedUpdater] automaticallyChecksForUpdates] ? (NSInteger)[[SUUpdater sharedUpdater] updateCheckInterval] : 0;
     [self didChangeValueForKey:UPDATEINTERVAL_KEY];
 }
 
