@@ -1038,9 +1038,6 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 
 #if !defined(PDFKIT_PLATFORM_IOS)
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-
 @implementation PDFAnnotationCircle (SKNExtensions)
 
 - (id)initSkimNoteWithProperties:(NSDictionary *)dict{
@@ -1435,8 +1432,6 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 }
 
 @end
-
-#pragma clang diagnostic pop
 
 #pragma mark -
 
