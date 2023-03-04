@@ -45,6 +45,7 @@
     NSButton *resetButton;
     NSButton *resetAllButton;
     NSSegmentedControl *panesButton;
+    NSTextView *fieldEditor;
     NSArray *preferencePanes;
     NSViewController<SKPreferencePane> *currentPane;
     NSMutableArray *history;
