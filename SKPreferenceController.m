@@ -66,6 +66,9 @@
 #define INITIALUSERDEFAULTS_KEY @"InitialUserDefaults"
 #define RESETTABLEKEYS_KEY @"ResettableKeys"
 
+@interface SKPreferenceFieldEditor : NSTextView
+@end
+
 @implementation SKPreferenceController
 
 @synthesize resetButton, resetAllButton;
@@ -108,6 +111,7 @@ static SKPreferenceController *sharedPrefenceController = nil;
     SKDESTROY(preferencePanes);
     SKDESTROY(resetButton);
     SKDESTROY(resetAllButton);
+    SKDESTROY(fieldEditor);
     SKDESTROY(history);
     [super dealloc];
 }
@@ -233,6 +237,17 @@ static SKPreferenceController *sharedPrefenceController = nil;
     // make sure edits are committed
     [currentPane commitEditing];
     [[NSUserDefaultsController sharedUserDefaultsController] commitEditing];
+}
+
+- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)anObject {
+    if ([[currentPane nibName] isEqualToString:@"NotesPreferences"]) {
+        if (fieldEditor == nil) {
+            fieldEditor = [[SKPreferenceFieldEditor alloc] init];
+            [fieldEditor setFieldEditor:YES];
+        }
+        return fieldEditor;
+    }
+    return nil;
 }
 
 #pragma mark Actions
@@ -390,6 +405,18 @@ static SKPreferenceController *sharedPrefenceController = nil;
         [(NSCustomTouchBarItem *)item setView:button];
     }
     return item;
+}
+
+@end
+
+
+@implementation SKPreferenceFieldEditor
+
+- (BOOL)respondsToSelector:(SEL)aSelector {
+    if (aSelector == @selector(changeFont:) ||
+        aSelector == @selector(changeAttributes:))
+        return NO;
+    return [super respondsToSelector:aSelector];
 }
 
 @end
