@@ -43,7 +43,9 @@
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
     if (aSelector == @selector(performFindPanelAction:) ||
-        aSelector == @selector(centerSelectionInVisibleArea:))
+        aSelector == @selector(centerSelectionInVisibleArea:) ||
+        aSelector == @selector(changeFont:) ||
+        aSelector == @selector(changeAttributes:))
         return NO;
     return [super respondsToSelector:aSelector];
 }
