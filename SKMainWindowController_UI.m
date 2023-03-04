@@ -305,14 +305,11 @@
 }
 
 - (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)anObject {
-    if ([anObject isEqual:[findController findField]]) {
-        if (fieldEditor == nil) {
-            fieldEditor = [[SKFieldEditor alloc] init];
-            [fieldEditor setFieldEditor:YES];
-        }
-        return fieldEditor;
+    if (fieldEditor == nil) {
+        fieldEditor = [[SKFieldEditor alloc] init];
+        [fieldEditor setFieldEditor:YES];
     }
-    return nil;
+    return fieldEditor;
 }
 
 - (void)window:(NSWindow *)sender willSendEvent:(NSEvent *)event {

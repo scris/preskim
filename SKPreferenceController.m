@@ -43,6 +43,7 @@
 #import "SKSyncPreferences.h"
 #import "NSUserDefaultsController_SKExtensions.h"
 #import "SKFontWell.h"
+#import "SKFieldEditor.h"
 #import "SKStringConstants.h"
 #import "NSView_SKExtensions.h"
 #import "NSGraphics_SKExtensions.h"
@@ -65,9 +66,6 @@
 
 #define INITIALUSERDEFAULTS_KEY @"InitialUserDefaults"
 #define RESETTABLEKEYS_KEY @"ResettableKeys"
-
-@interface SKPreferenceFieldEditor : NSTextView
-@end
 
 @implementation SKPreferenceController
 
@@ -240,14 +238,11 @@ static SKPreferenceController *sharedPrefenceController = nil;
 }
 
 - (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)anObject {
-    if ([[currentPane nibName] isEqualToString:@"NotesPreferences"]) {
-        if (fieldEditor == nil) {
-            fieldEditor = [[SKPreferenceFieldEditor alloc] init];
-            [fieldEditor setFieldEditor:YES];
-        }
-        return fieldEditor;
+    if (fieldEditor == nil) {
+        fieldEditor = [[SKFieldEditor alloc] init];
+        [fieldEditor setFieldEditor:YES];
     }
-    return nil;
+    return fieldEditor;
 }
 
 #pragma mark Actions
@@ -405,18 +400,6 @@ static SKPreferenceController *sharedPrefenceController = nil;
         [(NSCustomTouchBarItem *)item setView:button];
     }
     return item;
-}
-
-@end
-
-
-@implementation SKPreferenceFieldEditor
-
-- (BOOL)respondsToSelector:(SEL)aSelector {
-    if (aSelector == @selector(changeFont:) ||
-        aSelector == @selector(changeAttributes:))
-        return NO;
-    return [super respondsToSelector:aSelector];
 }
 
 @end
