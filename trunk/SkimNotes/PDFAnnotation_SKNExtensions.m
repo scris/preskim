@@ -370,13 +370,19 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         if ([userName isKindOfClass:stringClass] && [self respondsToSelector:@selector(setUserName:)])
             [self setUserName:userName];
         if (lineWidth || borderStyle || dashPattern) {
+            if ([borderStyle respondsToSelector:@selector(integerValue)] == NO)
+                borderStyle = nil;
             if ([self border] == nil)
                 [self setBorder:[[[PDFBorder alloc] init] autorelease]];
             if ([lineWidth respondsToSelector:@selector(doubleValue)])
                 [[self border] setLineWidth:[lineWidth doubleValue]];
             if ([dashPattern isKindOfClass:arrayClass])
                 [[self border] setDashPattern:dashPattern];
-            if ([borderStyle respondsToSelector:@selector(integerValue)])
+            else if ([borderStyle integerValue] == kPDFBorderStyleDashed)
+                [[self border] setDashPattern:[NSArray array]];
+            else
+                [[self border] setDashPattern:nil];
+            if (borderStyle)
                 [[self border] setStyle:[borderStyle integerValue]];
         } else if ([self border]) {
             [self setBorder:nil];
