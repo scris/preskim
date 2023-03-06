@@ -66,7 +66,7 @@ return YES; \
 
 @implementation SKLineInspector
 
-@synthesize styleButton, startLineStyleButton, endLineStyleButton, lineWell, lineWidth, style, dashPattern, startLineStyle, endLineStyle, currentLineChangeAction;
+@synthesize startLineStyleButton, endLineStyleButton, lineWell, lineWidth, style, dashPattern, startLineStyle, endLineStyle, currentLineChangeAction;
 
 static SKLineInspector *sharedLineInspector = nil;
 
@@ -96,7 +96,6 @@ static SKLineInspector *sharedLineInspector = nil;
 
 - (void)dealloc {
     SKDESTROY(dashPattern);
-    SKDESTROY(styleButton);
     SKDESTROY(startLineStyleButton);
     SKDESTROY(endLineStyleButton);
     SKDESTROY(lineWell);
@@ -110,12 +109,6 @@ static SKLineInspector *sharedLineInspector = nil;
     [lineWell bind:SKLineWellDashPatternKey toObject:self withKeyPath:DASHPATTERN_KEY options:nil];
     [lineWell bind:SKLineWellStartLineStyleKey toObject:self withKeyPath:STARTLINESTYLE_KEY options:nil];
     [lineWell bind:SKLineWellEndLineStyleKey toObject:self withKeyPath:ENDLINESTYLE_KEY options:nil];
-    
-    [styleButton setHelp:NSLocalizedString(@"Solid line style", @"Tool tip message") forSegment:kPDFBorderStyleSolid];
-    [styleButton setHelp:NSLocalizedString(@"Dashed line style", @"Tool tip message") forSegment:kPDFBorderStyleDashed];
-    [styleButton setHelp:NSLocalizedString(@"Beveled line style", @"Tool tip message") forSegment:kPDFBorderStyleBeveled];
-    [styleButton setHelp:NSLocalizedString(@"Inset line style", @"Tool tip message") forSegment:kPDFBorderStyleInset];
-    [styleButton setHelp:NSLocalizedString(@"Underline line style", @"Tool tip message") forSegment:kPDFBorderStyleUnderline];
     
     [startLineStyleButton setHelp:NSLocalizedString(@"No start line style", @"Tool tip message") forSegment:kPDFLineStyleNone];
     [startLineStyleButton setHelp:NSLocalizedString(@"Square start line style", @"Tool tip message") forSegment:kPDFLineStyleSquare];
@@ -133,96 +126,7 @@ static SKLineInspector *sharedLineInspector = nil;
     
     [self setWindowFrameAutosaveName:SKLineInspectorFrameAutosaveName];
     
-	NSSize size = NSMakeSize(29.0, 12.0);
-    
-    MAKE_IMAGE(styleButton, kPDFBorderStyleSolid, size,
-        NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(6.0, 3.0, 17.0, 6.0)];
-        [path setLineWidth:2.0];
-        [[NSColor blackColor] setStroke];
-        [path stroke];
-    );
-    
-    MAKE_IMAGE(styleButton, kPDFBorderStyleDashed, size,
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path moveToPoint:NSMakePoint(6.0, 5.0)];
-        [path lineToPoint:NSMakePoint(6.0, 3.0)];
-        [path lineToPoint:NSMakePoint(9.0, 3.0)];
-        [path moveToPoint:NSMakePoint(12.0, 3.0)];
-        [path lineToPoint:NSMakePoint(17.0, 3.0)];
-        [path moveToPoint:NSMakePoint(20.0, 3.0)];
-        [path lineToPoint:NSMakePoint(23.0, 3.0)];
-        [path lineToPoint:NSMakePoint(23.0, 5.0)];
-        [path moveToPoint:NSMakePoint(23.0, 7.0)];
-        [path lineToPoint:NSMakePoint(23.0, 9.0)];
-        [path lineToPoint:NSMakePoint(20.0, 9.0)];
-        [path moveToPoint:NSMakePoint(17.0, 9.0)];
-        [path lineToPoint:NSMakePoint(12.0, 9.0)];
-        [path moveToPoint:NSMakePoint(9.0, 9.0)];
-        [path lineToPoint:NSMakePoint(6.0, 9.0)];
-        [path lineToPoint:NSMakePoint(6.0, 7.0)];
-        [path setLineWidth:2.0];
-        [[NSColor blackColor] setStroke];
-        [path stroke];
-	);
-    
-    MAKE_IMAGE(styleButton, kPDFBorderStyleBeveled, size,
-        NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(6.0, 3.0, 17.0, 6.0)];
-        [path setLineWidth:2.0];
-        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.25] setStroke];
-        [path stroke];
-        path = [NSBezierPath bezierPath];
-        [path moveToPoint:NSMakePoint(7.0, 3.0)];
-        [path lineToPoint:NSMakePoint(23.0, 3.0)];
-        [path lineToPoint:NSMakePoint(23.0, 8.0)];
-        [path setLineWidth:2.0];
-        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.35] set];
-        [path stroke];
-        path = [NSBezierPath bezierPath];
-        [path moveToPoint:NSMakePoint(5.0, 2.0)];
-        [path lineToPoint:NSMakePoint(7.0, 4.0)];
-        [path lineToPoint:NSMakePoint(7.0, 2.0)];
-        [path closePath];
-        [path moveToPoint:NSMakePoint(24.0, 10.0)];
-        [path lineToPoint:NSMakePoint(22.0, 8.0)];
-        [path lineToPoint:NSMakePoint(24.0, 8.0)];
-        [path closePath];
-        [path fill];
-	);
-    
-    MAKE_IMAGE(styleButton, kPDFBorderStyleInset, size,
-        NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(6.0, 3.0, 17.0, 6.0)];
-        [path setLineWidth:2.0];
-        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.25] setStroke];
-        [path stroke];
-        path = [NSBezierPath bezierPath];
-        [path moveToPoint:NSMakePoint(6.0, 4.0)];
-        [path lineToPoint:NSMakePoint(6.0, 9.0)];
-        [path lineToPoint:NSMakePoint(22.0, 9.0)];
-        [path setLineWidth:2.0];
-        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.35] set];
-        [path stroke];
-        path = [NSBezierPath bezierPath];
-        [path moveToPoint:NSMakePoint(5.0, 2.0)];
-        [path lineToPoint:NSMakePoint(7.0, 4.0)];
-        [path lineToPoint:NSMakePoint(5.0, 4.0)];
-        [path closePath];
-        [path moveToPoint:NSMakePoint(24.0, 10.0)];
-        [path lineToPoint:NSMakePoint(22.0, 8.0)];
-        [path lineToPoint:NSMakePoint(22.0, 10.0)];
-        [path closePath];
-        [path fill];
-    );
-    
-    MAKE_IMAGE(styleButton, kPDFBorderStyleUnderline, size,
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path moveToPoint:NSMakePoint(6.0, 3.0)];
-        [path lineToPoint:NSMakePoint(23.0, 3.0)];
-        [path setLineWidth:2.0];
-        [[NSColor colorWithGenericGamma22White:0.0 alpha:0.5] setStroke];
-        [path stroke];
-    );
-	
-    size = NSMakeSize(24.0, 12.0);
+	NSSize size = NSMakeSize(24.0, 12.0);
     
     MAKE_IMAGE(startLineStyleButton, kPDFLineStyleNone, size,
         NSBezierPath *path = [NSBezierPath bezierPath];
@@ -398,6 +302,7 @@ static SKLineInspector *sharedLineInspector = nil;
         [dashPattern release];
         dashPattern = [pattern copy];
         [self notifyChangeAction:SKLineChangeActionDashPattern];
+        [self setStyle:[dashPattern count] > 0 ? kPDFBorderStyleDashed : kPDFBorderStyleSolid];
     }
 }
 

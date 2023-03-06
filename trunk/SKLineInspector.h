@@ -53,7 +53,6 @@ typedef NS_ENUM(NSUInteger, SKLineChangeAction) {
 @class SKLineWell;
 
 @interface SKLineInspector : NSWindowController {
-    NSSegmentedControl *styleButton;
     NSSegmentedControl *startLineStyleButton;
     NSSegmentedControl *endLineStyleButton;
     SKLineWell *lineWell;
@@ -65,7 +64,7 @@ typedef NS_ENUM(NSUInteger, SKLineChangeAction) {
     SKLineChangeAction currentLineChangeAction;
 }
 
-@property (nonatomic, retain) IBOutlet NSSegmentedControl *styleButton, *startLineStyleButton, *endLineStyleButton;
+@property (nonatomic, retain) IBOutlet NSSegmentedControl *startLineStyleButton, *endLineStyleButton;
 @property (nonatomic, retain) IBOutlet SKLineWell *lineWell;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic) PDFBorderStyle style;
