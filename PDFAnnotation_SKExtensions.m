@@ -388,7 +388,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 }
 
 - (void)setBorderStyle:(PDFBorderStyle)style {
-    if ([self isEditable]) {
+    if ([self isEditable] && [self hasBorder]) {
         PDFBorder *oldBorder = [self border];
         PDFBorder *border = nil;
         if (oldBorder || style)
@@ -410,7 +410,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 }
 
 - (void)setLineWidth:(CGFloat)width {
-    if ([self isEditable]) {
+    if ([self isEditable] && [self hasBorder]) {
         PDFBorder *border = nil;
         if (width > 0.0) {
             PDFBorder *oldBorder = [self border];
@@ -438,7 +438,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 }
 
 - (void)setDashPattern:(NSArray *)pattern {
-    if ([self isEditable]) {
+    if ([self isEditable] && [self hasBorder]) {
         PDFBorder *oldBorder = [self border];
         PDFBorder *border = nil;
         if (oldBorder || [pattern count])
