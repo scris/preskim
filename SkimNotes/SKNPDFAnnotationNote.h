@@ -65,13 +65,13 @@ extern NSString *SKNPDFAnnotationImageKey;
 */
 extern PDFSize SKNPDFAnnotationNoteSize;
 
+#if !defined(PDFKIT_PLATFORM_IOS)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 /*!
     @abstract    A concrete <code>PDFAnnotation</code> subclass, a subclass of <code>PDFAnnotationText</code>, representing a Skim anchored note.
     @discussion  This is a <code>PDFAnnotationText</code> subclass containing a separate short string value, a longer rich text property, and an image property.
 */
-#if !defined(PDFKIT_PLATFORM_IOS)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 @interface SKNPDFAnnotationNote : PDFAnnotationText
 #pragma clang diagnostic pop
 #else
