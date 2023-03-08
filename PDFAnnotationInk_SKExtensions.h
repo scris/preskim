@@ -51,6 +51,4 @@ extern NSString *SKPDFAnnotationScriptingPointListsKey;
 
 - (NSArray *)pagePaths;
 
-- (NSArray *)pointLists;
-
 @end
