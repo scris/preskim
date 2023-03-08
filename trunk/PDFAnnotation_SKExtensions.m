@@ -67,7 +67,6 @@
 #import "SKAnnotationTypeImageCell.h"
 
 
-NSString *SKPDFAnnotationScriptingBorderStyleKey = @"scriptingBorderStyle";
 NSString *SKPDFAnnotationScriptingColorKey = @"scriptingColor";
 NSString *SKPDFAnnotationScriptingModificationDateKey = @"scriptingModificationDate";
 NSString *SKPDFAnnotationScriptingUserNameKey = @"scriptingUserName";
@@ -664,7 +663,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 + (NSSet *)customScriptingKeys {
     static NSSet *customScriptingKeys = nil;
     if (customScriptingKeys == nil)
-        customScriptingKeys = [[NSSet alloc] initWithObjects:SKNPDFAnnotationLineWidthKey, SKPDFAnnotationScriptingBorderStyleKey, SKNPDFAnnotationDashPatternKey, nil];
+        customScriptingKeys = [[NSSet alloc] initWithObjects:SKNPDFAnnotationLineWidthKey, SKNPDFAnnotationBorderStyleKey, SKNPDFAnnotationDashPatternKey, nil];
     return customScriptingKeys;
 }
 
@@ -696,9 +695,9 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 - (void)setScriptingProperties:(NSDictionary *)properties {
     [super setScriptingProperties:properties];
     // set the borderStyle afterwards, as this may have been changed when setting the dash pattern
-    id style = [properties objectForKey:SKPDFAnnotationScriptingBorderStyleKey];
+    id style = [properties objectForKey:SKNPDFAnnotationBorderStyleKey];
     if ([style respondsToSelector:@selector(integerValue)] && [properties objectForKey:SKNPDFAnnotationDashPatternKey])
-        [self setScriptingBorderStyle:[style integerValue]];
+        [self setBorderStyle:[style integerValue]];
 }
 
 - (NSColor *)scriptingColor {
@@ -799,16 +798,6 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 - (NSTextAlignment)scriptingAlignment {
     return NSTextAlignmentLeft;
-}
-
-- (PDFBorderStyle)scriptingBorderStyle {
-    return [self borderStyle];
-}
-
-- (void)setScriptingBorderStyle:(PDFBorderStyle)borderStyle {
-    if ([self isEditable]) {
-        [self setBorderStyle:borderStyle];
-    }
 }
 
 - (NSData *)startPointAsQDPoint {

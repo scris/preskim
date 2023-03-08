@@ -889,7 +889,7 @@
             </property>
             <property name="line style" code="LnSt" type="note line style"
                 description="The line style of the note.">
-                <cocoa key="scriptingBorderStyle"/>
+                <cocoa key="borderStyle"/>
             </property>
             <property name="dash pattern" code="DshP"
                 description="The dash pattern of the border of the note or of the line, a list of numbers.">

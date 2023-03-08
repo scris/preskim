@@ -42,7 +42,6 @@
 #import "NSGeometry_SKExtensions.h"
 
 
-extern NSString *SKPDFAnnotationScriptingBorderStyleKey;
 extern NSString *SKPDFAnnotationScriptingColorKey;
 extern NSString *SKPDFAnnotationScriptingModificationDateKey;
 extern NSString *SKPDFAnnotationScriptingUserNameKey;
@@ -156,8 +155,6 @@ extern NSString *SKPasteboardTypeSkimNote;
 - (CGFloat)fontSize;
 - (NSColor *)scriptingFontColor;
 - (NSColor *)scriptingInteriorColor;
-- (PDFBorderStyle)scriptingBorderStyle;
-- (void)setScriptingBorderStyle:(PDFBorderStyle)style;
 - (NSData *)startPointAsQDPoint;
 - (NSData *)endPointAsQDPoint;
 - (PDFLineStyle)scriptingStartLineStyle;

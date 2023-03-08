@@ -378,7 +378,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
         [customKeys addObject:SKPDFAnnotationSelectionSpecifierKey];
         [customKeys addObject:SKPDFAnnotationScriptingPointListsKey];
         [customKeys removeObject:SKNPDFAnnotationLineWidthKey];
-        [customKeys removeObject:SKPDFAnnotationScriptingBorderStyleKey];
+        [customKeys removeObject:SKNPDFAnnotationBorderStyleKey];
         [customKeys removeObject:SKNPDFAnnotationDashPatternKey];
         customMarkupScriptingKeys = [customKeys copy];
         [customKeys release];

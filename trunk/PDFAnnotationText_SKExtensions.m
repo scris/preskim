@@ -79,7 +79,7 @@ NSString *SKPDFAnnotationScriptingIconTypeKey = @"scriptingIconType";
         NSMutableSet *customKeys = [[super customScriptingKeys] mutableCopy];
         [customKeys addObject:SKPDFAnnotationScriptingIconTypeKey];
         [customKeys removeObject:SKNPDFAnnotationLineWidthKey];
-        [customKeys removeObject:SKPDFAnnotationScriptingBorderStyleKey];
+        [customKeys removeObject:SKNPDFAnnotationBorderStyleKey];
         [customKeys removeObject:SKNPDFAnnotationDashPatternKey];
         customTextScriptingKeys = [customKeys copy];
         [customKeys release];
