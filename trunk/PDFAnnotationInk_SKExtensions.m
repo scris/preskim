@@ -341,24 +341,6 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     [super drawSelectionHighlightWithLineWidth:lineWidth active:active inContext:context];
 }
 
-- (NSArray *)pointLists {
-    NSMutableArray *pointLists = [NSMutableArray array];
-    NSMutableArray *pointValues;
-    NSPoint point;
-    NSInteger i, iMax;
-    for (NSBezierPath *path in [self paths]) {
-        iMax = [path elementCount];
-        pointValues = [[NSMutableArray alloc] initWithCapacity:iMax];
-        for (i = 0; i < iMax; i++) {
-            point = [path associatedPointForElementAtIndex:i];
-            [pointValues addObject:[NSValue valueWithPoint:point]];
-        }
-        [pointLists addObject:pointValues];
-        [pointValues release];
-    }
-    return pointLists;
-}
-
 - (NSString *)colorDefaultKey { return SKInkNoteColorKey; }
 
 - (NSSet *)keysForValuesToObserveForUndo {
