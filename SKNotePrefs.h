@@ -49,7 +49,7 @@
 @property (nonatomic, retain) NSColor *scriptingColor;
 @property (nonatomic, retain) NSColor *scriptingInteriorColor;
 @property (nonatomic) CGFloat lineWidth;
-@property (nonatomic) PDFBorderStyle scriptingBorderStyle;
+@property (nonatomic) PDFBorderStyle borderStyle;
 @property (nonatomic, retain) NSArray *dashPattern;
 @property (nonatomic) PDFLineStyle scriptingStartLineStyle, scriptingEndLineStyle;
 @property (nonatomic, retain) NSString *fontName;

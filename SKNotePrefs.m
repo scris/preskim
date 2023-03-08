@@ -45,7 +45,7 @@
 @implementation SKNotePrefs
 
 @synthesize type;
-@dynamic name, scriptingColor, scriptingInteriorColor, lineWidth, scriptingBorderStyle, dashPattern, scriptingStartLineStyle, scriptingEndLineStyle, fontName, fontSize, scriptingFontColor, scriptingAlignment, scriptingIconType, scriptingUserName, scriptingProperties;
+@dynamic name, scriptingColor, scriptingInteriorColor, lineWidth, borderStyle, dashPattern, scriptingStartLineStyle, scriptingEndLineStyle, fontName, fontSize, scriptingFontColor, scriptingAlignment, scriptingIconType, scriptingUserName, scriptingProperties;
 
 static NSDictionary *alternateTypeNames = nil;
 static NSDictionary *colorKeys = nil;
@@ -64,20 +64,20 @@ static NSDictionary *propertyKeys = nil;
     lineStyleKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKFreeTextNoteLineStyleKey, SKNFreeTextString, SKCircleNoteLineStyleKey, SKNCircleString, SKSquareNoteLineStyleKey, SKNSquareString, SKLineNoteLineStyleKey, SKNLineString, SKInkNoteLineStyleKey, SKNInkString, nil];
     dashPatternKeys = [[NSDictionary alloc] initWithObjectsAndKeys:SKFreeTextNoteDashPatternKey, SKNFreeTextString, SKCircleNoteDashPatternKey, SKNCircleString, SKSquareNoteDashPatternKey, SKNSquareString, SKLineNoteDashPatternKey, SKNLineString, SKInkNoteDashPatternKey, SKNInkString, nil];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    NSArray *array = @[@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", @"fontName", @"fontSize", @"scriptingFontColor", @"scriptingAlignment"];
+    NSArray *array = @[@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"lineWidth", @"bBorderStyle", @"dashPattern", @"fontName", @"fontSize", @"scriptingFontColor", @"scriptingAlignment"];
     [dict setObject:array forKey:SKNFreeTextString];
     array = @[@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"fontName", @"fontSize", @"scriptingIconType"];
     [dict setObject:array forKey:SKNNoteString];
-    array = @[@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern"];
+    array = @[@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"bBorderStyle", @"dashPattern"];
     [dict setObject:array forKey:SKNCircleString];
     [dict setObject:array forKey:SKNSquareString];
     array = @[@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor"];
     [dict setObject:array forKey:SKNHighlightString];
     [dict setObject:array forKey:SKNUnderlineString];
     [dict setObject:array forKey:SKNStrikeOutString];
-    array = @[@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern", @"scriptingStartLineStyle", @"scriptingEndLineStyle"];
+    array = @[@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"scriptingInteriorColor", @"lineWidth", @"bBorderStyle", @"dashPattern", @"scriptingStartLineStyle", @"scriptingEndLineStyle"];
     [dict setObject:array forKey:SKNLineString];
-    array = @[@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"lineWidth", @"scriptingBorderStyle", @"dashPattern"];
+    array = @[@"name", @"type", @"classCode", @"scriptingUserName", @"scriptingColor", @"lineWidth", @"bBorderStyle", @"dashPattern"];
     [dict setObject:array forKey:SKNInkString];
     propertyKeys = [dict copy];
 }
@@ -162,12 +162,12 @@ static NSDictionary *propertyKeys = nil;
         [[NSUserDefaults standardUserDefaults] setDouble:lineWidth forKey:key];
 }
 
-- (PDFBorderStyle)scriptingBorderStyle {
+- (PDFBorderStyle)borderStyle {
     NSString *key = [lineStyleKeys objectForKey:type];
     return key ? [[NSUserDefaults standardUserDefaults] integerForKey:key] : 0;
 }
 
-- (void)setScriptingBorderStyle:(PDFBorderStyle)borderStyle {
+- (void)setBorderStyle:(PDFBorderStyle)borderStyle {
     NSString *key = [lineStyleKeys objectForKey:type];
     if (key)
         [[NSUserDefaults standardUserDefaults] setInteger:borderStyle forKey:key];
