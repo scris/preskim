@@ -1674,7 +1674,7 @@ static char SKMainWindowContentLayoutObservationContext;
     if ([overviewView window])
         return;
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
+    if ([NSView shouldShowFadeAnimation] == NO)
         animate = NO;
     
     if (overviewView == nil) {
@@ -1768,7 +1768,7 @@ static char SKMainWindowContentLayoutObservationContext;
         return;
     }
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
+    if ([NSView shouldShowFadeAnimation] == NO)
         animate = NO;
     
     BOOL isMainWindow = [overviewContentView window] == mainWindow;
@@ -1869,7 +1869,7 @@ static char SKMainWindowContentLayoutObservationContext;
     if (mwcFlags.isAnimatingFindBar)
         return;
     
-    BOOL animate = NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey];
+    BOOL animate = [NSView shouldShowSlideAnimation];
     NSView *findBar = [findController view];
     NSView *contentView = [findBar superview];
     NSLayoutConstraint *newTopConstraint = nil;
@@ -1924,7 +1924,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [findField selectText:nil];
     } else if (mwcFlags.isAnimatingFindBar == 0) {
         
-        BOOL animate = NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey];
+        BOOL animate = [NSView shouldShowSlideAnimation];
         NSView *contentView = mwcFlags.fullSizeContent ? pdfContentView : centerContentView;
         CGFloat barHeight = NSHeight([findBar frame]);
         NSArray *constraints = nil;
@@ -2359,7 +2359,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             NSUInteger row = [[rightSideController.snapshotArrayController arrangedObjects] indexOfObject:controller];
             if (row != NSNotFound) {
                 NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideDown;
-                if ([self rightSidePaneIsOpen] == NO || [self rightSidePaneState] != SKSidePaneStateSnapshot || [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
+                if ([self rightSidePaneIsOpen] == NO || [self rightSidePaneState] != SKSidePaneStateSnapshot || [NSView shouldShowSlideAnimation] == NO)
                     options = NSTableViewAnimationEffectNone;
                 [rightSideController.snapshotTableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:options];
             }
@@ -2378,7 +2378,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         NSUInteger row = [[rightSideController.snapshotArrayController arrangedObjects] indexOfObject:controller];
         if (row != NSNotFound) {
             NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideUp;
-            if ([self rightSidePaneIsOpen] == NO || [self rightSidePaneState] != SKSidePaneStateSnapshot || [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
+            if ([self rightSidePaneIsOpen] == NO || [self rightSidePaneState] != SKSidePaneStateSnapshot || [NSView shouldShowSlideAnimation] == NO)
                 options = NSTableViewAnimationEffectNone;
             [rightSideController.snapshotTableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:options];
         }

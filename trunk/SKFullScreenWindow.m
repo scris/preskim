@@ -38,6 +38,7 @@
 
 #import "SKFullScreenWindow.h"
 #import "SKStringConstants.h"
+#import "NSView_SKExtensions.h"
 
 #define DURATION 0.3
 
@@ -66,7 +67,7 @@
 - (BOOL)canBecomeMainWindow { return isMain; }
 
 - (void)fadeOutBlocking:(BOOL)blocking {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey]) {
+    if ([NSView shouldShowFadeAnimation] == NO) {
         [self orderOut:nil];
     } else {
         __block BOOL wait = blocking;
@@ -84,7 +85,7 @@
 }
 
 - (void)fadeInBlocking:(BOOL)blocking {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey]) {
+    if ([NSView shouldShowFadeAnimation]) {
         [self orderFront:nil];
     } else {
         __block BOOL wait = blocking;

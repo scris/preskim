@@ -95,7 +95,7 @@
     if ([newView superview] != nil)
         return;
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey] ||
+    if ([NSView shouldShowFadeAnimation] == NO ||
         [currentView window] == nil)
         animate = NO;
     

@@ -127,7 +127,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
     [window addChildWindow:self ordered:NSWindowAbove];
     
     frame.size.width = NSWidth([mainContentView frame]) + CONTENT_INSET;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey]) {
+    if ([NSView shouldShowSlideAnimation]) {
         [self setFrame:frame display:YES];
         if ([window isKeyWindow])
             [self makeKeyAndOrderFront:nil];

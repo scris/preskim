@@ -38,6 +38,7 @@
 
 #import "SKAnimatedBorderlessWindow.h"
 #import "SKStringConstants.h"
+#import "NSView_SKExtensions.h"
 
 #define ALPHA_VALUE 1.0
 #define FADE_IN_DURATION 0.3
@@ -123,7 +124,7 @@
     
     [self setAlphaValue:[self defaultAlphaValue]];
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey]) {
+    if ([NSView shouldShowFadeAnimation] == NO) {
         [self remove];
     } else {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
@@ -143,7 +144,7 @@
         [self setAlphaValue:0.0];
     [super orderFront:self];
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey]) {
+    if ([NSView shouldShowFadeAnimation] == NO) {
         [self setAlphaValue:[self defaultAlphaValue]];
     } else {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){

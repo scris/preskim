@@ -136,7 +136,7 @@
 - (void)toggleBelowView:(NSView *)view animate:(BOOL)animate {
     if (animating)
         return;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
+    if ([NSView shouldShowSlideAnimation] == NO)
         animate = NO;
     
     NSView *contentView = [view superview];

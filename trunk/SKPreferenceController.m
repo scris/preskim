@@ -157,7 +157,7 @@ static SKPreferenceController *sharedPrefenceController = nil;
             [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0]];
         [[constraints lastObject] setPriority:NSLayoutPriorityDefaultLow];
         
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey]) {
+        if ([NSView shouldShowFadeAnimation] == NO) {
             [contentView replaceSubview:oldView with:view];
             [NSLayoutConstraint activateConstraints:constraints];
             [window setFrame:frame display:YES];
