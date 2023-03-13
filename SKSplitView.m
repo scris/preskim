@@ -38,6 +38,7 @@
 
 #import "SKSplitView.h"
 #import "SKStringConstants.h"
+#import "NSView_SKExtensions.h"
 
 
 @implementation SKSplitView
@@ -114,7 +115,7 @@
 }
 
 - (void)setPosition:(CGFloat)position ofDividerAtIndex:(NSInteger)dividerIndex animate:(BOOL)animate {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey] ||
+    if ([NSView shouldShowSlideAnimation] == NO ||
         [self window] == nil || dividerIndex > 1)
         animate = NO;
     

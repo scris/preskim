@@ -262,7 +262,7 @@ static SKDownloadController *sharedDownloadController = nil;
 - (void)addObjectToDownloads:(SKDownload *)download {
     NSInteger row = [self countOfDownloads];
     NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideDown;
-    if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
+    if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowSlideAnimation] == NO)
         options = NSTableViewAnimationEffectNone;
     [tableView beginUpdates];
     [tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:options];
@@ -272,7 +272,7 @@ static SKDownloadController *sharedDownloadController = nil;
 
 - (void)removeObjectsFromDownloadsAtIndexes:(NSIndexSet *)indexes {
     NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideUp;
-    if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
+    if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowSlideAnimation] == NO)
         options = NSTableViewAnimationEffectNone;
     [tableView beginUpdates];
     [tableView removeRowsAtIndexes:indexes withAnimation:options];
