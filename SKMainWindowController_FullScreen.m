@@ -63,6 +63,7 @@
 #import "NSScreen_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "SKStatusBar.h"
+#import "SKAnimatedBorderlessWindow.h"
 
 #define MAINWINDOWFRAME_KEY         @"windowFrame"
 #define LEFTSIDEPANEWIDTH_KEY       @"leftSidePaneWidth"
@@ -82,6 +83,12 @@ static BOOL autoHideToolbarInFullScreen = NO;
 static BOOL collapseSidePanesInFullScreen = NO;
 
 static CGFloat fullScreenToolbarOffset = 0.0;
+
+#if SDK_BEFORE(10_12)
+@interface NSWorkSpace (BDSKSierraDeclarations)
+- (void)accessibilityDisplayShouldReduceMotion;
+@end
+#endif
 
 #if SDK_BEFORE(10_14)
 @interface PDFView (SKMojaveDeclarations)
@@ -562,22 +569,50 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
 }
 
 - (NSArray *)customWindowsToEnterFullScreenForWindow:(NSWindow *)window {
-    return [[[self document] windowControllers] valueForKey:WINDOW_KEY];
+    NSArray *windows = [[[self document] windowControllers] valueForKey:WINDOW_KEY];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+    if (RUNNING_AFTER(10_12) && [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldReduceMotion]) {
+#pragma clang diagnostic pop
+        animationWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[window frame]];
+        windows = [windows arrayByAddingObject:animationWindow];
+    }
+    return windows;
 }
 
 - (void)window:(NSWindow *)window startCustomAnimationToEnterFullScreenWithDuration:(NSTimeInterval)duration {
     if (fullScreenToolbarOffset <= 0.0 && autoHideToolbarInFullScreen == NO && [[mainWindow toolbar] isVisible])
         fullScreenToolbarOffset = toolbarViewOffset(mainWindow);
+    NSRect frame = SKShrinkRect([[window screen] frame], -fullScreenOffset(window), NSMaxYEdge);
+    BOOL fade = animationWindow != nil;
     [(SKMainWindow *)window setDisableConstrainedFrame:YES];
+    if (fade) {
+        [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:[(SKMainWindow *)window windowImage]];
+        [animationWindow orderWindow:NSWindowBelow relativeTo:window];
+        [window setAlphaValue:0.0];
+        [window setFrame:frame display:YES];
+        for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
+            if ([view isKindOfClass:[NSControl class]])
+                [view setAlphaValue:0.0];
+    }
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-            [context setDuration:duration - 0.1];
-            [[window animator] setFrame:SKShrinkRect([[window screen] frame], -fullScreenOffset(window), NSMaxYEdge) display:YES];
-            for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
-                if ([view isKindOfClass:[NSControl class]])
-                    [[view animator] setAlphaValue:0.0];
+            [context setDuration:duration - 0.01];
+            if (fade) {
+                [[window animator] setAlphaValue:1.0];
+                [[animationWindow animator] setAlphaValue:0.0];
+            } else {
+                [[window animator] setFrame:frame display:YES];
+                for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
+                    if ([view isKindOfClass:[NSControl class]])
+                        [[view animator] setAlphaValue:0.0];
+            }
         }
         completionHandler:^{
             [(SKMainWindow *)window setDisableConstrainedFrame:NO];
+            if (fade) {
+                [animationWindow orderOut:nil];
+                SKDESTROY(animationWindow);
+            }
         }];
 }
 
@@ -629,13 +664,22 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
 }
 
 - (NSArray *)customWindowsToExitFullScreenForWindow:(NSWindow *)window {
-    return [[[self document] windowControllers] valueForKey:WINDOW_KEY];
+    NSArray *windows = [[[self document] windowControllers] valueForKey:WINDOW_KEY];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+    if (RUNNING_AFTER(10_12) && [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldReduceMotion]) {
+#pragma clang diagnostic pop
+        animationWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[window frame]];
+        windows = [windows arrayByAddingObject:animationWindow];
+    }
+    return windows;
 }
 
 - (void)window:(NSWindow *)window startCustomAnimationToExitFullScreenWithDuration:(NSTimeInterval)duration {
     NSString *frameString = [savedNormalSetup objectForKey:MAINWINDOWFRAME_KEY];
     NSRect frame = NSRectFromString(frameString);
     NSRect startFrame = [window frame];
+    BOOL fade = animationWindow != nil;
     [(SKMainWindow *)window setDisableConstrainedFrame:YES];
     [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
     for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
@@ -643,16 +687,32 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
             [view setAlphaValue:0.0];
     [window setFrame:SKShrinkRect(startFrame, -fullScreenOffset(window), NSMaxYEdge) display:YES];
     [window setLevel:NSStatusWindowLevel];
+    if (fade) {
+        [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:[(SKMainWindow *)window windowImage]];
+        [animationWindow orderWindow:NSWindowBelow relativeTo:window];
+        [window setAlphaValue:0.0];
+        [window setFrame:frame display:YES];
+        for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
+            if ([view isKindOfClass:[NSControl class]])
+                [view setAlphaValue:1.0];
+    }
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-            [context setDuration:duration - 0.1];
-            [[window animator] setFrame:frame display:YES];
-            for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
-                if ([view isKindOfClass:[NSControl class]])
-                    [[view animator] setAlphaValue:1.0];
+            [context setDuration:duration - 0.01];
+            if (fade) {
+                [[window animator] setAlphaValue:1.0];
+                [[animationWindow animator] setAlphaValue:0.0];
+            } else {
+                [[window animator] setFrame:frame display:YES];
+                for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
+                    if ([view isKindOfClass:[NSControl class]])
+                        [[view animator] setAlphaValue:1.0];
+            }
         }
         completionHandler:^{
             [(SKMainWindow *)window setDisableConstrainedFrame:NO];
             [window setLevel:NSNormalWindowLevel];
+            [animationWindow orderOut:nil];
+            SKDESTROY(animationWindow);
         }];
 }
 

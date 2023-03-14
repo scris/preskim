@@ -123,7 +123,7 @@ enum {
     
     NSWindow                            *mainWindow;
     SKSideWindow                        *sideWindow;
-    NSMutableArray                      *blankingWindows;
+    NSWindow                            *animationWindow;
     
     SKInteractionMode                   interactionMode;
     
