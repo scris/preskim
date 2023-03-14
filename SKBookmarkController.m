@@ -341,8 +341,10 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (void)insertBookmarks:(NSArray *)newBookmarks atIndexes:(NSIndexSet *)indexes ofBookmark:(SKBookmark *)parent animate:(BOOL)animate {
     NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideDown;
-    if (animate == NO || [self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowSlideAnimation] == NO)
+    if (animate == NO || [self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowFadeAnimation] == NO)
         options = NSTableViewAnimationEffectNone;
+    else if ([NSView shouldShowSlideAnimation] == NO)
+        options = NSTableViewAnimationEffectFade;
     if (needsBeginUpdates) {
         [outlineView beginUpdates];
         needsBeginUpdates = NO;
@@ -353,8 +355,10 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (void)removeBookmarksAtIndexes:(NSIndexSet *)indexes ofBookmark:(SKBookmark *)parent animate:(BOOL)animate {
     NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideUp;
-    if (animate == NO || [self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowSlideAnimation] == NO)
+    if (animate == NO || [self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowFadeAnimation] == NO)
         options = NSTableViewAnimationEffectNone;
+    else if ([NSView shouldShowSlideAnimation] == NO)
+        options = NSTableViewAnimationEffectFade;
     if (needsBeginUpdates) {
         [outlineView beginUpdates];
         needsBeginUpdates = NO;
@@ -468,7 +472,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [self getInsertionFolder:&item childIndex:&idx];
     [self insertBookmark:folder atIndex:idx ofBookmark:item animate:YES];
     
-    CGFloat delay = [NSView shouldShowSlideAnimation] ? 0.25 : 0.0;
+    CGFloat delay = [NSView shouldShowFadeAnimation] ? 0.25 : 0.0;
     DISPATCH_MAIN_AFTER_SEC(delay, ^{
         NSInteger row = [outlineView rowForItem:folder];
         [outlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
