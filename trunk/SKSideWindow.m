@@ -127,15 +127,28 @@ static CGFloat WINDOW_OFFSET = 8.0;
     [window addChildWindow:self ordered:NSWindowAbove];
     
     frame.size.width = NSWidth([mainContentView frame]) + CONTENT_INSET;
-    if ([NSView shouldShowSlideAnimation]) {
+    if ([NSView shouldShowFadeAnimation] == NO) {
         [self setFrame:frame display:YES];
         if ([window isKeyWindow])
             [self makeKeyAndOrderFront:nil];
         else
             [self orderFront:nil];
-    } else {
+    } else if ([NSView shouldShowSlideAnimation] == NO) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [[self animator] setFrame:frame display:YES];
+            }
+            completionHandler:^{
+                if ([window isKeyWindow])
+                    [self makeKeyAndOrderFront:nil];
+                else
+                    [self orderFront:nil];
+            }];
+    } else {
+        CGFloat alpha = [self alphaValue];
+        [self setAlphaValue:0.0];
+        [self setFrame:frame display:YES];
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                [[self animator] setAlphaValue:alpha];
             }
             completionHandler:^{
                 if ([window isKeyWindow])

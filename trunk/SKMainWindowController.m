@@ -2359,8 +2359,10 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             NSUInteger row = [[rightSideController.snapshotArrayController arrangedObjects] indexOfObject:controller];
             if (row != NSNotFound) {
                 NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideDown;
-                if ([self rightSidePaneIsOpen] == NO || [self rightSidePaneState] != SKSidePaneStateSnapshot || [NSView shouldShowSlideAnimation] == NO)
+                if ([self rightSidePaneIsOpen] == NO || [self rightSidePaneState] != SKSidePaneStateSnapshot || [NSView shouldShowFadeAnimation] == NO)
                     options = NSTableViewAnimationEffectNone;
+                else if ([NSView shouldShowSlideAnimation] == NO)
+                    options = NSTableViewAnimationEffectFade;
                 [rightSideController.snapshotTableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:options];
             }
             [rightSideController.snapshotTableView endUpdates];
@@ -2378,8 +2380,10 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         NSUInteger row = [[rightSideController.snapshotArrayController arrangedObjects] indexOfObject:controller];
         if (row != NSNotFound) {
             NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideUp;
-            if ([self rightSidePaneIsOpen] == NO || [self rightSidePaneState] != SKSidePaneStateSnapshot || [NSView shouldShowSlideAnimation] == NO)
+            if ([self rightSidePaneIsOpen] == NO || [self rightSidePaneState] != SKSidePaneStateSnapshot || [NSView shouldShowFadeAnimation] == NO)
                 options = NSTableViewAnimationEffectNone;
+            else if ([NSView shouldShowSlideAnimation] == NO)
+                options = NSTableViewAnimationEffectFade;
             [rightSideController.snapshotTableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:options];
         }
         [[self mutableArrayValueForKey:SNAPSHOTS_KEY] removeObject:controller];
