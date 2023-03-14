@@ -164,11 +164,14 @@ static SKPreferenceController *sharedPrefenceController = nil;
         } else {
             NSTimeInterval duration = fmax(0.25, [window animationResizeTime:frame]);
             [contentView displayIfNeeded];
+            if ([NSView shouldShowSlideAnimation] == NO)
+                [window setFrame:frame display:YES];
             [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                     [context setDuration:duration];
                     [[contentView animator] replaceSubview:oldView with:view];
                     [NSLayoutConstraint activateConstraints:constraints];
-                    [[window animator] setFrame:frame display:YES];
+                    if ([NSView shouldShowSlideAnimation])
+                        [[window animator] setFrame:frame display:YES];
                 }
                 completionHandler:^{}];
         }
