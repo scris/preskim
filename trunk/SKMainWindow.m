@@ -45,6 +45,7 @@
 @implementation SKMainWindow
 
 @synthesize disableConstrainedFrame;
+@dynamic windowImage;
 
 - (void)sendEvent:(NSEvent *)theEvent {
     if ([theEvent type] == NSEventTypeLeftMouseDown || [theEvent type] == NSEventTypeRightMouseDown || [theEvent type] == NSEventTypeKeyDown) {
@@ -104,6 +105,21 @@
 
 - (void)setDelegate:(id<SKMainWindowDelegate>)newDelegate {
     [super setDelegate:newDelegate];
+}
+
+- (NSImage *)windowImage {
+    NSRect frame = [self frame];
+    CGImageRef cgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, (CGWindowID)[self windowNumber], kCGWindowImageBoundsIgnoreFraming);
+    size_t width = (size_t)CGImageGetWidth(cgImage);
+    size_t height = (size_t)CGImageGetHeight(cgImage);
+    CGContextRef ctx = CGBitmapContextCreate(NULL, width, height, 8, 4 * width, CGImageGetColorSpace(cgImage), kCGBitmapByteOrder32Host | kCGImageAlphaPremultipliedFirst);
+    CGContextDrawImage(ctx, CGRectMake(0.0, 0.0, width, height), cgImage);
+    CGImageRef copiedCgImage = CGBitmapContextCreateImage(ctx);
+    NSImage *image = [[NSImage alloc] initWithCGImage:copiedCgImage size:frame.size];
+    CGContextRelease(ctx);
+    CGImageRelease(cgImage);
+    CGImageRelease(copiedCgImage);
+    return [image autorelease];
 }
 
 @end
