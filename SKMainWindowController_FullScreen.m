@@ -588,6 +588,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     [(SKMainWindow *)window setDisableConstrainedFrame:YES];
     if (fade) {
         [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:[(SKMainWindow *)window windowImage]];
+        [animationWindow setHasShadow:YES];
         [animationWindow orderWindow:NSWindowBelow relativeTo:window];
         [window setAlphaValue:0.0];
         [window setFrame:frame display:YES];
