@@ -597,6 +597,7 @@ static char SKSnaphotWindowAppObservationContext;
     
     SKAnimatedBorderlessWindow *miniaturizeWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:startRect];
     [miniaturizeWindow setLevel:NSFloatingWindowLevel];
+    [miniaturizeWindow setHasShadow:YES];
     [miniaturizeWindow setBackgroundImage:windowImage];
     
     [miniaturizeWindow orderFront:nil];
