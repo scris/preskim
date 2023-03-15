@@ -157,11 +157,7 @@ static SKPreferenceController *sharedPrefenceController = nil;
             [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0]];
         [[constraints lastObject] setPriority:NSLayoutPriorityDefaultLow];
         
-        if ([NSView shouldShowFadeAnimation] == NO) {
-            [contentView replaceSubview:oldView with:view];
-            [NSLayoutConstraint activateConstraints:constraints];
-            [window setFrame:frame display:YES];
-        } else {
+        if ([NSView shouldShowFadeAnimation]) {
             NSTimeInterval duration = fmax(0.25, [window animationResizeTime:frame]);
             [contentView displayIfNeeded];
             if ([NSView shouldShowSlideAnimation] == NO)
@@ -174,6 +170,10 @@ static SKPreferenceController *sharedPrefenceController = nil;
                         [[window animator] setFrame:frame display:YES];
                 }
                 completionHandler:^{}];
+        } else {
+            [contentView replaceSubview:oldView with:view];
+            [NSLayoutConstraint activateConstraints:constraints];
+            [window setFrame:frame display:YES];
         }
     }
 }

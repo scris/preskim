@@ -344,7 +344,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     if (animate == NO || [self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowFadeAnimation] == NO)
         options = NSTableViewAnimationEffectNone;
     else if ([NSView shouldShowSlideAnimation] == NO)
-        options = NSTableViewAnimationEffectFade;
+        options = NSTableViewAnimationEffectGap | NSTableViewAnimationEffectFade;
     if (needsBeginUpdates) {
         [outlineView beginUpdates];
         needsBeginUpdates = NO;
@@ -358,7 +358,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     if (animate == NO || [self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowFadeAnimation] == NO)
         options = NSTableViewAnimationEffectNone;
     else if ([NSView shouldShowSlideAnimation] == NO)
-        options = NSTableViewAnimationEffectFade;
+        options = NSTableViewAnimationEffectGap | NSTableViewAnimationEffectFade;
     if (needsBeginUpdates) {
         [outlineView beginUpdates];
         needsBeginUpdates = NO;

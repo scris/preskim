@@ -67,9 +67,7 @@
 - (BOOL)canBecomeMainWindow { return isMain; }
 
 - (void)fadeOutBlocking:(BOOL)blocking {
-    if ([NSView shouldShowFadeAnimation] == NO) {
-        [self orderOut:nil];
-    } else {
+    if ([NSView shouldShowFadeAnimation]) {
         __block BOOL wait = blocking;
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
             [context setDuration:DURATION];
@@ -81,13 +79,13 @@
         }];
         NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
         while (wait && [runLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
+    } else {
+        [self orderOut:nil];
     }
 }
 
 - (void)fadeInBlocking:(BOOL)blocking {
-    if ([NSView shouldShowFadeAnimation] == NO) {
-        [self orderFront:nil];
-    } else {
+    if ([NSView shouldShowFadeAnimation]) {
         __block BOOL wait = blocking;
         [self setAlphaValue:0.0];
         [self orderFront:nil];
@@ -99,6 +97,8 @@
         }];
         NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
         while (wait && [runLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
+    } else {
+        [self orderFront:nil];
     }
 }
 

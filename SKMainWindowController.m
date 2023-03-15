@@ -2362,7 +2362,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                 if ([self rightSidePaneIsOpen] == NO || [self rightSidePaneState] != SKSidePaneStateSnapshot || [NSView shouldShowFadeAnimation] == NO)
                     options = NSTableViewAnimationEffectNone;
                 else if ([NSView shouldShowSlideAnimation] == NO)
-                    options = NSTableViewAnimationEffectFade;
+                    options = NSTableViewAnimationEffectGap | NSTableViewAnimationEffectFade;
                 [rightSideController.snapshotTableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:options];
             }
             [rightSideController.snapshotTableView endUpdates];
@@ -2383,7 +2383,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             if ([self rightSidePaneIsOpen] == NO || [self rightSidePaneState] != SKSidePaneStateSnapshot || [NSView shouldShowFadeAnimation] == NO)
                 options = NSTableViewAnimationEffectNone;
             else if ([NSView shouldShowSlideAnimation] == NO)
-                options = NSTableViewAnimationEffectFade;
+                options = NSTableViewAnimationEffectGap | NSTableViewAnimationEffectFade;
             [rightSideController.snapshotTableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:options];
         }
         [[self mutableArrayValueForKey:SNAPSHOTS_KEY] removeObject:controller];
