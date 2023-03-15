@@ -49,7 +49,6 @@
 }
 
 @property (nonatomic) BOOL disableConstrainedFrame;
-@property (nonatomic, readonly) NSImage *windowImage;
 
 - (id<SKMainWindowDelegate>)delegate;
 - (void)setDelegate:(id<SKMainWindowDelegate>)newDelegate;
