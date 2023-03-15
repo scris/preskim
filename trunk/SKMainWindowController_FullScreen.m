@@ -556,7 +556,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
 static inline NSImage *imageForWindow(NSWindow *window) {
     NSRect frame = [window frame];
     CGWindowListOption options = kCGWindowListOptionIncludingWindow;
-    if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0)
+    if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0 && autoHideToolbarInFullScreen == NO && [[window toolbar] isVisible])
         options |= kCGWindowListOptionOnScreenAboveWindow;
     CGImageRef cgImage = CGWindowListCreateImage(CGRectNull, options, (CGWindowID)[window windowNumber], kCGWindowImageBoundsIgnoreFraming);
     NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:frame.size];
