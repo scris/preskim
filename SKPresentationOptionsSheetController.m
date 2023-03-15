@@ -306,7 +306,7 @@ static char *SKTransitionPropertiesObservationContext;
             [self makeTransitions];
             width += [tableWidthConstraint constant] + TABLE_OFFSET;
         }
-        if (isVisible) {
+        if (isVisible && [NSView shouldShowSlideAnimation]) {
             [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                     [[boxLeadingConstraint animator] setConstant:width];
                     [[scrollView animator] setHidden:hidden];
@@ -318,6 +318,10 @@ static char *SKTransitionPropertiesObservationContext;
         } else {
             [boxLeadingConstraint setConstant:width];
             [scrollView setHidden:hidden];
+            if (isVisible) {
+                NSRect frame = [window frame];
+                [window setFrameOrigin:NSMakePoint(NSMidX([[controller window] frame]) - 0.5 * NSWidth(frame), NSMinY(frame))];
+            }
         }
         [[[self undoManager] prepareWithInvocationTarget:self] setSeparate:separate == NO];
     }
