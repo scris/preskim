@@ -566,11 +566,9 @@ static NSImage *imageForWindow(NSWindow *window) {
                 break;
         if (tbWindow) {
             CGImageRef tbCgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, (CGWindowID)[tbWindow windowNumber], kCGWindowImageBoundsIgnoreFraming);
-            CGColorSpaceRef cs = CGImageGetColorSpace(cgImage);
             size_t width = CGImageGetWidth(cgImage), height = CGImageGetHeight(cgImage);
             size_t tbWidth = CGImageGetWidth(tbCgImage), tbHeight = CGImageGetHeight(tbCgImage);
-            CGContextRef ctx = CGBitmapContextCreate(NULL, width, height, 8, 4 * width, cs, kCGBitmapByteOrder32Host | kCGImageAlphaPremultipliedFirst);
-            CGColorSpaceRelease(cs);
+            CGContextRef ctx = CGBitmapContextCreate(NULL, width, height, 8, 4 * width, CGImageGetColorSpace(cgImage), kCGBitmapByteOrder32Host | kCGImageAlphaPremultipliedFirst);
             CGContextDrawImage(ctx, CGRectMake(0.0, 0.0, width, height), cgImage);
             CGContextDrawImage(ctx, CGRectMake(0.0, height - tbHeight, tbWidth, tbHeight), tbCgImage);
             CGImageRelease(tbCgImage);
