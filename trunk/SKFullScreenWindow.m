@@ -85,7 +85,7 @@
 }
 
 - (void)fadeInBlocking:(BOOL)blocking {
-    if ([NSView shouldShowFadeAnimation]) {
+    if ([NSView shouldShowFadeAnimation] == NO) {
         [self orderFront:nil];
     } else {
         __block BOOL wait = blocking;
