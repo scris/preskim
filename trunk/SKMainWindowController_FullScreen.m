@@ -553,6 +553,17 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     return 0.0;
 }
 
+static inline NSImage *imageForWindow(NSWindow *window) {
+    NSRect frame = [window frame];
+    CGWindowListOption options = kCGWindowListOptionIncludingWindow;
+    if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0)
+        options |= kCGWindowListOptionOnScreenAboveWindow;
+    CGImageRef cgImage = CGWindowListCreateImage(CGRectNull, options, (CGWindowID)[window windowNumber], kCGWindowImageBoundsIgnoreFraming);
+    NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:frame.size];
+    CGImageRelease(cgImage);
+    return [image autorelease];
+}
+
 - (void)windowWillEnterFullScreen:(NSNotification *)notification {
     mwcFlags.isSwitchingFullScreen = 1;
     interactionMode = SKFullScreenMode;
@@ -586,7 +597,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     NSRect frame = SKShrinkRect([[window screen] frame], -fullScreenOffset(window), NSMaxYEdge);
     [(SKMainWindow *)window setDisableConstrainedFrame:YES];
     if (animationWindow != nil) {
-        [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:[(SKMainWindow *)window windowImage]];
+        [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:imageForWindow(window)];
         [animationWindow setHasShadow:YES];
         [animationWindow orderWindow:NSWindowBelow relativeTo:window];
         [window setAlphaValue:0.0];
@@ -680,7 +691,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
 - (void)window:(NSWindow *)window startCustomAnimationToExitFullScreenWithDuration:(NSTimeInterval)duration {
     NSRect frame = NSRectFromString([savedNormalSetup objectForKey:MAINWINDOWFRAME_KEY]);
     if (animationWindow != nil) {
-        [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:[(SKMainWindow *)window windowImage]];
+        [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:imageForWindow(window)];
         [animationWindow orderWindow:NSWindowBelow relativeTo:window];
         [window setAlphaValue:0.0];
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
