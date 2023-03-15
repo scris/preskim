@@ -693,6 +693,7 @@ static inline NSImage *imageForWindow(NSWindow *window) {
     if (animationWindow != nil) {
         [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:imageForWindow(window)];
         [animationWindow orderWindow:NSWindowBelow relativeTo:window];
+        [animationWindow setLevel:NSStatusWindowLevel];
         [window setAlphaValue:0.0];
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
         [window setFrame:frame display:YES];
