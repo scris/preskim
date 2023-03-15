@@ -265,7 +265,7 @@ static SKDownloadController *sharedDownloadController = nil;
     if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowFadeAnimation] == NO)
         options = NSTableViewAnimationEffectNone;
     else if ([NSView shouldShowSlideAnimation] == NO)
-        options = NSTableViewAnimationEffectFade;
+        options = NSTableViewAnimationEffectGap | NSTableViewAnimationEffectFade;
     [tableView beginUpdates];
     [tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:options];
     [self insertObject:download inDownloadsAtIndex:row];
@@ -277,7 +277,7 @@ static SKDownloadController *sharedDownloadController = nil;
     if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowFadeAnimation] == NO)
         options = NSTableViewAnimationEffectNone;
     else if ([NSView shouldShowSlideAnimation] == NO)
-        options = NSTableViewAnimationEffectFade;
+        options = NSTableViewAnimationEffectGap | NSTableViewAnimationEffectFade;
     [tableView beginUpdates];
     [tableView removeRowsAtIndexes:indexes withAnimation:options];
     [[self mutableArrayValueForKey:DOWNLOADS_KEY] removeObjectsAtIndexes:indexes];

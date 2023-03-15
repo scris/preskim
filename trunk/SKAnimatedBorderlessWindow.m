@@ -124,9 +124,7 @@
     
     [self setAlphaValue:[self defaultAlphaValue]];
     
-    if ([NSView shouldShowFadeAnimation] == NO) {
-        [self remove];
-    } else {
+    if ([NSView shouldShowFadeAnimation]) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [context setDuration:[self fadeOutDuration]];
                 [[self animator] setAlphaValue:0.0];
@@ -134,6 +132,8 @@
             completionHandler:nil];
         // don't put this in the completionHandler, because we want to be able to stop this using stopAnimation
         [self performSelector:@selector(remove) withObject:nil afterDelay:[self fadeOutDuration]];
+    } else {
+        [self remove];
     }
 }
 
@@ -144,9 +144,7 @@
         [self setAlphaValue:0.0];
     [super orderFront:self];
     
-    if ([NSView shouldShowFadeAnimation] == NO) {
-        [self setAlphaValue:[self defaultAlphaValue]];
-    } else {
+    if ([NSView shouldShowFadeAnimation]) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [context setDuration:[self fadeInDuration]];
                 [[self animator] setAlphaValue:[self defaultAlphaValue]];
@@ -155,6 +153,8 @@
                 if ([self hasShadow])
                     [self invalidateShadow];
             }];
+    } else {
+        [self setAlphaValue:[self defaultAlphaValue]];
     }
     [self fadeOutAfterTimeout];
 }
