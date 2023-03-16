@@ -44,17 +44,16 @@
 
 @implementation SKFullScreenWindow
 
-- (id)initWithScreen:(NSScreen *)screen level:(NSInteger)level isMain:(BOOL)flag {
+- (id)initWithScreen:(NSScreen *)screen {
     NSRect screenFrame = [(screen ?: [NSScreen mainScreen]) frame];
     self = [self initWithContentRect:screenFrame styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
     if (self) {
-        isMain = flag;
         [self setBackgroundColor:[NSColor blackColor]];
-        [self setLevel:level];
+        [self setLevel:NSPopUpMenuWindowLevel];
         [self setReleasedWhenClosed:NO];
-        [self setDisplaysWhenScreenProfileChanges:isMain];
-        [self setAcceptsMouseMovedEvents:isMain];
-        [self setExcludedFromWindowsMenu:isMain == NO];
+        [self setDisplaysWhenScreenProfileChanges:YES];
+        [self setAcceptsMouseMovedEvents:YES];
+        [self setExcludedFromWindowsMenu:NO];
         // appartently this is needed for secondary screens
         [self setFrame:screenFrame display:NO];
         [self setAnimationBehavior:NSWindowAnimationBehaviorNone];
@@ -62,45 +61,9 @@
     return self;
 }
 
-- (BOOL)canBecomeKeyWindow { return isMain; }
+- (BOOL)canBecomeKeyWindow { return YES; }
 
-- (BOOL)canBecomeMainWindow { return isMain; }
-
-- (void)fadeOutBlocking:(BOOL)blocking {
-    if ([NSView shouldShowFadeAnimation]) {
-        __block BOOL wait = blocking;
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-            [context setDuration:DURATION];
-            [[self animator] setAlphaValue:0.0];
-        } completionHandler:^{
-            [self orderOut:nil];
-            [self setAlphaValue:1.0];
-            wait = NO;
-        }];
-        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-        while (wait && [runLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
-    } else {
-        [self orderOut:nil];
-    }
-}
-
-- (void)fadeInBlocking:(BOOL)blocking {
-    if ([NSView shouldShowFadeAnimation]) {
-        __block BOOL wait = blocking;
-        [self setAlphaValue:0.0];
-        [self orderFront:nil];
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-            [context setDuration:DURATION];
-            [[self animator] setAlphaValue:1.0];
-        } completionHandler:^{
-            wait = NO;
-        }];
-        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-        while (wait && [runLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
-    } else {
-        [self orderFront:nil];
-    }
-}
+- (BOOL)canBecomeMainWindow { return YES; }
 
 - (void)sendEvent:(NSEvent *)theEvent {
     if ([theEvent type] == NSEventTypeRightMouseDown || ([theEvent type] == NSEventTypeLeftMouseDown && ([theEvent modifierFlags] & NSEventModifierFlagControl))) {

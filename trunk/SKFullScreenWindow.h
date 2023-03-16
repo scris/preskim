@@ -40,14 +40,9 @@
 #import "SKMainWindow.h"
 
 
-@interface SKFullScreenWindow : SKMainWindow <NSAnimationDelegate> {
-    BOOL isMain;
-}
+@interface SKFullScreenWindow : SKMainWindow <NSAnimationDelegate>
 
-- (id)initWithScreen:(NSScreen *)screen level:(NSInteger)level isMain:(BOOL)flag;
-
-- (void)fadeOutBlocking:(BOOL)blocking;
-- (void)fadeInBlocking:(BOOL)blocking;
+- (id)initWithScreen:(NSScreen *)screen;
 
 @end
 
