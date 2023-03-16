@@ -977,6 +977,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     rect = NSInsetRect(rect, 2.0, 2.0);
     CGFloat r = RUNNING_AFTER(10_15) ? 3.0 : 2.0;
     BOOL disabled = RUNNING_AFTER(10_13) && [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO && ([self isDescendantOf:[[self window] contentView]] == NO || [[self window] isKindOfClass:NSClassFromString(@"NSToolbarSnapshotWindow")]);
+    CGFloat stroke = [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 0.55 : 0.25;
     NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:r - 0.5 yRadius:r - 0.5];
 
     if (NSWidth(rect) > 2.0) {
@@ -992,10 +993,10 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         [aColor drawSwatchInRect:rect];
         
         if (SKHasDarkAppearance(self)) {
-            [[NSColor colorWithGenericGamma22White:1.0 alpha:0.25] setStroke];
+            [[NSColor colorWithGenericGamma22White:1.0 alpha:stroke] setStroke];
             [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationScreen];
         } else {
-            [[NSColor colorWithGenericGamma22White:0.0 alpha:0.25] setStroke];
+            [[NSColor colorWithGenericGamma22White:0.0 alpha:stroke] setStroke];
             [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationMultiply];
         }
         [path stroke];
