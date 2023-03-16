@@ -304,7 +304,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     if ([[mainWindow firstResponder] isDescendantOf:pdfSplitView])
         [mainWindow makeFirstResponder:nil];
     
-    NSWindow *fullScreenWindow = [[SKFullScreenWindow alloc] initWithScreen:screen ?: [mainWindow screen] level:NSPopUpMenuWindowLevel isMain:YES];
+    NSWindow *fullScreenWindow = [[SKFullScreenWindow alloc] initWithScreen:screen ?: [mainWindow screen]];
     
     [mainWindow setDelegate:nil];
     [self setWindow:fullScreenWindow];
