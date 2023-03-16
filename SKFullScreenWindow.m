@@ -37,10 +37,6 @@
  */
 
 #import "SKFullScreenWindow.h"
-#import "SKStringConstants.h"
-#import "NSView_SKExtensions.h"
-
-#define DURATION 0.3
 
 @implementation SKFullScreenWindow
 
