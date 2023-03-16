@@ -351,7 +351,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [fullScreenWindow orderOut:nil];
 }
 
-static NSImage *imageForWindow(NSWindow *window) {
+- (void)showStaticContentForWindow:(NSWindow *)window {
     NSRect frame = [window frame];
     CGImageRef cgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, (CGWindowID)[window windowNumber], kCGWindowImageBoundsIgnoreFraming);
     if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0 && autoHideToolbarInFullScreen == NO && [[window toolbar] isVisible]) {
@@ -374,7 +374,17 @@ static NSImage *imageForWindow(NSWindow *window) {
     }
     NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:frame.size];
     CGImageRelease(cgImage);
-    return [image autorelease];
+    if (animationWindow == nil)
+        animationWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[window frame]];
+    else
+        [animationWindow setFrame:[window frame] display:NO];
+    [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:image];
+    [image release];
+    [animationWindow setHasShadow:[window hasShadow]];
+    // trick to make sure the animation window shows up in the same space and tyhe same level
+    [window addChildWindow:animationWindow ordered:NSWindowBelow];
+    [window removeChildWindow:animationWindow];
+    [window setAlphaValue:0.0];
 }
 
 #pragma mark API
@@ -421,10 +431,7 @@ static NSImage *imageForWindow(NSWindow *window) {
             screen = [screens firstObject];
     }
     
-    animationWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[mainWindow frame]];
-    [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:imageForWindow(mainWindow)];
-    [animationWindow setHasShadow:YES];
-    [animationWindow orderWindow:NSWindowAbove relativeTo:mainWindow];
+    [self showStaticContentForWindow:mainWindow];
     
     [self addFullScreenWindowOnScreen:screen];
     
@@ -479,21 +486,16 @@ static NSImage *imageForWindow(NSWindow *window) {
     
     NSWindow *fullScreenWindow = [self window];
     
+    [self showStaticContentForWindow:fullScreenWindow];
+    
     while ([[fullScreenWindow childWindows] count] > 0) {
         NSWindow *childWindow = [[fullScreenWindow childWindows] lastObject];
         [fullScreenWindow removeChildWindow:childWindow];
         [childWindow orderOut:nil];
     }
     
-    [fullScreenWindow display];
     [fullScreenWindow setDelegate:nil];
     [fullScreenWindow makeFirstResponder:nil];
-    
-    animationWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[fullScreenWindow frame]];
-    [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:imageForWindow(fullScreenWindow)];
-    [animationWindow setHasShadow:YES];
-    [animationWindow setLevel:[fullScreenWindow level]];
-    [animationWindow orderWindow:NSWindowAbove relativeTo:fullScreenWindow];
     
     interactionMode = SKNormalMode;
     
@@ -619,10 +621,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     NSRect frame = SKShrinkRect([[window screen] frame], -fullScreenOffset(window), NSMaxYEdge);
     [(SKMainWindow *)window setDisableConstrainedFrame:YES];
     if (animationWindow != nil) {
-        [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:imageForWindow(window)];
-        [animationWindow setHasShadow:YES];
-        [animationWindow orderWindow:NSWindowBelow relativeTo:window];
-        [window setAlphaValue:0.0];
+        [self showStaticContentForWindow:window];
         [window setFrame:frame display:YES];
         for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
             if ([view isKindOfClass:[NSControl class]])
@@ -714,10 +713,8 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
 - (void)window:(NSWindow *)window startCustomAnimationToExitFullScreenWithDuration:(NSTimeInterval)duration {
     NSRect frame = NSRectFromString([savedNormalSetup objectForKey:MAINWINDOWFRAME_KEY]);
     if (animationWindow != nil) {
-        [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:imageForWindow(window)];
-        [animationWindow orderWindow:NSWindowBelow relativeTo:window];
+        [self showStaticContentForWindow:window];
         [animationWindow setLevel:NSStatusWindowLevel];
-        [window setAlphaValue:0.0];
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
         [window setFrame:frame display:YES];
         [window setLevel:NSNormalWindowLevel];
