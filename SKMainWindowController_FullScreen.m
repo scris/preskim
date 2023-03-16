@@ -79,6 +79,8 @@
 #define SKCollapseSidePanesInFullScreenKey @"SKCollapseSidePanesInFullScreen"
 #define SKResizablePresentationKey @"SKResizablePresentation"
 
+#define PRESENTATION_DURATION 0.5
+
 static BOOL autoHideToolbarInFullScreen = NO;
 static BOOL collapseSidePanesInFullScreen = NO;
 
@@ -298,15 +300,16 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     }
 }
 
-- (void)fadeInFullScreenWindowOnScreen:(NSScreen *)screen {
+- (void)addFullScreenWindowOnScreen:(NSScreen *)screen {
     if ([[mainWindow firstResponder] isDescendantOf:pdfSplitView])
         [mainWindow makeFirstResponder:nil];
     
-    SKFullScreenWindow *fullScreenWindow = [[SKFullScreenWindow alloc] initWithScreen:screen ?: [mainWindow screen] level:NSPopUpMenuWindowLevel isMain:YES];
+    NSWindow *fullScreenWindow = [[SKFullScreenWindow alloc] initWithScreen:screen ?: [mainWindow screen] level:NSPopUpMenuWindowLevel isMain:YES];
     
     [mainWindow setDelegate:nil];
     [self setWindow:fullScreenWindow];
-    [fullScreenWindow fadeInBlocking:YES];
+    [fullScreenWindow setAlphaValue:0.0];
+    [fullScreenWindow orderFront:nil];
     [fullScreenWindow makeKeyWindow];
     [NSApp updatePresentationOptionsForWindow:fullScreenWindow];
     [mainWindow setAnimationBehavior:NSWindowAnimationBehaviorNone];
@@ -319,49 +322,8 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [fullScreenWindow release];
 }
 
-- (void)fadeInFullScreenView {
-    SKFullScreenWindow *fullScreenWindow = (SKFullScreenWindow *)[self window];
-    SKFullScreenWindow *fadeWindow = [[[SKFullScreenWindow alloc] initWithScreen:[fullScreenWindow screen] level:[fullScreenWindow level] isMain:NO] autorelease];
-    NSView *contentView = [fullScreenWindow contentView];
-    
-    [fadeWindow setFrame:[fullScreenWindow frame] display:NO];
-    [fadeWindow orderWindow:NSWindowAbove relativeTo:[fullScreenWindow windowNumber]];
-    [contentView addSubview:pdfView];
-    [pdfView activateConstraintsToSuperview];
-    [pdfView layoutDocumentView];
-    [pdfView requiresDisplay];
-    [fullScreenWindow makeFirstResponder:pdfView];
-    [fullScreenWindow recalculateKeyViewLoop];
-    [fullScreenWindow setDelegate:self];
-    [fadeWindow fadeOutBlocking:NO];
-}
-
-- (void)fadeOutFullScreenView {
-    SKFullScreenWindow *fullScreenWindow = (SKFullScreenWindow *)[self window];
-    SKFullScreenWindow *fadeWindow = [[SKFullScreenWindow alloc] initWithScreen:[fullScreenWindow screen] level:[fullScreenWindow level] isMain:NO];
-    
-    [fadeWindow setFrame:[fullScreenWindow frame] display:NO];
-    [fadeWindow setAlphaValue:0.0];
-    [fadeWindow orderWindow:NSWindowAbove relativeTo:[fullScreenWindow windowNumber]];
-    [fadeWindow fadeInBlocking:YES];
-    
-    while ([[fullScreenWindow childWindows] count] > 0) {
-        NSWindow *childWindow = [[fullScreenWindow childWindows] lastObject];
-        [fullScreenWindow removeChildWindow:childWindow];
-        [childWindow orderOut:nil];
-    }
-    
-    NSView *view = [[[fullScreenWindow contentView] subviews] firstObject];
-    [view removeFromSuperview];
-    [fullScreenWindow display];
-    [fullScreenWindow setDelegate:nil];
-    [fullScreenWindow makeFirstResponder:nil];
-    [fadeWindow orderOut:nil];
-    [fadeWindow release];
-}
-
-- (void)fadeOutFullScreenWindow {
-    SKFullScreenWindow *fullScreenWindow = (SKFullScreenWindow *)[[[self window] retain] autorelease];
+- (void)removeFullScreenWindow {
+    NSWindow *fullScreenWindow = [[[self window] retain] autorelease];
     
     [self setWindow:mainWindow];
     [mainWindow setAlphaValue:0.0];
@@ -374,8 +336,6 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
         [fullScreenWindow setLevel:NSPopUpMenuWindowLevel];
         // these can change due to the child window trick
         [mainWindow setLevel:NSNormalWindowLevel];
-        if (NSContainsRect([fullScreenWindow frame], [mainWindow frame]))
-            [mainWindow setAlphaValue:1.0];
         [mainWindow setCollectionBehavior:collectionBehavior];
     } else {
         [mainWindow makeKeyAndOrderFront:nil];
@@ -388,9 +348,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [NSApp updatePresentationOptionsForWindow:mainWindow];
     [mainWindow setAnimationBehavior:NSWindowAnimationBehaviorDefault];
     [NSApp removeWindowsItem:fullScreenWindow];
-    [fullScreenWindow fadeOutBlocking:NO];
-    if ([mainWindow alphaValue] < 1.0)
-        [[mainWindow animator] setAlphaValue:1.0];
+    [fullScreenWindow orderOut:nil];
 }
 
 #pragma mark API
@@ -437,19 +395,42 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
             screen = [screens firstObject];
     }
     
-    [self fadeInFullScreenWindowOnScreen:screen];
+    animationWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[mainWindow frame]];
+    [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:imageForWindow(mainWindow)];
+    [animationWindow setHasShadow:YES];
+    [animationWindow orderWindow:NSWindowAbove relativeTo:mainWindow];
+    
+    [self addFullScreenWindowOnScreen:screen];
     
     if ([self hasOverview])
         [self hideOverviewAnimating:NO];
     
     [self enterPresentationMode];
     
-    [self fadeInFullScreenView];
+    NSWindow *fullScreenWindow = [self window];
     
+    [[fullScreenWindow contentView] addSubview:pdfView];
+    [pdfView activateConstraintsToSuperview];
+    [pdfView layoutDocumentView];
+    [pdfView requiresDisplay];
+    [fullScreenWindow makeFirstResponder:pdfView];
+    [fullScreenWindow recalculateKeyViewLoop];
+    [fullScreenWindow setDelegate:self];
+
     if ([[[self pdfView] currentPage] isEqual:page] == NO)
         [[self pdfView] goToCurrentPage:page];
     
     mwcFlags.isSwitchingFullScreen = 0;
+    
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+        [context setDuration:PRESENTATION_DURATION];
+        [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+        [[animationWindow animator] setAlphaValue:0.0];
+        [[fullScreenWindow animator] setAlphaValue:1.0];
+    } completionHandler:^{
+        [animationWindow orderOut:nil];
+        SKDESTROY(animationWindow);
+    }];
     
     [pdfView setInteractionMode:SKPresentationMode];
     [touchBarController interactionModeChanged];
@@ -470,7 +451,23 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     // do this first, otherwise the navigation window may be covered by fadeWindow and then reveiled again, which looks odd
     [pdfView setInteractionMode:SKNormalMode];
     
-    [self fadeOutFullScreenView];
+    NSWindow *fullScreenWindow = [self window];
+    
+    while ([[fullScreenWindow childWindows] count] > 0) {
+        NSWindow *childWindow = [[fullScreenWindow childWindows] lastObject];
+        [fullScreenWindow removeChildWindow:childWindow];
+        [childWindow orderOut:nil];
+    }
+    
+    [fullScreenWindow display];
+    [fullScreenWindow setDelegate:nil];
+    [fullScreenWindow makeFirstResponder:nil];
+    
+    animationWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[fullScreenWindow frame]];
+    [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:imageForWindow(fullScreenWindow)];
+    [animationWindow setHasShadow:YES];
+    [animationWindow setLevel:[fullScreenWindow level]];
+    [animationWindow orderWindow:NSWindowAbove relativeTo:fullScreenWindow];
     
     interactionMode = SKNormalMode;
     
@@ -498,7 +495,17 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     [touchBarController interactionModeChanged];
     
-    [self fadeOutFullScreenWindow];
+    [self removeFullScreenWindow];
+    
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+        [context setDuration:PRESENTATION_DURATION];
+        [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+        [[animationWindow animator] setAlphaValue:0.0];
+        [[mainWindow animator] setAlphaValue:1.0];
+    } completionHandler:^{
+        [animationWindow orderOut:nil];
+        SKDESTROY(animationWindow);
+    }];
     
     // the page number may have changed
     [self synchronizeWindowTitleWithDocumentName];
