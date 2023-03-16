@@ -351,6 +351,32 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [fullScreenWindow orderOut:nil];
 }
 
+static NSImage *imageForWindow(NSWindow *window) {
+    NSRect frame = [window frame];
+    CGImageRef cgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, (CGWindowID)[window windowNumber], kCGWindowImageBoundsIgnoreFraming);
+    if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0 && autoHideToolbarInFullScreen == NO && [[window toolbar] isVisible]) {
+        NSWindow *tbWindow = nil;
+        for (tbWindow in [window childWindows])
+            if ([NSStringFromClass([tbWindow class]) containsString:@"Toolbar"])
+                break;
+        if (tbWindow) {
+            CGImageRef tbCgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, (CGWindowID)[tbWindow windowNumber], kCGWindowImageBoundsIgnoreFraming);
+            size_t width = CGImageGetWidth(cgImage), height = CGImageGetHeight(cgImage);
+            size_t tbWidth = CGImageGetWidth(tbCgImage), tbHeight = CGImageGetHeight(tbCgImage);
+            CGContextRef ctx = CGBitmapContextCreate(NULL, width, height, 8, 4 * width, CGImageGetColorSpace(cgImage), kCGBitmapByteOrder32Host | kCGImageAlphaPremultipliedFirst);
+            CGContextDrawImage(ctx, CGRectMake(0.0, 0.0, width, height), cgImage);
+            CGContextDrawImage(ctx, CGRectMake(0.0, height - tbHeight, tbWidth, tbHeight), tbCgImage);
+            CGImageRelease(tbCgImage);
+            CGImageRelease(cgImage);
+            cgImage = CGBitmapContextCreateImage(ctx);
+            CGContextRelease(ctx);
+        }
+    }
+    NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:frame.size];
+    CGImageRelease(cgImage);
+    return [image autorelease];
+}
+
 #pragma mark API
 
 - (void)enterFullscreen {
@@ -558,32 +584,6 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     if (view)
         return NSMaxY([view convertRectToScreen:[view frame]]) - NSMaxY([[view window] frame]);
     return 0.0;
-}
-
-static NSImage *imageForWindow(NSWindow *window) {
-    NSRect frame = [window frame];
-    CGImageRef cgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, (CGWindowID)[window windowNumber], kCGWindowImageBoundsIgnoreFraming);
-    if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0 && autoHideToolbarInFullScreen == NO && [[window toolbar] isVisible]) {
-        NSWindow *tbWindow = nil;
-        for (tbWindow in [window childWindows])
-            if ([NSStringFromClass([tbWindow class]) containsString:@"Toolbar"])
-                break;
-        if (tbWindow) {
-            CGImageRef tbCgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, (CGWindowID)[tbWindow windowNumber], kCGWindowImageBoundsIgnoreFraming);
-            size_t width = CGImageGetWidth(cgImage), height = CGImageGetHeight(cgImage);
-            size_t tbWidth = CGImageGetWidth(tbCgImage), tbHeight = CGImageGetHeight(tbCgImage);
-            CGContextRef ctx = CGBitmapContextCreate(NULL, width, height, 8, 4 * width, CGImageGetColorSpace(cgImage), kCGBitmapByteOrder32Host | kCGImageAlphaPremultipliedFirst);
-            CGContextDrawImage(ctx, CGRectMake(0.0, 0.0, width, height), cgImage);
-            CGContextDrawImage(ctx, CGRectMake(0.0, height - tbHeight, tbWidth, tbHeight), tbCgImage);
-            CGImageRelease(tbCgImage);
-            CGImageRelease(cgImage);
-            cgImage = CGBitmapContextCreateImage(ctx);
-            CGContextRelease(ctx);
-        }
-    }
-    NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:frame.size];
-    CGImageRelease(cgImage);
-    return [image autorelease];
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification *)notification {
