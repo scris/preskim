@@ -623,6 +623,7 @@ static NSImage *imageForWindow(NSWindow *window) {
         [(SKMainWindow *)window setDisableConstrainedFrame:NO];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration];
+                [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
                 [[window animator] setAlphaValue:1.0];
                 [[animationWindow animator] setAlphaValue:0.0];
             }
@@ -715,6 +716,7 @@ static NSImage *imageForWindow(NSWindow *window) {
         [window setLevel:NSNormalWindowLevel];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration];
+                [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
                 [[window animator] setAlphaValue:1.0];
                 [[animationWindow animator] setAlphaValue:0.0];
             }
