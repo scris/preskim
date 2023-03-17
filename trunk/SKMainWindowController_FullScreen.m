@@ -704,6 +704,9 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
         [self showStaticContentForWindow:window];
         [animationWindow setLevel:NSStatusWindowLevel];
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
+        for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
+            if ([view isKindOfClass:[NSControl class]])
+                [view setAlphaValue:1.0];
         [window setFrame:frame display:YES];
         [window setLevel:NSNormalWindowLevel];
         [self crossFadeToWindow:window duration:duration];
