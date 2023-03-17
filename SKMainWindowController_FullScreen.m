@@ -449,8 +449,8 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [fullScreenWindow recalculateKeyViewLoop];
     [fullScreenWindow setDelegate:self];
 
-    if ([[[self pdfView] currentPage] isEqual:page] == NO)
-        [[self pdfView] goToCurrentPage:page];
+    if ([[pdfView currentPage] isEqual:page] == NO)
+        [pdfView goToPage:page];
     
     mwcFlags.isSwitchingFullScreen = 0;
     
