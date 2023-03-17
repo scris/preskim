@@ -333,7 +333,6 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
         // trick to make sure the main window shows up in the same space as the fullscreen window
         [fullScreenWindow addChildWindow:mainWindow ordered:NSWindowBelow];
         [fullScreenWindow removeChildWindow:mainWindow];
-        [fullScreenWindow setLevel:NSPopUpMenuWindowLevel];
         // these can change due to the child window trick
         [mainWindow setLevel:NSNormalWindowLevel];
         [mainWindow setCollectionBehavior:collectionBehavior];
@@ -528,6 +527,8 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [touchBarController interactionModeChanged];
     
     [self removeFullScreenWindow];
+    
+    [animationWindow setLevel:NSPopUpMenuWindowLevel];
     
     [self crossFadeToWindow:mainWindow duration:PRESENTATION_DURATION];
     
