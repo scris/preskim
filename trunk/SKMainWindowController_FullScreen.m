@@ -619,6 +619,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     if (animationWindow != nil) {
         [self showStaticContentForWindow:window];
         [window setFrame:frame display:YES];
+        [window orderWindow:NSWindowAbove relativeTo:animationWindow];
         for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
             if ([view isKindOfClass:[NSControl class]])
                 [view setAlphaValue:0.0];
