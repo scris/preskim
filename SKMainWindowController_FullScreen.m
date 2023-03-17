@@ -327,9 +327,9 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     [self setWindow:mainWindow];
     [mainWindow setAlphaValue:0.0];
+    [mainWindow setAnimationBehavior:NSWindowAnimationBehaviorNone];
     if (NSPointInRect(SKCenterPoint([mainWindow frame]), [[fullScreenWindow screen] frame])) {
         NSWindowCollectionBehavior collectionBehavior = [mainWindow collectionBehavior];
-        [mainWindow setAnimationBehavior:NSWindowAnimationBehaviorNone];
         // trick to make sure the main window shows up in the same space as the fullscreen window
         [fullScreenWindow addChildWindow:mainWindow ordered:NSWindowBelow];
         [fullScreenWindow removeChildWindow:mainWindow];
