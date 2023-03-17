@@ -386,6 +386,19 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [window setAlphaValue:0.0];
 }
 
+- (void)crossFadeToWindow:(NSWindow *)window duration:(NSTimeInterval)duration {
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            [context setDuration:duration];
+            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+            [[window animator] setAlphaValue:1.0];
+            [[animationWindow animator] setAlphaValue:0.0];
+        }
+        completionHandler:^{
+            [animationWindow orderOut:nil];
+            SKDESTROY(animationWindow);
+        }];
+}
+
 #pragma mark API
 
 - (void)enterFullscreen {
@@ -454,15 +467,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     mwcFlags.isSwitchingFullScreen = 0;
     
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-        [context setDuration:PRESENTATION_DURATION];
-        [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-        [[animationWindow animator] setAlphaValue:0.0];
-        [[fullScreenWindow animator] setAlphaValue:1.0];
-    } completionHandler:^{
-        [animationWindow orderOut:nil];
-        SKDESTROY(animationWindow);
-    }];
+    [self crossFadeToWindow:fullScreenWindow duration:PRESENTATION_DURATION];
     
     [pdfView setInteractionMode:SKPresentationMode];
     [touchBarController interactionModeChanged];
@@ -524,15 +529,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     [self removeFullScreenWindow];
     
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-        [context setDuration:PRESENTATION_DURATION];
-        [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-        [[animationWindow animator] setAlphaValue:0.0];
-        [[mainWindow animator] setAlphaValue:1.0];
-    } completionHandler:^{
-        [animationWindow orderOut:nil];
-        SKDESTROY(animationWindow);
-    }];
+    [self crossFadeToWindow:mainWindow duration:PRESENTATION_DURATION];
     
     // the page number may have changed
     [self synchronizeWindowTitleWithDocumentName];
@@ -626,16 +623,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
             if ([view isKindOfClass:[NSControl class]])
                 [view setAlphaValue:0.0];
         [(SKMainWindow *)window setDisableConstrainedFrame:NO];
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-                [context setDuration:duration];
-                [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-                [[window animator] setAlphaValue:1.0];
-                [[animationWindow animator] setAlphaValue:0.0];
-            }
-            completionHandler:^{
-                [animationWindow orderOut:nil];
-                SKDESTROY(animationWindow);
-            }];
+        [self crossFadeToWindow:window duration:duration];
     } else {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration - 0.02];
@@ -718,16 +706,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
         [window setFrame:frame display:YES];
         [window setLevel:NSNormalWindowLevel];
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-                [context setDuration:duration];
-                [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-                [[window animator] setAlphaValue:1.0];
-                [[animationWindow animator] setAlphaValue:0.0];
-            }
-            completionHandler:^{
-                [animationWindow orderOut:nil];
-                SKDESTROY(animationWindow);
-            }];
+        [self crossFadeToWindow:window duration:duration];
     } else {
         [(SKMainWindow *)window setDisableConstrainedFrame:YES];
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
