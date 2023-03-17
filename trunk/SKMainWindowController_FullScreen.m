@@ -677,6 +677,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
 - (void)windowDidFailToEnterFullScreen:(NSWindow *)window {
     if ([[pdfView document] isLocked] == NO || [savedNormalSetup count] == 1)
         [savedNormalSetup removeAllObjects];
+    SKDESTROY(animationWindow);
     interactionMode = SKNormalMode;
     mwcFlags.isSwitchingFullScreen = 0;
 }
@@ -777,6 +778,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
         [self applyLeftSideWidth:0.0 rightSideWidth:0.0];
         [self forceSubwindowsOnTop:YES];
     }
+    SKDESTROY(animationWindow);
     mwcFlags.isSwitchingFullScreen = 0;
     mwcFlags.wantsPresentation = 0;
 }
