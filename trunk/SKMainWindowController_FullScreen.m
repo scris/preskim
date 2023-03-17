@@ -381,9 +381,8 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:image];
     [image release];
     [animationWindow setHasShadow:[window hasShadow]];
-    // trick to make sure the animation window shows up in the same space and tyhe same level
-    [window addChildWindow:animationWindow ordered:NSWindowBelow];
-    [window removeChildWindow:animationWindow];
+    [animationWindow setLevel:[window level]];
+    [animationWindow orderWindow:NSWindowAbove relativeTo:window];
     [window setAlphaValue:0.0];
 }
 
