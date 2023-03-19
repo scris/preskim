@@ -457,7 +457,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
             [context setDuration:PRESENTATION_DURATION];
             [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
             [[fullScreenWindow animator] setAlphaValue:1.0];
-            if (NSContainsRect([fullScreenWindow frame], [animationWindow frame]) == NO);
+            if (NSContainsRect([fullScreenWindow frame], [animationWindow frame]) == NO)
                 [[animationWindow animator] setAlphaValue:0.0];
         }
         completionHandler:^{
