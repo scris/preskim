@@ -385,19 +385,6 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [window setAlphaValue:0.0];
 }
 
-- (void)crossFadeToWindow:(NSWindow *)window duration:(NSTimeInterval)duration {
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-            [context setDuration:duration];
-            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-            [[window animator] setAlphaValue:1.0];
-            [[animationWindow animator] setAlphaValue:0.0];
-        }
-        completionHandler:^{
-            [animationWindow orderOut:nil];
-            SKDESTROY(animationWindow);
-        }];
-}
-
 #pragma mark API
 
 - (void)enterFullscreen {
@@ -466,7 +453,17 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     mwcFlags.isSwitchingFullScreen = 0;
     
-    [self crossFadeToWindow:fullScreenWindow duration:PRESENTATION_DURATION];
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            [context setDuration:PRESENTATION_DURATION];
+            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+            [[fullScreenWindow animator] setAlphaValue:1.0];
+            if (NSContainsRect([fullScreenWindow frame], [animationWindow frame]) == NO);
+                [[animationWindow animator] setAlphaValue:0.0];
+        }
+        completionHandler:^{
+            [animationWindow orderOut:nil];
+            SKDESTROY(animationWindow);
+        }];
     
     [pdfView setInteractionMode:SKPresentationMode];
     [touchBarController interactionModeChanged];
@@ -530,7 +527,21 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     [animationWindow setLevel:NSPopUpMenuWindowLevel];
     
-    [self crossFadeToWindow:mainWindow duration:PRESENTATION_DURATION];
+    BOOL covered = NSContainsRect([animationWindow frame], [mainWindow frame]);
+    if (covered)
+        [mainWindow setAlphaValue:1.0];
+    
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            [context setDuration:PRESENTATION_DURATION];
+            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+            if (covered == NO)
+                [[mainWindow animator] setAlphaValue:1.0];
+            [[animationWindow animator] setAlphaValue:0.0];
+        }
+        completionHandler:^{
+            [animationWindow orderOut:nil];
+            SKDESTROY(animationWindow);
+        }];
     
     // the page number may have changed
     [self synchronizeWindowTitleWithDocumentName];
@@ -625,7 +636,15 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
             if ([view isKindOfClass:[NSControl class]])
                 [view setAlphaValue:0.0];
         [(SKMainWindow *)window setDisableConstrainedFrame:NO];
-        [self crossFadeToWindow:window duration:duration];
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+                [context setDuration:duration];
+                [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+                [[window animator] setAlphaValue:1.0];
+            }
+            completionHandler:^{
+                [animationWindow orderOut:nil];
+                SKDESTROY(animationWindow);
+            }];
     } else {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration - 0.02];
@@ -711,7 +730,16 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
                 [view setAlphaValue:1.0];
         [window setFrame:frame display:YES];
         [window setLevel:NSNormalWindowLevel];
-        [self crossFadeToWindow:window duration:duration];
+        [window setAlphaValue:1.0];
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+                [context setDuration:duration];
+                [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+                [[animationWindow animator] setAlphaValue:0.0];
+            }
+            completionHandler:^{
+                [animationWindow orderOut:nil];
+                SKDESTROY(animationWindow);
+            }];
     } else {
         [(SKMainWindow *)window setDisableConstrainedFrame:YES];
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
