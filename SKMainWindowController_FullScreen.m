@@ -596,6 +596,12 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     return 0.0;
 }
 
+static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alpha, BOOL animate) {
+    for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
+        if ([view isKindOfClass:[NSControl class]])
+            [(animate ? (id)[view animator] : (id)view) setAlphaValue:alpha];
+}
+
 - (void)windowWillEnterFullScreen:(NSNotification *)notification {
     mwcFlags.isSwitchingFullScreen = 1;
     interactionMode = SKFullScreenMode;
@@ -632,9 +638,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
         [self showStaticContentForWindow:window];
         [window setFrame:frame display:YES];
         [window orderWindow:NSWindowAbove relativeTo:animationWindow];
-        for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
-            if ([view isKindOfClass:[NSControl class]])
-                [view setAlphaValue:0.0];
+        setAlphaValueOfTitleBarControls(window, 0.0, NO);
         [(SKMainWindow *)window setDisableConstrainedFrame:NO];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration];
@@ -649,9 +653,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration - 0.02];
                 [[window animator] setFrame:frame display:YES];
-                for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
-                    if ([view isKindOfClass:[NSControl class]])
-                        [[view animator] setAlphaValue:0.0];
+                setAlphaValueOfTitleBarControls(window, 0.0, YES);
             }
             completionHandler:^{
                 [(SKMainWindow *)window setDisableConstrainedFrame:NO];
@@ -725,9 +727,7 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
         [self showStaticContentForWindow:window];
         [animationWindow setLevel:NSStatusWindowLevel];
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
-        for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
-            if ([view isKindOfClass:[NSControl class]])
-                [view setAlphaValue:1.0];
+        setAlphaValueOfTitleBarControls(window, 1.0, NO);
         [window setFrame:frame display:YES];
         [window setLevel:NSNormalWindowLevel];
         [window setAlphaValue:1.0];
@@ -743,17 +743,13 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     } else {
         [(SKMainWindow *)window setDisableConstrainedFrame:YES];
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
-        for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
-            if ([view isKindOfClass:[NSControl class]])
-                [view setAlphaValue:0.0];
+        setAlphaValueOfTitleBarControls(window, 0.0, NO);
         [window setFrame:SKShrinkRect([[window screen] frame], -fullScreenOffset(window), NSMaxYEdge) display:YES];
         [window setLevel:NSStatusWindowLevel];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration];
                 [[window animator] setFrame:frame display:YES];
-                for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews])
-                    if ([view isKindOfClass:[NSControl class]])
-                        [[view animator] setAlphaValue:1.0];
+                setAlphaValueOfTitleBarControls(window, 1.0, YES);
             }
             completionHandler:^{
                 [(SKMainWindow *)window setDisableConstrainedFrame:NO];
