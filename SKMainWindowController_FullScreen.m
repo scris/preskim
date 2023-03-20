@@ -633,9 +633,9 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
     if (fullScreenToolbarOffset <= 0.0 && autoHideToolbarInFullScreen == NO && [[mainWindow toolbar] isVisible])
         fullScreenToolbarOffset = toolbarViewOffset(mainWindow);
     NSRect frame = SKShrinkRect([[window screen] frame], -fullScreenOffset(window), NSMaxYEdge);
-    [(SKMainWindow *)window setDisableConstrainedFrame:YES];
     if (animationWindow != nil) {
         [self showStaticContentForWindow:window];
+        [(SKMainWindow *)window setDisableConstrainedFrame:YES];
         [window setFrame:frame display:YES];
         [window orderWindow:NSWindowAbove relativeTo:animationWindow];
         setAlphaValueOfTitleBarControls(window, 0.0, NO);
@@ -652,12 +652,12 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
     } else {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration - 0.02];
+                [(SKMainWindow *)window setDisableConstrainedFrame:YES];
                 [[window animator] setFrame:frame display:YES];
                 setAlphaValueOfTitleBarControls(window, 0.0, YES);
-            }
-            completionHandler:^{
                 [(SKMainWindow *)window setDisableConstrainedFrame:NO];
-            }];
+            }
+            completionHandler:^{}];
     }
 }
 
@@ -741,18 +741,18 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
                 SKDESTROY(animationWindow);
             }];
     } else {
-        [(SKMainWindow *)window setDisableConstrainedFrame:YES];
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
         setAlphaValueOfTitleBarControls(window, 0.0, NO);
         [window setFrame:SKShrinkRect([[window screen] frame], -fullScreenOffset(window), NSMaxYEdge) display:YES];
         [window setLevel:NSStatusWindowLevel];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration];
+                [(SKMainWindow *)window setDisableConstrainedFrame:YES];
                 [[window animator] setFrame:frame display:YES];
                 setAlphaValueOfTitleBarControls(window, 1.0, YES);
+                [(SKMainWindow *)window setDisableConstrainedFrame:NO];
             }
             completionHandler:^{
-                [(SKMainWindow *)window setDisableConstrainedFrame:NO];
                 [window setLevel:NSNormalWindowLevel];
             }];
     }
