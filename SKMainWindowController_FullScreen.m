@@ -276,11 +276,6 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
         SKDESTROY(activity);
     }
     
-    if (presentationPreview) {
-        [presentationPreview close];
-        [presentationPreview autorelease];
-        presentationPreview = nil;
-    }
     [self removePresentationNotesNavigation];
     
     if ([pdfView respondsToSelector:@selector(enablePageShadows:)])
@@ -459,6 +454,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
             [[fullScreenWindow animator] setAlphaValue:1.0];
             if (NSContainsRect([fullScreenWindow frame], [animationWindow frame]) == NO)
                 [[animationWindow animator] setAlphaValue:0.0];
+            [[[presentationPreview window] animator] setAlphaValue:1.0];
         }
         completionHandler:^{
             [animationWindow orderOut:nil];
@@ -537,10 +533,16 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
             if (covered == NO)
                 [[mainWindow animator] setAlphaValue:1.0];
             [[animationWindow animator] setAlphaValue:0.0];
+            [[[presentationPreview window] animator] setAlphaValue:0.0];
         }
         completionHandler:^{
             [animationWindow orderOut:nil];
             SKDESTROY(animationWindow);
+            if (presentationPreview) {
+                [[presentationPreview window] setAnimationBehavior:NSWindowAnimationBehaviorNone];
+                [presentationPreview close];
+                [presentationPreview autorelease];
+            }
         }];
     
     // the page number may have changed

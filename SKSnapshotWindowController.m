@@ -284,10 +284,14 @@ static char SKSnaphotWindowAppObservationContext;
             [[self delegate] snapshotController:self didFinishSetup:openType];
         });
     
-    if (openType == SKSnapshotOpenPreview)
+    if (openType == SKSnapshotOpenPreview) {
+        [[self window] setAlphaValue:0.0];
+        [[self window] setAnimationBehavior:NSWindowAnimationBehaviorNone];
         [[self window] orderFront:nil];
-    else if ([self hasWindow])
+        [[self window] setAnimationBehavior:NSWindowAnimationBehaviorDefault];
+    } else if ([self hasWindow]) {
         [self showWindow:nil];
+    }
 }
 
 - (void)setPdfDocument:(PDFDocument *)pdfDocument goToPageNumber:(NSInteger)pageNum rect:(NSRect)rect scaleFactor:(CGFloat)factor autoFits:(BOOL)autoFits screen:(NSScreen *)screen openType:(SKSnapshotOpenType)openType {
