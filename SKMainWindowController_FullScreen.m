@@ -295,7 +295,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     }
 }
 
-- (void)addFullScreenWindowOnScreen:(NSScreen *)screen {
+- (void)addPresentationWindowOnScreen:(NSScreen *)screen {
     if ([[mainWindow firstResponder] isDescendantOf:pdfSplitView])
         [mainWindow makeFirstResponder:nil];
     
@@ -317,7 +317,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [fullScreenWindow release];
 }
 
-- (void)removeFullScreenWindow {
+- (void)removePresentationWindow {
     NSWindow *fullScreenWindow = [[[self window] retain] autorelease];
     
     [self setWindow:mainWindow];
@@ -426,7 +426,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     [self showStaticContentForWindow:mainWindow];
     
-    [self addFullScreenWindowOnScreen:screen];
+    [self addPresentationWindowOnScreen:screen];
     
     if ([self hasOverview])
         [self hideOverviewAnimating:NO];
@@ -519,7 +519,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     [touchBarController interactionModeChanged];
     
-    [self removeFullScreenWindow];
+    [self removePresentationWindow];
     
     [animationWindow setLevel:NSPopUpMenuWindowLevel];
     
