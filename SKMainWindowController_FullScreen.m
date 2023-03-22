@@ -355,11 +355,12 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
                 break;
         if (tbWindow) {
             CGImageRef tbCgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, (CGWindowID)[tbWindow windowNumber], kCGWindowImageBoundsIgnoreFraming);
+            NSRect tbFrame = [tbWindow frame];
             size_t width = CGImageGetWidth(cgImage), height = CGImageGetHeight(cgImage);
-            size_t tbWidth = CGImageGetWidth(tbCgImage), tbHeight = CGImageGetHeight(tbCgImage);
+            CGFloat sx = width / NSWidth(frame), sy = height / NSHeight(frame);
             CGContextRef ctx = CGBitmapContextCreate(NULL, width, height, 8, 4 * width, CGImageGetColorSpace(cgImage), kCGBitmapByteOrder32Host | kCGImageAlphaPremultipliedFirst);
             CGContextDrawImage(ctx, CGRectMake(0.0, 0.0, width, height), cgImage);
-            CGContextDrawImage(ctx, CGRectMake(0.0, height - tbHeight, tbWidth, tbHeight), tbCgImage);
+            CGContextDrawImage(ctx, CGRectMake(sx * (NSMinX(tbFrame) - NSMinX(frame)), sy * (NSMinY(tbFrame) - NSMinY(frame)), sx * NSWidth(tbFrame), sy * NSHeight(tbFrame)), tbCgImage);
             CGImageRelease(tbCgImage);
             CGImageRelease(cgImage);
             cgImage = CGBitmapContextCreateImage(ctx);
