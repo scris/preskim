@@ -438,9 +438,13 @@ static char SKMainWindowContentLayoutObservationContext;
     }
     
     // Set up the PDF
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [pdfView setShouldAntiAlias:[sud boolForKey:SKShouldAntiAliasKey]];
+    if (RUNNING_BEFORE(10_14))
+        [pdfView setGreekingThreshold:[sud floatForKey:SKGreekingThresholdKey]];
+#pragma clang diagnostic pop
     [pdfView setInterpolationQuality:[sud integerForKey:SKInterpolationQualityKey]];
-    [pdfView setGreekingThreshold:[sud floatForKey:SKGreekingThresholdKey]];
     [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
     
     [self applyPDFSettings:hasWindowSetup ? savedNormalSetup : [sud dictionaryForKey:SKDefaultPDFDisplaySettingsKey] rewind:NO];
@@ -2577,8 +2581,11 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             [self resetSnapshotSizeIfNeeded];
             [rightSideController.snapshotTableView noteHeightOfRowsChangedAnimating:YES];
         } else if ([key isEqualToString:SKShouldAntiAliasKey]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [pdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
             [secondaryPdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
+#pragma clang diagnostic pop
             [pdfView requiresDisplay];
             [secondaryPdfView requiresDisplay];
         } else if ([key isEqualToString:SKInterpolationQualityKey]) {
@@ -2587,9 +2594,12 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             [pdfView requiresDisplay];
             [secondaryPdfView requiresDisplay];
             [self allThumbnailsNeedUpdate];
-        } else if ([key isEqualToString:SKGreekingThresholdKey]) {
+        } else if ([key isEqualToString:SKGreekingThresholdKey] && RUNNING_BEFORE(10_14)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
             [secondaryPdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
+#pragma clang diagnostic pop
         } else if ([key isEqualToString:SKTableFontSizeKey]) {
             [self updateTableFont];
             [self updatePageColumnWidthForTableViews:[NSArray arrayWithObjects:leftSideController.tocOutlineView, rightSideController.noteOutlineView, leftSideController.findTableView, leftSideController.groupedFindTableView, nil]];

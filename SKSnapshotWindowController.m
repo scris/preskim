@@ -301,9 +301,13 @@ static char SKSnaphotWindowAppObservationContext;
     [pdfView setAutoScales:NO];
     [pdfView setDisplaysPageBreaks:NO];
     [pdfView setDisplayBox:kPDFDisplayBoxCropBox];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [pdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
+    if (RUNNING_BEFORE(10_14))
+        [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
+#pragma clang diagnostic pop
     [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
-    [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
     [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
     [pdfView setDocument:pdfDocument];
     
@@ -669,13 +673,19 @@ static char SKSnaphotWindowAppObservationContext;
             if ([[self window] isVisible])
                 [self updateWindowLevel];
         } else if ([key isEqualToString:SKShouldAntiAliasKey]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [pdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
+#pragma clang diagnostic pop
             [pdfView requiresDisplay];
         } else if ([key isEqualToString:SKInterpolationQualityKey]) {
-            [pdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
+            [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
             [pdfView requiresDisplay];
-        } else if ([key isEqualToString:SKGreekingThresholdKey]) {
+        } else if ([key isEqualToString:SKGreekingThresholdKey] && RUNNING_BEFORE(10_14)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
+#pragma clang diagnostic pop
         } else if ([key isEqualToString:SKBackgroundColorKey] || [key isEqualToString:SKDarkBackgroundColorKey]) {
             [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
         }
