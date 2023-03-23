@@ -364,7 +364,12 @@ static NSUInteger maxRecentDocumentsCount = 0;
 }
 
 - (void)moveBookmarkAtIndex:(NSUInteger)fromIndex ofBookmark:(SKBookmark *)fromParent toIndex:(NSUInteger)toIndex ofBookmark:(SKBookmark *)toParent {
-    [outlineView moveItemAtIndex:fromIndex inParent:OV_ITEM(fromParent) toIndex:toIndex inParent:OV_ITEM(toParent)];
+    if ([NSView shouldShowSlideAnimation]) {
+        [outlineView moveItemAtIndex:fromIndex inParent:OV_ITEM(fromParent) toIndex:toIndex inParent:OV_ITEM(toParent)];
+    } else {
+        [outlineView removeItemsAtIndexes:[NSIndexSet indexSetWithIndex:fromIndex] inParent:OV_ITEM(fromParent) withAnimation:NSTableViewAnimationEffectNone];
+        [outlineView insertItemsAtIndexes:[NSIndexSet indexSetWithIndex:toIndex] inParent:OV_ITEM(toParent) withAnimation:NSTableViewAnimationEffectNone];
+    }
     SKBookmark *bookmark = [[fromParent objectInChildrenAtIndex:fromIndex] retain];
     [fromParent removeObjectFromChildrenAtIndex:fromIndex];
     [toParent insertObject:bookmark inChildrenAtIndex:toIndex];
