@@ -1996,6 +1996,7 @@ static char SKMainWindowContentLayoutObservationContext;
     if ([findResults count] == 0) {
         
         [pdfView setHighlightedSelections:nil];
+        [self updateRightStatus];
         
     } else {
         
@@ -2032,8 +2033,12 @@ static char SKMainWindowContentLayoutObservationContext;
         [pdfView setHighlightedSelections:highlights];
         [highlights release];
         
-        if ([currentSel hasCharacters])
+        if ([currentSel hasCharacters]) {
             [pdfView setCurrentSelection:currentSel animate:YES];
+            [[statusBar rightField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Match %lu of %lu", @"Status message"), (unsigned long)[searchResults indexOfObject:currentSel] + 1, (unsigned long)[self countOfSearchResults]]];
+        } else {
+            [self updateRightStatus];
+        }
         if ([pdfView toolMode] == SKMoveToolMode || [pdfView toolMode] == SKMagnifyToolMode || [pdfView toolMode] == SKSelectToolMode)
             [pdfView setCurrentSelection:nil];
     }
