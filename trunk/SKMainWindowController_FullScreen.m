@@ -734,10 +734,14 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
         setAlphaValueOfTitleBarControls(window, 1.0, NO);
         [window setFrame:frame display:YES];
         [window setLevel:NSNormalWindowLevel];
-        [window setAlphaValue:1.0];
+        BOOL covered = NSContainsRect([animationWindow frame], [window frame]);
+        if (covered)
+            [window setAlphaValue:1.0];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration];
                 [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+                if (covered == NO)
+                    [[window animator] setAlphaValue:1.0];
                 [[animationWindow animator] setAlphaValue:0.0];
             }
             completionHandler:^{
@@ -745,10 +749,12 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
                 SKDESTROY(animationWindow);
             }];
     } else {
+        NSRect startFrame = [window frame];
+        startFrame.size.height = NSHeight([[window screen] frame]) + fullScreenOffset(window);
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
         setAlphaValueOfTitleBarControls(window, 0.0, NO);
         [(SKMainWindow *)window setDisableConstrainedFrame:YES];
-        [window setFrame:SKShrinkRect([[window screen] frame], -fullScreenOffset(window), NSMaxYEdge) display:YES];
+        [window setFrame:startFrame display:YES];
         [window setLevel:NSStatusWindowLevel];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration];
