@@ -396,4 +396,73 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
    }
 }
 
+- (void)goToDestination:(PDFDestination *)destination {
+    NSPoint point = [destination point];
+    if (point.x >= kPDFDestinationUnspecifiedValue || point.y >= kPDFDestinationUnspecifiedValue) {
+        PDFPage *page = [destination page];
+        NSRect bounds = NSZeroRect;
+        BOOL override = YES;
+        NSInteger type = 0;
+        @try { type = [[destination valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.type" : @"_private.type"] integerValue]; }
+        @catch (id e) {}
+        switch (type) {
+            case 0:
+                override = NO;
+                break;
+            case 1: // Fit
+                bounds = [page foregroundBox];
+                break;
+            case 2: // FitH
+                bounds = [page foregroundBox];
+                @try { point.y = [[destination valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.top" : @"_private.top"] integerValue]; }
+                @catch (id e) { override = NO; }
+                break;
+            case 3: // FitV
+                bounds = [page foregroundBox];
+                @try { point.x = [[destination valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.left" : @"_private.left"] integerValue]; }
+                @catch (id e) { override = NO; }
+                break;
+            case 4: // FitR
+            {
+                @try { bounds.origin.x = [[destination valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.left" : @"_private.left"] integerValue]; }
+                @catch (id e) { override = NO; }
+                @try { bounds.origin.y = [[destination valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.bottom" : @"_private.bottom"] integerValue]; }
+                @catch (id e) { override = NO; }
+                @try { bounds.size.width = [[destination valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.right" : @"_private.right"] integerValue] - NSMinX(bounds); }
+                @catch (id e) { override = NO; }
+                @try { bounds.size.height = [[destination valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.top" : @"_private.top"] integerValue] - NSMinY(bounds); }
+                @catch (id e) { override = NO; }
+                break;
+            }
+            case 5: // FitB
+                bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
+                break;
+            case 6: // FitBH
+                bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
+                @try { point.y = [[destination valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.top" : @"_private.top"] integerValue]; }
+                @catch (id e) { override = NO; }
+                break;
+            case 7: // FitBV
+                bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
+                @try { point.x = [[destination valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.left" : @"_private.left"] integerValue]; }
+                @catch (id e) { override = NO; }
+                break;
+            default:
+                override = NO;
+                break;
+        }
+        if (override) {
+            NSRect bounds, rect = [self visibleContentRect];
+            CGFloat zoom = fmin(NSWidth(rect) / NSWidth(bounds), NSHeight(rect) / NSHeight(bounds));
+            if (point.x >= kPDFDestinationUnspecifiedValue)
+                point.x = NSMinX(bounds);
+            if (point.y >= kPDFDestinationUnspecifiedValue)
+                point.y = NSMaxY(bounds);
+            destination = [[[PDFDestination alloc] initWithPage:page atPoint:point] autorelease];
+            [destination setZoom:zoom];
+        }
+    }
+    [super goToDestination:destination];
+}
+
 @end
