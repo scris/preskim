@@ -46,6 +46,7 @@
 #import "SKLine.h"
 #import "SKMainDocument.h"
 #import "PDFSelection_SKExtensions.h"
+#import "PDFDestination_SKExtensions.h"
 
 #define SKReadingBarNumberOfLinesKey @"SKReadingBarNumberOfLines"
 
@@ -311,11 +312,7 @@
         }
         if (dest) {
             aPage = [dest page];
-            point = [dest point];
-            if (fabs(point.x - kPDFDestinationUnspecifiedValue) <= 0.0)
-                point.x = [aPage rotation] < 180 ? NSMinX([aPage boundsForBox:kPDFDisplayBoxCropBox]) : NSMaxX([aPage boundsForBox:kPDFDisplayBoxCropBox]);
-            if (fabs(point.y - kPDFDestinationUnspecifiedValue) <= 0.0)
-                point.y = (([aPage rotation] + 90) % 360) < 180 ? NSMaxY([aPage boundsForBox:kPDFDisplayBoxCropBox]) : NSMinY([aPage boundsForBox:kPDFDisplayBoxCropBox]);
+            point = [[dest effectiveDestinationWithTargetRect:NSZeroRect] point];
         }
     } else if ([location isKindOfClass:[SKLine class]]) {
         aPage = [(SKLine *)location page];

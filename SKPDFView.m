@@ -79,6 +79,7 @@
 #import "SKMainWindowController_Actions.h"
 #import "NSObject_SKExtensions.h"
 #import "SKLoupeController.h"
+#import "PDFDestination_SKExtensions.h"
 
 #define ANNOTATION_MODE_COUNT 9
 #define TOOL_MODE_COUNT 5
@@ -4969,11 +4970,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
             PDFDestination *destination = [annotation linkDestination];
             if ([destination page]) {
                 page = [destination page];
-                point = [destination point];
-                if (fabs(point.x - kPDFDestinationUnspecifiedValue) <= 0.0)
-                    point.x = [page rotation] < 180 ? NSMinX([page boundsForBox:kPDFDisplayBoxCropBox]) : NSMaxX([page boundsForBox:kPDFDisplayBoxCropBox]);
-                if (fabs(point.y - kPDFDestinationUnspecifiedValue) <= 0.0)
-                    point.y = (([page rotation] + 90) % 360) < 180 ? NSMaxY([page boundsForBox:kPDFDisplayBoxCropBox]) : NSMinY([page boundsForBox:kPDFDisplayBoxCropBox]);
+                point = [[destination effectiveDestinationWithTargetRect:NSZeroRect] point];
                 point = [self convertPoint:point fromPage:page];
                 point.y -= 0.5 * DEFAULT_SNAPSHOT_HEIGHT;
             }
