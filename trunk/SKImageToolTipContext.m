@@ -47,6 +47,7 @@
 #import "NSCharacterSet_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "NSAttributedString_SKExtensions.h"
+#import "PDFDestination_SKExtensions.h"
 
 #define TEXT_MARGIN_X 2.0
 #define TEXT_MARGIN_Y 2.0
@@ -106,7 +107,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     
     BOOL isScaled = fabs(scale - 1.0) > 0.01;
     PDFPage *page = [self page];
-    NSPoint point = [self point];
+    NSPoint point = [[self effectiveDestinationWithTargetRect:NSZeroRect] point];
     NSRect bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
     CGFloat size = isScaled ? ceil(scale * fmax(NSWidth(bounds), NSHeight(bounds))) : 0.0;
     NSImage *pageImage = [page thumbnailWithSize:size forBox:kPDFDisplayBoxCropBox shadowBlurRadius:0.0 highlights:selections];
@@ -119,10 +120,6 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
         [scaleTransform scaleBy:size / fmax(NSWidth(bounds), NSHeight(bounds))];
         [transform appendTransform:scaleTransform];
     }
-    if (fabs(point.x - kPDFDestinationUnspecifiedValue) <= 0.0)
-        point.x = [page rotation] < 180 ? NSMinX([page boundsForBox:kPDFDisplayBoxCropBox]) : NSMaxX([page boundsForBox:kPDFDisplayBoxCropBox]);
-    if (fabs(point.y - kPDFDestinationUnspecifiedValue) <= 0.0)
-        point.y = (([page rotation] + 90) % 360) < 180 ? NSMaxY([page boundsForBox:kPDFDisplayBoxCropBox]) : NSMinY([page boundsForBox:kPDFDisplayBoxCropBox]);
     
     sourceRect.size.width = [[NSUserDefaults standardUserDefaults] doubleForKey:SKToolTipWidthKey];
     sourceRect.size.height = [[NSUserDefaults standardUserDefaults] doubleForKey:SKToolTipHeightKey];

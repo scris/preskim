@@ -60,6 +60,7 @@
 		CE0ECD1C0DE73604006EEDDB /* NSDocument_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0ECD1B0DE73604006EEDDB /* NSDocument_SKExtensions.m */; };
 		CE10979A161320CF00C4FA18 /* SKExportAccessoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE109799161320CF00C4FA18 /* SKExportAccessoryController.m */; };
 		CE1098F11613CFC800C4FA18 /* ExportAccessoryView.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE1098EF1613CFC800C4FA18 /* ExportAccessoryView.strings */; };
+		CE11CFEC29D86E5A00C6C217 /* PDFDestination_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE11CFEB29D86E5A00C6C217 /* PDFDestination_SKExtensions.m */; };
 		CE121AC81180644A00951425 /* SKScriptMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = CE121AC71180644A00951425 /* SKScriptMenu.m */; };
 		CE121B2D1180770900951425 /* ScriptMenu.tiff in Resources */ = {isa = PBXBuildFile; fileRef = CE121B2C1180770900951425 /* ScriptMenu.tiff */; };
 		CE1248C513FEDCF200FFAE20 /* SKTemplateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1248C413FEDCF200FFAE20 /* SKTemplateManager.m */; };
@@ -314,6 +315,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		CE11CFF329D86E5A00C6C217 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE7DC7280E09286500D6D76D /* SkimNotes.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CE0C361E29A9361D0056897C;
+			remoteInfo = "SkimNotes iOS";
+		};
+		CE11CFF529D86E5A00C6C217 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE7DC7280E09286500D6D76D /* SkimNotes.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CE0C363429A9362B0056897C;
+			remoteInfo = "SkimNotesBase iOS";
+		};
 		CE1411441229B66B00C9EBA0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CE7DC7280E09286500D6D76D /* SkimNotes.xcodeproj */;
@@ -670,6 +685,8 @@
 		CE1098FA1613D05A00C4FA18 /* es */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/ExportAccessoryView.strings; sourceTree = "<group>"; };
 		CE1098FB1613D06400C4FA18 /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/ExportAccessoryView.strings; sourceTree = "<group>"; };
 		CE1098FC1613D06900C4FA18 /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/ExportAccessoryView.strings; sourceTree = "<group>"; };
+		CE11CFEA29D86E5A00C6C217 /* PDFDestination_SKExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFDestination_SKExtensions.h; sourceTree = "<group>"; };
+		CE11CFEB29D86E5A00C6C217 /* PDFDestination_SKExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDFDestination_SKExtensions.m; sourceTree = "<group>"; };
 		CE121AC61180644A00951425 /* SKScriptMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKScriptMenu.h; sourceTree = "<group>"; };
 		CE121AC71180644A00951425 /* SKScriptMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKScriptMenu.m; sourceTree = "<group>"; };
 		CE121B2C1180770900951425 /* ScriptMenu.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = ScriptMenu.tiff; sourceTree = "<group>"; };
@@ -1985,6 +2002,8 @@
 			children = (
 				CE7DC7320E09286500D6D76D /* SkimNotes.framework */,
 				CEA5F5440E2CED1100F65088 /* SkimNotesBase.framework */,
+				CE11CFF429D86E5A00C6C217 /* SkimNotes.framework */,
+				CE11CFF629D86E5A00C6C217 /* SkimNotesBase.framework */,
 				CE7DC7340E09286500D6D76D /* skimnotes */,
 				CE1411451229B66B00C9EBA0 /* skimpdf */,
 				CEDB9AE40E2E9EA50057FD09 /* SkimNotesTest.app */,
@@ -2130,6 +2149,8 @@
 				CEE7E77A24426C380034690E /* PDFAnnotationChoiceWidget_SKExtensions.m */,
 				CE3A3D2A0B78C0A0006B64D3 /* SKNPDFAnnotationNote_SKExtensions.h */,
 				CE3A3D2B0B78C0A0006B64D3 /* SKNPDFAnnotationNote_SKExtensions.m */,
+				CE11CFEA29D86E5A00C6C217 /* PDFDestination_SKExtensions.h */,
+				CE11CFEB29D86E5A00C6C217 /* PDFDestination_SKExtensions.m */,
 				CEE176E20DBD5B0C00E6C317 /* PDFDocumentView_SKExtensions.h */,
 				CEE176E30DBD5B0C00E6C317 /* PDFDocumentView_SKExtensions.m */,
 				CE6DC7B90D689138003A072F /* PDFDocument_SKExtensions.h */,
@@ -2295,6 +2316,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		CE11CFF429D86E5A00C6C217 /* SkimNotes.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SkimNotes.framework;
+			remoteRef = CE11CFF329D86E5A00C6C217 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CE11CFF629D86E5A00C6C217 /* SkimNotesBase.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SkimNotesBase.framework;
+			remoteRef = CE11CFF529D86E5A00C6C217 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		CE1411451229B66B00C9EBA0 /* skimpdf */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
@@ -2698,6 +2733,7 @@
 				CE41B2CC0C08D17100E36EB7 /* NSValue_SKExtensions.m in Sources */,
 				CE7C20500C259A5D0059E08C /* NSColor_SKExtensions.m in Sources */,
 				CE8B46E90C29CA00005CE7F1 /* SKLineInspector.m in Sources */,
+				CE11CFEC29D86E5A00C6C217 /* PDFDestination_SKExtensions.m in Sources */,
 				CE4BC1300C357A0300C2AF03 /* SKLineWell.m in Sources */,
 				CEBC0DDD2791C607008686E8 /* NSObject_SKExtensions.m in Sources */,
 				CE4D97FD0C3C2BFF002C20CB /* SKColorSwatch.m in Sources */,
