@@ -312,7 +312,7 @@
         }
         if (dest) {
             aPage = [dest page];
-            point = [[dest effectiveDestinationWithTargetRect:NSZeroRect] point];
+            point = [[dest effectiveDestinationWithTargetSize:NSZeroSize] point];
         }
     } else if ([location isKindOfClass:[SKLine class]]) {
         aPage = [(SKLine *)location page];

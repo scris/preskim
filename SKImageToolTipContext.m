@@ -107,7 +107,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     
     BOOL isScaled = fabs(scale - 1.0) > 0.01;
     PDFPage *page = [self page];
-    NSPoint point = [[self effectiveDestinationWithTargetRect:NSZeroRect] point];
+    NSPoint point = [[self effectiveDestinationWithTargetSize:NSZeroSize] point];
     NSRect bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
     CGFloat size = isScaled ? ceil(scale * fmax(NSWidth(bounds), NSHeight(bounds))) : 0.0;
     NSImage *pageImage = [page thumbnailWithSize:size forBox:kPDFDisplayBoxCropBox shadowBlurRadius:0.0 highlights:selections];

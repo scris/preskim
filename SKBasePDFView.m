@@ -398,7 +398,7 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
 }
 
 - (void)goToDestination:(PDFDestination *)destination {
-     [super goToDestination:[destination effectiveDestinationWithTargetRect:[self visibleContentRect]]];
+     [super goToDestination:[destination effectiveDestinationWithTargetSize:[self visibleContentRect].size]];
 }
 
 @end
