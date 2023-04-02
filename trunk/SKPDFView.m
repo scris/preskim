@@ -4970,7 +4970,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
             PDFDestination *destination = [annotation linkDestination];
             if ([destination page]) {
                 page = [destination page];
-                point = [[destination effectiveDestinationWithTargetRect:NSZeroRect] point];
+                point = [[destination effectiveDestinationWithTargetSize:NSZeroSize] point];
                 point = [self convertPoint:point fromPage:page];
                 point.y -= 0.5 * DEFAULT_SNAPSHOT_HEIGHT;
             }

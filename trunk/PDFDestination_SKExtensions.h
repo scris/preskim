@@ -41,6 +41,6 @@
 
 @interface PDFDestination (SKExtensions)
 
-- (PDFDestination *)effectiveDestinationWithTargetRect:(NSRect)rect;
+- (PDFDestination *)effectiveDestinationWithTargetSize:(NSSize)rect;
 
 @end
