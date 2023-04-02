@@ -48,7 +48,7 @@
         PDFPage *page = [self page];
         NSRect bounds = NSZeroRect;
         NSSize size = pdfView ? [pdfView visibleContentRect].size : NSZeroSize;
-        CGFloat zoom = kPDFDestinationUnspecifiedValue;
+        CGFloat zoomX = kPDFDestinationUnspecifiedValue, zoomY = kPDFDestinationUnspecifiedValue;
         BOOL override = YES;
         NSInteger type = 0;
         @try { type = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.type" : @"_private.type"] doubleValue]; }
@@ -59,22 +59,24 @@
                 break;
             case 1: // Fit
                 bounds = pdfView ? [pdfView layoutBoundsForPage:page] : [page boundsForBox:kPDFDisplayBoxCropBox];
-                if (pdfView && NSIsEmptyRect(bounds) == NO)
-                    zoom = fmin(size.width / NSWidth(bounds), size.height / NSHeight(bounds));
+                if (pdfView && NSIsEmptyRect(bounds) == NO) {
+                    zoomX = size.width / NSWidth(bounds);
+                    zoomY = size.height / NSHeight(bounds);
+                }
                 break;
             case 2: // FitH
                 bounds = pdfView ? [pdfView layoutBoundsForPage:page] : [page boundsForBox:kPDFDisplayBoxCropBox];
                 @try { point.y = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.top" : @"_private.top"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 if (override && pdfView && NSIsEmptyRect(bounds) == NO)
-                    zoom = size.width / NSWidth(bounds);
+                    zoomX = zoomY = size.width / NSWidth(bounds);
                 break;
             case 3: // FitV
                 bounds = pdfView ? [pdfView layoutBoundsForPage:page] : [page boundsForBox:kPDFDisplayBoxCropBox];
                 @try { point.x = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.left" : @"_private.left"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 if (override && pdfView && NSIsEmptyRect(bounds) == NO)
-                    zoom = size.height / NSHeight(bounds);
+                    zoomX = zoomY = size.height / NSHeight(bounds);
                 break;
             case 4: // FitR
             {
@@ -86,28 +88,32 @@
                 @catch (id e) { override = NO; }
                 @try { bounds.size.height = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.top" : @"_private.top"] doubleValue] - NSMinY(bounds); }
                 @catch (id e) { override = NO; }
-                if (override && pdfView && NSIsEmptyRect(bounds) == NO)
-                    zoom = fmin(size.width / NSWidth(bounds), size.height / NSHeight(bounds));
+                if (override && pdfView && NSIsEmptyRect(bounds) == NO) {
+                    zoomX = size.width / NSWidth(bounds);
+                    zoomY = size.height / NSHeight(bounds);
+                }
                 break;
             }
             case 5: // FitB
                 bounds = [page foregroundRect];
-                if (pdfView && NSIsEmptyRect(bounds) == NO)
-                    zoom = fmin(size.width / NSWidth(bounds), size.height / NSHeight(bounds));
+                if (pdfView && NSIsEmptyRect(bounds) == NO) {
+                    zoomX = size.width / NSWidth(bounds);
+                    zoomY = size.height / NSHeight(bounds);
+                }
                 break;
             case 6: // FitBH
                 bounds = [page foregroundRect];
                 @try { point.y = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.top" : @"_private.top"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 if (override && pdfView && NSIsEmptyRect(bounds) == NO)
-                    zoom = size.width / NSWidth(bounds);
+                    zoomX = zoomY = size.width / NSWidth(bounds);
                 break;
             case 7: // FitBV
                 bounds = [page foregroundRect];
                 @try { point.x = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.left" : @"_private.left"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 if (override && pdfView && NSIsEmptyRect(bounds) == NO)
-                    zoom = size.height / NSHeight(bounds);
+                    zoomX = zoomY = size.height / NSHeight(bounds);
                 break;
             default:
                 override = NO;
@@ -118,9 +124,13 @@
                 point.x = NSMinX(bounds);
             if (point.y >= kPDFDestinationUnspecifiedValue)
                 point.y = NSMaxY(bounds);
+            if (zoomX < zoomY)
+                point.y += 0.5 * (zoomY / zoomX - 1.0) * NSHeight(bounds);
+            else if (zoomX > zoomY)
+                point.x -= 0.5 * (zoomX / zoomY - 1.0) * NSWidth(bounds);
             PDFDestination *destination = [[[PDFDestination alloc] initWithPage:page atPoint:point] autorelease];
-            if (zoom < kPDFDestinationUnspecifiedValue)
-                [destination setZoom:zoom];
+            if (zoomX < kPDFDestinationUnspecifiedValue)
+                [destination setZoom:fmin(zoomX, zoomY)];
             return destination;
         }
     }

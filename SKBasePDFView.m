@@ -398,7 +398,10 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
 }
 
 - (void)goToDestination:(PDFDestination *)destination {
-    [super goToDestination:[destination effectiveDestinationForView:self]];
+    destination = [destination effectiveDestinationForView:self];
+    if ([destination zoom] < kPDFDestinationUnspecifiedValue && [destination zoom] > 0.0)
+        [self setScaleFactor:[destination zoom]];
+    [super goToDestination:destination];
 }
 
 @end
