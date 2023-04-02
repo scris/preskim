@@ -41,7 +41,7 @@
 
 
 @interface SKPDFPage : PDFPage {
-    NSRect foregroundBox;
+    NSRect foregroundRect;
     NSInteger intrinsicRotation;
     NSInteger characterDirectionAngle;
     NSInteger lineDirectionAngle;

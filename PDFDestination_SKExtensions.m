@@ -55,15 +55,15 @@
                 override = NO;
                 break;
             case 1: // Fit
-                bounds = [page foregroundBox];
+                bounds = [page foregroundRect];
                 break;
             case 2: // FitH
-                bounds = [page foregroundBox];
+                bounds = [page foregroundRect];
                 @try { point.y = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.top" : @"_private.top"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 break;
             case 3: // FitV
-                bounds = [page foregroundBox];
+                bounds = [page foregroundRect];
                 @try { point.x = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.left" : @"_private.left"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 break;
