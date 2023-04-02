@@ -55,6 +55,7 @@ extern NSString *SKPDFPageActionRotate;
 + (BOOL)usesSequentialPageNumbering;
 + (void)setUsesSequentialPageNumbering:(BOOL)flag;
 
+- (NSRect)foregroundRect;
 - (NSRect)foregroundBox;
 
 - (NSImage *)thumbnailWithSize:(CGFloat)size forBox:(PDFDisplayBox)box;

@@ -61,15 +61,15 @@
 - (BOOL)isEditable { return YES; }
 
 // cache the value calculated in the superclass
-- (NSRect)foregroundBox {
-    if (NSEqualRects(NSZeroRect, foregroundBox))
-        foregroundBox = [super foregroundBox];
-    return foregroundBox;
+- (NSRect)foregroundRect {
+    if (NSEqualRects(NSZeroRect, foregroundRect))
+        foregroundRect = [super foregroundRect];
+    return foregroundRect;
 }
 
 - (void)setBounds:(NSRect)bounds forBox:(PDFDisplayBox)box {
     if (box == kPDFDisplayBoxCropBox)
-        foregroundBox = NSZeroRect;
+        foregroundRect = NSZeroRect;
     [super setBounds:bounds forBox:box];
 }
 
@@ -95,14 +95,14 @@
 }
 
 - (void)addAnnotation:(PDFAnnotation *)annotation {
-    if (NSContainsRect(foregroundBox, [annotation bounds]) == NO)
-        foregroundBox = NSZeroRect;
+    if (NSContainsRect(foregroundRect, [annotation bounds]) == NO)
+        foregroundRect = NSZeroRect;
     [super addAnnotation:annotation];
 }
 
 - (void)removeAnnotation:(PDFAnnotation *)annotation {
-    if (NSContainsRect(foregroundBox, [annotation bounds]) == NO)
-        foregroundBox = NSZeroRect;
+    if (NSContainsRect(foregroundRect, [annotation bounds]) == NO)
+        foregroundRect = NSZeroRect;
     [super removeAnnotation:annotation];
 }
 

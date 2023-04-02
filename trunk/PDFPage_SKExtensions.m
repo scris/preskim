@@ -139,22 +139,24 @@ static BOOL usesSequentialPageNumbering = NO;
 }
 
 // this will be cached in our custom subclass
-- (NSRect)foregroundBox {
-    CGFloat marginWidth = [[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginWidthKey];
-    CGFloat marginHeight = [[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginHeightKey];
+- (NSRect)foregroundRect {
     NSBitmapImageRep *imageRep = [self newBitmapImageRepForBox:kPDFDisplayBoxMediaBox];
     NSRect bounds = [self boundsForBox:kPDFDisplayBoxMediaBox];
-    NSRect foregroundBox = [imageRep foregroundRect];
+    NSRect foregroundRect = [imageRep foregroundRect];
     if (imageRep == nil) {
-        foregroundBox = bounds;
-    } else if (NSIsEmptyRect(foregroundBox)) {
-        foregroundBox.origin = SKIntegralPoint(SKCenterPoint(bounds));
-        foregroundBox.size = NSZeroSize;
+        foregroundRect = bounds;
+    } else if (NSIsEmptyRect(foregroundRect)) {
+        foregroundRect.origin = SKIntegralPoint(SKCenterPoint(bounds));
+        foregroundRect.size = NSZeroSize;
     } else {
-        foregroundBox.origin = SKAddPoints(foregroundBox.origin, bounds.origin);
+        foregroundRect.origin = SKAddPoints(foregroundRect.origin, bounds.origin);
     }
     [imageRep release];
-    return NSIntersectionRect(NSInsetRect(foregroundBox, -marginWidth, -marginHeight), bounds);
+    return foregroundRect;
+}
+
+- (NSRect)foregroundBox {
+    return NSIntersectionRect(NSInsetRect([self foregroundRect], -[[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginWidthKey], -[[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginHeightKey]), [self boundsForBox:kPDFDisplayBoxCropBox]);
 }
 
 - (NSImage *)thumbnailWithSize:(CGFloat)aSize forBox:(PDFDisplayBox)box {
