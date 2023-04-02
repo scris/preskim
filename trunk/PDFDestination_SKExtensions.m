@@ -102,7 +102,7 @@
             if (point.y >= kPDFDestinationUnspecifiedValue)
                 point.y = NSMaxY(bounds);
             PDFDestination *destination = [[[PDFDestination alloc] initWithPage:page atPoint:point] autorelease];
-            if (size.width > 0.0 && size.height > 0.0)
+            if (size.width > 0.0 && size.height > 0.0 && NSWidth(bounds) > 0.0 && NSHeight(bounds) > 0.0)
                 [destination setZoom:fmin(size.width / NSWidth(bounds), size.height / NSHeight(bounds))];
             return destination;
         }
