@@ -38,10 +38,11 @@
 
 #import "PDFDestination_SKExtensions.h"
 #import "PDFPage_SKExtensions.h"
+#import "PDFView_SKExtensions.h"
 
 @implementation PDFDestination (SKExtensions)
 
-- (PDFDestination *)effectiveDestinationWithTargetSize:(NSSize)size {
+- (PDFDestination *)effectiveDestinationForView:(PDFView *)pdfView {
     NSPoint point = [self point];
     if (point.x >= kPDFDestinationUnspecifiedValue || point.y >= kPDFDestinationUnspecifiedValue) {
         PDFPage *page = [self page];
@@ -55,15 +56,15 @@
                 override = NO;
                 break;
             case 1: // Fit
-                bounds = [page foregroundRect];
+                bounds = pdfView ? [pdfView layoutBoundsForPage:page] : [page boundsForBox:kPDFDisplayBoxCropBox];
                 break;
             case 2: // FitH
-                bounds = [page foregroundRect];
+                bounds = pdfView ? [pdfView layoutBoundsForPage:page] : [page boundsForBox:kPDFDisplayBoxCropBox];
                 @try { point.y = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.top" : @"_private.top"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 break;
             case 3: // FitV
-                bounds = [page foregroundRect];
+                bounds = pdfView ? [pdfView layoutBoundsForPage:page] : [page boundsForBox:kPDFDisplayBoxCropBox];
                 @try { point.x = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.left" : @"_private.left"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 break;
@@ -80,15 +81,15 @@
                 break;
             }
             case 5: // FitB
-                bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
+                bounds = [page foregroundRect];
                 break;
             case 6: // FitBH
-                bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
+                bounds = [page foregroundRect];
                 @try { point.y = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.top" : @"_private.top"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 break;
             case 7: // FitBV
-                bounds = [page boundsForBox:kPDFDisplayBoxCropBox];
+                bounds = [page foregroundRect];
                 @try { point.x = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.left" : @"_private.left"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 break;
@@ -102,8 +103,10 @@
             if (point.y >= kPDFDestinationUnspecifiedValue)
                 point.y = NSMaxY(bounds);
             PDFDestination *destination = [[[PDFDestination alloc] initWithPage:page atPoint:point] autorelease];
-            if (size.width > 0.0 && size.height > 0.0 && NSWidth(bounds) > 0.0 && NSHeight(bounds) > 0.0)
+            if (pdfView && NSWidth(bounds) > 0.0 && NSHeight(bounds) > 0.0) {
+                NSSize size = [pdfView visibleContentRect].size;
                 [destination setZoom:fmin(size.width / NSWidth(bounds), size.height / NSHeight(bounds))];
+            }
             return destination;
         }
     }

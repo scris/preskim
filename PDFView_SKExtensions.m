@@ -64,9 +64,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (CGFloat)minScaleFactor;
 - (CGFloat)maxScaleFactor;
 @property (nonatomic) PDFDisplayDirection displayDirection;
+@property (nonatomic) NSEdgeInsets pageBreakMargins;
 @end
 
 #endif
+
+#define PAGE_BREAK_MARGIN 4.0
 
 @implementation PDFView (SKExtensions)
 
@@ -277,6 +280,43 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     NSRect rect = [self convertRect:[clipView bounds] fromView:clipView];
     rect.size.height -= [scrollView contentInsets].top;
     return rect;
+}
+
+- (NSRect)layoutBoundsForPage:(PDFPage *)page {
+    NSRect pageRect = [page boundsForBox:[self displayBox]];
+    if ([self displaysPageBreaks]) {
+        if (RUNNING_BEFORE(10_13)) {
+            pageRect = NSInsetRect(pageRect, -PAGE_BREAK_MARGIN, -PAGE_BREAK_MARGIN);
+        } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+            NSEdgeInsets margins = [self pageBreakMargins];
+#pragma clang diagnostic pop
+            switch ([page rotation]) {
+                case 0:
+                    pageRect = NSInsetRect(pageRect, -margins.left, -margins.bottom);
+                    pageRect.size.width += margins.right - margins.left;
+                    pageRect.size.height += margins.top - margins.bottom;
+                    break;
+                case 90:
+                    pageRect = NSInsetRect(pageRect, -margins.top, -margins.left);
+                    pageRect.size.width += margins.bottom - margins.top;
+                    pageRect.size.height += margins.right - margins.left;
+                    break;
+                case 180:
+                    pageRect = NSInsetRect(pageRect, -margins.right, -margins.top);
+                    pageRect.size.width += margins.left - margins.right;
+                    pageRect.size.height += margins.bottom - margins.top;
+                    break;
+                case 270:
+                    pageRect = NSInsetRect(pageRect, -margins.bottom, -margins.right);
+                    pageRect.size.width += margins.top - margins.bottom;
+                    pageRect.size.height += margins.left - margins.right;
+                    break;
+            }
+        }
+    }
+    return pageRect;
 }
 
 - (CGFloat)maximumScaleFactor {

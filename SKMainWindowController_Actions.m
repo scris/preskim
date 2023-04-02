@@ -89,12 +89,6 @@
 #define DEFAULT_SPLIT_PDF_FACTOR 0.3
 
 
-#if SDK_BEFORE(10_13)
-@interface PDFView (SKHighSierraDeclarations)
-@property (nonatomic) NSEdgeInsets pageBreakMargins;
-@end
-#endif
-
 @interface SKMainWindowController (SKPrivateUI)
 - (void)updateLineInspector;
 - (void)updateNoteFilterPredicate;
@@ -450,49 +444,12 @@ static NSArray *allMainDocumentPDFViews() {
     }
 }
 
-static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
-    NSRect pageRect = [page boundsForBox:[pdfView displayBox]];
-    if ([pdfView displaysPageBreaks]) {
-        if (RUNNING_BEFORE(10_13)) {
-            pageRect = NSInsetRect(pageRect, -PAGE_BREAK_MARGIN, -PAGE_BREAK_MARGIN);
-        } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-            NSEdgeInsets margins = [pdfView pageBreakMargins];
-#pragma clang diagnostic pop
-            switch ([page rotation]) {
-                case 0:
-                    pageRect = NSInsetRect(pageRect, -margins.left, -margins.bottom);
-                    pageRect.size.width += margins.right - margins.left;
-                    pageRect.size.height += margins.top - margins.bottom;
-                    break;
-                case 90:
-                    pageRect = NSInsetRect(pageRect, -margins.top, -margins.left);
-                    pageRect.size.width += margins.bottom - margins.top;
-                    pageRect.size.height += margins.right - margins.left;
-                    break;
-                case 180:
-                    pageRect = NSInsetRect(pageRect, -margins.right, -margins.top);
-                    pageRect.size.width += margins.left - margins.right;
-                    pageRect.size.height += margins.bottom - margins.top;
-                    break;
-                case 270:
-                    pageRect = NSInsetRect(pageRect, -margins.bottom, -margins.right);
-                    pageRect.size.width += margins.top - margins.bottom;
-                    pageRect.size.height += margins.left - margins.right;
-                    break;
-            }
-        }
-    }
-    return pageRect;
-}
-
 // @@ Horizontal layout
 - (IBAction)alternateZoomToFit:(id)sender {
     PDFDisplayMode displayMode = [pdfView extendedDisplayMode];
     NSRect frame = [pdfView frame];
     PDFPage *page = [pdfView currentPage];
-    NSRect pageRect = layoutBoundsForPage(page, pdfView);
+    NSRect pageRect = [pdfView layoutBoundsForPage:page];
     CGFloat width, height;
     CGFloat scrollerWidth = 0.0;
     CGFloat scaleFactor;
@@ -928,7 +885,7 @@ static NSRect layoutBoundsForPage(PDFPage *page, PDFView *pdfView) {
     NSSize size, oldSize = [[self pdfView] frame].size;
     NSRect documentRect = [[[self pdfView] documentView] convertRect:[[[self pdfView] documentView] bounds] toView:nil];
     PDFPage *page = [[self pdfView] currentPage];
-    NSRect pageRect = layoutBoundsForPage(page, pdfView);
+    NSRect pageRect = [pdfView layoutBoundsForPage:page];
     
     oldSize.height -= [[[self pdfView] scrollView] contentInsets].top;
     
