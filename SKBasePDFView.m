@@ -289,15 +289,7 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     NSRect docRect = [[[self scrollView] documentView] frame];
     if (NSWidth(docRect) <= NSWidth(bounds))
         return;
-    NSRect pageBounds = [page boundsForBox:[self displayBox]];
-    if ([self displaysPageBreaks]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        CGFloat margin = [self pageBreakMargins].left;
-#pragma clang diagnostic pop
-        pageBounds = NSInsetRect(pageBounds, -margin, -margin);
-    }
-    pageBounds = [self convertRect:[self convertRect:pageBounds fromPage:page] toView:clipView];
+    NSRect pageBounds = [self convertRect:[self convertRect:[self layoutBoundsForPage:page] fromPage:page] toView:clipView];
     bounds.origin.x = fmin(fmax(fmin(NSMidX(pageBounds) - 0.5 * NSWidth(bounds), NSMinX(pageBounds)), NSMinX(docRect)), NSMaxX(docRect) - NSWidth(bounds));
     [self goToPage:page];
     [clipView scrollToPoint:bounds.origin];

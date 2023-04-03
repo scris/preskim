@@ -81,8 +81,6 @@
 
 #define STATUSBAR_HEIGHT 22.0
 
-#define PAGE_BREAK_MARGIN 4.0
-
 #define DEFAULT_SIDE_PANE_WIDTH 250.0
 #define MIN_SIDE_PANE_WIDTH 100.0
 
@@ -437,7 +435,7 @@ static NSArray *allMainDocumentPDFViews() {
     if (RUNNING(10_12) && 0 == ([pdfView displayMode] & kPDFDisplaySinglePageContinuous)) {
         CGFloat pageHeight = NSHeight([[pdfView currentPage] boundsForBox:[pdfView displayBox]]);
         if ([pdfView displaysPageBreaks])
-            pageHeight += 2.0 * PAGE_BREAK_MARGIN;
+            pageHeight += 8.0;
         CGFloat scaleFactor = fmax([pdfView minimumScaleFactor], NSHeight([pdfView frame]) / pageHeight);
         if (scaleFactor < [pdfView scaleFactor])
             [pdfView setScaleFactor:scaleFactor];

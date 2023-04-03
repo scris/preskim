@@ -1754,22 +1754,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         NSRect bounds = [clipView bounds];
         CGFloat inset = [self convertSize:NSMakeSize(0.0, [scrollView contentInsets].top) toView:clipView].height;
         NSRect docRect = [[scrollView documentView] frame];
-        NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
-        if ([self displaysPageBreaks]) {
-            CGFloat scale = [self scaleFactor];
-            if (RUNNING_BEFORE(10_13)) {
-                pageRect = NSInsetRect(pageRect, -4.0 * scale, -4.0 * scale);
-            } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-                NSEdgeInsets margins = [self pageBreakMargins];
-#pragma clang diagnostic pop
-                pageRect = NSInsetRect(pageRect, -scale * margins.left, -scale * margins.bottom);
-                pageRect.size.width += scale * (margins.right - margins.left);
-                pageRect.size.height += scale * (margins.top - margins.bottom);
-            }
-        }
-        pageRect = [self convertRect:pageRect toView:clipView];
+        NSRect pageRect = [self convertRect:[self convertRect:[self layoutBoundsForPage:page] fromPage:page] toView:clipView];
         if ((mode & (kPDFDisplayHorizontalContinuous | kPDFDisplayTwoUp)) && NSWidth(docRect) > NSWidth(bounds)) {
             bounds.origin.x = fmin(fmax(fmin(NSMidX(pageRect) - 0.5 * NSWidth(bounds), NSMinX(pageRect)), NSMinX(docRect)), NSMaxX(docRect) - NSWidth(bounds));
         }
