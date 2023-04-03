@@ -70,6 +70,11 @@
                 @catch (id e) { override = NO; }
                 if (override && pdfView && NSIsEmptyRect(bounds) == NO)
                     zoomX = zoomY = size.width / NSWidth(bounds);
+                if (override && pdfView && point.y >= kPDFDestinationUnspecifiedValue) {
+                    PDFDestination *d = [pdfView currentDestination];
+                    if ([d page] == page)
+                        point.y = [d point].y;
+                }
                 break;
             case 3: // FitV
                 bounds = pdfView ? [pdfView layoutBoundsForPage:page] : [page boundsForBox:kPDFDisplayBoxCropBox];
@@ -77,6 +82,11 @@
                 @catch (id e) { override = NO; }
                 if (override && pdfView && NSIsEmptyRect(bounds) == NO)
                     zoomX = zoomY = size.height / NSHeight(bounds);
+                if (override && pdfView && point.x >= kPDFDestinationUnspecifiedValue) {
+                    PDFDestination *d = [pdfView currentDestination];
+                    if ([d page] == page)
+                        point.x = [d point].x;
+                }
                 break;
             case 4: // FitR
             {
@@ -107,6 +117,11 @@
                 @catch (id e) { override = NO; }
                 if (override && pdfView && NSIsEmptyRect(bounds) == NO)
                     zoomX = zoomY = size.width / NSWidth(bounds);
+                if (override && pdfView && point.y >= kPDFDestinationUnspecifiedValue) {
+                    PDFDestination *d = [pdfView currentDestination];
+                    if ([d page] == page)
+                        point.y = [d point].y;
+                }
                 break;
             case 7: // FitBV
                 bounds = [page foregroundRect];
@@ -114,6 +129,11 @@
                 @catch (id e) { override = NO; }
                 if (override && pdfView && NSIsEmptyRect(bounds) == NO)
                     zoomX = zoomY = size.height / NSHeight(bounds);
+                if (override && pdfView && point.x >= kPDFDestinationUnspecifiedValue) {
+                    PDFDestination *d = [pdfView currentDestination];
+                    if ([d page] == page)
+                        point.x = [d point].x;
+                }
                 break;
             default:
                 override = NO;
