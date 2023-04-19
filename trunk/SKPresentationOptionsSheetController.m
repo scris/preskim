@@ -534,11 +534,13 @@ static char *SKTransitionPropertiesObservationContext;
     NSCustomTouchBarItem *item = nil;
     if ([identifier isEqualToString:SKTouchBarItemIdentifierOK]) {
         NSButton *button = [NSButton buttonWithTitle:[okButton title] target:[okButton target] action:[okButton action]];
+        [button setTag:NSModalResponseOK];
         [button setKeyEquivalent:@"\r"];
         item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
         [(NSCustomTouchBarItem *)item setView:button];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierCancel]) {
         NSButton *button = [NSButton buttonWithTitle:[cancelButton title] target:[cancelButton target] action:[cancelButton action]];
+        [button setTag:NSModalResponseCancel];
         item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
         [(NSCustomTouchBarItem *)item setView:button];
     }
