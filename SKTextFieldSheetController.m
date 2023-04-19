@@ -69,7 +69,7 @@
 - (NSTouchBar *)makeTouchBar {
     NSTouchBar *touchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
     [touchBar setDelegate:self];
-    [touchBar setDefaultItemIdentifiers:@[@"NSTouchBarItemIdentifierFlexibleSpace", SKTouchBarItemIdentifierOK, SKTouchBarItemIdentifierCancel, @"NSTouchBarItemIdentifierFixedSpaceLarge"]];
+    [touchBar setDefaultItemIdentifiers:@[@"NSTouchBarItemIdentifierFlexibleSpace", SKTouchBarItemIdentifierCancel, SKTouchBarItemIdentifierOK, @"NSTouchBarItemIdentifierFixedSpaceLarge"]];
     return touchBar;
 }
 
