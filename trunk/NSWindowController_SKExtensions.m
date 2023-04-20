@@ -72,8 +72,11 @@
 }
 
 - (IBAction)dismissSheet:(id)sender {
-    [[[self window] sheetParent] endSheet:[self window] returnCode:[sender tag]];
-    [self release];
+    NSWindow *window = [[self window] sheetParent];
+    if (window) {
+        [window endSheet:[self window] returnCode:[sender tag]];
+        [self autorelease];
+    }
 }
 
 @end
