@@ -397,7 +397,7 @@
     if ([tv isEqual:leftSideController.thumbnailTableView]) {
         if ([[pdfView document] isLocked] == NO) {
             PDFPage *page = [[pdfView document] pageAtIndex:row];
-            return [page filePromise];
+            return [page filePromiseForPageIndexes:nil];
         }
     } else if ([tv isEqual:rightSideController.snapshotTableView]) {
         SKSnapshotWindowController *snapshot = [[rightSideController.snapshotArrayController arrangedObjects] objectAtIndex:row];
@@ -545,7 +545,7 @@
         NSUInteger idx = [rowIndexes firstIndex];
         if (idx != NSNotFound && [[pdfView document] isLocked] == NO) {
             PDFPage *page = [[pdfView document] pageAtIndex:idx];
-            [page writeToClipboard];
+            [page writeToClipboardForPageIndexes:nil];
         }
     } else if ([tv isEqual:leftSideController.findTableView]) {
         NSMutableString *string = [NSMutableString string];
