@@ -73,13 +73,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     }
 }
 
+- (void)copyURL:(id)sender {
+    NSUInteger i = [[self selectionIndexes] firstIndex];
+    if (i != NSNotFound) {
+        id view = [[self itemAtIndex:i] view];
+        if ([view respondsToSelector:_cmd])
+            [view copyURL:sender];
+    }
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
-    if ([menuItem action] == @selector(copy:)) {
+    SEL action = [menuItem action];
+    if (action == @selector(copy:) || action == @selector(copyURL:)) {
         NSUInteger i = [[self selectionIndexes] firstIndex];
         if (i == NSNotFound)
             return NO;
         id view = [[self itemAtIndex:i] view];
-        if ([view respondsToSelector:@selector(copy:)] == NO)
+        if ([view respondsToSelector:action] == NO)
             return NO;
         if ([view respondsToSelector:_cmd])
             return [view validateMenuItem:menuItem];
