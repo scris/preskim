@@ -1696,6 +1696,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [scrollView release];
         [overviewView setItemPrototype:[[[SKThumbnailItem alloc] init] autorelease]];
         [overviewView setSelectable:YES];
+        [overviewView setAllowsMultipleSelection:YES];
         [self updateOverviewItemSize];
         [overviewView setContent:[self thumbnails]];
         [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];

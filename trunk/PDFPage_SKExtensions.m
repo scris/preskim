@@ -75,6 +75,8 @@ NSString *SKPDFPageActionRotate = @"rotate";
 #define SKAutoCropBoxMarginWidthKey @"SKAutoCropBoxMarginWidth"
 #define SKAutoCropBoxMarginHeightKey @"SKAutoCropBoxMarginHeight"
 
+#define SKPasteboardTypePageIndexes @"net.sourceforge.skim-app.pasteboard.page-indexes"
+
 @implementation PDFPage (SKExtensions) 
 
 - (void)fallback_transformContext:(CGContextRef)context forBox:(PDFDisplayBox)box {
@@ -310,6 +312,23 @@ static BOOL usesSequentialPageNumbering = NO;
     return [image TIFFRepresentation];
 }
 
+- (NSData *)dataRepresentationForPageIndexes:(NSIndexSet *)pageIndexes {
+    NSData *data = nil;
+    if (pageIndexes) {
+        PDFDocument *pdfDoc = [[PDFDocument alloc] init];
+        [pageIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
+            PDFPage *aPage = [[[self document] pageAtIndex:i] copy];
+            [pdfDoc insertPage:aPage atIndex:[pdfDoc pageCount]];
+            [aPage release];
+        }];
+        data = [pdfDoc dataRepresentation];
+        [pdfDoc release];
+    } else {
+        data = [self dataRepresentation];
+    }
+    return data;
+}
+
 // the page is set as owner in -filePromise
 - (void)pasteboard:(NSPasteboard *)pboard item:(NSPasteboardItem *)item provideDataForType:(NSString *)type {
     if ([type isEqualToString:(NSString *)kPasteboardTypeFileURLPromise]) {
@@ -321,7 +340,11 @@ static BOOL usesSequentialPageNumbering = NO;
         
         if ([[self document] allowsPrinting]) {
             pathExt = @"pdf";
-            data = [self dataRepresentation];
+            NSIndexSet *pageIndexes = nil;
+            NSData *indexData = [item dataForType:SKPasteboardTypePageIndexes];
+            if (indexData)
+                pageIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:indexData];
+            data = [self dataRepresentationForPageIndexes:pageIndexes];
         } else {
             pathExt = @"tiff";
             data = [self TIFFDataForRect:[self boundsForBox:kPDFDisplayBoxCropBox]];
@@ -331,7 +354,11 @@ static BOOL usesSequentialPageNumbering = NO;
         if ([data writeToURL:fileURL atomically:YES])
             [item setString:[fileURL absoluteString] forType:type];
     } else if ([type isEqualToString:NSPasteboardTypePDF]) {
-        [item setData:[self dataRepresentation] forType:type];
+        NSIndexSet *pageIndexes = nil;
+        NSData *indexData = [item dataForType:SKPasteboardTypePageIndexes];
+        if (indexData)
+            pageIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:indexData];
+        [item setData:[self dataRepresentationForPageIndexes:pageIndexes] forType:type];
     } else if ([type isEqualToString:NSPasteboardTypeTIFF]) {
         [item setData:[self TIFFDataForRect:[self boundsForBox:kPDFDisplayBoxCropBox]] forType:type];
     }
@@ -349,32 +376,38 @@ static BOOL usesSequentialPageNumbering = NO;
 - (void)filePromiseProvider:(NSFilePromiseProvider *)filePromiseProvider writePromiseToURL:(NSURL *)fileURL completionHandler:(void (^)(NSError *))completionHandler {
     NSData *data = nil;
     NSError *error = nil;
-    if ([[self document] allowsPrinting])
-        data = [self dataRepresentation];
-    else
+    if ([[self document] allowsPrinting]) {
+        NSIndexSet *pageIndexes = [filePromiseProvider userInfo];
+        data = [self dataRepresentationForPageIndexes:pageIndexes];
+    } else
         data = [self TIFFDataForRect:[self boundsForBox:kPDFDisplayBoxCropBox]];
     [data writeToURL:fileURL options:NSDataWritingAtomic error:&error];
     completionHandler(error);
 }
 
-- (id<NSPasteboardWriting>)filePromise {
+- (id<NSPasteboardWriting>)filePromiseForPageIndexes:(NSIndexSet *)pageIndexes {
     if ([[self document] isLocked] == NO) {
         NSString *fileUTI = [[self document] allowsPrinting] ? (NSString *)kUTTypePDF : (NSString *)kUTTypeTIFF;
         Class promiseClass = NSClassFromString(@"NSFilePromiseProvider");
         if (promiseClass) {
-            return [[[promiseClass alloc] initWithFileType:fileUTI delegate:self] autorelease];
+            NSFilePromiseProvider *item = [[[promiseClass alloc] initWithFileType:fileUTI delegate:self] autorelease];
+            if (pageIndexes)
+                [item setUserInfo:pageIndexes];
+            return item;
         } else {
             NSString *pdfType = [[self document] allowsPrinting] ? NSPasteboardTypePDF : nil;
             NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
             [item setString:fileUTI forType:(NSString *)kPasteboardTypeFilePromiseContent];
             [item setDataProvider:self forTypes:@[(NSString *)kPasteboardTypeFileURLPromise, NSPasteboardTypeTIFF, pdfType]];
+            if (pageIndexes)
+                [item setData:[NSKeyedArchiver archivedDataWithRootObject:pageIndexes] forType:SKPasteboardTypePageIndexes];
             return item;
         }
     }
     return nil;
 }
 
-- (void)writeToClipboard {
+- (void)writeToClipboardForPageIndexes:(NSIndexSet *)pageIndexes {
     if ([[self document] isLocked] == NO) {
         NSData *tiffData = [self TIFFDataForRect:[self boundsForBox:kPDFDisplayBoxCropBox]];
         NSPasteboardItem *pboardItem = [[[NSPasteboardItem alloc] init] autorelease];

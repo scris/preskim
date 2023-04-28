@@ -410,9 +410,15 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([NSApp willDragMouse]) {
         
-        id<NSPasteboardWriting> item = [[[self thumbnail] page] filePromise];
+        PDFPage *page = [[self thumbnail] page];
+        NSIndexSet *selectionIndexes = [[[self controller] collectionView] selectionIndexes];
+        if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:[page pageIndex]] == NO)
+            selectionIndexes = nil;
+        
+        id<NSPasteboardWriting> item = [page filePromiseForPageIndexes:selectionIndexes];
         
         if (item) {
+            
             NSRect rect = [imageView frame];
             NSBitmapImageRep *imageRep = [imageView bitmapImageRepCachingDisplayInRect:[imageView bounds]];
             NSImage *dragImage = [[[NSImage alloc] initWithSize:rect.size] autorelease];
@@ -431,16 +437,40 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (void)copyPage:(id)sender {
-    [[[self thumbnail] page] writeToClipboard];
+    PDFPage *page = [[self thumbnail] page];
+    NSIndexSet *selectionIndexes = [[[self controller] collectionView] selectionIndexes];
+    if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:[page pageIndex]] == NO)
+        selectionIndexes = nil;
+    [[[self thumbnail] page] writeToClipboardForPageIndexes:selectionIndexes];
 }
 
 - (void)copyPageURL:(id)sender {
     PDFPage *page = [[self thumbnail] page];
-    NSURL *skimURL = [page skimURL];
-    if (skimURL != nil) {
+    NSIndexSet *selectionIndexes = [[[self controller] collectionView] selectionIndexes];
+    if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:[page pageIndex]] == NO)
+        selectionIndexes = nil;
+    NSMutableArray *urls = [NSMutableArray array];
+    NSMutableArray *names = [NSMutableArray array];
+    NSString *name = [[[[self window] windowController] document] displayName];
+    if (selectionIndexes) {
+        [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
+            NSURL *url = [[[page document] pageAtIndex:i] skimURL];
+            if (url) {
+                [urls addObject:url];
+                [names addObject:name];
+            }
+        }];
+    } else {
+        NSURL *url = [page skimURL];
+        if (url) {
+            [urls addObject:url];
+            [names addObject:name];
+        }
+    }
+    if ([urls count]) {
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
-        [pboard writeURLs:@[skimURL] names:@[[[[[self window] windowController] document] displayName]]];
+        [pboard writeURLs:urls names:names];
     }
 }
 
