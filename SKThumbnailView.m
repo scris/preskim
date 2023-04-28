@@ -436,7 +436,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     }
 }
 
-- (void)copyPage:(id)sender {
+- (void)copy:(id)sender {
     PDFPage *page = [[self thumbnail] page];
     NSIndexSet *selectionIndexes = [[[self controller] collectionView] selectionIndexes];
     if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:[page pageIndex]] == NO)
@@ -479,7 +479,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     NSMenu *menu = nil;
     if (page && [[page document] isLocked] == NO) {
         menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-        [menu addItemWithTitle:NSLocalizedString(@"Copy", @"Menu item title") action:@selector(copyPage:) target:self];
+        [menu addItemWithTitle:NSLocalizedString(@"Copy", @"Menu item title") action:@selector(copy:) target:self];
         [menu addItemWithTitle:NSLocalizedString(@"Copy URL", @"Menu item title") action:@selector(copyPageURL:) target:self];
     }
     return menu;
