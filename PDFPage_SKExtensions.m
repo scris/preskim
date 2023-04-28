@@ -412,7 +412,7 @@ static BOOL usesSequentialPageNumbering = NO;
         NSData *tiffData = [self TIFFDataForRect:[self boundsForBox:kPDFDisplayBoxCropBox]];
         NSPasteboardItem *pboardItem = [[[NSPasteboardItem alloc] init] autorelease];
         if ([[self document] allowsPrinting])
-            [pboardItem setData:[self dataRepresentation] forType:NSPasteboardTypePDF];
+            [pboardItem setData:[self dataRepresentationForPageIndexes:pageIndexes] forType:NSPasteboardTypePDF];
         [pboardItem setData:tiffData forType:NSPasteboardTypeTIFF];
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
