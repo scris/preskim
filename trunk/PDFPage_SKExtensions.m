@@ -344,7 +344,7 @@ static BOOL usesSequentialPageNumbering = NO;
                 pageIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:indexData];
                 NSMutableArray *labels = [NSMutableArray array];
                 [pageIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
-                    [labels addObject:[[self document] pageAtIndex:i]];
+                    [labels addObject:[[[self document] pageAtIndex:i] displayLabel]];
                 }];
                 if ([labels count])
                     label = [labels componentsJoinedByString:@", "];
@@ -381,7 +381,7 @@ static BOOL usesSequentialPageNumbering = NO;
     if (pageIndexes && [[self document] allowsPrinting]) {
         NSMutableArray *labels = [NSMutableArray array];
         [pageIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
-            [labels addObject:[[self document] pageAtIndex:i]];
+            [labels addObject:[[[self document] pageAtIndex:i] displayLabel]];
         }];
         label = [labels componentsJoinedByString:@", "];
     }
