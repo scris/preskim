@@ -332,9 +332,7 @@ static BOOL usesSequentialPageNumbering = NO;
 // the page is set as owner in -filePromise
 - (void)pasteboard:(NSPasteboard *)pboard item:(NSPasteboardItem *)item provideDataForType:(NSString *)type {
     if ([type isEqualToString:(NSString *)kPasteboardTypeFileURLPromise]) {
-        NSURL *dropDestination = [pboard pasteLocationURL];
-        NSString *filename = [NSString stringWithFormat:@"%@ %c %@", ([[[self containingDocument] displayName] stringByDeletingPathExtension] ?: @"PDF"), '-', [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [self displayLabel]]];
-        NSURL *fileURL = [dropDestination URLByAppendingPathComponent:filename isDirectory:NO];
+        NSString *label = [self displayLabel];
         NSString *pathExt = nil;
         NSData *data = nil;
         
@@ -342,14 +340,24 @@ static BOOL usesSequentialPageNumbering = NO;
             pathExt = @"pdf";
             NSIndexSet *pageIndexes = nil;
             NSData *indexData = [item dataForType:SKPasteboardTypePageIndexes];
-            if (indexData)
+            if (indexData) {
                 pageIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:indexData];
+                NSMutableArray *labels = [NSMutableArray array];
+                [pageIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
+                    [labels addObject:[[self document] pageAtIndex:i]];
+                }];
+                if ([labels count])
+                    label = [labels componentsJoinedByString:@", "];
+            }
             data = [self dataRepresentationForPageIndexes:pageIndexes];
         } else {
             pathExt = @"tiff";
             data = [self TIFFDataForRect:[self boundsForBox:kPDFDisplayBoxCropBox]];
         }
         
+        NSURL *dropDestination = [pboard pasteLocationURL];
+        NSString *filename = [NSString stringWithFormat:@"%@ %c %@", ([[[self containingDocument] displayName] stringByDeletingPathExtension] ?: @"PDF"), '-', [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), label]];
+        NSURL *fileURL = [dropDestination URLByAppendingPathComponent:filename isDirectory:NO];
         fileURL = [[fileURL URLByAppendingPathExtension:pathExt] uniqueFileURL];
         if ([data writeToURL:fileURL atomically:YES])
             [item setString:[fileURL absoluteString] forType:type];
@@ -368,7 +376,16 @@ static BOOL usesSequentialPageNumbering = NO;
 
 // the page is set as delegate in -filePromise
 - (NSString *)filePromiseProvider:(NSFilePromiseProvider *)filePromiseProvider fileNameForType:(NSString *)fileType {
-    NSString *filename = [NSString stringWithFormat:@"%@ %c %@", ([[[self containingDocument] displayName] stringByDeletingPathExtension] ?: @"PDF"), '-', [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [self displayLabel]]];
+    NSString *label = [self displayLabel];
+    NSIndexSet *pageIndexes = [filePromiseProvider userInfo];
+    if (pageIndexes && [[self document] allowsPrinting]) {
+        NSMutableArray *labels = [NSMutableArray array];
+        [pageIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
+            [labels addObject:[[self document] pageAtIndex:i]];
+        }];
+        label = [labels componentsJoinedByString:@", "];
+    }
+    NSString *filename = [NSString stringWithFormat:@"%@ %c %@", ([[[self containingDocument] displayName] stringByDeletingPathExtension] ?: @"PDF"), '-', [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), label]];
     NSString *pathExt = [[self document] allowsPrinting] ? @"pdf" : @"tiff";
     return [filename stringByAppendingPathExtension:pathExt];
 }
