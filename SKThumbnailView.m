@@ -454,10 +454,11 @@ static char SKThumbnailViewThumbnailObservationContext;
     NSString *name = [[[[self window] windowController] document] displayName];
     if (selectionIndexes) {
         [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
-            NSURL *url = [[[page document] pageAtIndex:i] skimURL];
+            PDFPage *aPage = [[page document] pageAtIndex:i];
+            NSURL *url = [aPage skimURL];
             if (url) {
                 [urls addObject:url];
-                [names addObject:name];
+                [names addObject:[name stringByAppendingFormat:@" (%@)", [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [aPage displayLabel]]]];
             }
         }];
     } else {
