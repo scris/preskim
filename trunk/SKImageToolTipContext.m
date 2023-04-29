@@ -121,11 +121,13 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
         [transform appendTransform:scaleTransform];
     }
     
+    if (page == nil)
+        return nil;
+    
     sourceRect.size.width = [[NSUserDefaults standardUserDefaults] doubleForKey:SKToolTipWidthKey];
     sourceRect.size.height = [[NSUserDefaults standardUserDefaults] doubleForKey:SKToolTipHeightKey];
     sourceRect.origin = SKAddPoints([transform transformPoint:point], offset);
     sourceRect.origin.y -= NSHeight(sourceRect);
-    
     
     if ([pageSelection hasCharacters]) {
         NSRect selBounds = [pageSelection boundsForPage:page];
