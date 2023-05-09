@@ -16,6 +16,7 @@
 		CE4F80EB0CFB06EE00DBEA14 /* SKQLConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4F80E90CFB06EE00DBEA14 /* SKQLConverter.h */; };
 		CE4F80EC0CFB06EE00DBEA14 /* SKQLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4F80EA0CFB06EE00DBEA14 /* SKQLConverter.m */; };
 		CE82D0AB0ED347B100020950 /* Ink.png in Resources */ = {isa = PBXBuildFile; fileRef = CE82D0AA0ED347B100020950 /* Ink.png */; };
+		CE861AAE2A0AABE6002FFA1D /* Widget.png in Resources */ = {isa = PBXBuildFile; fileRef = CE861AAD2A0AABE6002FFA1D /* Widget.png */; };
 		CEC7BCE20CF763A0008CCD63 /* StrikeOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CEC7BCDA0CF7639E008CCD63 /* StrikeOut.png */; };
 		CEC7BCE30CF763A0008CCD63 /* Note.png in Resources */ = {isa = PBXBuildFile; fileRef = CEC7BCDB0CF7639E008CCD63 /* Note.png */; };
 		CEC7BCE40CF763A0008CCD63 /* Line.png in Resources */ = {isa = PBXBuildFile; fileRef = CEC7BCDC0CF7639E008CCD63 /* Line.png */; };
@@ -45,6 +46,7 @@
 		CE4F80E90CFB06EE00DBEA14 /* SKQLConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKQLConverter.h; sourceTree = "<group>"; };
 		CE4F80EA0CFB06EE00DBEA14 /* SKQLConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKQLConverter.m; sourceTree = "<group>"; };
 		CE82D0AA0ED347B100020950 /* Ink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ink.png; sourceTree = "<group>"; };
+		CE861AAD2A0AABE6002FFA1D /* Widget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Widget.png; sourceTree = "<group>"; };
 		CEB5409B0F261EEF00723C1F /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CEC7BCDA0CF7639E008CCD63 /* StrikeOut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StrikeOut.png; sourceTree = "<group>"; };
 		CEC7BCDB0CF7639E008CCD63 /* Note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Note.png; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				CEC7BCE00CF7639E008CCD63 /* Underline.png */,
 				CEC7BCE10CF7639E008CCD63 /* Highlight.png */,
 				CE82D0AA0ED347B100020950 /* Ink.png */,
+				CE861AAD2A0AABE6002FFA1D /* Widget.png */,
 				8D576317048677EA00EA77CD /* Info.plist */,
 				8D5B49A704867FD3000E48DA /* InfoPlist.strings */,
 			);
@@ -246,6 +249,7 @@
 				CEC7BCE70CF763A0008CCD63 /* Circle.png in Resources */,
 				CEC7BCE80CF763A0008CCD63 /* Underline.png in Resources */,
 				CEC7BCE90CF763A0008CCD63 /* Highlight.png in Resources */,
+				CE861AAE2A0AABE6002FFA1D /* Widget.png in Resources */,
 				CEF9B7BD0CF8CF50001F40F5 /* Skim.icns in Resources */,
 				CE82D0AB0ED347B100020950 /* Ink.png in Resources */,
 			);
