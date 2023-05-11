@@ -588,7 +588,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
                 NSURL *fileURL = [[oPanel URLs] firstObject];
                 if (fileURL) {
                     [bm setFileURL:fileURL];
-                    [outlineView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[outlineView rowForItem:bm]] columnIndexes:[NSIndexSet indexSetWithIndex:1]];
+                    [outlineView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[outlineView rowForItem:bm]] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]];
                 }
             }
         }];
