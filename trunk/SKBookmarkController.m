@@ -972,7 +972,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
             [self insertBookmarks:newBookmarks atIndexes:indexes ofBookmark:item animate:YES];
             [ov endUpdates];
             if (item == bookmarkRoot || [outlineView isItemExpanded:item]) {
-                if (item == bookmarkRoot)
+                if (item != bookmarkRoot)
                     [indexes shiftIndexesStartingAtIndex:0 by:[outlineView rowForItem:item] + 1];
                 [outlineView selectRowIndexes:indexes byExtendingSelection:NO];
             }
