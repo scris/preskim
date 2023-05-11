@@ -586,10 +586,8 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [oPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result){
             if (result == NSModalResponseOK) {
                 NSURL *fileURL = [[oPanel URLs] firstObject];
-                if (fileURL) {
+                if (fileURL)
                     [bm setFileURL:fileURL];
-                    [outlineView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[outlineView rowForItem:bm]] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]];
-                }
             }
         }];
 }

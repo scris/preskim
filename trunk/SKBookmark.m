@@ -423,7 +423,7 @@ static Class SKBookmarkClass = Nil;
     NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
     if ([key isEqualToString:@"pageNumber"])
         keyPaths = [keyPaths setByAddingObjectsFromSet:[NSSet setWithObjects:@"pageIndex", nil]];
-    else if ([key isEqualToString:@"fileDescription"] || [key isEqualToString:@"toolTip"])
+    else if ([key isEqualToString:@"fileDescription"] || [key isEqualToString:@"toolTip"] || [key isEqualToString:@"icon"])
         keyPaths = [keyPaths setByAddingObjectsFromSet:[NSSet setWithObjects:@"fileURL", nil]];
     return keyPaths;
 }
