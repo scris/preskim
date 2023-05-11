@@ -215,6 +215,7 @@ static Class SKBookmarkClass = Nil;
 - (void)setLabel:(NSString *)newLabel {}
 
 - (NSURL *)fileURL { return nil; }
+- (void)setFileURL:(NSURL *)fileURL {}
 - (NSURL *)fileURLToOpen { return nil; }
 - (NSString *)fileDescription { return nil; }
 - (NSString *)toolTip { return nil; }
@@ -536,6 +537,14 @@ static Class SKBookmarkClass = Nil;
 
 - (NSURL *)fileURL {
     return [alias fileURLNoUI];
+}
+
+- (void)setFileURL:(NSURL *)fileURL {
+    SKAlias *newAlias = [[SKAlias alloc] initWithURL:fileURL];
+    if (newAlias) {
+        [alias release];
+        alias = newAlias;
+    }
 }
 
 - (NSURL *)fileURLToOpen {

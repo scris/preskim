@@ -576,6 +576,24 @@ static NSUInteger maxRecentDocumentsCount = 0;
     }
 }
 
+- (IBAction)chooseFile:(id)sender {
+    SKBookmark *bm = [[self clickedBookmarks] firstObject];
+    NSURL *fileURL = [bm fileURL];
+    NSOpenPanel *oPanel = [NSOpenPanel openPanel];
+    [oPanel setAllowedFileTypes:@[SKPDFDocumentType, SKPDFBundleDocumentType, SKPostScriptDocumentType, SKEncapsulatedPostScriptDocumentType, SKDVIDocumentType, SKXDVDocumentType, SKNotesDocumentType]];
+    if (fileURL)
+        [oPanel setDirectoryURL:[fileURL URLByDeletingLastPathComponent]];
+    [oPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result){
+            if (result == NSModalResponseOK) {
+                NSURL *fileURL = [[oPanel URLs] firstObject];
+                if (fileURL) {
+                    [bm setFileURL:fileURL];
+                    [outlineView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[outlineView rowForItem:bm]] columnIndexes:[NSIndexSet indexSetWithIndex:1]];
+                }
+            }
+        }];
+}
+
 - (IBAction)copyURL:(id)sender {
     NSArray *selectedBookmarks = minimumCoverForBookmarks([outlineView selectedItems]);
     NSMutableArray *skimURLs = [NSMutableArray array];
@@ -630,13 +648,16 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
         [menu removeAllItems];
         if (row != -1) {
             [menu addItemWithTitle:NSLocalizedString(@"Remove", @"Menu item title") action:@selector(deleteBookmarks:) target:self];
-            for (SKBookmark *bm in [self clickedBookmarks]) {
+            NSArray *clickedBookmarks = [self clickedBookmarks];
+            for (SKBookmark *bm in clickedBookmarks) {
                 if ([bm bookmarkType] != SKBookmarkTypeSeparator) {
                     [menu addItemWithTitle:NSLocalizedString(@"Open", @"Menu item title") action:@selector(openBookmarks:) target:self];
                     [menu addItemWithTitle:NSLocalizedString(@"Quick Look", @"Menu item title") action:@selector(previewBookmarks:) target:self];
                     break;
                 }
             }
+            if ([clickedBookmarks count] == 1 && [[clickedBookmarks firstObject] bookmarkType] == SKBookmarkTypeBookmark)
+                [menu addItemWithTitle:NSLocalizedString(@"Choose File", @"Menu item title") action:@selector(chooseFile:) target:self];
             [menu addItem:[NSMenuItem separatorItem]];
         }
         [menu addItemWithTitle:NSLocalizedString(@"New Folder", @"Menu item title") action:@selector(insertBookmarkFolder:) target:self];
