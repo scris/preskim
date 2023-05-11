@@ -578,11 +578,11 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (IBAction)chooseFile:(id)sender {
     SKBookmark *bm = [[self clickedBookmarks] firstObject];
-    NSURL *fileURL = [bm fileURL];
+    NSURL *oldURL = [bm fileURL];
     NSOpenPanel *oPanel = [NSOpenPanel openPanel];
     [oPanel setAllowedFileTypes:@[SKPDFDocumentType, SKPDFBundleDocumentType, SKPostScriptDocumentType, SKEncapsulatedPostScriptDocumentType, SKDVIDocumentType, SKXDVDocumentType, SKNotesDocumentType]];
-    if (fileURL)
-        [oPanel setDirectoryURL:[fileURL URLByDeletingLastPathComponent]];
+    if (oldURL)
+        [oPanel setDirectoryURL:[oldURL URLByDeletingLastPathComponent]];
     [oPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result){
             if (result == NSModalResponseOK) {
                 NSURL *fileURL = [[oPanel URLs] firstObject];
