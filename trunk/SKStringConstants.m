@@ -145,3 +145,4 @@ NSString *SKDisplayPageBoundsKey = @"SKDisplayPageBounds";
 NSString *SKDisableHistoryHighlightsKey = @"SKDisableHistoryHighlights";
 NSString *SKInvertColorsInDarkModeKey = @"SKInvertColorsInDarkMode";
 NSString *SKSepiaToneKey = @"SKSepiaTone";
+NSString *SKWhitePointKey = @"SKWhitePoint";

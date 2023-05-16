@@ -956,6 +956,10 @@
                 description="The background color behind the pages.">
                 <cocoa key="backgroundColor"/>
             </property>
+            <property name="white point" type="RGBA color" code="WhPt"
+                description="Adjusted white point color applied to the PDF content. The same for normal and full screen mode.">
+                <cocoa key="whitePoint"/>
+            </property>
             <property name="sepia tone" type="real" code="SepT"
                 description="Intensity of a sepia tone effect applied to the PDF content. The same for normal and full screen mode.">
                 <cocoa key="sepiaTone"/>

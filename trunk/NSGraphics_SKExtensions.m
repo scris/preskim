@@ -39,6 +39,7 @@
 #import "NSGraphics_SKExtensions.h"
 #import "NSGeometry_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
+#import "NSUserDefaults_SKExtensions.h"
 #import <Quartz/Quartz.h>
 #import "SKStringConstants.h"
 
@@ -210,6 +211,11 @@ extern NSArray *SKColorEffectFilters(void) {
     CGFloat sepia = [[NSUserDefaults standardUserDefaults] doubleForKey:SKSepiaToneKey];
     if (sepia > 0.0) {
         if ((filter = [CIFilter filterWithName:@"CISepiaTone" keysAndValues:@"inputIntensity", [NSNumber numberWithDouble:fmin(sepia, 1.0)], nil]))
+            [filters addObject:filter];
+    }
+    NSColor *white = [[NSUserDefaults standardUserDefaults] colorForKey:SKWhitePointKey];
+    if (white) {
+        if ((filter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [[[CIColor alloc] initWithColor:white] autorelease], nil]))
             [filters addObject:filter];
     }
     if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
