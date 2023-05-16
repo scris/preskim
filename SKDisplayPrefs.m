@@ -44,7 +44,7 @@
 
 @implementation SKDisplayPrefs
 
-@dynamic name, pdfViewSettings, backgroundColor, sepiaTone, inverted;
+@dynamic name, pdfViewSettings, backgroundColor, sepiaTone, whitePoint, inverted;
 
 - (id)initForFullScreen:(BOOL)isFullScreen {
     self = [super init];
@@ -114,6 +114,19 @@
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:SKSepiaToneKey];
     else
         [[NSUserDefaults standardUserDefaults] setDouble:fmin(sepiaTone, 1.0) forKey:SKSepiaToneKey];
+}
+
+- (NSColor *)whitePoint {
+    return [[NSUserDefaults standardUserDefaults] colorForKey:SKWhitePointKey] ?: [NSColor whiteColor];
+}
+
+- (void)setWhitePoint:(NSColor *)whitePoint {
+    CGFloat r = 1.0, g = 1.0, b = 1.0, a = 1.0;
+    [[whitePoint colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&r green:&g blue:&b alpha:&a];
+    if (whitePoint == nil || a <= 0.0 || (r > 0.9999 && g > 0.9999 && b > 0.9999))
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:SKWhitePointKey];
+    else
+        [[NSUserDefaults standardUserDefaults] setObject:@[[NSNumber numberWithDouble:r], [NSNumber numberWithDouble:g], [NSNumber numberWithDouble:b]] forKey:SKWhitePointKey];
 }
 
 - (BOOL)isInverted {
