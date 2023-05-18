@@ -188,7 +188,7 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
             alpha = (CGFloat)[[descriptor descriptorAtIndex:4] int32Value] / 65535.0f;
         else
             alpha= 1.0;
-        return [NSColor colorWithCalibratedRed:red green:green blue:blue alpha:alpha];
+        return [[NSColor colorWithCalibratedRed:red green:green blue:blue alpha:alpha] colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
     } else if ([descriptor descriptorType] == typeEnumerated) {
         switch ([descriptor enumCodeValue]) {
             case SKScriptingColorRed: return [NSColor redColor];
