@@ -38,7 +38,6 @@
 
 #import "SKBookmarkController.h"
 #import "SKBookmark.h"
-#import "SKAlias.h"
 #import "SKTypeSelectHelper.h"
 #import "SKStatusBar.h"
 #import "SKToolbarItem.h"
