@@ -658,7 +658,7 @@
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Veq-Br-EFG">
                     <rect key="frame" x="150" y="18" width="33" height="23"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="BxE-Xo-uNS">
                         <font key="font" metaFont="system"/>
                         <segments>
@@ -688,7 +688,7 @@
                 </textField>
                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jYx-ER-Exi">
                     <rect key="frame" x="225" y="15" width="19" height="28"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <autoresizingMask key="autoresizingMask"/>
                     <stepperCell key="cell" continuous="YES" alignment="left" minValue="1" maxValue="100" doubleValue="1" id="mIF-lD-uRK"/>
                     <connections>
                         <binding destination="190" name="value" keyPath="selection.pdfView.pacerSpeed" id="G0d-wg-67j"/>
