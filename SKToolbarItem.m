@@ -55,7 +55,7 @@
 }
 
 - (void)setViewWithSizes:(NSView *)view {
-    if ([view isKindOfClass:[NSSegmentedControl class]]) {
+    if ([view isKindOfClass:[NSSegmentedControl class]] || [view isKindOfClass:[NSStepper class]]) {
         [(NSSegmentedControl *)view sizeToFit];
     }
     [self setView:view];
