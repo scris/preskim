@@ -459,7 +459,7 @@
                             <menuItem title="Spelling" id="184">
                                 <menu key="submenu" title="Spelling" id="185">
                                     <items>
-                                        <menuItem title="Spelling…" keyEquivalent=":" id="187">
+                                        <menuItem title="Show Spelling and Grammar" keyEquivalent=":" id="187">
                                             <connections>
                                                 <action selector="showGuessPanel:" target="-1" id="188"/>
                                             </connections>
@@ -469,9 +469,20 @@
                                                 <action selector="checkSpelling:" target="-1" id="190"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Check Spelling as You Type" id="191">
+                                        <menuItem isSeparatorItem="YES" id="PjS-xx-X1B"/>
+                                        <menuItem title="Check Spelling While Typing" id="191">
                                             <connections>
                                                 <action selector="toggleContinuousSpellChecking:" target="-1" id="192"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Check Grammar With Spelling" id="06P-7j-vYz">
+                                            <connections>
+                                                <action selector="toggleGrammarChecking:" target="-1" id="84v-dn-1gf"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Correct Spelling Automatically" id="63O-n8-owb">
+                                            <connections>
+                                                <action selector="toggleAutomaticSpellingCorrection:" target="-1" id="osa-8Z-IVg"/>
                                             </connections>
                                         </menuItem>
                                     </items>
