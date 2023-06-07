@@ -140,7 +140,6 @@ NSString *SKCaseInsensitiveFilterKey = @"SKCaseInsensitiveFilter";
 NSString *SKCaseInsensitiveFindKey = @"SKCaseInsensitiveFind";
 NSString *SKSpellCheckingEnabledKey = @"SKSpellCheckingEnabled";
 NSString *SKGrammarCheckingEnabledKey = @"SKGrammarCheckingEnabled";
-NSString *SKSpellingCorrectionEnabledKey = @"SKSpellingCorrectionEnabled";
 NSString *SKDownloadsDirectoryKey = @"SKDownloadsDirectory";
 NSString *SKDisableSearchAfterSpotlighKey = @"SKDisableSearchAfterSpotligh";
 NSString *SKDisplayNoteBoundsKey = @"SKDisplayNoteBounds";

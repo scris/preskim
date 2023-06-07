@@ -328,7 +328,6 @@ static char SKPDFAnnotationPropertiesObservationContext;
         NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
         [self setContinuousSpellCheckingEnabled:[sud boolForKey:SKSpellCheckingEnabledKey]];
         [self setGrammarCheckingEnabled:[sud boolForKey:SKGrammarCheckingEnabledKey]];
-        [self setAutomaticSpellingCorrectionEnabled:[sud boolForKey:SKSpellingCorrectionEnabledKey]];
     }
     return self;
 }
@@ -356,11 +355,6 @@ static char SKPDFAnnotationPropertiesObservationContext;
 - (void)toggleGrammarChecking:(id)sender {
     [super toggleGrammarChecking:sender];
     [[NSUserDefaults standardUserDefaults] setBool:[self isGrammarCheckingEnabled] forKey:SKGrammarCheckingEnabledKey];
-}
-
-- (void)toggleAutomaticSpellingCorrection:(id)sender {
-    [super toggleAutomaticSpellingCorrection:sender];
-    [[NSUserDefaults standardUserDefaults] setBool:[self isAutomaticSpellingCorrectionEnabled] forKey:SKSpellingCorrectionEnabledKey];
 }
 
 @end
