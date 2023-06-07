@@ -238,8 +238,6 @@
 		<true/>
 		<key>SKGrammarCheckingEnabled</key>
 		<false/>
-		<key>SKSpellingCorrectionEnabled</key>
-		<true/>
 	</dict>
 	<key>ResettableKeys</key>
 	<dict>

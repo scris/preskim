@@ -139,7 +139,6 @@ extern NSString *SKCaseInsensitiveFilterKey;
 extern NSString *SKCaseInsensitiveFindKey;
 extern NSString *SKSpellCheckingEnabledKey;
 extern NSString *SKGrammarCheckingEnabledKey;
-extern NSString *SKSpellingCorrectionEnabledKey;
 extern NSString *SKDownloadsDirectoryKey;
 extern NSString *SKDisableSearchAfterSpotlighKey;
 extern NSString *SKDisplayNoteBoundsKey;
