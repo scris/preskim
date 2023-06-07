@@ -44,6 +44,7 @@
 #import "NSGraphics_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
 #import "SKTextUndoManager.h"
+#import "SKStringConstants.h"
 #import <SkimNotes/SkimNotes.h>
 
 static char SKPDFAnnotationPropertiesObservationContext;
@@ -134,7 +135,6 @@ static char SKPDFAnnotationPropertiesObservationContext;
     [textView setVerticallyResizable:YES];
     [textView setAutoresizingMask:NSViewWidthSizable];
     [textView setUsesFontPanel:NO];
-    [textView setContinuousSpellCheckingEnabled:YES];
     [textView setAllowsUndo:YES];
     [textView setDelegate:self];
     [textView setString:[annotation string] ?: @""];
@@ -322,6 +322,17 @@ static char SKPDFAnnotationPropertiesObservationContext;
 
 @implementation SKTextNoteTextView
 
+- (id)initWithFrame:(NSRect)frameRect {
+    self = [super initWithFrame:frameRect];
+    if (self) {
+        NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+        [self setContinuousSpellCheckingEnabled:[sud boolForKey:SKSpellCheckingEnabledKey]];
+        [self setGrammarCheckingEnabled:[sud boolForKey:SKGrammarCheckingEnabledKey]];
+        [self setAutomaticSpellingCorrectionEnabled:[sud boolForKey:SKSpellingCorrectionEnabledKey]];
+    }
+    return self;
+}
+
 - (BOOL)respondsToSelector:(SEL)aSelector {
     if (aSelector == @selector(changeFont:) || aSelector == @selector(changeAttributes:) || aSelector == @selector(changeColor:) || aSelector == @selector(alignLeft:) || aSelector == @selector(alignRight:) || aSelector == @selector(alignCenter:))
         return NO;
@@ -335,6 +346,21 @@ static char SKPDFAnnotationPropertiesObservationContext;
         [[self nextResponder] keyDown:theEvent];
     else
         [super keyDown:theEvent];
+}
+
+- (void)toggleContinuousSpellChecking:(id)sender {
+    [super toggleContinuousSpellChecking:sender];
+    [[NSUserDefaults standardUserDefaults] setBool:[self isContinuousSpellCheckingEnabled] forKey:SKSpellCheckingEnabledKey];
+}
+
+- (void)toggleGrammarChecking:(id)sender {
+    [super toggleGrammarChecking:sender];
+    [[NSUserDefaults standardUserDefaults] setBool:[self isGrammarCheckingEnabled] forKey:SKGrammarCheckingEnabledKey];
+}
+
+- (void)toggleAutomaticSpellingCorrection:(id)sender {
+    [super toggleAutomaticSpellingCorrection:sender];
+    [[NSUserDefaults standardUserDefaults] setBool:[self isAutomaticSpellingCorrectionEnabled] forKey:SKSpellingCorrectionEnabledKey];
 }
 
 @end
