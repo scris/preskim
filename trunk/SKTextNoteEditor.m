@@ -134,6 +134,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     [textView setVerticallyResizable:YES];
     [textView setAutoresizingMask:NSViewWidthSizable];
     [textView setUsesFontPanel:NO];
+    [textView setContinuousSpellCheckingEnabled:YES];
     [textView setAllowsUndo:YES];
     [textView setDelegate:self];
     [textView setString:[annotation string] ?: @""];
