@@ -38,6 +38,7 @@
 
 #import "SKNoteTextView.h"
 #import "NSUserDefaultsController_SKExtensions.h"
+#import "SKStringConstants.h"
 
 static char SKNoteTextViewDefaultsObservationContext;
 
@@ -46,6 +47,28 @@ static char SKNoteTextViewDefaultsObservationContext;
 @implementation SKNoteTextView
 
 @synthesize usesDefaultFontSize;
+
+- (id)initWithFrame:(NSRect)frameRect {
+    self = [super initWithFrame:frameRect];
+    if (self) {
+        NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+        [self setContinuousSpellCheckingEnabled:[sud boolForKey:SKSpellCheckingEnabledKey]];
+        [self setGrammarCheckingEnabled:[sud boolForKey:SKGrammarCheckingEnabledKey]];
+        [self setAutomaticSpellingCorrectionEnabled:[sud boolForKey:SKSpellingCorrectionEnabledKey]];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super initWithCoder:coder];
+    if (self) {
+        NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+        [self setContinuousSpellCheckingEnabled:[sud boolForKey:SKSpellCheckingEnabledKey]];
+        [self setGrammarCheckingEnabled:[sud boolForKey:SKGrammarCheckingEnabledKey]];
+        [self setAutomaticSpellingCorrectionEnabled:[sud boolForKey:SKSpellingCorrectionEnabledKey]];
+    }
+    return self;
+}
 
 - (void)dealloc {
     if (usesDefaultFontSize)
@@ -85,6 +108,21 @@ static char SKNoteTextViewDefaultsObservationContext;
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+}
+
+- (void)toggleContinuousSpellChecking:(id)sender {
+    [super toggleContinuousSpellChecking:sender];
+    [[NSUserDefaults standardUserDefaults] setBool:[self isContinuousSpellCheckingEnabled] forKey:SKSpellCheckingEnabledKey];
+}
+
+- (void)toggleGrammarChecking:(id)sender {
+    [super toggleGrammarChecking:sender];
+    [[NSUserDefaults standardUserDefaults] setBool:[self isGrammarCheckingEnabled] forKey:SKGrammarCheckingEnabledKey];
+}
+
+- (void)toggleAutomaticSpellingCorrection:(id)sender {
+    [super toggleAutomaticSpellingCorrection:sender];
+    [[NSUserDefaults standardUserDefaults] setBool:[self isAutomaticSpellingCorrectionEnabled] forKey:SKSpellingCorrectionEnabledKey];
 }
 
 @end
