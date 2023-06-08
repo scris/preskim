@@ -456,15 +456,15 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Spelling" id="184">
-                                <menu key="submenu" title="Spelling" id="185">
+                            <menuItem title="Spelling and Grammar" id="184">
+                                <menu key="submenu" title="Spelling and Grammar" id="185">
                                     <items>
                                         <menuItem title="Show Spelling and Grammar" keyEquivalent=":" id="187">
                                             <connections>
                                                 <action selector="showGuessPanel:" target="-1" id="188"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Check Spelling" keyEquivalent=";" id="189">
+                                        <menuItem title="Check Document Now" keyEquivalent=";" id="189">
                                             <connections>
                                                 <action selector="checkSpelling:" target="-1" id="190"/>
                                             </connections>
