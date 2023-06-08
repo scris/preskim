@@ -1777,7 +1777,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [rewindPage release];
         rewindPage = [[self currentPage] retain];
         DISPATCH_MAIN_AFTER_SEC(0.0, ^{
-            if (rewindPage && ([self displayMode] & kPDFDisplaySinglePageContinuous))
+            if (rewindPage && [self pageForPoint:SKCenterPoint([self visibleContentRect]) nearest:NO] != rewindPage)
                 [self scrollToPage:rewindPage];
         });
         DISPATCH_MAIN_AFTER_SEC(0.25, ^{
