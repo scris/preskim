@@ -1255,6 +1255,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self setToolMode:([self toolMode] + 1) % TOOL_MODE_COUNT];
         return;
     }
+    [self setNeedsRewind:NO];;
     if (interactionMode == SKPresentationMode && [self window] && [transitionController hasTransition] && [self canGoToNextPage])
         [self animateTransitionForNextPage:YES];
     else
@@ -1267,6 +1268,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self setToolMode:([self toolMode] + TOOL_MODE_COUNT - 1) % TOOL_MODE_COUNT];
         return;
     }
+    [self setNeedsRewind:NO];;
     if (interactionMode == SKPresentationMode && [self window] && [transitionController hasTransition] && [self canGoToPreviousPage])
         [self animateTransitionForNextPage:NO];
     else
@@ -1279,6 +1281,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self setAnnotationMode:([self annotationMode] + ANNOTATION_MODE_COUNT - 1) % ANNOTATION_MODE_COUNT];
         return;
     } else {
+        [self setNeedsRewind:NO];;
         [super goToFirstPage:sender];
     }
 }
@@ -1288,8 +1291,14 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self setAnnotationMode:([self annotationMode] + 1) % ANNOTATION_MODE_COUNT];
         return;
     } else {
+        [self setNeedsRewind:NO];;
         [super goToLastPage:sender];
     }
+}
+
+- (void)goToPage:(PDFPage *)page {
+    [self setNeedsRewind:NO];
+    [super goToPage:page];
 }
 
 - (IBAction)delete:(id)sender
@@ -1747,6 +1756,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self goToPage:page];
         return;
     }
+    [self setNeedsRewind:NO];
     PDFDisplayMode mode = [self extendedDisplayMode];
     if (mode != kPDFDisplaySinglePage) {
         NSScrollView *scrollView = [self scrollView];
@@ -3134,6 +3144,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         if (wasPageDisplayed == NO)
             [self goToPage:page];
+        else
+            [self setNeedsRewind:NO];
         
         if (interactionMode != SKPresentationMode) {
             if (showBar) {
