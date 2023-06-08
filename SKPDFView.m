@@ -1301,6 +1301,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [super goToPage:page];
 }
 
+- (void)goToCurrentPage:(PDFPage *)page {
+    [self setNeedsRewind:NO];
+    [super goToCurrentPage:page];
+}
+
 - (IBAction)delete:(id)sender
 {
 	if ([currentAnnotation isSkimNote])
