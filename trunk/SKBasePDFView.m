@@ -350,9 +350,11 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
         PDFPage *page = nil;
         if (hasVerticalLayout(self)) {
             NSUInteger i = [[self currentPage] pageIndex];
-            i += ([self displayMode] == kPDFDisplayTwoUpContinuous && (i > 0 || [self displaysAsBook] == NO)) ? 2 : 1;
-            if (i < [[self document] pageCount])
-                page = [[self document] pageAtIndex:i];
+            NSUInteger di = ([self displayMode] == kPDFDisplayTwoUpContinuous && (i > 0 || [self displaysAsBook] == NO)) ? 2 : 1;
+            if (i + di  < [[self document] pageCount])
+                page = [[self document] pageAtIndex:i + di];
+            else if (di == 2 && i + 1  < [[self document] pageCount])
+                page = [[self document] pageAtIndex:i + 1];
         }
         [super goToNextPage:sender];
         if (page)
