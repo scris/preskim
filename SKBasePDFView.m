@@ -295,7 +295,7 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     [clipView scrollToPoint:bounds.origin];
 }
 
-- (void)verticallyGoToPage:(PDFPage *)page {
+- (void)verticallyScrollToPage:(PDFPage *)page {
     NSScrollView *scrollView = [self scrollView];
     CGFloat inset = [scrollView contentInsets].top;
     NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
@@ -331,13 +331,13 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
         PDFPage *page = nil;
         if (hasVerticalLayout(self)) {
             NSUInteger i = [[self currentPage] pageIndex];
-            NSUInteger di = [self displayMode] == kPDFDisplayTwoUpContinuous ? 2 : 1;
-            if (i > di)
+            NSUInteger di = ([self displayMode] == kPDFDisplayTwoUpContinuous && (i > 1 || [self displaysAsBook] == NO)) ? 2 : 1;
+            if (i >= di)
                 page = [[self document] pageAtIndex:i - di];
         }
         [super goToPreviousPage:sender];
         if (page)
-            [self verticallyGoToPage:page];
+            [self verticallyScrollToPage:page];
     }
 }
 
@@ -349,13 +349,14 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     } else {
         PDFPage *page = nil;
         if (hasVerticalLayout(self)) {
-            NSUInteger i = [[self currentPage] pageIndex] + ([self displayMode] == kPDFDisplayTwoUpContinuous ? 2 : 1);
+            NSUInteger i = [[self currentPage] pageIndex];
+            i += ([self displayMode] == kPDFDisplayTwoUpContinuous && (i > 0 || [self displaysAsBook] == NO)) ? 2 : 1;
             if (i < [[self document] pageCount])
                 page = [[self document] pageAtIndex:i];
         }
         [super goToNextPage:sender];
         if (page)
-            [self verticallyGoToPage:page];
+            [self verticallyScrollToPage:page];
     }
 }
 
@@ -385,7 +386,7 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     } else {
         [self goToPage:page];
         if (hasVerticalLayout(self))
-            [self verticallyGoToPage:page];
+            [self verticallyScrollToPage:page];
    }
 }
 
