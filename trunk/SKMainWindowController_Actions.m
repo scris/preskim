@@ -813,6 +813,7 @@ static NSArray *allMainDocumentPDFViews() {
             [self displayThumbnailViewAnimating:YES];
         else
             [self displayTocViewAnimating:YES];
+        [self updateRightStatus];
     } else {
         NSInteger options = mwcFlags.caseInsensitiveSearch ? NSCaseInsensitiveSearch : 0;
         if (mwcFlags.wholeWordSearch) {
