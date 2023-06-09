@@ -1742,9 +1742,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 #pragma mark Rewind
 
-- (void)scrollToPage:(PDFPage *)page {
-    if ([self isPageAtIndexDisplayed:[page pageIndex]] == NO) {
-        [self goToPage:page];
+- (void)rewind {
+    if ([self isPageAtIndexDisplayed:[rewindPage pageIndex]] == NO) {
+        [self goToPage:rewindPage];
         return;
     }
     PDFDisplayMode mode = [self extendedDisplayMode];
@@ -1754,7 +1754,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         NSRect bounds = [clipView bounds];
         CGFloat inset = [self convertSize:NSMakeSize(0.0, [scrollView contentInsets].top) toView:clipView].height;
         NSRect docRect = [[scrollView documentView] frame];
-        NSRect pageRect = [self convertRect:[self convertRect:[self layoutBoundsForPage:page] fromPage:page] toView:clipView];
+        NSRect pageRect = [self convertRect:[self convertRect:[self layoutBoundsForPage:rewindPage] fromPage:rewindPage] toView:clipView];
         if ((mode & (kPDFDisplayHorizontalContinuous | kPDFDisplayTwoUp)) && NSWidth(docRect) > NSWidth(bounds)) {
             bounds.origin.x = fmin(fmax(fmin(NSMidX(pageRect) - 0.5 * NSWidth(bounds), NSMinX(pageRect)), NSMinX(docRect)), NSMaxX(docRect) - NSWidth(bounds));
         }
@@ -1778,12 +1778,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         rewindPage = [[self currentPage] retain];
         DISPATCH_MAIN_AFTER_SEC(0.0, ^{
             if (rewindPage && [self pageForPoint:SKCenterPoint([self visibleContentRect]) nearest:NO] != rewindPage)
-                [self scrollToPage:rewindPage];
+                [self rewind];
         });
         DISPATCH_MAIN_AFTER_SEC(0.25, ^{
             if (rewindPage) {
                 if ([[self currentPage] isEqual:rewindPage] == NO)
-                    [self scrollToPage:rewindPage];
+                    [self rewind];
                 SKDESTROY(rewindPage);
             }
         });
