@@ -1792,6 +1792,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
+- (void)goToCurrentPage:(PDFPage *)page {
+    [self setNeedsRewind:NO];
+    [super goToCurrentPage:page];
+}
+
 #pragma mark Event Handling
 
 // PDFView has duplicated key equivalents for Cmd-+/- as well as Opt-Cmd-+/-, which is totoally unnecessary and harmful
@@ -3135,6 +3140,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         NSRect visibleRect;
         BOOL wasPageDisplayed = [self isPageAtIndexDisplayed:pageIndex];
         BOOL shouldHideReadingBar = NO;
+        
+        [self setNeedsRewind:NO];
         
         if (wasPageDisplayed == NO)
             [self goToPage:page];
