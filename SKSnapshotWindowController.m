@@ -341,9 +341,13 @@ static char SKSnaphotWindowAppObservationContext;
     
     // Delayed to allow PDFView to finish its bookkeeping 
     // fixes bug of apparently ignoring the point but getting the page right.
-    DISPATCH_MAIN_AFTER_SEC(SMALL_DELAY, ^{
+    if (openType == SKSnapshotOpenPreview) {
         [self goToRect:rect openType:openType];
-    });
+    } else {
+        DISPATCH_MAIN_AFTER_SEC(SMALL_DELAY, ^{
+            [self goToRect:rect openType:openType];
+        });
+    }
 }
 
 - (void)setPdfDocument:(PDFDocument *)pdfDocument goToPageNumber:(NSInteger)pageNum rect:(NSRect)rect scaleFactor:(CGFloat)factor autoFits:(BOOL)autoFits {
