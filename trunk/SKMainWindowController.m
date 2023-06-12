@@ -1708,6 +1708,7 @@ static char SKMainWindowContentLayoutObservationContext;
             [overviewView setItemPrototype:[[[SKThumbnailItem alloc] init] autorelease]];
             [overviewView setContent:[self thumbnails]];
         } else {
+            [overviewView setAllowsEmptySelection:NO];
             [overviewView setCollectionViewLayout:[[[NSCollectionViewFlowLayout alloc] init] autorelease]];
             [overviewView registerClass:[SKThumbnailItem class] forItemWithIdentifier:@"thumbnail"];
             [overviewView setDataSource:(id<NSCollectionViewDataSource>)self];
