@@ -392,12 +392,18 @@ static NSArray *allMainDocumentPDFViews() {
 
 - (IBAction)markPage:(id)sender {
     if (markedPageIndex != NSNotFound) {
-        [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:NO];
+        if (RUNNING_BEFORE(10_11))
+            [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:NO];
+        else
+            [(SKThumbnailItem *)[overviewView itemAtIndexPath:[NSIndexPath indexPathForItem:markedPageIndex inSection:0]] setMarked:NO];
         [[(NSTableCellView *)[leftSideController.thumbnailTableView viewAtColumn:1 row:markedPageIndex makeIfNecessary:NO] imageView] setObjectValue:nil];
     }
     markedPageIndex = [pdfView currentPageIndexAndPoint:&markedPagePoint rotated:NULL];
     beforeMarkedPageIndex = NSNotFound;
-    [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
+    if (RUNNING_BEFORE(10_11))
+        [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
+    else
+        [(SKThumbnailItem *)[overviewView itemAtIndexPath:[NSIndexPath indexPathForItem:markedPageIndex inSection:0]] setMarked:YES];
     [[(NSTableCellView *)[leftSideController.thumbnailTableView viewAtColumn:1 row:markedPageIndex makeIfNecessary:NO] imageView] setObjectValue:[NSImage markImage]];
 }
 
