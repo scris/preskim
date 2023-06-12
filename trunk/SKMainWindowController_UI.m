@@ -362,9 +362,14 @@
         [rowView setHighlightLevel:[self thumbnailHighlightLevelForRow:row]];
     }];
     if (overviewView) {
-        NSInteger i, iMax = [[overviewView content] count];
-        for (i = 0; i < iMax; i++)
-            [(SKThumbnailItem *)[overviewView itemAtIndex:i] setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
+        if (RUNNING_BEFORE(10_11)) {
+            NSInteger i, iMax = [[overviewView content] count];
+            for (i = 0; i < iMax; i++)
+                [(SKThumbnailItem *)[overviewView itemAtIndex:i] setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
+        } else {
+            for (NSIndexPath *indexPath in [overviewView indexPathsForVisibleItems])
+                [(SKThumbnailItem *)[overviewView itemAtIndexPath:indexPath] setHighlightLevel:[self thumbnailHighlightLevelForRow:[indexPath item]]];
+        }
     }
 }
 

@@ -328,7 +328,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [[NSProcessInfo processInfo] endActivity:activity];
         SKDESTROY(activity);
     }
-    [overviewView removeObserver:self forKeyPath:@"selectionIndexes" context:&SKMainWindowThumbnailSelectionObservationContext];
+    [overviewView removeObserver:self forKeyPath:RUNNING_BEFORE(10_11) ? @"selectionIndexes" : @"selectionIndexPaths" context:&SKMainWindowThumbnailSelectionObservationContext];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self stopObservingNotes:[self notes]];
     [self clearWidgets];
@@ -1668,9 +1668,17 @@ static char SKMainWindowContentLayoutObservationContext;
         }
     }
     size = [SKThumbnailView sizeForImageSize:NSMakeSize(ceil(width * roundedThumbnailSize), ceil(height * roundedThumbnailSize))];
-    if (NSEqualSizes(size, [overviewView minItemSize]) == NO) {
-        [overviewView setMinItemSize:size];
-        [overviewView setMaxItemSize:size];
+    if (RUNNING_BEFORE(10_11)) {
+        if (NSEqualSizes(size, [overviewView minItemSize]) == NO) {
+            [overviewView setMinItemSize:size];
+            [overviewView setMaxItemSize:size];
+        }
+    } else {
+        NSCollectionViewFlowLayout *layout = [overviewView collectionViewLayout];
+        if (NSEqualSizes(size, [layout itemSize]) == NO) {
+            [layout setItemSize:size];
+            [layout invalidateLayout];
+        }
     }
 }
 
@@ -1694,20 +1702,28 @@ static char SKMainWindowContentLayoutObservationContext;
         [overviewContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [overviewContentView addSubview:scrollView];
         [scrollView release];
-        [overviewView setItemPrototype:[[[SKThumbnailItem alloc] init] autorelease]];
         [overviewView setSelectable:YES];
         [overviewView setAllowsMultipleSelection:YES];
+        if (RUNNING_BEFORE(10_11)) {
+            [overviewView setItemPrototype:[[[SKThumbnailItem alloc] init] autorelease]];
+            [overviewView setContent:[self thumbnails]];
+        } else {
+            [overviewView setCollectionViewLayout:[[[NSCollectionViewFlowLayout alloc] init] autorelease]];
+            [overviewView registerClass:[SKThumbnailItem class] forItemWithIdentifier:@"thumbnail"];
+            [overviewView setDataSource:(id<NSCollectionViewDataSource>)self];
+        }
         [self updateOverviewItemSize];
-        [overviewView setContent:[self thumbnails]];
         [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
         [overviewView setTypeSelectHelper:[leftSideController.thumbnailTableView typeSelectHelper]];
         [overviewView setDoubleClickAction:@selector(hideOverview:)  ];
-        [overviewView addObserver:self forKeyPath:@"selectionIndexes" options:0 context:&SKMainWindowThumbnailSelectionObservationContext];
-        NSInteger i, iMax = [[overviewView content] count];
-        for (i = 0; i < iMax; i++)
-            [(SKThumbnailItem *)[overviewView itemAtIndex:i] setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
-        if (markedPageIndex != NSNotFound)
-            [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
+        [overviewView addObserver:self forKeyPath:RUNNING_BEFORE(10_11) ? @"selectionIndexes" : @"selectionIndexPaths" options:0 context:&SKMainWindowThumbnailSelectionObservationContext];
+        if (RUNNING_BEFORE(10_11)) {
+            NSInteger i, iMax = [[overviewView content] count];
+            for (i = 0; i < iMax; i++)
+                [(SKThumbnailItem *)[overviewView itemAtIndex:i] setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
+            if (markedPageIndex != NSNotFound)
+                [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
+        }
     }
     
     BOOL isPresentation = [self interactionMode] == SKPresentationMode;
@@ -1727,9 +1743,13 @@ static char SKMainWindowContentLayoutObservationContext;
     if (RUNNING_BEFORE(10_14)) {
         [overviewContentView setMaterial:isPresentation ? NSVisualEffectMaterialDark : RUNNING_BEFORE(10_11) ? NSVisualEffectMaterialAppearanceBased : NSVisualEffectMaterialSidebar];
         NSBackgroundStyle style = isPresentation ? NSBackgroundStyleDark : NSBackgroundStyleLight;
-        NSUInteger i, iMax = [[overviewView content] count];
-        for (i = 0; i < iMax; i++)
-            [(SKThumbnailItem *)[overviewView itemAtIndex:i] setBackgroundStyle:style];
+        if (RUNNING_BEFORE(10_11)) {
+            NSUInteger i, iMax = [[overviewView content] count];
+            for (i = 0; i < iMax; i++)
+                [(SKThumbnailItem *)[overviewView itemAtIndex:i] setBackgroundStyle:style];
+        } else {
+            [[overviewView visibleItems] setValue:[NSNumber numberWithInteger:style] forKey:@"backgroundStyle"];
+        }
     } else if (isPresentation) {
         SKSetHasDarkAppearance(overviewContentView);
 #pragma clang diagnostic push
@@ -1820,6 +1840,23 @@ static char SKMainWindowContentLayoutObservationContext;
     
 - (void)hideOverviewAnimating:(BOOL)animate {
     [self hideOverviewAnimating:(BOOL)animate completionHandler:NULL];
+}
+
+- (NSInteger)collectionView:(NSCollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger)section {
+    return [[self thumbnails] count];
+}
+
+- (NSCollectionViewItem *)collectionView:(NSCollectionView *)collectionView
+     itemForRepresentedObjectAtIndexPath:(NSIndexPath *)indexPath {
+    SKThumbnailItem *item = [collectionView makeItemWithIdentifier:@"thumbnail" forIndexPath:indexPath];
+    NSUInteger i = [indexPath item];
+    [item setRepresentedObject:[[self thumbnails] objectAtIndex:i]];
+    [item setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
+    [item setMarked:markedPageIndex == i];
+    if (RUNNING_BEFORE(10_14))
+        [item setBackgroundStyle:[self interactionMode] == SKPresentationMode ? NSBackgroundStyleDark : NSBackgroundStyleLight];
+    return item;
 }
 
 #pragma mark Searching
@@ -2949,7 +2986,10 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     [self setThumbnails:newThumbnails];
     [self updateThumbnailSelection];
     if (overviewView) {
-        [overviewView setContent:newThumbnails];
+        if (RUNNING_BEFORE(10_11))
+            [overviewView setContent:newThumbnails];
+        else
+            [overviewView reloadData];
         [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
         [self updateOverviewItemSize];
     }
