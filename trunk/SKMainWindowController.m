@@ -1709,7 +1709,10 @@ static char SKMainWindowContentLayoutObservationContext;
             [overviewView setContent:[self thumbnails]];
         } else {
             [overviewView setAllowsEmptySelection:NO];
-            [overviewView setCollectionViewLayout:[[[NSCollectionViewFlowLayout alloc] init] autorelease]];
+            NSCollectionViewFlowLayout *layout = [[[NSCollectionViewFlowLayout alloc] init] autorelease];
+            [layout setMinimumLineSpacing:0.0];
+            [layout setMinimumInteritemSpacing:0.0];
+            [overviewView setCollectionViewLayout:layout];
             [overviewView registerClass:[SKThumbnailItem class] forItemWithIdentifier:@"thumbnail"];
             [overviewView setDataSource:(id<NSCollectionViewDataSource>)self];
         }
