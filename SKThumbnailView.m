@@ -59,6 +59,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MARK_OFFSET 16.0
 
 #define IMAGE_KEY @"image"
+#define LABEL_KEY @"label"
 
 #define HIGHLIGHT_ID @"highlight"
 #define MARK_ID @"mark"
@@ -112,7 +113,10 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    @try { [thumbnail removeObserver:self forKeyPath:IMAGE_KEY context:&SKThumbnailViewThumbnailObservationContext]; }
+    @try {
+        [thumbnail removeObserver:self forKeyPath:IMAGE_KEY context:&SKThumbnailViewThumbnailObservationContext];
+        [thumbnail removeObserver:self forKeyPath:LABEL_KEY context:&SKThumbnailViewThumbnailObservationContext];
+    }
     @catch (id e) {}
     controller = nil;
     SKDESTROY(imageView);
@@ -249,10 +253,12 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)setThumbnail:(SKThumbnail *)newThumbnail {
     if (thumbnail != newThumbnail) {
         [thumbnail removeObserver:self forKeyPath:IMAGE_KEY context:&SKThumbnailViewThumbnailObservationContext];
+        [thumbnail removeObserver:self forKeyPath:LABEL_KEY context:&SKThumbnailViewThumbnailObservationContext];
         [thumbnail release];
         thumbnail = [newThumbnail retain];
         [labelView setObjectValue:[thumbnail label]];
         [thumbnail addObserver:self forKeyPath:IMAGE_KEY options:NSKeyValueObservingOptionInitial context:&SKThumbnailViewThumbnailObservationContext];
+        [thumbnail addObserver:self forKeyPath:LABEL_KEY options:NSKeyValueObservingOptionInitial context:&SKThumbnailViewThumbnailObservationContext];
         if ([self isSelected] || [self highlightLevel] > 0)
             [self updateLabelHighlight];
     }
@@ -348,10 +354,16 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if (context == &SKThumbnailViewThumbnailObservationContext) {
-        if ([self window] && NSIsEmptyRect([imageView visibleRect]) == NO)
-            [imageView setImage:[thumbnail image]];
-        else
-            [imageView setImage:nil];
+        if ([keyPath isEqualToString:IMAGE_KEY]) {
+            if ([self window] && NSIsEmptyRect([imageView visibleRect]) == NO)
+                [imageView setImage:[thumbnail image]];
+            else
+                [imageView setImage:nil];
+        } else if ([keyPath isEqualToString:LABEL_KEY]) {
+            [labelView setObjectValue:[thumbnail label]];
+            if (RUNNING_AFTER(10_15) && ([self isSelected] || [self highlightLevel] > 0))
+                [self updateLabelHighlightMask:nil];
+        }
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
