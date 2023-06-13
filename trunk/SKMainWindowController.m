@@ -1705,6 +1705,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [overviewView setSelectable:YES];
         [overviewView setAllowsMultipleSelection:YES];
         if (RUNNING_BEFORE(10_11)) {
+            [self updateOverviewItemSize];
             [overviewView setItemPrototype:[[[SKThumbnailItem alloc] init] autorelease]];
             [overviewView setContent:[self thumbnails]];
         } else {
@@ -1713,10 +1714,10 @@ static char SKMainWindowContentLayoutObservationContext;
             [layout setMinimumLineSpacing:0.0];
             [layout setMinimumInteritemSpacing:0.0];
             [overviewView setCollectionViewLayout:layout];
+            [self updateOverviewItemSize];
             [overviewView registerClass:[SKThumbnailItem class] forItemWithIdentifier:@"thumbnail"];
             [overviewView setDataSource:(id<NSCollectionViewDataSource>)self];
         }
-        [self updateOverviewItemSize];
         [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
         [overviewView setTypeSelectHelper:[leftSideController.thumbnailTableView typeSelectHelper]];
         [overviewView setDoubleClickAction:@selector(hideOverview:)  ];
