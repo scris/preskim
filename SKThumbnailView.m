@@ -361,8 +361,12 @@ static char SKThumbnailViewThumbnailObservationContext;
                 [imageView setImage:nil];
         } else if ([keyPath isEqualToString:LABEL_KEY]) {
             [labelView setObjectValue:[thumbnail label]];
-            if (RUNNING_AFTER(10_15) && ([self isSelected] || [self highlightLevel] > 0))
-                [self updateLabelHighlightMask:nil];
+            if ([self isSelected] || [self highlightLevel] > 0) {
+                if (RUNNING_AFTER(10_15))
+                    [self updateLabelHighlightMask:nil];
+                else
+                    [self setNeedsDisplayInRect:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
+            }
         }
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
