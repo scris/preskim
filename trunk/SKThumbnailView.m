@@ -177,10 +177,12 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)updateImageHighlightMask:(NSNotification *)note {
     NSRect rect = [imageHighlightView bounds];
     NSImage *mask = [[NSImage alloc] initWithSize:rect.size];
-    [mask lockFocus];
-    [[NSColor colorWithGenericGamma22White:0.0 alpha:1.0] setFill];
-    [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:IMAGE_SEL_RADIUS yRadius:IMAGE_SEL_RADIUS] fill];
-    [mask unlockFocus];
+    if (NSIsEmptyRect(rect) == NO) {
+        [mask lockFocus];
+        [[NSColor colorWithGenericGamma22White:0.0 alpha:1.0] setFill];
+        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:IMAGE_SEL_RADIUS yRadius:IMAGE_SEL_RADIUS] fill];
+        [mask unlockFocus];
+    }
     [imageHighlightView setMaskImage:mask];
     [mask release];
 }
@@ -215,10 +217,12 @@ static char SKThumbnailViewThumbnailObservationContext;
     CGFloat inset = fmax(0.0, floor(0.5 * (NSWidth(rect) - [[labelView cell] cellSize].width)));
     CGFloat alpha = [self isSelected] ? 1.0 : 0.05 * [self highlightLevel];
     NSImage *mask = [[NSImage alloc] initWithSize:rect.size];
-    [mask lockFocus];
-    [[NSColor colorWithGenericGamma22White:0.0 alpha:alpha] setFill];
-    [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, inset, 0.0) xRadius:TEXT_SEL_RADIUS yRadius:TEXT_SEL_RADIUS] fill];
-    [mask unlockFocus];
+    if (NSIsEmptyRect(rect) == NO) {
+        [mask lockFocus];
+        [[NSColor colorWithGenericGamma22White:0.0 alpha:alpha] setFill];
+        [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, inset, 0.0) xRadius:TEXT_SEL_RADIUS yRadius:TEXT_SEL_RADIUS] fill];
+        [mask unlockFocus];
+    }
     [labelHighlightView setMaskImage:mask];
     [mask release];
 }
