@@ -1708,6 +1708,11 @@ static char SKMainWindowContentLayoutObservationContext;
             [self updateOverviewItemSize];
             [overviewView setItemPrototype:[[[SKThumbnailItem alloc] init] autorelease]];
             [overviewView setContent:[self thumbnails]];
+            NSInteger i, iMax = [[overviewView content] count];
+            for (i = 0; i < iMax; i++)
+                [(SKThumbnailItem *)[overviewView itemAtIndex:i] setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
+            if (markedPageIndex != NSNotFound)
+                [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
         } else {
             [overviewView setAllowsEmptySelection:NO];
             NSCollectionViewFlowLayout *layout = [[[NSCollectionViewFlowLayout alloc] init] autorelease];
@@ -1720,15 +1725,8 @@ static char SKMainWindowContentLayoutObservationContext;
         }
         [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
         [overviewView setTypeSelectHelper:[leftSideController.thumbnailTableView typeSelectHelper]];
-        [overviewView setDoubleClickAction:@selector(hideOverview:)  ];
+        [overviewView setDoubleClickAction:@selector(hideOverview:)];
         [overviewView addObserver:self forKeyPath:RUNNING_BEFORE(10_11) ? @"selectionIndexes" : @"selectionIndexPaths" options:0 context:&SKMainWindowThumbnailSelectionObservationContext];
-        if (RUNNING_BEFORE(10_11)) {
-            NSInteger i, iMax = [[overviewView content] count];
-            for (i = 0; i < iMax; i++)
-                [(SKThumbnailItem *)[overviewView itemAtIndex:i] setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
-            if (markedPageIndex != NSNotFound)
-                [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
-        }
     }
     
     BOOL isPresentation = [self interactionMode] == SKPresentationMode;
