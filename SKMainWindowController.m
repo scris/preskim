@@ -1716,7 +1716,7 @@ static char SKMainWindowContentLayoutObservationContext;
         } else {
             [overviewView setAllowsEmptySelection:NO];
             NSCollectionViewFlowLayout *layout = [[[NSCollectionViewFlowLayout alloc] init] autorelease];
-            [layout setMinimumLineSpacing:0.0];
+            [layout setMinimumLineSpacing:8.0];
             [layout setMinimumInteritemSpacing:0.0];
             [overviewView setCollectionViewLayout:layout];
             [self updateOverviewItemSize];
