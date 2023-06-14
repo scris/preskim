@@ -52,7 +52,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define MARGIN 8.0
 #define TEXT_MARGIN 4.0
-#define TEXT_SPACE 32.0
+#define TEXT_SPACE_OLD 32.0
+#define TEXT_SPACE 24.0
 #define SELECTION_MARGIN 6.0
 #define IMAGE_SEL_RADIUS 8.0
 #define TEXT_SEL_RADIUS 4.0
@@ -73,7 +74,8 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)commonInit {
     NSRect bounds = [self bounds];
-    NSRect rect = NSOffsetRect(NSInsetRect(bounds, MARGIN, MARGIN + 0.5 * TEXT_SPACE), 0.0, 0.5 * TEXT_SPACE);
+    CGFloat textSpace = RUNNING_BEFORE(10_11) ? TEXT_SPACE_OLD : TEXT_SPACE;
+    NSRect rect = NSOffsetRect(NSInsetRect(bounds, MARGIN, MARGIN + 0.5 * textSpace), 0.0, 0.5 * textSpace);
     imageView = [[SKThumbnailImageView alloc] initWithFrame:rect];
     [imageView setImageScaling:NSImageScaleProportionallyUpOrDown];
     [imageView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -87,7 +89,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     [labelView setSelectable:NO];
     [labelView setAlignment:NSTextAlignmentCenter];
     [labelView setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
-    rect = NSInsetRect(bounds, TEXT_MARGIN, TEXT_SPACE);
+    rect = NSInsetRect(bounds, TEXT_MARGIN, textSpace);
     rect.size.height = [[labelView cell] cellSize].height;
     rect.origin.y -= NSHeight(rect);
     [labelView setFrame:rect];
@@ -129,7 +131,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 + (NSSize)sizeForImageSize:(NSSize)size {
-    return NSMakeSize(size.width + 2.0 * MARGIN, size.height + 2.0 * MARGIN + TEXT_SPACE);
+    return NSMakeSize(size.width + 2.0 * MARGIN, size.height + 2.0 * MARGIN + (RUNNING_BEFORE(10_11) ? TEXT_SPACE_OLD : TEXT_SPACE));
 }
 
 #pragma mark Updating
