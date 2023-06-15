@@ -1714,7 +1714,6 @@ static char SKMainWindowContentLayoutObservationContext;
             if (markedPageIndex != NSNotFound)
                 [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
         } else {
-            [overviewView setAllowsEmptySelection:NO];
             NSCollectionViewFlowLayout *layout = [[[NSCollectionViewFlowLayout alloc] init] autorelease];
             [layout setMinimumLineSpacing:8.0];
             [layout setMinimumInteritemSpacing:0.0];
