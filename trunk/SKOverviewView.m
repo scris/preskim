@@ -131,4 +131,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         [cachedViews addObject:view];
 }
 
+- (void)selectAll:(id)sender {
+    if ([self numberOfSections])
+        [self setSelectionIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfItemsInSection:0])]];
+}
+
+- (void)deselectAll:(id)sender {
+    [self setSelectionIndexes:[NSIndexSet indexSet]];
+}
+
 @end
