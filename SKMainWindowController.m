@@ -1461,7 +1461,9 @@ static char SKMainWindowContentLayoutObservationContext;
 }
 
 - (void)setThumbnails:(NSArray *)newThumbnails {
+    [thumbnails setValue:nil forKey:@"delegate"];
     [thumbnails setArray:newThumbnails];
+    [thumbnails setValue:self forKey:@"delegate"];
 }
 
 - (NSArray *)snapshots {
@@ -2979,7 +2981,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         
         [pageLabels enumerateObjectsUsingBlock:^(id label, NSUInteger i, BOOL *stop) {
             SKThumbnail *thumbnail = [[SKThumbnail alloc] initWithImage:pageImage label:label pageIndex:i];
-            [thumbnail setDelegate:self];
             [thumbnail setDirty:YES];
             [newThumbnails addObject:thumbnail];
             [thumbnail release];
