@@ -180,13 +180,14 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
     }
 }
 
-- (NSTextAlignment)scriptingAlignment {
-    return [self alignment];
+- (NSInteger)scriptingAlignment {
+    NSTextAlignment align = [self alignment];
+    return align == 0 ? NSTextAlignmentLeft : align == 1 ? NSTextAlignmentRight : NSTextAlignmentCenter;
 }
 
-- (void)setScriptingAlignment:(NSTextAlignment)alignment {
+- (void)setScriptingAlignment:(NSInteger)alignment {
     if ([self isEditable]) {
-        [self setAlignment:alignment];
+        [self setAlignment:alignment == NSTextAlignmentLeft ? 0 : alignment == NSTextAlignmentRight ? 1 : 2];
     }
 }
 

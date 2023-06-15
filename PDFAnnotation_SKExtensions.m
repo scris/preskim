@@ -796,7 +796,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     return nil;
 }
 
-- (NSTextAlignment)scriptingAlignment {
+- (NSInteger)scriptingAlignment {
     return NSTextAlignmentLeft;
 }
 

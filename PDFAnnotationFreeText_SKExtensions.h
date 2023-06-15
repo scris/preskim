@@ -49,6 +49,6 @@ extern NSString *SKPDFAnnotationScriptingAlignmentKey;
 - (void)setFontName:(NSString *)fontName;
 - (void)setFontSize:(CGFloat)pointSize;
 - (void)setScriptingFontColor:(NSColor *)newScriptingFontColor;
-- (void)setScriptingAlignment:(NSTextAlignment)alignment;
+- (void)setScriptingAlignment:(NSInteger)alignment;
 
 @end
