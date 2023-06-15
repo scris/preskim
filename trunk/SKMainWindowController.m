@@ -2690,7 +2690,9 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             if ([[pdfView currentPage] pageIndex] != pageIndex)
                 [pdfView goToCurrentPage:[[pdfView document] pageAtIndex:pageIndex]];
         } else if ([indexes count] == 0) {
+            mwcFlags.updatingThumbnailSelection = 1;
             [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
+            mwcFlags.updatingThumbnailSelection = 0;
         }
         
     } else if (context == &SKPDFAnnotationPropertiesObservationContext) {
