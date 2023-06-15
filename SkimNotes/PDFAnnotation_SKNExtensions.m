@@ -163,6 +163,14 @@ static PDFKitPlatformColor *SKNColorFromArray(NSArray *array) {
     }
 }
 
+static inline NSInteger SKNAlignmentFromTextAlignment(NSTextAlignment alignment) {
+    return alignment == NSTextAlignmentCenter ? 2 : alignment == NSTextAlignmentRight ? 1 : 0;
+}
+
+static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment) {
+    return alignment == 2 ? NSTextAlignmentCenter : alignment == 1 ? NSTextAlignmentRight : NSTextAlignmentLeft;
+}
+
 #if !defined(PDFKIT_PLATFORM_IOS)
 
 #if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_12
@@ -431,7 +439,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
             else if ([fontColor isKindOfClass:arrayClass])
                 [self setFontColor:SKNColorFromArray((NSArray *)fontColor)];
             if ([alignment respondsToSelector:@selector(integerValue)])
-                [self setAlignment:[alignment integerValue]];
+                [self setAlignment:SKNTextAlignmentFromAlignment([alignment integerValue])];
         }
         
         if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNSquigglyString]) {
@@ -737,9 +745,9 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         
         if ([type isEqualToString:SKNFreeTextString]) {
             if ([self respondsToSelector:@selector(alignment)]) {
-                [dict setValue:[NSNumber numberWithInteger:[(id)self alignment]] forKey:SKNPDFAnnotationAlignmentKey];
+                [dict setValue:[NSNumber numberWithInteger:SKNTextAlignmentFromAlignment([(id)self alignment])] forKey:SKNPDFAnnotationAlignmentKey];
             } else if ((value = [self valueForAnnotationKey:@"/Q"])) {
-                [dict setValue:[NSNumber numberWithInteger:[value integerValue]] forKey:SKNPDFAnnotationAlignmentKey];
+                [dict setValue:[NSNumber numberWithInteger:SKNTextAlignmentFromAlignment([value integerValue])] forKey:SKNPDFAnnotationAlignmentKey];
             }
             
             PDFKitPlatformFont *font = nil;
@@ -1163,7 +1171,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         else if ([fontColor isKindOfClass:arrayClass])
             [self setFontColor:SKNColorFromArray((NSArray *)fontColor)];
         if ([alignment respondsToSelector:@selector(integerValue)])
-            [self setAlignment:[alignment integerValue]];
+            [self setAlignment:SKNTextAlignmentFromAlignment([alignment integerValue])];
     }
     return self;
 }
@@ -1174,7 +1182,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     [dict setValue:[self font] forKey:SKNPDFAnnotationFontKey];
     if ([[fontColor colorSpace] colorSpaceModel] != NSGrayColorSpaceModel || [fontColor whiteComponent] > 0.0 || [fontColor alphaComponent] < 1.0)
         [dict setValue:fontColor forKey:SKNPDFAnnotationFontColorKey];
-    [dict setValue:[NSNumber numberWithInteger:[self alignment]] forKey:SKNPDFAnnotationAlignmentKey];
+    [dict setValue:[NSNumber numberWithInteger:SKNAlignmentFromTextAlignment([self alignment])] forKey:SKNPDFAnnotationAlignmentKey];
     return dict;
 }
 
