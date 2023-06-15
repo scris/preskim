@@ -55,7 +55,7 @@
 @property (nonatomic, retain) NSString *fontName;
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic, retain) NSColor *scriptingFontColor;
-@property (nonatomic) NSTextAlignment scriptingAlignment;
+@property (nonatomic) NSInteger scriptingAlignment;
 @property (nonatomic) PDFTextAnnotationIconType scriptingIconType;
 @property (nonatomic, retain) NSString *scriptingUserName;
 @property (nonatomic, retain) NSDictionary *scriptingProperties;

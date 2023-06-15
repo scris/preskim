@@ -150,7 +150,7 @@ extern NSString *SKPasteboardTypeSkimNote;
 - (id)richText;
 - (void)setBoundsAsQDRect:(NSData *)inQDBoundsAsData;
 - (NSData *)boundsAsQDRect;
-- (NSTextAlignment)scriptingAlignment;
+- (NSInteger)scriptingAlignment;
 - (NSString *)fontName;
 - (CGFloat)fontSize;
 - (NSColor *)scriptingFontColor;

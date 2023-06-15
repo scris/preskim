@@ -236,13 +236,13 @@ static NSDictionary *propertyKeys = nil;
         [[NSUserDefaults standardUserDefaults] setDouble:fontSize forKey:SKAnchoredNoteFontSizeKey];
 }
 
-- (NSTextAlignment)scriptingAlignment {
+- (NSInteger)scriptingAlignment {
     if ([type isEqualToString:SKNFreeTextString])
         return [[NSUserDefaults standardUserDefaults] integerForKey:SKFreeTextNoteAlignmentKey];
     return 0;
 }
 
-- (void)setScriptingAlignment:(NSTextAlignment)alignment {
+- (void)setScriptingAlignment:(NSInteger)alignment {
     if ([type isEqualToString:SKNFreeTextString])
         [[NSUserDefaults standardUserDefaults] setInteger:alignment forKey:SKFreeTextNoteAlignmentKey];
 }
