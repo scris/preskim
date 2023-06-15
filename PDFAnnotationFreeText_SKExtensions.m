@@ -50,13 +50,22 @@ NSString *SKPDFAnnotationScriptingAlignmentKey = @"scriptingAlignment";
 
 @implementation PDFAnnotationFreeText (SKExtensions)
 
+static inline NSTextAlignment textAlignmentFromAlignment(NSInteger alignment) {
+    switch (alignment) {
+        case 0: return NSTextAlignmentLeft;
+        case 1: return NSTextAlignmentRight;
+        case 2: return NSTextAlignmentCenter;
+        default: return NSTextAlignmentLeft;
+    }
+}
+
 - (void)setDefaultSkimNoteProperties {
     NSFont *font = [[NSUserDefaults standardUserDefaults] fontForNameKey:SKFreeTextNoteFontNameKey sizeKey:SKFreeTextNoteFontSizeKey];
     if (font)
         [self setFont:font];
     [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKFreeTextNoteColorKey]];
     [self setFontColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKFreeTextNoteFontColorKey]];
-    [self setAlignment:[[NSUserDefaults standardUserDefaults] integerForKey:SKFreeTextNoteAlignmentKey]];
+    [self setAlignment:textAlignmentFromAlignment([[NSUserDefaults standardUserDefaults] integerForKey:SKFreeTextNoteAlignmentKey])];
     PDFBorder *border = [[PDFBorder allocWithZone:[self zone]] init];
     [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKFreeTextNoteLineWidthKey]];
     [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKFreeTextNoteDashPatternKey]];
@@ -182,12 +191,12 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
 
 - (NSInteger)scriptingAlignment {
     NSTextAlignment align = [self alignment];
-    return align == 0 ? NSTextAlignmentLeft : align == 1 ? NSTextAlignmentRight : NSTextAlignmentCenter;
+    return align == 2 ? NSTextAlignmentCenter : align == 1 ? NSTextAlignmentRight : NSTextAlignmentLeft;
 }
 
 - (void)setScriptingAlignment:(NSInteger)alignment {
     if ([self isEditable]) {
-        [self setAlignment:alignment == NSTextAlignmentLeft ? 0 : alignment == NSTextAlignmentRight ? 1 : 2];
+        [self setAlignment:alignment == NSTextAlignmentCenter ? 2 : alignment == NSTextAlignmentRight ? 1 : 0];
     }
 }
 
