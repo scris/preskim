@@ -163,6 +163,8 @@ static PDFKitPlatformColor *SKNColorFromArray(NSArray *array) {
     }
 }
 
+#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_12) && MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_12)
+
 static inline NSInteger SKNAlignmentFromTextAlignment(NSTextAlignment alignment) {
     return alignment == NSTextAlignmentCenter ? 2 : alignment == NSTextAlignmentRight ? 1 : 0;
 }
@@ -170,6 +172,18 @@ static inline NSInteger SKNAlignmentFromTextAlignment(NSTextAlignment alignment)
 static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment) {
     return alignment == 2 ? NSTextAlignmentCenter : alignment == 1 ? NSTextAlignmentRight : NSTextAlignmentLeft;
 }
+
+#else
+
+static inline NSInteger SKNAlignmentFromTextAlignment(NSTextAlignment alignment) {
+    return alignment == NSCenterTextAlignment ? 2 : alignment == NSRightTextAlignment ? 1 : 0;
+}
+
+static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment) {
+    return alignment == 2 ? NSCenterTextAlignment : alignment == 1 ? NSRightTextAlignment : NSLeftTextAlignment;
+}
+
+#endif
 
 #if !defined(PDFKIT_PLATFORM_IOS)
 
