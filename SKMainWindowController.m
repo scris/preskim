@@ -1857,7 +1857,8 @@ static char SKMainWindowContentLayoutObservationContext;
     NSUInteger i = [indexPath item];
     [item setRepresentedObject:[[self thumbnails] objectAtIndex:i]];
     [item setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
-    [item setMarked:markedPageIndex == i];
+    if (markedPageIndex == i)
+        [item setMarked:YES];
     if (RUNNING_BEFORE(10_14))
         [item setBackgroundStyle:[self interactionMode] == SKPresentationMode ? NSBackgroundStyleDark : NSBackgroundStyleLight];
     return item;
