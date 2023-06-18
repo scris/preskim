@@ -127,7 +127,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (void)cacheView:(id)view {
     if (cachedViews == nil)
         cachedViews = [[NSMutableArray alloc] init];
-    if ([cachedViews count] < 20)
+    if ([cachedViews count] < 20 || [[view identifier] isEqualToString:@"highlight"] == NO)
         [cachedViews addObject:view];
 }
 
