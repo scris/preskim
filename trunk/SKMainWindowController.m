@@ -1766,6 +1766,8 @@ static char SKMainWindowContentLayoutObservationContext;
     }
     [overviewView setSingleClickAction:isPresentation ? @selector(hideOverview:) : NULL];
     
+    [[SKImageToolTipWindow sharedToolTipWindow] orderOut:nil];
+    
     if (animate) {
         BOOL hasLayer = [contentView wantsLayer] || [contentView layer] != nil;
         if (hasLayer == NO) {
