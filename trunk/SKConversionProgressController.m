@@ -53,6 +53,7 @@
 
 #define SKDviConversionCommandKey @"SKDviConversionCommand"
 #define SKXdvConversionCommandKey @"SKXdvConversionCommand"
+#define SKPSConversionCommandKey @"SKPSConversionCommand"
 
 #define SKTouchBarItemIdentifierCancel @"net.sourceforge.skim-app.touchbar-item.cancel"
 
@@ -252,7 +253,10 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     CGDataProviderRef provider = NULL;
     
-    if ([ws type:fileType conformsToType:SKPostScriptDocumentType] == NO) {
+    BOOL isCGPSSupported = YES;
+    if (@available(macOS 14.0, *)) { isCGPSSupported = NO; }
+        
+    if (isCGPSSupported == NO || [ws type:fileType conformsToType:SKPostScriptDocumentType] == NO) {
         
         NSString *toolPath = nil;
         if ([ws type:fileType conformsToType:SKDVIDocumentType]) {
@@ -265,13 +269,18 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
             if (xdvToolPath == nil)
                 xdvToolPath = createToolPathForCommand(SKXdvConversionCommandKey, @[@"xdvipdfmx", @"xdv2pdf"]);
             toolPath = xdvToolPath;
+        } else if ([ws type:fileType conformsToType:SKPostScriptDocumentType]) {
+            static NSString *psToolPath = nil;
+            if (psToolPath == nil)
+                psToolPath = createToolPathForCommand(SKPSConversionCommandKey, @[@"ps2pdf", @"pstopdf"]);
+            toolPath = psToolPath;
         }
         if (toolPath) {
             NSString *commandName = [toolPath lastPathComponent];
             NSURL *tmpDirURL = [[NSFileManager defaultManager] URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:aURL create:YES error:NULL];
             BOOL outputPS = [commandName isEqualToString:@"dvips"];
             NSURL *outFileURL = [tmpDirURL URLByAppendingPathComponent:[aURL lastPathComponentReplacingPathExtension:outputPS ? @"ps" : @"pdf"] isDirectory:NO];
-            NSArray *arguments = [commandName isEqualToString:@"dvipdf"] ? @[[aURL path], [outFileURL path]] : @[@"-o", [outFileURL path], [aURL path]];
+            NSArray *arguments = [commandName isEqualToString:@"dvipdf"] || [commandName isEqualToString:@"ps2pdf"] ? @[[aURL path], [outFileURL path]] : @[@"-o", [outFileURL path], [aURL path]];
             
             task = [[NSTask alloc] init];
             [task setLaunchPath:toolPath];
