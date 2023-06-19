@@ -262,7 +262,7 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
         if ([ws type:fileType conformsToType:SKDVIDocumentType]) {
             static NSString *dviToolPath = nil;
             if (dviToolPath == nil)
-                dviToolPath = createToolPathForCommand(SKDviConversionCommandKey, @[@"dvipdfmx", @"dvipdfm", @"dvipdf", @"dvips"]);
+                dviToolPath = createToolPathForCommand(SKDviConversionCommandKey, isCGPSSupported ? @[@"dvipdfmx", @"dvipdfm", @"dvipdf", @"dvips"] : @[@"dvipdfmx", @"dvipdfm", @"dvipdf"]);
             toolPath = dviToolPath;
         } else if ([ws type:fileType conformsToType:SKXDVDocumentType]) {
             static NSString *xdvToolPath = nil;
