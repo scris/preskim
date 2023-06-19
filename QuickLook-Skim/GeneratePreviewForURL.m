@@ -85,22 +85,24 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
         
     } else if (UTTypeEqual(CFSTR("com.adobe.postscript"), contentTypeUTI)) {
         
-        bool converted = false;
-        CGPSConverterCallbacks converterCallbacks = { 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-        CGPSConverterRef converter = CGPSConverterCreate(NULL, &converterCallbacks, NULL);
-        CGDataProviderRef provider = CGDataProviderCreateWithURL(url);
-        CFMutableDataRef data = CFDataCreateMutable(NULL, 0);
-        CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData(data);
-        if (provider != NULL && consumer != NULL)
-            converted = CGPSConverterConvert(converter, provider, consumer, NULL);
-        CGDataProviderRelease(provider);
-        CGDataConsumerRelease(consumer);
-        CFRelease(converter);
-        if (converted) {
-            QLPreviewRequestSetDataRepresentation(preview, data, kUTTypePDF, NULL);
-            err = noErr;
+        if (@available(macOS 14.0, *)) {} else {
+            bool converted = false;
+            CGPSConverterCallbacks converterCallbacks = { 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+            CGPSConverterRef converter = CGPSConverterCreate(NULL, &converterCallbacks, NULL);
+            CGDataProviderRef provider = CGDataProviderCreateWithURL(url);
+            CFMutableDataRef data = CFDataCreateMutable(NULL, 0);
+            CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData(data);
+            if (provider != NULL && consumer != NULL)
+                converted = CGPSConverterConvert(converter, provider, consumer, NULL);
+            CGDataProviderRelease(provider);
+            CGDataConsumerRelease(consumer);
+            CFRelease(converter);
+            if (converted) {
+                QLPreviewRequestSetDataRepresentation(preview, data, kUTTypePDF, NULL);
+                err = noErr;
+            }
+            if (data) CFRelease(data);
         }
-        if (data) CFRelease(data);
         
     } else if (UTTypeEqual(CFSTR("net.sourceforge.skim-app.skimnotes"), contentTypeUTI)) {
         
