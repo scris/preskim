@@ -163,7 +163,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
         
     } else if (UTTypeEqual(CFSTR("com.adobe.postscript"), contentTypeUTI)) {
         
-        if (@available(macOS 14.0, *)) {} else {
+        if (floor(NSAppKitVersionNumber) <= 2299.0) {
             bool converted = false;
             CGPSConverterCallbacks converterCallbacks = { 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
             CGPSConverterRef converter = CGPSConverterCreate(NULL, &converterCallbacks, NULL);

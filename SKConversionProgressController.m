@@ -253,16 +253,13 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     CGDataProviderRef provider = NULL;
     
-    BOOL isCGPSSupported = YES;
-    if (@available(macOS 14.0, *)) { isCGPSSupported = NO; }
-        
-    if (isCGPSSupported == NO || [ws type:fileType conformsToType:SKPostScriptDocumentType] == NO) {
+    if (!RUNNING_AFTER(13_0) || [ws type:fileType conformsToType:SKPostScriptDocumentType] == NO) {
         
         NSString *toolPath = nil;
         if ([ws type:fileType conformsToType:SKDVIDocumentType]) {
             static NSString *dviToolPath = nil;
             if (dviToolPath == nil)
-                dviToolPath = createToolPathForCommand(SKDviConversionCommandKey, isCGPSSupported ? @[@"dvipdfmx", @"dvipdfm", @"dvipdf", @"dvips"] : @[@"dvipdfmx", @"dvipdfm", @"dvipdf"]);
+                dviToolPath = createToolPathForCommand(SKDviConversionCommandKey, RUNNING_AFTER(13_0) ? @[@"dvipdfmx", @"dvipdfm", @"dvipdf"] : @[@"dvipdfmx", @"dvipdfm", @"dvipdf", @"dvips"]);
             toolPath = dviToolPath;
         } else if ([ws type:fileType conformsToType:SKXDVDocumentType]) {
             static NSString *xdvToolPath = nil;
