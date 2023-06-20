@@ -253,7 +253,7 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     CGDataProviderRef provider = NULL;
     
-    if (!RUNNING_AFTER(13_0) || [ws type:fileType conformsToType:SKPostScriptDocumentType] == NO) {
+    if (RUNNING_AFTER(13_0) || [ws type:fileType conformsToType:SKPostScriptDocumentType] == NO) {
         
         NSString *toolPath = nil;
         if ([ws type:fileType conformsToType:SKDVIDocumentType]) {
