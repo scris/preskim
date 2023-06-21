@@ -269,7 +269,7 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
         } else if ([ws type:fileType conformsToType:SKPostScriptDocumentType]) {
             static NSString *psToolPath = nil;
             if (psToolPath == nil)
-                psToolPath = createToolPathForCommand(SKPSConversionCommandKey, @[@"ps2pdf", @"pstopdf"]);
+                psToolPath = createToolPathForCommand(SKPSConversionCommandKey, @[@"ps2pdf", @"ps2pdf12", @"ps2pdf13", @"ps2pdf14", @"pstopdf"]);
             toolPath = psToolPath;
         }
         if (toolPath) {
@@ -277,7 +277,7 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
             NSURL *tmpDirURL = [[NSFileManager defaultManager] URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:aURL create:YES error:NULL];
             BOOL outputPS = [commandName isEqualToString:@"dvips"];
             NSURL *outFileURL = [tmpDirURL URLByAppendingPathComponent:[aURL lastPathComponentReplacingPathExtension:outputPS ? @"ps" : @"pdf"] isDirectory:NO];
-            NSArray *arguments = [commandName isEqualToString:@"dvipdf"] || [commandName isEqualToString:@"ps2pdf"] ? @[[aURL path], [outFileURL path]] : @[@"-o", [outFileURL path], [aURL path]];
+            NSArray *arguments = [commandName isEqualToString:@"dvipdf"] || [commandName hasPrefix:@"ps2pdf"] ? @[[aURL path], [outFileURL path]] : @[@"-o", [outFileURL path], [aURL path]];
             
             task = [[NSTask alloc] init];
             [task setLaunchPath:toolPath];
