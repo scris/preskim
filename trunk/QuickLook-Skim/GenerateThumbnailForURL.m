@@ -163,48 +163,57 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
         
     } else if (UTTypeEqual(CFSTR("com.adobe.postscript"), contentTypeUTI)) {
         
-        if (floor(NSAppKitVersionNumber) <= 2299.0) {
-            bool converted = false;
+        bool converted = false;
+        CFDataRef pdfData = NULL;
+        
+        if (floor(NSAppKitVersionNumber) > 2299.0) {
+            NSData *data = [SKQLConverter PDFDataForURL:(NSURL *)url ofType:(NSString *)contentTypeUTI allPages:NO];
+            if (data) {
+                pdfData = (CFDataRef)[data retain];
+                converted = true;
+            }
+        } else {
             CGPSConverterCallbacks converterCallbacks = { 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
             CGPSConverterRef converter = CGPSConverterCreate(NULL, &converterCallbacks, NULL);
             CGDataProviderRef provider = CGDataProviderCreateWithURL(url);
-            CFMutableDataRef pdfData = CFDataCreateMutable(NULL, 0);
-            CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData(pdfData);
+            CFMutableDataRef mutableData = CFDataCreateMutable(NULL, 0);
+            CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData(mutableData);
             if (provider != NULL && consumer != NULL)
                 converted = CGPSConverterConvert(converter, provider, consumer, NULL);
             CGDataProviderRelease(provider);
             CGDataConsumerRelease(consumer);
             CFRelease(converter);
-            
-            if (converted) {
-                // sadly, we can't use the system's QL generator from inside quicklookd, so we don't get the fancy binder on the left edge
-                provider = CGDataProviderCreateWithCFData(pdfData);
-                CGPDFDocumentRef pdfDoc = CGPDFDocumentCreateWithProvider(provider);
-                CGPDFPageRef pdfPage = NULL;
-                if (pdfDoc && CGPDFDocumentGetNumberOfPages(pdfDoc) > 0)
-                    pdfPage = CGPDFDocumentGetPage(pdfDoc, 1);
-                
-                if (pdfPage) {
-                    CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
-                    CGRect thumbRect = {{0.0, 0.0}, {CGRectGetWidth(pageRect), CGRectGetHeight(pageRect)}};
-                    CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
-                    CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, thumbRect.size, FALSE, NULL);
-                    CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
-                    CGContextConcatCTM(ctxt, t);
-                    CGContextClipToRect(ctxt, pageRect);
-                    CGContextSetFillColor(ctxt, color);
-                    CGContextFillRect(ctxt, pageRect);
-                    CGContextDrawPDFPage(ctxt, pdfPage);
-                    QLThumbnailRequestFlushContext(thumbnail, ctxt);
-                    CGContextRelease(ctxt);
-                    didGenerate = true;
-                }
-                CGPDFDocumentRelease(pdfDoc);
-                CGDataProviderRelease(provider);
-            }
-            if (pdfData) CFRelease(pdfData);
+            if (converted)
+                pdfData = mutableData;
         }
+        if (converted) {
+            // sadly, we can't use the system's QL generator from inside quicklookd, so we don't get the fancy binder on the left edge
+            CGDataProviderRef provider = CGDataProviderCreateWithCFData(pdfData);
+            CGPDFDocumentRef pdfDoc = CGPDFDocumentCreateWithProvider(provider);
+            CGPDFPageRef pdfPage = NULL;
+            if (pdfDoc && CGPDFDocumentGetNumberOfPages(pdfDoc) > 0)
+                pdfPage = CGPDFDocumentGetPage(pdfDoc, 1);
             
+            if (pdfPage) {
+                CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
+                CGRect thumbRect = {{0.0, 0.0}, {CGRectGetWidth(pageRect), CGRectGetHeight(pageRect)}};
+                CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
+                CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, thumbRect.size, FALSE, NULL);
+                CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
+                CGContextConcatCTM(ctxt, t);
+                CGContextClipToRect(ctxt, pageRect);
+                CGContextSetFillColor(ctxt, color);
+                CGContextFillRect(ctxt, pageRect);
+                CGContextDrawPDFPage(ctxt, pdfPage);
+                QLThumbnailRequestFlushContext(thumbnail, ctxt);
+                CGContextRelease(ctxt);
+                didGenerate = true;
+            }
+            CGPDFDocumentRelease(pdfDoc);
+            CGDataProviderRelease(provider);
+        }
+        if (pdfData) CFRelease(pdfData);
+        
     } else if (UTTypeEqual(CFSTR("net.sourceforge.skim-app.skimnotes"), contentTypeUTI)) {
         
         NSData *data = [[NSData alloc] initWithContentsOfURL:(NSURL *)url options:NSUncachedRead error:NULL];

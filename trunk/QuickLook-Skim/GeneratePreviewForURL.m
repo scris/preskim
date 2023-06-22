@@ -85,7 +85,13 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
         
     } else if (UTTypeEqual(CFSTR("com.adobe.postscript"), contentTypeUTI)) {
         
-        if (floor(NSAppKitVersionNumber) <= 2299.0) {
+        if (floor(NSAppKitVersionNumber) > 2299.0) {
+            NSData *data = [SKQLConverter PDFDataForURL:(NSURL *)url ofType:(NSString *)contentTypeUTI allPages:YES];
+            if (data) {
+                QLPreviewRequestSetDataRepresentation(preview, (CFDataRef)data, kUTTypePDF, NULL);
+                err = noErr;
+            }
+        } else {
             bool converted = false;
             CGPSConverterCallbacks converterCallbacks = { 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
             CGPSConverterRef converter = CGPSConverterCreate(NULL, &converterCallbacks, NULL);
