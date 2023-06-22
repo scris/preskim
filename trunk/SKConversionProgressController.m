@@ -264,7 +264,7 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
         } else if ([ws type:fileType conformsToType:SKXDVDocumentType]) {
             static NSString *xdvToolPath = nil;
             if (xdvToolPath == nil)
-                xdvToolPath = createToolPathForCommand(SKXdvConversionCommandKey, @[@"xdvipdfmx", @"xdv2pdf"]);
+                xdvToolPath = createToolPathForCommand(SKXdvConversionCommandKey, @[@"xdvipdfmx", @"dvipdfmx", @"xdv2pdf"]);
             toolPath = xdvToolPath;
         } else if ([ws type:fileType conformsToType:SKPostScriptDocumentType]) {
             static NSString *psToolPath = nil;
