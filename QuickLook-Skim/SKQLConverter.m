@@ -57,18 +57,20 @@ NSString *SKQLPDFPathForPDFBundleURL(NSURL *url)
     return pdfFile ? [filePath stringByAppendingPathComponent:pdfFile] : nil;
 }
 
-static NSAttributedString *imageAttachmentForPath(NSString *path)
-{        
+static NSAttributedString *imageAttachmentForType(NSString *type, CFBundleRef bundle)
+{
     static NSMutableDictionary *imageWrappers = nil;
-    NSFileWrapper *wrapper = [imageWrappers objectForKey:path];
+    NSFileWrapper *wrapper = [imageWrappers objectForKey:type];
     
     if (wrapper == nil) {
+        CFURLRef imgURL = CFBundleCopyResourceURL(bundle, (CFStringRef)type, CFSTR("png"), NULL);
         if (imageWrappers == nil)
             imageWrappers = [[NSMutableDictionary alloc] init];
-        wrapper = [[NSFileWrapper alloc] initWithURL:[NSURL fileURLWithPath:path] options:0 error:NULL];
-        [wrapper setPreferredFilename:[path lastPathComponent]];
-        [imageWrappers setObject:wrapper forKey:path];
+        wrapper = [[NSFileWrapper alloc] initWithURL:(NSURL *)imgURL options:0 error:NULL];
+        [wrapper setPreferredFilename:[type stringByAppendingPathExtension:@"png"]];
+        [imageWrappers setObject:wrapper forKey:type];
         [wrapper release];
+        if (imgURL) CFRelease(imgURL);
     }
     
     NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:wrapper];
@@ -179,7 +181,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
     return [notes isKindOfClass:[NSArray class]] ? notes : nil;
 }
 
-+ (NSAttributedString *)attributedStringWithNotes:(NSArray *)notes forThumbnail:(QLThumbnailRequestRef)thumbnail;
++ (NSAttributedString *)attributedStringWithNotes:(NSArray *)notes bundle:(CFBundleRef)bundle;
 {
     NSMutableAttributedString *attrString = [[[NSMutableAttributedString alloc] init] autorelease];
     NSFont *font = [NSFont userFontOfSize:_fontSize];
@@ -194,7 +196,6 @@ static NSString *HTMLEscapeString(NSString *htmlString)
     [noteParStyle setHeadIndent:_noteIndent];
     
     if (notes) {
-        CFBundleRef bundle = QLThumbnailRequestGetGeneratorBundle(thumbnail);
         NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"pageIndex" ascending:YES] autorelease];
         NSEnumerator *noteEnum = [[notes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]] objectEnumerator];
         NSDictionary *note;
@@ -204,7 +205,6 @@ static NSString *HTMLEscapeString(NSString *htmlString)
             NSAttributedString *text = [note objectForKey:@"text"];
             NSColor *color = [note objectForKey:@"color"];
             NSUInteger pageIndex = [[note objectForKey:@"pageIndex"] unsignedIntegerValue];
-            NSURL *imgURL = [(NSURL *)CFBundleCopyResourceURL(bundle, (CFStringRef)type, CFSTR("png"), NULL) autorelease];
             NSInteger start;
             
             if ([text isKindOfClass:[NSData class]])
@@ -212,7 +212,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
             if ([color isKindOfClass:[NSArray class]])
                 color = colorFromArray((NSArray *)color);
             
-            [attrString appendAttributedString:imageAttachmentForPath([imgURL path])];
+            [attrString appendAttributedString:imageAttachmentForType(type, bundle)];
             [attrString addAttribute:NSBackgroundColorAttributeName value:color range:NSMakeRange([attrString length] - 1, 1)];
             [attrString appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (page %ld)\n", type, (long)(pageIndex+1)] attributes:attrs] autorelease]];
             start = [attrString length];
