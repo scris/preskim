@@ -272,7 +272,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
     
     NSData *output = nil;
     
-    NSString *commandPath = @"/usr/local/bin/ps2pdf";
+    NSString *commandPath = nil;
     if (UTTypeEqual(CFSTR("com.adobe.postscript"), (CFStringRef)type))
         commandPath = @"/usr/local/bin/ps2pdf";
     else if (UTTypeEqual(CFSTR("org.tug.tex.dvi"), (CFStringRef)type))
