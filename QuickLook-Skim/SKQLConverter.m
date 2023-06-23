@@ -33,6 +33,7 @@
 
 #import "SKQLConverter.h"
 #include <tgmath.h>
+#include "BDSKTask.h"
 
 static NSString *_noteFontName = @"LucidaHandwriting-Italic";
 static const CGFloat _noteIndent = 20.0;
@@ -284,7 +285,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
     
     if (commandPath && [fm isExecutableFileAtPath:commandPath]) {
         
-        NSTask *task = [[NSTask alloc] init];
+        NSTask *task = [[BDSKTask alloc] init];
         [task setLaunchPath:commandPath];
         [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
         [task setStandardOutput:[NSFileHandle fileHandleWithNullDevice]];
