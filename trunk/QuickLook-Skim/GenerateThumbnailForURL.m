@@ -210,7 +210,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
         
         if (data) {
             NSArray *notes = [SKQLConverter notesWithData:data];
-            NSAttributedString *attrString = [SKQLConverter attributedStringWithNotes:notes forThumbnail:thumbnail];
+            NSAttributedString *attrString = [SKQLConverter attributedStringWithNotes:notes bundle:QLThumbnailRequestGetGeneratorBundle(thumbnail)];
             [data release];
             
             if (attrString) {
