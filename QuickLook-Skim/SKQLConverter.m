@@ -295,6 +295,9 @@ static NSString *HTMLEscapeString(NSString *htmlString)
         int fd = mkstemp(tempName);
         assert(tempName);
         
+        if (fd != -1)
+            close(fd);
+        
         NSString *outputPath = [fm stringWithFileSystemRepresentation:tempName length:strlen(tempName)];
         free(tempName);
 
@@ -320,7 +323,6 @@ static NSString *HTMLEscapeString(NSString *htmlString)
         int status = -1;
         @try {
             [task launch];
-            close(fd);
             [task waitUntilExit];
             status = [task terminationStatus];
         }
