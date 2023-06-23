@@ -17,8 +17,6 @@
 		CE4F80EC0CFB06EE00DBEA14 /* SKQLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4F80EA0CFB06EE00DBEA14 /* SKQLConverter.m */; };
 		CE82D0AB0ED347B100020950 /* Ink.png in Resources */ = {isa = PBXBuildFile; fileRef = CE82D0AA0ED347B100020950 /* Ink.png */; };
 		CE861AAE2A0AABE6002FFA1D /* Widget.png in Resources */ = {isa = PBXBuildFile; fileRef = CE861AAD2A0AABE6002FFA1D /* Widget.png */; };
-		CE9648032A461B7800E1820B /* BDSKTask.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9648012A461B7800E1820B /* BDSKTask.h */; };
-		CE9648042A461B7800E1820B /* BDSKTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9648022A461B7800E1820B /* BDSKTask.m */; };
 		CEC7BCE20CF763A0008CCD63 /* StrikeOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CEC7BCDA0CF7639E008CCD63 /* StrikeOut.png */; };
 		CEC7BCE30CF763A0008CCD63 /* Note.png in Resources */ = {isa = PBXBuildFile; fileRef = CEC7BCDB0CF7639E008CCD63 /* Note.png */; };
 		CEC7BCE40CF763A0008CCD63 /* Line.png in Resources */ = {isa = PBXBuildFile; fileRef = CEC7BCDC0CF7639E008CCD63 /* Line.png */; };
@@ -49,8 +47,6 @@
 		CE4F80EA0CFB06EE00DBEA14 /* SKQLConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKQLConverter.m; sourceTree = "<group>"; };
 		CE82D0AA0ED347B100020950 /* Ink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ink.png; sourceTree = "<group>"; };
 		CE861AAD2A0AABE6002FFA1D /* Widget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Widget.png; sourceTree = "<group>"; };
-		CE9648012A461B7800E1820B /* BDSKTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BDSKTask.h; sourceTree = "<group>"; };
-		CE9648022A461B7800E1820B /* BDSKTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BDSKTask.m; sourceTree = "<group>"; };
 		CEB5409B0F261EEF00723C1F /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CEC7BCDA0CF7639E008CCD63 /* StrikeOut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StrikeOut.png; sourceTree = "<group>"; };
 		CEC7BCDB0CF7639E008CCD63 /* Note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Note.png; sourceTree = "<group>"; };
@@ -147,8 +143,6 @@
 				08FB77B6FE84183AC02AAC07 /* main.c */,
 				CE4F80E90CFB06EE00DBEA14 /* SKQLConverter.h */,
 				CE4F80EA0CFB06EE00DBEA14 /* SKQLConverter.m */,
-				CE9648012A461B7800E1820B /* BDSKTask.h */,
-				CE9648022A461B7800E1820B /* BDSKTask.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -180,7 +174,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4F80EB0CFB06EE00DBEA14 /* SKQLConverter.h in Headers */,
-				CE9648032A461B7800E1820B /* BDSKTask.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,7 +276,6 @@
 				2C05A19C06CAA52B00D84F6F /* GeneratePreviewForURL.m in Sources */,
 				61E3BCFB0870B4F2002186A0 /* GenerateThumbnailForURL.m in Sources */,
 				CE4F80EC0CFB06EE00DBEA14 /* SKQLConverter.m in Sources */,
-				CE9648042A461B7800E1820B /* BDSKTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
