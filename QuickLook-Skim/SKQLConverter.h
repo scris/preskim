@@ -40,5 +40,4 @@ extern NSString *SKQLPDFPathForPDFBundleURL(NSURL *url);
 + (NSArray *)notesWithData:(NSData *)data;
 + (NSAttributedString *)attributedStringWithNotes:(NSArray *)notes forThumbnail:(QLThumbnailRequestRef)thumbnail;
 + (NSString *)htmlStringWithNotes:(NSArray *)notes;
-+ (NSData *)PDFDataForURL:(NSURL *)url ofType:(NSString *)type allPages:(BOOL)allPages;
 @end

@@ -33,7 +33,6 @@
 
 #import "SKQLConverter.h"
 #include <tgmath.h>
-#include "BDSKTask.h"
 
 static NSString *_noteFontName = @"LucidaHandwriting-Italic";
 static const CGFloat _noteIndent = 20.0;
@@ -267,78 +266,6 @@ static NSString *HTMLEscapeString(NSString *htmlString)
     [htmlString appendString:@"</dl></body></html>"];
     
     return htmlString;
-}
-
-+ (NSData *)PDFDataForURL:(NSURL *)url ofType:(NSString *)type allPages:(BOOL)allPages {
-    
-    NSData *output = nil;
-    
-    NSString *commandPath = nil;
-    if (UTTypeEqual(CFSTR("com.adobe.postscript"), (CFStringRef)type))
-        commandPath = @"/usr/local/bin/ps2pdf";
-    else if (UTTypeEqual(CFSTR("org.tug.tex.dvi"), (CFStringRef)type))
-        commandPath = floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_10 ? @"/Library/TeX/texbin/dvipdfmx" : @"/usr/texbin/dvipdfmx";
-    else if (UTTypeEqual(CFSTR("org.tug.tex.xdv"), (CFStringRef)type))
-        commandPath = floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_10 ? @"/Library/TeX/texbin/xdvipdfmx" : @"/usr/texbin/xdvipdfmx";
-    
-    NSFileManager *fm = [[NSFileManager alloc] init];
-    
-    if (commandPath && [fm isExecutableFileAtPath:commandPath]) {
-        
-        NSTask *task = [[BDSKTask alloc] init];
-        [task setLaunchPath:commandPath];
-        [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
-        [task setStandardOutput:[NSFileHandle fileHandleWithNullDevice]];
-        
-        NSString *tempDir = NSTemporaryDirectory() ?: @"/tmp";
-        const char *tmpPath = [[tempDir stringByAppendingPathComponent:@"skimql.XXXXXX"] fileSystemRepresentation];
-        char *tempName = strdup(tmpPath);
-        int fd = mkstemp(tempName);
-        assert(tempName);
-        
-        if (fd != -1)
-            close(fd);
-        
-        NSString *outputPath = [fm stringWithFileSystemRepresentation:tempName length:strlen(tempName)];
-        free(tempName);
-
-        NSMutableArray *arguments = [[NSMutableArray alloc] init];
-        if (UTTypeEqual(CFSTR("com.adobe.postscript"), (CFStringRef)type)) {
-            if (allPages == NO)
-                [arguments addObject:@"-dLastPage=1"];
-            [arguments addObject:[url path]];
-            [arguments addObject:outputPath];
-        } else {
-            [arguments addObject:@"-q"];
-            if (allPages == NO) {
-                [arguments addObject:@"-s"];
-                [arguments addObject:@"1"];
-            }
-            [arguments addObject:@"-o"];
-            [arguments addObject:outputPath];
-            [arguments addObject:[url path]];
-        }
-        [task setArguments:arguments];
-        [arguments release];
-        
-        int status = -1;
-        @try {
-            [task launch];
-            [task waitUntilExit];
-            status = [task terminationStatus];
-        }
-        @catch (id e) {}
-        [task release];
-        
-        if (0 == status)
-            output = [NSData dataWithContentsOfFile:outputPath options:NSUncachedRead error:NULL];
-        
-        [fm removeItemAtPath:outputPath error:NULL];
-    }
-    
-    [fm release];
-    
-    return output;
 }
 
 @end
