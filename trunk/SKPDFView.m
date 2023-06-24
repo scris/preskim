@@ -5055,12 +5055,14 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     NSRect selRect = [self doSelectRectWithEvent:theEvent didDrag:&dragged];
     
     if (dragged && NSIsEmptyRect(selRect) == NO) {
-        
         NSPoint point = [self convertPoint:SKCenterPoint(selRect) fromView:[self documentView]];
         PDFPage *page = [self pageForPoint:point nearest:YES];
         NSRect rect = [self convertRect:[self convertRect:selRect fromView:[self documentView]] toPage:page];
         
         [self zoomToRect:rect onPage:page];
+    } else if (dragged == NO && [self autoScales] == NO) {
+        [self setAutoScales:YES];
+        [self setAutoScales:NO];
     }
 }
 
