@@ -238,10 +238,12 @@ static BOOL isSignificantPixelFromBitMapData(SKBitmapData *bitmap, NSInteger x, 
         bytesPerRow:0 bitsPerPixel:0] autorelease];
     bmpImageRep = [bmpImageRep bitmapImageRepByRetaggingWithColorSpace:[NSColorSpace sRGBColorSpace]];
     [bmpImageRep setSize:size];
-    [NSGraphicsContext saveGraphicsState];
-    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:bmpImageRep]];
-    if (drawingHandler) drawingHandler((NSRect){NSZeroPoint, size});
-    [NSGraphicsContext restoreGraphicsState];
+    if (drawingHandler) {
+        [NSGraphicsContext saveGraphicsState];
+        [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:bmpImageRep]];
+        drawingHandler((NSRect){NSZeroPoint, size});
+        [NSGraphicsContext restoreGraphicsState];
+    }
     return bmpImageRep;
 
 }
