@@ -40,7 +40,6 @@
 #import "SKLineInspector.h"
 #import "NSGraphics_SKExtensions.h"
 #import "NSBezierPath_SKExtensions.h"
-#import "NSImage_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 
 NSString *SKPasteboardTypeLineStyle = @"net.sourceforge.skim-app.pasteboard.line-style";
@@ -297,19 +296,22 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     imageRep = [self bitmapImageRepCachingDisplayInRect:bounds];
     lwFlags.active = wasActive;
     
-    __block NSImage *image = nil;
-    CGFloat scale = [imageRep pixelsWide] / NSWidth(bounds);
+    NSGraphicsContext *context = [NSGraphicsContext graphicsContextWithBitmapImageRep:imageRep];
     
+    [NSGraphicsContext saveGraphicsState];
+    [NSGraphicsContext setCurrentContext:context];
     SKRunWithAppearance(self, ^{
-        image = [NSImage bitmapImageWithSize:bounds.size scale:scale drawingHandler:^(NSRect rect){
-            [[NSColor windowBackgroundColor] setFill];
-            [NSBezierPath fillRect:rect];
-            [[[NSColor textColor] colorWithAlphaComponent:0.6] setStroke];
-            [NSBezierPath strokeRect:NSInsetRect(rect, 0.5, 0.5)];
-            rect = NSInsetRect(rect, 1.0, 1.0);
-            [imageRep drawInRect:rect fromRect:rect operation:NSCompositingOperationSourceOver fraction:1.0 respectFlipped:NO hints:nil];
-        }];
+        [context setCompositingOperation:NSCompositeDestinationOver];
+        [[NSColor windowBackgroundColor] setFill];
+        [NSBezierPath fillRect:bounds];
+        [context setCompositingOperation:NSCompositeSourceOver];
+        [[[NSColor textColor] colorWithAlphaComponent:0.6] setStroke];
+        [NSBezierPath strokeRect:NSInsetRect(bounds, 0.5, 0.5)];
     });
+    [NSGraphicsContext restoreGraphicsState];
+    
+    NSImage *image = [[[NSImage alloc] initWithSize:bounds.size] autorelease];
+    [image addRepresentation:imageRep];
     
     return image;
 }
