@@ -1748,26 +1748,24 @@ static char SKMainWindowContentLayoutObservationContext;
     [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
     [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
     
-    NSVisualEffectView *backgroundView = RUNNING_BEFORE(10_11) ? (NSVisualEffectView *)overviewContentView : (NSVisualEffectView *)[overviewView backgroundView];
-    if (RUNNING_BEFORE(10_14)) {
-        [backgroundView setMaterial:isPresentation ? NSVisualEffectMaterialDark : RUNNING_BEFORE(10_11) ? NSVisualEffectMaterialAppearanceBased : NSVisualEffectMaterialSidebar];
+    if (RUNNING_BEFORE(10_11)) {
+        [(NSVisualEffectView *)overviewContentView setMaterial:isPresentation ? NSVisualEffectMaterialDark : NSVisualEffectMaterialAppearanceBased];
         NSBackgroundStyle style = isPresentation ? NSBackgroundStyleDark : NSBackgroundStyleLight;
-        if (RUNNING_BEFORE(10_11)) {
-            NSUInteger i, iMax = [[overviewView content] count];
-            for (i = 0; i < iMax; i++)
-                [(SKThumbnailItem *)[overviewView itemAtIndex:i] setBackgroundStyle:style];
-        } else {
-            [[overviewView visibleItems] setValue:[NSNumber numberWithInteger:style] forKey:@"backgroundStyle"];
-        }
+        NSUInteger i, iMax = [[overviewView content] count];
+        for (i = 0; i < iMax; i++)
+            [(SKThumbnailItem *)[overviewView itemAtIndex:i] setBackgroundStyle:style];
+    } else if (RUNNING_BEFORE(10_14)) {
+        [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:isPresentation ? NSVisualEffectMaterialDark : NSVisualEffectMaterialSidebar];
+        [[overviewView visibleItems] setValue:[NSNumber numberWithInteger:isPresentation ? NSBackgroundStyleDark : NSBackgroundStyleLight] forKey:@"backgroundStyle"];
     } else if (isPresentation) {
         SKSetHasDarkAppearance(overviewContentView);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-        [backgroundView setMaterial:NSVisualEffectMaterialUnderPageBackground];
+        [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialUnderPageBackground];
 #pragma clang diagnostic pop
     } else {
         SKSetHasDefaultAppearance(overviewContentView);
-        [backgroundView setMaterial:NSVisualEffectMaterialSidebar];
+        [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialSidebar];
     }
     [overviewView setSingleClickAction:isPresentation ? @selector(hideOverview:) : NULL];
     
