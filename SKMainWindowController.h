@@ -87,7 +87,7 @@ enum {
     SKMainTouchBarController            *touchBarController;
     
     SKOverviewView                      *overviewView;
-    NSVisualEffectView                  *overviewContentView;
+    NSView                              *overviewContentView;
     
     NSView                              *leftSideContentView;
     NSView                              *rightSideContentView;

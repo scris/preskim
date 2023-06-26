@@ -1697,16 +1697,16 @@ static char SKMainWindowContentLayoutObservationContext;
         [scrollView setHasVerticalScroller:YES];
         [scrollView setAutohidesScrollers:YES];
         [scrollView setDocumentView:overviewView];
-        [scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [overviewView setBackgroundColors:@[[NSColor clearColor]]];
         [scrollView setDrawsBackground:NO];
-        overviewContentView = [[NSVisualEffectView alloc] init];
-        [overviewContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [overviewContentView addSubview:scrollView];
-        [scrollView release];
+        NSVisualEffectView *bgView = [[NSVisualEffectView alloc] init];
         [overviewView setSelectable:YES];
         [overviewView setAllowsMultipleSelection:YES];
         if (RUNNING_BEFORE(10_11)) {
+            overviewContentView = bgView;
+            [scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+            [overviewContentView addSubview:scrollView];
+            [scrollView release];
+            [overviewView setBackgroundColors:@[[NSColor clearColor]]];
             [self updateOverviewItemSize];
             [overviewView setItemPrototype:[[[SKThumbnailItem alloc] init] autorelease]];
             [overviewView setContent:[self thumbnails]];
@@ -1716,6 +1716,9 @@ static char SKMainWindowContentLayoutObservationContext;
             if (markedPageIndex != NSNotFound)
                 [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
         } else {
+            overviewContentView = scrollView;
+            [overviewView setBackgroundView:bgView];
+            [bgView release];
             NSCollectionViewFlowLayout *layout = [[[NSCollectionViewFlowLayout alloc] init] autorelease];
             [layout setMinimumLineSpacing:8.0];
             [layout setMinimumInteritemSpacing:0.0];
@@ -1728,6 +1731,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [overviewView setTypeSelectHelper:[leftSideController.thumbnailTableView typeSelectHelper]];
         [overviewView setDoubleClickAction:@selector(hideOverview:)];
         [overviewView addObserver:self forKeyPath:RUNNING_BEFORE(10_11) ? @"selectionIndexes" : @"selectionIndexPaths" options:0 context:&SKMainWindowThumbnailSelectionObservationContext];
+        [overviewContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
     }
     
     BOOL isPresentation = [self interactionMode] == SKPresentationMode;
@@ -1744,8 +1748,9 @@ static char SKMainWindowContentLayoutObservationContext;
     [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
     [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
     
+    NSVisualEffectView *backgroundView = RUNNING_BEFORE(10_11) ? (NSVisualEffectView *)overviewContentView : (NSVisualEffectView *)[overviewView backgroundView];
     if (RUNNING_BEFORE(10_14)) {
-        [overviewContentView setMaterial:isPresentation ? NSVisualEffectMaterialDark : RUNNING_BEFORE(10_11) ? NSVisualEffectMaterialAppearanceBased : NSVisualEffectMaterialSidebar];
+        [backgroundView setMaterial:isPresentation ? NSVisualEffectMaterialDark : RUNNING_BEFORE(10_11) ? NSVisualEffectMaterialAppearanceBased : NSVisualEffectMaterialSidebar];
         NSBackgroundStyle style = isPresentation ? NSBackgroundStyleDark : NSBackgroundStyleLight;
         if (RUNNING_BEFORE(10_11)) {
             NSUInteger i, iMax = [[overviewView content] count];
@@ -1758,11 +1763,11 @@ static char SKMainWindowContentLayoutObservationContext;
         SKSetHasDarkAppearance(overviewContentView);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-        [overviewContentView setMaterial:NSVisualEffectMaterialUnderPageBackground];
+        [backgroundView setMaterial:NSVisualEffectMaterialUnderPageBackground];
 #pragma clang diagnostic pop
     } else {
         SKSetHasDefaultAppearance(overviewContentView);
-        [overviewContentView setMaterial:NSVisualEffectMaterialSidebar];
+        [backgroundView setMaterial:NSVisualEffectMaterialSidebar];
     }
     [overviewView setSingleClickAction:isPresentation ? @selector(hideOverview:) : NULL];
     
