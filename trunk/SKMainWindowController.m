@@ -1701,12 +1701,12 @@ static char SKMainWindowContentLayoutObservationContext;
         NSVisualEffectView *bgView = [[NSVisualEffectView alloc] init];
         [overviewView setSelectable:YES];
         [overviewView setAllowsMultipleSelection:YES];
+        [overviewView setBackgroundColors:@[[NSColor clearColor]]];
         if (RUNNING_BEFORE(10_11)) {
             overviewContentView = bgView;
             [scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [overviewContentView addSubview:scrollView];
             [scrollView release];
-            [overviewView setBackgroundColors:@[[NSColor clearColor]]];
             [self updateOverviewItemSize];
             [overviewView setItemPrototype:[[[SKThumbnailItem alloc] init] autorelease]];
             [overviewView setContent:[self thumbnails]];
