@@ -1393,8 +1393,21 @@
 
 #pragma mark SKPDFView delegate protocol
 
+- (NSURL *)redirectRelativeLinkURL:(NSURL *)url {
+    if ([url isFileURL] && [[[self document] fileType] isEqualToString:SKPDFBundleDocumentType] && [url checkResourceIsReachableAndReturnError:NULL] == NO) {
+        NSString *path = [url path];
+        NSURL *docURL = [[self document] fileURL];
+        NSString *docPath = [docURL path];
+        if ([docPath hasSuffix:@"/"] == NO)
+            docPath = [docPath stringByAppendingString:@"/"];
+        if ([path hasPrefix:docPath])
+            url = [[docURL URLByDeletingLastPathComponent] URLByAppendingPathComponent:[path substringFromIndex:[docPath length]]];
+    }
+    return url;
+}
+
 - (void)PDFViewOpenPDF:(PDFView *)sender forRemoteGoToAction:(PDFActionRemoteGoTo *)action {
-    NSURL *fileURL = [action URL];
+    NSURL *fileURL = [self redirectRelativeLinkURL:[action URL]];
     SKDocumentController *sdc = [NSDocumentController sharedDocumentController];
     Class docClass = [sdc documentClassForContentsOfURL:fileURL];
     if (docClass) {
@@ -1418,15 +1431,7 @@
 
 - (void)PDFViewWillClickOnLink:(PDFView *)sender withURL:(NSURL *)url {
     SKDocumentController *sdc = [NSDocumentController sharedDocumentController];
-    if ([url isFileURL] && [[[self document] fileType] isEqualToString:SKPDFBundleDocumentType] && [url checkResourceIsReachableAndReturnError:NULL] == NO) {
-        NSString *path = [url path];
-        NSURL *docURL = [[self document] fileURL];
-        NSString *docPath = [docURL path];
-        if ([docPath hasSuffix:@"/"] == NO)
-            docPath = [docPath stringByAppendingString:@"/"];
-        if ([path hasPrefix:docPath])
-            url = [[docURL URLByDeletingLastPathComponent] URLByAppendingPathComponent:[path substringFromIndex:[docPath length]]];
-    }
+    url = [self redirectRelativeLinkURL:url];
     if ([url isFileURL] && [sdc documentClassForContentsOfURL:url]) {
         [sdc openDocumentWithContentsOfURL:url display:YES completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error){
             if (document == nil && error && [error isUserCancelledError] == NO)
