@@ -51,7 +51,8 @@
         CGFloat zoomX = kPDFDestinationUnspecifiedValue, zoomY = kPDFDestinationUnspecifiedValue;
         BOOL override = YES;
         NSInteger type = 0;
-        @try { type = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.type" : @"_private.type"] doubleValue]; }
+        // the -type property always returns 0, and not the value from the ivar
+        @try { type = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.type" : @"_private.type"] integerValue]; }
         @catch (id e) {}
         switch (type) {
             case 0:
