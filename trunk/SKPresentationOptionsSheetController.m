@@ -113,6 +113,7 @@ static char *SKTransitionPropertiesObservationContext;
     );
     SKDESTROY(transition);
     SKDESTROY(transitions);
+    SKDESTROY(changedTransitions);
     SKDESTROY(undoManager);
     SKDESTROY(notesDocumentPopUpButton);
     SKDESTROY(tableView);
@@ -364,9 +365,15 @@ static char *SKTransitionPropertiesObservationContext;
 
 #pragma mark Undo
 
+- (void)observeUndoManagerCheckpoint:(NSNotification *)notification {
+    SKDESTROY(changedTransitions);
+}
+
 - (NSUndoManager *)undoManager {
-    if (undoManager == nil)
+    if (undoManager == nil) {
         undoManager = [[NSUndoManager alloc] init];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeUndoManagerCheckpoint:) name:NSUndoManagerCheckpointNotification object:undoManager];
+    }
     return undoManager;
 }
 
@@ -401,6 +408,14 @@ static char *SKTransitionPropertiesObservationContext;
         
         if ([newValue isEqual:[NSNull null]]) newValue = nil;
         if ([oldValue isEqual:[NSNull null]]) oldValue = nil;
+        
+        if ([keyPath isEqualToString:DURATION_KEY]) {
+            if ([changedTransitions containsObject:object])
+                return;
+            if (changedTransitions == nil)
+                changedTransitions = [[NSMutableSet alloc] init];
+            [changedTransitions addObject:object];
+        }
         
         if ((newValue || oldValue) && [newValue isEqual:oldValue] == NO)
             [[[self undoManager] prepareWithInvocationTarget:self] setValue:oldValue forKey:keyPath ofTransition:object];

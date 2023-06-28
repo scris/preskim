@@ -57,6 +57,7 @@
     NSArray *transitions;
     SKMainWindowController *controller;
     NSUndoManager *undoManager;
+    NSMutableSet *changedTransitions;
 }
 
 @property (nonatomic, retain) IBOutlet NSPopUpButton *notesDocumentPopUpButton;
