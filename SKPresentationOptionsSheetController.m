@@ -409,6 +409,9 @@ static char *SKTransitionPropertiesObservationContext;
         if ([newValue isEqual:[NSNull null]]) newValue = nil;
         if ([oldValue isEqual:[NSNull null]]) oldValue = nil;
         
+        if (newValue == oldValue || [newValue isEqual:oldValue])
+            return;
+            
         if ([keyPath isEqualToString:DURATION_KEY]) {
             if ([changedTransitions containsObject:object])
                 return;
@@ -417,8 +420,7 @@ static char *SKTransitionPropertiesObservationContext;
             [changedTransitions addObject:object];
         }
         
-        if ((newValue || oldValue) && [newValue isEqual:oldValue] == NO)
-            [[[self undoManager] prepareWithInvocationTarget:self] setValue:oldValue forKey:keyPath ofTransition:object];
+        [[[self undoManager] prepareWithInvocationTarget:self] setValue:oldValue forKey:keyPath ofTransition:object];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
