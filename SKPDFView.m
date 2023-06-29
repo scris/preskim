@@ -4867,8 +4867,9 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
 
 
 - (NSRect)doSelectRectWithEvent:(NSEvent *)theEvent didDrag:(BOOL *)didDrag {
-    NSPoint mouseLoc = [theEvent locationInWindow];
-    NSPoint startPoint = [[self documentView] convertPoint:mouseLoc fromView:nil];
+    NSView *docView = [self documentView];
+    NSClipView *clipView = [[self scrollView] contentView];
+    NSPoint startPoint = [theEvent locationInView:docView];
     NSPoint currentPoint;
     NSRect selRect = {startPoint, NSZeroSize};
     BOOL dragged = NO;
@@ -4882,16 +4883,14 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         if ([theEvent type] == NSEventTypeLeftMouseUp)
             break;
         
-        if ([theEvent type] == NSEventTypeLeftMouseDragged) {
-            // change mouseLoc
-            [[[self scrollView] contentView] autoscroll:theEvent];
-            mouseLoc = [theEvent locationInWindow];
-            dragged = YES;
-        }
-        
         // dragging or flags changed
         
-        currentPoint = [[self documentView] convertPoint:mouseLoc fromView:nil];
+        if ([theEvent type] == NSEventTypeLeftMouseDragged) {
+            // change mouseLoc
+            [clipView autoscroll:theEvent];
+            currentPoint = [theEvent locationInView:docView];
+            dragged = YES;
+        }
         
         // center around startPoint when holding down the Shift key
         if (([theEvent modifierFlags] & NSEventModifierFlagShift))
@@ -4900,9 +4899,9 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
             selRect = SKRectFromPoints(startPoint, currentPoint);
         
         // intersect with the bounds, project on the bounds if necessary and allow zero width or height
-        selRect = SKIntersectionRect(selRect, [[self documentView] bounds]);
+        selRect = SKIntersectionRect(selRect, [docView bounds]);
         
-        [highlightLayerController setRect:[self convertRect:selRect fromView:[self documentView]]];
+        [highlightLayerController setRect:[self convertRect:selRect fromView:docView]];
         [[highlightLayerController layer] setNeedsDisplay];
     }
     
