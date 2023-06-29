@@ -4870,7 +4870,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     NSView *docView = [self documentView];
     NSClipView *clipView = [[self scrollView] contentView];
     NSPoint startPoint = [theEvent locationInView:docView];
-    NSPoint currentPoint;
+    NSPoint currentPoint = startPoint;
     NSRect selRect = {startPoint, NSZeroSize};
     BOOL dragged = NO;
     NSWindow *window = [self window];
