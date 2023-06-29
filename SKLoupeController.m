@@ -281,7 +281,7 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGFloat scale) {
     CGInterpolationQuality interpolation = [pdfView interpolationQuality] + 1;
     BOOL shouldAntiAlias = [pdfView shouldAntiAlias];
     PDFDisplayBox box = [pdfView displayBox];
-    NSRect scaledRect = SKRectFromCenterAndSize(mouseLoc, NSMakeSize(NSWidth(magRect) / magnification, NSHeight(magRect) / magnification));
+    NSRect scaledRect = NSMakeRect(mouseLoc.x + (NSMinX(magRect) - mouseLoc.x) / magnification, mouseLoc.y + (NSMinY(magRect) - mouseLoc.y) / magnification, NSWidth(magRect) / magnification, NSHeight(magRect) / magnification);
     CGFloat backingScale = [pdfView backingScale];
     NSRange pageRange;
 #pragma clang diagnostic push
