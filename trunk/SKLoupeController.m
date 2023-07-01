@@ -317,6 +317,11 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGFloat scale) {
             CGContextSetShadowWithColor(context, shadowOffset, shadowBlurRadius, shadowColor);
         CGContextFillRect(context, pageRect);
         CGContextRestoreGState(context);
+        
+        // only draw the page when there is something to draw
+        if (CGRectIntersectsRect(rect, pageRect) == NO)
+            continue;
+        
         if (borderColor) {
             CGContextSaveGState(context);
             CGContextSetFillColorWithColor(context, borderColor);
@@ -325,10 +330,6 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGFloat scale) {
             CGContextEOFillPath(context);
             CGContextRestoreGState(context);
         }
-        
-        // only draw the page when there is something to draw
-        if (CGRectIntersectsRect(rect, pageRect) == NO)
-            continue;
         
         // draw page contents
         CGContextSaveGState(context);
