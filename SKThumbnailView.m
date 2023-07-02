@@ -509,7 +509,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)applyMenuHighlighted:(BOOL)flag {
     NSCollectionView *collectionView = [[self controller] collectionView];
     NSIndexSet *selectionIndexes = [collectionView selectionIndexes];
-    if ([selectionIndexes containsIndex:[[[self thumbnail] page] pageIndex]]) {
+    if ([selectionIndexes count] > 1 && [selectionIndexes containsIndex:[[[self thumbnail] page] pageIndex]]) {
         [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
             NSCollectionViewItem *item = (RUNNING_BEFORE(10_11)) ? [collectionView itemAtIndex:i] : [collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
             [(SKThumbnailView *)[item view] setMenuHighlighted:flag];
