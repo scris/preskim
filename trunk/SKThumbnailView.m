@@ -194,16 +194,15 @@ static char SKThumbnailViewThumbnailObservationContext;
         if ([self isSelected] || [self isMenuHighlighted]) {
             if (imageHighlightView == nil) {
                 imageHighlightView = [self newHighlightView];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-                [imageHighlightView setEmphasized:NO];
-#pragma clang diagnostic pop
                 [imageHighlightView setFrame:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
                 [imageHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
                 [self addSubview:imageHighlightView positioned:NSWindowBelow relativeTo:nil];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateImageHighlightMask:) name:NSViewFrameDidChangeNotification object:imageHighlightView];
             }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
             [imageHighlightView setEmphasized:[self isMenuHighlighted]];
+#pragma clang diagnostic pop
             [self updateImageHighlightMask:nil];
         } else if (imageHighlightView) {
             [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:imageHighlightView];
