@@ -44,6 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @interface SKThumbnailView : SKGroupView <NSDraggingSource> {
     SKThumbnail *thumbnail;
     BOOL selected;
+    BOOL menuHighlighted;
     NSBackgroundStyle backgroundStyle;
     NSInteger highlightLevel;
     NSImageView *imageView;
@@ -56,6 +57,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @property (nonatomic, retain) SKThumbnail *thumbnail;
 @property (nonatomic, getter=isSelected) BOOL selected;
+@property (nonatomic, getter=isMenuHighlighted) BOOL menuHighlighted;
 @property (nonatomic) NSBackgroundStyle backgroundStyle;
 @property (nonatomic) NSInteger highlightLevel;
 @property (nonatomic, getter=isMarked) BOOL marked;

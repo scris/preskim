@@ -69,7 +69,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 @implementation SKThumbnailView
 
-@synthesize selected, thumbnail, backgroundStyle, highlightLevel, controller;
+@synthesize selected, menuHighlighted, thumbnail, backgroundStyle, highlightLevel, controller;
 @dynamic marked;
 
 - (void)commonInit {
@@ -191,7 +191,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)updateImageHighlight {
     if (RUNNING_AFTER(10_15)) {
-        if ([self isSelected]) {
+        if ([self isSelected] || [self isMenuHighlighted]) {
             if (imageHighlightView == nil) {
                 imageHighlightView = [self newHighlightView];
 #pragma clang diagnostic push
@@ -203,6 +203,7 @@ static char SKThumbnailViewThumbnailObservationContext;
                 [self addSubview:imageHighlightView positioned:NSWindowBelow relativeTo:nil];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateImageHighlightMask:) name:NSViewFrameDidChangeNotification object:imageHighlightView];
             }
+            [imageHighlightView setEmphasized:[self isMenuHighlighted]];
             [self updateImageHighlightMask:nil];
         } else if (imageHighlightView) {
             [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:imageHighlightView];
@@ -279,6 +280,13 @@ static char SKThumbnailViewThumbnailObservationContext;
     }
 }
 
+- (void)setMenuHighlighted:(BOOL)newMenuHighlighted {
+    if (menuHighlighted != newMenuHighlighted) {
+        menuHighlighted = newMenuHighlighted;
+        [self updateImageHighlight];
+    }
+}
+
 - (void)setBackgroundStyle:(NSBackgroundStyle)newBackgroundStyle {
     if (backgroundStyle != newBackgroundStyle) {
         backgroundStyle = newBackgroundStyle;
@@ -321,11 +329,13 @@ static char SKThumbnailViewThumbnailObservationContext;
     if (RUNNING_AFTER(10_15))
         return;
     
-    if ([self isSelected]) {
+    if ([self isSelected] || [self isMenuHighlighted]) {
         NSRect rect = NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN);
         if (NSIntersectsRect(dirtyRect, rect)) {
             [NSGraphicsContext saveGraphicsState];
-            if ([self backgroundStyle] == NSBackgroundStyleDark)
+            if ([self isMenuHighlighted])
+                [[NSColor alternateSelectedControlColor] setFill];
+            else if ([self backgroundStyle] == NSBackgroundStyleDark)
                 [[NSColor darkGrayColor] setFill];
             else
                 [[NSColor secondarySelectedControlColor] setFill];
@@ -497,6 +507,34 @@ static char SKThumbnailViewThumbnailObservationContext;
     }
 }
 
+- (void)applyMenuHighlighted:(BOOL)flag {
+    NSCollectionView *collectionView = [[self controller] collectionView];
+    NSIndexSet *selectionIndexes = [collectionView selectionIndexes];
+    if ([selectionIndexes containsIndex:[[[self thumbnail] page] pageIndex]]) {
+        [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
+            NSCollectionViewItem *item = (RUNNING_BEFORE(10_11)) ? [collectionView itemAtIndex:i] : [collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
+            [(SKThumbnailView *)[item view] setMenuHighlighted:flag];
+        }];
+    } else {
+        [self setMenuHighlighted:flag];
+    }
+}
+
+- (void)handleMenuDidEndTracking:(NSNotification *)notification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSMenuDidEndTrackingNotification object:[notification object]];
+    [self applyMenuHighlighted:NO];
+}
+
+- (void)willOpenMenu:(NSMenu *)menu
+           withEvent:(NSEvent *)event {
+    [self applyMenuHighlighted:YES];
+}
+
+- (void)didCloseMenu:(NSMenu *)menu
+           withEvent:(NSEvent *)event {
+    [self applyMenuHighlighted:NO];
+}
+
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent {
     PDFPage *page = [[self thumbnail] page];
     NSMenu *menu = nil;
@@ -504,6 +542,10 @@ static char SKThumbnailViewThumbnailObservationContext;
         menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
         [menu addItemWithTitle:NSLocalizedString(@"Copy", @"Menu item title") action:@selector(copy:) target:self];
         [menu addItemWithTitle:NSLocalizedString(@"Copy URL", @"Menu item title") action:@selector(copyURL:) target:self];
+        if (RUNNING(10_11)) {
+            [self applyMenuHighlighted:YES];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleMenuDidEndTracking:) name:NSMenuDidEndTrackingNotification object:menu];
+        }
     }
     return menu;
 }
