@@ -335,9 +335,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     gestureRotation = 0.0;
     gesturePageIndex = NSNotFound;
     
-    trackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect owner:self userInfo:nil];
-    [self addTrackingArea:trackingArea];
-    
     [self registerForDraggedTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]];
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -367,7 +364,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)dealloc {
     // we should have been cleaned up in setDelegate:nil which is called from windowWillClose:
     SKDESTROY(syncDot);
-    SKDESTROY(trackingArea);
     SKDESTROY(currentAnnotation);
     SKDESTROY(typeSelectHelper);
     SKDESTROY(transitionController);
@@ -2328,9 +2324,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)mouseEntered:(NSEvent *)theEvent {
     NSTrackingArea *eventArea = [theEvent trackingArea];
     PDFAnnotation *annotation;
-    if ([eventArea owner] == self && [eventArea isEqual:trackingArea]) {
-        [[self window] setAcceptsMouseMovedEvents:YES];
-    } else if ([eventArea owner] == self && (annotation = [[eventArea userInfo] objectForKey:SKAnnotationKey])) {
+    if ([eventArea owner] == self && (annotation = [[eventArea userInfo] objectForKey:SKAnnotationKey])) {
         [[SKImageToolTipWindow sharedToolTipWindow] showForImageContext:annotation scale:[self scaleFactor] atPoint:NSZeroPoint];
     } else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd]) {
         [super mouseEntered:theEvent];
@@ -2340,16 +2334,17 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)mouseExited:(NSEvent *)theEvent {
     NSTrackingArea *eventArea = [theEvent trackingArea];
     PDFAnnotation *annotation;
-    if ([eventArea owner] == self && [eventArea isEqual:trackingArea]) {
-        [[self window] setAcceptsMouseMovedEvents:NO];
-        [[NSCursor arrowCursor] set];
-        if (toolMode == SKMagnifyToolMode)
-            [loupeController hide];
-    } else if ([eventArea owner] == self && (annotation = [[eventArea userInfo] objectForKey:SKAnnotationKey])) {
+    if ([eventArea owner] == self && (annotation = [[eventArea userInfo] objectForKey:SKAnnotationKey])) {
         if ([annotation isEqual:[[SKImageToolTipWindow sharedToolTipWindow] currentImageContext]])
             [[SKImageToolTipWindow sharedToolTipWindow] fadeOut];
-    } else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd]) {
-        [super mouseExited:theEvent];
+    } else {
+        if (([eventArea options] & NSTrackingInVisibleRect)) {
+            [[NSCursor arrowCursor] set];
+            if (toolMode == SKMagnifyToolMode)
+                [loupeController hide];
+        }
+        if ([[SKPDFView superclass] instancesRespondToSelector:_cmd])
+            [super mouseExited:theEvent];
     }
 }
 

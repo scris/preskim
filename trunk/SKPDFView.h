@@ -159,8 +159,6 @@ enum {
     
     NSInteger minHistoryIndex;
     
-    NSTrackingArea *trackingArea;
-    
     NSInteger spellingTag;
     
     NSInteger laserPointerColor;
