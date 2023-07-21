@@ -819,7 +819,7 @@ enum {
         [tmpData setPdfDocument:pdfDoc];
         [self setOriginalData:inData];
         [pdfDoc release];
-        [self updateChangeCount:NSChangeDone];
+        [self updateChangeCount:NSChangeReadOtherContents];
         return YES;
     } else {
         SKDESTROY(tmpData);
@@ -916,7 +916,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                         array = [[NSFileManager defaultManager] readSkimNotesFromSkimFileAtURL:notesURL error:NULL];
                         if ([array count] && [array isEqualToArray:[tmpData noteDicts]] == NO) {
                             [tmpData setNoteDicts:array];
-                            [self updateChangeCount:NSChangeDone];
+                            [self updateChangeCount:NSChangeReadOtherContents];
                         }
                     }
                 }
