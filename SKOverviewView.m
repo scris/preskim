@@ -110,7 +110,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     [super mouseDown:theEvent];
     
     if (action)
-        [self tryToPerform:action with:self];
+        DISPATCH_MAIN_AFTER_SEC(0.01, ^{ [self tryToPerform:action with:self]; });
 }
 
 - (id)newViewWithIdentifier:(NSString *)identifier {
