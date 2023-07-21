@@ -2693,7 +2693,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     } else if (context == &SKMainWindowThumbnailSelectionObservationContext) {
         
         NSIndexSet *indexes = [overviewView selectionIndexes];
-        NSLog(@"%@",indexes);
         if ([indexes count] == 1 && mwcFlags.updatingThumbnailSelection == 0) {
             NSUInteger pageIndex = [indexes firstIndex];
             if ([[pdfView currentPage] pageIndex] != pageIndex)
