@@ -1747,6 +1747,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [overviewContentView setFrame:[oldView frame]];
     [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
     [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
+    [overviewView setAllowsMultipleSelection:isPresentation == NO];
     
     if (RUNNING_BEFORE(10_11)) {
         [(NSVisualEffectView *)overviewContentView setMaterial:isPresentation ? NSVisualEffectMaterialDark : NSVisualEffectMaterialAppearanceBased];
