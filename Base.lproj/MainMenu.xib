@@ -719,7 +719,8 @@
                             <menuItem isSeparatorItem="YES" id="520">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Toggle Toolbar" keyEquivalent="b" id="227">
+                            <menuItem title="Toggle Toolbar" keyEquivalent="t" id="227">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="toggleToolbarShown:" target="-1" id="238"/>
                                 </connections>
