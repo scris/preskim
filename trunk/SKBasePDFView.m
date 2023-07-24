@@ -50,6 +50,9 @@
 
 static char SKBasePDFViewDefaultsObservationContext;
 
+// don't use the constant, which is only defined on 10.13+
+#define kPDFDestinationUnspecifiedValue FLT_MAX
+
 #if SDK_BEFORE(10_12)
 @interface PDFView (SKSierraDeclarations)
 - (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context;
