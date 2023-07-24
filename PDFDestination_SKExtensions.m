@@ -40,6 +40,9 @@
 #import "PDFPage_SKExtensions.h"
 #import "PDFView_SKExtensions.h"
 
+// don't use the constant, which is only defined on 10.13+
+#define kPDFDestinationUnspecifiedValue FLT_MAX
+
 @implementation PDFDestination (SKExtensions)
 
 - (PDFDestination *)effectiveDestinationForView:(PDFView *)pdfView {
