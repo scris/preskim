@@ -73,10 +73,16 @@ NSString *SKDocumentErrorDomain = @"SKDocumentErrorDomain";
     if ([errors count] > 1) {
         NSMutableDictionary *userInfo = [[error userInfo] mutableCopy];
         NSString *description;
-        if ([errors count] > max)
-            description = [[[[errors subarrayWithRange:NSMakeRange(0, max)] valueForKey:@"localizedDescription"] componentsJoinedByString:@"\n"] stringByAppendingFormat:@"\n%C", ELLIPSIS_CHARACTER];
+        NSMutableArray *descriptions = [NSMutableArray array];
+        for (NSError *err in errors) {
+            NSString *desc = [err localizedDescription];
+            if ([descriptions containsObject:desc] == NO)
+                [descriptions addObject:desc];
+        }
+        if ([descriptions count] > max)
+            description = [[[descriptions subarrayWithRange:NSMakeRange(0, max)] componentsJoinedByString:@"\n"] stringByAppendingFormat:@"\n%C", ELLIPSIS_CHARACTER];
         else
-            description = [[errors valueForKey:@"localizedDescription"] componentsJoinedByString:@"\n"];
+            description = [[descriptions valueForKey:@"localizedDescription"] componentsJoinedByString:@"\n"];
         [userInfo setObject:description forKey:NSLocalizedDescriptionKey];
         error = [NSError errorWithDomain:[error domain] code:[error code] userInfo:userInfo];
         [userInfo release];
