@@ -59,6 +59,8 @@
 + (NSData *)newPDFDataFromURL:(NSURL *)aURL ofType:(NSString *)aFileType error:(NSError **)outError;
 + (NSData *)newPDFDataWithPostScriptData:(NSData *)psData error:(NSError **)outError;
 
++ (NSString *)toolPathForType:(NSString *)aFileType;
+
 - (IBAction)cancel:(id)sender;
 - (IBAction)close:(id)sender;
 
