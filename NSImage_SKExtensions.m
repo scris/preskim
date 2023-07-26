@@ -1610,7 +1610,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
 + (void)makeCursorImages {
     
     MAKE_VECTOR_IMAGE(SKImageNameResizeDiagonal45Cursor, NO, 16.0, 16.0,
-        if (RUNNING_AFTER(10_11))
+        if (RUNNING_BEFORE(10_11))
             [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
         [[NSGraphicsContext currentContext] setShouldAntialias:NO];
         [[NSColor whiteColor] setFill];
@@ -1665,7 +1665,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     );
     
     MAKE_VECTOR_IMAGE(SKImageNameResizeDiagonal135Cursor, NO, 16.0, 16.0,
-        if (RUNNING_AFTER(10_11))
+        if (RUNNING_BEFORE(10_11))
             [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
         [[NSGraphicsContext currentContext] setShouldAntialias:NO];
         [[NSColor whiteColor] setFill];
@@ -1780,7 +1780,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     );
     
     MAKE_VECTOR_IMAGE(SKImageNameCameraCursor, NO, 18.0, 16.0,
-        if (RUNNING_AFTER(10_11))
+        if (RUNNING_BEFORE(10_11))
             [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
         [[NSColor whiteColor] set];
         NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(1.0, 2.0, 16.0, 11.0)];
