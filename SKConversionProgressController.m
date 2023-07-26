@@ -201,7 +201,7 @@ CGPSConverterCallbacks SKPSConverterCallbacks = {
     
 }
 
-static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *supportedTools) {
+static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTools) {
     NSString *commandPath = [[NSUserDefaults standardUserDefaults] stringForKey:defaultKey];
     NSString *commandName = [commandPath lastPathComponent];
     NSArray *paths = @[@"/Library/TeX/texbin", @"/usr/texbin", @"/sw/bin", @"/opt/local/bin", @"/usr/local/bin"];
@@ -222,7 +222,27 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
         }
     } while (commandPath == nil && (commandName = [toolEnum nextObject]));
     
-    return [commandPath retain];
+    return commandPath;
+}
+
++ (NSString *)toolPathForType:(NSString *)fileType {
+    static NSMutableDictionary *toolPaths = nil;
+    NSString *toolPath = [toolPaths objectForKey:fileType];
+    if (toolPath == nil) {
+        NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+        if ([ws type:fileType conformsToType:SKDVIDocumentType])
+            toolPath = toolPathForCommand(SKDviConversionCommandKey, RUNNING_AFTER(13_0) ? @[@"dvipdfmx", @"dvipdfm", @"dvipdf"] : @[@"dvipdfmx", @"dvipdfm", @"dvipdf", @"dvips"]);
+        else if ([ws type:fileType conformsToType:SKXDVDocumentType])
+            toolPath = toolPathForCommand(SKXdvConversionCommandKey, @[@"xdvipdfmx", @"dvipdfmx", @"xdv2pdf"]);
+        else if ([ws type:fileType conformsToType:SKPostScriptDocumentType])
+            toolPath = toolPathForCommand(SKPSConversionCommandKey, @[@"ps2pdf", @"ps2pdf12", @"ps2pdf13", @"ps2pdf14", @"pstopdf"]);
+        if (toolPath) {
+            if (toolPaths == nil)
+                toolPaths = [[NSMutableDictionary alloc] init];
+            [toolPaths setObject:toolPath forKey:fileType];
+        }
+    }
+    return toolPath;
 }
 
 - (void)taskFinished:(NSNotification *)notification {
@@ -255,23 +275,7 @@ static NSString *createToolPathForCommand(NSString *defaultKey, NSArray *support
     
     if (RUNNING_AFTER(13_0) || [ws type:fileType conformsToType:SKPostScriptDocumentType] == NO) {
         
-        NSString *toolPath = nil;
-        if ([ws type:fileType conformsToType:SKDVIDocumentType]) {
-            static NSString *dviToolPath = nil;
-            if (dviToolPath == nil)
-                dviToolPath = createToolPathForCommand(SKDviConversionCommandKey, RUNNING_AFTER(13_0) ? @[@"dvipdfmx", @"dvipdfm", @"dvipdf"] : @[@"dvipdfmx", @"dvipdfm", @"dvipdf", @"dvips"]);
-            toolPath = dviToolPath;
-        } else if ([ws type:fileType conformsToType:SKXDVDocumentType]) {
-            static NSString *xdvToolPath = nil;
-            if (xdvToolPath == nil)
-                xdvToolPath = createToolPathForCommand(SKXdvConversionCommandKey, @[@"xdvipdfmx", @"dvipdfmx", @"xdv2pdf"]);
-            toolPath = xdvToolPath;
-        } else if ([ws type:fileType conformsToType:SKPostScriptDocumentType]) {
-            static NSString *psToolPath = nil;
-            if (psToolPath == nil)
-                psToolPath = createToolPathForCommand(SKPSConversionCommandKey, @[@"ps2pdf", @"ps2pdf12", @"ps2pdf13", @"ps2pdf14", @"pstopdf"]);
-            toolPath = psToolPath;
-        }
+        NSString *toolPath = [[self class] toolPathForType:fileType];
         if (toolPath) {
             NSString *commandName = [toolPath lastPathComponent];
             NSURL *tmpDirURL = [[NSFileManager defaultManager] URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:aURL create:YES error:NULL];

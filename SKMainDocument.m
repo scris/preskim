@@ -783,6 +783,23 @@ enum {
 
 #pragma mark Reading
 
++ (NSArray *)readableTypes {
+    static NSArray *readableTypes = nil;
+    if (readableTypes == nil) {
+        NSMutableArray *tmpTypes = [[super readableTypes] mutableCopy];
+        if ([SKConversionProgressController toolPathForType:SKDVIDocumentType] == nil)
+            [tmpTypes removeObject:SKDVIDocumentType];
+        if ([SKConversionProgressController toolPathForType:SKXDVDocumentType] == nil)
+            [tmpTypes removeObject:SKXDVDocumentType];
+        if (RUNNING_AFTER(13_0) && [SKConversionProgressController toolPathForType:SKPostScriptDocumentType] == nil) {
+            [tmpTypes removeObject:SKPostScriptDocumentType];
+            [tmpTypes removeObject:SKEncapsulatedPostScriptDocumentType];
+        }
+        readableTypes = tmpTypes;
+    }
+    return readableTypes;
+}
+
 - (void)setPDFData:(NSData *)data {
     if (pdfData != data) {
         [pdfData release];
