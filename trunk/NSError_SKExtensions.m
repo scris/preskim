@@ -82,7 +82,7 @@ NSString *SKDocumentErrorDomain = @"SKDocumentErrorDomain";
         if ([descriptions count] > max)
             description = [[[descriptions subarrayWithRange:NSMakeRange(0, max)] componentsJoinedByString:@"\n"] stringByAppendingFormat:@"\n%C", ELLIPSIS_CHARACTER];
         else
-            description = [[descriptions valueForKey:@"localizedDescription"] componentsJoinedByString:@"\n"];
+            description = [descriptions componentsJoinedByString:@"\n"];
         [userInfo setObject:description forKey:NSLocalizedDescriptionKey];
         error = [NSError errorWithDomain:[error domain] code:[error code] userInfo:userInfo];
         [userInfo release];
