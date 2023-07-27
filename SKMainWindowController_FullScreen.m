@@ -86,6 +86,8 @@ static BOOL collapseSidePanesInFullScreen = NO;
 
 static CGFloat fullScreenToolbarOffset = 0.0;
 
+static BOOL showMenuBarInFullScreen = NO;
+
 #if SDK_BEFORE(10_12)
 @interface NSWorkSpace (BDSKSierraDeclarations)
 - (void)accessibilityDisplayShouldReduceMotion;
@@ -615,6 +617,7 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
 }
 
 - (NSApplicationPresentationOptions)window:(NSWindow *)window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions)proposedOptions {
+    showMenuBarInFullScreen = (proposedOptions & NSApplicationPresentationAutoHideMenuBar) == 0;
     if (autoHideToolbarInFullScreen)
         return proposedOptions | NSApplicationPresentationAutoHideToolbar;
     return proposedOptions;
@@ -636,6 +639,8 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
     if (fullScreenToolbarOffset <= 0.0 && autoHideToolbarInFullScreen == NO && [[mainWindow toolbar] isVisible])
         fullScreenToolbarOffset = toolbarViewOffset(mainWindow);
     NSRect frame = SKShrinkRect([[window screen] frame], -fullScreenOffset(window), NSMaxYEdge);
+    if (showMenuBarInFullScreen)
+        frame.size.height -= [[NSApp mainMenu] menuBarHeight];
     if (animationWindow != nil) {
         [self showStaticContentForWindow:window];
         [(SKMainWindow *)window setDisableConstrainedFrame:YES];
@@ -729,7 +734,8 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
     NSRect frame = NSRectFromString([savedNormalSetup objectForKey:MAINWINDOWFRAME_KEY]);
     if (animationWindow != nil) {
         [self showStaticContentForWindow:window];
-        [animationWindow setLevel:NSStatusWindowLevel];
+        if (showMenuBarInFullScreen == NO)
+            [animationWindow setLevel:NSStatusWindowLevel];
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
         setAlphaValueOfTitleBarControls(window, 1.0, NO);
         [window setFrame:frame display:YES];
@@ -750,12 +756,13 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
             }];
     } else {
         NSRect startFrame = [window frame];
-        startFrame.size.height = NSHeight([[window screen] frame]) + fullScreenOffset(window);
+        startFrame.size.height += fullScreenOffset(window);
         [window setStyleMask:[window styleMask] & ~NSWindowStyleMaskFullScreen];
         setAlphaValueOfTitleBarControls(window, 0.0, NO);
         [(SKMainWindow *)window setDisableConstrainedFrame:YES];
         [window setFrame:startFrame display:YES];
-        [window setLevel:NSStatusWindowLevel];
+        if (showMenuBarInFullScreen == NO)
+            [window setLevel:NSStatusWindowLevel];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration];
                 [[window animator] setFrame:frame display:YES];
