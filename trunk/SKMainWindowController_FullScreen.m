@@ -617,7 +617,8 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
 }
 
 - (NSApplicationPresentationOptions)window:(NSWindow *)window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions)proposedOptions {
-    showMenuBarInFullScreen = (proposedOptions & NSApplicationPresentationAutoHideMenuBar) == 0;
+    if (RUNNING_AFTER(11_0))
+        showMenuBarInFullScreen = (proposedOptions & NSApplicationPresentationAutoHideMenuBar) == 0;
     if (autoHideToolbarInFullScreen)
         return proposedOptions | NSApplicationPresentationAutoHideToolbar;
     return proposedOptions;
