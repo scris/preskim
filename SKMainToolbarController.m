@@ -1038,9 +1038,9 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     } else if ([identifier isEqualToString:SKDocumentToolbarDisplayDirectionItemIdentifier]) {
         return RUNNING_AFTER(10_12) && [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && [mainController.pdfView displayMode] == kPDFDisplaySinglePageContinuous;
     } else if ([identifier isEqualToString:SKDocumentToolbarDisplaysRTLItemIdentifier]) {
-        return RUNNING_AFTER(10_12) && [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && ([mainController.pdfView displayMode] & kPDFDisplayTwoUp) != 0;
+        return RUNNING_AFTER(10_12) && [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarBookModeItemIdentifier]) {
-        return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && ([mainController.pdfView displayMode] & kPDFDisplayTwoUp) != 0;
+        return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarToolModeItemIdentifier]) {
         return [mainController hasOverview] == NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarNewTextNoteItemIdentifier] || [identifier isEqualToString:SKDocumentToolbarNewCircleNoteItemIdentifier] || [identifier isEqualToString:SKDocumentToolbarNewLineItemIdentifier]) {
@@ -1240,10 +1240,12 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 - (IBAction)changeDisplaysRTL:(id)sender {
     [mainController.pdfView setDisplaysRightToLeftAndRewind:NO == [mainController.pdfView displaysRightToLeft]];
+    [mainController.pdfView setExtendedDisplayMode:[mainController.pdfView displayMode] | kPDFDisplayTwoUp];
 }
 
 - (IBAction)changeBookMode:(id)sender {
     [mainController.pdfView setDisplaysAsBookAndRewind:NO == [mainController.pdfView displaysAsBook]];
+    [mainController.pdfView setExtendedDisplayMode:[mainController.pdfView displayMode] | kPDFDisplayTwoUp];
 }
 
 - (IBAction)changePageBreaks:(id)sender {

@@ -300,10 +300,12 @@
 
 - (IBAction)toggleDisplaysRTL:(id)sender {
     [pdfView setDisplaysRightToLeftAndRewind:[pdfView displaysRightToLeft] == NO];
+    [pdfView setExtendedDisplayMode:[pdfView displayMode] | kPDFDisplayTwoUp];
 }
 
 - (IBAction)toggleDisplaysAsBook:(id)sender {
     [pdfView setDisplaysAsBookAndRewind:[pdfView displaysAsBook] == NO];
+    [pdfView setExtendedDisplayMode:[pdfView displayMode] | kPDFDisplayTwoUp];
 }
 
 - (IBAction)toggleDisplayPageBreaks:(id)sender {
