@@ -1692,10 +1692,10 @@ static NSArray *allMainDocumentPDFViews() {
         return RUNNING_AFTER(10_12) && [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && [pdfView displayMode] == kPDFDisplaySinglePageContinuous;
     } else if (action == @selector(toggleDisplaysRTL:)) {
         [menuItem setState:[pdfView displaysRightToLeft] ? NSOnState : NSOffState];
-        return RUNNING_AFTER(10_12) && [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && ([pdfView displayMode] == kPDFDisplayTwoUp || [pdfView displayMode] == kPDFDisplayTwoUpContinuous);
+        return RUNNING_AFTER(10_12) && [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(toggleDisplaysAsBook:)) {
         [menuItem setState:[pdfView displaysAsBook] ? NSOnState : NSOffState];
-        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && ([pdfView displayMode] == kPDFDisplayTwoUp || [pdfView displayMode] == kPDFDisplayTwoUpContinuous);
+        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(toggleDisplayPageBreaks:)) {
         [menuItem setState:[pdfView displaysPageBreaks] ? NSOnState : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
