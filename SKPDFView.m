@@ -335,6 +335,14 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     gestureRotation = 0.0;
     gesturePageIndex = NSNotFound;
     
+    NSTrackingAreaOptions options = NSTrackingMouseMoved | NSTrackingMouseEnteredAndExited;
+    for (NSTrackingArea *area in [self trackingAreas]) {
+        if (([area options] & NSTrackingInVisibleRect))
+            options &= ~[area options];
+    }
+    if (options)
+        [self addTrackingArea:[[[NSTrackingArea alloc] initWithRect:NSZeroRect options:options | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect owner:self userInfo:nil] autorelease]];
+    
     [self registerForDraggedTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]];
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
