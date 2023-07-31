@@ -5273,7 +5273,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     if ((area & kPDFLinkArea))
         [[NSCursor pointingHandCursor] set];
     else if (interactionMode == SKPresentationMode)
-        [pdfvFlags.cursorHidden ? [NSCursor emptyCursor] : pdfvFlags.useArrowCursorInPresentation ? [NSCursor arrowCursor] : [NSCursor laserPointerCursorWithColor:laserPointerColor] set];
+        [pdfvFlags.cursorHidden ? [NSCursor emptyCursor] : pdfvFlags.useArrowCursorInPresentation || area == kPDFNoArea ? [NSCursor arrowCursor] : [NSCursor laserPointerCursorWithColor:laserPointerColor] set];
     else if ((area & SKSpecialToolArea))
         [[NSCursor arrowCursor] set];
     else if ((area & SKTemporaryToolArea))
