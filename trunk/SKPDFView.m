@@ -3308,9 +3308,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (currentAnnotation)
             [self setNeedsDisplayForAnnotation:currentAnnotation];
     }
-    if ([[notification name] isEqualToString:NSWindowDidResignKeyNotification])
+    if ([[notification name] isEqualToString:NSWindowDidResignKeyNotification]) {
         [self setTemporaryToolMode:SKNoToolMode];
-    if (inKeyWindow == NO) {
         if (interactionMode == SKPresentationMode) {
             [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(showNavWindow) object:nil];
             [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(doAutoHide) object:nil];
