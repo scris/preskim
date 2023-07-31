@@ -422,7 +422,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         BOOL hasLinkToolTips = (toolMode == SKTextToolMode || toolMode == SKMoveToolMode || toolMode == SKNoteToolMode);
         NSPoint mouseLoc = [docView convertPointFromScreen:[NSEvent mouseLocation]];
         BOOL mouseInView = [[self window] isVisible] && NSMouseInRect(mouseLoc, [docView visibleRect], [docView isFlipped]);
-        NSTrackingAreaOptions options = NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp;
+        NSTrackingAreaOptions options = NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow;
         PDFAnnotation *hoverAnnotation = nil;
         
         for (PDFPage *page in [self visiblePages]) {

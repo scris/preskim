@@ -292,7 +292,7 @@
 
 - (void)addTrackingAreaForRowView:(NSTableRowView *)rowView {
     NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:[NSValue valueWithNonretainedObject:rowView], SKImageToolTipRowViewKey, nil];
-    NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:[rowView bounds] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect owner:self userInfo:userInfo];
+    NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:[rowView bounds] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect owner:self userInfo:userInfo];
     [rowView addTrackingArea:area];
     [area release];
     [userInfo release];
@@ -304,7 +304,7 @@
         NSView *view = [rowView viewAtColumn:column];
         if (view) {
             NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:[NSValue valueWithNonretainedObject:rowView], SKImageToolTipRowViewKey, [NSNumber numberWithInteger:column], SKImageToolTipColumnKey, nil];
-            NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:[view frame] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp owner:self userInfo:userInfo];
+            NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:[view frame] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow owner:self userInfo:userInfo];
             [rowView addTrackingArea:area];
             [area release];
             [userInfo release];
