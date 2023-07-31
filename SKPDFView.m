@@ -414,6 +414,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         BOOL hasLinkToolTips = (toolMode == SKTextToolMode || toolMode == SKMoveToolMode || toolMode == SKNoteToolMode);
         NSPoint mouseLoc = [docView convertPointFromScreen:[NSEvent mouseLocation]];
         BOOL mouseInView = [[self window] isVisible] && NSMouseInRect(mouseLoc, [docView visibleRect], [docView isFlipped]);
+        NSTrackingAreaOptions options = NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp;
         PDFAnnotation *hoverAnnotation = nil;
         
         for (PDFPage *page in [self visiblePages]) {
@@ -423,11 +424,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                     if (NSIsEmptyRect(rect) == NO) {
                         rect = [self convertRect:rect toView:docView];
                         NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:annotation, SKAnnotationKey, nil];
-                        NSTrackingAreaOptions options = NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp;
-                        if (mouseInView && NSMouseInRect(mouseLoc, rect, [docView isFlipped])) {
-                            options |= NSTrackingAssumeInside;
+                        if (mouseInView && NSMouseInRect(mouseLoc, rect, [docView isFlipped]))
                             hoverAnnotation = annotation;
-                        }
                         NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:rect options:options owner:self userInfo:userInfo];
                         [docView addTrackingArea:area];
                         [area release];
