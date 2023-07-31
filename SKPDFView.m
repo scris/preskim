@@ -3310,12 +3310,16 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
     if ([[notification name] isEqualToString:NSWindowDidResignKeyNotification])
         [self setTemporaryToolMode:SKNoToolMode];
-    if (inKeyWindow == NO && interactionMode == SKPresentationMode) {
-        [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(showNavWindow) object:nil];
-        [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(doAutoHide) object:nil];
-        [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(doAutoHideCursor) object:nil];
-        pdfvFlags.cursorHidden = 0;
-        [self setCursorForMouse:nil];
+    if (inKeyWindow == NO) {
+        if (interactionMode == SKPresentationMode) {
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(showNavWindow) object:nil];
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(doAutoHide) object:nil];
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(doAutoHideCursor) object:nil];
+            pdfvFlags.cursorHidden = 0;
+            [self setCursorForMouse:nil];
+        } else if (toolMode == SKMagnifyToolMode) {
+            [loupeController hide];
+        }
     }
 }
 
