@@ -5206,7 +5206,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     } else if (NSPointInRect(p, [self convertRect:[self visibleContentRect] toView:nil]) == NO || ([navWindow isVisible] && NSPointInRect([theEvent locationOnScreen], [navWindow frame]))) {
         area = kPDFNoArea;
     } else if (interactionMode == SKPresentationMode) {
-        area &= (kPDFPageArea | kPDFLinkArea);
+        area = (area & kPDFLinkArea) | kPDFPageArea;
     } else if ((modifiers == NSEventModifierFlagCommand || modifiers == (NSEventModifierFlagCommand | NSEventModifierFlagShift) || modifiers == (NSEventModifierFlagCommand | NSEventModifierFlagOption))) {
         area = (area & kPDFPageArea) | SKSpecialToolArea;
     } else if ((modifiers & NSEventModifierFlagCommand) == 0 && temporaryToolMode != SKNoToolMode) {
