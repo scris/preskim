@@ -48,7 +48,6 @@
         [self setLevel:NSPopUpMenuWindowLevel];
         [self setReleasedWhenClosed:NO];
         [self setDisplaysWhenScreenProfileChanges:YES];
-        [self setAcceptsMouseMovedEvents:YES];
         [self setExcludedFromWindowsMenu:NO];
         // appartently this is needed for secondary screens
         [self setFrame:screenFrame display:NO];
