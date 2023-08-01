@@ -1240,7 +1240,9 @@ static NSArray *allMainDocumentPDFViews() {
         [self hideOverviewAnimating:YES];
     } else if ([self interactionMode] != SKNormalMode) {
         if (sender == [self window]) {
-            if ([self canExitFullscreen])
+            if ([self interactionMode] == SKPresentationMode && [self leftSidePaneIsOpen])
+                [self toggleLeftSidePane:sender];
+            else if ([self canExitFullscreen])
                 [self exitFullscreen];
             else if ([self canExitPresentation])
                 [self exitPresentation];
