@@ -585,8 +585,7 @@ static char SKMainWindowContentLayoutObservationContext;
     return hasCrop ? cropBoxes : nil;
 }
 
-- (void)applyChangedCropBoxes:(NSArray *)cropBoxes {
-    PDFDocument *pdfDoc = [self pdfDocument];
+- (void)applyChangedCropBoxes:(NSArray *)cropBoxes inDocument:(PDFDocument *)pdfDoc {
     NSUInteger i, iMax = [pdfDoc pageCount];
     if ([cropBoxes count] == iMax) {
         for (i = 0; i < iMax; i++) {
@@ -617,7 +616,7 @@ static char SKMainWindowContentLayoutObservationContext;
         if (leftWidth && rightWidth)
             [self applyLeftSideWidth:[leftWidth doubleValue] rightSideWidth:[rightWidth doubleValue]];
         
-        [self applyChangedCropBoxes:[setup objectForKey:CROPBOXES_KEY]];
+        [self applyChangedCropBoxes:[setup objectForKey:CROPBOXES_KEY] inDocument:[self pdfDocument]];
         
         NSArray *snapshotSetups = [setup objectForKey:SNAPSHOTS_KEY];
         if ([snapshotSetups count])
@@ -1186,15 +1185,10 @@ static char SKMainWindowContentLayoutObservationContext;
         
         if ([document isLocked] == NO) {
             NSArray *cropBoxes = [savedNormalSetup objectForKey:CROPBOXES_KEY];
-            NSUInteger i, iMax = [document pageCount];
-            if ([cropBoxes count] == iMax) {
-                for (i = 0; i < iMax; i++) {
-                    NSString *box = [cropBoxes objectAtIndex:i];
-                    if ([box isEqualToString:@""] == NO)
-                        [[document pageAtIndex:i] setBounds:NSRectFromString(box) forBox:kPDFDisplayBoxCropBox];
-                }
-            }
+            if ([cropBoxes count])
+                [self applyChangedCropBoxes:cropBoxes inDocument:document];
         }
+        
         [pdfView setDocument:document];
         [[pdfView document] setDelegate:self];
         
@@ -2197,7 +2191,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [pdfView resetHistory];
     }
     
-    [self applyChangedCropBoxes:[savedNormalSetup objectForKey:CROPBOXES_KEY]];
+    [self applyChangedCropBoxes:[savedNormalSetup objectForKey:CROPBOXES_KEY] inDocument:[self pdfDocument]];
     
     NSArray *snapshotSetups = [savedNormalSetup objectForKey:SNAPSHOTS_KEY];
     if ([snapshotSetups count])
