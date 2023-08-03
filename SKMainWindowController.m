@@ -476,18 +476,8 @@ static char SKMainWindowContentLayoutObservationContext;
         [leftSideController.button setEnabled:NO forSegment:SKSidePaneStateOutline];
     
     // Due to a bug in Leopard we should only resize and swap in the PDFView after loading the PDFDocument
-    if ([[pdfView document] isLocked]) {
-        // PDFView has the annoying habit for the password view to force a full window display
-        CGFloat leftWidth = [self leftSideWidth];
-        CGFloat rightWidth = [self rightSideWidth];
-        [self applyLeftSideWidth:0.0 rightSideWidth:0.0];
-        [pdfContentView addSubview:pdfView];
-        [pdfView activateConstraintsToSuperview];
-        [self applyLeftSideWidth:leftWidth rightSideWidth:rightWidth];
-    } else {
-        [pdfContentView addSubview:pdfView];
-        [pdfView activateConstraintsToSuperview];
-    }
+    [pdfContentView addSubview:pdfView];
+    [pdfView activateConstraintsToSuperview];
     
     // get the initial display mode from the PDF if present and not overridden by an explicit setup
     if (hasWindowSetup == NO && [[NSUserDefaults standardUserDefaults] boolForKey:SKUseSettingsFromPDFKey]) {
@@ -1194,13 +1184,7 @@ static char SKMainWindowContentLayoutObservationContext;
             [[pdfView document] setContainingDocument:nil];
         }
         
-        if ([document isLocked] && [pdfView window]) {
-            // PDFView has the annoying habit for the password view to force a full window display
-            CGFloat leftWidth = [self leftSideWidth];
-            CGFloat rightWidth = [self rightSideWidth];
-            [pdfView setDocument:document];
-            [self applyLeftSideWidth:leftWidth rightSideWidth:rightWidth];
-        } else {
+        if ([document isLocked] == NO) {
             NSArray *cropBoxes = [savedNormalSetup objectForKey:CROPBOXES_KEY];
             NSUInteger i, iMax = [document pageCount];
             if ([cropBoxes count] == iMax) {
@@ -1210,8 +1194,8 @@ static char SKMainWindowContentLayoutObservationContext;
                         [[document pageAtIndex:i] setBounds:NSRectFromString(box) forBox:kPDFDisplayBoxCropBox];
                 }
             }
-            [pdfView setDocument:document];
         }
+        [pdfView setDocument:document];
         [[pdfView document] setDelegate:self];
         
         [secondaryPdfView setDocument:document];
