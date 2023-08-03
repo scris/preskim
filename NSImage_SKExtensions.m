@@ -2101,18 +2101,20 @@ static void drawAnchoredNoteBackground() {
 static void drawCircleNoteBackground() {
     [NSGraphicsContext saveGraphicsState];
     [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:2.0 yOffset:-1.0];
-    [[NSColor whiteColor] setFill];
-    NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(3.0, 3.0, 15.0, 14.0)];
-    [path fill];
+    [[NSColor whiteColor] setStroke];
+    NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(4.5, 4.5, 12.0, 11.0)];
+    [path setLineWidth:3.0];
+    [path stroke];
     [NSGraphicsContext restoreGraphicsState];
 }
 
 static void drawSquareNoteBackground() {
     [NSGraphicsContext saveGraphicsState];
     [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:2.0 yOffset:-1.0];
-    [[NSColor whiteColor] setFill];
-    NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(3.0, 3.0, 15.0, 14.0)];
-    [path fill];
+    [[NSColor whiteColor] setStroke];
+    NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(4.5, 4.5, 12.0, 11.0)];
+    [path setLineWidth:3.0];
+    [path stroke];
     [NSGraphicsContext restoreGraphicsState];
 }
 
