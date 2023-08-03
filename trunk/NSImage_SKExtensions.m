@@ -2248,10 +2248,10 @@ static void evaluateLaserPointer(void *info, const CGFloat *in, CGFloat *out) {
     NSInteger i, offset = 3 * ((NSInteger)info % 7);
     for (i = 0; i < 3; i++)
         out[i] = laserPointerRGB[offset + i];
-    CGFloat f = 9.0 * in[0] * in[0];
-    if (f < 1.0) {
+    CGFloat x = M_PI * in[0];
+    if (x < 1.0) {
         for (i = 0; i < 3; i++)
-            out[i] = 1.0 - f + f * out[i];
+            out[i] = 1.0 + x * x * (out[i] - 1.0);
     }
-    out[3] = 0.5 + 0.5 * cos(M_PI * in[0]);
+    out[3] = 0.5 + 0.5 * cos(x);
 }
