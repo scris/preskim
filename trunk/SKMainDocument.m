@@ -1382,7 +1382,9 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                      }
                  }
              }];
-        }
+         } else {
+             [super revertDocumentToSaved:sender];
+         }
     }
 }
 
@@ -1394,8 +1396,10 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 	if ([anItem action] == @selector(revertDocumentToSaved:)) {
         if ([self fileURL] == nil || [[self fileURL] checkResourceIsReachableAndReturnError:NULL] == NO)
             return NO;
-        return [self isDocumentEdited] || [fileUpdateChecker fileChangedOnDisk] ||
-               NSOrderedAscending == [[self fileModificationDate] compare:[[[NSFileManager defaultManager] attributesOfItemAtPath:[[self fileURL] path] error:NULL] fileModificationDate]];
+        if ([self isDocumentEdited] || [fileUpdateChecker fileChangedOnDisk] ||
+               NSOrderedAscending == [[self fileModificationDate] compare:[[[NSFileManager defaultManager] attributesOfItemAtPath:[[self fileURL] path] error:NULL] fileModificationDate]])
+            return YES;
+        return [super validateUserInterfaceItem:anItem];
     } else if ([anItem action] == @selector(printDocument:)) {
         return [[self pdfDocument] allowsPrinting];
     } else if ([anItem action] == @selector(convertNotes:)) {
