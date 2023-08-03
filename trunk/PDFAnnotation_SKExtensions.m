@@ -538,7 +538,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 - (BOOL)isLink { return [[self type] isEqualToString:@"Link"]; }
 
-- (BOOL)isWidget {return NO; }
+- (BOOL)isWidget { return [self widgetType] != kSKNPDFWidgetTypeUnknown; }
 
 - (BOOL)isResizable { return NO; }
 
