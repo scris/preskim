@@ -154,7 +154,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     SKDESTROY(previousButton);
     SKDESTROY(nextButton);
     SKDESTROY(zoomButton);
-    SKDESTROY(zoomSlider);
     SKDESTROY(closeButton);
     [super dealloc];
 }
@@ -188,7 +187,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 - (void)handleScaleChangedNotification:(NSNotification *)notification {
     [zoomButton setState:[[notification object] autoScales] ? NSOnState : NSOffState];
-    [zoomSlider setDoubleValue:log([(PDFView *)[notification object] scaleFactor])];
 }
 
 - (void)handlePageChangedNotification:(NSNotification *)notification {
@@ -495,39 +493,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
             [self setAccessibilityLabel:alternateToolTip];
     }
 }
-
-@end
-
-#pragma mark -
-
-@implementation SKNavigationSliderCell
-
-- (void)drawBarInside:(NSRect)frame flipped:(BOOL)flipped {
-    frame = NSInsetRect(frame, 2.5, 0.0);
-    frame.origin.y = NSMidY(frame) - (flipped ? 2.0 : 3.0);
-    frame.size.height = 5.0;
-	
-    CGFloat alpha = [self isEnabled] ? 0.6 : 0.3;
-    [[NSColor colorWithDeviceWhite:0.3 alpha:alpha] setFill];
-    [[NSColor colorWithDeviceWhite:1.0 alpha:alpha] setStroke];
-    
-	NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:frame xRadius:2.0 yRadius:2.0];
-    [path fill];
-    [path stroke];
-}
-
-- (void)drawKnob:(NSRect)frame {
-	if ([self isEnabled]) {
-        [[NSColor colorWithDeviceWhite:1.0 alpha:[self isHighlighted] ? 0.9 : 0.7] setFill];
-        [NSShadow setShadowWithWhite:0.0 alpha:1.0 blurRadius:2.0 yOffset:0.0];
-    } else {
-        [[NSColor colorWithDeviceWhite:1.0 alpha:0.3] setFill];
-    }
-    
-    [[NSBezierPath bezierPathWithOvalInRect:SKRectFromCenterAndSquareSize(SKCenterPoint(frame), 15.0)] fill];
-}
-
-- (BOOL)_usesCustomTrackImage { return YES; }
 
 @end
 
