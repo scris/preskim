@@ -46,7 +46,6 @@
     SKNavigationButton *nextButton;
     SKNavigationButton *zoomButton;
     SKNavigationButton *closeButton;
-    NSSlider *zoomSlider;
 }
 - (id)initWithPDFView:(SKPDFView *)pdfView;
 - (void)handleScaleChangedNotification:(NSNotification *)notification;
@@ -96,10 +95,6 @@
 @property (nonatomic, retain) NSBezierPath *path, *alternatePath;
 @property (nonatomic, retain) NSString *toolTip, *alternateToolTip;
 
-@end
-
-
-@interface SKNavigationSliderCell : NSSliderCell
 @end
 
 
