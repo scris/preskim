@@ -116,7 +116,7 @@ enum {
 
 @protocol SKPDFViewDelegate;
 
-@class SKReadingBar, SKTransitionController, SKTypeSelectHelper, SKNavigationWindow, SKTextNoteEditor, SKSyncDot, SKLoupeController, SKLayerController;
+@class SKReadingBar, SKTransitionController, SKTypeSelectHelper, SKNavigationWindow, SKCursorStyleWindow, SKTextNoteEditor, SKSyncDot, SKLoupeController, SKLayerController;
 
 @interface SKPDFView : SKBasePDFView {
     SKToolMode toolMode;
@@ -126,6 +126,8 @@ enum {
     
     NSInteger navigationMode;
     SKNavigationWindow *navWindow;
+    
+    SKCursorStyleWindow *cursorWindow;
     
     SKReadingBar *readingBar;
     
@@ -170,6 +172,7 @@ enum {
         unsigned int wantsNewUndoGroup:1;
         unsigned int cursorHidden:1;
         unsigned int useArrowCursorInPresentation:1;
+        unsigned int removeLaserPointerShadow:1;
     } pdfvFlags;
 }
 
@@ -221,6 +224,13 @@ enum {
 - (void)zoomLog:(id)sender;
 - (void)toggleAutoActualSize:(id)sender;
 - (void)exitPresentation:(id)sender;
+
+- (void)showCursorStyleWindow:(id)sender;
+- (void)closeCursorStyleWindow:(id)sender;
+- (NSInteger)cursorStyle;
+- (void)changeCursorStyle:(id)sender;
+- (BOOL)removeCursorShadow;
+- (void)toggleRemoveCursorShadow:(id)sender;
 
 - (void)addAnnotationForContext:(id)sender;
 - (void)addAnnotationWithType:(SKNoteType)annotationType;

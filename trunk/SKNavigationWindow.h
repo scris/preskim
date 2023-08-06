@@ -41,21 +41,32 @@
 
 @class SKPDFView, SKNavigationToolTipView, SKNavigationButton;
 
-@interface SKNavigationWindow : SKAnimatedBorderlessWindow {
+@interface SKHUDWindow : SKAnimatedBorderlessWindow
+- (id)initWithPDFView:(SKPDFView *)pdfView;
+- (void)showForWindow:(NSWindow *)window;
+@end
+    
+
+@interface SKNavigationWindow : SKHUDWindow {
     SKNavigationButton *previousButton;
     SKNavigationButton *nextButton;
     SKNavigationButton *zoomButton;
+    SKNavigationButton *cursorButton;
     SKNavigationButton *closeButton;
 }
-- (id)initWithPDFView:(SKPDFView *)pdfView;
 - (void)handleScaleChangedNotification:(NSNotification *)notification;
 - (void)handlePageChangedNotification:(NSNotification *)notification;
 - (void)handleParentWindowDidResizeNotification:(NSNotification *)notification;
-- (void)showForWindow:(NSWindow *)window;
 @end
 
 
-@interface SKNavigationContentView : NSView;
+@interface SKCursorStyleWindow : SKHUDWindow {
+    NSSegmentedControl *styleButton;
+    NSButton *removeShadowButton;
+    NSButton *closeButton;
+}
+- (void)selectCursorStyle:(NSInteger)style;
+- (void)removeShadow:(BOOL)removeShadow;
 @end
 
 
@@ -99,4 +110,12 @@
 
 
 @interface SKNavigationSeparator : NSView
+@end
+
+
+@interface SKStyleSegmentedControl : NSSegmentedControl
+@end
+
+
+@interface SKStyleSegmentedCell : NSSegmentedCell
 @end

@@ -64,13 +64,14 @@ static inline NSBezierPath *nextButtonPath(NSSize size);
 static inline NSBezierPath *previousButtonPath(NSSize size);
 static inline NSBezierPath *zoomButtonPath(NSSize size);
 static inline NSBezierPath *alternateZoomButtonPath(NSSize size);
+static inline NSBezierPath *cursorButtonPath(NSSize size);
 static inline NSBezierPath *closeButtonPath(NSSize size);
 
-@implementation SKNavigationWindow
+@implementation SKHUDWindow
 
 - (id)initWithPDFView:(SKPDFView *)pdfView {
     NSScreen *screen = [[pdfView window] screen] ?: [NSScreen mainScreen];
-    CGFloat width = 4 * BUTTON_WIDTH + 2 * SEP_WIDTH + 2 * BUTTON_MARGIN;
+    CGFloat width = 5 * BUTTON_WIDTH + 3 * SEP_WIDTH + 2 * BUTTON_MARGIN;
     NSRect contentRect = NSMakeRect(NSMidX([screen frame]) - 0.5 * width, NSMinY([screen frame]) + WINDOW_OFFSET, width, BUTTON_HEIGHT + 2 * BUTTON_MARGIN);
     self = [super initWithContentRect:contentRect];
     if (self) {
@@ -93,6 +94,50 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [contentView release];
         
         SKSetHasDarkAppearance(self);
+        
+    }
+    return self;
+}
+
+- (void)showForWindow:(NSWindow *)window {
+    NSRect frame = [window frame];
+    CGFloat width = NSWidth([self frame]);
+    frame = NSMakeRect(NSMidX(frame) - 0.5 * width, NSMinY(frame) + WINDOW_OFFSET, width, NSHeight([self frame]));
+    [self setFrame:frame display:NO];
+    if ([self parentWindow] == nil) {
+        [self setAlphaValue:0.0];
+        [window addChildWindow:self ordered:NSWindowAbove];
+    }
+    [self fadeIn];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleParentWindowDidResizeNotification:) name:NSWindowDidResizeNotification object:window];
+}
+
+- (void)remove {
+    if ([self parentWindow]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResizeNotification object:[self parentWindow]];
+        [[self parentWindow] removeChildWindow:self];
+    }
+    [super remove];
+}
+
+- (BOOL)isAccessibilityElement {
+    return YES;
+}
+
+- (NSArray *)accessibilityChildren {
+    return NSAccessibilityUnignoredChildren([[self contentView] subviews]);
+}
+
+@end
+
+#pragma mark -
+
+@implementation SKNavigationWindow
+
+- (id)initWithPDFView:(SKPDFView *)pdfView {
+    self = [super initWithPDFView:pdfView];
+    if (self) {
         
         NSRect rect = NSMakeRect(BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
         previousButton = [[SKNavigationButton alloc] initWithFrame:rect];
@@ -139,6 +184,19 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = BUTTON_WIDTH;
+        cursorButton = [[SKNavigationButton alloc] initWithFrame:rect];
+        [cursorButton setTarget:pdfView];
+        [cursorButton setAction:@selector(showCursorStyleWindow:)];
+        [cursorButton setToolTip:NSLocalizedString(@"Cursor", @"Tool tip message")];
+        [cursorButton setPath:cursorButtonPath(rect.size)];
+        [[self contentView] addSubview:cursorButton];
+        
+        rect.origin.x = NSMaxX(rect);
+        rect.size.width = SEP_WIDTH;
+        [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
+        
+        rect.origin.x = NSMaxX(rect);
+        rect.size.width = BUTTON_WIDTH;
         closeButton = [[SKNavigationButton alloc] initWithFrame:rect];
         [closeButton setTarget:pdfView];
         [closeButton setAction:@selector(exitPresentation:)];
@@ -154,30 +212,9 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     SKDESTROY(previousButton);
     SKDESTROY(nextButton);
     SKDESTROY(zoomButton);
+    SKDESTROY(cursorButton);
     SKDESTROY(closeButton);
     [super dealloc];
-}
-
-- (void)showForWindow:(NSWindow *)window {
-    NSRect frame = [window frame];
-    CGFloat width = NSWidth([self frame]);
-    frame = NSMakeRect(NSMidX(frame) - 0.5 * width, NSMinY(frame) + WINDOW_OFFSET, width, BUTTON_HEIGHT + 2 * BUTTON_MARGIN);
-    [self setFrame:frame display:NO];
-    if ([self parentWindow] == nil) {
-        [self setAlphaValue:0.0];
-        [window addChildWindow:self ordered:NSWindowAbove];
-    }
-    [self fadeIn];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleParentWindowDidResizeNotification:) name:NSWindowDidResizeNotification object:window];
-}
-
-- (void)remove {
-    if ([self parentWindow]) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResizeNotification object:[self parentWindow]];
-        [[self parentWindow] removeChildWindow:self];
-    }
-    [super remove];
 }
 
 - (void)orderOut:(id)sender {
@@ -202,28 +239,93 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     [self setFrame:frame display:YES];
 }
 
-- (BOOL)isAccessibilityElement {
-    return YES;
-}
-
-- (NSArray *)accessibilityChildren {
-    return NSAccessibilityUnignoredChildren([[self contentView] subviews]);
-}
-
 @end
 
 #pragma mark -
 
-@implementation SKNavigationContentView
+@implementation SKCursorStyleWindow
 
-- (void)drawRect:(NSRect)rect {
-    [NSGraphicsContext saveGraphicsState];
-    [[NSColor colorWithDeviceWhite:0.0 alpha:0.5] setFill];
-    [[NSColor colorWithDeviceWhite:1.0 alpha:0.2] setStroke];
-    [NSBezierPath setDefaultLineWidth:1.0];
-    [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect([self bounds], 1.0, 1.0) xRadius:CORNER_RADIUS yRadius:CORNER_RADIUS] fill];
-    [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect([self bounds], 0.5, 0.5) xRadius:CORNER_RADIUS yRadius:CORNER_RADIUS] stroke];
-    [NSGraphicsContext restoreGraphicsState];
+- (id)initWithPDFView:(SKPDFView *)pdfView {
+    self = [super initWithPDFView:pdfView];
+    if (self) {
+        
+        NSRect rect;
+        
+        styleButton = [[SKStyleSegmentedControl alloc] init];
+        [styleButton setSegmentCount:8];
+        [styleButton setTrackingMode:NSSegmentSwitchTrackingSelectOne];
+        NSInteger i;
+        for (i = 0; i < 8; i++) {
+            [styleButton setWidth:24.0 forSegment:i];
+            [[styleButton cell] setTag:i - 1 forSegment:i];
+            [styleButton setImage:i > 0 ? [NSImage laserPointerImageWithColor:i - 1] : [[NSCursor arrowCursor] image] forSegment:i];
+        }
+        [styleButton sizeToFit];
+        rect = [styleButton frame];
+        rect.origin.x = rect.origin.y = BUTTON_MARGIN;
+        [styleButton setFrame:rect];
+        [[styleButton cell] selectSegmentWithTag:[pdfView cursorStyle]];
+        [styleButton setTarget:pdfView];
+        [styleButton setAction:@selector(changeCursorStyle:)];
+        if (RUNNING_BEFORE(10_14))
+            [[styleButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+        [[self contentView] addSubview:styleButton];
+        
+        rect.origin.x = NSMaxX(rect);
+        rect.size.width = SEP_WIDTH;
+        [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
+        
+        rect.origin.x = NSMaxX(rect);
+        rect.size.width = NSHeight(rect);
+        removeShadowButton = [[NSButton alloc] initWithFrame:rect];
+        [removeShadowButton setButtonType:NSSwitchButton];
+        [removeShadowButton setTitle:NSLocalizedString(@"Remove shadow", @"Button title")];
+        [removeShadowButton setState:[pdfView removeCursorShadow] ? NSOnState : NSOffState];
+        [removeShadowButton setTarget:pdfView];
+        [removeShadowButton setAction:@selector(toggleRemoveCursorShadow:)];
+        if (RUNNING_BEFORE(10_14))
+            [[removeShadowButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+        [removeShadowButton sizeToFit];
+        rect.size.width = NSWidth([removeShadowButton frame]);
+        [removeShadowButton setFrameOrigin:NSMakePoint(NSMinX(rect), NSMidY(rect) - 0.5 * NSHeight([removeShadowButton frame]))];
+        [[self contentView] addSubview:removeShadowButton];
+        
+        rect.origin.x = NSMaxX(rect);
+        rect.size.width = SEP_WIDTH;
+        [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
+        
+        rect.origin.x = NSMaxX(rect);
+        rect.size.width = NSHeight(rect);
+        closeButton = [[NSButton alloc] initWithFrame:rect];
+        [closeButton setBordered:NO];
+        [closeButton setImage:[NSImage imageNamed:NSImageNameStopProgressTemplate]];
+        [closeButton setTarget:pdfView];
+        [closeButton setAction:@selector(closeCursorStyleWindow:)];
+        if (RUNNING_BEFORE(10_14))
+            [[closeButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+        [[self contentView] addSubview:closeButton];
+        
+        NSScreen *screen = [[pdfView window] screen] ?: [NSScreen mainScreen];
+        NSRect frame = NSMakeRect(NSMidX([screen frame]) - 0.5 * NSWidth(frame), NSMinY([screen frame]) + WINDOW_OFFSET, NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSHeight(rect) + 2.0 * BUTTON_MARGIN + 2.0 * SEP_WIDTH, NSHeight(rect) + 2.0 * BUTTON_MARGIN);
+        [self setFrame:frame display:NO];
+        [(NSVisualEffectView *)[self contentView] setMaskImage:[NSImage maskImageWithSize:frame.size cornerRadius:CORNER_RADIUS]];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    SKDESTROY(styleButton);
+    SKDESTROY(removeShadowButton);
+    SKDESTROY(closeButton);
+    [super dealloc];
+}
+
+- (void)selectCursorStyle:(NSInteger)style {
+    [[styleButton cell] selectSegmentWithTag:style];
+}
+
+- (void)removeShadow:(BOOL)removeShadow {
+    [removeShadowButton setState:removeShadow ? NSOnState : NSOffState];
 }
 
 @end
@@ -494,6 +596,10 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     }
 }
 
+- (NSString *)accessibilityLabel {
+    return [self state] == NSOnState && alternateToolTip ? alternateToolTip : toolTip;
+}
+
 @end
 
 #pragma mark -
@@ -504,6 +610,40 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     NSRect bounds = [self bounds];
     [[NSColor colorWithDeviceWhite:1.0 alpha:0.6] setFill];
     [NSBezierPath fillRect:NSMakeRect(NSMidX(bounds) - 0.5, NSMinY(bounds), 1.0, NSHeight(bounds))];
+}
+
+@end
+
+#pragma mark -
+
+@implementation SKStyleSegmentedControl
+
++ (Class)cellClass { return [SKStyleSegmentedCell class]; }
+
+- (BOOL)allowsVibrancy { return NO; }
+
+@end
+
+#pragma mark -
+
+@implementation SKStyleSegmentedCell
+
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
+    [self drawInteriorWithFrame:cellFrame inView:controlView];
+}
+
+- (void)drawSegment:(NSInteger)segment inFrame:(NSRect)frame withView:(NSView *)controlView {
+    if ([(NSSegmentedControl *)[self controlView] selectedSegment] == segment) {
+        NSRect rect = frame;
+        rect.size.width -= 1.0;
+        rect.size.height -= 1.0;
+        rect.origin.y += 1.0;
+        [NSGraphicsContext saveGraphicsState];
+        [[NSColor colorWithGenericGamma22White:1.0 alpha:0.5] setFill];
+        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:5.0 yRadius:5.0] fill];
+        [NSGraphicsContext restoreGraphicsState];
+    }
+    [super drawSegment:segment inFrame:frame withView:controlView];
 }
 
 @end
@@ -602,6 +742,29 @@ static inline NSBezierPath *alternateZoomButtonPath(NSSize size) {
     }
     
     [path setWindingRule:NSEvenOddWindingRule];
+    
+    return path;
+}
+
+static inline NSBezierPath *cursorButtonPath(NSSize size) {
+    NSRect bounds = {NSZeroPoint, size};
+    NSRect rect = NSInsetRect(bounds, 10.0, 10.0);
+    NSBezierPath *path = [NSBezierPath bezierPath];
+    [path moveToPoint:NSMakePoint(NSMidX(rect) - 2.0, NSMaxY(rect))];
+    [path lineToPoint:NSMakePoint(NSMidX(rect) + 2.0, NSMaxY(rect))];
+    [path lineToPoint:NSMakePoint(NSMidX(rect) + 2.0, NSMidY(rect) + 3.0)];
+    [path lineToPoint:NSMakePoint(NSMidX(rect) + 9.0, NSMidY(rect) + 5.0)];
+    [path lineToPoint:NSMakePoint(NSMidX(rect), NSMinY(rect))];
+    [path lineToPoint:NSMakePoint(NSMidX(rect) - 9.0, NSMidY(rect) + 5.0)];
+    [path lineToPoint:NSMakePoint(NSMidX(rect) - 2.0, NSMidY(rect) + 3.0)];
+    [path closePath];
+    
+    NSAffineTransform *transform = [[[NSAffineTransform alloc] init] autorelease];
+    CGFloat centerX = NSMidX(bounds), centerY = NSMidY(bounds);
+    [transform translateXBy:centerX yBy:centerY];
+    [transform rotateByDegrees:-20.0];
+    [transform translateXBy:-centerX yBy:-centerY];
+    [path transformUsingAffineTransform:transform];
     
     return path;
 }

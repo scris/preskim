@@ -60,5 +60,6 @@
 + (NSCursor *)emptyCursor;
 
 + (NSCursor *)laserPointerCursorWithColor:(NSInteger)color;
++ (NSCursor *)safeLaserPointerCursorWithColor:(NSInteger)color;
 
 @end
