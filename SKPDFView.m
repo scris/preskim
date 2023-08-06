@@ -321,6 +321,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     laserPointerColor = [[NSUserDefaults standardUserDefaults] integerForKey:SKLaserPointerColorKey];
     
     navWindow = nil;
+    cursorWindow = nil;
     
     readingBar = nil;
     
@@ -2065,8 +2066,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
     }
     
-    if (navWindow && [navWindow isVisible] == NO) {
-        if (navigationMode == SKNavigationEverywhere && NSPointInRect([theEvent locationInWindow], [[[self window] contentView] frame])) {
+    if (navigationMode != SKNavigationNone && [navWindow isVisible] == NO) {
+        if (navigationMode == SKNavigationEverywhere && [cursorWindow isVisible] == NO && NSPointInRect([theEvent locationInWindow], [[[self window] contentView] frame])) {
+            if (navWindow == nil)
+                navWindow = [[SKNavigationWindow alloc] initWithPDFView:self];
             [navWindow showForWindow:[self window]];
             NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(navWindow), NSAccessibilityUIElementsKey, nil]);
         } else if (navigationMode == SKNavigationBottom && NSPointInRect([theEvent locationInWindow], SKSliceRect([[[self window] contentView] frame], NAVIGATION_BOTTOM_EDGE_HEIGHT, NSMinYEdge))) {
@@ -3496,10 +3499,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)enableNavigation {
     navigationMode = [[NSUserDefaults standardUserDefaults] integerForKey:SKPresentationNavigationOptionKey];
-    
-    if (navigationMode != SKNavigationNone)
-        navWindow = [[SKNavigationWindow alloc] initWithPDFView:self];
-    
     [self performSelectorOnce:@selector(doAutoHide) afterDelay:AUTO_HIDE_DELAY];
 }
 
@@ -3531,6 +3530,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)showNavWindow {
     if ([navWindow isVisible] == NO && NSPointInRect([[self window] mouseLocationOutsideOfEventStream], SKSliceRect([[[self window] contentView] frame], NAVIGATION_BOTTOM_EDGE_HEIGHT, NSMinYEdge))) {
+        if (navWindow == nil)
+            navWindow = [[SKNavigationWindow alloc] initWithPDFView:self];
         [navWindow showForWindow:[self window]];
         NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(navWindow), NSAccessibilityUIElementsKey, nil]);
     }
@@ -5467,7 +5468,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
 
 - (BOOL)isAccessibilityAlternateUIVisible{
     if (interactionMode == SKPresentationMode) {
-        return [navWindow isVisible];
+        return [navWindow isVisible] || [cursorWindow isVisible];
     } else {
         return [[self delegate] respondsToSelector:@selector(PDFViewIsFindVisible:)] && [[self delegate] PDFViewIsFindVisible:self];
     }
