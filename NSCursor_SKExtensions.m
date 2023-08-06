@@ -231,6 +231,21 @@ static void (*original_hide)(id, SEL) = NULL;
     NSCursor *cursor = (id)[laserPointerCursors pointerAtIndex:color % 7];
     if (nil == cursor) {
         NSImage *cursorImage = [NSImage laserPointerImageWithColor:color];
+        cursor = [[[NSCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(0.5 * [cursorImage size].width, 0.5 * [cursorImage size].height)] autorelease];
+        [laserPointerCursors insertPointer:cursor atIndex:color % 7];
+    }
+    return cursor;
+}
+
++ (NSCursor *)safeLaserPointerCursorWithColor:(NSInteger)color {
+    static NSPointerArray *laserPointerCursors = nil;
+    if (laserPointerCursors == nil) {
+        laserPointerCursors = [[NSPointerArray strongObjectsPointerArray] retain];
+        [laserPointerCursors setCount:7];
+    }
+    NSCursor *cursor = (id)[laserPointerCursors pointerAtIndex:color % 7];
+    if (nil == cursor) {
+        NSImage *cursorImage = [NSImage laserPointerImageWithColor:color];
         cursor = [[[SKLaserPointerCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(0.5 * [cursorImage size].width, 0.5 * [cursorImage size].height)] autorelease];
         [laserPointerCursors insertPointer:cursor atIndex:color % 7];
     }

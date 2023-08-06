@@ -80,6 +80,7 @@
 #import "NSObject_SKExtensions.h"
 #import "SKLoupeController.h"
 #import "PDFDestination_SKExtensions.h"
+#import "NSSegmentedControl_SKExtensions.h"
 
 #define ANNOTATION_MODE_COUNT 9
 #define TOOL_MODE_COUNT 5
@@ -140,6 +141,7 @@ NSString *SKPDFViewNewPageKey = @"newPage";
 #define SKPacerSpeedKey @"SKPacerSpeed"
 #define SKUseArrowCursorInPresentationKey @"SKUseArrowCursorInPresentation"
 #define SKLaserPointerColorKey @"SKLaserPointerColor"
+#define SKRemoveLaserPointerShadowKey @"SKRemoveLaserPointerShadows"
 
 #define SKAnnotationKey @"SKAnnotation"
 
@@ -313,6 +315,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     pdfvFlags.wantsNewUndoGroup = 0;
     pdfvFlags.cursorHidden = 0;
     pdfvFlags.useArrowCursorInPresentation = [[NSUserDefaults standardUserDefaults] boolForKey:SKUseArrowCursorInPresentationKey];
+    pdfvFlags.removeLaserPointerShadow = [[NSUserDefaults standardUserDefaults] boolForKey:SKRemoveLaserPointerShadowKey];
     inKeyWindow = NO;
     
     laserPointerColor = [[NSUserDefaults standardUserDefaults] integerForKey:SKLaserPointerColorKey];
@@ -376,6 +379,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     SKDESTROY(typeSelectHelper);
     SKDESTROY(transitionController);
     SKDESTROY(navWindow);
+    SKDESTROY(cursorWindow);
     SKDESTROY(readingBar);
     SKDESTROY(editor);
     SKDESTROY(highlightAnnotation);
@@ -1696,6 +1700,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     pdfvFlags.useArrowCursorInPresentation = pdfvFlags.useArrowCursorInPresentation == NO;
     [self setCursorForMouse:nil];
     [[NSUserDefaults standardUserDefaults] setBool:pdfvFlags.useArrowCursorInPresentation forKey:SKUseArrowCursorInPresentationKey];
+    [cursorWindow selectCursorStyle:[self cursorStyle]];
 }
 
 - (void)nextLaserPointerColor:(id)sender {
@@ -1704,6 +1709,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [self setCursorForMouse:nil];
     [self performSelectorOnce:@selector(doAutoHide) afterDelay:AUTO_HIDE_DELAY];
     [[NSUserDefaults standardUserDefaults] setInteger:laserPointerColor forKey:SKLaserPointerColorKey];
+    [cursorWindow selectCursorStyle:[self cursorStyle]];
 }
 
 - (void)previousLaserPointerColor:(id)sender {
@@ -1712,6 +1718,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     [self setCursorForMouse:nil];
     [self performSelectorOnce:@selector(doAutoHide) afterDelay:AUTO_HIDE_DELAY];
     [[NSUserDefaults standardUserDefaults] setInteger:laserPointerColor forKey:SKLaserPointerColorKey];
+    [cursorWindow selectCursorStyle:[self cursorStyle]];
 }
 
 - (void)nextToolMode:(id)sender {
@@ -3506,6 +3513,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [navWindow remove];
         SKDESTROY(navWindow);
     }
+    if (cursorWindow) {
+        [cursorWindow remove];
+        SKDESTROY(cursorWindow);
+    }
 }
 
 - (void)doAutoHide {
@@ -3523,6 +3534,46 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [navWindow showForWindow:[self window]];
         NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(navWindow), NSAccessibilityUIElementsKey, nil]);
     }
+}
+
+- (void)showCursorStyleWindow:(id)sender {
+    if ([cursorWindow isVisible] == NO) {
+        if (cursorWindow == nil)
+            cursorWindow = [[SKCursorStyleWindow alloc] initWithPDFView:self];
+        [navWindow fadeOut];
+        [cursorWindow showForWindow:[self window]];
+        NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(cursorWindow), NSAccessibilityUIElementsKey, nil]);
+    }
+}
+
+- (void)closeCursorStyleWindow:(id)sender {
+    [cursorWindow fadeOut];
+}
+
+- (NSInteger)cursorStyle {
+    return pdfvFlags.useArrowCursorInPresentation ? -1 : laserPointerColor;
+}
+
+- (void)changeCursorStyle:(id)sender {
+    NSInteger style = [sender selectedTag];
+    if (style < 0) {
+        pdfvFlags.useArrowCursorInPresentation = 1;
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SKUseArrowCursorInPresentationKey];
+    } else {
+        pdfvFlags.useArrowCursorInPresentation = 0;
+        laserPointerColor = style % 7;
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:SKUseArrowCursorInPresentationKey];
+        [[NSUserDefaults standardUserDefaults] setInteger:laserPointerColor forKey:SKLaserPointerColorKey];
+    }
+}
+
+- (BOOL)removeCursorShadow {
+    return pdfvFlags.removeLaserPointerShadow;
+}
+
+- (void)toggleRemoveCursorShadow:(id)sender {
+    pdfvFlags.removeLaserPointerShadow = pdfvFlags.removeLaserPointerShadow == NO;
+    [[NSUserDefaults standardUserDefaults] setBool:pdfvFlags.removeLaserPointerShadow forKey:SKRemoveLaserPointerShadowKey];
 }
 
 #pragma mark Event handling
@@ -5221,7 +5272,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     NSInteger modifiers = [theEvent standardModifierFlags];
     
     if ([[self document] isLocked]) {
-    } else if (NSPointInRect(p, [self convertRect:[self visibleContentRect] toView:nil]) == NO || ([navWindow isVisible] && NSPointInRect([theEvent locationOnScreen], [navWindow frame]))) {
+    } else if (NSPointInRect(p, [self convertRect:[self visibleContentRect] toView:nil]) == NO || ([navWindow isVisible] && NSPointInRect([theEvent locationOnScreen], [navWindow frame])) || ([cursorWindow isVisible] && NSPointInRect([theEvent locationOnScreen], [cursorWindow frame]))) {
         area = kPDFNoArea;
     } else if (interactionMode == SKPresentationMode) {
         area = (area & kPDFLinkArea) | kPDFPageArea;
@@ -5290,9 +5341,16 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
 - (void)setCursorForAreaOfInterest:(PDFAreaOfInterest)area {
     if ((area & kPDFLinkArea))
         [[NSCursor pointingHandCursor] set];
-    else if (interactionMode == SKPresentationMode)
-        [pdfvFlags.cursorHidden ? [NSCursor emptyCursor] : pdfvFlags.useArrowCursorInPresentation || area == kPDFNoArea ? [NSCursor arrowCursor] : [NSCursor laserPointerCursorWithColor:laserPointerColor] set];
-    else if ((area & SKSpecialToolArea))
+    else if (interactionMode == SKPresentationMode) {
+        if (pdfvFlags.cursorHidden)
+            [[NSCursor emptyCursor] set];
+        else if (pdfvFlags.useArrowCursorInPresentation || area == kPDFNoArea)
+            [[NSCursor arrowCursor] set];
+        else if (pdfvFlags.removeLaserPointerShadow)
+            [[NSCursor safeLaserPointerCursorWithColor:laserPointerColor] set];
+        else
+            [[NSCursor laserPointerCursorWithColor:laserPointerColor] set];
+    } else if ((area & SKSpecialToolArea))
         [[NSCursor arrowCursor] set];
     else if ((area & SKTemporaryToolArea))
         [[self cursorForTemporaryToolMode] set];
@@ -5394,6 +5452,10 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     if (interactionMode == SKPresentationMode) {
         if ([navWindow isVisible]) {
             [navWindow fadeOut];
+            NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, nil);
+        }
+        if ([cursorWindow isVisible]) {
+            [cursorWindow fadeOut];
             NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, nil);
         }
     } else if ([[self delegate] respondsToSelector:@selector(PDFViewPerformHideFind:)]) {
