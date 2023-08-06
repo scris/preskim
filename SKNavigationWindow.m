@@ -269,6 +269,15 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [styleButton setAction:@selector(changeCursorStyle:)];
         if (RUNNING_BEFORE(10_14))
             [[styleButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+        NSArray *segments = [NSAccessibilityUnignoredDescendant(styleButton) accessibilityChildren];
+        [[segments objectAtIndex:0] setAccessibilityLabel:NSLocalizedString(@"arrow", @"Accessibility description")];
+        [[segments objectAtIndex:1] setAccessibilityLabel:NSLocalizedString(@"red", @"Accessibility description")];
+        [[segments objectAtIndex:2] setAccessibilityLabel:NSLocalizedString(@"orange", @"Accessibility description")];
+        [[segments objectAtIndex:3] setAccessibilityLabel:NSLocalizedString(@"yellow", @"Accessibility description")];
+        [[segments objectAtIndex:4] setAccessibilityLabel:NSLocalizedString(@"green", @"Accessibility description")];
+        [[segments objectAtIndex:5] setAccessibilityLabel:NSLocalizedString(@"blue", @"Accessibility description")];
+        [[segments objectAtIndex:6] setAccessibilityLabel:NSLocalizedString(@"indigo", @"Accessibility description")];
+        [[segments objectAtIndex:7] setAccessibilityLabel:NSLocalizedString(@"violet", @"Accessibility description")];
         [[self contentView] addSubview:styleButton];
         
         rect.origin.x = NSMaxX(rect);
@@ -303,6 +312,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [closeButton setAction:@selector(closeCursorStyleWindow:)];
         if (RUNNING_BEFORE(10_14))
             [[closeButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+        [[closeButton cell] setAccessibilityLabel:NSLocalizedString(@"close", @"Accessibility description")];
         [[self contentView] addSubview:closeButton];
         
         NSScreen *screen = [[pdfView window] screen] ?: [NSScreen mainScreen];
