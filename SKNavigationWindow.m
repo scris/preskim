@@ -306,7 +306,11 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [[self contentView] addSubview:closeButton];
         
         NSScreen *screen = [[pdfView window] screen] ?: [NSScreen mainScreen];
-        NSRect frame = NSMakeRect(NSMidX([screen frame]) - 0.5 * NSWidth(frame), NSMinY([screen frame]) + WINDOW_OFFSET, NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSHeight(rect) + 2.0 * BUTTON_MARGIN + 2.0 * SEP_WIDTH, NSHeight(rect) + 2.0 * BUTTON_MARGIN);
+        NSRect frame;
+        frame.size.width = NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSHeight(rect) + 2.0 * BUTTON_MARGIN + 2.0 * SEP_WIDTH;
+        frame.size.height = NSHeight(rect) + 2.0 * BUTTON_MARGIN;
+        frame.origin.x = NSMidX([screen frame]) - 0.5 * NSWidth(frame);
+        frame.origin.y = NSMinY([screen frame]) + WINDOW_OFFSET;
         [self setFrame:frame display:NO];
         [(NSVisualEffectView *)[self contentView] setMaskImage:[NSImage maskImageWithSize:frame.size cornerRadius:CORNER_RADIUS]];
     }
