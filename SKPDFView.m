@@ -3538,10 +3538,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)showCursorStyleWindow:(id)sender {
+    [navWindow fadeOut];
     if ([cursorWindow isVisible] == NO) {
         if (cursorWindow == nil)
             cursorWindow = [[SKCursorStyleWindow alloc] initWithPDFView:self];
-        [navWindow fadeOut];
         [cursorWindow showForWindow:[self window]];
         NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self documentView]), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(cursorWindow), NSAccessibilityUIElementsKey, nil]);
     }
