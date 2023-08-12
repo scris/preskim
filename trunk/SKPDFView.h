@@ -142,6 +142,8 @@ enum {
 	PDFAnnotation *currentAnnotation;
 	PDFAnnotation *highlightAnnotation;
     
+    NSMutableArray *temporaryAnnotations;
+    
     SKTextNoteEditor *editor;
     
     NSRect selectionRect;
