@@ -377,6 +377,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     // we should have been cleaned up in setDelegate:nil which is called from windowWillClose:
     SKDESTROY(syncDot);
     SKDESTROY(currentAnnotation);
+    SKDESTROY(temporaryAnnotations);
     SKDESTROY(typeSelectHelper);
     SKDESTROY(transitionController);
     SKDESTROY(navWindow);
@@ -730,6 +731,15 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [NSCursor setHiddenUntilMouseMoves:NO];
             if ([[self documentView] isHidden])
                 [[self documentView] setHidden:NO];
+            if (temporaryAnnotations) {
+                for (PDFAnnotation *annotation in temporaryAnnotations) {
+                    PDFPage *page = [annotation page];
+                    [self setNeedsDisplayForAnnotation:annotation];
+                    [page removeAnnotation:annotation];
+                    [self annotationsChangedOnPage:page];
+                }
+                SKDESTROY(temporaryAnnotations);
+            }
         }
         interactionMode = newInteractionMode;
         if (interactionMode == SKPresentationMode) {
@@ -1941,9 +1951,13 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self setCurrentAnnotation:nil];
         } else if ((area & kPDFLinkArea)) {
             [super mouseDown:theEvent];
-        } else if (([[self window] styleMask] & NSWindowStyleMaskResizable) != 0 && [NSApp willDragMouse]) {
+        } else if (([[self window] styleMask] & NSWindowStyleMaskResizable) != 0 && NSEqualRects([[self window] frame], [[[self window] screen] frame]) == NO && [NSApp willDragMouse]) {
             [[NSCursor closedHandCursor] set];
             [self doDragWindowWithEvent:theEvent];
+        } else if ([NSApp willDragMouse]) {
+            [[NSCursor arrowCursor] set];
+            [self doDrawFreehandNoteWithEvent:theEvent];
+            [self setCurrentAnnotation:nil];
         } else {
             [self goToNextPage:self];
             // Eat up drag events because we don't want to select
@@ -4561,9 +4575,18 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [annotation setBorder:[currentAnnotation border]];
             [annotation setString:[currentAnnotation string]];
         }
-        [annotation registerUserName]; 
-        [self addAnnotation:annotation toPage:page];
-        [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
+        if (interactionMode != SKPresentationMode) {
+            [annotation registerUserName];
+            [self addAnnotation:annotation toPage:page];
+            [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
+        } else {
+            if (temporaryAnnotations == nil)
+                temporaryAnnotations = [[NSMutableArray alloc] init];
+            [temporaryAnnotations addObject:annotation];
+            [page addAnnotation:annotation];
+            [self setNeedsDisplayForAnnotation:annotation];
+            [self annotationsChangedOnPage:page];
+        }
         
         [paths release];
         [annotation release];
@@ -4571,7 +4594,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (currentAnnotation) {
             [self removeCurrentAnnotation:nil];
             [self setCurrentAnnotation:annotation];
-        } else if (([theEvent modifierFlags] & (NSEventModifierFlagShift | NSEventModifierFlagCapsLock))) {
+        } else if (interactionMode != SKPresentationMode && ([theEvent modifierFlags] & (NSEventModifierFlagShift | NSEventModifierFlagCapsLock))) {
             [self setCurrentAnnotation:annotation];
         }
     } else if (([theEvent modifierFlags] & NSEventModifierFlagCapsLock)) {
