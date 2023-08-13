@@ -44,6 +44,7 @@
 @interface SKHUDWindow : SKAnimatedBorderlessWindow
 - (id)initWithPDFView:(SKPDFView *)pdfView;
 - (void)showForWindow:(NSWindow *)window;
+- (void)handleParentWindowDidResizeNotification:(NSNotification *)notification;
 @end
     
 
@@ -56,7 +57,6 @@
 }
 - (void)handleScaleChangedNotification:(NSNotification *)notification;
 - (void)handlePageChangedNotification:(NSNotification *)notification;
-- (void)handleParentWindowDidResizeNotification:(NSNotification *)notification;
 @end
 
 

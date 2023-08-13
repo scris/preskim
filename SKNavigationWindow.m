@@ -121,6 +121,14 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     [super remove];
 }
 
+- (void)handleParentWindowDidResizeNotification:(NSNotification *)notification {
+    NSWindow *window = [self parentWindow];
+    NSRect frame = [window frame];
+    frame.origin = NSMakePoint(NSMidX(frame) - 0.5 * NSWidth([self frame]), NSMinY(frame) + WINDOW_OFFSET);
+    frame.size = [self frame].size;
+    [self setFrame:frame display:YES];
+}
+
 - (BOOL)isAccessibilityElement {
     return YES;
 }
@@ -238,14 +246,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (void)handlePageChangedNotification:(NSNotification *)notification {
     [previousButton setEnabled:[[notification object] canGoToPreviousPage]];
     [nextButton setEnabled:[[notification object] canGoToNextPage]];
-}
-
-- (void)handleParentWindowDidResizeNotification:(NSNotification *)notification {
-    NSWindow *window = [self parentWindow];
-    NSRect frame = [window frame];
-    CGFloat width = NSWidth([self frame]);
-    frame = NSMakeRect(NSMidX(frame) - 0.5 * width, NSMinY(frame) + WINDOW_OFFSET, width, BUTTON_HEIGHT + 2 * BUTTON_MARGIN);
-    [self setFrame:frame display:YES];
 }
 
 @end
