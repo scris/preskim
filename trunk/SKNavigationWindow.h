@@ -62,7 +62,8 @@
 
 @interface SKCursorStyleWindow : SKHUDWindow {
     NSSegmentedControl *styleButton;
-    NSButton *removeShadowButton;
+    NSSegmentedControl *removeShadowButton;
+    NSSegmentedControl *drawButton;
     NSButton *closeButton;
 }
 - (void)selectCursorStyle:(NSInteger)style;
@@ -113,9 +114,9 @@
 @end
 
 
-@interface SKStyleSegmentedControl : NSSegmentedControl
+@interface SKHUDSegmentedControl : NSSegmentedControl
 @end
 
 
-@interface SKStyleSegmentedCell : NSSegmentedCell
+@interface SKHUDSegmentedCell : NSSegmentedCell
 @end

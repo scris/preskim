@@ -52,6 +52,7 @@
 #define BUTTON_HEIGHT 50.0
 #define SLIDER_WIDTH 100.0
 #define SEP_WIDTH 21.0
+#define SMALL_SEP_WIDTH 7.0
 #define BUTTON_MARGIN 7.0
 #define WINDOW_OFFSET 20.0
 #define LABEL_OFFSET 10.0
@@ -88,7 +89,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [contentView setMaterial:RUNNING_BEFORE(10_14) ? NSVisualEffectMaterialDark : NSVisualEffectMaterialFullScreenUI];
 #pragma clang diagnostic pop
         [contentView setState:NSVisualEffectStateActive];
-        [contentView setMaskImage:[NSImage maskImageWithSize:contentRect.size cornerRadius:CORNER_RADIUS]];
         
         [self setContentView:contentView];
         [contentView release];
@@ -203,6 +203,15 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [closeButton setToolTip:NSLocalizedString(@"Close", @"Tool tip message")];
         [closeButton setPath:closeButtonPath(rect.size)];
         [[self contentView] addSubview:closeButton];
+        
+        NSScreen *screen = [[pdfView window] screen] ?: [NSScreen mainScreen];
+        NSRect frame;
+        frame.size.width = 5 * BUTTON_WIDTH + 3 * SEP_WIDTH + 2 * BUTTON_MARGIN;
+        frame.size.height = BUTTON_HEIGHT + 2.0 * BUTTON_MARGIN;
+        frame.origin.x = NSMidX([screen frame]) - 0.5 * NSWidth(frame);
+        frame.origin.y = NSMinY([screen frame]) + WINDOW_OFFSET;
+        [self setFrame:frame display:NO];
+        [(NSVisualEffectView *)[self contentView] setMaskImage:[NSImage maskImageWithSize:frame.size cornerRadius:CORNER_RADIUS]];
     }
     return self;
 }
@@ -251,7 +260,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         NSRect rect;
         
-        styleButton = [[SKStyleSegmentedControl alloc] init];
+        styleButton = [[SKHUDSegmentedControl alloc] init];
         [styleButton setSegmentCount:8];
         [styleButton setTrackingMode:NSSegmentSwitchTrackingSelectOne];
         NSInteger i;
@@ -281,29 +290,45 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [[self contentView] addSubview:styleButton];
         
         rect.origin.x = NSMaxX(rect);
-        rect.size.width = SEP_WIDTH;
-        [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
-        
-        rect.origin.x = NSMaxX(rect);
         rect.size.width = NSHeight(rect);
-        removeShadowButton = [[NSButton alloc] initWithFrame:rect];
-        [removeShadowButton setButtonType:NSSwitchButton];
-        [removeShadowButton setTitle:NSLocalizedString(@"Remove shadow", @"Button title")];
-        [removeShadowButton setState:[pdfView removeCursorShadow] ? NSOnState : NSOffState];
+        removeShadowButton = [[SKHUDSegmentedControl alloc] initWithFrame:rect];
+        [removeShadowButton setSegmentCount:1];
+        [removeShadowButton setTrackingMode:NSSegmentSwitchTrackingSelectAny];
+        [removeShadowButton setLabel:NSLocalizedString(@"Remove shadow", @"Button title") forSegment:0];
+        [removeShadowButton setSelected:[pdfView removeCursorShadow] forSegment:0];
         [removeShadowButton setTarget:pdfView];
         [removeShadowButton setAction:@selector(toggleRemoveCursorShadow:)];
         if (RUNNING_BEFORE(10_14))
             [[removeShadowButton cell] setBackgroundStyle:NSBackgroundStyleDark];
         [removeShadowButton sizeToFit];
         rect.size.width = NSWidth([removeShadowButton frame]);
-        [removeShadowButton setFrameOrigin:NSMakePoint(NSMinX(rect), NSMidY(rect) - 0.5 * NSHeight([removeShadowButton frame]))];
         [[self contentView] addSubview:removeShadowButton];
         
-        rect.origin.x = NSMaxX(rect);
-        rect.size.width = SEP_WIDTH;
+        rect.origin.x = NSMaxX(rect) - SMALL_SEP_WIDTH;
+        rect.size.width = SMALL_SEP_WIDTH;
         [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
         
+        rect.origin.x = NSMaxX(rect) + SMALL_SEP_WIDTH;
+        rect.size.width = NSHeight(rect);
+        drawButton = [[SKHUDSegmentedControl alloc] initWithFrame:rect];
+        [drawButton setSegmentCount:1];
+        [drawButton setTrackingMode:NSSegmentSwitchTrackingSelectAny];
+        [drawButton setWidth:24.0 forSegment:0];
+        [drawButton setImage:[NSImage imageNamed:SKImageNameInkNote] forSegment:0];
+        [drawButton setSelected:[pdfView drawInPresentation] forSegment:0];
+        [drawButton setTarget:pdfView];
+        [drawButton setAction:@selector(toggleDrawInPresentation:)];
+        if (RUNNING_BEFORE(10_14))
+            [[drawButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+        [drawButton sizeToFit];
+        rect.size.width = NSWidth([drawButton frame]);
+        [[self contentView] addSubview:drawButton];
+        
         rect.origin.x = NSMaxX(rect);
+        rect.size.width = SMALL_SEP_WIDTH;
+        [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
+        
+        rect.origin.x = NSMaxX(rect) + SMALL_SEP_WIDTH;
         rect.size.width = NSHeight(rect);
         closeButton = [[NSButton alloc] initWithFrame:rect];
         [closeButton setBordered:NO];
@@ -317,7 +342,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         NSScreen *screen = [[pdfView window] screen] ?: [NSScreen mainScreen];
         NSRect frame;
-        frame.size.width = NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSHeight(rect) + 2.0 * BUTTON_MARGIN + 2.0 * SEP_WIDTH;
+        frame.size.width = NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSWidth([drawButton frame]) + NSHeight(rect) + 2.0 * BUTTON_MARGIN + 3.0 * SMALL_SEP_WIDTH;
         frame.size.height = NSHeight(rect) + 2.0 * BUTTON_MARGIN;
         frame.origin.x = NSMidX([screen frame]) - 0.5 * NSWidth(frame);
         frame.origin.y = NSMinY([screen frame]) + WINDOW_OFFSET;
@@ -330,6 +355,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (void)dealloc {
     SKDESTROY(styleButton);
     SKDESTROY(removeShadowButton);
+    SKDESTROY(drawButton);
     SKDESTROY(closeButton);
     [super dealloc];
 }
@@ -339,7 +365,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 }
 
 - (void)removeShadow:(BOOL)removeShadow {
-    [removeShadowButton setState:removeShadow ? NSOnState : NSOffState];
+    [removeShadowButton setSelected:removeShadow forSegment:0];
 }
 
 @end
@@ -630,9 +656,9 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 #pragma mark -
 
-@implementation SKStyleSegmentedControl
+@implementation SKHUDSegmentedControl
 
-+ (Class)cellClass { return [SKStyleSegmentedCell class]; }
++ (Class)cellClass { return [SKHUDSegmentedCell class]; }
 
 - (BOOL)allowsVibrancy { return NO; }
 
@@ -640,14 +666,14 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 #pragma mark -
 
-@implementation SKStyleSegmentedCell
+@implementation SKHUDSegmentedCell
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
     [self drawInteriorWithFrame:cellFrame inView:controlView];
 }
 
 - (void)drawSegment:(NSInteger)segment inFrame:(NSRect)frame withView:(NSView *)controlView {
-    if ([(NSSegmentedControl *)[self controlView] selectedSegment] == segment) {
+    if ([self isSelectedForSegment:segment]) {
         NSRect rect = frame;
         rect.size.width -= 1.0;
         rect.size.height -= 1.0;
