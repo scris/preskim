@@ -142,6 +142,7 @@ NSString *SKPDFViewNewPageKey = @"newPage";
 #define SKUseArrowCursorInPresentationKey @"SKUseArrowCursorInPresentation"
 #define SKLaserPointerColorKey @"SKLaserPointerColor"
 #define SKRemoveLaserPointerShadowKey @"SKRemoveLaserPointerShadows"
+#define SKDisableDrawingInPresentationKey @"SKDisableDrawingInPresentation"
 
 #define SKAnnotationKey @"SKAnnotation"
 
@@ -316,6 +317,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     pdfvFlags.cursorHidden = 0;
     pdfvFlags.useArrowCursorInPresentation = [[NSUserDefaults standardUserDefaults] boolForKey:SKUseArrowCursorInPresentationKey];
     pdfvFlags.removeLaserPointerShadow = [[NSUserDefaults standardUserDefaults] boolForKey:SKRemoveLaserPointerShadowKey];
+    pdfvFlags.drawInPresentation = NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableDrawingInPresentationKey];
     inKeyWindow = NO;
     
     laserPointerColor = [[NSUserDefaults standardUserDefaults] integerForKey:SKLaserPointerColorKey];
@@ -378,6 +380,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     SKDESTROY(syncDot);
     SKDESTROY(currentAnnotation);
     SKDESTROY(temporaryAnnotations);
+    SKDESTROY(temporaryUndoManager);
     SKDESTROY(typeSelectHelper);
     SKDESTROY(transitionController);
     SKDESTROY(navWindow);
@@ -659,6 +662,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (NSUndoManager *)undoManager {
+    if (interactionMode == SKPresentationMode) {
+        if (temporaryUndoManager == nil)
+            temporaryUndoManager = [[NSUndoManager alloc] init];
+        return temporaryUndoManager;
+    }
     NSUndoManager *undoManager = [super undoManager];
     if (undoManager == nil && [[self delegate] respondsToSelector:@selector(document)])
         undoManager = [[(NSWindowController *)[self delegate] document] undoManager];
@@ -739,6 +747,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                     [self annotationsChangedOnPage:page];
                 }
                 SKDESTROY(temporaryAnnotations);
+                SKDESTROY(temporaryUndoManager);
             }
         }
         interactionMode = newInteractionMode;
@@ -1954,7 +1963,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         } else if (([[self window] styleMask] & NSWindowStyleMaskResizable) != 0 && NSEqualRects([[self window] frame], [[[self window] screen] frame]) == NO && [NSApp willDragMouse]) {
             [[NSCursor closedHandCursor] set];
             [self doDragWindowWithEvent:theEvent];
-        } else if ([NSApp willDragMouse]) {
+        } else if (pdfvFlags.drawInPresentation && [NSApp willDragMouse]) {
             [[NSCursor arrowCursor] set];
             [self doDrawFreehandNoteWithEvent:theEvent];
             [self setCurrentAnnotation:nil];
@@ -2934,6 +2943,29 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [oldPage release];
 }
 
+- (void)addTemporaryAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page {
+    [[[self undoManager] prepareWithInvocationTarget:self] removeTemporaryAnnotation:annotation];
+    if (temporaryAnnotations == nil)
+        temporaryAnnotations = [[NSMutableArray alloc] init];
+    [temporaryAnnotations addObject:annotation];
+    [page addAnnotation:annotation];
+    [self setNeedsDisplayForAnnotation:annotation];
+    [self annotationsChangedOnPage:page];
+}
+
+- (void)removeTemporaryAnnotation:(PDFAnnotation *)annotation {
+    PDFAnnotation *wasAnnotation = [annotation retain];
+    PDFPage *page = [[wasAnnotation page] retain];
+    
+    [[[self undoManager] prepareWithInvocationTarget:self] addTemporaryAnnotation:wasAnnotation toPage:page];
+    [self setNeedsDisplayForAnnotation:wasAnnotation];
+    [temporaryAnnotations removeObject:annotation];
+    [page removeAnnotation:wasAnnotation];
+    [self annotationsChangedOnPage:page];
+    [wasAnnotation release];
+    [page release];
+}
+
 - (void)editThisAnnotation:(id)sender {
     [self editAnnotation:[sender representedObject]];
 }
@@ -3589,6 +3621,15 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)toggleRemoveCursorShadow:(id)sender {
     pdfvFlags.removeLaserPointerShadow = pdfvFlags.removeLaserPointerShadow == NO;
     [[NSUserDefaults standardUserDefaults] setBool:pdfvFlags.removeLaserPointerShadow forKey:SKRemoveLaserPointerShadowKey];
+}
+
+- (BOOL)drawInPresentation {
+    return pdfvFlags.removeLaserPointerShadow;
+}
+
+- (void)toggleDrawInPresentation:(id)sender {
+    pdfvFlags.drawInPresentation = pdfvFlags.drawInPresentation == NO;
+    [[NSUserDefaults standardUserDefaults] setBool:NO == pdfvFlags.drawInPresentation forKey:SKDisableDrawingInPresentationKey];
 }
 
 #pragma mark Event handling
@@ -4580,12 +4621,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [self addAnnotation:annotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
         } else {
-            if (temporaryAnnotations == nil)
-                temporaryAnnotations = [[NSMutableArray alloc] init];
-            [temporaryAnnotations addObject:annotation];
-            [page addAnnotation:annotation];
-            [self setNeedsDisplayForAnnotation:annotation];
-            [self annotationsChangedOnPage:page];
+            [self addTemporaryAnnotation:annotation toPage:page];
         }
         
         [paths release];

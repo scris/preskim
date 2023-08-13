@@ -143,6 +143,7 @@ enum {
 	PDFAnnotation *highlightAnnotation;
     
     NSMutableArray *temporaryAnnotations;
+    NSUndoManager *temporaryUndoManager;
     
     SKTextNoteEditor *editor;
     
@@ -175,6 +176,7 @@ enum {
         unsigned int cursorHidden:1;
         unsigned int useArrowCursorInPresentation:1;
         unsigned int removeLaserPointerShadow:1;
+        unsigned int drawInPresentation:1;
     } pdfvFlags;
 }
 
@@ -233,6 +235,8 @@ enum {
 - (void)changeCursorStyle:(id)sender;
 - (BOOL)removeCursorShadow;
 - (void)toggleRemoveCursorShadow:(id)sender;
+- (BOOL)drawInPresentation;
+- (void)toggleDrawInPresentation:(id)sender;
 
 - (void)addAnnotationForContext:(id)sender;
 - (void)addAnnotationWithType:(SKNoteType)annotationType;

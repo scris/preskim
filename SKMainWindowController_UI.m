@@ -312,6 +312,12 @@
     return fieldEditor;
 }
 
+- (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)sender {
+    if ([self interactionMode] == SKPresentationMode)
+        return [pdfView undoManager];
+    return nil;
+}
+
 - (void)window:(NSWindow *)sender willSendEvent:(NSEvent *)event {
     [[SKImageToolTipWindow sharedToolTipWindow] orderOut:nil];
     
