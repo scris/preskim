@@ -740,12 +740,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             if ([[self documentView] isHidden])
                 [[self documentView] setHidden:NO];
             if (temporaryAnnotations) {
-                for (PDFAnnotation *annotation in temporaryAnnotations) {
-                    PDFPage *page = [annotation page];
-                    [self setNeedsDisplayForAnnotation:annotation];
-                    [page removeAnnotation:annotation];
-                    [self annotationsChangedOnPage:page];
-                }
+                for (PDFAnnotation *annotation in temporaryAnnotations)
+                    [self removeTemporaryAnnotation:annotation];
                 SKDESTROY(temporaryAnnotations);
                 SKDESTROY(temporaryUndoManager);
             }
@@ -2947,10 +2943,12 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [[[self undoManager] prepareWithInvocationTarget:self] removeTemporaryAnnotation:annotation];
     if (temporaryAnnotations == nil)
         temporaryAnnotations = [[NSMutableArray alloc] init];
+    [annotation setShouldPrint:NO];
     [temporaryAnnotations addObject:annotation];
     [page addAnnotation:annotation];
     [self setNeedsDisplayForAnnotation:annotation];
     [self annotationsChangedOnPage:page];
+    [(SKMainWindowController *)[[self window] windowController] updateThumbnailAtPageIndex:[page pageIndex]];
 }
 
 - (void)removeTemporaryAnnotation:(PDFAnnotation *)annotation {
@@ -2963,6 +2961,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [page removeAnnotation:wasAnnotation];
     [self annotationsChangedOnPage:page];
     [wasAnnotation release];
+    [(SKMainWindowController *)[[self window] windowController] updateThumbnailAtPageIndex:[page pageIndex]];
     [page release];
 }
 
