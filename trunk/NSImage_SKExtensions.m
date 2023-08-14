@@ -187,6 +187,7 @@ NSString *SKImageNameSnapshotViewAdorn = @"SnapshotViewAdorn";
 NSString *SKImageNameFindViewAdorn = @"FindViewAdorn";
 NSString *SKImageNameGroupedFindViewAdorn = @"GroupedFindViewAdorn";
 NSString *SKImageNameTextToolAdorn = @"TextToolAdorn";
+NSString *SKImageNameInkToolAdorn = @"InkToolAdorn";
 
 NSString *SKImageNameTextAlignLeft = @"TextAlignLeft";
 NSString *SKImageNameTextAlignCenter = @"TextAlignCenter";
@@ -1442,7 +1443,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
 
 + (void)makeAdornImages {
     
-    MAKE_IMAGE(SKImageNameOutlineViewAdorn, YES, 25.0, 14.0, 
+    MAKE_IMAGE(SKImageNameOutlineViewAdorn, YES, 25.0, 14.0,
         [[NSColor blackColor] setStroke];
         NSBezierPath *path = [NSBezierPath bezierPath];
         [path moveToPoint:NSMakePoint(7.0, 2.5)];
@@ -1545,6 +1546,18 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path moveToPoint:NSMakePoint(6.0 - NSMidX([font boundingRectForGlyph:glyph]), 2.0)];
         [path appendBezierPathWithGlyph:glyph inFont:font];
         [path fill];
+    );
+    
+    MAKE_IMAGE(SKImageNameInkToolAdorn, YES, 24.0, 24.0,
+        NSAffineTransform *t = [NSAffineTransform transform];
+        [t translateXBy:1.5 yBy:5.5];
+        [t concat];
+        drawTextNote();
+        t = [NSAffineTransform transform];
+        [t rotateByDegrees:-45.0];
+        [t translateXBy:-4 yBy:-2];
+        [t concat];
+        drawInkNote();
     );
     
 }

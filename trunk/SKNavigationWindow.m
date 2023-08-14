@@ -47,6 +47,8 @@
 #import "NSShadow_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 #import "NSImage_SKExtensions.h"
+#import "NSString_SKExtensions.h"
+#import <SkimNotes/SkimNotes.h>
 
 #define BUTTON_WIDTH 50.0
 #define BUTTON_HEIGHT 50.0
@@ -314,12 +316,13 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [drawButton setSegmentCount:1];
         [drawButton setTrackingMode:NSSegmentSwitchTrackingSelectAny];
         [drawButton setWidth:24.0 forSegment:0];
-        [drawButton setImage:[NSImage imageNamed:SKImageNameInkNote] forSegment:0];
+        [drawButton setImage:[NSImage imageNamed:SKImageNameInkToolAdorn] forSegment:0];
         [drawButton setSelected:[pdfView drawInPresentation] forSegment:0];
         [drawButton setTarget:pdfView];
         [drawButton setAction:@selector(toggleDrawInPresentation:)];
         if (RUNNING_BEFORE(10_14))
             [[drawButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+        [[[NSAccessibilityUnignoredDescendant(drawButton) accessibilityChildren] firstObject] setAccessibilityLabel:[SKNInkString typeName]];
         [drawButton sizeToFit];
         rect.size.width = NSWidth([drawButton frame]);
         [[self contentView] addSubview:drawButton];
