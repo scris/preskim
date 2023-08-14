@@ -252,7 +252,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         [toolModeButton setAction:@selector(toolModeButtonAction:)];
         
         [toolModeButton setToolTip:NSLocalizedString(@"Tool Mode", @"Tool tip message")];
-        [[toolModeButton cell] setAccessibilityLabel:NSLocalizedString(@"Tool Mode", @"Tool tip message")];
+        [[toolModeButton cell] setAccessibilityLabel:NSLocalizedString(@"Text Tool", @"Tool tip message")];
 
     }
     
