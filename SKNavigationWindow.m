@@ -356,7 +356,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         NSScreen *screen = [[pdfView window] screen] ?: [NSScreen mainScreen];
         NSRect frame;
-        frame.size.width = NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSWidth([drawButton frame]) + NSHeight(rect) + 2.0 * BUTTON_MARGIN + 3.0 * SMALL_SEP_WIDTH;
+        frame.size.width = NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSWidth([drawButton frame]) + NSHeight(rect) + 2.0 * BUTTON_MARGIN + 4.0 * SMALL_SEP_WIDTH;
         frame.size.height = NSHeight(rect) + 2.0 * BUTTON_MARGIN;
         frame.origin.x = NSMidX([screen frame]) - 0.5 * NSWidth(frame);
         frame.origin.y = NSMinY([screen frame]) + WINDOW_OFFSET;
