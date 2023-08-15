@@ -285,6 +285,7 @@ static inline void hideLaserPointer(void) {
         laserPointerWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:SKRectFromCenterAndSquareSize(p, s)];
         [laserPointerWindow setLevel:(NSWindowLevel)kCGCursorWindowLevel];
         [(SKAnimatedBorderlessWindow *)laserPointerWindow setBackgroundImage:image];
+        [laserPointerWindow setHidesOnDeactivate:YES];
         [laserPointerWindow orderFrontRegardless];
     }
 }
