@@ -308,11 +308,12 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [removeShadowButton setAction:@selector(toggleRemoveCursorShadow:)];
         if (RUNNING_BEFORE(10_14))
             [[removeShadowButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+        [removeShadowButton setWidth:ceil([[removeShadowButton labelForSegment:0] sizeWithAttributes:@{NSFontAttributeName:[removeShadowButton font]}].width) + 8.0 forSegment:0];
         [removeShadowButton sizeToFit];
         rect.size.width = NSWidth([removeShadowButton frame]);
         [[self contentView] addSubview:removeShadowButton];
         
-        rect.origin.x = NSMaxX(rect) - SMALL_SEP_WIDTH;
+        rect.origin.x = NSMaxX(rect);
         rect.size.width = SMALL_SEP_WIDTH;
         [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
         
