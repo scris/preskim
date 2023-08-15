@@ -321,7 +321,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         drawButton = [[SKHUDSegmentedControl alloc] initWithFrame:rect];
         [drawButton setSegmentCount:1];
         [drawButton setTrackingMode:NSSegmentSwitchTrackingSelectAny];
-        [drawButton setWidth:24.0 forSegment:0];
+        [drawButton setWidth:30.0 forSegment:0];
         [drawButton setImage:[NSImage imageNamed:SKImageNameInkToolAdorn] forSegment:0];
         [drawButton setSelected:[pdfView drawInPresentation] forSegment:0];
         [drawButton setTarget:pdfView];
