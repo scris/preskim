@@ -48,6 +48,10 @@
 #import "NSView_SKExtensions.h"
 #import "NSImage_SKExtensions.h"
 #import "NSString_SKExtensions.h"
+#import "NSColor_SKExtensions.h"
+#import "NSMenu_SKExtensions.h"
+#import "NSUserDefaults_SKExtensions.h"
+#import "SKStringConstants.h"
 #import <SkimNotes/SkimNotes.h>
 
 #define BUTTON_WIDTH 50.0
@@ -61,7 +65,6 @@
 #define LABEL_TEXT_MARGIN 2.0
 
 #define CORNER_RADIUS 10.0
-
 
 static inline NSBezierPath *nextButtonPath(NSSize size);
 static inline NSBezierPath *previousButtonPath(NSSize size);
@@ -254,6 +257,9 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 #pragma mark -
 
+@interface SKCursorStyleWindow () <NSMenuDelegate>
+@end
+
 @implementation SKCursorStyleWindow
 
 - (id)initWithPDFView:(SKPDFView *)pdfView {
@@ -327,6 +333,10 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         rect.size.width = NSWidth([drawButton frame]);
         [[self contentView] addSubview:drawButton];
         
+        NSMenu *menu = [[[NSMenu alloc] init] autorelease];
+        [menu setDelegate:self];
+        [drawButton setMenu:menu forSegment:0];
+
         rect.origin.x = NSMaxX(rect);
         rect.size.width = SMALL_SEP_WIDTH;
         [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
@@ -369,6 +379,42 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 - (void)removeShadow:(BOOL)removeShadow {
     [removeShadowButton setSelected:removeShadow forSegment:0];
+}
+
+- (void)chooseColor:(id)sender {
+    NSColor *color = [sender representedObject];
+    if ([color isEqual:[[NSUserDefaults standardUserDefaults] colorForKey:SKInkNoteColorKey]])
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:SKPresentationInkNoteColorKey];
+    else
+        [[NSUserDefaults standardUserDefaults] setColor:color forKey:SKPresentationInkNoteColorKey];
+}
+
+- (void)menuNeedsUpdate:(NSMenu *)menu {
+    [menu removeAllItems];
+    
+    NSMutableArray *colors = [[[NSColor favoriteColors] mutableCopy] autorelease];
+    NSColor *inkColor = [[NSUserDefaults standardUserDefaults] colorForKey:SKInkNoteColorKey];
+    NSColor *tmpColor = [[NSUserDefaults standardUserDefaults] colorForKey:SKPresentationInkNoteColorKey];
+    if ([colors containsObject:inkColor] == NO)
+        [colors insertObject:inkColor atIndex:0];
+    if (tmpColor && [colors containsObject:tmpColor] == NO)
+        [colors insertObject:tmpColor atIndex:0];
+    
+    NSSize size = NSMakeSize(16.0, 16.0);
+    
+    for (NSColor *color in colors) {
+        NSMenuItem *item = [menu addItemWithTitle:@"" action:@selector(chooseColor:) target:self];
+        
+        NSImage *image = [NSImage imageWithSize:size flipped:NO drawingHandler:^(NSRect rect){
+                [color drawSwatchInRoundedRect:rect];
+                return YES;
+            }];
+        [image setAccessibilityDescription:[color accessibilityValue]];
+        [item setRepresentedObject:color];
+        [item setImage:image];
+        if ([color isEqual:tmpColor ?: inkColor])
+            [item setState:NSOnState];
+    }
 }
 
 @end

@@ -4514,6 +4514,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     NSRect boxBounds = NSIntersectionRect([page boundsForBox:[self displayBox]], [self convertRect:[self visibleContentRect] toPage:page]);
     CGAffineTransform t = CGAffineTransformRotate(CGAffineTransformMakeScale([self scaleFactor], [self scaleFactor]), -M_PI_2 * [page rotation] / 90.0);
     CGFloat r = fmin(2.0, 2.0 * [self scaleFactor]);
+    NSColor *tmpColor = interactionMode == SKPresentationMode ? [[NSUserDefaults standardUserDefaults] colorForKey:SKPresentationInkNoteColorKey] : nil;
     layer = [CAShapeLayer layer];
     // transform and place so that the path is in page coordinates
     [layer setBounds:NSRectToCGRect(boxBounds)];
@@ -4538,7 +4539,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     } else {
         [self setCurrentAnnotation:nil];
         NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-        [layer setStrokeColor:[[sud colorForKey:SKInkNoteColorKey] CGColor]];
+        [layer setStrokeColor:[tmpColor ?: [sud colorForKey:SKInkNoteColorKey] CGColor]];
         [layer setLineWidth:[sud floatForKey:SKInkNoteLineWidthKey]];
         if ((PDFBorderStyle)[sud integerForKey:SKInkNoteLineStyleKey] == kPDFBorderStyleDashed) {
             [layer setLineDashPattern:[sud arrayForKey:SKInkNoteDashPatternKey]];
@@ -4620,6 +4621,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [self addAnnotation:annotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
         } else {
+            if (tmpColor)
+                [annotation setColor:tmpColor];
             [self addTemporaryAnnotation:annotation toPage:page];
         }
         

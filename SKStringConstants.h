@@ -147,3 +147,4 @@ extern NSString *SKDisableHistoryHighlightsKey;
 extern NSString *SKInvertColorsInDarkModeKey;
 extern NSString *SKSepiaToneKey;
 extern NSString *SKWhitePointKey;
+extern NSString *SKPresentationInkNoteColorKey;

@@ -148,3 +148,4 @@ NSString *SKDisableHistoryHighlightsKey = @"SKDisableHistoryHighlights";
 NSString *SKInvertColorsInDarkModeKey = @"SKInvertColorsInDarkMode";
 NSString *SKSepiaToneKey = @"SKSepiaTone";
 NSString *SKWhitePointKey = @"SKWhitePoint";
+NSString *SKPresentationInkNoteColorKey = @"SKPresentationInkNoteColor";
