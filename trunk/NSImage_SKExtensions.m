@@ -1548,9 +1548,13 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path fill];
     );
     
-    MAKE_IMAGE(SKImageNameInkToolAdorn, YES, 24.0, 24.0,
+    MAKE_IMAGE(SKImageNameInkToolAdorn, YES, 30.0, 24.0,
         NSAffineTransform *t = [NSAffineTransform transform];
-        [t translateXBy:1.5 yBy:5.5];
+        [t translateXBy:0.0 yBy:2.5];
+        [t concat];
+        drawMenuBadge();
+        t = [NSAffineTransform transform];
+        [t translateXBy:1.5 yBy:3.0];
         [t concat];
         drawTextNote();
         t = [NSAffineTransform transform];
