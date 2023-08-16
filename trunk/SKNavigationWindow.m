@@ -58,7 +58,7 @@
 #define BUTTON_HEIGHT 50.0
 #define SLIDER_WIDTH 100.0
 #define SEP_WIDTH 21.0
-#define SMALL_SEP_WIDTH 7.0
+#define SMALL_SEP_WIDTH 13.0
 #define BUTTON_MARGIN 7.0
 #define WINDOW_OFFSET 20.0
 #define LABEL_OFFSET 10.0
@@ -317,7 +317,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         rect.size.width = SMALL_SEP_WIDTH;
         [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
         
-        rect.origin.x = NSMaxX(rect) + SMALL_SEP_WIDTH;
+        rect.origin.x = NSMaxX(rect);
         rect.size.width = NSHeight(rect);
         drawButton = [[SKHUDSegmentedControl alloc] initWithFrame:rect];
         [drawButton setSegmentCount:1];
@@ -342,7 +342,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         rect.size.width = SMALL_SEP_WIDTH;
         [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
         
-        rect.origin.x = NSMaxX(rect) + SMALL_SEP_WIDTH;
+        rect.origin.x = NSMaxX(rect);
         rect.size.width = NSHeight(rect);
         closeButton = [[NSButton alloc] initWithFrame:rect];
         [closeButton setBordered:NO];
@@ -356,7 +356,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         NSScreen *screen = [[pdfView window] screen] ?: [NSScreen mainScreen];
         NSRect frame;
-        frame.size.width = NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSWidth([drawButton frame]) + NSHeight(rect) + 2.0 * BUTTON_MARGIN + 4.0 * SMALL_SEP_WIDTH;
+        frame.size.width = NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSWidth([drawButton frame]) + NSHeight(rect) + 2.0 * BUTTON_MARGIN + 2.0 * SMALL_SEP_WIDTH;
         frame.size.height = NSHeight(rect) + 2.0 * BUTTON_MARGIN;
         frame.origin.x = NSMidX([screen frame]) - 0.5 * NSWidth(frame);
         frame.origin.y = NSMinY([screen frame]) + WINDOW_OFFSET;
@@ -718,8 +718,15 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 @implementation SKHUDSegmentedCell
 
+- (NSRect)drawingRectForBounds:(NSRect)bounds {
+    NSRect rect = [super drawingRectForBounds:bounds];
+    rect.origin.y = NSMinY(bounds);
+    rect.size.height = NSHeight(bounds);
+    return rect;
+}
+
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
-    [self drawInteriorWithFrame:cellFrame inView:controlView];
+    [self drawInteriorWithFrame:[self drawingRectForBounds:cellFrame] inView:controlView];
 }
 
 - (void)drawSegment:(NSInteger)segment inFrame:(NSRect)frame withView:(NSView *)controlView {
