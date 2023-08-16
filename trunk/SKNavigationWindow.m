@@ -724,12 +724,9 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 - (void)drawSegment:(NSInteger)segment inFrame:(NSRect)frame withView:(NSView *)controlView {
     if ([self isSelectedForSegment:segment]) {
-        NSRect rect = frame;
-        rect.size.width -= 1.0;
-        rect.size.height -= 1.0;
-        rect.origin.y += 1.0;
+        NSRect rect = SKShrinkRect(SKShrinkRect(frame, 1.0, NSMaxXEdge), 1.0, NSMinYEdge);
         [NSGraphicsContext saveGraphicsState];
-        [[NSColor colorWithGenericGamma22White:1.0 alpha:0.5] setFill];
+        [[NSColor colorWithGenericGamma22White:1.0 alpha:[self isEnabledForSegment:segment] ? 0.5 : 0.3] setFill];
         [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:5.0 yRadius:5.0] fill];
         [NSGraphicsContext restoreGraphicsState];
     }
