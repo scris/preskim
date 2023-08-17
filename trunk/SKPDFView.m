@@ -3623,7 +3623,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (BOOL)drawInPresentation {
-    return pdfvFlags.removeLaserPointerShadow;
+    return pdfvFlags.drawInPresentation;
 }
 
 - (void)toggleDrawInPresentation:(id)sender {
