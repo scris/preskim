@@ -64,7 +64,7 @@
     NSSegmentedControl *styleButton;
     NSSegmentedControl *removeShadowButton;
     NSSegmentedControl *drawButton;
-    NSButton *closeButton;
+    NSSegmentedControl *closeButton;
 }
 - (void)selectCursorStyle:(NSInteger)style;
 - (void)removeShadow:(BOOL)removeShadow;

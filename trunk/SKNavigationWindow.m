@@ -344,19 +344,22 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = NSHeight(rect);
-        closeButton = [[NSButton alloc] initWithFrame:rect];
-        [closeButton setBordered:NO];
-        [closeButton setImage:[NSImage imageNamed:NSImageNameStopProgressTemplate]];
+        closeButton = [[SKHUDSegmentedControl alloc] initWithFrame:rect];
+        [closeButton setSegmentCount:1];
+        [closeButton setTrackingMode:NSSegmentSwitchTrackingMomentary];
+        [closeButton setWidth:24.0 forSegment:0];
+        [closeButton setImage:[NSImage imageNamed:NSImageNameStopProgressTemplate] forSegment:0];
         [closeButton setTarget:pdfView];
         [closeButton setAction:@selector(closeCursorStyleWindow:)];
         if (RUNNING_BEFORE(10_14))
             [[closeButton cell] setBackgroundStyle:NSBackgroundStyleDark];
-        [[closeButton cell] setAccessibilityLabel:NSLocalizedString(@"close", @"Accessibility description")];
+        [[[NSAccessibilityUnignoredDescendant(closeButton) accessibilityChildren] firstObject] setAccessibilityLabel:NSLocalizedString(@"close", @"Accessibility description")];
+        [closeButton sizeToFit];
         [[self contentView] addSubview:closeButton];
         
         NSScreen *screen = [[pdfView window] screen] ?: [NSScreen mainScreen];
         NSRect frame;
-        frame.size.width = NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSWidth([drawButton frame]) + NSHeight(rect) + 2.0 * BUTTON_MARGIN + 2.0 * SMALL_SEP_WIDTH;
+        frame.size.width = NSWidth([styleButton frame]) + NSWidth([removeShadowButton frame]) + NSWidth([drawButton frame]) + NSWidth([closeButton frame]) + 2.0 * BUTTON_MARGIN + 2.0 * SMALL_SEP_WIDTH;
         frame.size.height = NSHeight(rect) + 2.0 * BUTTON_MARGIN;
         frame.origin.x = NSMidX([screen frame]) - 0.5 * NSWidth(frame);
         frame.origin.y = NSMinY([screen frame]) + WINDOW_OFFSET;
