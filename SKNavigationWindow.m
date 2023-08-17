@@ -712,6 +712,14 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 - (BOOL)allowsVibrancy { return NO; }
 
+- (void)sizeToFit {
+    [super sizeToFit];
+    NSSize size = [self frame].size;
+    if (size.height < 24.0) {
+        size.height = 24.0;
+        [self setFrameSize:size];
+    }
+}
 @end
 
 #pragma mark -
@@ -731,13 +739,47 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 - (void)drawSegment:(NSInteger)segment inFrame:(NSRect)frame withView:(NSView *)controlView {
     if ([self isSelectedForSegment:segment]) {
-        NSRect rect = SKShrinkRect(SKShrinkRect(frame, 1.0, NSMaxXEdge), 1.0, NSMinYEdge);
         [NSGraphicsContext saveGraphicsState];
         [[NSColor colorWithGenericGamma22White:1.0 alpha:[self isEnabledForSegment:segment] ? 0.5 : 0.3] setFill];
-        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:5.0 yRadius:5.0] fill];
+        [[NSBezierPath bezierPathWithRoundedRect:frame xRadius:5.0 yRadius:5.0] fill];
         [NSGraphicsContext restoreGraphicsState];
     }
-    [super drawSegment:segment inFrame:frame withView:controlView];
+    NSString *label = [self labelForSegment:segment];
+    NSImage *image = [self imageForSegment:segment];
+    if ([label length]) {
+        NSMutableParagraphStyle *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+        NSColor *color = nil;
+        if ([self isSelectedForSegment:segment])
+            color = [NSColor colorWithGenericGamma22White:0.0 alpha:[self isEnabledForSegment:segment] ? 0.9 : 0.7];
+        else
+            color = [NSColor colorWithGenericGamma22White:1.0 alpha:[self isEnabledForSegment:segment] ? 0.9 : 0.3];
+        [paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
+        [paragraphStyle setAlignment:NSCenterTextAlignment];
+        NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:label attributes:@{NSFontAttributeName:[self font], NSForegroundColorAttributeName:color, NSParagraphStyleAttributeName:paragraphStyle}];
+        NSRect rect = frame;
+        CGFloat height = [attrString size].height;
+        rect.origin.y = NSMidY(rect) - 0.5 * height;
+        rect.size.height = height;
+        [attrString drawInRect:rect];
+    } else if (image) {
+        if ([image isTemplate]) {
+            NSColor *color = nil;
+            if ([self isSelectedForSegment:segment])
+                color = [NSColor colorWithGenericGamma22White:0.0 alpha:[self isEnabledForSegment:segment] ? 1.0 : 0.7];
+            else
+                color = [NSColor colorWithGenericGamma22White:1.0 alpha:[self isEnabledForSegment:segment] ? 0.9 : 0.3];
+            image = [[image copy] autorelease];
+            [image lockFocus];
+            [color setFill];
+            NSRectFillUsingOperation((NSRect){NSZeroPoint, [image size]}, NSCompositeSourceAtop);
+            [image unlockFocus];
+        }
+        NSRect rect = frame;
+        rect.size = [image size];
+        rect.origin.x = NSMidX(frame) - 0.5 * NSWidth(rect);
+        rect.origin.y = NSMidY(frame) - 0.5 * NSHeight(rect);
+        [image drawInRect:rect];
+    }
 }
 
 @end
