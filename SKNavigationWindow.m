@@ -771,7 +771,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
             image = [[image copy] autorelease];
             [image lockFocus];
             [color setFill];
-            NSRectFillUsingOperation((NSRect){NSZeroPoint, [image size]}, NSCompositeSourceAtop);
+            NSRectFillUsingOperation((NSRect){NSZeroPoint, [image size]}, NSCompositeSourceIn);
             [image unlockFocus];
         }
         NSRect rect = frame;
