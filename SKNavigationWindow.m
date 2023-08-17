@@ -762,23 +762,25 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         rect.size.height = height;
         [attrString drawInRect:rect];
     } else if (image) {
+        NSRect rect = frame;
+        rect.size = [image size];
+        rect.origin.x = NSMidX(frame) - 0.5 * NSWidth(rect);
+        rect.origin.y = NSMidY(frame) - 0.5 * NSHeight(rect);
         if ([image isTemplate]) {
             NSColor *color = nil;
             if ([self isSelectedForSegment:segment])
                 color = [NSColor colorWithGenericGamma22White:0.0 alpha:[self isEnabledForSegment:segment] ? 1.0 : 0.7];
             else
                 color = [NSColor colorWithGenericGamma22White:1.0 alpha:[self isEnabledForSegment:segment] ? 0.9 : 0.3];
-            image = [[image copy] autorelease];
-            [image lockFocus];
+            CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+            CGContextBeginTransparencyLayer(context, NULL);
+            [image drawInRect:rect];
             [color setFill];
-            NSRectFillUsingOperation((NSRect){NSZeroPoint, [image size]}, NSCompositeSourceIn);
-            [image unlockFocus];
+            NSRectFillUsingOperation(rect, NSCompositeSourceIn);
+            CGContextEndTransparencyLayer(context);
+        } else {
+            [image drawInRect:rect];
         }
-        NSRect rect = frame;
-        rect.size = [image size];
-        rect.origin.x = NSMidX(frame) - 0.5 * NSWidth(rect);
-        rect.origin.y = NSMidY(frame) - 0.5 * NSHeight(rect);
-        [image drawInRect:rect];
     }
 }
 
