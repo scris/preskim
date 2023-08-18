@@ -55,7 +55,7 @@
         [query setObject:account forKey:(NSString *)kSecAttrAccount];
     [query setObject:@YES forKey:(NSString *)kSecReturnData];
     
-    OSStatus err = SecItemCopyMatching((CFDictionaryRef)query, password ? (CFTypeRef *)&passwordData : NULL);
+    OSStatus err = SecItemCopyMatching((CFDictionaryRef)query, (CFTypeRef *)&passwordData);
     
     if (err == noErr) {
         if (passwordData) {
