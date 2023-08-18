@@ -776,7 +776,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
             else
                 color = [NSColor colorWithGenericGamma22White:1.0 alpha:[self isEnabledForSegment:segment] ? 0.9 : 0.3];
             CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
-            CGContextBeginTransparencyLayer(context, NULL);
+            CGContextBeginTransparencyLayerWithRect(context, NSRectToCGRect(frame), NULL);
             [image drawInRect:rect];
             [color setFill];
             NSRectFillUsingOperation(rect, NSCompositeSourceIn);
