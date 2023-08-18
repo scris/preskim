@@ -766,9 +766,17 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [attrString drawInRect:rect];
     } else if (image) {
         NSRect rect = frame;
-        rect.size = [image size];
-        rect.origin.x = NSMidX(frame) - 0.5 * NSWidth(rect);
-        rect.origin.y = NSMidY(frame) - 0.5 * NSHeight(rect);
+        NSRect srcRect = (NSRect){NSZeroPoint, [image size]};
+        CGFloat d = 0.5 * (NSWidth(rect) - NSWidth(srcRect));
+        if (d > 0.0)
+            rect = NSInsetRect(rect, d, 0.0);
+        else if (d < 0.0)
+            srcRect = NSInsetRect(srcRect, -d, 0.0);
+        d = 0.5 * (NSHeight(rect) - NSHeight(srcRect));
+        if (d > 0.0)
+            rect = NSInsetRect(rect, 0.0, d);
+        else if (d < 0.0)
+            srcRect = NSInsetRect(srcRect, 0.0, -d);
         if ([image isTemplate]) {
             NSColor *color = nil;
             if ([self isSelectedForSegment:segment])
@@ -777,12 +785,12 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
                 color = [NSColor colorWithGenericGamma22White:1.0 alpha:[self isEnabledForSegment:segment] ? 0.9 : 0.3];
             CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
             CGContextBeginTransparencyLayerWithRect(context, NSRectToCGRect(frame), NULL);
-            [image drawInRect:rect];
             [color setFill];
-            NSRectFillUsingOperation(rect, NSCompositeSourceIn);
+            [NSBezierPath fillRect:rect];
+            [image drawInRect:rect fromRect:srcRect operation:NSCompositingOperationDestinationIn fraction:1.0 respectFlipped:YES hints:nil];
             CGContextEndTransparencyLayer(context);
         } else {
-            [image drawInRect:rect];
+            [image drawInRect:rect fromRect:srcRect operation:NSCompositingOperationSourceOver fraction:1.0 respectFlipped:YES hints:nil];
         }
     }
 }
