@@ -5197,6 +5197,8 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         if ([[[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged] type] == NSEventTypeLeftMouseUp)
             break;
         didDrag = YES;
+        if (interactionMode == SKPresentationMode && pdfvFlags.useArrowCursorInPresentation == NO && pdfvFlags.removeLaserPointerShadow)
+            [self updateCursorForMouse:theEvent];
     }
     return didDrag;
 }
