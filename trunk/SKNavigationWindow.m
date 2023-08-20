@@ -717,8 +717,13 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 - (void)sizeToFit {
     [super sizeToFit];
-    [self setFrameSize:NSMakeSize(NSWidth([self frame]), 24.0)];
+    NSSize size = [self frame].size;
+    if (fabs(size.height - 24.0) > 0.0) {
+        size.height = 24.0;
+        [self setFrameSize:size];
+    }
 }
+
 @end
 
 #pragma mark -
