@@ -1950,21 +1950,22 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     } else if (interactionMode == SKPresentationMode) {
         [self setTemporaryToolMode:SKNoToolMode];
         BOOL didHideMouse = pdfvFlags.cursorHidden;
-        if (pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_TABLET_EVENT(theEvent, NSPointingDeviceTypePen)) {
-            [[NSCursor arrowCursor] set];
-            [self doDrawFreehandNoteWithEvent:theEvent];
-            [self setCurrentAnnotation:nil];
-        } else if ((area & kPDFLinkArea)) {
-            [super mouseDown:theEvent];
-        } else if (([[self window] styleMask] & NSWindowStyleMaskResizable) != 0 && NSEqualRects([[self window] frame], [[[self window] screen] frame]) == NO && [NSApp willDragMouse]) {
+        if ([NSApp willDragMouse] == NO) {
+            if ((area & kPDFLinkArea)) {
+                [super mouseDown:theEvent];
+            } else {
+                [self goToNextPage:self];
+                // Eat up drag events because we don't want to select
+                [self doDragMouseWithEvent:theEvent];
+            }
+        } else if (IS_TABLET_EVENT(theEvent, NSPointingDeviceTypePen) == NO && ([[self window] styleMask] & NSWindowStyleMaskResizable) != 0 && NSEqualRects([[self window] frame], [[[self window] screen] frame]) == NO) {
             [[NSCursor closedHandCursor] set];
             [self doDragWindowWithEvent:theEvent];
-        } else if (pdfvFlags.drawInPresentation && [NSApp willDragMouse]) {
+        } else if (pdfvFlags.drawInPresentation || IS_TABLET_EVENT(theEvent, NSPointingDeviceTypePen)) {
             [[NSCursor arrowCursor] set];
             [self doDrawFreehandNoteWithEvent:theEvent];
             [self setCurrentAnnotation:nil];
         } else {
-            [self goToNextPage:self];
             // Eat up drag events because we don't want to select
             [self doDragMouseWithEvent:theEvent];
         }
