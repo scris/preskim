@@ -64,6 +64,7 @@ extern NSString *SKPDFViewAnnotationKey;
 extern NSString *SKPDFViewPageKey;
 extern NSString *SKPDFViewOldPageKey;
 extern NSString *SKPDFViewNewPageKey;
+extern NSString *SKPDFViewTemporaryKey;
 
 typedef NS_ENUM(NSInteger, SKToolMode) {
     SKTextToolMode,

@@ -131,6 +131,7 @@ NSString *SKPDFViewAnnotationKey = @"annotation";
 NSString *SKPDFViewPageKey = @"page";
 NSString *SKPDFViewOldPageKey = @"oldPage";
 NSString *SKPDFViewNewPageKey = @"newPage";
+NSString *SKPDFViewTemporaryKey = @"temporary";
 
 #define SKMoveReadingBarModifiersKey @"SKMoveReadingBarModifiers"
 #define SKResizeReadingBarModifiersKey @"SKResizeReadingBarModifiers"
@@ -2936,7 +2937,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [self resetPDFToolTipRects];
     if ([self isEditingAnnotation:annotation])
         [editor layoutWithEvent:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidMoveAnnotationNotification object:self userInfo:@{SKPDFViewOldPageKey:oldPage, SKPDFViewNewPageKey:page, SKPDFViewAnnotationKey:annotation}];                
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidMoveAnnotationNotification object:self userInfo:@{SKPDFViewOldPageKey:oldPage, SKPDFViewNewPageKey:page, SKPDFViewAnnotationKey:annotation}];
     [oldPage release];
 }
 
@@ -2949,7 +2950,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [page addAnnotation:annotation];
     [self setNeedsDisplayForAnnotation:annotation];
     [self annotationsChangedOnPage:page];
-    [(SKMainWindowController *)[[self window] windowController] updateThumbnailAtPageIndex:[page pageIndex]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidAddAnnotationNotification object:self userInfo:@{SKPDFViewAnnotationKey:annotation, SKPDFViewPageKey:page, SKPDFViewTemporaryKey:@YES}];
 }
 
 - (void)removeTemporaryAnnotation:(PDFAnnotation *)annotation {
@@ -2962,7 +2963,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [page removeAnnotation:wasAnnotation];
     [self annotationsChangedOnPage:page];
     [wasAnnotation release];
-    [(SKMainWindowController *)[[self window] windowController] updateThumbnailAtPageIndex:[page pageIndex]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidRemoveAnnotationNotification object:self userInfo:@{SKPDFViewAnnotationKey:wasAnnotation, SKPDFViewPageKey:page, SKPDFViewTemporaryKey:@YES}];
     [page release];
 }
 
