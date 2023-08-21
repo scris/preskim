@@ -2013,20 +2013,24 @@ static NSArray *allMainDocumentPDFViews() {
     PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFViewAnnotationKey];
     PDFPage *page = [[notification userInfo] objectForKey:SKPDFViewPageKey];
     
-    if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
-        mwcFlags.updatingNoteSelection = 1;
-        [[self mutableArrayValueForKey:NOTES_KEY] addObject:annotation];
-        [rightSideController.noteArrayController rearrangeObjects]; // doesn't seem to be done automatically
-        mwcFlags.updatingNoteSelection = 0;
-        [rightSideController.noteOutlineView reloadData];
-    }
-    if (page) {
-        [self updateThumbnailAtPageIndex:[page pageIndex]];
-        for (SKSnapshotWindowController *wc in snapshots) {
-            if ([wc isPageVisible:page])
-                [self snapshotNeedsUpdate:wc];
+    if ([[[notification userInfo] objectForKey:SKPDFViewTemporaryKey] boolValue] == NO) {
+        if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
+            mwcFlags.updatingNoteSelection = 1;
+            [[self mutableArrayValueForKey:NOTES_KEY] addObject:annotation];
+            [rightSideController.noteArrayController rearrangeObjects]; // doesn't seem to be done automatically
+            mwcFlags.updatingNoteSelection = 0;
+            [rightSideController.noteOutlineView reloadData];
         }
-        [secondaryPdfView setNeedsDisplayForAnnotation:annotation onPage:page];
+        if (page) {
+            [self updateThumbnailAtPageIndex:[page pageIndex]];
+            for (SKSnapshotWindowController *wc in snapshots) {
+                if ([wc isPageVisible:page])
+                    [self snapshotNeedsUpdate:wc];
+            }
+            [secondaryPdfView setNeedsDisplayForAnnotation:annotation onPage:page];
+        }
+    } else if (page) {
+        [self updateThumbnailAtPageIndex:[page pageIndex]];
     }
 }
 
@@ -2034,25 +2038,29 @@ static NSArray *allMainDocumentPDFViews() {
     PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFViewAnnotationKey];
     PDFPage *page = [[notification userInfo] objectForKey:SKPDFViewPageKey];
     
-    if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
-        if ([[self selectedNotes] containsObject:annotation])
-            [rightSideController.noteOutlineView deselectAll:self];
-        
-        [[self windowControllerForNote:annotation] close];
-        
-        mwcFlags.updatingNoteSelection = 1;
-        [[self mutableArrayValueForKey:NOTES_KEY] removeObject:annotation];
-        [rightSideController.noteArrayController rearrangeObjects]; // doesn't seem to be done automatically
-        mwcFlags.updatingNoteSelection = 0;
-        [rightSideController.noteOutlineView reloadData];
-    }
-    if (page) {
-        [self updateThumbnailAtPageIndex:[page pageIndex]];
-        for (SKSnapshotWindowController *wc in snapshots) {
-            if ([wc isPageVisible:page])
-                [self snapshotNeedsUpdate:wc];
+    if ([[[notification userInfo] objectForKey:SKPDFViewTemporaryKey] boolValue]) {
+        if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
+            if ([[self selectedNotes] containsObject:annotation])
+                [rightSideController.noteOutlineView deselectAll:self];
+            
+            [[self windowControllerForNote:annotation] close];
+            
+            mwcFlags.updatingNoteSelection = 1;
+            [[self mutableArrayValueForKey:NOTES_KEY] removeObject:annotation];
+            [rightSideController.noteArrayController rearrangeObjects]; // doesn't seem to be done automatically
+            mwcFlags.updatingNoteSelection = 0;
+            [rightSideController.noteOutlineView reloadData];
         }
-        [secondaryPdfView setNeedsDisplayForAnnotation:annotation onPage:page];
+        if (page) {
+            [self updateThumbnailAtPageIndex:[page pageIndex]];
+            for (SKSnapshotWindowController *wc in snapshots) {
+                if ([wc isPageVisible:page])
+                    [self snapshotNeedsUpdate:wc];
+            }
+            [secondaryPdfView setNeedsDisplayForAnnotation:annotation onPage:page];
+        }
+    } else if (page) {
+        [self updateThumbnailAtPageIndex:[page pageIndex]];
     }
 }
 
