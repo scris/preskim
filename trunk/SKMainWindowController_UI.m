@@ -2038,7 +2038,7 @@ static NSArray *allMainDocumentPDFViews() {
     PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFViewAnnotationKey];
     PDFPage *page = [[notification userInfo] objectForKey:SKPDFViewPageKey];
     
-    if ([[[notification userInfo] objectForKey:SKPDFViewTemporaryKey] boolValue]) {
+    if ([[[notification userInfo] objectForKey:SKPDFViewTemporaryKey] boolValue] == NO) {
         if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
             if ([[self selectedNotes] containsObject:annotation])
                 [rightSideController.noteOutlineView deselectAll:self];
