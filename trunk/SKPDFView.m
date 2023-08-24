@@ -2049,7 +2049,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self doDragMouseWithEvent:theEvent];
         }
     } else if (toolMode == SKNoteToolMode && pdfvFlags.hideNotes == NO && [[self document] allowsNotes] && IS_MARKUP(annotationMode) == NO) {
-        if (annotationMode == SKInkNote) {
+        if ((area & kPDFLinkArea) != 0 && [NSApp willDragMouse] == NO) {
+            [super mouseDown:theEvent];
+        } else if (annotationMode == SKInkNote) {
             [self doDrawFreehandNoteWithEvent:theEvent];
         } else {
             [self setCurrentAnnotation:nil];
@@ -5381,8 +5383,6 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
             if ((area & SKReadingBarArea) == 0)
                 area |= SKDragArea;
         } else if (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) {
-            if (toolMode == SKNoteToolMode)
-                area &= ~kPDFLinkArea;
             if (editor && [[currentAnnotation page] isEqual:page] && NSPointInRect(p, [currentAnnotation bounds])) {
                 area = kPDFTextFieldArea;
             } else if ((area & SKReadingBarArea) == 0) {
