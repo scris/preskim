@@ -274,7 +274,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 @implementation SKPDFView
 
 @synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, currentAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, zooming;
-@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing;
+@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing, temporaryUndoManager;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -663,15 +663,18 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (NSUndoManager *)undoManager {
-    if (interactionMode == SKPresentationMode) {
-        if (temporaryUndoManager == nil)
-            temporaryUndoManager = [[NSUndoManager alloc] init];
-        return temporaryUndoManager;
-    }
+    if (interactionMode == SKPresentationMode)
+        return [self temporaryUndoManager];
     NSUndoManager *undoManager = [super undoManager];
     if (undoManager == nil && [[self delegate] respondsToSelector:@selector(documentForPDFView:)])
         undoManager = [[[self delegate] documentForPDFView:self] undoManager];
     return undoManager;
+}
+
+- (NSUndoManager *)temporaryUndoManager {
+    if (temporaryUndoManager == nil)
+        temporaryUndoManager = [[NSUndoManager alloc] init];
+    return temporaryUndoManager;
 }
 
 - (void)setBackgroundColor:(NSColor *)newBackgroundColor {
@@ -2944,7 +2947,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)addTemporaryAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page {
-    [[[self undoManager] prepareWithInvocationTarget:self] removeTemporaryAnnotation:annotation];
+    [[[self temporaryUndoManager] prepareWithInvocationTarget:self] removeTemporaryAnnotation:annotation];
     if (temporaryAnnotations == nil)
         temporaryAnnotations = [[NSMutableArray alloc] init];
     [annotation setShouldPrint:NO];
@@ -2959,7 +2962,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     PDFAnnotation *wasAnnotation = [annotation retain];
     PDFPage *page = [[wasAnnotation page] retain];
     
-    [[[self undoManager] prepareWithInvocationTarget:self] addTemporaryAnnotation:wasAnnotation toPage:page];
+    [[[self temporaryUndoManager] prepareWithInvocationTarget:self] addTemporaryAnnotation:wasAnnotation toPage:page];
     [self setNeedsDisplayForAnnotation:wasAnnotation];
     [temporaryAnnotations removeObject:annotation];
     [page removeAnnotation:wasAnnotation];
