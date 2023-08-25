@@ -286,4 +286,5 @@ enum {
 - (void)PDFViewToggleContents:(PDFView *)sender;
 - (void)PDFViewPerformHideFind:(PDFView *)sender;
 - (BOOL)PDFViewIsFindVisible:(PDFView *)sender;
+- (NSDocument *)documentForPDFView:(PDFView *)sender;
 @end

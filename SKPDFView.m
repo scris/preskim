@@ -669,8 +669,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         return temporaryUndoManager;
     }
     NSUndoManager *undoManager = [super undoManager];
-    if (undoManager == nil && [[self delegate] respondsToSelector:@selector(document)])
-        undoManager = [[(NSWindowController *)[self delegate] document] undoManager];
+    if (undoManager == nil && [[self delegate] respondsToSelector:@selector(documentForPDFView:)])
+        undoManager = [[[self delegate] documentForPDFView:self] undoManager];
     return undoManager;
 }
 
@@ -2391,7 +2391,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     NSUndoManager *undoManager = [self undoManager];
     [[undoManager prepareWithInvocationTarget:self] rotatePageAtIndex:idx by:-rotation];
     [undoManager setActionName:NSLocalizedString(@"Rotate Page", @"Undo action name")];
-    NSDocument *doc = [[self delegate] respondsToSelector:@selector(document)] ? [(NSWindowController *)[self delegate] document] : [[[self window] windowController] document];
+    NSDocument *doc = [[self delegate] respondsToSelector:@selector(documentForPDFView:)] ? [[self delegate] documentForPDFView:self] : [[[self window] windowController] document];
     [doc undoableActionIsDiscardable];
     
     PDFPage *page = [[self document] pageAtIndex:idx];
