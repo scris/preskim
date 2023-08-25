@@ -201,6 +201,7 @@ enum {
 @property (nonatomic, readonly) BOOL hasPacer;
 @property (nonatomic, readonly) SKTransitionController *transitionController;
 @property (nonatomic, retain) SKTypeSelectHelper *typeSelectHelper;
+@property (nonatomic, readonly) NSUndoManager *temporaryUndoManager;
 
 @property (nonatomic) BOOL needsRewind;
 
