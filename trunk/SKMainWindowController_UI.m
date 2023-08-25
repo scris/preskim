@@ -1513,6 +1513,10 @@
     [self toggleLeftSidePane:sender];
 }
 
+- (NSDocument *)documentForPDFView:(PDFView *)sender {
+    return [self document];
+}
+
 #pragma mark NSSplitView delegate protocol
 
 - (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview {
