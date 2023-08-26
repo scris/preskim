@@ -55,7 +55,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 - (NSString *)redoMenuItemTitle {
-    return [super canRedo] || nextUndoManager == nil ? [super redoMenuItemTitle] : [nextUndoManager redoMenuItemTitle];
+    return [nextUndoManager canRedo] ? [nextUndoManager redoMenuItemTitle] : [super redoMenuItemTitle];
 }
 
 - (NSString *)undoMenuItemTitle {
@@ -71,10 +71,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 - (void)redo {
-    if ([super canRedo])
-        [super redo];
-    else
+    if ([nextUndoManager canRedo])
         [nextUndoManager redo];
+    else
+        [super redo];
 }
 
 - (void)undo {
