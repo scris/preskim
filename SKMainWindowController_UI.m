@@ -1184,6 +1184,8 @@
 - (void)menuNeedsUpdate:(NSMenu *)menu {
     NSMenuItem *item = nil;
     [menu removeAllItems];
+    if ([self interactionMode] == SKPresentationMode)
+        return;
     if ([menu isEqual:[leftSideController.thumbnailTableView menu]]) {
         NSInteger row = [leftSideController.thumbnailTableView clickedRow];
         if (row != -1) {
