@@ -1517,8 +1517,10 @@
     [self toggleLeftSidePane:sender];
 }
 
-- (NSDocument *)documentForPDFView:(PDFView *)sender {
-    return [self document];
+- (NSUndoManager *)undoManagerForPDFView:(PDFView *)sender {
+    if ([self interactionMode] == SKPresentationMode)
+        return [pdfView temporaryUndoManager];
+    return [[self document] undoManager];
 }
 
 - (void)PDFView:(PDFView *)sender rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation {
