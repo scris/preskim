@@ -1775,7 +1775,7 @@ static NSArray *allMainDocumentPDFViews() {
         [menuItem setState:[pdfView autoScales] ? NSOnState : NSOffState];
         return [[self pdfDocument] isLocked] == NO && [self hasOverview] == NO;
     } else if (action == @selector(rotateRight:) || action == @selector(rotateLeft:) || action == @selector(rotateAllRight:) || action == @selector(rotateAllLeft:)) {
-        return [[self pdfDocument] isLocked] == NO;
+        return [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(cropAll:) || action == @selector(crop:) || action == @selector(autoCropAll:) || action == @selector(smartAutoCropAll:)) {
         return [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(resetCrop:)) {
