@@ -315,7 +315,7 @@
 - (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)sender {
     if ([self interactionMode] == SKPresentationMode)
         return [pdfView temporaryUndoManager];
-    return nil;
+    return [[self document] undoManager];
 }
 
 - (void)window:(NSWindow *)sender willSendEvent:(NSEvent *)event {
