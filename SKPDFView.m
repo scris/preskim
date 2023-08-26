@@ -2390,20 +2390,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
-- (void)rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation {
-    NSDocument *doc = [[self delegate] respondsToSelector:@selector(documentForPDFView:)] ? [[self delegate] documentForPDFView:self] : [[[self window] windowController] document];
-    NSUndoManager *undoManager = [doc undoManager];
-    [[undoManager prepareWithInvocationTarget:self] rotatePageAtIndex:idx by:-rotation];
-    [undoManager setActionName:NSLocalizedString(@"Rotate Page", @"Undo action name")];
-    [doc undoableActionIsDiscardable];
-    
-    PDFPage *page = [[self document] pageAtIndex:idx];
-    [page setRotation:[page rotation] + rotation];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
-                                                        object:[self document] userInfo:@{SKPDFPageActionKey:SKPDFPageActionRotate, SKPDFPagePageKey:page}];
-}
-
 - (void)beginGestureWithEvent:(NSEvent *)theEvent {
     [super beginGestureWithEvent:theEvent];
     PDFPage *page = [self pageAndPoint:NULL forEvent:theEvent nearest:YES];
@@ -2428,7 +2414,12 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     gestureRotation -= [theEvent rotation];
     if (fabs(gestureRotation) > 45.0 && gesturePageIndex != NSNotFound) {
         CGFloat rotation = 90.0 * round(gestureRotation / 90.0);
-        [self rotatePageAtIndex:gesturePageIndex by:(NSInteger)rotation];
+        if ([[self delegate] respondsToSelector:@selector(PDFView:rotatePageAtIndex:by:)]) {
+            [[self delegate] PDFView:self rotatePageAtIndex:gesturePageIndex by:(NSInteger)rotation];
+        } else {
+            PDFPage *page = [[self document] pageAtIndex:gesturePageIndex];
+            [page setRotation:[page rotation] + (NSInteger)rotation];
+        }
         gestureRotation -= rotation;
     }
     if (([theEvent phase] == NSEventPhaseEnded || [theEvent phase] == NSEventPhaseCancelled)) {
