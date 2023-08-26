@@ -134,6 +134,8 @@
 
 - (void)observeUndoManagerCheckpoint:(NSNotification *)notification;
 
+- (void)rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation;
+
 @end
 
 @interface SKMainWindowController (UIPrivate)
@@ -1517,6 +1519,10 @@
 
 - (NSDocument *)documentForPDFView:(PDFView *)sender {
     return [self document];
+}
+
+- (void)PDFView:(PDFView *)sender rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation {
+    [self rotatePageAtIndex:idx by:rotation];
 }
 
 #pragma mark NSSplitView delegate protocol
