@@ -4456,6 +4456,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             // select a new copy of the annotation
             PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithProperties:[newCurrentAnnotation SkimNoteProperties]];
             [newAnnotation registerUserName];
+            [self commitEditing];
             [self addAnnotation:newAnnotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
             newCurrentAnnotation = newAnnotation;
@@ -4487,6 +4488,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 [paths release];
             }
             if (newAnnotation) {
+                [self commitEditing];
                 [newAnnotation setColor:[currentAnnotation color]];
                 [newAnnotation registerUserName];
                 [self removeAnnotation:newCurrentAnnotation];
