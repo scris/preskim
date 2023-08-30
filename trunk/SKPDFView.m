@@ -2894,6 +2894,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)removeAnnotation:(PDFAnnotation *)annotation {
+    if (annotation == currentAnnotation)
+        [self commitEditing];
     [self beginNewUndoGroupIfNeeded];
     
     PDFAnnotation *wasAnnotation = [annotation retain];
