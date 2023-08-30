@@ -2652,6 +2652,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
     
     if ([newAnnotations count] > 0) {
+        [self commitEditing];
+        
         for (NSArray *annotationAndPage in newAnnotations) {
             newAnnotation = [annotationAndPage firstObject];
             page = [annotationAndPage lastObject];
@@ -2668,6 +2670,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         
         return YES;
     } else if (newAnnotation) {
+        [self commitEditing];
+        
         if (annotationType != SKLineNote && annotationType != SKInkNote && [text length] > 0)
             [newAnnotation setString:text];
         [newAnnotation registerUserName];
@@ -3050,8 +3054,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)beginNewUndoGroupIfNeeded {
-    if (editor)
-        [self commitEditing];
     if (pdfvFlags.wantsNewUndoGroup) {
         NSUndoManager *undoManger = [self undoManager];
         if ([undoManger groupingLevel] > 0) {
