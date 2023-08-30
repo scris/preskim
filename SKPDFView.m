@@ -3047,6 +3047,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)beginNewUndoGroupIfNeeded {
+    if (editor) {
+        NSUndoManager *undoManager = [self undoManager];
+        NSInteger level = [undoManager groupingLevel];
+        [self commitEditing];
+        if ([undoManager groupingLevel] > level)
+            pdfvFlags.wantsNewUndoGroup = YES;
+    }
     if (pdfvFlags.wantsNewUndoGroup) {
         NSUndoManager *undoManger = [self undoManager];
         if ([undoManger groupingLevel] > 0) {
