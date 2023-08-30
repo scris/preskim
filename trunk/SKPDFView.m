@@ -776,11 +776,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         // Will need to redraw old active anotation.
         if (currentAnnotation != nil) {
             [self setNeedsDisplayForAnnotation:currentAnnotation];
-            NSInteger level = [[self undoManager] groupingLevel];
             if (editor && [self commitEditing] == NO)
                 [self discardEditing];
-            if ([[self undoManager] groupingLevel] > level)
-                pdfvFlags.wantsNewUndoGroup = YES;
         }
         
         // Assign.
@@ -3041,19 +3038,20 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (BOOL)commitEditing {
-    if (editor)
-        return [editor commitEditing];
-    return YES;
-}
-
-- (void)beginNewUndoGroupIfNeeded {
+    BOOL success = YES;
     if (editor) {
         NSUndoManager *undoManager = [self undoManager];
         NSInteger level = [undoManager groupingLevel];
-        [self commitEditing];
+        success = [editor commitEditing];
         if ([undoManager groupingLevel] > level)
             pdfvFlags.wantsNewUndoGroup = YES;
     }
+    return success;
+}
+
+- (void)beginNewUndoGroupIfNeeded {
+    if (editor)
+        [self commitEditing];
     if (pdfvFlags.wantsNewUndoGroup) {
         NSUndoManager *undoManger = [self undoManager];
         if ([undoManger groupingLevel] > 0) {
