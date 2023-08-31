@@ -228,7 +228,7 @@ static char SKMainWindowContentLayoutObservationContext;
 @implementation SKMainWindowController
 
 @synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, statusBar, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
-@dynamic pdfDocument, presentationOptions, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
+@dynamic pdfDocument, presentationOptions, presentationUndoManager, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -319,6 +319,8 @@ static char SKMainWindowContentLayoutObservationContext;
     SKDESTROY(overviewContentView);
     SKDESTROY(fieldEditor);
     SKDESTROY(presentationNotesDocument);
+    SKDESTROY(presentationNotes);
+    SKDESTROY(presentationUndoManager);
     [super dealloc];
 }
 
@@ -1059,8 +1061,8 @@ static char SKMainWindowContentLayoutObservationContext;
             [pageIndexes addIndex:[annotation pageIndex]];
             PDFAnnotation *popup = [annotation popup];
             if (popup)
-                [pdfView removeAnnotation:popup];
-            [pdfView removeAnnotation:annotation];
+                [pdfDoc removeAnnotation:popup];
+            [pdfDoc removeAnnotation:annotation];
         }
         if (removeAllNotes)
             [self removeAllObjectsFromNotes];
@@ -1088,7 +1090,7 @@ static char SKMainWindowContentLayoutObservationContext;
                 pageIndex = [pdfDoc pageCount] - 1;
             [pageIndexes addIndex:pageIndex];
             PDFPage *page = [pdfDoc pageAtIndex:pageIndex];
-            [pdfView addAnnotation:annotation toPage:page];
+            [pdfDoc addAnnotation:annotation toPage:page];
             if (isConvert && [[annotation contents] length] == 0)
                 [annotation autoUpdateString];
             [notesToAdd addObject:annotation];
@@ -1573,6 +1575,12 @@ static char SKMainWindowContentLayoutObservationContext;
         [presentationNotesDocument release];
         presentationNotesDocument = [newDocument retain];
     }
+}
+
+- (NSUndoManager *)presentationUndoManager {
+    if (presentationUndoManager == nil)
+        presentationUndoManager = [[NSUndoManager alloc] init];
+    return presentationUndoManager;
 }
 
 - (BOOL)recentInfoNeedsUpdate {
@@ -2319,6 +2327,100 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     [self incrementProgressSheet];
 }
 
+- (void)handleDidAddAnnotationNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
+    PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
+    NSUndoManager *undoManager = [self interactionMode] == SKPresentationMode ? [self presentationUndoManager] : [[self document] undoManager];
+    
+    [[undoManager prepareWithInvocationTarget:[notification object]] removeAnnotation:annotation];
+    
+    if ([self interactionMode] == SKPresentationMode) {
+        if (presentationNotes == nil)
+            presentationNotes = [[NSMutableArray alloc] init];
+        [presentationNotes addObject:annotation];
+        if (page)
+            [self updateThumbnailAtPageIndex:[page pageIndex]];
+    } else {
+        if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
+            mwcFlags.updatingNoteSelection = 1;
+            [[self mutableArrayValueForKey:NOTES_KEY] addObject:annotation];
+            [rightSideController.noteArrayController rearrangeObjects]; // doesn't seem to be done automatically
+            mwcFlags.updatingNoteSelection = 0;
+            [rightSideController.noteOutlineView reloadData];
+        }
+        if (page) {
+            [self updateThumbnailAtPageIndex:[page pageIndex]];
+            for (SKSnapshotWindowController *wc in snapshots) {
+                if ([wc isPageVisible:page])
+                    [self snapshotNeedsUpdate:wc];
+            }
+            [secondaryPdfView setNeedsDisplayForAnnotation:annotation onPage:page];
+        }
+    }
+}
+
+- (void)handleDidRemoveAnnotationNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
+    PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
+    NSUndoManager *undoManager = [self interactionMode] == SKPresentationMode ? [self presentationUndoManager] : [[self document] undoManager];
+
+    [[undoManager prepareWithInvocationTarget:[notification object]] addAnnotation:annotation toPage:page];
+    
+    if ([self interactionMode] == SKPresentationMode) {
+        [presentationNotes removeObject:annotation];
+        if (page)
+            [self updateThumbnailAtPageIndex:[page pageIndex]];
+    } else {
+        if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
+            if ([[self selectedNotes] containsObject:annotation])
+                [rightSideController.noteOutlineView deselectAll:self];
+            
+            [[self windowControllerForNote:annotation] close];
+            
+            mwcFlags.updatingNoteSelection = 1;
+            [[self mutableArrayValueForKey:NOTES_KEY] removeObject:annotation];
+            [rightSideController.noteArrayController rearrangeObjects]; // doesn't seem to be done automatically
+            mwcFlags.updatingNoteSelection = 0;
+            [rightSideController.noteOutlineView reloadData];
+        }
+        if (page) {
+            [self updateThumbnailAtPageIndex:[page pageIndex]];
+            for (SKSnapshotWindowController *wc in snapshots) {
+                if ([wc isPageVisible:page])
+                    [self snapshotNeedsUpdate:wc];
+            }
+            [secondaryPdfView setNeedsDisplayForAnnotation:annotation onPage:page];
+        }
+    }
+}
+
+- (void)handleDidMoveAnnotationNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
+    PDFPage *oldPage = [userInfo objectForKey:SKPDFDocumentOldPageKey];
+    PDFPage *newPage = [userInfo objectForKey:SKPDFDocumentPageKey];
+    NSUndoManager *undoManager = [[self document] undoManager];
+
+    [[undoManager prepareWithInvocationTarget:[notification object]] moveAnnotation:annotation toPage:oldPage];
+    
+    if (oldPage || newPage) {
+        if (oldPage)
+            [self updateThumbnailAtPageIndex:[oldPage pageIndex]];
+        if (newPage)
+            [self updateThumbnailAtPageIndex:[newPage pageIndex]];
+        for (SKSnapshotWindowController *wc in snapshots) {
+            if ([wc isPageVisible:oldPage] || [wc isPageVisible:newPage])
+                [self snapshotNeedsUpdate:wc];
+        }
+        [secondaryPdfView requiresDisplay];
+    }
+    
+    [rightSideController.noteArrayController rearrangeObjects];
+    [rightSideController.noteOutlineView reloadData];
+}
+
 - (void)registerForDocumentNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     PDFDocument *pdfDoc = [pdfView document];
@@ -2330,6 +2432,12 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                              name:PDFDocumentDidEndPageWriteNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handlePageBoundsDidChangeNotification:) 
                              name:SKPDFPageBoundsDidChangeNotification object:pdfDoc];
+    [nc addObserver:self selector:@selector(handleDidAddAnnotationNotification:)
+                             name:SKPDFDocumentDidAddAnnotationNotification object:pdfDoc];
+    [nc addObserver:self selector:@selector(handleDidRemoveAnnotationNotification:)
+                             name:SKPDFDocumentDidRemoveAnnotationNotification object:pdfDoc];
+    [nc addObserver:self selector:@selector(handleDidMoveAnnotationNotification:)
+                             name:SKPDFDocumentDidMoveAnnotationNotification object:pdfDoc];
 }
 
 - (void)unregisterForDocumentNotifications {
@@ -2339,6 +2447,9 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     [nc removeObserver:self name:PDFDocumentDidEndWriteNotification object:pdfDoc];
     [nc removeObserver:self name:PDFDocumentDidEndPageWriteNotification object:pdfDoc];
     [nc removeObserver:self name:SKPDFPageBoundsDidChangeNotification object:pdfDoc];
+    [nc removeObserver:self name:SKPDFDocumentDidAddAnnotationNotification object:pdfDoc];
+    [nc removeObserver:self name:SKPDFDocumentDidRemoveAnnotationNotification object:pdfDoc];
+    [nc removeObserver:self name:SKPDFDocumentDidMoveAnnotationNotification object:pdfDoc];
 }
 
 #pragma mark Subwindows

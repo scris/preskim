@@ -316,7 +316,7 @@
 
 - (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)sender {
     if ([self interactionMode] == SKPresentationMode)
-        return [pdfView temporaryUndoManager];
+        return [self presentationUndoManager];
     return [[self document] undoManager];
 }
 
@@ -896,7 +896,7 @@
 - (void)outlineView:(NSOutlineView *)ov deleteItems:(NSArray *)items  {
     if ([ov isEqual:rightSideController.noteOutlineView] && [items count]) {
         for (PDFAnnotation *item in [self noteItems:items])
-            [pdfView removeAnnotation:item];
+            [[self pdfDocument] removeAnnotation:item];
         [[[self document] undoManager] setActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
     }
 }
@@ -1517,12 +1517,6 @@
     [self toggleLeftSidePane:sender];
 }
 
-- (NSUndoManager *)undoManagerForPDFView:(PDFView *)sender {
-    if ([self interactionMode] == SKPresentationMode)
-        return [pdfView temporaryUndoManager];
-    return [[self document] undoManager];
-}
-
 - (void)PDFView:(PDFView *)sender rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation {
     [self rotatePageAtIndex:idx by:rotation];
 }
@@ -2023,81 +2017,6 @@ static NSArray *allMainDocumentPDFViews() {
         [self updateRightStatus];
 }
 
-- (void)handleDidAddAnnotationNotification:(NSNotification *)notification {
-    PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFViewAnnotationKey];
-    PDFPage *page = [[notification userInfo] objectForKey:SKPDFViewPageKey];
-    
-    if ([[[notification userInfo] objectForKey:SKPDFViewTemporaryKey] boolValue] == NO) {
-        if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
-            mwcFlags.updatingNoteSelection = 1;
-            [[self mutableArrayValueForKey:NOTES_KEY] addObject:annotation];
-            [rightSideController.noteArrayController rearrangeObjects]; // doesn't seem to be done automatically
-            mwcFlags.updatingNoteSelection = 0;
-            [rightSideController.noteOutlineView reloadData];
-        }
-        if (page) {
-            [self updateThumbnailAtPageIndex:[page pageIndex]];
-            for (SKSnapshotWindowController *wc in snapshots) {
-                if ([wc isPageVisible:page])
-                    [self snapshotNeedsUpdate:wc];
-            }
-            [secondaryPdfView setNeedsDisplayForAnnotation:annotation onPage:page];
-        }
-    } else if (page) {
-        [self updateThumbnailAtPageIndex:[page pageIndex]];
-    }
-}
-
-- (void)handleDidRemoveAnnotationNotification:(NSNotification *)notification {
-    PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFViewAnnotationKey];
-    PDFPage *page = [[notification userInfo] objectForKey:SKPDFViewPageKey];
-    
-    if ([[[notification userInfo] objectForKey:SKPDFViewTemporaryKey] boolValue] == NO) {
-        if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
-            if ([[self selectedNotes] containsObject:annotation])
-                [rightSideController.noteOutlineView deselectAll:self];
-            
-            [[self windowControllerForNote:annotation] close];
-            
-            mwcFlags.updatingNoteSelection = 1;
-            [[self mutableArrayValueForKey:NOTES_KEY] removeObject:annotation];
-            [rightSideController.noteArrayController rearrangeObjects]; // doesn't seem to be done automatically
-            mwcFlags.updatingNoteSelection = 0;
-            [rightSideController.noteOutlineView reloadData];
-        }
-        if (page) {
-            [self updateThumbnailAtPageIndex:[page pageIndex]];
-            for (SKSnapshotWindowController *wc in snapshots) {
-                if ([wc isPageVisible:page])
-                    [self snapshotNeedsUpdate:wc];
-            }
-            [secondaryPdfView setNeedsDisplayForAnnotation:annotation onPage:page];
-        }
-    } else if (page) {
-        [self updateThumbnailAtPageIndex:[page pageIndex]];
-    }
-}
-
-- (void)handleDidMoveAnnotationNotification:(NSNotification *)notification {
-    PDFPage *oldPage = [[notification userInfo] objectForKey:SKPDFViewOldPageKey];
-    PDFPage *newPage = [[notification userInfo] objectForKey:SKPDFViewNewPageKey];
-    
-    if (oldPage || newPage) {
-        if (oldPage)
-            [self updateThumbnailAtPageIndex:[oldPage pageIndex]];
-        if (newPage)
-            [self updateThumbnailAtPageIndex:[newPage pageIndex]];
-        for (SKSnapshotWindowController *wc in snapshots) {
-            if ([wc isPageVisible:oldPage] || [wc isPageVisible:newPage])
-                [self snapshotNeedsUpdate:wc];
-        }
-        [secondaryPdfView requiresDisplay];
-    }
-    
-    [rightSideController.noteArrayController rearrangeObjects];
-    [rightSideController.noteOutlineView reloadData];
-}
-
 - (void)handleReadingBarDidChangeNotification:(NSNotification *)notification {
     NSDictionary *userInfo = [notification userInfo];
     PDFPage *oldPage = [userInfo objectForKey:SKPDFViewOldPageKey];
@@ -2159,12 +2078,6 @@ static NSArray *allMainDocumentPDFViews() {
                              name:PDFViewDisplayBoxChangedNotification object:pdfView];
     [nc addObserver:self selector:@selector(handleCurrentAnnotationChangedNotification:)
                              name:SKPDFViewCurrentAnnotationChangedNotification object:pdfView];
-    [nc addObserver:self selector:@selector(handleDidAddAnnotationNotification:) 
-                             name:SKPDFViewDidAddAnnotationNotification object:pdfView];
-    [nc addObserver:self selector:@selector(handleDidRemoveAnnotationNotification:) 
-                             name:SKPDFViewDidRemoveAnnotationNotification object:pdfView];
-    [nc addObserver:self selector:@selector(handleDidMoveAnnotationNotification:) 
-                             name:SKPDFViewDidMoveAnnotationNotification object:pdfView];
     [nc addObserver:self selector:@selector(handleReadingBarDidChangeNotification:) 
                              name:SKPDFViewReadingBarDidChangeNotification object:pdfView];
     // View

@@ -52,19 +52,14 @@ extern NSString *SKPDFViewToolModeChangedNotification;
 extern NSString *SKPDFViewAnnotationModeChangedNotification;
 extern NSString *SKPDFViewTemporaryToolModeChangedNotification;
 extern NSString *SKPDFViewCurrentAnnotationChangedNotification;
-extern NSString *SKPDFViewDidAddAnnotationNotification;
-extern NSString *SKPDFViewDidRemoveAnnotationNotification;
-extern NSString *SKPDFViewDidMoveAnnotationNotification;
 extern NSString *SKPDFViewReadingBarDidChangeNotification;
 extern NSString *SKPDFViewSelectionChangedNotification;
 extern NSString *SKPDFViewMagnificationChangedNotification;
 extern NSString *SKPDFViewPacerStartedOrStoppedNotification;
 
 extern NSString *SKPDFViewAnnotationKey;
-extern NSString *SKPDFViewPageKey;
 extern NSString *SKPDFViewOldPageKey;
 extern NSString *SKPDFViewNewPageKey;
-extern NSString *SKPDFViewTemporaryKey;
 
 typedef NS_ENUM(NSInteger, SKToolMode) {
     SKTextToolMode,
@@ -142,9 +137,6 @@ enum {
     
 	PDFAnnotation *currentAnnotation;
 	PDFAnnotation *highlightAnnotation;
-    
-    NSMutableArray *temporaryAnnotations;
-    NSUndoManager *temporaryUndoManager;
     
     SKTextNoteEditor *editor;
     
@@ -242,10 +234,8 @@ enum {
 
 - (void)addAnnotationForContext:(id)sender;
 - (void)addAnnotationWithType:(SKNoteType)annotationType;
-- (void)addAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page;
 - (void)removeCurrentAnnotation:(id)sender;
 - (void)removeThisAnnotation:(id)sender;
-- (void)removeAnnotation:(PDFAnnotation *)annotation;
 
 - (void)editCurrentAnnotation:(id)sender;
 - (void)editThisAnnotation:(id)sender;
@@ -290,5 +280,4 @@ enum {
 - (void)PDFViewPerformHideFind:(PDFView *)sender;
 - (BOOL)PDFViewIsFindVisible:(PDFView *)sender;
 - (void)PDFView:(PDFView *)sender rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation;
-- (NSUndoManager *)undoManagerForPDFView:(PDFView *)sender;
 @end
