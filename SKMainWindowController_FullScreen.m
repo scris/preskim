@@ -480,6 +480,14 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     if ([self leftSidePaneIsOpen])
         [self hideSideWindow];
     
+    if ([presentationNotes count]) {
+        PDFDocument *pdfDoc = [self pdfDocument];
+        for (PDFAnnotation *annotation in presentationNotes)
+            [pdfDoc removeAnnotation:annotation];
+    }
+    SKDESTROY(presentationNotes);
+    SKDESTROY(presentationUndoManager);
+    
     // do this first, otherwise the navigation window may be covered by fadeWindow and then reveiled again, which looks odd
     [pdfView setInteractionMode:SKNormalMode];
     

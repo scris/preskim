@@ -1710,9 +1710,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     if ([[self pdfDocument] allowsNotes]) {
         PDFPage *page = [newNote page];
         if (page && [[page annotations] containsObject:newNote] == NO) {
-            SKPDFView *pdfView = [self pdfView];
-            
-            [pdfView addAnnotation:newNote toPage:page];
+            [[self pdfDocument] addAnnotation:newNote toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
         } else {
             [[NSScriptCommand currentCommand] setScriptErrorNumber:NSReceiversCantHandleCommandScriptError];
@@ -1724,7 +1722,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     if ([[self pdfDocument] allowsNotes]) {
         PDFAnnotation *note = [[self notes] objectAtIndex:anIndex];
         
-        [[self pdfView] removeAnnotation:note];
+        [[self pdfDocument] removeAnnotation:note];
         [[self undoManager] setActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
     }
 }

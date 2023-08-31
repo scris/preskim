@@ -38,8 +38,6 @@
 
 #import "PDFPage_SKExtensions.h"
 #import <SkimNotes/SkimNotes.h>
-#import "SKMainDocument.h"
-#import "SKPDFView.h"
 #import "SKReadingBar.h"
 #import "PDFSelection_SKExtensions.h"
 #import "SKRuntime.h"
@@ -752,20 +750,16 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
 
 - (void)insertObject:(id)newNote inNotesAtIndex:(NSUInteger)anIndex {
     if ([self isEditable] && [[self document] allowsNotes]) {
-        SKPDFView *pdfView = [(SKMainDocument *)[self containingDocument] pdfView];
-        
-        [pdfView addAnnotation:newNote toPage:self];
-        [[pdfView undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
+        [[self document] addAnnotation:newNote toPage:self];
+        [[[self containingDocument] undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
     }
 }
 
 - (void)removeObjectFromNotesAtIndex:(NSUInteger)anIndex {
     if ([self isEditable] && [[self document] allowsNotes]) {
         PDFAnnotation *note = [[self notes] objectAtIndex:anIndex];
-        SKPDFView *pdfView = [(SKMainDocument *)[self containingDocument] pdfView];
-        
-        [pdfView removeAnnotation:note];
-        [[pdfView undoManager] setActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
+        [[self document] removeAnnotation:note];
+        [[[self containingDocument] undoManager] setActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
     }
 }
 

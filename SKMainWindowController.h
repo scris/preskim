@@ -136,7 +136,10 @@ enum {
     SKSnapshotWindowController          *presentationPreview;
     NSButton                            *presentationNotesButton;
     NSTrackingArea                      *presentationNotesTrackingArea;
-
+    
+    NSMutableArray                      *presentationNotes;
+    NSUndoManager                       *presentationUndoManager;
+    
     NSButton                            *colorAccessoryView;
     NSButton                            *textColorAccessoryView;
     
@@ -270,6 +273,8 @@ enum {
 
 @property (nonatomic, retain) NSDocument *presentationNotesDocument;
 @property (nonatomic) NSInteger presentationNotesOffset;
+
+@property (nonatomic, readonly) NSUndoManager *presentationUndoManager;
 
 @property (nonatomic, copy) NSArray *tags;
 @property (nonatomic) double rating;

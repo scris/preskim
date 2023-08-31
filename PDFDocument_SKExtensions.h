@@ -39,6 +39,16 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+extern NSString *SKPDFDocumentDidAddAnnotationNotification;
+extern NSString *SKPDFDocumentWillRemoveAnnotationNotification;
+extern NSString *SKPDFDocumentDidRemoveAnnotationNotification;
+extern NSString *SKPDFDocumentWillMoveAnnotationNotification;
+extern NSString *SKPDFDocumentDidMoveAnnotationNotification;
+
+extern NSString *SKPDFDocumentAnnotationKey;
+extern NSString *SKPDFDocumentPageKey;
+extern NSString *SKPDFDocumentOldPageKey;
+
 typedef struct _SKLanguageDirectionAngles {
     NSInteger characterDirection;
     NSInteger lineDirection;
@@ -54,4 +64,7 @@ typedef struct _SKLanguageDirectionAngles {
 - (NSDocument *)containingDocument;
 - (NSArray *)detectedWidgets;
 - (void)setContainingDocument:(NSDocument *)document;
+- (void)addAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page;
+- (void)removeAnnotation:(PDFAnnotation *)annotation;
+- (void)moveAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page;
 @end

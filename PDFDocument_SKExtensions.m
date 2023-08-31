@@ -42,7 +42,17 @@
 #import "PDFPage_SKExtensions.h"
 #import "NSData_SKExtensions.h"
 #import "NSDocument_SKExtensions.h"
+#import "PDFAnnotation_SKExtensions.h"
 
+NSString *SKPDFDocumentDidAddAnnotationNotification = @"SKPDFDocumentDidAddAnnotationNotification";
+NSString *SKPDFDocumentWillRemoveAnnotationNotification = @"SKPDFDocumentWillRemoveAnnotationNotification";
+NSString *SKPDFDocumentDidRemoveAnnotationNotification = @"SKPDFDocumentDidRemoveAnnotationNotification";
+NSString *SKPDFDocumentWillMoveAnnotationNotification = @"SKPDFDocumentWillMoveAnnotationNotification";
+NSString *SKPDFDocumentDidMoveAnnotationNotification = @"SKPDFDocumentDidMoveAnnotationNotification";
+
+NSString *SKPDFDocumentAnnotationKey = @"annotation";
+NSString *SKPDFDocumentPageKey = @"page";
+NSString *SKPDFDocumentOldPageKey = @"oldPage";
 
 #if SDK_BEFORE(10_13)
 
@@ -297,5 +307,32 @@ static inline NSInteger angleForDirection(NSLocaleLanguageDirection direction, B
 - (void)setContainingDocument:(NSDocument *)document  {}
 
 - (NSArray *)detectedWidgets { return nil; }
+
+- (void)addAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page {
+    NSDictionary *userInfo = @{SKPDFDocumentAnnotationKey:annotation, SKPDFDocumentPageKey:page};
+    [page addAnnotation:annotation];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFDocumentDidAddAnnotationNotification object:self userInfo:userInfo];
+}
+
+- (void)removeAnnotation:(PDFAnnotation *)annotation {
+    PDFPage *page = [annotation page];
+    NSDictionary *userInfo = @{SKPDFDocumentAnnotationKey:annotation, SKPDFDocumentPageKey:page};
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFDocumentWillRemoveAnnotationNotification object:self userInfo:userInfo];
+    [page removeAnnotation:annotation];
+    if (RUNNING(10_12) && [annotation isNote] && [[page annotations] containsObject:annotation])
+        [page removeAnnotation:annotation];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFDocumentDidRemoveAnnotationNotification object:self userInfo:userInfo];
+}
+
+- (void)moveAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page {
+    PDFPage *oldPage = [annotation page];
+    NSDictionary *userInfo = @{SKPDFDocumentAnnotationKey:annotation, SKPDFDocumentPageKey:page, SKPDFDocumentOldPageKey:oldPage};
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFDocumentWillMoveAnnotationNotification object:self userInfo:userInfo];
+    [oldPage removeAnnotation:annotation];
+    if (RUNNING(10_12) && [annotation isNote] && [[oldPage annotations] containsObject:annotation])
+        [oldPage removeAnnotation:annotation];
+    [page addAnnotation:annotation];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFDocumentDidMoveAnnotationNotification object:self userInfo:userInfo];
+}
 
 @end

@@ -119,19 +119,14 @@ NSString *SKPDFViewToolModeChangedNotification = @"SKPDFViewToolModeChangedNotif
 NSString *SKPDFViewTemporaryToolModeChangedNotification = @"SKPDFViewTemporaryToolModeChangedNotification";
 NSString *SKPDFViewAnnotationModeChangedNotification = @"SKPDFViewAnnotationModeChangedNotification";
 NSString *SKPDFViewCurrentAnnotationChangedNotification = @"SKPDFViewCurrentAnnotationChangedNotification";
-NSString *SKPDFViewDidAddAnnotationNotification = @"SKPDFViewDidAddAnnotationNotification";
-NSString *SKPDFViewDidRemoveAnnotationNotification = @"SKPDFViewDidRemoveAnnotationNotification";
-NSString *SKPDFViewDidMoveAnnotationNotification = @"SKPDFViewDidMoveAnnotationNotification";
 NSString *SKPDFViewReadingBarDidChangeNotification = @"SKPDFViewReadingBarDidChangeNotification";
 NSString *SKPDFViewSelectionChangedNotification = @"SKPDFViewSelectionChangedNotification";
 NSString *SKPDFViewMagnificationChangedNotification = @"SKPDFViewMagnificationChangedNotification";
 NSString *SKPDFViewPacerStartedOrStoppedNotification = @"SKPDFViewPacerStartedOrStoppedNotification";
 
 NSString *SKPDFViewAnnotationKey = @"annotation";
-NSString *SKPDFViewPageKey = @"page";
 NSString *SKPDFViewOldPageKey = @"oldPage";
 NSString *SKPDFViewNewPageKey = @"newPage";
-NSString *SKPDFViewTemporaryKey = @"temporary";
 
 #define SKMoveReadingBarModifiersKey @"SKMoveReadingBarModifiers"
 #define SKResizeReadingBarModifiersKey @"SKResizeReadingBarModifiers"
@@ -265,6 +260,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)handlePageChangedNotification:(NSNotification *)notification;
 - (void)handleScaleChangedNotification:(NSNotification *)notification;
+- (void)registerForDocumentNotifications;
+- (void)unregisterForDocumentNotifications;
 
 @end
 
@@ -273,7 +270,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 @implementation SKPDFView
 
 @synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, currentAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, zooming;
-@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing, temporaryUndoManager;
+@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -379,8 +376,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     // we should have been cleaned up in setDelegate:nil which is called from windowWillClose:
     SKDESTROY(syncDot);
     SKDESTROY(currentAnnotation);
-    SKDESTROY(temporaryAnnotations);
-    SKDESTROY(temporaryUndoManager);
     SKDESTROY(typeSelectHelper);
     SKDESTROY(transitionController);
     SKDESTROY(navWindow);
@@ -639,7 +634,13 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [self setReadingBar:nil];
     }
     
+    if ([self document])
+        [self unregisterForDocumentNotifications];
+    
     [super setDocument:document];
+    
+    if (document)
+        [self registerForDocumentNotifications];
     
     [self resetPDFToolTipRects];
     
@@ -659,19 +660,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
     
     [loupeController updateContents];
-}
-
-- (NSUndoManager *)undoManager {
-    if ([[self delegate] respondsToSelector:@selector(undoManagerForPDFView:)])
-        return [[self delegate] undoManagerForPDFView:self];
-    else
-        return [super undoManager];
-}
-
-- (NSUndoManager *)temporaryUndoManager {
-    if (temporaryUndoManager == nil)
-        temporaryUndoManager = [[NSUndoManager alloc] init];
-    return temporaryUndoManager;
 }
 
 - (void)setBackgroundColor:(NSColor *)newBackgroundColor {
@@ -740,12 +728,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [NSCursor setHiddenUntilMouseMoves:NO];
             if ([[self documentView] isHidden])
                 [[self documentView] setHidden:NO];
-            if (temporaryAnnotations) {
-                for (PDFAnnotation *annotation in temporaryAnnotations)
-                    [self removeTemporaryAnnotation:annotation];
-                SKDESTROY(temporaryAnnotations);
-                SKDESTROY(temporaryUndoManager);
-            }
         }
         interactionMode = newInteractionMode;
         if (interactionMode == SKPresentationMode) {
@@ -1400,7 +1382,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             
             [newAnnotation registerUserName];
             [self beginNewUndoGroupIfNeededWithCommit:YES];
-            [self addAnnotation:newAnnotation toPage:page];
+            [[self document] addAnnotation:newAnnotation toPage:page];
             
             [self setCurrentAnnotation:newAnnotation];
 
@@ -1473,7 +1455,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             
             [newAnnotation registerUserName];
             [self beginNewUndoGroupIfNeededWithCommit:YES];
-            [self addAnnotation:newAnnotation toPage:page];
+            [[self document] addAnnotation:newAnnotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
             [self setCurrentAnnotation:newAnnotation];
@@ -2661,7 +2643,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             if ([text length] > 0 || [newAnnotation string] == nil)
                 [newAnnotation setString:text ?: @""];
             [newAnnotation registerUserName];
-            [self addAnnotation:newAnnotation toPage:page];
+            [[self document] addAnnotation:newAnnotation toPage:page];
             if ([text length] == 0 && isInitial == NO)
                 [newAnnotation autoUpdateString];
         }
@@ -2676,7 +2658,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if (annotationType != SKLineNote && annotationType != SKInkNote && [text length] > 0)
             [newAnnotation setString:text];
         [newAnnotation registerUserName];
-        [self addAnnotation:newAnnotation toPage:page];
+        [[self document] addAnnotation:newAnnotation toPage:page];
         if ([text length] == 0 && isInitial == NO)
             [newAnnotation autoUpdateString];
         if ([newAnnotation string] == nil)
@@ -2867,20 +2849,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [self addAnnotationWithType:[sender tag] context:[sender representedObject]];
 }
 
-- (void)addAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page {
-    [[[self undoManager] prepareWithInvocationTarget:self] removeAnnotation:annotation];
-    [annotation setShouldDisplay:pdfvFlags.hideNotes == NO || [annotation isSkimNote] == NO];
-    [annotation setShouldPrint:pdfvFlags.hideNotes == NO || [annotation isSkimNote] == NO];
-    [page addAnnotation:annotation];
-    [self setNeedsDisplayForAnnotation:annotation];
-    [self annotationsChangedOnPage:page];
-    [self resetPDFToolTipRects];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidAddAnnotationNotification object:self userInfo:@{SKPDFViewPageKey:page, SKPDFViewAnnotationKey:annotation}];
-}
-
 - (void)removeCurrentAnnotation:(id)sender{
     if ([currentAnnotation isSkimNote]) {
-        [self removeAnnotation:currentAnnotation];
+        [[self document] removeAnnotation:currentAnnotation];
         [[self undoManager] setActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
     }
 }
@@ -2889,77 +2860,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     PDFAnnotation *annotation = [sender representedObject];
     
     if (annotation)
-        [self removeAnnotation:annotation];
-}
-
-- (void)removeAnnotation:(PDFAnnotation *)annotation {
-    if (currentAnnotation == annotation) {
-        [self setCurrentAnnotation:nil];
-        [self beginNewUndoGroupIfNeededWithCommit:NO];
-    }
-    
-    PDFAnnotation *wasAnnotation = [annotation retain];
-    PDFPage *page = [[wasAnnotation page] retain];
-    
-    [[[self undoManager] prepareWithInvocationTarget:self] addAnnotation:wasAnnotation toPage:page];
-    [self setNeedsDisplayForAnnotation:wasAnnotation];
-    [page removeAnnotation:wasAnnotation];
-    [self annotationsChangedOnPage:page];
-    if ([wasAnnotation isNote]) {
-        if (RUNNING(10_12) && [[page annotations] containsObject:wasAnnotation])
-            [page removeAnnotation:wasAnnotation];
-        [self resetPDFToolTipRects];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidRemoveAnnotationNotification object:self
-                                                      userInfo:@{SKPDFViewAnnotationKey:wasAnnotation, SKPDFViewPageKey:page}];
-    [wasAnnotation release];
-    [page release];
-}
-
-- (void)moveAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page {
-    PDFPage *oldPage = [[annotation page] retain];
-    [[[self undoManager] prepareWithInvocationTarget:self] moveAnnotation:annotation toPage:oldPage];
-    [[self undoManager] setActionName:NSLocalizedString(@"Edit Note", @"Undo action name")];
-    [self setNeedsDisplayForAnnotation:annotation];
-    [annotation retain];
-    [oldPage removeAnnotation:annotation];
-    [page addAnnotation:annotation];
-    [annotation release];
-    [self setNeedsDisplayForAnnotation:annotation];
-    [self annotationsChangedOnPage:oldPage];
-    [self annotationsChangedOnPage:page];
-    if ([annotation isNote])
-        [self resetPDFToolTipRects];
-    if ([self isEditingAnnotation:annotation])
-        [editor layoutWithEvent:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidMoveAnnotationNotification object:self userInfo:@{SKPDFViewOldPageKey:oldPage, SKPDFViewNewPageKey:page, SKPDFViewAnnotationKey:annotation}];
-    [oldPage release];
-}
-
-- (void)addTemporaryAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page {
-    [[[self temporaryUndoManager] prepareWithInvocationTarget:self] removeTemporaryAnnotation:annotation];
-    if (temporaryAnnotations == nil)
-        temporaryAnnotations = [[NSMutableArray alloc] init];
-    [annotation setShouldPrint:NO];
-    [temporaryAnnotations addObject:annotation];
-    [page addAnnotation:annotation];
-    [self setNeedsDisplayForAnnotation:annotation];
-    [self annotationsChangedOnPage:page];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidAddAnnotationNotification object:self userInfo:@{SKPDFViewAnnotationKey:annotation, SKPDFViewPageKey:page, SKPDFViewTemporaryKey:@YES}];
-}
-
-- (void)removeTemporaryAnnotation:(PDFAnnotation *)annotation {
-    PDFAnnotation *wasAnnotation = [annotation retain];
-    PDFPage *page = [[wasAnnotation page] retain];
-    
-    [[[self temporaryUndoManager] prepareWithInvocationTarget:self] addTemporaryAnnotation:wasAnnotation toPage:page];
-    [self setNeedsDisplayForAnnotation:wasAnnotation];
-    [temporaryAnnotations removeObject:annotation];
-    [page removeAnnotation:wasAnnotation];
-    [self annotationsChangedOnPage:page];
-    [wasAnnotation release];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDidRemoveAnnotationNotification object:self userInfo:@{SKPDFViewAnnotationKey:wasAnnotation, SKPDFViewPageKey:page, SKPDFViewTemporaryKey:@YES}];
-    [page release];
+        [[self document] removeAnnotation:annotation];
 }
 
 - (void)editThisAnnotation:(id)sender {
@@ -3336,6 +3237,86 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 #pragma mark Notification handling
+
+- (void)handleDidAddAnnotationNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
+    PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
+    
+    [annotation setShouldDisplay:pdfvFlags.hideNotes == NO || [annotation isSkimNote] == NO || interactionMode == SKPresentationMode];
+    [annotation setShouldPrint:(pdfvFlags.hideNotes == NO || [annotation isSkimNote] == NO) && interactionMode != SKPresentationMode];
+    
+    [self setNeedsDisplayForAnnotation:annotation];
+    [self annotationsChangedOnPage:page];
+    [self resetPDFToolTipRects];
+}
+
+- (void)handleWillRemoveAnnotationNotification:(NSNotification *)notification {
+    PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
+    
+    if (currentAnnotation == annotation) {
+        [self setCurrentAnnotation:nil];
+        [self beginNewUndoGroupIfNeededWithCommit:NO];
+    }
+    
+    [self setNeedsDisplayForAnnotation:annotation];
+}
+
+- (void)handleDidRemoveAnnotationNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
+    PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
+    
+    [self annotationsChangedOnPage:page];
+    if ([annotation isNote])
+        [self resetPDFToolTipRects];
+}
+
+- (void)handleWillMoveAnnotationNotification:(NSNotification *)notification {
+    PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
+    
+    [self setNeedsDisplayForAnnotation:annotation];
+}
+
+- (void)handleDidMoveAnnotationNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
+    PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
+    PDFPage *oldPage = [userInfo objectForKey:SKPDFDocumentOldPageKey];
+    
+    [self setNeedsDisplayForAnnotation:annotation];
+    [self annotationsChangedOnPage:oldPage];
+    [self annotationsChangedOnPage:page];
+    if ([annotation isNote])
+        [self resetPDFToolTipRects];
+    if ([self isEditingAnnotation:annotation])
+        [editor layoutWithEvent:nil];
+}
+
+- (void)registerForDocumentNotifications {
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    PDFDocument *pdfDoc = [self document];
+    [nc addObserver:self selector:@selector(handleDidAddAnnotationNotification:)
+                             name:SKPDFDocumentDidAddAnnotationNotification object:pdfDoc];
+    [nc addObserver:self selector:@selector(handleWillRemoveAnnotationNotification:)
+                             name:SKPDFDocumentWillRemoveAnnotationNotification object:pdfDoc];
+    [nc addObserver:self selector:@selector(handleDidRemoveAnnotationNotification:)
+                             name:SKPDFDocumentDidRemoveAnnotationNotification object:pdfDoc];
+    [nc addObserver:self selector:@selector(handleWillMoveAnnotationNotification:)
+                             name:SKPDFDocumentWillMoveAnnotationNotification object:pdfDoc];
+    [nc addObserver:self selector:@selector(handleDidMoveAnnotationNotification:)
+                             name:SKPDFDocumentDidMoveAnnotationNotification object:pdfDoc];
+}
+
+- (void)unregisterForDocumentNotifications {
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    PDFDocument *pdfDoc = [self document];
+    [nc removeObserver:self name:SKPDFDocumentDidAddAnnotationNotification object:pdfDoc];
+    [nc removeObserver:self name:SKPDFDocumentWillRemoveAnnotationNotification object:pdfDoc];
+    [nc removeObserver:self name:SKPDFDocumentDidRemoveAnnotationNotification object:pdfDoc];
+    [nc removeObserver:self name:SKPDFDocumentWillMoveAnnotationNotification object:pdfDoc];
+    [nc removeObserver:self name:SKPDFDocumentDidMoveAnnotationNotification object:pdfDoc];
+}
 
 - (void)handlePageChangedNotification:(NSNotification *)notification {
     if ([self displayMode] == kPDFDisplaySinglePage || [self displayMode] == kPDFDisplayTwoUp) {
@@ -4076,7 +4057,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (newActivePage) { // newActivePage should never be nil, but just to be sure
         if (newActivePage != [currentAnnotation page]) {
             // move the annotation to the new page
-            [self moveAnnotation:currentAnnotation toPage:newActivePage];
+            [[self document] moveAnnotation:currentAnnotation toPage:newActivePage];
+            [[self undoManager] setActionName:NSLocalizedString(@"Edit Note", @"Undo action name")];
         }
         
         NSRect newBounds = [currentAnnotation bounds];
@@ -4459,7 +4441,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithProperties:[newCurrentAnnotation SkimNoteProperties]];
             [newAnnotation registerUserName];
             [self beginNewUndoGroupIfNeededWithCommit:YES];
-            [self addAnnotation:newAnnotation toPage:page];
+            [[self document] addAnnotation:newAnnotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
             newCurrentAnnotation = newAnnotation;
             [newAnnotation release];
@@ -4493,9 +4475,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 [self beginNewUndoGroupIfNeededWithCommit:YES];
                 [newAnnotation setColor:[currentAnnotation color]];
                 [newAnnotation registerUserName];
-                [self removeAnnotation:newCurrentAnnotation];
+                [[self document] removeAnnotation:newCurrentAnnotation];
                 [self removeCurrentAnnotation:nil];
-                [self addAnnotation:newAnnotation toPage:page];
+                [[self document] addAnnotation:newAnnotation toPage:page];
                 [[self undoManager] setActionName:NSLocalizedString(@"Join Notes", @"Undo action name")];
                 newCurrentAnnotation = newAnnotation;
             }
@@ -4626,13 +4608,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (interactionMode != SKPresentationMode) {
             [annotation registerUserName];
             [self beginNewUndoGroupIfNeededWithCommit:NO];
-            [self addAnnotation:annotation toPage:page];
-            [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
-        } else {
-            if (tmpColor)
-                [annotation setColor:tmpColor];
-            [self addTemporaryAnnotation:annotation toPage:page];
+        } else if (tmpColor) {
+            [annotation setColor:tmpColor];
         }
+        [[self document] addAnnotation:annotation toPage:page];
+        [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
         
         [paths release];
         [annotation release];
@@ -4661,7 +4641,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         for (PDFAnnotation *annotation in annotations) {
             if ([annotation isSkimNote] && [annotation hitTest:point] && [self isEditingAnnotation:annotation] == NO) {
-                [self removeAnnotation:annotation];
+                [[self document] removeAnnotation:annotation];
                 [[self undoManager] setActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
                 break;
             }
