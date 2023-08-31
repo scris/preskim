@@ -272,6 +272,8 @@ enum {
 
 - (NSString *)currentColorDefaultKeyForAlternate:(BOOL)isAlt;
 
+- (void)undoManagerDidOpenOrCloseUndoGroup;
+
 @end
 
 #pragma mark -
