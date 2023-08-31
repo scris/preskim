@@ -225,7 +225,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)editTextNoteWithEvent:(NSEvent *)theEvent;
 - (BOOL)isEditingAnnotation:(PDFAnnotation *)annotation;
 
-- (void)beginNewUndoGroupIfNeeded;
+- (void)beginNewUndoGroupIfNeededWithCommit:(BOOL)commit;
 
 - (void)enableNavigation;
 - (void)disableNavigation;
@@ -1400,6 +1400,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [newAnnotation setBounds:bounds];
             
             [newAnnotation registerUserName];
+            [self beginNewUndoGroupIfNeededWithCommit:YES];
             [self addAnnotation:newAnnotation toPage:page];
             
             [self setCurrentAnnotation:newAnnotation];
@@ -1472,6 +1473,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             }
             
             [newAnnotation registerUserName];
+            [self beginNewUndoGroupIfNeededWithCommit:YES];
             [self addAnnotation:newAnnotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
@@ -2652,7 +2654,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
     
     if ([newAnnotations count] > 0) {
-        [self commitEditing];
+        [self beginNewUndoGroupIfNeededWithCommit:YES];
         
         for (NSArray *annotationAndPage in newAnnotations) {
             newAnnotation = [annotationAndPage firstObject];
@@ -2670,7 +2672,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         
         return YES;
     } else if (newAnnotation) {
-        [self commitEditing];
+        [self beginNewUndoGroupIfNeededWithCommit:YES];
         
         if (annotationType != SKLineNote && annotationType != SKInkNote && [text length] > 0)
             [newAnnotation setString:text];
@@ -2867,8 +2869,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)addAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page {
-    [self beginNewUndoGroupIfNeeded];
-    
     [[[self undoManager] prepareWithInvocationTarget:self] removeAnnotation:annotation];
     [annotation setShouldDisplay:pdfvFlags.hideNotes == NO || [annotation isSkimNote] == NO];
     [annotation setShouldPrint:pdfvFlags.hideNotes == NO || [annotation isSkimNote] == NO];
@@ -2894,16 +2894,15 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)removeAnnotation:(PDFAnnotation *)annotation {
-    if (annotation == currentAnnotation)
-        [self commitEditing];
-    [self beginNewUndoGroupIfNeeded];
+    if (currentAnnotation == annotation) {
+        [self setCurrentAnnotation:nil];
+        [self beginNewUndoGroupIfNeededWithCommit:NO];
+    }
     
     PDFAnnotation *wasAnnotation = [annotation retain];
     PDFPage *page = [[wasAnnotation page] retain];
     
     [[[self undoManager] prepareWithInvocationTarget:self] addAnnotation:wasAnnotation toPage:page];
-	if (currentAnnotation == annotation)
-		[self setCurrentAnnotation:nil];
     [self setNeedsDisplayForAnnotation:wasAnnotation];
     [page removeAnnotation:wasAnnotation];
     [self annotationsChangedOnPage:page];
@@ -3055,7 +3054,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     return success;
 }
 
-- (void)beginNewUndoGroupIfNeeded {
+- (void)beginNewUndoGroupIfNeededWithCommit:(BOOL)commit {
+    if (commit)
+        [self commitEditing];
     if (pdfvFlags.wantsNewUndoGroup) {
         NSUndoManager *undoManger = [self undoManager];
         if ([undoManger groupingLevel] > 0) {
@@ -4361,7 +4362,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         } else if (currentAnnotation == nil) {
             continue;
         }
-        [self beginNewUndoGroupIfNeeded];
+        [self beginNewUndoGroupIfNeededWithCommit:NO];
         if (resizeHandle == 0)
             [self doMoveAnnotationWithEvent:lastMouseEvent offset:offset];
         else if (isLine)
@@ -4458,7 +4459,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             // select a new copy of the annotation
             PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithProperties:[newCurrentAnnotation SkimNoteProperties]];
             [newAnnotation registerUserName];
-            [self commitEditing];
+            [self beginNewUndoGroupIfNeededWithCommit:YES];
             [self addAnnotation:newAnnotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
             newCurrentAnnotation = newAnnotation;
@@ -4490,7 +4491,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 [paths release];
             }
             if (newAnnotation) {
-                [self commitEditing];
+                [self beginNewUndoGroupIfNeededWithCommit:YES];
                 [newAnnotation setColor:[currentAnnotation color]];
                 [newAnnotation registerUserName];
                 [self removeAnnotation:newCurrentAnnotation];
@@ -4625,6 +4626,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
         if (interactionMode != SKPresentationMode) {
             [annotation registerUserName];
+            [self beginNewUndoGroupIfNeededWithCommit:NO];
             [self addAnnotation:annotation toPage:page];
             [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
         } else {
