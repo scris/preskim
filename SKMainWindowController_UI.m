@@ -2133,6 +2133,10 @@ static NSArray *allMainDocumentPDFViews() {
     [self updatePageLabels];
 }
 
+- (void)handleOpenOrCloseUndoGroupNotification:(NSNotification *)notification {
+    [pdfView undoManagerDidOpenOrCloseUndoGroup];
+}
+
 #pragma mark Observer registration
 
 - (void)registerForNotifications {
@@ -2167,8 +2171,12 @@ static NSArray *allMainDocumentPDFViews() {
     [nc addObserver:self selector:@selector(handleNoteViewFrameDidChangeNotification:) 
                              name:NSViewFrameDidChangeNotification object:[rightSideController.noteOutlineView enclosingScrollView]];
     //  UndoManager
-    [nc addObserver:self selector:@selector(observeUndoManagerCheckpoint:) 
+    [nc addObserver:self selector:@selector(observeUndoManagerCheckpoint:)
                              name:NSUndoManagerCheckpointNotification object:[[self document] undoManager]];
+    [nc addObserver:self selector:@selector(handleOpenOrCloseUndoGroupNotification:)
+                             name:NSUndoManagerDidOpenUndoGroupNotification object:[[self document] undoManager]];
+    [nc addObserver:self selector:@selector(handleOpenOrCloseUndoGroupNotification:)
+                             name:NSUndoManagerDidCloseUndoGroupNotification object:[[self document] undoManager]];
     //  SKDocumentController
     [nc addObserver:self selector:@selector(handleWillRemoveDocumentNotification:)
                              name:SKDocumentControllerWillRemoveDocumentNotification object:nil];

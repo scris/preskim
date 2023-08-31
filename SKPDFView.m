@@ -265,7 +265,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (void)handlePageChangedNotification:(NSNotification *)notification;
 - (void)handleScaleChangedNotification:(NSNotification *)notification;
-- (void)handleUndoGroupOpenedOrClosedNotification:(NSNotification *)notification;
 
 @end
 
@@ -3354,10 +3353,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [self setAutoScales:YES];
 }
 
-- (void)handleUndoGroupOpenedOrClosedNotification:(NSNotification *)notification {
-    pdfvFlags.wantsNewUndoGroup = NO;
-}
-
 - (void)handleKeyStateChangedNotification:(NSNotification *)notification {
     atomic_store(&inKeyWindow, [[self window] isKeyWindow]);
     if (RUNNING_BEFORE(10_12) || RUNNING_AFTER(10_14)) {
@@ -3385,6 +3380,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)handleMainStateChangedNotification:(NSNotification *)notification {
     [self setTemporaryToolMode:SKNoToolMode];
+}
+
+- (void)undoManagerDidOpenOrCloseUndoGroup {
+    pdfvFlags.wantsNewUndoGroup = NO;
 }
 
 #pragma mark Key and window changes
@@ -5479,14 +5478,6 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     if ([self delegate] && newDelegate == nil)
         [self cleanup];
     [super setDelegate:newDelegate];
-    if ([self delegate]) {
-        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        NSUndoManager *undoManager = [self undoManager];
-        [nc addObserver:self selector:@selector(handleUndoGroupOpenedOrClosedNotification:)
-                                                     name:NSUndoManagerDidOpenUndoGroupNotification object:undoManager];
-        [nc addObserver:self selector:@selector(handleUndoGroupOpenedOrClosedNotification:)
-                                                     name:NSUndoManagerDidCloseUndoGroupNotification object:undoManager];
-    }
 }
 
 - (NSString *)currentColorDefaultKeyForAlternate:(BOOL)isAlt {
