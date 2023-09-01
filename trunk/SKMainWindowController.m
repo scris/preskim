@@ -1034,7 +1034,7 @@ static char SKMainWindowContentLayoutObservationContext;
     
     if ([pdfDoc allowsNotes] == NO && [noteDicts count] > 0) {
         // there should not be any notesToRemove at this point
-        NSUInteger i, pageCount = MIN([pdfDoc pageCount], [[noteDicts valueForKeyPath:@"@max.pageIndex"] unsignedIntegerValue]);
+        NSUInteger i, pageCount = MIN([pdfDoc pageCount], [[noteDicts valueForKeyPath:@"@max.pageIndex"] unsignedIntegerValue] + 1);
         SKDESTROY(placeholderPdfDocument);
         pdfDoc = placeholderPdfDocument = [[SKPDFDocument alloc] init];
         [placeholderPdfDocument setContainingDocument:[self document]];
