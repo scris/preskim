@@ -1024,9 +1024,9 @@ static char SKMainWindowContentLayoutObservationContext;
     return properties;
 }
 
-- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove {
+- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove setDocument:(PDFDocument *)pdfDocument {
     PDFAnnotation *annotation;
-    PDFDocument *pdfDoc = [pdfView document];
+    PDFDocument *pdfDoc = pdfDocument ?: [pdfView document];
     NSMutableArray *notesToAdd = [NSMutableArray array];
     NSMutableArray *widgetProperties = [NSMutableArray array];
     NSMutableIndexSet *pageIndexes = [NSMutableIndexSet indexSet];
@@ -1101,7 +1101,10 @@ static char SKMainWindowContentLayoutObservationContext;
     if ([notesToAdd count] > 0)
         [self insertNotes:notesToAdd atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([notes count], [notesToAdd count])]];
     
-    if ([[self pdfDocument] isLocked]) {
+    if (pdfDocument)
+        [self setPdfDocument:pdfDocument];
+    
+    if ([[pdfView document] isLocked]) {
         [placeholderWidgetProperties release];
         placeholderWidgetProperties = [widgetProperties count] ? [widgetProperties copy] : nil;
     } else {
