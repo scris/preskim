@@ -976,6 +976,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [self stopObservingNotes:widgets];
     SKDESTROY(widgets);
     SKDESTROY(widgetValues);
+    SKDESTROY(placeholderWidgetProperties);
 }
 
 - (void)setWidgetValues:(NSMapTable *)newWidgetValues {
@@ -1167,8 +1168,7 @@ static char SKMainWindowContentLayoutObservationContext;
             [self removeAllObjectsFromNotes];
             [self setThumbnails:nil];
             [self clearWidgets];
-            SKDESTROY(placeholderWidgetProperties);
-
+            
             // remmeber snapshots and close them, without animation
             snapshotDicts = [snapshots valueForKey:SKSnapshotCurrentSetupKey];
             [snapshots setValue:nil forKey:@"delegate"];
