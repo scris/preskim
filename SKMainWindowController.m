@@ -1102,6 +1102,8 @@ static char SKMainWindowContentLayoutObservationContext;
     if ([notesToAdd count] > 0)
         [self insertNotes:notesToAdd atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([notes count], [notesToAdd count])]];
     
+    mwcFlags.addOrRemoveNotesInBulk = 0;
+    
     if (pdfDocument)
         [self setPdfDocument:pdfDocument];
     
@@ -1131,8 +1133,6 @@ static char SKMainWindowContentLayoutObservationContext;
     if ([pageIndexes count])
         [self updateThumbnailsAtPageIndexes:pageIndexes];
     [pdfView resetPDFToolTipRects];
-    
-    mwcFlags.addOrRemoveNotesInBulk = 0;
 }
 
 #pragma mark Accessors
