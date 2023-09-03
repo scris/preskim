@@ -1058,12 +1058,14 @@ static char SKMainWindowContentLayoutObservationContext;
             // remove the current annotations
             [pdfView setCurrentAnnotation:nil];
         }
-        for (annotation in [[notesToRemove copy] autorelease]) {
-            [pageIndexes addIndex:[annotation pageIndex]];
-            PDFAnnotation *popup = [annotation popup];
-            if (popup)
-                [pdfDoc removeAnnotation:popup];
-            [pdfDoc removeAnnotation:annotation];
+        if (pdfDocument == nil) {
+            for (annotation in [[notesToRemove copy] autorelease]) {
+                [pageIndexes addIndex:[annotation pageIndex]];
+                PDFAnnotation *popup = [annotation popup];
+                if (popup)
+                    [pdfDoc removeAnnotation:popup];
+                [pdfDoc removeAnnotation:annotation];
+            }
         }
         if (removeAllNotes)
             [self removeAllObjectsFromNotes];
