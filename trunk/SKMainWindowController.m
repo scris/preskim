@@ -1149,14 +1149,15 @@ static char SKMainWindowContentLayoutObservationContext;
         BOOL rotated = NO, secondaryRotated = NO;
         NSArray *snapshotDicts = nil;
         NSDictionary *openState = nil;
+        PDFDocument *oldPdfDoc = [pdfView document];
         
-        if ([pdfView document]) {
+        if (oldPdfDoc) {
             pageIndex = [pdfView currentPageIndexAndPoint:&point rotated:&rotated];
             if (secondaryPdfView)
                 secondaryPageIndex = [secondaryPdfView currentPageIndexAndPoint:&secondaryPoint rotated:&secondaryRotated];
             openState = [self expansionStateForOutline:[[pdfView document] outlineRoot]];
             
-            [[pdfView document] cancelFindString];
+            [oldPdfDoc cancelFindString];
             
             // make sure these will not be activated, or they can lead to a crash
             [pdfView removePDFToolTipRects];
@@ -1180,11 +1181,11 @@ static char SKMainWindowContentLayoutObservationContext;
             
             [self unregisterForDocumentNotifications];
             
-            [[pdfView document] setDelegate:nil];
+            [oldPdfDoc setDelegate:nil];
             
-            [[[pdfView document] outlineRoot] clearDocument];
+            [[oldPdfDoc outlineRoot] clearDocument];
             
-            [[pdfView document] setContainingDocument:nil];
+            [oldPdfDoc setContainingDocument:nil];
         }
         
         if ([document isLocked] == NO) {
@@ -1198,7 +1199,7 @@ static char SKMainWindowContentLayoutObservationContext;
         
         [secondaryPdfView setDocument:document];
         
-        [[pdfView document] setContainingDocument:[self document]];
+        [document setContainingDocument:[self document]];
 
         [self registerForDocumentNotifications];
         
