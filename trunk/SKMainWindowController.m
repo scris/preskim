@@ -1025,6 +1025,12 @@ static char SKMainWindowContentLayoutObservationContext;
     return properties;
 }
 
+/*
+ open: notesToRemove == @[], pdfDocument != nil
+ revert: notesToRemove == self.notes, pdfDocument != nil
+ convert: notesToRemove == @[not isSkimNote], pdfDocument == nil
+ read: notesToRemove == nil or self.notes, pdfDocument == nil
+ */
 - (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove setDocument:(PDFDocument *)pdfDocument {
     PDFAnnotation *annotation;
     PDFDocument *pdfDoc = pdfDocument ?: [pdfView document];
