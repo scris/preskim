@@ -1030,7 +1030,7 @@ static char SKMainWindowContentLayoutObservationContext;
     PDFDocument *pdfDoc = pdfDocument ?: [pdfView document];
     NSMutableArray *notesToAdd = [NSMutableArray array];
     NSMutableArray *widgetProperties = [NSMutableArray array];
-    NSMutableIndexSet *pageIndexes = [NSMutableIndexSet indexSet];
+    NSMutableIndexSet *pageIndexes = pdfDocument ? [NSMutableIndexSet indexSet] : nil;
     BOOL isConvert = [notesToRemove count] > 0 && [[notesToRemove firstObject] isSkimNote] == NO;
     
     SKDESTROY(placeholderPdfDocument);
@@ -1128,7 +1128,8 @@ static char SKMainWindowContentLayoutObservationContext;
     // make sure we clear the undo handling
     [self observeUndoManagerCheckpoint:nil];
     [rightSideController.noteOutlineView reloadData];
-    [self updateThumbnailsAtPageIndexes:pageIndexes];
+    if ([pageIndexes count])
+        [self updateThumbnailsAtPageIndexes:pageIndexes];
     [pdfView resetPDFToolTipRects];
     
     mwcFlags.addOrRemoveNotesInBulk = 0;
