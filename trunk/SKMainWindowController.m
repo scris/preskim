@@ -1036,7 +1036,7 @@ static char SKMainWindowContentLayoutObservationContext;
     PDFDocument *pdfDoc = pdfDocument ?: [pdfView document];
     NSMutableArray *notesToAdd = [NSMutableArray array];
     NSMutableArray *widgetProperties = [NSMutableArray array];
-    NSMutableIndexSet *pageIndexes = pdfDocument ? [NSMutableIndexSet indexSet] : nil;
+    NSMutableIndexSet *pageIndexes = pdfDocument ? nil : [NSMutableIndexSet indexSet];
     BOOL isConvert = [notesToRemove count] > 0 && [[notesToRemove firstObject] isSkimNote] == NO;
     
     SKDESTROY(placeholderPdfDocument);
