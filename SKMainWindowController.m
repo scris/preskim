@@ -1070,7 +1070,7 @@ static char SKMainWindowContentLayoutObservationContext;
         if (removeAllNotes)
             [self removeAllObjectsFromNotes];
     }
-    if (notesToRemove && isConvert == NO && widgets) {
+    if (notesToRemove && isConvert == NO && pdfDocument == nil) {
         for (PDFAnnotation *widget in widgets) {
             id origValue = [widgetValues objectForKey:widget];
             if ([([widget objectValue] ?: @"") isEqual:(origValue ?: @"")] == NO)
