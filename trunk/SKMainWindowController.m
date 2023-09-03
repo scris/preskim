@@ -1032,10 +1032,10 @@ static char SKMainWindowContentLayoutObservationContext;
     NSMutableIndexSet *pageIndexes = [NSMutableIndexSet indexSet];
     BOOL isConvert = [notesToRemove count] > 0 && [[notesToRemove firstObject] isSkimNote] == NO;
     
+    SKDESTROY(placeholderPdfDocument);
     if ([pdfDoc allowsNotes] == NO && [noteDicts count] > 0) {
         // there should not be any notesToRemove at this point
         NSUInteger i, pageCount = MIN([pdfDoc pageCount], [[noteDicts valueForKeyPath:@"@max.pageIndex"] unsignedIntegerValue] + 1);
-        SKDESTROY(placeholderPdfDocument);
         pdfDoc = placeholderPdfDocument = [[SKPDFDocument alloc] init];
         [placeholderPdfDocument setContainingDocument:[self document]];
         for (i = 0; i < pageCount; i++) {
@@ -1167,7 +1167,6 @@ static char SKMainWindowContentLayoutObservationContext;
             [self removeAllObjectsFromNotes];
             [self setThumbnails:nil];
             [self clearWidgets];
-            SKDESTROY(placeholderPdfDocument);
             SKDESTROY(placeholderWidgetProperties);
 
             // remmeber snapshots and close them, without animation
