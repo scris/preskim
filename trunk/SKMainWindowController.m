@@ -1092,8 +1092,7 @@ static char SKMainWindowContentLayoutObservationContext;
             else if (pageIndex >= [pdfDoc pageCount])
                 pageIndex = [pdfDoc pageCount] - 1;
             [pageIndexes addIndex:pageIndex];
-            PDFPage *page = [pdfDoc pageAtIndex:pageIndex];
-            [pdfDoc addAnnotation:annotation toPage:page];
+            [pdfDoc addAnnotation:annotation toPage:[pdfDoc pageAtIndex:pageIndex]];
             if (isConvert && [[annotation contents] length] == 0)
                 [annotation autoUpdateString];
             [notesToAdd addObject:annotation];
