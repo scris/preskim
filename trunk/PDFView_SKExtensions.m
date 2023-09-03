@@ -69,6 +69,16 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 #endif
 
+@interface PDFView (SKPrivatePageViewDeclarations)
+- (id)pageViewForPageAtIndex:(NSUInteger)index;
+@end
+
+@interface NSView (SKPrivatePageViewDeclarations)
+- (void)addAnnotation:(PDFAnnotation *)annotation;
+- (void)updateAnnotation:(PDFAnnotation *)annotation;
+- (void)removeAnnotation:(PDFAnnotation *)annotation;
+@end
+
 #define PAGE_BREAK_MARGIN 4.0
 
 @implementation PDFView (SKExtensions)
@@ -100,6 +110,15 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     return [self descendantOfClass:[NSScrollView class]];
 }
 
+- (NSView *)safePageViewForPage:(PDFPage *)page {
+    if ([self respondsToSelector:@selector(pageViewForPageAtIndex:)] == NO)
+        return nil;
+    NSView *pageView = [self pageViewForPageAtIndex:[page pageIndex]];
+    if ([pageView respondsToSelector:@selector(addAnnotation:)] && [pageView respondsToSelector:@selector(updateAnnotation:)] && [pageView respondsToSelector:@selector(removeAnnotation:)])
+        return pageView;
+    return nil;
+}
+
 - (void)setNeedsDisplayInRect:(NSRect)rect ofPage:(PDFPage *)page {
     if ([self isPageAtIndexDisplayed:[page pageIndex]]) {
         // for some versions we need to dirty the documentView, otherwise it won't redisplay when scrolled out of view,
@@ -114,6 +133,9 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 
 - (void)setNeedsDisplayForAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
     [self setNeedsDisplayInRect:[annotation displayRect] ofPage:page];
+    NSView *pageView = [self safePageViewForPage:page];
+    if (pageView)
+        [pageView updateAnnotation:annotation];
     [self annotationsChangedOnPage:page];
 }
 
@@ -124,6 +146,22 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 - (void)requiresDisplay {
     NSView *view = RUNNING_BEFORE(10_12) ? [self documentView] : self;
     [view setNeedsDisplay:YES];
+}
+
+- (void)setNeedsDisplayForAddedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
+    [self setNeedsDisplayInRect:[annotation displayRect] ofPage:page];
+    NSView *pageView = [self safePageViewForPage:page];
+    if (pageView)
+        [pageView addAnnotation:annotation];
+    [self annotationsChangedOnPage:page];
+}
+
+- (void)setNeedsDisplayForRemovedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
+    [self setNeedsDisplayInRect:[annotation displayRect] ofPage:page];
+    NSView *pageView = [self safePageViewForPage:page];
+    if (pageView)
+        [pageView removeAnnotation:annotation];
+    [self annotationsChangedOnPage:page];
 }
 
 - (void)doPdfsyncWithEvent:(NSEvent *)theEvent {
