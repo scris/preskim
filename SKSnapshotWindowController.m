@@ -145,20 +145,11 @@ static char SKSnaphotWindowAppObservationContext;
 }
 
 - (void)setNeedsDisplayInRect:(NSRect)rect ofPage:(PDFPage *)page {
-    NSRect aRect = [pdfView convertRect:rect fromPage:page];
-    CGFloat scale = [pdfView scaleFactor];
-	CGFloat maxX = ceil(NSMaxX(aRect) + scale);
-	CGFloat maxY = ceil(NSMaxY(aRect) + scale);
-	CGFloat minX = floor(NSMinX(aRect) - scale);
-	CGFloat minY = floor(NSMinY(aRect) - scale);
-	
-    aRect = NSIntersectionRect([pdfView bounds], NSMakeRect(minX, minY, maxX - minX, maxY - minY));
-    if (NSIsEmptyRect(aRect) == NO)
-        [pdfView setNeedsDisplayInRect:aRect];
+    [pdfView setNeedsDisplayInRect:rect ofPage:page];
 }
 
 - (void)setNeedsDisplayForAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
-    [self setNeedsDisplayInRect:[annotation displayRect] ofPage:page];
+    [pdfView setNeedsDisplayForAnnotation:annotation onPage:page];
 }
 
 - (void)redisplay {
@@ -207,11 +198,18 @@ static char SKSnaphotWindowAppObservationContext;
         [[self delegate] snapshotControllerDidChange:self];
 }
 
-- (void)handleDidAddRemoveAnnotationNotification:(NSNotification *)notification {
+- (void)handleDidAddAnnotationNotification:(NSNotification *)notification {
     PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
     PDFPage *page = [[notification userInfo] objectForKey:SKPDFDocumentPageKey];
     if ([self isPageVisible:page])
-        [self setNeedsDisplayForAnnotation:annotation onPage:page];
+        [pdfView setNeedsDisplayForAddedAnnotation:annotation onPage:page];
+}
+
+- (void)handleDidRemoveAnnotationNotification:(NSNotification *)notification {
+    PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
+    PDFPage *page = [[notification userInfo] objectForKey:SKPDFDocumentPageKey];
+    if ([self isPageVisible:page])
+        [pdfView setNeedsDisplayForRemovedAnnotation:annotation onPage:page];
 }
 
 - (void)handleDidMoveAnnotationNotification:(NSNotification *)notification {
@@ -219,9 +217,9 @@ static char SKSnaphotWindowAppObservationContext;
     PDFPage *oldPage = [[notification userInfo] objectForKey:SKPDFDocumentOldPageKey];
     PDFPage *newPage = [[notification userInfo] objectForKey:SKPDFDocumentPageKey];
     if ([self isPageVisible:oldPage])
-        [self setNeedsDisplayForAnnotation:annotation onPage:oldPage];
+        [pdfView setNeedsDisplayForRemovedAnnotation:annotation onPage:oldPage];
     if ([self isPageVisible:newPage])
-        [self setNeedsDisplayForAnnotation:annotation onPage:newPage];
+        [pdfView setNeedsDisplayForAddedAnnotation:annotation onPage:newPage];
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
@@ -272,9 +270,9 @@ static char SKSnaphotWindowAppObservationContext;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleViewChangedNotification:) 
                                                  name:SKSnapshotViewChangedNotification object:self];
     PDFDocument *pdfDoc = [pdfView document];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidAddRemoveAnnotationNotification:) 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidAddAnnotationNotification:)
                                                  name:SKPDFDocumentDidAddAnnotationNotification object:pdfDoc];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidAddRemoveAnnotationNotification:) 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidRemoveAnnotationNotification:)
                                                  name:SKPDFDocumentDidRemoveAnnotationNotification object:pdfDoc];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidMoveAnnotationNotification:) 
                                                  name:SKPDFDocumentDidMoveAnnotationNotification object:pdfDoc];

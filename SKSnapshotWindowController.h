@@ -97,7 +97,8 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
 - (void)handleDocumentDidUnlockNotification:(NSNotification *)notification;
 - (void)handlePDFViewFrameChangedNotification:(NSNotification *)notification;
 - (void)handleViewChangedNotification:(NSNotification *)notification;
-- (void)handleDidAddRemoveAnnotationNotification:(NSNotification *)notification;
+- (void)handleDidAddAnnotationNotification:(NSNotification *)notification;
+- (void)handleDidRemoveAnnotationNotification:(NSNotification *)notification;
 - (void)handleDidMoveAnnotationNotification:(NSNotification *)notification;
 
 - (void)setNeedsDisplayInRect:(NSRect)rect ofPage:(PDFPage *)page;

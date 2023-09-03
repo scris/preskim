@@ -2360,7 +2360,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                 if ([wc isPageVisible:page])
                     [self snapshotNeedsUpdate:wc];
             }
-            [secondaryPdfView setNeedsDisplayForAnnotation:annotation onPage:page];
+            [secondaryPdfView setNeedsDisplayForAddedAnnotation:annotation onPage:page];
         }
     }
 }
@@ -2397,7 +2397,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                 if ([wc isPageVisible:page])
                     [self snapshotNeedsUpdate:wc];
             }
-            [secondaryPdfView setNeedsDisplayForAnnotation:annotation onPage:page];
+            [secondaryPdfView setNeedsDisplayForRemovedAnnotation:annotation onPage:page];
         }
     }
 }
@@ -2419,7 +2419,8 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             if ([wc isPageVisible:oldPage] || [wc isPageVisible:newPage])
                 [self snapshotNeedsUpdate:wc];
         }
-        [secondaryPdfView requiresDisplay];
+        [secondaryPdfView setNeedsDisplayForRemovedAnnotation:annotation onPage:oldPage];
+        [secondaryPdfView setNeedsDisplayForAddedAnnotation:annotation onPage:newPage];
     }
     
     [rightSideController.noteArrayController rearrangeObjects];
