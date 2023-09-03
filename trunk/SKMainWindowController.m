@@ -1099,13 +1099,14 @@ static char SKMainWindowContentLayoutObservationContext;
         }
         [pool release];
     }
-    if ([notesToAdd count] > 0)
-        [self insertNotes:notesToAdd atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([notes count], [notesToAdd count])]];
     
     mwcFlags.addOrRemoveNotesInBulk = 0;
     
     if (pdfDocument)
         [self setPdfDocument:pdfDocument];
+    
+    if ([notesToAdd count] > 0)
+        [self insertNotes:notesToAdd atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([notes count], [notesToAdd count])]];
     
     if ([[pdfView document] isLocked]) {
         [placeholderWidgetProperties release];
