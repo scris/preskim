@@ -194,7 +194,7 @@ enum {
 - (void)setDataFromTmpData {
     PDFDocument *pdfDoc = [tmpData pdfDocument];
     
-    mdFlags.needsPasswordToConvert = [pdfDoc allowsPrinting] == NO || [pdfDoc allowsNotes];
+    mdFlags.needsPasswordToConvert = [pdfDoc allowsPrinting] == NO || [pdfDoc allowsNotes] == NO;
     
     [self tryToUnlockDocument:pdfDoc];
     
