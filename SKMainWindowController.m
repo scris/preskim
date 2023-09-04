@@ -1025,19 +1025,109 @@ static char SKMainWindowContentLayoutObservationContext;
     return properties;
 }
 
-/*
- open: notesToRemove == @[], pdfDocument != nil
- revert: notesToRemove == self.notes, pdfDocument != nil
- convert: notesToRemove == @[not isSkimNote], pdfDocument == nil
- read: notesToRemove == nil or self.notes, pdfDocument == nil
- */
-- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove setDocument:(PDFDocument *)pdfDocument {
-    PDFAnnotation *annotation;
-    PDFDocument *pdfDoc = pdfDocument ?: [pdfView document];
+- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts toDocument:(PDFDocument *)pdfDoc pageIndexes:(NSMutableIndexSet *)pageIndexes autoUpdate:(BOOL)autoUpdate {
     NSMutableArray *notesToAdd = [NSMutableArray array];
-    NSMutableArray *widgetProperties = [NSMutableArray array];
-    NSMutableIndexSet *pageIndexes = pdfDocument ? nil : [NSMutableIndexSet indexSet];
+    
+    // disable automatic add/remove from the notification handlers
+    // we want to do this in bulk as binding can be very slow and there are potentially many notes
+    mwcFlags.addOrRemoveNotesInBulk = 1;
+    
+    // create new annotations from the dictionary and add them to their page and to the document
+    for (NSDictionary *dict in noteDicts) {
+        if ([[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString])
+            continue;
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+        PDFAnnotation *annotation = [PDFAnnotation newSkimNoteWithProperties:dict];
+        if (annotation) {
+            // this is only to make sure markup annotations generate the lineRects, for thread safety
+            [annotation boundsOrder];
+            NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
+            if (pageIndex == NSNotFound)
+                pageIndex = 0;
+            else if (pageIndex >= [pdfDoc pageCount])
+                pageIndex = [pdfDoc pageCount] - 1;
+            [pageIndexes addIndex:pageIndex];
+            [pdfDoc addAnnotation:annotation toPage:[pdfDoc pageAtIndex:pageIndex]];
+            if (autoUpdate && [[annotation contents] length] == 0)
+                [annotation autoUpdateString];
+            [notesToAdd addObject:annotation];
+            [annotation release];
+        }
+        [pool release];
+    }
+    
+    mwcFlags.addOrRemoveNotesInBulk = 0;
+    
+    if ([notesToAdd count] > 0)
+        [self insertNotes:notesToAdd atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([notes count], [notesToAdd count])]];
+}
+
+- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove {
     BOOL isConvert = [notesToRemove count] > 0 && [[notesToRemove firstObject] isSkimNote] == NO;
+    PDFDocument *pdfDoc = [pdfView document];
+    NSMutableIndexSet *pageIndexes = [NSMutableIndexSet indexSet];
+    
+    if ([notesToRemove count]) {
+        // notesToRemove is either all notes, no notes, or non Skim notes
+        if (isConvert == NO) {
+            [pdfView removePDFToolTipRects];
+            // remove the current annotations
+            [pdfView setCurrentAnnotation:nil];
+        }
+        PDFAnnotation *annotation;
+        mwcFlags.addOrRemoveNotesInBulk = 1;
+        for (annotation in [[notesToRemove copy] autorelease]) {
+            [pageIndexes addIndex:[annotation pageIndex]];
+            PDFAnnotation *popup = [annotation popup];
+            if (popup)
+                [pdfDoc removeAnnotation:popup];
+            [pdfDoc removeAnnotation:annotation];
+        }
+        mwcFlags.addOrRemoveNotesInBulk = 0;
+        if (isConvert == NO)
+            [self removeAllObjectsFromNotes];
+    }
+    if (notesToRemove && isConvert == NO) {
+        for (PDFAnnotation *widget in widgets) {
+            id origValue = [widgetValues objectForKey:widget];
+            if ([([widget objectValue] ?: @"") isEqual:(origValue ?: @"")] == NO)
+                [widget setObjectValue:origValue];
+        }
+    }
+    
+    [self addAnnotationsFromDictionaries:noteDicts toDocument:pdfDoc pageIndexes:pageIndexes autoUpdate:isConvert];
+    
+    if (isConvert) {
+        NSMapTable *values = [NSMapTable strongToStrongObjectsMapTable];
+        for (PDFAnnotation *widget in widgets) {
+            id value = [widget objectValue];
+            if (value)
+                [values setObject:value forKey:widget];
+        }
+        if ([values count])
+            [self setWidgetValues:values];
+    } else {
+        NSArray *widgetProperties = [noteDicts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"type = \"Widget\""]];
+        if ([widgetProperties count])
+            [self changeWidgetsFromDictionaries:widgetProperties];
+    }
+    
+    // make sure we clear the undo handling
+    [self observeUndoManagerCheckpoint:nil];
+    [rightSideController.noteOutlineView reloadData];
+    [self updateThumbnailsAtPageIndexes:pageIndexes];
+    [pdfView resetPDFToolTipRects];
+}
+
+- (void)setPdfDocument:(PDFDocument *)pdfDocument addAnnotationsFromDictionaries:(NSArray *)noteDicts {
+    PDFDocument *pdfDoc = pdfDocument;
+    NSArray *widgetProperties = [noteDicts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"type = \"Widget\""]];
+    PDFDocument *oldPdfDoc = [pdfView document];
+    NSUInteger pageIndex = NSNotFound, secondaryPageIndex = NSNotFound;
+    NSPoint point = NSZeroPoint, secondaryPoint = NSZeroPoint;
+    BOOL rotated = NO, secondaryRotated = NO;
+    NSArray *snapshotDicts = nil;
+    NSDictionary *openState = nil;
     
     SKDESTROY(placeholderPdfDocument);
     if ([pdfDoc allowsNotes] == NO && [noteDicts count] > 0) {
@@ -1052,94 +1142,119 @@ static char SKMainWindowContentLayoutObservationContext;
         }
     }
     
-    // disable automatic add/remove from the notification handlers
-    // we want to do this in bulk as binding can be very slow and there are potentially many notes
-    mwcFlags.addOrRemoveNotesInBulk = 1;
-    
-    if ([notesToRemove count]) {
-        // notesToRemove is either all notes, no notes, or non Skim notes
-        BOOL removeAllNotes = [[notesToRemove firstObject] isSkimNote];
-        if (removeAllNotes) {
-            [pdfView removePDFToolTipRects];
-            // remove the current annotations
-            [pdfView setCurrentAnnotation:nil];
-        }
-        if (pdfDocument == nil) {
-            for (annotation in [[notesToRemove copy] autorelease]) {
-                [pageIndexes addIndex:[annotation pageIndex]];
-                PDFAnnotation *popup = [annotation popup];
-                if (popup)
-                    [pdfDoc removeAnnotation:popup];
-                [pdfDoc removeAnnotation:annotation];
-            }
-        }
-        if (removeAllNotes)
-            [self removeAllObjectsFromNotes];
-    }
-    if (notesToRemove && isConvert == NO && pdfDocument == nil) {
-        for (PDFAnnotation *widget in widgets) {
-            id origValue = [widgetValues objectForKey:widget];
-            if ([([widget objectValue] ?: @"") isEqual:(origValue ?: @"")] == NO)
-                [widget setObjectValue:origValue];
-        }
-    }
-    
-    // create new annotations from the dictionary and add them to their page and to the document
-    for (NSDictionary *dict in noteDicts) {
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        if ([[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString]) {
-            [widgetProperties addObject:dict];
-        } else if ((annotation = [PDFAnnotation newSkimNoteWithProperties:dict])) {
-            // this is only to make sure markup annotations generate the lineRects, for thread safety
-            [annotation boundsOrder];
-            NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
-            if (pageIndex == NSNotFound)
-                pageIndex = 0;
-            else if (pageIndex >= [pdfDoc pageCount])
-                pageIndex = [pdfDoc pageCount] - 1;
-            [pageIndexes addIndex:pageIndex];
-            [pdfDoc addAnnotation:annotation toPage:[pdfDoc pageAtIndex:pageIndex]];
-            if (isConvert && [[annotation contents] length] == 0)
-                [annotation autoUpdateString];
-            [notesToAdd addObject:annotation];
-            [annotation release];
-        }
-        [pool release];
+    if (oldPdfDoc) {
+        // this is a revert
+        // need to clean up data and actions, and remember settings to restore
+        pageIndex = [pdfView currentPageIndexAndPoint:&point rotated:&rotated];
+        if (secondaryPdfView)
+            secondaryPageIndex = [secondaryPdfView currentPageIndexAndPoint:&secondaryPoint rotated:&secondaryRotated];
+        openState = [self expansionStateForOutline:[[pdfView document] outlineRoot]];
+        
+        [oldPdfDoc cancelFindString];
+        
+        // make sure these will not be activated, or they can lead to a crash
+        [pdfView removePDFToolTipRects];
+        [pdfView setCurrentAnnotation:nil];
+        
+        // these will be invalid. If needed, they will be restored for the new document
+        [self setSearchResults:nil];
+        [self setGroupedSearchResults:nil];
+        [self removeAllObjectsFromNotes];
+        [self setThumbnails:nil];
+        [self clearWidgets];
+        
+        // remember snapshots and close them, without animation
+        snapshotDicts = [snapshots valueForKey:SKSnapshotCurrentSetupKey];
+        [snapshots setValue:nil forKey:@"delegate"];
+        [snapshots makeObjectsPerformSelector:@selector(close)];
+        [self removeAllObjectsFromSnapshots];
+        [rightSideController.snapshotTableView reloadData];
+        
+        [lastViewedPages setCount:0];
+        
+        [self unregisterForDocumentNotifications];
+        
+        [oldPdfDoc setDelegate:nil];
+        
+        [[oldPdfDoc outlineRoot] clearDocument];
+        
+        [oldPdfDoc setContainingDocument:nil];
     }
     
-    mwcFlags.addOrRemoveNotesInBulk = 0;
+    if ([pdfDocument isLocked] == NO) {
+        NSArray *cropBoxes = [savedNormalSetup objectForKey:CROPBOXES_KEY];
+        if ([cropBoxes count])
+            [self applyChangedCropBoxes:cropBoxes inDocument:pdfDocument];
+    }
     
-    if (pdfDocument)
-        [self setPdfDocument:pdfDocument];
+    [self addAnnotationsFromDictionaries:noteDicts toDocument:pdfDoc pageIndexes:nil autoUpdate:NO];
     
-    if ([notesToAdd count] > 0)
-        [self insertNotes:notesToAdd atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([notes count], [notesToAdd count])]];
+    [pdfView setDocument:pdfDocument];
+    [pdfDocument setDelegate:self];
+    
+    [secondaryPdfView setDocument:pdfDocument];
+    
+    [pdfDocument setContainingDocument:[self document]];
+
+    [self registerForDocumentNotifications];
     
     if ([[pdfView document] isLocked]) {
-        [placeholderWidgetProperties release];
         placeholderWidgetProperties = [widgetProperties count] ? [widgetProperties copy] : nil;
     } else {
-        if (widgets == nil)
-            [self makeWidgets];
+        [self makeWidgets];
         if ([widgetProperties count])
             [self changeWidgetsFromDictionaries:widgetProperties];
-        if (isConvert) {
-            NSMapTable *values = [NSMapTable strongToStrongObjectsMapTable];
-            for (PDFAnnotation *widget in widgets) {
-                id value = [widget objectValue];
-                if (value)
-                    [values setObject:value forKey:widget];
-            }
-            if ([values count])
-                [self setWidgetValues:values];
-        }
     }
+    
+    [self updatePageLabelsAndOutlineForExpansionState:openState];
+    [self updateNoteSelection];
+    
+    if ([snapshotDicts count]) {
+        if ([pdfDocument isLocked] && ([self interactionMode] == SKNormalMode || [self interactionMode] == SKFullScreenMode))
+            [savedNormalSetup setObject:snapshotDicts forKey:SNAPSHOTS_KEY];
+        else
+            [self showSnapshotsWithSetups:snapshotDicts];
+    }
+    
+    if ([pdfDocument pageCount] && (pageIndex != NSNotFound || secondaryPageIndex != NSNotFound)) {
+        if (pageIndex != NSNotFound) {
+            if (pageIndex >= [pdfDocument pageCount])
+                pageIndex = [pdfDocument pageCount] - 1;
+            if ([pdfDocument isLocked] && ([self interactionMode] == SKNormalMode || [self interactionMode] == SKFullScreenMode)) {
+                [savedNormalSetup setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
+            } else {
+                if (rotated)
+                    [pdfView goToCurrentPage:[pdfDocument pageAtIndex:pageIndex]];
+                else
+                    [pdfView goToPageAtIndex:pageIndex point:point];
+            }
+        }
+        if (secondaryPageIndex != NSNotFound) {
+            if (secondaryPageIndex >= [pdfDocument pageCount])
+                secondaryPageIndex = [pdfDocument pageCount] - 1;
+            if (secondaryRotated)
+                [secondaryPdfView goToCurrentPage:[pdfDocument pageAtIndex:secondaryPageIndex]];
+            else
+                [secondaryPdfView goToPageAtIndex:secondaryPageIndex point:secondaryPoint];
+        }
+        [pdfView resetHistory];
+    }
+    
+    if (markedPageIndex >= [pdfDocument pageCount])
+        markedPageIndex = beforeMarkedPageIndex = NSNotFound;
+    else if (beforeMarkedPageIndex >= [pdfDocument pageCount])
+        beforeMarkedPageIndex = NSNotFound;
+    
+    // the number of pages may have changed
+    [toolbarController handleChangedHistoryNotification:nil];
+    [toolbarController handlePageChangedNotification:nil];
+    [self handlePageChangedNotification:nil];
+    [self updateLeftStatus];
+    [self updateRightStatus];
     
     // make sure we clear the undo handling
     [self observeUndoManagerCheckpoint:nil];
     [rightSideController.noteOutlineView reloadData];
-    if ([pageIndexes count])
-        [self updateThumbnailsAtPageIndexes:pageIndexes];
     [pdfView resetPDFToolTipRects];
 }
 
@@ -1147,119 +1262,6 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (PDFDocument *)pdfDocument{
     return [pdfView document];
-}
-
-- (void)setPdfDocument:(PDFDocument *)document{
-
-    if ([pdfView document] != document) {
-        
-        NSUInteger pageIndex = NSNotFound, secondaryPageIndex = NSNotFound;
-        NSPoint point = NSZeroPoint, secondaryPoint = NSZeroPoint;
-        BOOL rotated = NO, secondaryRotated = NO;
-        NSArray *snapshotDicts = nil;
-        NSDictionary *openState = nil;
-        PDFDocument *oldPdfDoc = [pdfView document];
-        
-        if (oldPdfDoc) {
-            pageIndex = [pdfView currentPageIndexAndPoint:&point rotated:&rotated];
-            if (secondaryPdfView)
-                secondaryPageIndex = [secondaryPdfView currentPageIndexAndPoint:&secondaryPoint rotated:&secondaryRotated];
-            openState = [self expansionStateForOutline:[[pdfView document] outlineRoot]];
-            
-            [oldPdfDoc cancelFindString];
-            
-            // make sure these will not be activated, or they can lead to a crash
-            [pdfView removePDFToolTipRects];
-            [pdfView setCurrentAnnotation:nil];
-            
-            // these will be invalid. If needed, the document will restore them
-            [self setSearchResults:nil];
-            [self setGroupedSearchResults:nil];
-            [self removeAllObjectsFromNotes];
-            [self setThumbnails:nil];
-            [self clearWidgets];
-            
-            // remmeber snapshots and close them, without animation
-            snapshotDicts = [snapshots valueForKey:SKSnapshotCurrentSetupKey];
-            [snapshots setValue:nil forKey:@"delegate"];
-            [snapshots makeObjectsPerformSelector:@selector(close)];
-            [self removeAllObjectsFromSnapshots];
-            [rightSideController.snapshotTableView reloadData];
-            
-            [lastViewedPages setCount:0];
-            
-            [self unregisterForDocumentNotifications];
-            
-            [oldPdfDoc setDelegate:nil];
-            
-            [[oldPdfDoc outlineRoot] clearDocument];
-            
-            [oldPdfDoc setContainingDocument:nil];
-        }
-        
-        if ([document isLocked] == NO) {
-            NSArray *cropBoxes = [savedNormalSetup objectForKey:CROPBOXES_KEY];
-            if ([cropBoxes count])
-                [self applyChangedCropBoxes:cropBoxes inDocument:document];
-        }
-        
-        [pdfView setDocument:document];
-        [[pdfView document] setDelegate:self];
-        
-        [secondaryPdfView setDocument:document];
-        
-        [document setContainingDocument:[self document]];
-
-        [self registerForDocumentNotifications];
-        
-        [self updatePageLabelsAndOutlineForExpansionState:openState];
-        [self updateNoteSelection];
-        
-        if ([snapshotDicts count]) {
-            if ([document isLocked] && ([self interactionMode] == SKNormalMode || [self interactionMode] == SKFullScreenMode))
-                [savedNormalSetup setObject:snapshotDicts forKey:SNAPSHOTS_KEY];
-            else
-                [self showSnapshotsWithSetups:snapshotDicts];
-        }
-        
-        if ([document pageCount] && (pageIndex != NSNotFound || secondaryPageIndex != NSNotFound)) {
-            if (pageIndex != NSNotFound) {
-                if (pageIndex >= [document pageCount])
-                    pageIndex = [document pageCount] - 1;
-                if ([document isLocked] && ([self interactionMode] == SKNormalMode || [self interactionMode] == SKFullScreenMode)) {
-                    [savedNormalSetup setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
-                } else {
-                    if (rotated)
-                        [pdfView goToCurrentPage:[document pageAtIndex:pageIndex]];
-                    else
-                        [pdfView goToPageAtIndex:pageIndex point:point];
-                }
-            }
-            if (secondaryPageIndex != NSNotFound) {
-                if (secondaryPageIndex >= [document pageCount])
-                    secondaryPageIndex = [document pageCount] - 1;
-                if (secondaryRotated)
-                    [secondaryPdfView goToCurrentPage:[document pageAtIndex:secondaryPageIndex]];
-                else
-                    [secondaryPdfView goToPageAtIndex:secondaryPageIndex point:secondaryPoint];
-            }
-            [pdfView resetHistory];
-        }
-        
-        if (markedPageIndex >= [document pageCount]) {
-            markedPageIndex = NSNotFound;
-            beforeMarkedPageIndex = NSNotFound;
-        } else if (beforeMarkedPageIndex >= [document pageCount]) {
-            beforeMarkedPageIndex = NSNotFound;
-        }
-        
-        // the number of pages may have changed
-        [toolbarController handleChangedHistoryNotification:nil];
-        [toolbarController handlePageChangedNotification:nil];
-        [self handlePageChangedNotification:nil];
-        [self updateLeftStatus];
-        [self updateRightStatus];
-    }
 }
 
 - (void)updatePageLabel {

@@ -198,7 +198,7 @@ enum {
     
     [self tryToUnlockDocument:pdfDoc];
     
-    [[self mainWindowController] addAnnotationsFromDictionaries:[tmpData noteDicts] removeAnnotations:[self notes] setDocument:pdfDoc];
+    [[self mainWindowController] setPdfDocument:pdfDoc addAnnotationsFromDictionaries:[tmpData noteDicts]];
     
     if ([tmpData presentationOptions])
         [[self mainWindowController] setPresentationOptions:[tmpData presentationOptions]];
@@ -1079,7 +1079,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     }
     
     if (array) {
-        [[self mainWindowController] addAnnotationsFromDictionaries:array removeAnnotations:replace ? [self notes] : nil setDocument:nil];
+        [[self mainWindowController] addAnnotationsFromDictionaries:array removeAnnotations:replace ? [self notes] : nil];
         [[self undoManager] setActionName:replace ? NSLocalizedString(@"Replace Notes", @"Undo action name") : NSLocalizedString(@"Add Notes", @"Undo action name")];
     } else
         NSBeep();
@@ -1197,7 +1197,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                [[self mainWindowController] addAnnotationsFromDictionaries:noteDicts removeAnnotations:annotations setDocument:nil];
+                [[self mainWindowController] addAnnotationsFromDictionaries:noteDicts removeAnnotations:annotations];
                 
                 [self setPDFData:data pageOffsets:offsets];
                 
