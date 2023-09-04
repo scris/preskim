@@ -228,7 +228,7 @@ enum {
 - (NSWindowController *)windowControllerForNote:(PDFAnnotation *)annotation;
 
 @property (nonatomic, readonly) SKPDFView *pdfView;
-@property (nonatomic, retain) PDFDocument *pdfDocument;
+@property (nonatomic, readonly) PDFDocument *pdfDocument;
 @property (nonatomic, readonly) PDFView *secondaryPdfView;
 
 @property (nonatomic, readonly) PDFDocument *placeholderPdfDocument;
@@ -335,7 +335,8 @@ enum {
 - (void)updateSnapshotsIfNeeded;
 - (void)updateSnapshot:(NSTimer *)timer;
 
-- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove setDocument:(PDFDocument *)pdfDocument;
+- (void)setPdfDocument:(PDFDocument *)pdfDocument addAnnotationsFromDictionaries:(NSArray *)noteDicts;
+- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove;
 
 - (void)applySetup:(NSDictionary *)setup;
 - (NSDictionary *)currentSetup;
