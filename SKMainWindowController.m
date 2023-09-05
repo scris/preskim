@@ -1027,6 +1027,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts toDocument:(PDFDocument *)pdfDoc pageIndexes:(NSMutableIndexSet *)pageIndexes autoUpdate:(BOOL)autoUpdate {
     NSMutableArray *notesToAdd = [NSMutableArray array];
+    BOOL shouldDisplay = [pdfView hideNotes] == NO;
     
     // disable automatic add/remove from the notification handlers
     // we want to do this in bulk as binding can be very slow and there are potentially many notes
@@ -1047,6 +1048,8 @@ static char SKMainWindowContentLayoutObservationContext;
             else if (pageIndex >= [pdfDoc pageCount])
                 pageIndex = [pdfDoc pageCount] - 1;
             [pageIndexes addIndex:pageIndex];
+            [annotation setShouldDisplay:shouldDisplay];
+            [annotation setShouldPrint:shouldDisplay];
             [pdfDoc addAnnotation:annotation toPage:[pdfDoc pageAtIndex:pageIndex]];
             if (autoUpdate && [[annotation contents] length] == 0)
                 [annotation autoUpdateString];
