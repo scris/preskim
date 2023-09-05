@@ -1201,7 +1201,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
     [self registerForDocumentNotifications];
     
-    if ([[pdfView document] isLocked]) {
+    if ([pdfDocument isLocked]) {
         placeholderWidgetProperties = [widgetProperties count] ? [widgetProperties copy] : nil;
     } else {
         [self makeWidgets];
