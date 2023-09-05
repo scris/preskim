@@ -3243,8 +3243,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
     PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
     
-    [annotation setShouldDisplay:pdfvFlags.hideNotes == NO || [annotation isSkimNote] == NO || interactionMode == SKPresentationMode];
-    [annotation setShouldPrint:(pdfvFlags.hideNotes == NO || [annotation isSkimNote] == NO) && interactionMode != SKPresentationMode];
+    if ([annotation isSkimNote]) {
+        [annotation setShouldDisplay:pdfvFlags.hideNotes == NO || interactionMode == SKPresentationMode];
+        [annotation setShouldPrint:pdfvFlags.hideNotes == NO && interactionMode != SKPresentationMode];
+    }
     
     [self setNeedsDisplayForAnnotation:annotation];
     [self annotationsChangedOnPage:page];
