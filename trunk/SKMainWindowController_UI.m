@@ -132,8 +132,6 @@
 
 - (void)updateNoteFilterPredicate;
 
-- (void)observeUndoManagerCheckpoint:(NSNotification *)notification;
-
 - (void)rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation;
 
 @end
@@ -2050,6 +2048,11 @@ static NSArray *allMainDocumentPDFViews() {
 
 - (void)handlePageLabelsChangedNotification:(NSNotification *)notification {
     [self updatePageLabels];
+}
+
+- (void)observeUndoManagerCheckpoint:(NSNotification *)notification {
+    // Start the coalescing of note property changes over.
+    SKDESTROY(undoGroupOldPropertiesPerNote);
 }
 
 - (void)handleOpenOrCloseUndoGroupNotification:(NSNotification *)notification {
