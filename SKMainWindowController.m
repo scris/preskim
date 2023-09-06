@@ -216,8 +216,6 @@ static char SKMainWindowContentLayoutObservationContext;
 - (void)startObservingNotes:(NSArray *)newNotes;
 - (void)stopObservingNotes:(NSArray *)oldNotes;
 
-- (void)observeUndoManagerCheckpoint:(NSNotification *)notification;
-
 - (void)clearWidgets;
 
 + (void)defineFullScreenGlobalVariables;
@@ -1117,7 +1115,7 @@ static char SKMainWindowContentLayoutObservationContext;
     }
     
     // make sure we clear the undo handling
-    [self observeUndoManagerCheckpoint:nil];
+    SKDESTROY(undoGroupOldPropertiesPerNote);
     [rightSideController.noteOutlineView reloadData];
     [self updateThumbnailsAtPageIndexes:pageIndexes];
     [pdfView resetPDFToolTipRects];
@@ -1257,7 +1255,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [self updateRightStatus];
     
     // make sure we clear the undo handling
-    [self observeUndoManagerCheckpoint:nil];
+    SKDESTROY(undoGroupOldPropertiesPerNote);
     [rightSideController.noteOutlineView reloadData];
     [pdfView resetPDFToolTipRects];
 }
@@ -2697,12 +2695,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         // Use a relatively unpopular method. Here we're effectively "casting" a key path to a key (see how these dictionaries get built in -observeValueForKeyPath:ofObject:change:context:). It had better really be a key or things will get confused. For example, this is one of the things that would need updating if -[SKTNote keysForValuesToObserveForUndo] someday becomes -[SKTNote keyPathsForValuesToObserveForUndo].
         [note setValuesForKeysWithDictionary:noteProperties];
     }
-}
-
-- (void)observeUndoManagerCheckpoint:(NSNotification *)notification {
-    // Start the coalescing of note property changes over.
-    [undoGroupOldPropertiesPerNote release];
-    undoGroupOldPropertiesPerNote = nil;
 }
 
 #pragma mark KVO
