@@ -1041,7 +1041,8 @@ static char SKMainWindowContentLayoutObservationContext;
         PDFAnnotation *annotation = [PDFAnnotation newSkimNoteWithProperties:dict];
         if (annotation) {
             // this is only to make sure markup annotations generate the lineRects, for thread safety
-            [annotation boundsOrder];
+            if ([annotation isMarkup])
+                [annotation boundsOrder];
             NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
             if (pageIndex == NSNotFound)
                 pageIndex = 0;
@@ -2230,7 +2231,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [[self window] makeFirstResponder:[self pdfView]];
 }
 
-- (void)documentDidUnlock:(NSNotification *)notification {
+- (void)documentDidUnlock:(NSNotification *)notification {log_method();
     if (placeholderPdfDocument && [[self pdfDocument] allowsNotes]) {
         PDFDocument *pdfDoc = [self pdfDocument];
         NSMutableIndexSet *pageIndexes = [NSMutableIndexSet indexSet];
