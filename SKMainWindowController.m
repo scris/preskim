@@ -947,11 +947,8 @@ static char SKMainWindowContentLayoutObservationContext;
 - (void)registerWidgets:(NSArray *)array {
     [widgets addObjectsFromArray:array];
     [self startObservingNotes:array];
-    for (PDFAnnotation *annotation in array) {
-        id value = [annotation objectValue];
-        if (value)
-            [widgetValues setObject:value forKey:annotation];
-    }
+    for (PDFAnnotation *annotation in array)
+        [widgetValues setObject:[annotation objectValue] forKey:annotation];
 }
 
 - (void)makeWidgets {
@@ -1101,11 +1098,8 @@ static char SKMainWindowContentLayoutObservationContext;
     
     if (isConvert) {
         NSMapTable *values = [NSMapTable strongToStrongObjectsMapTable];
-        for (PDFAnnotation *widget in widgets) {
-            id value = [widget objectValue];
-            if (value)
-                [values setObject:value forKey:widget];
-        }
+        for (PDFAnnotation *widget in widgets)
+            [values setObject:[widget objectValue] forKey:widget];
         if ([values count])
             [self setWidgetValues:values];
     } else {
