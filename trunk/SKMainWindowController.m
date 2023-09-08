@@ -109,6 +109,7 @@
 #import "SKDocumentController.h"
 #import "NSColor_SKExtensions.h"
 #import "NSObject_SKExtensions.h"
+#import "SKTextUndoManager.h"
 
 #define MULTIPLICATION_SIGN_CHARACTER (unichar)0x00d7
 
@@ -1589,7 +1590,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (NSUndoManager *)presentationUndoManager {
     if (presentationUndoManager == nil)
-        presentationUndoManager = [[NSUndoManager alloc] init];
+        presentationUndoManager = [[SKTextUndoManager alloc] initWithNextUndoManager:[[self document] undoManager]];
     return presentationUndoManager;
 }
 
@@ -2341,8 +2342,9 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     NSDictionary *userInfo = [notification userInfo];
     PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
     PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
+    NSUndoManager *undoManager = [[self document] undoManager];
     
-    if ([self interactionMode] == SKPresentationMode) {
+    if ([self interactionMode] == SKPresentationMode && [undoManager isUndoing] == NO && [undoManager isRedoing] == NO) {
         [[[self presentationUndoManager] prepareWithInvocationTarget:[notification object]] removeAnnotation:annotation];
         
         if (presentationNotes == nil)
@@ -2351,7 +2353,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         if (page)
             [self updateThumbnailAtPageIndex:[page pageIndex]];
     } else {
-        [[[[self document] undoManager] prepareWithInvocationTarget:[notification object]] removeAnnotation:annotation];
+        [[undoManager prepareWithInvocationTarget:[notification object]] removeAnnotation:annotation];
         
         if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
             mwcFlags.updatingNoteSelection = 1;
@@ -2375,15 +2377,16 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     NSDictionary *userInfo = [notification userInfo];
     PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
     PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
+    NSUndoManager *undoManager = [[self document] undoManager];
     
-    if ([self interactionMode] == SKPresentationMode) {
+    if ([self interactionMode] == SKPresentationMode && [undoManager isUndoing] == NO && [undoManager isRedoing] == NO) {
         [[[self presentationUndoManager] prepareWithInvocationTarget:[notification object]] addAnnotation:annotation toPage:page];
         
         [presentationNotes removeObject:annotation];
         if (page)
             [self updateThumbnailAtPageIndex:[page pageIndex]];
     } else {
-        [[[[self document] undoManager] prepareWithInvocationTarget:[notification object]] addAnnotation:annotation toPage:page];
+        [[undoManager prepareWithInvocationTarget:[notification object]] addAnnotation:annotation toPage:page];
         
         if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
             if ([[self selectedNotes] containsObject:annotation])
