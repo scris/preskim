@@ -3467,11 +3467,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             return YES;
         return NO;
     } else if (action == @selector(paste:)) {
-        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}];
+        return interactionMode != SKPresentationMode && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}];
     } else if (action == @selector(alternatePaste:)) {
-        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSAttributedString class], [NSString class]] options:@{}];
+        return interactionMode != SKPresentationMode && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(pasteAsPlainText:)) {
-        return [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[NSAttributedString class], [NSString class]] options:@{}];
+        return interactionMode != SKPresentationMode && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(delete:)) {
         return [currentAnnotation isSkimNote];
     } else if (action == @selector(selectAll:)) {
