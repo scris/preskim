@@ -4619,13 +4619,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (interactionMode != SKPresentationMode) {
             [annotation registerUserName];
             [self beginNewUndoGroupIfNeededWithCommit:NO];
-            [[self document] addAnnotation:annotation toPage:page];
-            [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
         } else if (tmpColor) {
             [annotation setColor:tmpColor];
-            [[self document] addAnnotation:annotation toPage:page];
         }
-        
+        [[self document] addAnnotation:annotation toPage:page];
+        if (interactionMode != SKPresentationMode)
+            [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
+
         [paths release];
         [annotation release];
         
