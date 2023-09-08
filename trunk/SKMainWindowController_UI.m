@@ -1519,6 +1519,10 @@
     [self rotatePageAtIndex:idx by:rotation];
 }
 
+- (NSUndoManager *)undoManagerForPDFView:(PDFView *)sender {
+    return [[self document] undoManager];
+}
+
 #pragma mark NSSplitView delegate protocol
 
 - (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview {
