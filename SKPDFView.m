@@ -1048,6 +1048,15 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     }
 }
 
+- (NSUndoManager *)undoManager {
+    NSUndoManager *undoManager = nil;
+    if ([[self delegate] respondsToSelector:@selector(document)])
+        undoManager = [[(NSWindowController *)[self delegate] document] undoManager];
+    if (undoManager == nil)
+        undoManager = [super undoManager];
+    return undoManager;
+}
+
 #pragma mark Reading bar
 
 - (BOOL)hasReadingBar {
