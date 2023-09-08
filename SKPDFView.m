@@ -1050,8 +1050,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 - (NSUndoManager *)undoManager {
     NSUndoManager *undoManager = nil;
-    if ([[self delegate] respondsToSelector:@selector(document)])
-        undoManager = [[(NSWindowController *)[self delegate] document] undoManager];
+    if ([[self delegate] respondsToSelector:@selector(undoManagerForPDFView:)])
+        undoManager = [[self delegate] undoManagerForPDFView:self];
     if (undoManager == nil)
         undoManager = [super undoManager];
     return undoManager;

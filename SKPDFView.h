@@ -280,4 +280,5 @@ enum {
 - (void)PDFViewPerformHideFind:(PDFView *)sender;
 - (BOOL)PDFViewIsFindVisible:(PDFView *)sender;
 - (void)PDFView:(PDFView *)sender rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation;
+- (NSUndoManager *)undoManagerForPDFView:(PDFView *)sender;
 @end
