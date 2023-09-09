@@ -1057,6 +1057,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     return undoManager;
 }
 
+- (void)setUndoActionName:(NSString *)actionName {
+    if (interactionMode != SKPresentationMode)
+        [[self undoManager] setActionName:actionName];
+}
+
 #pragma mark Reading bar
 
 - (BOOL)hasReadingBar {
@@ -1397,7 +1402,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
         }
         
-        [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
+        [self setUndoActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
         
     } else {
         
@@ -1465,7 +1470,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [newAnnotation registerUserName];
             [self beginNewUndoGroupIfNeededWithCommit:YES];
             [[self document] addAnnotation:newAnnotation toPage:page];
-            [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
+            [self setUndoActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
             [self setCurrentAnnotation:newAnnotation];
             
@@ -2656,7 +2661,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             if ([text length] == 0 && isInitial == NO)
                 [newAnnotation autoUpdateString];
         }
-        [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
+        [self setUndoActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
         [self setCurrentAnnotation:newAnnotation];
         
@@ -2672,7 +2677,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [newAnnotation autoUpdateString];
         if ([newAnnotation string] == nil)
             [newAnnotation setString:@""];
-        [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
+        [self setUndoActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
         [self setCurrentAnnotation:newAnnotation];
         [newAnnotation release];
@@ -2861,7 +2866,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)removeCurrentAnnotation:(id)sender{
     if ([currentAnnotation isSkimNote]) {
         [[self document] removeAnnotation:currentAnnotation];
-        [[self undoManager] setActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
+        [self setUndoActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
     }
 }
 
@@ -4069,7 +4074,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (newActivePage != [currentAnnotation page]) {
             // move the annotation to the new page
             [[self document] moveAnnotation:currentAnnotation toPage:newActivePage];
-            [[self undoManager] setActionName:NSLocalizedString(@"Edit Note", @"Undo action name")];
+            [self setUndoActionName:NSLocalizedString(@"Edit Note", @"Undo action name")];
         }
         
         NSRect newBounds = [currentAnnotation bounds];
@@ -4453,7 +4458,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [newAnnotation registerUserName];
             [self beginNewUndoGroupIfNeededWithCommit:YES];
             [[self document] addAnnotation:newAnnotation toPage:page];
-            [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
+            [self setUndoActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
             newCurrentAnnotation = newAnnotation;
             [newAnnotation release];
         } else if (([newCurrentAnnotation isMarkup] ||
@@ -4489,7 +4494,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 [[self document] removeAnnotation:newCurrentAnnotation];
                 [self removeCurrentAnnotation:nil];
                 [[self document] addAnnotation:newAnnotation toPage:page];
-                [[self undoManager] setActionName:NSLocalizedString(@"Join Notes", @"Undo action name")];
+                [self setUndoActionName:NSLocalizedString(@"Join Notes", @"Undo action name")];
                 newCurrentAnnotation = newAnnotation;
             }
         }
@@ -4624,7 +4629,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         }
         [[self document] addAnnotation:annotation toPage:page];
         if (interactionMode != SKPresentationMode)
-            [[self undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
+            [self setUndoActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
         [paths release];
         [annotation release];
@@ -4654,7 +4659,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         for (PDFAnnotation *annotation in annotations) {
             if ([annotation isSkimNote] && [annotation hitTest:point] && [self isEditingAnnotation:annotation] == NO) {
                 [[self document] removeAnnotation:annotation];
-                [[self undoManager] setActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
+                [self setUndoActionName:NSLocalizedString(@"Remove Note", @"Undo action name")];
                 break;
             }
         }
