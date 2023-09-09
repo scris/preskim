@@ -1398,7 +1398,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [self beginNewUndoGroupIfNeededWithCommit:YES];
             [[self document] addAnnotation:newAnnotation toPage:page];
             
-            [self setCurrentAnnotation:newAnnotation];
+            if (toolMode == SKTextToolMode || toolMode == SKNoteToolMode)
+                [self setCurrentAnnotation:newAnnotation];
 
         }
         
@@ -1472,7 +1473,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [[self document] addAnnotation:newAnnotation toPage:page];
             [self setUndoActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
-            [self setCurrentAnnotation:newAnnotation];
+            if (toolMode == SKTextToolMode || toolMode == SKNoteToolMode)
+                [self setCurrentAnnotation:newAnnotation];
             
         } else {
             
@@ -2663,7 +2665,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         }
         [self setUndoActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
-        [self setCurrentAnnotation:newAnnotation];
+        if (toolMode == SKTextToolMode || toolMode == SKNoteToolMode)
+            [self setCurrentAnnotation:newAnnotation];
         
         return YES;
     } else if (newAnnotation) {
@@ -2679,7 +2682,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
             [newAnnotation setString:@""];
         [self setUndoActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
 
-        [self setCurrentAnnotation:newAnnotation];
+        if (toolMode == SKTextToolMode || toolMode == SKNoteToolMode)
+            [self setCurrentAnnotation:newAnnotation];
         [newAnnotation release];
         
         return YES;
