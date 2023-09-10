@@ -185,7 +185,7 @@
 }
 
 - (IBAction)createNewNote:(id)sender{
-    if ([pdfView hideNotes] == NO && [[self pdfDocument] allowsNotes])
+    if ([pdfView canAddNotes])
         [pdfView addAnnotationWithType:[sender tag]];
     else NSBeep();
 }

@@ -270,7 +270,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 @implementation SKPDFView
 
 @synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, currentAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, zooming;
-@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing;
+@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, canAddNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -1060,6 +1060,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (void)setUndoActionName:(NSString *)actionName {
     if (interactionMode != SKPresentationMode)
         [[self undoManager] setActionName:actionName];
+}
+
+- (BOOL)canAddNotes {
+    return pdfvFlags.hideNotes == NO && interactionMode != SKPresentationMode && (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && [[self document] allowsNotes];
 }
 
 #pragma mark Reading bar
@@ -3476,11 +3480,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             return YES;
         return NO;
     } else if (action == @selector(paste:)) {
-        return interactionMode != SKPresentationMode && (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}];
+        return [self canAddNotes] && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}];
     } else if (action == @selector(alternatePaste:)) {
-        return interactionMode != SKPresentationMode && (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSAttributedString class], [NSString class]] options:@{}];
+        return [self canAddNotes] && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(pasteAsPlainText:)) {
-        return interactionMode != SKPresentationMode && (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[NSAttributedString class], [NSString class]] options:@{}];
+        return [self canAddNotes] && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(delete:)) {
         return [currentAnnotation isSkimNote];
     } else if (action == @selector(selectAll:)) {

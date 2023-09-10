@@ -187,6 +187,7 @@ enum {
 @property (nonatomic, retain) PDFPage *currentSelectionPage;
 @property (nonatomic, readonly) CGFloat currentMagnification;
 @property (nonatomic) BOOL hideNotes;
+@property (nonatomic, readonly) BOOL canAddNotes;
 @property (nonatomic, readonly) BOOL hasReadingBar;
 @property (readonly) SKReadingBar *readingBar;
 @property (nonatomic) CGFloat pacerSpeed;
