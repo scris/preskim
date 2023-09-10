@@ -2897,7 +2897,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (currentAnnotation != annotation)
             [self setCurrentAnnotation:annotation];
         [self editCurrentAnnotation:nil];
-    } else if ([currentAnnotation isEditable] && [[self delegate] respondsToSelector:@selector(PDFView:editAnnotation:)]) {
+    } else if ([annotation isEditable] && [[self delegate] respondsToSelector:@selector(PDFView:editAnnotation:)]) {
         [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
         
         [[self delegate] PDFView:self editAnnotation:annotation];
