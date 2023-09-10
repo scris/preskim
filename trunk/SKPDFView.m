@@ -2224,7 +2224,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     item = [menu insertItemWithTitle:NSLocalizedString(@"Take Snapshot", @"Menu item title") action:@selector(takeSnapshot:) target:self atIndex:0];
     [item setRepresentedObject:pointValue];
     
-    if (([self toolMode] == SKTextToolMode || [self toolMode] == SKNoteToolMode) && [self hideNotes] == NO && [[self document] allowsNotes]) {
+    if ([self canAddNotes]) {
         
         [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
         
@@ -2344,7 +2344,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         if ([[menu itemAtIndex:0] isSeparatorItem])
             [menu removeItemAtIndex:0];
         
-    } else if ((toolMode == SKSelectToolMode && NSIsEmptyRect(selectionRect) == NO) || ([self toolMode] == SKTextToolMode && [self hideNotes] && [[self currentSelection] hasCharacters])) {
+    } else if ((toolMode == SKSelectToolMode && NSIsEmptyRect(selectionRect) == NO) || ([self toolMode] == SKTextToolMode && [[self currentSelection] hasCharacters])) {
         
         [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
         
@@ -2893,9 +2893,15 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (annotation == nil || [self isEditingAnnotation:annotation])
         return;
     
-    if (currentAnnotation != annotation)
-        [self setCurrentAnnotation:annotation];
-    [self editCurrentAnnotation:nil];
+    if ([self canAddNotes] && [self window]) {
+        if (currentAnnotation != annotation)
+            [self setCurrentAnnotation:annotation];
+        [self editCurrentAnnotation:nil];
+    } else if ([currentAnnotation isEditable] && [[self delegate] respondsToSelector:@selector(PDFView:editAnnotation:)]) {
+        [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
+        
+        [[self delegate] PDFView:self editAnnotation:annotation];
+    }
 }
 
 - (void)editCurrentAnnotation:(id)sender {

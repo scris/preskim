@@ -1279,18 +1279,16 @@
                             item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editNoteTextFromTable:) target:self];
                             [item setRepresentedObject:annotation];
                         }
-                    } else if ([[rightSideController.noteOutlineView tableColumnWithIdentifier:NOTE_COLUMNID] isHidden] && [pdfView canAddNotes]) {
+                    } else if ([[rightSideController.noteOutlineView tableColumnWithIdentifier:NOTE_COLUMNID] isHidden]) {
                         item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editThisAnnotation:) target:pdfView];
                         [item setRepresentedObject:annotation];
                     } else {
                         item = [menu addItemWithTitle:NSLocalizedString(@"Edit", @"Menu item title") action:@selector(editNoteFromTable:) target:self];
                         [item setRepresentedObject:annotation];
-                        if ([pdfView canAddNotes]) {
-                            item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editThisAnnotation:) target:pdfView];
-                            [item setRepresentedObject:annotation];
-                            [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
-                            [item setAlternate:YES];
-                        }
+                        item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editThisAnnotation:) target:pdfView];
+                        [item setRepresentedObject:annotation];
+                        [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
+                        [item setAlternate:YES];
                     }
                 }
                 if ([pdfView hideNotes] == NO && [[self pdfDocument] allowsNotes]) {
