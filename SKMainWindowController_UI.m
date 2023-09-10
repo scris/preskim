@@ -1067,7 +1067,8 @@
 - (void)editNoteTextFromTable:(id)sender {
     PDFAnnotation *annotation = [sender representedObject];
     [pdfView scrollAnnotationToVisible:annotation];
-    [pdfView setCurrentAnnotation:annotation];
+    if ([pdfView canAddNotes])
+        [pdfView setCurrentAnnotation:annotation];
     [self showNote:annotation];
     SKNoteWindowController *noteController = (SKNoteWindowController *)[self windowControllerForNote:annotation];
     [[noteController window] makeFirstResponder:[noteController textView]];
