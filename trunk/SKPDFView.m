@@ -3476,11 +3476,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             return YES;
         return NO;
     } else if (action == @selector(paste:)) {
-        return interactionMode != SKPresentationMode && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}];
+        return interactionMode != SKPresentationMode && (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}];
     } else if (action == @selector(alternatePaste:)) {
-        return interactionMode != SKPresentationMode && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSAttributedString class], [NSString class]] options:@{}];
+        return interactionMode != SKPresentationMode && (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(pasteAsPlainText:)) {
-        return interactionMode != SKPresentationMode && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[NSAttributedString class], [NSString class]] options:@{}];
+        return interactionMode != SKPresentationMode && (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(delete:)) {
         return [currentAnnotation isSkimNote];
     } else if (action == @selector(selectAll:)) {
