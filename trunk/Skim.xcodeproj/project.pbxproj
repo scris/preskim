@@ -157,7 +157,7 @@
 		CE5BEA190C7C635400EBDCF7 /* NSGeometry_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5BEA170C7C635400EBDCF7 /* NSGeometry_SKExtensions.m */; };
 		CE5BF8010C7CBF6300EBDCF7 /* SKTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5BF7FF0C7CBF6300EBDCF7 /* SKTableView.m */; };
 		CE5BF8430C7CC24A00EBDCF7 /* SKOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5BF8410C7CC24A00EBDCF7 /* SKOutlineView.m */; };
-		CE5CB23F2740329E00315060 /* SKTextUndoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5CB23D2740329E00315060 /* SKTextUndoManager.m */; };
+		CE5CB23F2740329E00315060 /* SKChainedUndoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5CB23D2740329E00315060 /* SKChainedUndoManager.m */; };
 		CE5F43730BF8A3410069D89C /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5F42D30BF8A3400069D89C /* IOKit.framework */; };
 		CE5FA1680C909886008BE480 /* SKFDFParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5FA1660C909886008BE480 /* SKFDFParser.m */; };
 		CE61008C2624FF85007CEC88 /* NotesDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE61008B2624FF84007CEC88 /* NotesDocument.xib */; };
@@ -955,8 +955,8 @@
 		CE5BF7FF0C7CBF6300EBDCF7 /* SKTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTableView.m; sourceTree = "<group>"; };
 		CE5BF8400C7CC24A00EBDCF7 /* SKOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKOutlineView.h; sourceTree = "<group>"; };
 		CE5BF8410C7CC24A00EBDCF7 /* SKOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKOutlineView.m; sourceTree = "<group>"; };
-		CE5CB23C2740329E00315060 /* SKTextUndoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKTextUndoManager.h; sourceTree = "<group>"; };
-		CE5CB23D2740329E00315060 /* SKTextUndoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKTextUndoManager.m; sourceTree = "<group>"; };
+		CE5CB23C2740329E00315060 /* SKChainedUndoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKChainedUndoManager.h; sourceTree = "<group>"; };
+		CE5CB23D2740329E00315060 /* SKChainedUndoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKChainedUndoManager.m; sourceTree = "<group>"; };
 		CE5F23571057B75000B5A7B9 /* SKCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKCompatibility.h; sourceTree = "<group>"; };
 		CE5F42D30BF8A3400069D89C /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		CE5FA1650C909886008BE480 /* SKFDFParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKFDFParser.h; sourceTree = "<group>"; };
@@ -1257,7 +1257,6 @@
 		CEF60DE5114C0E8E0074ACC4 /* it */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/MainMenu.strings; sourceTree = "<group>"; };
 		CEF60DE6114C0E8E0074ACC4 /* it */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/PreferenceWindow.strings; sourceTree = "<group>"; };
 		CEF60DE7114C0EA80074ACC4 /* ru */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/TransitionSheet.strings; sourceTree = "<group>"; };
-		CEF60DE9114C0EA80074ACC4 /* ru */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/ScaleSheet.strings; sourceTree = "<group>"; };
 		CEF60DEA114C0EA80074ACC4 /* ru */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/ReleaseNotes.strings; sourceTree = "<group>"; };
 		CEF60DEC114C0EA80074ACC4 /* ru */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/PrintAccessoryView.strings; sourceTree = "<group>"; };
 		CEF60DED114C0EA80074ACC4 /* ru */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/PasswordSheet.strings; sourceTree = "<group>"; };
@@ -2040,8 +2039,8 @@
 				CE4972890BDE8B2900D7F1D2 /* SKToolbarItem.m */,
 				CE5BD6710C7ADF1500EBDCF7 /* SKTypeSelectHelper.h */,
 				CE5BD6720C7ADF1500EBDCF7 /* SKTypeSelectHelper.m */,
-				CE5CB23C2740329E00315060 /* SKTextUndoManager.h */,
-				CE5CB23D2740329E00315060 /* SKTextUndoManager.m */,
+				CE5CB23C2740329E00315060 /* SKChainedUndoManager.h */,
+				CE5CB23D2740329E00315060 /* SKChainedUndoManager.m */,
 			);
 			name = "View Helpers";
 			sourceTree = "<group>";
@@ -2774,7 +2773,7 @@
 				CEE54D9C0DA2E7B30037169F /* PDFAnnotationLine_SKExtensions.m in Sources */,
 				CEE54DAE0DA2E8CD0037169F /* PDFAnnotationFreeText_SKExtensions.m in Sources */,
 				CEE54DB40DA2E99D0037169F /* PDFAnnotationMarkup_SKExtensions.m in Sources */,
-				CE5CB23F2740329E00315060 /* SKTextUndoManager.m in Sources */,
+				CE5CB23F2740329E00315060 /* SKChainedUndoManager.m in Sources */,
 				CEE54F6C0DA3FB060037169F /* SKMainToolbarController.m in Sources */,
 				CEE54F700DA3FBE00037169F /* NSSegmentedControl_SKExtensions.m in Sources */,
 				CEE54F900DA3FE9A0037169F /* NSValueTransformer_SKExtensions.m in Sources */,
