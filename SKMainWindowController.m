@@ -2347,6 +2347,8 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     if ([self interactionMode] == SKPresentationMode && [undoManager isUndoing] == NO && [undoManager isRedoing] == NO) {
         [[[self presentationUndoManager] prepareWithInvocationTarget:[notification object]] removeAnnotation:annotation];
         
+        [annotation setShouldDisplay:YES];
+        [annotation setShouldPrint:NO];
         if (presentationNotes == nil)
             presentationNotes = [[NSMutableArray alloc] init];
         [presentationNotes addObject:annotation];
@@ -2355,6 +2357,10 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     } else {
         [[undoManager prepareWithInvocationTarget:[notification object]] removeAnnotation:annotation];
         
+        if ([annotation isSkimNote]) {
+            [annotation setShouldDisplay:[pdfView hideNotes] == NO];
+            [annotation setShouldPrint:[pdfView hideNotes] == NO];
+        }
         if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
             mwcFlags.updatingNoteSelection = 1;
             [[self mutableArrayValueForKey:NOTES_KEY] addObject:annotation];
