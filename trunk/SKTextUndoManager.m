@@ -1,5 +1,5 @@
 //
-//  SKTextUndoManager.m
+//  SKChainedUndoManager.m
 //  Skim
 //
 //  Created by Christiaan Hofman on 13/11/2021.
@@ -36,10 +36,10 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#import "SKTextUndoManager.h"
+#import "SKChainedUndoManager.h"
 
 
-@implementation SKTextUndoManager
+@implementation SKChainedUndoManager
 
 - (id)initWithNextUndoManager:(NSUndoManager *)undoManager {
     self = [super init];

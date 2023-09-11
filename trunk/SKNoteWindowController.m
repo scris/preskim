@@ -62,7 +62,7 @@
 #import "NSView_SKExtensions.h"
 #import "NSPasteboard_SKExtensions.h"
 #import "NSAttributedString_SKExtensions.h"
-#import "SKTextUndoManager.h"
+#import "SKChainedUndoManager.h"
 #import "SKApplicationController.h"
 
 #define EM_DASH_CHARACTER (unichar)0x2014
@@ -356,7 +356,7 @@ static NSURL *temporaryDirectoryURL = nil;
 
 - (NSUndoManager *)undoManagerForTextView:(NSTextView *)aTextView {
     if (textViewUndoManager == nil)
-        textViewUndoManager = [[SKTextUndoManager alloc] initWithNextUndoManager:[[self document] undoManager]];
+        textViewUndoManager = [[SKChainedUndoManager alloc] initWithNextUndoManager:[[self document] undoManager]];
     return textViewUndoManager;
 }
 

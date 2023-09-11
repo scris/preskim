@@ -1,5 +1,5 @@
 //
-//  SKTextUndoManager.h
+//  SKChainedUndoManager.h
 //  Skim
 //
 //  Created by Christiaan Hofman on 13/11/2021.
@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import <Cocoa/Cocoa.h>
 
 
-@interface SKTextUndoManager : NSUndoManager {
+@interface SKChainedUndoManager : NSUndoManager {
     NSUndoManager *nextUndoManager;
 }
 - (id)initWithNextUndoManager:(NSUndoManager *)undoManager;
