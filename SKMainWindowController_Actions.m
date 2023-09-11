@@ -185,7 +185,7 @@
 }
 
 - (IBAction)createNewNote:(id)sender{
-    if ([pdfView canAddNotes])
+    if ([pdfView canSelectNote])
         [pdfView addAnnotationWithType:[sender tag]];
     else NSBeep();
 }

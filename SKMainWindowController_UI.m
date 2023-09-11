@@ -1067,7 +1067,7 @@
 - (void)editNoteTextFromTable:(id)sender {
     PDFAnnotation *annotation = [sender representedObject];
     [pdfView scrollAnnotationToVisible:annotation];
-    if ([pdfView canAddNotes])
+    if ([pdfView canSelectNote])
         [pdfView setCurrentAnnotation:annotation];
     [self showNote:annotation];
     SKNoteWindowController *noteController = (SKNoteWindowController *)[self windowControllerForNote:annotation];
@@ -1202,9 +1202,11 @@
             if ([rowIndexes containsIndex:row] == NO)
                 rowIndexes = [NSIndexSet indexSetWithIndex:row];
             NSArray *selections = [[leftSideController.findArrayController arrangedObjects] objectsAtIndexes:rowIndexes];
-            item = [menu addItemWithTitle:NSLocalizedString(@"Select", @"Menu item title") action:@selector(selectSelections:) target:self];
-            [item setRepresentedObject:selections];
-            if ([pdfView canAddNotes]) {
+            if ([pdfView toolMode] == SKTextToolMode) {
+                item = [menu addItemWithTitle:NSLocalizedString(@"Select", @"Menu item title") action:@selector(selectSelections:) target:self];
+                [item setRepresentedObject:selections];
+            }
+            if ([pdfView hideNotes] == NO) {
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Circle", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKCircleNote];
                 [item setRepresentedObject:selections];
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Box", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKSquareNote];
@@ -1224,9 +1226,11 @@
             if ([rowIndexes containsIndex:row] == NO)
                 rowIndexes = [NSIndexSet indexSetWithIndex:row];
             NSArray *selections = [[[leftSideController.groupedFindArrayController arrangedObjects] objectsAtIndexes:rowIndexes] valueForKeyPath:@"@unionOfArrays.matches"];
-            item = [menu addItemWithTitle:NSLocalizedString(@"Select", @"Menu item title") action:@selector(selectSelections:) target:self];
-            [item setRepresentedObject:selections];
-            if ([pdfView canAddNotes]) {
+            if ([pdfView toolMode] == SKTextToolMode) {
+                item = [menu addItemWithTitle:NSLocalizedString(@"Select", @"Menu item title") action:@selector(selectSelections:) target:self];
+                [item setRepresentedObject:selections];
+            }
+            if ([pdfView hideNotes] == NO) {
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Circle", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKCircleNote];
                 [item setRepresentedObject:selections];
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Box", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKSquareNote];
@@ -1295,7 +1299,7 @@
                     if ([pdfView currentAnnotation] == annotation) {
                         item = [menu addItemWithTitle:NSLocalizedString(@"Deselect", @"Menu item title") action:@selector(deselectNote:) target:self];
                         [item setRepresentedObject:annotation];
-                    } else if ([pdfView canAddNotes]) {
+                    } else if ([pdfView canSelectNote]) {
                         item = [menu addItemWithTitle:NSLocalizedString(@"Select", @"Menu item title") action:@selector(selectNote:) target:self];
                         [item setRepresentedObject:annotation];
                     }
@@ -1679,7 +1683,7 @@ static NSArray *allMainDocumentPDFViews() {
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     SEL action = [menuItem action];
     if (action == @selector(createNewNote:)) {
-        return [pdfView canAddNotes];
+        return [pdfView canSelectNote];
     } else if (action == @selector(editNote:)) {
         PDFAnnotation *annotation = [pdfView currentAnnotation];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isEditable];
