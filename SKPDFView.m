@@ -423,7 +423,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if ([self document] && [self window] && interactionMode != SKPresentationMode) {
         NSRect visibleRect = [self visibleContentRect];
         NSView *docView = [self documentView];
-        BOOL hasLinkToolTips = (toolMode == SKTextToolMode || toolMode == SKMoveToolMode || toolMode == SKNoteToolMode);
+        BOOL hasLinkToolTips = toolMode != SKMagnifyToolMode;
         NSPoint mouseLoc = [docView convertPointFromScreen:[NSEvent mouseLocation]];
         BOOL mouseInView = [[self window] isVisible] && NSMouseInRect(mouseLoc, [docView visibleRect], [docView isFlipped]);
         NSTrackingAreaOptions options = NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow;
