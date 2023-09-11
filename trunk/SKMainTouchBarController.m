@@ -380,7 +380,7 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
 }
 
 - (void)createNewNote:(id)sender {
-    if ([mainController.pdfView canAddNotes]) {
+    if ([mainController.pdfView canSelectNote]) {
         NSInteger type = [sender selectedSegment];
         [mainController.pdfView addAnnotationWithType:type];
     } else NSBeep();
@@ -413,7 +413,7 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
 
 - (void)handleToolModeChangedNotification:(NSNotification *)notification {
     [toolModeButton selectSegmentWithTag:[mainController.pdfView toolMode]];
-    [noteButton setEnabled:[mainController.pdfView canAddNotes]];
+    [noteButton setEnabled:[mainController.pdfView canSelectNote]];
     if ([mainController.pdfView toolMode] == SKNoteToolMode) {
         [annotationModeButton selectSegmentWithTag:[mainController.pdfView annotationMode]];
     } else {

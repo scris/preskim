@@ -270,7 +270,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 @implementation SKPDFView
 
 @synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, currentAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, zooming;
-@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, canAddNotes, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing;
+@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, canSelectNote, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -1062,7 +1062,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [[self undoManager] setActionName:actionName];
 }
 
-- (BOOL)canAddNotes {
+- (BOOL)canSelectNote {
     return pdfvFlags.hideNotes == NO && interactionMode != SKPresentationMode && (toolMode == SKTextToolMode || toolMode == SKNoteToolMode) && [[self document] allowsNotes];
 }
 
@@ -2224,7 +2224,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     item = [menu insertItemWithTitle:NSLocalizedString(@"Take Snapshot", @"Menu item title") action:@selector(takeSnapshot:) target:self atIndex:0];
     [item setRepresentedObject:pointValue];
     
-    if ([self canAddNotes]) {
+    if ([self canSelectNote]) {
         
         [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
         
@@ -2893,7 +2893,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (annotation == nil || [self isEditingAnnotation:annotation])
         return;
     
-    if ([self canAddNotes] && [self window]) {
+    if ([self canSelectNote] && [self window]) {
         if (currentAnnotation != annotation)
             [self setCurrentAnnotation:annotation];
         [self editCurrentAnnotation:nil];
@@ -3486,11 +3486,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             return YES;
         return NO;
     } else if (action == @selector(paste:)) {
-        return [self canAddNotes] && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}];
+        return [self canSelectNote] && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSString class]] options:@{}];
     } else if (action == @selector(alternatePaste:)) {
-        return [self canAddNotes] && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSAttributedString class], [NSString class]] options:@{}];
+        return [self canSelectNote] && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[PDFAnnotation class], [NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(pasteAsPlainText:)) {
-        return [self canAddNotes] && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[NSAttributedString class], [NSString class]] options:@{}];
+        return [self canSelectNote] && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[NSAttributedString class], [NSString class]] options:@{}];
     } else if (action == @selector(delete:)) {
         return [currentAnnotation isSkimNote];
     } else if (action == @selector(selectAll:)) {
