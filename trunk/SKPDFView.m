@@ -3267,12 +3267,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 #pragma mark Notification handling
 
 - (void)handleDidAddAnnotationNotification:(NSNotification *)notification {
-    NSDictionary *userInfo = [notification userInfo];
-    PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
-    PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
+    PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
     
     [self setNeedsDisplayForAnnotation:annotation];
-    [self annotationsChangedOnPage:page];
     [self resetPDFToolTipRects];
 }
 
@@ -3306,12 +3303,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)handleDidMoveAnnotationNotification:(NSNotification *)notification {
     NSDictionary *userInfo = [notification userInfo];
     PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
-    PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
     PDFPage *oldPage = [userInfo objectForKey:SKPDFDocumentOldPageKey];
     
     [self setNeedsDisplayForAnnotation:annotation];
     [self annotationsChangedOnPage:oldPage];
-    [self annotationsChangedOnPage:page];
     if ([annotation isNote])
         [self resetPDFToolTipRects];
     if ([self isEditingAnnotation:annotation])
