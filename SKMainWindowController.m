@@ -109,7 +109,7 @@
 #import "SKDocumentController.h"
 #import "NSColor_SKExtensions.h"
 #import "NSObject_SKExtensions.h"
-#import "SKTextUndoManager.h"
+#import "SKChainedUndoManager.h"
 
 #define MULTIPLICATION_SIGN_CHARACTER (unichar)0x00d7
 
@@ -1590,7 +1590,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (NSUndoManager *)presentationUndoManager {
     if (presentationUndoManager == nil)
-        presentationUndoManager = [[SKTextUndoManager alloc] initWithNextUndoManager:[[self document] undoManager]];
+        presentationUndoManager = [[SKChainedUndoManager alloc] initWithNextUndoManager:[[self document] undoManager]];
     return presentationUndoManager;
 }
 

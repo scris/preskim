@@ -43,7 +43,7 @@
 #import "NSView_SKExtensions.h"
 #import "NSGraphics_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
-#import "SKTextUndoManager.h"
+#import "SKChainedUndoManager.h"
 #import "SKStringConstants.h"
 #import <SkimNotes/SkimNotes.h>
 
@@ -245,7 +245,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
 
 - (NSUndoManager *)undoManagerForTextView:(NSTextView *)view {
     if (undoManager == nil)
-        undoManager = [[SKTextUndoManager alloc] initWithNextUndoManager:[pdfView undoManager]];
+        undoManager = [[SKChainedUndoManager alloc] initWithNextUndoManager:[pdfView undoManager]];
     return undoManager;
 }
 
