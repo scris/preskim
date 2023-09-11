@@ -3270,7 +3270,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
     
     [self setNeedsDisplayForAnnotation:annotation];
-    [self resetPDFToolTipRects];
+    if ([annotation isNote])
+        [self resetPDFToolTipRects];
 }
 
 - (void)handleWillRemoveAnnotationNotification:(NSNotification *)notification {
