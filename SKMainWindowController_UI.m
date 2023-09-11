@@ -1206,7 +1206,7 @@
                 item = [menu addItemWithTitle:NSLocalizedString(@"Select", @"Menu item title") action:@selector(selectSelections:) target:self];
                 [item setRepresentedObject:selections];
             }
-            if ([pdfView hideNotes] == NO) {
+            if ([pdfView hideNotes] == NO && [[pdfView document] allowsNotes]) {
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Circle", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKCircleNote];
                 [item setRepresentedObject:selections];
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Box", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKSquareNote];
@@ -1230,7 +1230,7 @@
                 item = [menu addItemWithTitle:NSLocalizedString(@"Select", @"Menu item title") action:@selector(selectSelections:) target:self];
                 [item setRepresentedObject:selections];
             }
-            if ([pdfView hideNotes] == NO) {
+            if ([pdfView hideNotes] == NO && [[pdfView document] allowsNotes]) {
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Circle", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKCircleNote];
                 [item setRepresentedObject:selections];
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Box", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKSquareNote];
