@@ -281,7 +281,7 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
             NSURL *tmpDirURL = [[NSFileManager defaultManager] URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:aURL create:YES error:NULL];
             BOOL outputPS = [commandName isEqualToString:@"dvips"];
             NSURL *outFileURL = [tmpDirURL URLByAppendingPathComponent:[aURL lastPathComponentReplacingPathExtension:outputPS ? @"ps" : @"pdf"] isDirectory:NO];
-            NSArray *arguments = [toolPath isEqualToString:@"ps2pdf"] && [[NSUserDefaults standardUserDefaults] stringForKey:SKPSConversionCommandKey] == nil ? @[@"-dALLOWPSTRANSPARENCY", [aURL path], [outFileURL path]] : [commandName isEqualToString:@"dvipdf"] || [commandName hasPrefix:@"ps2pdf"] ? @[[aURL path], [outFileURL path]] : @[@"-o", [outFileURL path], [aURL path]];
+            NSArray *arguments = [toolPath isEqualToString:@"/usr/local/bin/ps2pdf"] ? @[@"-dALLOWPSTRANSPARENCY", [aURL path], [outFileURL path]] : [commandName isEqualToString:@"dvipdf"] || [commandName hasPrefix:@"ps2pdf"] ? @[[aURL path], [outFileURL path]] : @[@"-o", [outFileURL path], [aURL path]];
             
             task = [[NSTask alloc] init];
             [task setLaunchPath:toolPath];
