@@ -198,6 +198,8 @@ enum {
     
     [self tryToUnlockDocument:pdfDoc];
     
+    [[self undoManager] disableUndoRegistration];
+    
     [[self mainWindowController] setPdfDocument:pdfDoc addAnnotationsFromDictionaries:[tmpData noteDicts]];
     
     if ([tmpData presentationOptions])
@@ -206,18 +208,13 @@ enum {
     [[self mainWindowController] setTags:[tmpData openMetaTags]];
     
     [[self mainWindowController] setRating:[tmpData openMetaRating]];
+    
+    [[self undoManager] enableUndoRegistration];
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController{
-    [[self undoManager] disableUndoRegistration];
-    
-    // set a copy, because we change the printInfo, and we don't want to change the shared instance
-    [self setPrintInfo:[[[super printInfo] copy] autorelease]];
-    
     [self setDataFromTmpData];
     SKDESTROY(tmpData);
-    
-    [[self undoManager] enableUndoRegistration];
     
     fileUpdateChecker = [[SKFileUpdateChecker alloc] initForDocument:self];
     // the file update checker starts disabled, setting enabled will start checking if it should
@@ -1000,9 +997,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     BOOL success = [super revertToContentsOfURL:absoluteURL ofType:typeName error:outError];
     
     if (success) {
-        [[self undoManager] disableUndoRegistration];
         [self setDataFromTmpData];
-        [[self undoManager] enableUndoRegistration];
         [[self undoManager] removeAllActions];
         [fileUpdateChecker reset];
     }
@@ -1022,9 +1017,17 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 
 - (NSPrintOperation *)printOperationWithSettings:(NSDictionary *)printSettings error:(NSError **)outError {
     NSPrintInfo *printInfo = [[[self printInfo] copy] autorelease];
+    PDFDocument *pdfDoc = [self pdfDocument];
+    
+    if ([pdfDoc pageCount]) {
+        PDFPage *page = [pdfDoc pageAtIndex:0];
+        NSSize pageSize = [page boundsForBox:kPDFDisplayBoxMediaBox].size;
+        BOOL isLandscape = [page rotation] % 180 == 90 ? pageSize.height > pageSize.width : pageSize.width > pageSize.height;
+        [printInfo setOrientation:isLandscape ? NSPaperOrientationLandscape : NSPaperOrientationPortrait];
+    }
+    
     [[printInfo dictionary] addEntriesFromDictionary:printSettings];
     
-    PDFDocument *pdfDoc = [self pdfDocument];
     NSPrintOperation *printOperation = [pdfDoc printOperationForPrintInfo:printInfo scalingMode:kPDFPrintPageScaleNone autoRotate:YES];
     
     // NSPrintProtected is a private key that disables the items in the PDF popup of the Print panel, and is set for encrypted documents
@@ -1607,17 +1610,6 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 
 - (SKPDFView *)pdfView {
     return [[self mainWindowController] pdfView];
-}
-
-- (NSPrintInfo *)printInfo {
-    NSPrintInfo *printInfo = [super printInfo];
-    if ([[self pdfDocument] pageCount]) {
-        PDFPage *page = [[self pdfDocument] pageAtIndex:0];
-        NSSize pageSize = [page boundsForBox:kPDFDisplayBoxMediaBox].size;
-        BOOL isLandscape = [page rotation] % 180 == 90 ? pageSize.height > pageSize.width : pageSize.width > pageSize.height;
-        [printInfo setOrientation:isLandscape ? NSLandscapeOrientation : NSPortraitOrientation];
-    }
-    return printInfo;
 }
 
 - (NSArray *)snapshots {
