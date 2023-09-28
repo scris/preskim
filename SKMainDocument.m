@@ -210,11 +210,12 @@ enum {
     [[self mainWindowController] setRating:[tmpData openMetaRating]];
     
     [[self undoManager] enableUndoRegistration];
+    
+    SKDESTROY(tmpData);
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController{
     [self setDataFromTmpData];
-    SKDESTROY(tmpData);
     
     fileUpdateChecker = [[SKFileUpdateChecker alloc] initForDocument:self];
     // the file update checker starts disabled, setting enabled will start checking if it should
@@ -1000,9 +1001,9 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         [self setDataFromTmpData];
         [[self undoManager] removeAllActions];
         [fileUpdateChecker reset];
+    } else {
+        SKDESTROY(tmpData);
     }
-    
-    SKDESTROY(tmpData);
     
     if (modalwindow) {
         [NSApp endModalSession:session];
