@@ -53,8 +53,6 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 
 - (SKInteractionMode)systemInteractionMode;
 
-- (void)undoableActionIsDiscardable;
-
 - (NSWindow *)mainWindow;
 
 - (IBAction)copyURL:(id)sender;

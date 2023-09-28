@@ -68,14 +68,6 @@ NSString *SKDocumentFileURLDidChangeNotification = @"SKDocumentFileURLDidChangeN
 
 - (SKInteractionMode)systemInteractionMode { return SKNormalMode; }
 
-- (void)undoableActionIsDiscardable {
-	// This action, while undoable, shouldn't mark the document dirty
-    NSDocumentChangeType changeType = [[self undoManager] isUndoing] ? NSChangeRedone : NSChangeUndone;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self updateChangeCount:changeType];
-    });
-}
-
 - (NSWindow *)mainWindow {
     return [[[self windowControllers] firstObject] window];
 }

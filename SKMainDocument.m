@@ -191,6 +191,11 @@ enum {
     [self addWindowController:mainWindowController];
 }
 
+- (void)updateChangeCount:(NSDocumentChangeType)change {
+    if ((change & NSChangeDiscardable) == 0)
+        [super updateChangeCount:change];
+}
+
 - (void)setDataFromTmpData {
     PDFDocument *pdfDoc = [tmpData pdfDocument];
     

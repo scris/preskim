@@ -503,7 +503,7 @@ static NSArray *allMainDocumentPDFViews() {
     NSUndoManager *undoManager = [[self document] undoManager];
     [[undoManager prepareWithInvocationTarget:self] rotatePageAtIndex:idx by:-rotation];
     [undoManager setActionName:NSLocalizedString(@"Rotate Page", @"Undo action name")];
-    [[self document] undoableActionIsDiscardable];
+    [undoManager setActionIsDiscardable:YES];
     
     PDFPage *page = [[pdfView document] pageAtIndex:idx];
     [page setRotation:[page rotation] + rotation];
@@ -516,7 +516,7 @@ static NSArray *allMainDocumentPDFViews() {
     NSUndoManager *undoManager = [[self document] undoManager];
     [[undoManager prepareWithInvocationTarget:self] rotateAllBy:-rotation];
     [undoManager setActionName:NSLocalizedString(@"Rotate", @"Undo action name")];
-    [[self document] undoableActionIsDiscardable];
+    [undoManager setActionIsDiscardable:YES];
     
     if (([pdfView displayMode] & kPDFDisplaySinglePageContinuous))
         [pdfView setNeedsRewind:YES];
@@ -550,7 +550,7 @@ static NSArray *allMainDocumentPDFViews() {
     NSUndoManager *undoManager = [[self document] undoManager];
     [[undoManager prepareWithInvocationTarget:self] cropPageAtIndex:anIndex toRect:oldRect];
     [undoManager setActionName:NSLocalizedString(@"Crop Page", @"Undo action name")];
-    [[self document] undoableActionIsDiscardable];
+    [undoManager setActionIsDiscardable:YES];
     
     PDFPage *page = [[pdfView document] pageAtIndex:anIndex];
     rect = NSIntersectionRect(rect, [page boundsForBox:kPDFDisplayBoxMediaBox]);
@@ -589,7 +589,7 @@ static NSArray *allMainDocumentPDFViews() {
     NSUndoManager *undoManager = [[self document] undoManager];
     [[undoManager prepareWithInvocationTarget:self] cropPagesToRects:oldRects];
     [undoManager setActionName:NSLocalizedString(@"Crop", @"Undo action name")];
-    [[self document] undoableActionIsDiscardable];
+    [undoManager setActionIsDiscardable:YES];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFPageBoundsDidChangeNotification 
                                                         object:[pdfView document] userInfo:@{SKPDFPageActionKey:SKPDFPageActionCrop}];
