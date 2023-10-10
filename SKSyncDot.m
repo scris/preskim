@@ -75,7 +75,10 @@
 - (void)finish:(NSTimer *)aTimer {
     [timer invalidate];
     SKDESTROY(timer);
-    if (handler) handler(YES);
+    if (handler) {
+        handler(YES);
+        SKDESTROY(handler);
+    }
 }
 
 - (void)animate:(NSTimer *)aTimer {
