@@ -156,7 +156,14 @@ static BOOL usesSequentialPageNumbering = NO;
 }
 
 - (NSRect)foregroundBox {
-    return NSIntersectionRect(NSInsetRect([self foregroundRect], 2.0 - [[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginWidthKey], 2.0 - [[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginHeightKey]), [self boundsForBox:kPDFDisplayBoxCropBox]);
+    NSRect rect = [self foregroundRect];
+    CGFloat width = fmax([[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginWidthKey] - 2.0, 0.0);
+    CGFloat height = fmax([[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginHeightKey] - 2.0, 0.0);
+    if (([self rotation] % 180) == 0)
+        rect = NSInsetRect(rect, -width, -height);
+    else
+        rect = NSInsetRect(rect, -height, -width);
+    return NSIntersectionRect(rect, [self boundsForBox:kPDFDisplayBoxCropBox]);
 }
 
 - (NSImage *)thumbnailWithSize:(CGFloat)aSize forBox:(PDFDisplayBox)box {
