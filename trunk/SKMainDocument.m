@@ -1025,13 +1025,6 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     NSPrintInfo *printInfo = [[[self printInfo] copy] autorelease];
     PDFDocument *pdfDoc = [self pdfDocument];
     
-    if ([pdfDoc pageCount]) {
-        PDFPage *page = [pdfDoc pageAtIndex:0];
-        NSSize pageSize = [page boundsForBox:kPDFDisplayBoxMediaBox].size;
-        BOOL isLandscape = [page rotation] % 180 == 90 ? pageSize.height > pageSize.width : pageSize.width > pageSize.height;
-        [printInfo setOrientation:isLandscape ? NSPaperOrientationLandscape : NSPaperOrientationPortrait];
-    }
-    
     [[printInfo dictionary] addEntriesFromDictionary:printSettings];
     
     NSPrintOperation *printOperation = [pdfDoc printOperationForPrintInfo:printInfo scalingMode:kPDFPrintPageScaleNone autoRotate:YES];
