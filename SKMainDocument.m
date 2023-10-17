@@ -1025,8 +1025,9 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     NSPrintInfo *printInfo = [[[self printInfo] copy] autorelease];
     PDFDocument *pdfDoc = [self pdfDocument];
     
+    [[printInfo dictionary] setValue:[NSNumber numberWithUnsignedInteger:[pdfDoc pageCount]] forKey:NSPrintLastPage];
     [[printInfo dictionary] addEntriesFromDictionary:printSettings];
-    
+
     NSPrintOperation *printOperation = [pdfDoc printOperationForPrintInfo:printInfo scalingMode:kPDFPrintPageScaleNone autoRotate:YES];
     
     // NSPrintProtected is a private key that disables the items in the PDF popup of the Print panel, and is set for encrypted documents
