@@ -54,7 +54,8 @@
         CGFloat zoomX = kPDFDestinationUnspecifiedValue, zoomY = kPDFDestinationUnspecifiedValue;
         BOOL override = YES;
         NSInteger type = 0;
-        if (([page rotation] % 180) != 0)
+        NSInteger rotation = [page rotation];
+        if ((rotation % 180) != 0)
             size = NSMakeSize(size.height, size.width);
         // the -type property always returns 0, and not the value from the ivar
         @try { type = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.type" : @"_private.type"] integerValue]; }
@@ -146,14 +147,14 @@
                 break;
         }
         if (override) {
-            if (point.x >= kPDFDestinationUnspecifiedValue)
-                point.x = NSMinX(bounds);
-            if (point.y >= kPDFDestinationUnspecifiedValue)
-                point.y = NSMaxY(bounds);
             if (zoomX < zoomY)
-                point.y += 0.5 * (zoomY / zoomX - 1.0) * NSHeight(bounds);
+                bounds = NSInsetRect(bounds, 0.0, 0.5 * (1.0 - zoomY / zoomX) * NSHeight(bounds));
             else if (zoomX > zoomY)
-                point.x -= 0.5 * (zoomX / zoomY - 1.0) * NSWidth(bounds);
+                bounds = NSInsetRect(bounds, 0.5 * (1.0 - zoomX / zoomY) * NSWidth(bounds), 0.0);
+            if (point.x >= kPDFDestinationUnspecifiedValue)
+                point.x = rotation < 180 ? NSMinX(bounds) : NSMaxX(bounds);
+            if (point.y >= kPDFDestinationUnspecifiedValue)
+                point.y = (rotation + 90) % 360 < 180 ? NSMaxY(bounds) : NSMinY(bounds);
             PDFDestination *destination = [[[PDFDestination alloc] initWithPage:page atPoint:point] autorelease];
             if (zoomX < kPDFDestinationUnspecifiedValue)
                 [destination setZoom:fmin(zoomX, zoomY)];
