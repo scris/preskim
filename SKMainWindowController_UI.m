@@ -1407,6 +1407,8 @@
 #pragma mark SKPDFView delegate protocol
 
 - (NSURL *)redirectRelativeLinkURL:(NSURL *)url {
+    if ([url scheme] == nil && [[self document] fileURL])
+        url = [[NSURL URLWithString:[url absoluteString] relativeToURL:[[self document] fileURL]] absoluteURL] ?: url;
     if ([url isFileURL] && [[[self document] fileType] isEqualToString:SKPDFBundleDocumentType] && [url checkResourceIsReachableAndReturnError:NULL] == NO) {
         NSString *path = [url path];
         NSURL *docURL = [[self document] fileURL];
