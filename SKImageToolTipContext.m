@@ -114,6 +114,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     NSRect pageImageRect = {NSZeroPoint, [pageImage size]};
     NSRect sourceRect = NSZeroRect;
     PDFSelection *pageSelection = [page selectionForRect:bounds];
+    NSRect selBounds;
     NSAffineTransform *transform = [page affineTransformForBox:kPDFDisplayBoxCropBox];
     if (isScaled) {
         NSAffineTransform *scaleTransform = [NSAffineTransform transform];
@@ -129,12 +130,13 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     sourceRect.origin = SKAddPoints([transform transformPoint:point], offset);
     sourceRect.origin.y -= NSHeight(sourceRect);
     
-    if ([pageSelection hasCharacters]) {
-        NSRect selBounds = [pageSelection boundsForPage:page];
-        selBounds = SKTransformRect(transform, selBounds);
-        sourceRect.origin.x = fmax(floor(NSMinX(selBounds)), fmin(floor(NSMaxX(selBounds) - NSWidth(sourceRect)), NSMinX(sourceRect)));
-        sourceRect.origin.y = fmin(ceil(NSMaxY(selBounds)), fmax(ceil(NSMinY(selBounds) + NSHeight(sourceRect)), NSMaxY(sourceRect))) - NSHeight(sourceRect);
-    }
+    if ([pageSelection hasCharacters])
+        selBounds = NSIntersectionRect(NSInsetRect([pageSelection boundsForPage:page], -2.0, -2.0), bounds);
+    else
+        selBounds = [page boundingBox];
+    selBounds = SKTransformRect(transform, selBounds);
+    sourceRect.origin.x = fmax(floor(NSMinX(selBounds)), fmin(floor(NSMaxX(selBounds) - NSWidth(sourceRect)), NSMinX(sourceRect)));
+    sourceRect.origin.y = fmin(ceil(NSMaxY(selBounds)), fmax(ceil(NSMinY(selBounds) + NSHeight(sourceRect)), NSMaxY(sourceRect))) - NSHeight(sourceRect);
     
     sourceRect = SKConstrainRect(sourceRect, pageImageRect);
     
