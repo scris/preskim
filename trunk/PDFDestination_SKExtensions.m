@@ -112,14 +112,14 @@
                 break;
             }
             case 5: // FitB
-                bounds = [page foregroundRect];
+                bounds = [page boundingBox];
                 if (pdfView && NSIsEmptyRect(bounds) == NO) {
                     zoomX = size.width / NSWidth(bounds);
                     zoomY = size.height / NSHeight(bounds);
                 }
                 break;
             case 6: // FitBH
-                bounds = [page foregroundRect];
+                bounds = [page boundingBox];
                 @try { point.y = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.top" : @"_private.top"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 if (override && pdfView && NSIsEmptyRect(bounds) == NO)
@@ -131,7 +131,7 @@
                 }
                 break;
             case 7: // FitBV
-                bounds = [page foregroundRect];
+                bounds = [page boundingBox];
                 @try { point.x = [[self valueForKeyPath:RUNNING_BEFORE(10_12) ? @"_pdfPriv.left" : @"_private.left"] doubleValue]; }
                 @catch (id e) { override = NO; }
                 if (override && pdfView && NSIsEmptyRect(bounds) == NO)

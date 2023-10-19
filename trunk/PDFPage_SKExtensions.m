@@ -152,18 +152,22 @@ static BOOL usesSequentialPageNumbering = NO;
         foregroundRect.origin = SKAddPoints(foregroundRect.origin, bounds.origin);
     }
     [imageRep release];
-    return NSIntersectionRect(NSInsetRect(foregroundRect, -2.0, -2.0), bounds);
+    return foregroundRect;
 }
 
 - (NSRect)foregroundBox {
     NSRect rect = [self foregroundRect];
-    CGFloat width = fmax([[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginWidthKey] - 2.0, 0.0);
-    CGFloat height = fmax([[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginHeightKey] - 2.0, 0.0);
+    CGFloat width = fmax([[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginWidthKey], 0.0);
+    CGFloat height = fmax([[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginHeightKey], 0.0);
     if (([self rotation] % 180) == 0)
         rect = NSInsetRect(rect, -width, -height);
     else
         rect = NSInsetRect(rect, -height, -width);
     return NSIntersectionRect(rect, [self boundsForBox:kPDFDisplayBoxMediaBox]);
+}
+
+- (NSRect)boundingBox {
+    return NSIntersectionRect(NSInsetRect([self foregroundRect], -2.0, -2.0), [self boundsForBox:kPDFDisplayBoxCropBox]);
 }
 
 - (NSImage *)thumbnailWithSize:(CGFloat)aSize forBox:(PDFDisplayBox)box {
