@@ -163,7 +163,7 @@ static BOOL usesSequentialPageNumbering = NO;
         rect = NSInsetRect(rect, -width, -height);
     else
         rect = NSInsetRect(rect, -height, -width);
-    return NSIntersectionRect(rect, [self boundsForBox:kPDFDisplayBoxCropBox]);
+    return NSIntersectionRect(rect, [self boundsForBox:kPDFDisplayBoxMediaBox]);
 }
 
 - (NSImage *)thumbnailWithSize:(CGFloat)aSize forBox:(PDFDisplayBox)box {
