@@ -1523,7 +1523,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     if (toolMode == SKSelectToolMode) {
         PDFPage *page = [self currentPage];
         @synchronized (self) {
-            selectionRect = NSIntersectionRect(NSUnionRect([page foregroundBox], selectionRect), [page boundsForBox:[self displayBox]]);
+            selectionRect = NSIntersectionRect(NSUnionRect([page autoCropBox], selectionRect), [page boundsForBox:[self displayBox]]);
             selectionPageIndex = [page pageIndex];
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewSelectionChangedNotification object:self];

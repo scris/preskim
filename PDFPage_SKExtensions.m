@@ -155,7 +155,7 @@ static BOOL usesSequentialPageNumbering = NO;
     return foregroundRect;
 }
 
-- (NSRect)foregroundBox {
+- (NSRect)autoCropBox {
     NSRect rect = [self foregroundRect];
     CGFloat width = fmax([[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginWidthKey], 0.0);
     CGFloat height = fmax([[NSUserDefaults standardUserDefaults] floatForKey:SKAutoCropBoxMarginHeightKey], 0.0);
@@ -708,7 +708,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
 }
 
 - (NSData *)contentBoundsAsQDRect {
-    return [NSData dataWithRectAsQDRect:[self foregroundBox]];
+    return [NSData dataWithRectAsQDRect:[self autoCropBox]];
 }
 
 - (NSArray *)lineBoundsAsQDRects {
