@@ -567,7 +567,7 @@ static NSArray *allMainDocumentPDFViews() {
     NSRect rect = NSIntegralRect([pdfView currentSelectionRect]);
     PDFPage *page = [pdfView currentSelectionPage] ?: [pdfView currentPage];
     if (NSIsEmptyRect(rect))
-        rect = [page foregroundBox];
+        rect = [page autoCropBox];
     [self cropPageAtIndex:[page pageIndex] toRect:rect];
 }
 
@@ -613,18 +613,18 @@ static NSArray *allMainDocumentPDFViews() {
         [self beginProgressSheetWithMessage:[NSLocalizedString(@"Cropping Pages", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:MIN(18, count)];
         
         if (count == 1) {
-            rect[0] = [[[pdfView document] pageAtIndex:0] foregroundBox];
+            rect[0] = [[[pdfView document] pageAtIndex:0] autoCropBox];
             [self incrementProgressSheet];
         } else if (count < 19) {
             for (i = 0; i < count; i++) {
-                rect[i % 2] = NSUnionRect(rect[i % 2], [[[pdfView document] pageAtIndex:i] foregroundBox]);
+                rect[i % 2] = NSUnionRect(rect[i % 2], [[[pdfView document] pageAtIndex:i] autoCropBox]);
                 [self incrementProgressSheet];
             }
         } else {
             NSInteger start[3] = {1, (count - 5) / 2, count - 6};
             for (j = 0; j < 3; j++) {
                 for (i = start[j]; i < start[j] + 6; i++) {
-                    rect[i % 2] = NSUnionRect(rect[i % 2], [[[pdfView document] pageAtIndex:i] foregroundBox]);
+                    rect[i % 2] = NSUnionRect(rect[i % 2], [[[pdfView document] pageAtIndex:i] autoCropBox]);
                     [self incrementProgressSheet];
                 }
             }
@@ -653,7 +653,7 @@ static NSArray *allMainDocumentPDFViews() {
     [self beginProgressSheetWithMessage:[NSLocalizedString(@"Cropping Pages", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:iMax];
     
     for (i = 0; i < iMax; i++) {
-        NSRect rect = [[pdfDoc pageAtIndex:i] foregroundBox];
+        NSRect rect = [[pdfDoc pageAtIndex:i] autoCropBox];
         [rectArray addPointer:&rect];
         [self incrementProgressSheet];
         if (i && i % 10 == 0)
@@ -674,7 +674,7 @@ static NSArray *allMainDocumentPDFViews() {
 	[self beginProgressSheetWithMessage:[NSLocalizedString(@"Cropping Pages", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:11 * iMax / 10];
     
     for (i = 0; i < iMax; i++) {
-        NSRect bbox = [[pdfDoc pageAtIndex:i] foregroundBox];
+        NSRect bbox = [[pdfDoc pageAtIndex:i] autoCropBox];
         size.width = fmax(size.width, NSWidth(bbox));
         size.height = fmax(size.height, NSHeight(bbox));
         [self incrementProgressSheet];
@@ -684,7 +684,7 @@ static NSArray *allMainDocumentPDFViews() {
     [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
     for (i = 0; i < iMax; i++) {
         PDFPage *page = [pdfDoc pageAtIndex:i];
-        NSRect rect = [page foregroundBox];
+        NSRect rect = [page autoCropBox];
         NSRect bounds = [page boundsForBox:kPDFDisplayBoxMediaBox];
         if (NSMinX(rect) - NSMinX(bounds) > NSMaxX(bounds) - NSMaxX(rect))
             rect.origin.x = NSMaxX(rect) - size.width;
