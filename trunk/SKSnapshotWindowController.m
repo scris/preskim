@@ -492,8 +492,7 @@ static char SKSnaphotWindowAppObservationContext;
 
 - (NSImage *)thumbnailWithSize:(CGFloat)size {
     NSRect bounds = [pdfView visibleContentRect];
-    NSClipView *clipView = [[pdfView scrollView] contentView];
-    NSBitmapImageRep *imageRep = [clipView bitmapImageRepCachingDisplayInRect:[pdfView convertRect:bounds toView:clipView]];
+    NSBitmapImageRep *imageRep = [pdfView bitmapImageRepCachingDisplayInRect:bounds];
     NSAffineTransform *transform = nil;
     NSSize thumbnailSize = bounds.size;
     CGFloat shadowBlurRadius = 0.0;
