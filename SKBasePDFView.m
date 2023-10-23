@@ -414,11 +414,13 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
 
 - (NSBitmapImageRep *)bitmapImageRepCachingDisplayInRect:(NSRect)rect {
     // draw our own bitmap, because macOS 12 does it wrong
-    // ignore background and page shadows because
+    // ignore page shadows because
     NSBitmapImageRep *imageRep = [self bitmapImageRepForCachingDisplayInRect:rect];
     PDFDisplayBox *box = [self displayBox];
     CGFloat scale = [self scaleFactor];
     CGContextRef context = [[NSGraphicsContext graphicsContextWithBitmapImageRep:imageRep] CGContext];
+    CGContextSetFillColorWithColor(context, [[self backgroundColor] CGColor]);
+    CGContextFillRect(context, CGRectMake(0.0, 0.0, NSWidth(rect), NSHeight(rect)));
     for (PDFPage *page in [self visiblePages]) {
         NSRect pageRect = [self convertRect:[page boundsForBox:box] fromPage:page];
         if (NSIntersectsRect(pageRect, rect) == NO) continue;
