@@ -402,45 +402,36 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     [super goToDestination:destination];
 }
 
-static inline NSRect SKPixelAlignedRect(NSRect rect, CGFloat scale) {
+static inline CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
     CGRect r;
-    r.origin.x = round(NSMinX(rect) * scale) / scale;
-    r.origin.y = round(NSMinY(rect) * scale) / scale;
-    r.size.width = round(NSMaxX(rect) * scale) / scale - NSMinX(r);
-    r.size.height = round(NSMaxY(rect) * scale) / scale - NSMinY(r);
-    return NSWidth(r) > 0.0 && NSHeight(r) > 0.0 ? r : NSZeroRect;
+    rect = CGContextConvertRectToDeviceSpace(context, rect);
+    r.origin.x = round(CGRectGetMinX(rect));
+    r.origin.y = round(CGRectGetMinY(rect));
+    r.size.width = round(CGRectGetMaxX(rect)) - CGRectGetMinX(r);
+    r.size.height = round(CGRectGetMaxY(rect)) - CGRectGetMinY(r);
+    return CGRectGetWidth(r) > 0.0 && CGRectGetHeight(r) > 0.0 ? CGContextConvertRectToUserSpace(context, r) : NSZeroRect;
 }
 
 - (NSBitmapImageRep *)bitmapImageRepCachingDisplayInRect:(NSRect)rect {
     // draw our own bitmap, because macOS 12 does it wrong
-    // ignore background and page shadows because we don't need them where we use this
+    // ignore background and page shadows because
     NSBitmapImageRep *imageRep = [self bitmapImageRepForCachingDisplayInRect:rect];
-    NSPoint offset = rect.origin;
-    NSRect r = rect;
-    r.origin = NSZeroPoint;
     PDFDisplayBox *box = [self displayBox];
     CGFloat scale = [self scaleFactor];
-    CGFloat s = [imageRep pixelsWide] / [imageRep size].width;
-    NSGraphicsContext *context = [NSGraphicsContext graphicsContextWithBitmapImageRep:imageRep];
-    CGContextRef cgContext = [context CGContext];
-    [NSGraphicsContext saveGraphicsState];
-    [NSGraphicsContext setCurrentContext:context];
+    CGContextRef context = [[NSGraphicsContext graphicsContextWithBitmapImageRep:imageRep] CGContext];
     for (PDFPage *page in [self visiblePages]) {
         NSRect pageRect = [self convertRect:[page boundsForBox:box] fromPage:page];
-        if (NSIntersectsRect(pageRect, r) == NO) continue;
-        pageRect.origin.x -= offset.x;
-        pageRect.origin.y -= offset.y;
-        [[NSColor whiteColor] setFill];
-        [NSBezierPath fillRect:SKPixelAlignedRect(pageRect, s)];
-        [context saveGraphicsState];
-        NSAffineTransform *t = [NSAffineTransform transform];
-        [t translateXBy:NSMinX(pageRect) yBy:NSMinY(pageRect)];
-        [t scaleBy:scale];
-        [t concat];
-        [page drawWithBox:box toContext:cgContext];
-        [context restoreGraphicsState];
+        if (NSIntersectsRect(pageRect, rect) == NO) continue;
+        pageRect.origin.x -= NSMinX(rect);
+        pageRect.origin.y -= NSMinY(rect);
+        CGContextSetFillColorWithColor(context, CGColorGetConstantColor(kCGColorWhite));
+        CGContextFillRect(context, SKPixelAlignedRect(NSRectToCGRect(pageRect), context));
+        CGContextSaveGState(context);
+        CGContextTranslateCTM(context, NSMinX(pageRect), NSMinY(pageRect));
+        CGContextScaleCTM(context, scale, scale);
+        [page drawWithBox:box toContext:context];
+        CGContextRestoreGState(context);
     }
-    [NSGraphicsContext restoreGraphicsState];
     return imageRep;
 }
 
