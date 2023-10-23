@@ -402,4 +402,46 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     [super goToDestination:destination];
 }
 
+static inline NSRect SKPixelAlignedRect(NSRect rect, CGFloat scale) {
+    CGRect r;
+    r.origin.x = round(NSMinX(rect) * scale) / scale;
+    r.origin.y = round(NSMinY(rect) * scale) / scale;
+    r.size.width = round(NSMaxX(rect) * scale) / scale - NSMinX(r);
+    r.size.height = round(NSMaxY(rect) * scale) / scale - NSMinY(r);
+    return NSWidth(r) > 0.0 && NSHeight(r) > 0.0 ? r : NSZeroRect;
+}
+
+- (NSBitmapImageRep *)bitmapImageRepCachingDisplayInRect:(NSRect)rect {
+    // draw our own bitmap, because macOS 12 does it wrong
+    // ignore background and page shadows because we don't need them where we use this
+    NSBitmapImageRep *imageRep = [self bitmapImageRepForCachingDisplayInRect:rect];
+    NSPoint offset = rect.origin;
+    NSRect r = rect;
+    r.origin = NSZeroPoint;
+    PDFDisplayBox *box = [self displayBox];
+    CGFloat scale = [self scaleFactor];
+    CGFloat s = [imageRep pixelsWide] / [imageRep size].width;
+    NSGraphicsContext *context = [NSGraphicsContext graphicsContextWithBitmapImageRep:imageRep];
+    CGContextRef cgContext = [context CGContext];
+    [NSGraphicsContext saveGraphicsState];
+    [NSGraphicsContext setCurrentContext:context];
+    for (PDFPage *page in [self visiblePages]) {
+        NSRect pageRect = [self convertRect:[page boundsForBox:box] fromPage:page];
+        if (NSIntersectsRect(pageRect, r) == NO) continue;
+        pageRect.origin.x -= offset.x;
+        pageRect.origin.y -= offset.y;
+        [[NSColor whiteColor] setFill];
+        [NSBezierPath fillRect:SKPixelAlignedRect(pageRect, s)];
+        [context saveGraphicsState];
+        NSAffineTransform *t = [NSAffineTransform transform];
+        [t translateXBy:NSMinX(pageRect) yBy:NSMinY(pageRect)];
+        [t scaleBy:scale];
+        [t concat];
+        [page drawWithBox:box toContext:cgContext];
+        [context restoreGraphicsState];
+    }
+    [NSGraphicsContext restoreGraphicsState];
+    return imageRep;
+}
+
 @end
