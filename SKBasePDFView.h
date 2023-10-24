@@ -44,4 +44,6 @@
 
 - (void)colorFiltersDidChange;
 
+- (void)drawPagesInRect:(NSRect)rect toContext:(CGContextRef)context;
+
 @end

@@ -489,20 +489,9 @@ static char SKSnaphotWindowAppObservationContext;
 
 #pragma mark Thumbnails
 
-static inline CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
-    CGRect r;
-    rect = CGContextConvertRectToDeviceSpace(context, rect);
-    r.origin.x = round(CGRectGetMinX(rect));
-    r.origin.y = round(CGRectGetMinY(rect));
-    r.size.width = round(CGRectGetMaxX(rect)) - CGRectGetMinX(r);
-    r.size.height = round(CGRectGetMaxY(rect)) - CGRectGetMinY(r);
-    return CGRectGetWidth(r) > 0.0 && CGRectGetHeight(r) > 0.0 ? CGContextConvertRectToUserSpace(context, r) : NSZeroRect;
-}
-
 - (NSImage *)thumbnailWithSize:(CGFloat)size {
-    NSRect rect = [pdfView visibleContentRect];
-    NSRect bounds = rect;
-    NSAffineTransform *transform = nil;
+    NSRect bounds = [pdfView visibleContentRect];
+    NSAffineTransform *transform = [NSAffineTransform transform];
     NSSize thumbnailSize = bounds.size;
     CGFloat shadowBlurRadius = 0.0;
     CGFloat shadowOffset = 0.0;
@@ -517,10 +506,13 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
             thumbnailSize = NSMakeSize(round((size - 2.0 * shadowBlurRadius) * NSWidth(bounds) / NSHeight(bounds) + 2.0 * shadowBlurRadius), size);
         else
             thumbnailSize = NSMakeSize(size, round((size - 2.0 * shadowBlurRadius) * NSHeight(bounds) / NSWidth(bounds) + 2.0 * shadowBlurRadius));
-        transform = [NSAffineTransform transform];
         [transform translateXBy:shadowBlurRadius yBy:shadowBlurRadius - shadowOffset];
         [transform scaleXBy:(thumbnailSize.width - 2.0 * shadowBlurRadius) / NSWidth(bounds) yBy:(thumbnailSize.height - 2.0 * shadowBlurRadius) / NSHeight(bounds)];
     }
+    
+    
+    if (NSEqualPoints(bounds.origin, NSZeroPoint) == NO)
+        [transform translateXBy:-NSMinX(bounds) yBy:-NSMinY(bounds)];
     
     image = [[[NSImage alloc] initWithSize:thumbnailSize] autorelease];
     
@@ -529,35 +521,20 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
     [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
     [transform concat];
     
-    if (shadowBlurRadius > 0.0) {
-        [NSGraphicsContext saveGraphicsState];
-        [[NSColor whiteColor] set];
+    [NSGraphicsContext saveGraphicsState];
+    [[NSColor whiteColor] set];
+    if (shadowBlurRadius > 0.0)
         [NSShadow setShadowWithWhite:0.0 alpha:0.5 blurRadius:shadowBlurRadius yOffset:shadowOffset];
-        NSRectFill(bounds);
-        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
-        [NSGraphicsContext restoreGraphicsState];
-        [[NSBezierPath bezierPathWithRect:bounds] addClip];
-    }
+    NSRectFill(bounds);
+    [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
+    [NSGraphicsContext restoreGraphicsState];
+    [[NSBezierPath bezierPathWithRect:bounds] addClip];
     
     [[pdfView backgroundColor] setFill];
     [NSBezierPath fillRect:bounds];
     
-    PDFDisplayBox *box = [pdfView displayBox];
-    CGFloat scale = [pdfView scaleFactor];
     CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
-    for (PDFPage *page in [pdfView visiblePages]) {
-        NSRect pageRect = [pdfView convertRect:[page boundsForBox:box] fromPage:page];
-        if (NSIntersectsRect(pageRect, rect) == NO) continue;
-        pageRect.origin.x -= NSMinX(rect);
-        pageRect.origin.y -= NSMinY(rect);
-        CGContextSetFillColorWithColor(context, CGColorGetConstantColor(kCGColorWhite));
-        CGContextFillRect(context, SKPixelAlignedRect(NSRectToCGRect(pageRect), context));
-        CGContextSaveGState(context);
-        CGContextTranslateCTM(context, NSMinX(pageRect), NSMinY(pageRect));
-        CGContextScaleCTM(context, scale, scale);
-        [page drawWithBox:box toContext:context];
-        CGContextRestoreGState(context);
-    }
+    [pdfView drawPagesInRect:bounds toContext:context];
     
     [image unlockFocus];
     
