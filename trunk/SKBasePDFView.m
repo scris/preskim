@@ -412,18 +412,12 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
     return CGRectGetWidth(r) > 0.0 && CGRectGetHeight(r) > 0.0 ? CGContextConvertRectToUserSpace(context, r) : NSZeroRect;
 }
 
-- (NSBitmapImageRep *)bitmapImageRepCachingDisplayInRect:(NSRect)rect {
-    // draw our own bitmap, because macOS 12 does it wrong
-    // ignore background and page shadows because
-    NSBitmapImageRep *imageRep = [self bitmapImageRepForCachingDisplayInRect:rect];
+- (void)drawPagesInRect:(NSRect)rect toContext:(CGContextRef)context {
     PDFDisplayBox *box = [self displayBox];
     CGFloat scale = [self scaleFactor];
-    CGContextRef context = [[NSGraphicsContext graphicsContextWithBitmapImageRep:imageRep] CGContext];
     for (PDFPage *page in [self visiblePages]) {
         NSRect pageRect = [self convertRect:[page boundsForBox:box] fromPage:page];
         if (NSIntersectsRect(pageRect, rect) == NO) continue;
-        pageRect.origin.x -= NSMinX(rect);
-        pageRect.origin.y -= NSMinY(rect);
         CGContextSetFillColorWithColor(context, CGColorGetConstantColor(kCGColorWhite));
         CGContextFillRect(context, SKPixelAlignedRect(NSRectToCGRect(pageRect), context));
         CGContextSaveGState(context);
@@ -432,6 +426,16 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
         [page drawWithBox:box toContext:context];
         CGContextRestoreGState(context);
     }
+}
+
+- (NSBitmapImageRep *)bitmapImageRepCachingDisplayInRect:(NSRect)rect {
+    // draw our own bitmap, because macOS 12 does it wrong
+    // ignore background and page shadows because
+    NSBitmapImageRep *imageRep = [self bitmapImageRepForCachingDisplayInRect:rect];
+    CGContextRef context = [[NSGraphicsContext graphicsContextWithBitmapImageRep:imageRep] CGContext];
+    if (NSEqualPoints(rect.origin, NSZeroPoint) == NO)
+        CGContextTranslateCTM(context, -NSMinX(rect), -NSMinY(rect));
+    [self drawPagesInRect:rect toContext:context];
     return imageRep;
 }
 
