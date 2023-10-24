@@ -82,7 +82,6 @@ NSString *SKSnapshotCurrentSetupKey = @"currentSetup";
 #define SKSnapshotViewChangedNotification @"SKSnapshotViewChangedNotification"
 
 static char SKSnaphotWindowDefaultsObservationContext;
-static char SKSnaphotWindowAppObservationContext;
 
 @interface SKSnapshotWindowController ()
 @property (nonatomic, copy) NSString *pageLabel;
@@ -120,9 +119,7 @@ static char SKSnaphotWindowAppObservationContext;
         [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
     [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
     [self updateWindowLevel];
-    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:@[SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey] context:&SKSnaphotWindowDefaultsObservationContext];
-    if (RUNNING_AFTER(10_13))
-        [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKSnaphotWindowAppObservationContext];
+    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:@[SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey] context:&SKSnaphotWindowDefaultsObservationContext];
     // the window is initialially exposed. The windowDidExpose notification is useless, it has nothing to do with showing the window
     [self setHasWindow:YES];
 }
@@ -222,12 +219,8 @@ static char SKSnaphotWindowAppObservationContext;
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:@[SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey, SKBackgroundColorKey, SKDarkBackgroundColorKey] context:&SKSnaphotWindowDefaultsObservationContext]; }
+    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:@[SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey] context:&SKSnaphotWindowDefaultsObservationContext]; }
     @catch (id e) {}
-    if (RUNNING_AFTER(10_13)) {
-        @try { [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:&SKSnaphotWindowAppObservationContext]; }
-        @catch (id e) {}
-    }
     if ([[self delegate] respondsToSelector:@selector(snapshotControllerWillClose:)])
         [[self delegate] snapshotControllerWillClose:self];
     [self setDelegate:nil];
@@ -304,7 +297,7 @@ static char SKSnaphotWindowAppObservationContext;
         [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
 #pragma clang diagnostic pop
     [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
-    [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
+    [pdfView setBackgroundColor:[NSColor whiteColor]];
     [pdfView setDocument:pdfDocument];
     
     PDFPage *page = [pdfDocument pageAtIndex:pageNum];
@@ -530,9 +523,6 @@ static char SKSnaphotWindowAppObservationContext;
     [NSGraphicsContext restoreGraphicsState];
     [[NSBezierPath bezierPathWithRect:bounds] addClip];
     
-    [[pdfView backgroundColor] setFill];
-    [NSBezierPath fillRect:bounds];
-    
     CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
     [pdfView drawPagesInRect:bounds toContext:context];
     
@@ -696,11 +686,7 @@ static char SKSnaphotWindowAppObservationContext;
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
 #pragma clang diagnostic pop
-        } else if ([key isEqualToString:SKBackgroundColorKey] || [key isEqualToString:SKDarkBackgroundColorKey]) {
-            [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
         }
-    } else if (context == &SKSnaphotWindowAppObservationContext) {
-        [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
