@@ -48,9 +48,11 @@
 @dynamic windowFrame;
 
 + (id)defaultAnimationForKey:(NSString *)key {
-    if ([key isEqualToString:@"windowFrame"])
-        return [CABasicAnimation animation];
-    else
+    if ([key isEqualToString:@"windowFrame"]) {
+        CABasicAnimation *anim = [CABasicAnimation animation];
+        [anim setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
+        return anim;
+    } else
         return [super defaultAnimationForKey:key];
 }
 
