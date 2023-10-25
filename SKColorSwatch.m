@@ -871,9 +871,11 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 @dynamic width;
 
 + (id)defaultAnimationForKey:(NSString *)key {
-    if ([key isEqualToString:@"width"])
-        return [CABasicAnimation animation];
-    else
+    if ([key isEqualToString:@"width"]) {
+        CABasicAnimation *anim = [CABasicAnimation animation];
+        [anim setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
+        return anim;
+    } else
         return [super defaultAnimationForKey:key];
 }
 
