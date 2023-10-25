@@ -49,6 +49,7 @@
 }
 
 @property (nonatomic) BOOL disableConstrainedFrame;
+@property (nonatomic) NSRect windowFrame;
 
 - (id<SKMainWindowDelegate>)delegate;
 - (void)setDelegate:(id<SKMainWindowDelegate>)newDelegate;

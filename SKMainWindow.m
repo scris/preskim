@@ -45,6 +45,22 @@
 @implementation SKMainWindow
 
 @synthesize disableConstrainedFrame;
+@dynamic windowFrame;
+
++ (id)defaultAnimationForKey:(NSString *)key {
+    if ([key isEqualToString:@"windowFrame"])
+        return [CABasicAnimation animation];
+    else
+        return [super defaultAnimationForKey:key];
+}
+
+- (NSRect)windowFrame {
+    return [self frame];
+}
+
+- (void)setWindowFrame:(NSRect)frameRect {
+    [self setFrame:frameRect display:YES];
+}
 
 - (void)sendEvent:(NSEvent *)theEvent {
     if ([theEvent type] == NSEventTypeLeftMouseDown || [theEvent type] == NSEventTypeRightMouseDown || [theEvent type] == NSEventTypeKeyDown) {
