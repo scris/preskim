@@ -46,9 +46,11 @@
 @synthesize animating;
 
 + (id)defaultAnimationForKey:(NSString *)key {
-    if ([key isEqualToString:@"firstSplitPosition"] || [key isEqualToString:@"secondSplitPosition"])
-        return [CABasicAnimation animation];
-    else
+    if ([key isEqualToString:@"firstSplitPosition"] || [key isEqualToString:@"secondSplitPosition"]) {
+        CABasicAnimation *anim = [CABasicAnimation animation];
+        [anim setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
+        return anim;
+    } else
         return [super defaultAnimationForKey:key];
 }
 
