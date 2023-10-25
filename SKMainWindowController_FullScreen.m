@@ -670,7 +670,10 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
         [(SKMainWindow *)window setDisableConstrainedFrame:YES];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration - 0.02];
-                [[(SKMainWindow *)window animator] setWindowFrame:frame];
+                if (RUNNING_BEFORE(12_0))
+                    [[window animator] setFrame:frame display:NO];
+                else
+                    [[(SKMainWindow *)window animator] setWindowFrame:frame];
                 setAlphaValueOfTitleBarControls(window, 0.0, YES);
             }
             completionHandler:^{
