@@ -814,6 +814,19 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
     mwcFlags.wantsPresentation = 0;
 }
 
+- (BOOL)respondsToSelector:(SEL)aSelector {
+    if (NO == [super respondsToSelector:aSelector])
+        return NO;
+    else if ((aSelector == @selector(customWindowsToEnterFullScreenForWindow:) ||
+                aSelector == @selector(window:startCustomAnimationToEnterFullScreenWithDuration:) ||
+                aSelector == @selector(customWindowsToExitFullScreenForWindow:) ||
+                aSelector == @selector(window:startCustomAnimationToExitFullScreenWithDuration:)) &&
+               [[[self document] windowControllers] count] == 1)
+        return NO;
+    else
+        return YES;
+}
+
 #pragma mark Presentation Notes Navigation
 
 - (NSView *)presentationNotesView {
