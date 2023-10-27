@@ -647,7 +647,7 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
         fullScreenToolbarOffset = toolbarViewOffset(mainWindow);
     NSRect frame = SKShrinkRect([[window screen] frame], -fullScreenOffset(window), NSMaxYEdge);
     if ([[NSUserDefaults standardUserDefaults] boolForKey:AppleMenuBarVisibleInFullscreenKey])
-        frame.size.height -= [[NSApp mainMenu] menuBarHeight];
+        frame.size.height -= [[NSApp mainMenu] menuBarHeight] ?: 24.0;
     if (animationWindow != nil) {
         [self showStaticContentForWindow:window];
         [(SKMainWindow *)window setDisableConstrainedFrame:YES];
