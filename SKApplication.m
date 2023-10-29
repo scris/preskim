@@ -97,12 +97,13 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
 
 #pragma mark Windows menu
 
-- (void)reorganizeWindowsItems {
+- (void)reorganizeWindowsItem:(NSWindow *)aWindow {
     NSMenu *windowsMenu = [self windowsMenu];
     NSInteger nItems = [windowsMenu numberOfItems];
     NSInteger i = nItems;
     NSMutableArray *mainItems = [NSMutableArray array];
     NSMutableArray *auxItems = [NSMutableArray array];
+    NSMutableArray *toSort = nil;
     NSMapTable *subItems = [NSMapTable strongToStrongObjectsMapTable];
     NSMenuItem *item;
     
@@ -113,30 +114,45 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
         NSWindow *window = [item target];
         NSWindowController *wc = [window windowController];
         NSDocument *doc = [wc document];
+        NSMutableArray *items = nil;
         
         if (doc == nil) {
-            [auxItems insertObject:item atIndex:0];
+            items = auxItems;
         } else if ([wc isEqual:[[doc windowControllers] firstObject]]) {
-            [mainItems insertObject:item atIndex:0];
+            items = mainItems;
         } else {
-            NSMutableArray *subArray = [subItems objectForKey:doc];
-            if (subArray == nil) {
-                subArray = [NSMutableArray array];
-                [subItems setObject:subArray forKey:doc];
+            items = [subItems objectForKey:doc];
+            if (items == nil) {
+                items = [NSMutableArray array];
+                [subItems setObject:items forKey:doc];
             }
-            [subArray insertObject:item atIndex:0];
             [item setIndentationLevel:1];
         }
+        if (window == aWindow)
+            toSort = items;
+        [items insertObject:item atIndex:0];
         [windowsMenu removeItemAtIndex:i];
     }
     
+    if ([toSort count] > 1)
+        [toSort sortUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease]]];
+    
     for (item in mainItems) {
         [windowsMenu addItem:item];
-        NSArray *subArray = [subItems objectForKey:[[[item target] windowController] document]];
+        NSDocument *doc = [[[item target] windowController] document];
+        NSArray *subArray = [subItems objectForKey:doc];
         if ([subArray count]) {
             NSMenuItem *subItem;
             for (subItem in subArray)
                 [windowsMenu addItem:subItem];
+        }
+        [subItems removeObjectForKey:doc];
+    }
+    
+    if ([subItems count]) {
+        for (NSDocument *doc in subItems) {
+            for (item in [subItems objectForKey:doc])
+                [windowsMenu addItem:item];
         }
     }
     
@@ -147,13 +163,13 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
 - (void)addWindowsItem:(NSWindow *)aWindow title:(NSString *)aString filename:(BOOL)isFilename {
     [super addWindowsItem:aWindow title:aString filename:isFilename];
     
-    [self reorganizeWindowsItems];
+    [self reorganizeWindowsItem:aWindow];
 }
 
 - (void)changeWindowsItem:(NSWindow *)aWindow title:(NSString *)aString filename:(BOOL)isFilename {
     [super changeWindowsItem:aWindow title:aString filename:isFilename];
     
-    [self reorganizeWindowsItems];
+    [self reorganizeWindowsItem:aWindow];
 }
 
 #pragma mark Scripting
