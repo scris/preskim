@@ -41,6 +41,7 @@
 #import "NSResponder_SKExtensions.h"
 #import "NSDocument_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
+#import "SKDownloadController.h"
 
 NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerminatingNotification";
 
@@ -161,6 +162,9 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
 }
 
 - (void)addWindowsItem:(NSWindow *)aWindow title:(NSString *)aString filename:(BOOL)isFilename {
+    if ([[aWindow windowController] class] == [SKDownloadController class])
+        return;
+    
     [super addWindowsItem:aWindow title:aString filename:isFilename];
     
     [self reorganizeWindowsItem:aWindow];
