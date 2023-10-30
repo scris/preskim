@@ -42,6 +42,9 @@
 #import "NSDocument_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
 #import "SKDownloadController.h"
+#import "SKPreferenceController.h"
+
+#define EM_DASH_CHARACTER (unichar)0x2014
 
 NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerminatingNotification";
 
@@ -138,6 +141,9 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
     if ([toSort count] > 1)
         [toSort sortUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease]]];
     
+    for (item in auxItems)
+        [windowsMenu addItem:item];
+    
     for (item in mainItems) {
         [windowsMenu addItem:item];
         NSDocument *doc = [[[item target] windowController] document];
@@ -156,14 +162,14 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
                 [windowsMenu addItem:item];
         }
     }
-    
-    for (item in auxItems)
-        [windowsMenu addItem:item];
 }
 
 - (void)addWindowsItem:(NSWindow *)aWindow title:(NSString *)aString filename:(BOOL)isFilename {
     if ([[aWindow windowController] class] == [SKDownloadController class])
         return;
+    
+    if ([[aWindow windowController] class] == [SKPreferenceController class])
+        aString = [NSString stringWithFormat:@"%@ %C %@", NSLocalizedString(@"Preferences", @"Window description"), EM_DASH_CHARACTER, aString];
     
     [super addWindowsItem:aWindow title:aString filename:isFilename];
     
@@ -171,6 +177,12 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
 }
 
 - (void)changeWindowsItem:(NSWindow *)aWindow title:(NSString *)aString filename:(BOOL)isFilename {
+    if ([[aWindow windowController] class] == [SKDownloadController class])
+        return;
+    
+    if ([[aWindow windowController] class] == [SKPreferenceController class])
+        aString = [NSString stringWithFormat:@"%@ %C %@", NSLocalizedString(@"Preferences", @"Window description"), EM_DASH_CHARACTER, aString];
+    
     [super changeWindowsItem:aWindow title:aString filename:isFilename];
     
     [self reorganizeWindowsItem:aWindow];
