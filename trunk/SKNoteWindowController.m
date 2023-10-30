@@ -65,8 +65,6 @@
 #import "SKChainedUndoManager.h"
 #import "SKApplicationController.h"
 
-#define EM_DASH_CHARACTER (unichar)0x2014
-
 #define SKNoteWindowFrameAutosaveName @"SKNoteWindow"
 #define SKAnyNoteWindowFrameAutosaveName @"SKAnyNoteWindow"
 
@@ -311,7 +309,7 @@ static NSURL *temporaryDirectoryURL = nil;
 }
 
 - (NSString *)windowTitleForDocumentDisplayName:(NSString *)displayName {
-    return [NSString stringWithFormat:@"%@ %C %@", [[[self note] type] typeName], EM_DASH_CHARACTER, [[self note] string] ?: @""];
+    return [[[[self note] type] typeName] stringByAppendingEmDashAndString:[[self note] string] ?: @""];
 }
 
 - (BOOL)isNoteWindowController { return YES; }

@@ -60,6 +60,7 @@
 #import "SKRuntime.h"
 #import "NSPasteboard_SKExtensions.h"
 #import "NSURL_SKExtensions.h"
+#import "NSString_SKExtensions.h"
 #import "SKLine.h"
 
 NSString *SKPDFPageBoundsDidChangeNotification = @"SKPDFPageBoundsDidChangeNotification";
@@ -365,7 +366,7 @@ static BOOL usesSequentialPageNumbering = NO;
         }
         
         NSURL *dropDestination = [pboard pasteLocationURL];
-        NSString *filename = [NSString stringWithFormat:@"%@ %c %@", ([[[self containingDocument] displayName] stringByDeletingPathExtension] ?: @"PDF"), '-', [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), label]];
+        NSString *filename = [([[[self containingDocument] displayName] stringByDeletingPathExtension] ?: @"PDF") stringByAppendingDashAndString:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), label]];
         NSURL *fileURL = [dropDestination URLByAppendingPathComponent:filename isDirectory:NO];
         fileURL = [[fileURL URLByAppendingPathExtension:pathExt] uniqueFileURL];
         if ([data writeToURL:fileURL atomically:YES])
@@ -394,7 +395,7 @@ static BOOL usesSequentialPageNumbering = NO;
         }];
         label = [labels componentsJoinedByString:@", "];
     }
-    NSString *filename = [NSString stringWithFormat:@"%@ %c %@", ([[[self containingDocument] displayName] stringByDeletingPathExtension] ?: @"PDF"), '-', [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), label]];
+    NSString *filename = [([[[self containingDocument] displayName] stringByDeletingPathExtension] ?: @"PDF") stringByAppendingDashAndString:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), label]];
     NSString *pathExt = [[self document] allowsPrinting] ? @"pdf" : @"tiff";
     return [filename stringByAppendingPathExtension:pathExt];
 }

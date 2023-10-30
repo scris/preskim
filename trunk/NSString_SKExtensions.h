@@ -48,6 +48,9 @@
 
 - (NSString *)stringByAppendingEllipsis;
 
+- (NSString *)stringByAppendingEmDashAndString:(NSString *)aString;
+- (NSString *)stringByAppendingDashAndString:(NSString *)aString;
+
 - (NSString *)stringByBackslashEscapingCharactersFromSet:(NSCharacterSet *)charSet;
 - (NSString *)stringByEscapingShellChars;
 - (NSString *)stringByEscapingDoubleQuotes;

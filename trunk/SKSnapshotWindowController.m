@@ -62,8 +62,7 @@
 #import "NSScreen_SKExtensions.h"
 #import "SKApplication.h"
 #import "PDFDocument_SKExtensions.h"
-
-#define EM_DASH_CHARACTER (unichar)0x2014
+#import "NSString_SKExtensions.h"
 
 #define SMALL_DELAY 0.1
 #define RESIZE_TIME_FACTOR 1.0
@@ -137,7 +136,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
 }
 
 - (NSString *)windowTitleForDocumentDisplayName:(NSString *)displayName {
-    return [NSString stringWithFormat:@"%@ %C %@", displayName, EM_DASH_CHARACTER, [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [self pageLabel]]];
+    return [displayName stringByAppendingEmDashAndString:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [self pageLabel]]];
 }
 
 - (void)setNeedsDisplayInRect:(NSRect)rect ofPage:(PDFPage *)page {
@@ -699,7 +698,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
     if ([type isEqualToString:(NSString *)kPasteboardTypeFileURLPromise]) {
         NSURL *dropDestination = [pboard pasteLocationURL];
         PDFPage *page = [[[self pdfView] document] pageAtIndex:[self pageIndex]];
-        NSString *filename = [NSString stringWithFormat:@"%@ %c %@", ([[[self document] displayName] stringByDeletingPathExtension] ?: @"PDF"), '-', [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [page displayLabel]]];
+        NSString *filename = [([[[self document] displayName] stringByDeletingPathExtension] ?: @"PDF") stringByAppendingDashAndString:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [page displayLabel]]];
         NSURL *fileURL = [[dropDestination URLByAppendingPathComponent:filename isDirectory:NO] URLByAppendingPathExtension:@"tiff"];
         fileURL = [fileURL uniqueFileURL];
         if ([[[self thumbnailWithSize:0.0] TIFFRepresentation] writeToURL:fileURL atomically:YES])
@@ -713,7 +712,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
 
 - (NSString *)filePromiseProvider:(NSFilePromiseProvider *)filePromiseProvider fileNameForType:(NSString *)fileType {
     PDFPage *page = [[[self pdfView] document] pageAtIndex:[self pageIndex]];
-    NSString *filename = [NSString stringWithFormat:@"%@ %c %@", ([[[self document] displayName] stringByDeletingPathExtension] ?: @"PDF"), '-', [NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [page displayLabel]]];
+    NSString *filename = [([[[self document] displayName] stringByDeletingPathExtension] ?: @"PDF") stringByAppendingDashAndString:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [page displayLabel]]];
     return [filename stringByAppendingPathExtension:@"tiff"];
 }
 
