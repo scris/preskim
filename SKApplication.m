@@ -165,10 +165,10 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
 }
 
 - (void)addWindowsItem:(NSWindow *)aWindow title:(NSString *)aString filename:(BOOL)isFilename {
-    if ([[aWindow windowController] class] == [SKDownloadController class])
+    if ([[aWindow windowController] isKindOfClass:[SKDownloadController class]])
         return;
     
-    if ([[aWindow windowController] class] == [SKPreferenceController class])
+    if ([[aWindow windowController] isKindOfClass:[SKPreferenceController class]])
         aString = [NSString stringWithFormat:@"%@ %C %@", NSLocalizedString(@"Preferences", @"Window description"), EM_DASH_CHARACTER, aString];
     
     [super addWindowsItem:aWindow title:aString filename:isFilename];
@@ -177,10 +177,10 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
 }
 
 - (void)changeWindowsItem:(NSWindow *)aWindow title:(NSString *)aString filename:(BOOL)isFilename {
-    if ([[aWindow windowController] class] == [SKDownloadController class])
+    if ([[aWindow windowController] isKindOfClass:[SKDownloadController class]])
         return;
     
-    if ([[aWindow windowController] class] == [SKPreferenceController class])
+    if ([[aWindow windowController] isKindOfClass:[SKPreferenceController class]])
         aString = [NSString stringWithFormat:@"%@ %C %@", NSLocalizedString(@"Preferences", @"Window description"), EM_DASH_CHARACTER, aString];
     
     [super changeWindowsItem:aWindow title:aString filename:isFilename];
