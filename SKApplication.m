@@ -41,10 +41,9 @@
 #import "NSResponder_SKExtensions.h"
 #import "NSDocument_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
+#import "NSString_SKExtensions.h"
 #import "SKDownloadController.h"
 #import "SKPreferenceController.h"
-
-#define EM_DASH_CHARACTER (unichar)0x2014
 
 NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerminatingNotification";
 
@@ -169,7 +168,7 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
         return;
     
     if ([[aWindow windowController] isKindOfClass:[SKPreferenceController class]])
-        aString = [NSString stringWithFormat:@"%@ %C %@", NSLocalizedString(@"Preferences", @"Window description"), EM_DASH_CHARACTER, aString];
+        aString = [NSLocalizedString(@"Preferences", @"Window description") stringByAppendingEmDashAndString:aString];
     
     [super addWindowsItem:aWindow title:aString filename:isFilename];
     
@@ -181,7 +180,7 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
         return;
     
     if ([[aWindow windowController] isKindOfClass:[SKPreferenceController class]])
-        aString = [NSString stringWithFormat:@"%@ %C %@", NSLocalizedString(@"Preferences", @"Window description"), EM_DASH_CHARACTER, aString];
+        aString = [NSLocalizedString(@"Preferences", @"Window description") stringByAppendingEmDashAndString:aString];
     
     [super changeWindowsItem:aWindow title:aString filename:isFilename];
     

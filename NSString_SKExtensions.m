@@ -50,6 +50,8 @@
 
 #define STACK_BUFFER_SIZE 256
 
+#define EM_DASH_CHARACTER (unichar)0x2014
+
 static inline
 CFStringRef __SKStringCreateByCollapsingAndTrimmingWhitespaceAndNewlines(CFAllocatorRef allocator, CFStringRef aString)
 {
@@ -233,6 +235,14 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
 - (NSString *)stringByAppendingEllipsis;
 {
     return [NSString stringWithFormat:NSLocalizedString(@"%@\u2026", "format for appending ellipsis character..."), self];
+}
+
+- (NSString *)stringByAppendingEmDashAndString:(NSString *)aString {
+    return [self stringByAppendingFormat:@" %C %@",  EM_DASH_CHARACTER, aString];
+}
+
+- (NSString *)stringByAppendingDashAndString:(NSString *)aString {
+    return [self stringByAppendingFormat:@" - %@", aString];
 }
 
 - (NSString *)stringByBackslashEscapingCharactersFromSet:(NSCharacterSet *)charSet {
