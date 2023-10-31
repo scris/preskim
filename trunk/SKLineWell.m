@@ -301,10 +301,10 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext setCurrentContext:context];
     SKRunWithAppearance(self, ^{
-        [context setCompositingOperation:NSCompositeDestinationOver];
+        [context setCompositingOperation:NSCompositingOperationDestinationOver];
         [[NSColor windowBackgroundColor] setFill];
         [NSBezierPath fillRect:bounds];
-        [context setCompositingOperation:NSCompositeSourceOver];
+        [context setCompositingOperation:NSCompositingOperationSourceOver];
         [[[NSColor textColor] colorWithAlphaComponent:0.6] setStroke];
         [NSBezierPath strokeRect:NSInsetRect(bounds, 0.5, 0.5)];
     });
