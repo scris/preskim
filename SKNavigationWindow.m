@@ -758,7 +758,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         else
             color = [NSColor colorWithGenericGamma22White:1.0 alpha:[self isEnabledForSegment:segment] ? 0.9 : 0.3];
         [paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
-        [paragraphStyle setAlignment:NSCenterTextAlignment];
+        [paragraphStyle setAlignment:NSTextAlignmentCenter];
         NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:label attributes:@{NSFontAttributeName:[self font], NSForegroundColorAttributeName:color, NSParagraphStyleAttributeName:paragraphStyle}];
         NSRect rect = frame;
         CGFloat height = [attrString size].height;
