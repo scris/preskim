@@ -198,10 +198,7 @@ static char SKThumbnailViewThumbnailObservationContext;
                 [self addSubview:imageHighlightView positioned:NSWindowBelow relativeTo:nil];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateImageHighlightMask:) name:NSViewFrameDidChangeNotification object:imageHighlightView];
             }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
             [imageHighlightView setEmphasized:[self isMenuHighlighted]];
-#pragma clang diagnostic pop
             [self updateImageHighlightMask:nil];
         } else if (imageHighlightView) {
             [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:imageHighlightView];
@@ -233,10 +230,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         if ([self isSelected] || [self highlightLevel] > 0) {
             if (labelHighlightView == nil) {
                 labelHighlightView = [self newHighlightView];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
                 [labelHighlightView setEmphasized:[[self window] isKeyWindow]];
-#pragma clang diagnostic pop
                 [labelHighlightView setFrame:[labelView frame]];
                 [labelHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
                 [self addSubview:labelHighlightView positioned:NSWindowBelow relativeTo:nil];
@@ -391,10 +385,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     if ([self isSelected] || [self highlightLevel] > 0) {
         [self updateBackgroundStyle];
         if (RUNNING_AFTER(10_15))
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
             [labelHighlightView setEmphasized:[[self window] isKeyWindow]];
-#pragma clang diagnostic pop
         else
             [self setNeedsDisplayInRect:[labelView frame]];
     }

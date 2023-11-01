@@ -271,9 +271,6 @@ static inline NSInteger angleForDirection(NSLocaleLanguageDirection direction, B
     return angles;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-
 - (BOOL)allowsNotes {
     return [self isLocked] == NO && [self allowsCommenting];
 }
@@ -281,8 +278,6 @@ static inline NSInteger angleForDirection(NSLocaleLanguageDirection direction, B
 - (BOOL)realAllowsCommenting {
     return [self allowsCommenting];
 }
-
-#pragma clang diagnostic pop
 
 - (NSDocument *)containingDocument {
     NSDocument *document = nil;

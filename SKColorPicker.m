@@ -54,16 +54,13 @@ static char SKColorPickerDefaultsObservationContext;
 - (id)init {
     self = [super init];
     if (self) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        scrubber = [[NSClassFromString(@"NSScrubber") alloc] initWithFrame:NSMakeRect(0.0, 0.0, 180, 22.0)];
+        scrubber = [[NSScrubber alloc] initWithFrame:NSMakeRect(0.0, 0.0, 180, 22.0)];
         [scrubber setDelegate:self];
         [scrubber setDataSource:self];
         [scrubber setScrubberLayout:[[[NSScrubberProportionalLayout alloc] initWithNumberOfVisibleItems:[[self colors] count]] autorelease]];
-        [scrubber registerClass:[NSClassFromString(@"NSScrubberItemView") class] forItemIdentifier:COLOR_IDENTIFIER];
-        [scrubber setSelectionOverlayStyle:[NSClassFromString(@"NSScrubberSelectionStyle") outlineOverlayStyle]];
+        [scrubber registerClass:[NSScrubberItemView class] forItemIdentifier:COLOR_IDENTIFIER];
+        [scrubber setSelectionOverlayStyle:[NSScrubberSelectionStyle outlineOverlayStyle]];
         [scrubber reloadData];
-#pragma clang diagnostic pop
         
         NSView *view = [[[NSView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 180, 30.0)] autorelease];
         NSArray *constraints = @[
@@ -73,11 +70,8 @@ static char SKColorPickerDefaultsObservationContext;
             [NSLayoutConstraint constraintWithItem:scrubber attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:22.0]];
         [scrubber setTranslatesAutoresizingMaskIntoConstraints:NO];
         [view addSubview:scrubber];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
         [NSLayoutConstraint activateConstraints:constraints];
-#pragma clang diagnostic pop
-
+        
         [self setView:view];
         
         [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKey:SKSwatchColorsKey context:&SKColorPickerDefaultsObservationContext];

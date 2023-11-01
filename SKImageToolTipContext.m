@@ -193,10 +193,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 
 - (NSImage *)toolTipImageWithScale:(CGFloat)scale {
     PDFSelection *sel = [self copy];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
     [sel setColor:[NSColor findHighlightColor]];
-#pragma clang diagnostic pop
     NSArray *selections = @[sel];
     [sel release];
     return [[self destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections label:nil];
@@ -209,10 +206,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 
 - (NSImage *)toolTipImageWithScale:(CGFloat)scale {
     NSArray *selections = [[[NSArray alloc] initWithArray:[self matches] copyItems:YES] autorelease];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
     [selections setValue:[NSColor findHighlightColor] forKey:@"color"];
-#pragma clang diagnostic pop
     return [[[selections firstObject] destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections label:[self label]];
 }
 

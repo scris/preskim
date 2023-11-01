@@ -80,10 +80,7 @@ static BOOL supportsHighlights = YES;
             [highlightView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [self addSubview:highlightView positioned:NSWindowBelow relativeTo:nil];
             [highlightView setMaterial:NSVisualEffectMaterialSelection];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
             [highlightView setEmphasized:[self isEmphasized]];
-#pragma clang diagnostic pop
         }
         [self updateHighlightMask];
     } else if (highlightView) {
@@ -122,10 +119,7 @@ static BOOL supportsHighlights = YES;
     [super setEmphasized:emphasized];
     if (supportsHighlights) {
         if (RUNNING_AFTER(10_15))
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
             [highlightView setEmphasized:emphasized];
-#pragma clang diagnostic pop
         else if ([self isSelected] == NO && [self highlightLevel] > 0)
             [self setNeedsDisplay:YES];
     }
