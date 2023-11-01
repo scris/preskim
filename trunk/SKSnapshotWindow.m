@@ -51,10 +51,6 @@
 @synthesize windowControllerMiniaturizesWindow;
 @dynamic windowImage;
 
-#if SDK_BEFORE(10_12)
-#define NSWindowStyleMask NSUInteger
-#endif
-
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSWindowStyleMask)styleMask backing:(NSBackingStoreType)bufferingType defer:(BOOL)deferCreation {
     self = [super initWithContentRect:contentRect styleMask:styleMask backing:bufferingType defer:deferCreation];
     if (self) {
@@ -63,10 +59,6 @@
     }
     return self;
 }
-
-#if SDK_BEFORE(10_12)
-#undef NSWindowStyleMask
-#endif
 
 - (id)_updateButtonsForModeChanged {
     id rv = [super _updateButtonsForModeChanged];

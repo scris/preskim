@@ -43,12 +43,11 @@
 @implementation NSWindow (SKExtensions)
 
 + (void)addTabs:(NSArray *)tabInfos forWindows:(NSArray *)windows {
-    if (RUNNING_BEFORE(10_12) || [windows count] < 2)
+    if ([windows count] < 2)
         return;
     // if windows are opened tabbed, first untab them
     for (NSWindow *window in windows) {
-        if ([window respondsToSelector:@selector(moveTabToNewWindow:)] &&
-            [[window tabbedWindows] count] > 1)
+        if ([[window tabbedWindows] count] > 1)
             [window moveTabToNewWindow:nil];
     }
     if ([windows count] == [tabInfos count])
@@ -106,41 +105,23 @@
                     [frontWindow addTabbedWindow:window ordered:NSWindowAbove];
             }
             // make sure we select the frontWindow, addTabbedWindow:ordered: sometimes changes it
-            if (RUNNING_AFTER(10_12))
-                [frontWindow setValue:frontWindow forKeyPath:@"tabGroup.selectedWindow"];
+            [frontWindow setValue:frontWindow forKeyPath:@"tabGroup.selectedWindow"];
         }
     }
-}
-
-static inline BOOL isWindowTabSelected(NSWindow *window, NSArray *tabbedWindows) {
-    if (RUNNING_AFTER(10_12))
-        return [window valueForKeyPath:@"tabGroup.selectedWindow"] == window;
-    if ([tabbedWindows count] > 1) {
-        NSArray *orderedWindows = [NSApp orderedWindows];
-        NSUInteger i = [orderedWindows indexOfObjectIdenticalTo:window];
-        for (NSWindow *tabbedWindow in tabbedWindows) {
-            NSUInteger j = [orderedWindows indexOfObjectIdenticalTo:tabbedWindow];
-            if (i > j)
-                return NO;
-        }
-    }
-    return YES;
 }
 
 - (NSString *)tabIndexesInWindows:(NSArray *)windows {
-    if (RUNNING_AFTER(10_11)) {
-        NSArray *tabbedWindows = [self tabbedWindows];
-        if ([tabbedWindows count] < 2) {
-            return [NSString stringWithFormat:@"(%lu)", (unsigned long)[windows indexOfObjectIdenticalTo:self]];
-        } else if (isWindowTabSelected(self, tabbedWindows)) {
-            NSMutableString *tabs = [NSMutableString string];
-            for (NSWindow *win in tabbedWindows) {
-                [tabs appendString:[tabs length] > 0 ? @", " : @"("];
-                [tabs appendFormat:@"%lu", (unsigned long)[windows indexOfObjectIdenticalTo:win]];
-            }
-            [tabs appendString:@")"];
-            return tabs;
+    NSArray *tabbedWindows = [self tabbedWindows];
+    if ([tabbedWindows count] < 2) {
+        return [NSString stringWithFormat:@"(%lu)", (unsigned long)[windows indexOfObjectIdenticalTo:self]];
+    } else if ([[self tabGroup] selectedWindow] == self) {
+        NSMutableString *tabs = [NSMutableString string];
+        for (NSWindow *win in tabbedWindows) {
+            [tabs appendString:[tabs length] > 0 ? @", " : @"("];
+            [tabs appendFormat:@"%lu", (unsigned long)[windows indexOfObjectIdenticalTo:win]];
         }
+        [tabs appendString:@")"];
+        return tabs;
     }
     return nil;
 }

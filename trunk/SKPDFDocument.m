@@ -41,14 +41,6 @@
 #import "PDFDocument_SKExtensions.h"
 
 
-#if SDK_BEFORE(10_13)
-
-@interface PDFDocument (SKHighSierraDeclarations)
-- (BOOL)allowsCommenting;
-@end
-
-#endif
-
 @implementation SKPDFDocument
 
 @synthesize containingDocument, detectedWidgets;
@@ -85,10 +77,6 @@
 
 // don't send out delegate methods during a synchronous find
 
-#if SDK_BEFORE(10_13)
-#define NSStringCompareOptions NSUInteger
-#endif
-
 - (NSArray *)findString:(NSString *)string withOptions:(NSStringCompareOptions)options {
     id delegate = [self delegate];
     [self setDelegate:nil];
@@ -115,19 +103,10 @@
     }
 }
 
-#if SDK_BEFORE(10_13)
-#undef NSStringCompareOptions
-#endif
-
 // fool the document into thinking it always allows annotations
 - (BOOL)allowsCommenting { return YES; }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-
-- (BOOL)realAllowsCommenting { return [PDFDocument instancesRespondToSelector:@selector(allowsCommenting)] == NO || [super allowsCommenting]; }
-
-#pragma clang diagnostic pop
+- (BOOL)realAllowsCommenting { return [super allowsCommenting]; }
 
 - (id <SKPDFDocumentDelegate>)delegate {
     return (id <SKPDFDocumentDelegate>)[super delegate];

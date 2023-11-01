@@ -378,9 +378,9 @@ static SKPreferenceController *sharedPrefenceController = nil;
 #pragma mark Touch bar
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
+    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
     [touchBar setDelegate:self];
-    [touchBar setDefaultItemIdentifiers:@[SKTouchBarItemIdentifierPanes, @"NSTouchBarItemIdentifierFixedSpaceSmall", SKTouchBarItemIdentifierReset, SKTouchBarItemIdentifierResetAll]];
+    [touchBar setDefaultItemIdentifiers:@[SKTouchBarItemIdentifierPanes, NSTouchBarItemIdentifierFixedSpaceSmall, SKTouchBarItemIdentifierReset, SKTouchBarItemIdentifierResetAll]];
     return touchBar;
 }
 
@@ -391,15 +391,15 @@ static SKPreferenceController *sharedPrefenceController = nil;
             panesButton = [[NSSegmentedControl segmentedControlWithLabels:[preferencePanes valueForKey:@"title"] trackingMode:NSSegmentSwitchTrackingSelectOne target:self action:@selector(touchbarSelectPane:)] retain];
             [panesButton setSelectedSegment:[preferencePanes indexOfObject:currentPane]];
         }
-        item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
         [(NSCustomTouchBarItem *)item setView:panesButton];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierReset]) {
         NSButton *button = [NSButton buttonWithTitle:[resetButton title] target:[resetButton target] action:[resetButton action]];
-        item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
         [(NSCustomTouchBarItem *)item setView:button];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierResetAll]) {
         NSButton *button = [NSButton buttonWithTitle:[resetAllButton title] target:[resetAllButton target] action:[resetAllButton action]];
-        item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
         [(NSCustomTouchBarItem *)item setView:button];
     }
     return item;

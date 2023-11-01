@@ -147,7 +147,7 @@ void SKSwizzlePDFDocumentViewMethods() {
     if (PDFPageViewClass)
         original_menuForEvent = (id (*)(id, SEL, id))SKReplaceInstanceMethodImplementation(PDFPageViewClass, @selector(menuForEvent:), (IMP)replacement_menuForEvent);
     
-    Class PDFDocumentViewClass = RUNNING_BEFORE(10_12) ? NSClassFromString(@"PDFDisplayView") : NSClassFromString(@"PDFDocumentView");
+    Class PDFDocumentViewClass = NSClassFromString(@"PDFDocumentView");
     if (PDFDocumentViewClass == Nil)
         return;
 
@@ -173,9 +173,6 @@ void SKSwizzlePDFDocumentViewMethods() {
 }
 
 void SKSwizzlePDFAccessibilityNodeAnnotationMethods() {
-    if (RUNNING_BEFORE(10_13))
-        return;
-    
     Class PDFAccessibilityNodeAnnotationClass = NSClassFromString(@"PDFAccessibilityNodeAnnotation");
     
     if (PDFAccessibilityNodeAnnotationClass == Nil || [PDFAccessibilityNodeAnnotationClass instancesRespondToSelector:@selector(annotation)] == NO)

@@ -273,11 +273,8 @@
 
 - (void)viewDidMoveToWindow {
     [super viewDidMoveToWindow];
-    if ([self window] == nil && RUNNING_AFTER(10_12))
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
+    if ([self window] == nil)
         [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row){ [rowView setEmphasized:NO]; }];
-#pragma clang diagnostic pop
 }
 
 #pragma mark Tracking

@@ -51,8 +51,6 @@
 
 - (void)pageLabelDidUpdate;
 
-- (void)clearDocument;
-
 - (NSScriptObjectSpecifier *)objectSpecifier;
 - (PDFOutline *)scriptingParent;
 - (NSArray *)entireContents;

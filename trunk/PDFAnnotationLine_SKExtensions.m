@@ -60,16 +60,8 @@ NSString *SKPDFAnnotationEndPointAsQDPointKey = @"endPointAsQDPoint";
 NSString *SKPDFAnnotationScriptingStartLineStyleKey = @"scriptingStartLineStyle";
 NSString *SKPDFAnnotationScriptingEndLineStyleKey = @"scriptingEndLineStyle";
 
-#if SDK_BEFORE(10_12)
-@interface PDFAnnotation (SKSierraDeclarations)
-// before 10.12 this was a private method, called by drawWithBox:
-- (void)drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
-@end
-#endif
-
 @implementation PDFAnnotationLine (SKExtensions)
 
-static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextRef) = NULL;
 static void (*original_setBounds)(id, SEL, NSRect) = NULL;
 
 static inline void addLineTipToPath(CGMutablePathRef path, NSPoint point, CGFloat angle, PDFLineStyle lineStyle, CGFloat lineWidth) {
@@ -104,46 +96,6 @@ static inline void addLineTipToPath(CGMutablePathRef path, NSPoint point, CGFloa
     }
 }
 
-- (void)replacement_drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
-    if ([self hasAppearanceStream]) {
-        original_drawWithBox_inContext(self, _cmd, box, context);
-    } else {
-        NSPoint origin = [self bounds].origin;
-        NSPoint startPoint = SKAddPoints(origin, [self startPoint]);
-        NSPoint endPoint = SKAddPoints(origin, [self endPoint]);
-        CGFloat angle = atan2(endPoint.y - startPoint.y, endPoint.x - startPoint.x);
-        CGFloat lineWidth = [self lineWidth];
-        CGMutablePathRef path = CGPathCreateMutable();
-        CGContextSaveGState(context);
-        [[self page] transformContext:context forBox:box];
-        CGContextSetStrokeColorWithColor(context, [[self color] CGColor]);
-        CGContextSetLineWidth(context, lineWidth);
-        CGContextSetLineJoin(context, kCGLineJoinRound);
-        if ([self borderStyle] == kPDFBorderStyleDashed) {
-            NSArray *dashPattern = [self dashPattern];
-            NSInteger i, count = [dashPattern count];
-            CGFloat dash[count];
-            for (i = 0; i < count; i++)
-                dash[i] = [[dashPattern objectAtIndex:i] doubleValue];
-            CGContextSetLineDash(context, 0.0, dash, count);
-            CGContextSetLineCap(context, kCGLineCapButt);
-        } else {
-            CGContextSetLineCap(context, kCGLineCapRound);
-        }
-        CGPathMoveToPoint(path, NULL, startPoint.x, startPoint.y);
-        CGPathAddLineToPoint(path, NULL, endPoint.x, endPoint.y);
-        if ([self startLineStyle] != kPDFLineStyleNone)
-            addLineTipToPath(path, startPoint, angle + M_PI, [self startLineStyle], lineWidth);
-        if ([self endLineStyle] != kPDFLineStyleNone)
-            addLineTipToPath(path, endPoint, angle, [self endLineStyle], lineWidth);
-        CGContextBeginPath(context);
-        CGContextAddPath(context, path);
-        CGPathRelease(path);
-        CGContextStrokePath(context);
-        CGContextRestoreGState(context);
-    }
-}
-
 - (void)replacement_setBounds:(NSRect)newBounds {
     NSPoint startPoint = [self startPoint];
     NSPoint endPoint = [self endPoint];
@@ -153,8 +105,6 @@ static inline void addLineTipToPath(CGMutablePathRef path, NSPoint point, CGFloa
 }
 
 + (void)load {
-    if (RUNNING(10_11))
-        original_drawWithBox_inContext = (void (*)(id, SEL, PDFDisplayBox, CGContextRef))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(drawWithBox:inContext:), @selector(replacement_drawWithBox:inContext:));
     if (RUNNING(10_13))
         original_setBounds = (void (*)(id, SEL, NSRect))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(setBounds:), @selector(replacement_setBounds:));
 }

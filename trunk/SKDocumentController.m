@@ -366,11 +366,9 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
         __block NSMutableArray *windows = nil;
         __block NSMutableArray *tabInfos = nil;
         
-        if (RUNNING_AFTER(10_11)) {
-            windows = [[NSMutableArray alloc] init];
-            while ([windows count] < (NSUInteger)i)
-                [windows addObject:[NSNull null]];
-        }
+        windows = [[NSMutableArray alloc] init];
+        while ([windows count] < (NSUInteger)i)
+            [windows addObject:[NSNull null]];
         
         while (i-- > 0) {
             SKBookmark *child = [children objectAtIndex:i];

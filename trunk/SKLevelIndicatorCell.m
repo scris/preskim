@@ -54,12 +54,6 @@
         [[NSBezierPath bezierPathWithRect:cellFrame] addClip];
         [super drawWithFrame:cellFrame inView:controlView];
         [NSGraphicsContext restoreGraphicsState];
-    } else if (RUNNING_BEFORE(10_13)) {
-        NSRect frame = SKCenterRectVertically(cellFrame, cellHeight, 0.0, [controlView isFlipped]);
-        [NSGraphicsContext saveGraphicsState];
-        [[NSBezierPath bezierPathWithRect:cellFrame] addClip];
-        [super drawWithFrame:frame inView:controlView];
-        [NSGraphicsContext restoreGraphicsState];
     } else if (NSHeight(cellFrame) <= 2.0 * (cellHeight - EDGE_HEIGHT)) {
         NSRect topFrame, bottomFrame, frame = cellFrame;
         NSDivideRect(cellFrame, &topFrame, &bottomFrame, floor(0.5 * NSHeight(cellFrame)), NSMinYEdge);

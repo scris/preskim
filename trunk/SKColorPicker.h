@@ -37,7 +37,6 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "NSScrubber_SKForwardDeclarations.h"
 
 @protocol SKColorPickerDelegate;
 

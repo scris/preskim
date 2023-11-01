@@ -368,14 +368,8 @@
         [rowView setHighlightLevel:[self thumbnailHighlightLevelForRow:row]];
     }];
     if (overviewView) {
-        if (RUNNING_BEFORE(10_11)) {
-            NSInteger i, iMax = [[overviewView content] count];
-            for (i = 0; i < iMax; i++)
-                [(SKThumbnailItem *)[overviewView itemAtIndex:i] setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
-        } else {
-            for (NSIndexPath *indexPath in [overviewView indexPathsForVisibleItems])
-                [(SKThumbnailItem *)[overviewView itemAtIndexPath:indexPath] setHighlightLevel:[self thumbnailHighlightLevelForRow:[indexPath item]]];
-        }
+        for (NSIndexPath *indexPath in [overviewView indexPathsForVisibleItems])
+            [(SKThumbnailItem *)[overviewView itemAtIndexPath:indexPath] setHighlightLevel:[self thumbnailHighlightLevelForRow:[indexPath item]]];
     }
 }
 
@@ -1709,13 +1703,13 @@ static NSArray *allMainDocumentPDFViews() {
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(changeDisplayMode:)) {
         [menuItem setState: [pdfView extendedDisplayMode] == [menuItem tag] ? NSOnState : NSOffState];
-        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && ([menuItem tag] < kPDFDisplayHorizontalContinuous || RUNNING_AFTER(10_12));
+        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(changeDisplayDirection:)) {
         [menuItem setState:[pdfView displaysHorizontally] == (BOOL)[menuItem tag] ? NSOnState : NSOffState];
-        return RUNNING_AFTER(10_12) && [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && [pdfView displayMode] == kPDFDisplaySinglePageContinuous;
+        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && [pdfView displayMode] == kPDFDisplaySinglePageContinuous;
     } else if (action == @selector(toggleDisplaysRTL:)) {
         [menuItem setState:[pdfView displaysRightToLeft] ? NSOnState : NSOffState];
-        return RUNNING_AFTER(10_12) && [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
+        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(toggleDisplaysAsBook:)) {
         [menuItem setState:[pdfView displaysAsBook] ? NSOnState : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
@@ -2048,15 +2042,6 @@ static NSArray *allMainDocumentPDFViews() {
     }
 }
 
-- (void)handleScrollerDidScrollNotification:(NSNotification *)notification {
-    SKScroller *scroller = [notification object];
-    if ([[pdfView document] isLocked] == NO ||
-        scroller == [leftSideController.thumbnailTableView.enclosingScrollView verticalScroller] ||
-        scroller == [presentationSheetController verticalScroller]) {
-        [[self thumbnails] makeObjectsPerformSelector:@selector(dirtyIfNeeded)];
-    }
-}
-
 - (void)handlePageLabelsChangedNotification:(NSNotification *)notification {
     [self updatePageLabels];
 }
@@ -2110,11 +2095,6 @@ static NSArray *allMainDocumentPDFViews() {
     // PDFPage
     [nc addObserver:self selector:@selector(handlePageLabelsChangedNotification:)
                              name:SKPageLabelsChangedNotification object:nil];
-    
-    // SKScroller
-    if (RUNNING_BEFORE(10_12))
-        [nc addObserver:self selector:@selector(handleScrollerDidScrollNotification:)
-               name:SKScrollerDidScrollNotification object:nil];
 }
 
 @end

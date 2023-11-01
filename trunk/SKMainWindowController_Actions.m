@@ -394,18 +394,12 @@ static NSArray *allMainDocumentPDFViews() {
 
 - (IBAction)markPage:(id)sender {
     if (markedPageIndex != NSNotFound) {
-        if (RUNNING_BEFORE(10_11))
-            [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:NO];
-        else
-            [(SKThumbnailItem *)[overviewView itemAtIndexPath:[NSIndexPath indexPathForItem:markedPageIndex inSection:0]] setMarked:NO];
+        [(SKThumbnailItem *)[overviewView itemAtIndexPath:[NSIndexPath indexPathForItem:markedPageIndex inSection:0]] setMarked:NO];
         [[(NSTableCellView *)[leftSideController.thumbnailTableView viewAtColumn:1 row:markedPageIndex makeIfNecessary:NO] imageView] setObjectValue:nil];
     }
     markedPageIndex = [pdfView currentPageIndexAndPoint:&markedPagePoint rotated:NULL];
     beforeMarkedPageIndex = NSNotFound;
-    if (RUNNING_BEFORE(10_11))
-        [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
-    else
-        [(SKThumbnailItem *)[overviewView itemAtIndexPath:[NSIndexPath indexPathForItem:markedPageIndex inSection:0]] setMarked:YES];
+    [(SKThumbnailItem *)[overviewView itemAtIndexPath:[NSIndexPath indexPathForItem:markedPageIndex inSection:0]] setMarked:YES];
     [[(NSTableCellView *)[leftSideController.thumbnailTableView viewAtColumn:1 row:markedPageIndex makeIfNecessary:NO] imageView] setObjectValue:[NSImage markImage]];
 }
 
@@ -440,14 +434,6 @@ static NSArray *allMainDocumentPDFViews() {
 - (IBAction)doZoomToFit:(id)sender {
     [pdfView setAutoScales:YES];
     [pdfView setAutoScales:NO];
-    if (RUNNING(10_12) && 0 == ([pdfView displayMode] & kPDFDisplaySinglePageContinuous)) {
-        CGFloat pageHeight = NSHeight([[pdfView currentPage] boundsForBox:[pdfView displayBox]]);
-        if ([pdfView displaysPageBreaks])
-            pageHeight += 8.0;
-        CGFloat scaleFactor = fmax([pdfView minimumScaleFactor], NSHeight([pdfView frame]) / pageHeight);
-        if (scaleFactor < [pdfView scaleFactor])
-            [pdfView setScaleFactor:scaleFactor];
-    }
 }
 
 // @@ Horizontal layout

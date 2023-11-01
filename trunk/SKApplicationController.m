@@ -111,12 +111,6 @@ static char SKApplicationControllerDefaultsObservationContext;
 
 NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
 
-#if SDK_BEFORE(10_12)
-@interface NSApplication (SKSierraDeclarations)
-@property (getter=isAutomaticCustomizeTouchBarMenuItemEnabled) BOOL automaticCustomizeTouchBarMenuItemEnabled;
-@end
-#endif
-
 @interface SKApplicationController (SKPrivate)
 - (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent;
 @end
@@ -152,14 +146,6 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
     
     // Set the initial values in the shared user defaults controller 
     [[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:[initialValuesDict dictionaryWithValuesForKeys:resettableUserDefaultsKeys]];
-    
-    if (RUNNING(10_11)) {
-        // Disable ATS on El Capitan, as forwarding is blocked, even if it is an htpps address
-        @try{
-            [(NSMutableDictionary *)[[NSBundle mainBundle] infoDictionary] setObject:@{@"NSAllowsArbitraryLoads":@YES} forKey:@"NSAppTransportSecurity"];
-        }
-        @catch(id e) {}
-    }
 }
 
 - (void)awakeFromNib {
@@ -167,15 +153,6 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
     for (NSMenuItem *menuItem in [menu itemArray]) {
         if ([menuItem action] == @selector(changeLeftSidePaneState:) || [menuItem action] == @selector(changeRightSidePaneState:))
             [menuItem setIndentationLevel:1];
-    }
-    
-    // horizontal layout is currently buggy, so don't support it
-    if (RUNNING_BEFORE(10_13)) {
-        menu = [[[[[NSApp mainMenu] itemAtIndex:PDF_MENU_INDEX] submenu] itemAtIndex:0] submenu];
-        for (NSMenuItem *menuItem in [menu itemArray]) {
-            if (([menuItem action] == @selector(changeDisplayMode:) && [menuItem tag] == 4) || [menuItem action] == @selector(toggleDisplaysRTL:))
-                [menuItem setHidden:YES];
-        }
     }
     
     // this creates the script menu if needed
@@ -270,11 +247,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
     
     [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
     
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if ([NSApp respondsToSelector:@selector(setAutomaticCustomizeTouchBarMenuItemEnabled:)])
-        [NSApp setAutomaticCustomizeTouchBarMenuItemEnabled:YES];
-#pragma clang diagnostic pop
+    [NSApp setAutomaticCustomizeTouchBarMenuItemEnabled:YES];
 }
 
 // we don't want to reopen last open files when re-activating the app

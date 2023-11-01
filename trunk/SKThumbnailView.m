@@ -52,7 +52,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define MARGIN 8.0
 #define TEXT_MARGIN 4.0
-#define TEXT_SPACE_OLD 32.0
 #define TEXT_SPACE 24.0
 #define SELECTION_MARGIN 6.0
 #define IMAGE_SEL_RADIUS 8.0
@@ -74,7 +73,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)commonInit {
     NSRect bounds = [self bounds];
-    CGFloat textSpace = RUNNING_BEFORE(10_11) ? TEXT_SPACE_OLD : TEXT_SPACE;
+    CGFloat textSpace = TEXT_SPACE;
     NSRect rect = NSOffsetRect(NSInsetRect(bounds, MARGIN, MARGIN + 0.5 * textSpace), 0.0, 0.5 * textSpace);
     imageView = [[SKThumbnailImageView alloc] initWithFrame:rect];
     [imageView setImageScaling:NSImageScaleProportionallyUpOrDown];
@@ -131,7 +130,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 + (NSSize)sizeForImageSize:(NSSize)size {
-    return NSMakeSize(size.width + 2.0 * MARGIN, size.height + 2.0 * MARGIN + (RUNNING_BEFORE(10_11) ? TEXT_SPACE_OLD : TEXT_SPACE));
+    return NSMakeSize(size.width + 2.0 * MARGIN, size.height + 2.0 * MARGIN + TEXT_SPACE);
 }
 
 #pragma mark Updating
@@ -511,7 +510,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     NSIndexSet *selectionIndexes = [collectionView selectionIndexes];
     if ([selectionIndexes count] > 1 && [selectionIndexes containsIndex:[[[self thumbnail] page] pageIndex]]) {
         [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
-            NSCollectionViewItem *item = (RUNNING_BEFORE(10_11)) ? [collectionView itemAtIndex:i] : [collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
+            NSCollectionViewItem *item = [collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
             [(SKThumbnailView *)[item view] setMenuHighlighted:flag];
         }];
     } else {
@@ -541,10 +540,6 @@ static char SKThumbnailViewThumbnailObservationContext;
         menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
         [menu addItemWithTitle:NSLocalizedString(@"Copy", @"Menu item title") action:@selector(copy:) target:self];
         [menu addItemWithTitle:NSLocalizedString(@"Copy URL", @"Menu item title") action:@selector(copyURL:) target:self];
-        if (RUNNING(10_11)) {
-            [self applyMenuHighlighted:YES];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleMenuDidEndTracking:) name:NSMenuDidEndTrackingNotification object:menu];
-        }
     }
     return menu;
 }

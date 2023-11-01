@@ -140,15 +140,6 @@ enum {
 - (void)setPage:(PDFPage *)newPage;
 @end
 
-@interface NSSavePanel (SKPrivateDeclarations)
-- (void)toggleOptionsView:(id)sender;
-@end
-#if SDK_BEFORE(10_11)
-@interface NSSavePanel (SKElCapitanDeclarations)
-- (void)setAccessoryViewDisclosed:(BOOL)flag;
-@end
-#endif
-
 @interface PDFDocument (SKPrivateDeclarations)
 - (NSString *)passwordUsedForUnlocking;
 @end
@@ -1108,13 +1099,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         [oPanel setAccessoryView:readNotesAccessoryView];
         [replaceNotesCheckButton setState:NSOnState];
         [readNotesAccessoryView release];
-        if ([oPanel respondsToSelector:@selector(setAccessoryViewDisclosed:)])
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-            [oPanel setAccessoryViewDisclosed:YES];
-#pragma clang diagnostic pop
-        else if ([oPanel respondsToSelector:@selector(toggleOptionsView:)])
-            [oPanel toggleOptionsView:nil];
+        [oPanel setAccessoryViewDisclosed:YES];
     }
     
     [oPanel setDirectoryURL:[fileURL URLByDeletingLastPathComponent]];
@@ -1176,9 +1161,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         if (pdfDocWithoutNotes == nil)
             pdfDocWithoutNotes = [[[PDFDocument alloc] initWithData:pdfData] autorelease];
         
-        dispatch_queue_t queue = RUNNING_AFTER(10_11) ? dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) : dispatch_get_main_queue();
-        
-        dispatch_async(queue, ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
             for (PDFPage *page in pdfDocWithoutNotes) {
                 NSArray *notes = [[page annotations] copy];
@@ -1196,8 +1179,6 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
             
             NSData *data = [pdfDocWithoutNotes dataRepresentation];
             
-            [[pdfDocWithoutNotes outlineRoot] clearDocument];
-
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 [[self mainWindowController] addAnnotationsFromDictionaries:noteDicts removeAnnotations:annotations];
@@ -1220,8 +1201,6 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         
         [offsets release];
 
-        [[pdfDocWithoutNotes outlineRoot] clearDocument];
-        
         [[self mainWindowController] dismissProgressSheet];
         
         mdFlags.convertingNotes = 0;
@@ -1242,7 +1221,6 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                     [self convertNotesUsingPDFDocument:pdfDoc];
                 }
             } else {
-                [[pdfDoc outlineRoot] clearDocument];
                 mdFlags.convertingNotes = 0;
             }
         }];

@@ -54,14 +54,6 @@ NSString *SKPDFDocumentAnnotationKey = @"annotation";
 NSString *SKPDFDocumentPageKey = @"page";
 NSString *SKPDFDocumentOldPageKey = @"oldPage";
 
-#if SDK_BEFORE(10_13)
-
-@interface PDFDocument (SKHighSierraDeclarations)
-- (BOOL)allowsCommenting;
-@end
-
-#endif
-
 @implementation PDFDocument (SKExtensions)
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len {
@@ -283,12 +275,11 @@ static inline NSInteger angleForDirection(NSLocaleLanguageDirection direction, B
 #pragma clang diagnostic ignored "-Wpartial-availability"
 
 - (BOOL)allowsNotes {
-    return [self isLocked] == NO &&
-    ([self respondsToSelector:@selector(allowsCommenting)] == NO || [self allowsCommenting]);
+    return [self isLocked] == NO && [self allowsCommenting];
 }
 
 - (BOOL)realAllowsCommenting {
-    return [self respondsToSelector:@selector(allowsCommenting)] == NO || [self allowsCommenting];
+    return [self allowsCommenting];
 }
 
 #pragma clang diagnostic pop
@@ -319,8 +310,6 @@ static inline NSInteger angleForDirection(NSLocaleLanguageDirection direction, B
     NSDictionary *userInfo = @{SKPDFDocumentAnnotationKey:annotation, SKPDFDocumentPageKey:page};
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFDocumentWillRemoveAnnotationNotification object:self userInfo:userInfo];
     [page removeAnnotation:annotation];
-    if (RUNNING(10_12) && [annotation isNote] && [[page annotations] containsObject:annotation])
-        [page removeAnnotation:annotation];
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFDocumentDidRemoveAnnotationNotification object:self userInfo:userInfo];
 }
 
@@ -329,8 +318,6 @@ static inline NSInteger angleForDirection(NSLocaleLanguageDirection direction, B
     NSDictionary *userInfo = @{SKPDFDocumentAnnotationKey:annotation, SKPDFDocumentPageKey:page, SKPDFDocumentOldPageKey:oldPage};
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFDocumentWillMoveAnnotationNotification object:self userInfo:userInfo];
     [oldPage removeAnnotation:annotation];
-    if (RUNNING(10_12) && [annotation isNote] && [[oldPage annotations] containsObject:annotation])
-        [oldPage removeAnnotation:annotation];
     [page addAnnotation:annotation];
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFDocumentDidMoveAnnotationNotification object:self userInfo:userInfo];
 }

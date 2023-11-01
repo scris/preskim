@@ -180,8 +180,7 @@
     
     [outlineView setAutoresizesOutlineColumn: NO];
     [outlineView setIndentationPerLevel:1.0];
-    if ([outlineView respondsToSelector:@selector(setStronglyReferencesItems:)])
-        [outlineView setStronglyReferencesItems:YES];
+    [outlineView setStronglyReferencesItems:YES];
 
     NSSortDescriptor *indexSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES] autorelease];
     NSSortDescriptor *stringSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] autorelease];

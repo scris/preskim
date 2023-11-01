@@ -53,29 +53,7 @@ static char SKBasePDFViewDefaultsObservationContext;
 // don't use the constant, which is only defined on 10.13+
 #define kPDFDestinationUnspecifiedValue FLT_MAX
 
-#if SDK_BEFORE(10_12)
-@interface PDFView (SKSierraDeclarations)
-- (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context;
-@end
-
-@interface PDFAnnotation (SKSierraDeclarations)
-- (void)drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
-@end
-#endif
-
-#if SDK_BEFORE(10_13)
-typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
-    kPDFDisplayDirectionVertical = 0,
-    kPDFDisplayDirectionHorizontal = 1,
-};
-@interface PDFView (SKHighSierraDeclarations)
-@property (nonatomic) PDFDisplayDirection displayDirection;
-@property (nonatomic) BOOL displaysRTL;
-@property (nonatomic) NSEdgeInsets pageBreakMargins;
-@end
-#endif
-
-#if SDK_BEFORE(10_13)
+#if SDK_BEFORE(10_14)
 @interface PDFView (SKMojaveDeclarations)
 @property (nonatomic, setter=enablePageShadows:) BOOL pageShadowsEnabled;
 @end
@@ -187,72 +165,6 @@ static inline NSArray *defaultKeysToObserve() {
 
 #pragma mark Bug fixes
 
-- (void)keyDown:(NSEvent *)theEvent {
-    if (RUNNING_BEFORE(10_12)) {
-        
-        unichar eventChar = [theEvent firstCharacter];
-        NSUInteger modifiers = [theEvent standardModifierFlags];
-        
-        if ((eventChar == SKSpaceCharacter) && ((modifiers & ~NSEventModifierFlagShift) == 0)) {
-            eventChar = modifiers == NSEventModifierFlagShift ? NSPageUpFunctionKey : NSPageDownFunctionKey;
-            modifiers = 0;
-        }
-        
-        if ((([self displayMode] & kPDFDisplaySinglePageContinuous) == 0) &&
-            (eventChar == NSDownArrowFunctionKey || eventChar == NSUpArrowFunctionKey || eventChar == NSPageDownFunctionKey || eventChar == NSPageUpFunctionKey) &&
-            (modifiers == 0)) {
-            
-            NSScrollView *scrollView = [self scrollView];
-            NSClipView *clipView = [scrollView contentView];
-            NSRect clipRect = [clipView bounds];
-            BOOL flipped = [clipView isFlipped];
-            CGFloat scroll = eventChar == NSUpArrowFunctionKey || eventChar == NSDownArrowFunctionKey ? [scrollView verticalLineScroll] : NSHeight([self convertRect:clipRect fromView:clipView]) - 6.0 * [scrollView verticalPageScroll];
-            NSPoint point = [self convertPoint:clipRect.origin fromView:clipView];
-            CGFloat margin = [self convertSize:NSMakeSize(1.0, 1.0) toView:clipView].height;
-            CGFloat inset = [scrollView convertSize:NSMakeSize(0.0, [scrollView contentInsets].top) toView:clipView].height;
-            
-            if (eventChar == NSDownArrowFunctionKey || eventChar == NSPageDownFunctionKey) {
-                point.y -= scroll;
-                [clipView scrollPoint:[self convertPoint:point toView:clipView]];
-                if (fabs(NSMinY(clipRect) - NSMinY([clipView bounds])) <= margin && [self canGoToNextPage]) {
-                    [self goToNextPage:nil];
-                    NSRect docRect = [[scrollView documentView] frame];
-                    clipRect = [clipView bounds];
-                    clipRect.origin.y = flipped ? NSMinY(docRect) - inset : NSMaxY(docRect) - NSHeight(clipRect) + inset;
-                    [clipView scrollPoint:clipRect.origin];
-                }
-            } else if (eventChar == NSUpArrowFunctionKey || eventChar == NSPageUpFunctionKey) {
-                point.y += scroll;
-                [clipView scrollPoint:[self convertPoint:point toView:clipView]];
-                if (fabs(NSMinY(clipRect) - NSMinY([clipView bounds])) <= margin && [self canGoToPreviousPage]) {
-                    [self goToPreviousPage:nil];
-                    NSRect docRect = [[scrollView documentView] frame];
-                    clipRect = [clipView bounds];
-                    clipRect.origin.y = flipped ? NSMaxY(docRect) - NSHeight(clipRect) : NSMinY(docRect);
-                    [clipView scrollPoint:clipRect.origin];
-                }
-            }
-            
-            return;
-        }
-    }
-    
-    [super keyDown:theEvent];
-}
-
-
-- (void)drawPage:(PDFPage *)pdfPage toContext:(CGContextRef)context {
-    [super drawPage:pdfPage toContext:context];
-    
-    if (RUNNING(10_12)) {
-        // On (High) Sierra note annotations don't draw at all
-        for (PDFAnnotation *annotation in [[[pdfPage annotations] copy] autorelease]) {
-            if ([annotation shouldDisplay] && ([annotation isNote] || [[annotation type] isEqualToString:SKNTextString]))
-                [annotation drawWithBox:[self displayBox] inContext:context];
-        }
-    }
-}
-
 - (void)goToRect:(NSRect)rect onPage:(PDFPage *)page {
     if (RUNNING(10_13)) {
         NSView *docView = [self documentView];
@@ -264,24 +176,12 @@ static inline NSArray *defaultKeysToObserve() {
     }
 }
 
-- (void)setCurrentSelection:(PDFSelection *)currentSelection {
-    if (RUNNING(10_12) && currentSelection == nil)
-        currentSelection = [[[PDFSelection alloc] initWithDocument:[self document]] autorelease];
-    [super setCurrentSelection:currentSelection];
-}
-
 static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    return RUNNING_AFTER(10_12) && [pdfView displayDirection] == kPDFDisplayDirectionHorizontal && [pdfView displayMode] == kPDFDisplaySinglePageContinuous;
-#pragma clang diagnostic pop
+    return [pdfView displayDirection] == kPDFDisplayDirectionHorizontal && [pdfView displayMode] == kPDFDisplaySinglePageContinuous;
 }
 
 static inline BOOL hasVerticalLayout(PDFView *pdfView) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    return RUNNING_AFTER(10_12) && [pdfView displayDirection] == kPDFDisplayDirectionVertical && ([pdfView displayMode] & kPDFDisplaySinglePageContinuous);
-#pragma clang diagnostic pop
+    return [pdfView displayDirection] == kPDFDisplayDirectionVertical && ([pdfView displayMode] & kPDFDisplaySinglePageContinuous);
 }
 
 - (void)horizontallyGoToPage:(PDFPage *)page {
@@ -310,13 +210,8 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     NSRect docRect = [[scrollView documentView] frame];
     CGFloat margin = 0.0;
     inset = [self convertSize:NSMakeSize(0.0, inset) toView:clipView].height;
-    if ([self displaysPageBreaks]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        margin = RUNNING_BEFORE(10_13) ? 4.0 : [self pageBreakMargins].top;
-#pragma clang diagnostic pop
-        margin = [self convertSize:NSMakeSize(0.0, margin * [self scaleFactor]) toView:clipView].height;
-    }
+    if ([self displaysPageBreaks])
+        margin = [self convertSize:NSMakeSize(0.0, [self pageBreakMargins].top * [self scaleFactor]) toView:clipView].height;
     pageRect = [self convertRect:pageRect toView:clipView];
     if ([clipView isFlipped])
         bounds.origin.y = fmin(fmax(fmin(NSMinY(pageRect) - 0.5 * (NSHeight(bounds) + inset), NSMinY(pageRect) - margin - inset), NSMinY(docRect) - inset), NSMaxY(docRect) - NSHeight(bounds));

@@ -297,17 +297,6 @@ static char SKPDFAnnotationPropertiesObservationContext;
         CGFloat scale = [self convertSizeFromBacking:NSMakeSize(1.0, 1.0)].width;
         width *= scale;
         NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSInsetRect(bounds, 0.5 * width, 0.5 * width)];
-        if ([annotation borderStyle] == kPDFBorderStyleDashed && RUNNING_BEFORE(10_12)) {
-            NSArray *dashPattern = [annotation dashPattern];
-            NSUInteger count = [dashPattern count];
-            if (count > 0) {
-                NSUInteger i;
-                CGFloat pattern[count];
-                for (i = 0; i < count; i++)
-                    pattern[i] = scale * [[dashPattern objectAtIndex:i] doubleValue];
-                [path setLineDash:pattern count:count phase:0.0];
-            }
-        }
         [path setLineWidth:width];
         [[NSColor blackColor] setStroke];
         [path stroke];

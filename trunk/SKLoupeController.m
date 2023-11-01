@@ -56,12 +56,6 @@
 #define SKLargeMagnificationWidthKey @"SKLargeMagnificationWidth"
 #define SKLargeMagnificationHeightKey @"SKLargeMagnificationHeight"
 
-#if SDK_BEFORE(10_13)
-@interface PDFView (SKHighSierraDeclarations)
-@property (nonatomic) BOOL displaysRTL;
-@end
-#endif
-
 @interface SKLoupeController ()
 - (void)makeWindow;
 - (void)handlePDFContentViewFrameChangedNotification:(NSNotification *)notification;
@@ -287,10 +281,7 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGFloat scale) {
     NSRect scaledRect = NSMakeRect(mouseLoc.x + (NSMinX(magRect) - mouseLoc.x) / magnification, mouseLoc.y + (NSMinY(magRect) - mouseLoc.y) / magnification, NSWidth(magRect) / magnification, NSHeight(magRect) / magnification);
     CGFloat backingScale = [pdfView backingScale];
     NSRange pageRange;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if (RUNNING_AFTER(10_13) && [pdfView displaysRTL] && ([pdfView displayMode] & kPDFDisplayTwoUp)) {
-#pragma clang diagnostic pop
+    if ([pdfView displaysRTL] && ([pdfView displayMode] & kPDFDisplayTwoUp)) {
         pageRange.location = [[pdfView pageForPoint:SKTopRightPoint(scaledRect) nearest:YES] pageIndex];
         pageRange.length = [[pdfView pageForPoint:SKBottomLeftPoint(scaledRect) nearest:YES] pageIndex] + 1 - pageRange.location;
     } else {
