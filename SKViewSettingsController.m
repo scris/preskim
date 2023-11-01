@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @implementation SKViewSettingsController
 
 @synthesize custom, useSettingsFromPDF, autoScales, scaleFactor, displayMode, displayDirection, displaysAsBook, displaysRTL, displaysPageBreaks, displayBox;
-@dynamic extendedDisplayMode, allowsHorizontalSettings, settings;
+@dynamic extendedDisplayMode, settings;
 
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
     NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
@@ -116,10 +116,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         if (autoScales)
             [self setScaleFactor:1.0];
     }
-}
-
-- (BOOL)allowsHorizontalSettings {
-    return RUNNING_AFTER(10_12);
 }
 
 - (NSDictionary *)settings {

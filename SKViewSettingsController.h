@@ -67,6 +67,4 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @property (nonatomic, copy) NSDictionary *settings;
 
-@property (nonatomic, readonly) BOOL allowsHorizontalSettings;
-
 @end

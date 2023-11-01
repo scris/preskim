@@ -169,15 +169,7 @@
                                     <menuItem title="Single page continuous" state="on" tag="1" id="Oa7-DS-xKD"/>
                                     <menuItem title="Two pages" tag="2" id="sdA-Oj-N8k"/>
                                     <menuItem title="Two pages continuous" tag="3" id="dTa-JT-uy7"/>
-                                    <menuItem title="Horizontal continuous" tag="4" id="rko-D8-5dg">
-                                        <connections>
-                                            <binding destination="-2" name="hidden" keyPath="allowsHorizontalSettings" id="gFo-HM-3D1">
-                                                <dictionary key="options">
-                                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
-                                    </menuItem>
+                                    <menuItem title="Horizontal continuous" tag="4" id="rko-D8-5dg"/>
                                 </items>
                             </menu>
                         </popUpButtonCell>
@@ -219,11 +211,6 @@ Gw
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <binding destination="-2" name="hidden" keyPath="allowsHorizontalSettings" previousBinding="ohg-8t-pbI" id="8bI-AG-EQR">
-                                <dictionary key="options">
-                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                </dictionary>
-                            </binding>
                             <binding destination="-2" name="enabled" keyPath="custom" id="ohg-8t-pbI"/>
                             <binding destination="-2" name="value" keyPath="displaysRTL" id="F2J-bL-KQM"/>
                         </connections>
