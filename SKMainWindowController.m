@@ -183,13 +183,6 @@ static char SKMainWindowContentLayoutObservationContext;
 
 #define SKDisableSearchBarBlurringKey @"SKDisableSearchBarBlurring"
 
-#if SDK_BEFORE(10_11)
-@interface NSCollectionView (SKElCapitanExtensions)
-- (BOOL)allowsEmptySelection;
-- (void)setAllowsEmptySelection:(BOOL)flag;
-@end
-#endif
-
 #pragma mark -
 
 @interface SKMainWindowController (SKPrivate)
@@ -329,7 +322,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [[NSProcessInfo processInfo] endActivity:activity];
         SKDESTROY(activity);
     }
-    [overviewView removeObserver:self forKeyPath:RUNNING_BEFORE(10_11) ? @"selectionIndexes" : @"selectionIndexPaths" context:&SKMainWindowThumbnailSelectionObservationContext];
+    [overviewView removeObserver:self forKeyPath:@"selectionIndexPaths" context:&SKMainWindowThumbnailSelectionObservationContext];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self stopObservingNotes:[self notes]];
     [self clearWidgets];
@@ -345,14 +338,8 @@ static char SKMainWindowContentLayoutObservationContext;
     [pdfView setDelegate:nil]; // this cleans up the pdfview
     [[pdfView document] setDelegate:nil];
     [noteTypeSheetController setDelegate:nil];
-    // Sierra seems to have a retain cycle when the document has an outlineRoot
-    [[[pdfView document] outlineRoot] clearDocument];
     [[pdfView document] setContainingDocument:nil];
     // Yosemite and El Capitan have a retain cycle when we leave the PDFView with a document
-    if (RUNNING_BEFORE(10_12)) {
-        [pdfView setDocument:nil];
-        [secondaryPdfView setDocument:nil];
-    }
     // we may retain our own document here
     [self setPresentationNotesDocument:nil];
 }
@@ -389,8 +376,8 @@ static char SKMainWindowContentLayoutObservationContext;
     pdfView = [[SKPDFView alloc] initWithFrame:[pdfContentView bounds]];
     [pdfView setTranslatesAutoresizingMaskIntoConstraints:NO];
     
-    if ([pdfView maximumScaleFactor] < 20.0 && [pdfView respondsToSelector:NSSelectorFromString(@"setMaxScaleFactor:")])
-        [pdfView setValue:[NSNumber numberWithDouble:20.0] forKey:@"maxScaleFactor"];
+    if ([pdfView maxScaleFactor] < 20.0)
+        [pdfView setMaxScaleFactor:20.0];
     
     // Set up the tool bar
     [toolbarController setupToolbar];
@@ -698,11 +685,9 @@ static char SKMainWindowContentLayoutObservationContext;
     [setup setObject:[NSNumber numberWithDouble:[pdfView scaleFactor]] forKey:SCALEFACTOR_KEY];
     [setup setObject:[NSNumber numberWithBool:[pdfView autoScales]] forKey:AUTOSCALES_KEY];
     [setup setObject:[NSNumber numberWithInteger:[pdfView displayMode]] forKey:DISPLAYMODE_KEY];
-    if (RUNNING_AFTER(10_12)) {
-        [setup setObject:[NSNumber numberWithInteger:[pdfView displaysHorizontally] ? 1 : 0] forKey:DISPLAYDIRECTION_KEY];
-        [setup setObject:[NSNumber numberWithBool:[pdfView displaysRightToLeft]] forKey:DISPLAYSRTL_KEY];
-    }
-
+    [setup setObject:[NSNumber numberWithInteger:[pdfView displaysHorizontally] ? 1 : 0] forKey:DISPLAYDIRECTION_KEY];
+    [setup setObject:[NSNumber numberWithBool:[pdfView displaysRightToLeft]] forKey:DISPLAYSRTL_KEY];
+    
     return setup;
 }
 
@@ -1172,8 +1157,6 @@ static char SKMainWindowContentLayoutObservationContext;
         [self unregisterForDocumentNotifications];
         
         [oldPdfDoc setDelegate:nil];
-        
-        [[oldPdfDoc outlineRoot] clearDocument];
         
         [oldPdfDoc setContainingDocument:nil];
     }
@@ -1667,17 +1650,10 @@ static char SKMainWindowContentLayoutObservationContext;
         }
     }
     size = [SKThumbnailView sizeForImageSize:NSMakeSize(ceil(width * roundedThumbnailSize), ceil(height * roundedThumbnailSize))];
-    if (RUNNING_BEFORE(10_11)) {
-        if (NSEqualSizes(size, [overviewView minItemSize]) == NO) {
-            [overviewView setMinItemSize:size];
-            [overviewView setMaxItemSize:size];
-        }
-    } else {
-        NSCollectionViewFlowLayout *layout = [overviewView collectionViewLayout];
-        if (NSEqualSizes(size, [layout itemSize]) == NO) {
-            [layout setItemSize:size];
-            [layout invalidateLayout];
-        }
+    NSCollectionViewFlowLayout *layout = [overviewView collectionViewLayout];
+    if (NSEqualSizes(size, [layout itemSize]) == NO) {
+        [layout setItemSize:size];
+        [layout invalidateLayout];
     }
 }
 
@@ -1699,35 +1675,20 @@ static char SKMainWindowContentLayoutObservationContext;
         [overviewView setSelectable:YES];
         [overviewView setAllowsMultipleSelection:YES];
         [overviewView setBackgroundColors:@[[NSColor clearColor]]];
-        if (RUNNING_BEFORE(10_11)) {
-            overviewContentView = bgView;
-            [scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-            [overviewContentView addSubview:scrollView];
-            [scrollView release];
-            [self updateOverviewItemSize];
-            [overviewView setItemPrototype:[[[SKThumbnailItem alloc] init] autorelease]];
-            [overviewView setContent:[self thumbnails]];
-            NSInteger i, iMax = [[overviewView content] count];
-            for (i = 0; i < iMax; i++)
-                [(SKThumbnailItem *)[overviewView itemAtIndex:i] setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
-            if (markedPageIndex != NSNotFound)
-                [(SKThumbnailItem *)[overviewView itemAtIndex:markedPageIndex] setMarked:YES];
-        } else {
-            overviewContentView = scrollView;
-            [overviewView setBackgroundView:bgView];
-            [bgView release];
-            NSCollectionViewFlowLayout *layout = [[[NSCollectionViewFlowLayout alloc] init] autorelease];
-            [layout setMinimumLineSpacing:8.0];
-            [layout setMinimumInteritemSpacing:0.0];
-            [overviewView setCollectionViewLayout:layout];
-            [self updateOverviewItemSize];
-            [overviewView registerClass:[SKThumbnailItem class] forItemWithIdentifier:@"thumbnail"];
-            [overviewView setDataSource:(id<NSCollectionViewDataSource>)self];
-        }
+        overviewContentView = scrollView;
+        [overviewView setBackgroundView:bgView];
+        [bgView release];
+        NSCollectionViewFlowLayout *layout = [[[NSCollectionViewFlowLayout alloc] init] autorelease];
+        [layout setMinimumLineSpacing:8.0];
+        [layout setMinimumInteritemSpacing:0.0];
+        [overviewView setCollectionViewLayout:layout];
+        [self updateOverviewItemSize];
+        [overviewView registerClass:[SKThumbnailItem class] forItemWithIdentifier:@"thumbnail"];
+        [overviewView setDataSource:(id<NSCollectionViewDataSource>)self];
         [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
         [overviewView setTypeSelectHelper:[leftSideController.thumbnailTableView typeSelectHelper]];
         [overviewView setDoubleClickAction:@selector(hideOverview:)];
-        [overviewView addObserver:self forKeyPath:RUNNING_BEFORE(10_11) ? @"selectionIndexes" : @"selectionIndexPaths" options:0 context:&SKMainWindowThumbnailSelectionObservationContext];
+        [overviewView addObserver:self forKeyPath:@"selectionIndexPaths" options:0 context:&SKMainWindowThumbnailSelectionObservationContext];
         [overviewContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
     }
     
@@ -1746,13 +1707,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
     [overviewView setAllowsMultipleSelection:isPresentation == NO];
     
-    if (RUNNING_BEFORE(10_11)) {
-        [(NSVisualEffectView *)overviewContentView setMaterial:isPresentation ? NSVisualEffectMaterialDark : NSVisualEffectMaterialAppearanceBased];
-        NSBackgroundStyle style = isPresentation ? NSBackgroundStyleDark : NSBackgroundStyleLight;
-        NSUInteger i, iMax = [[overviewView content] count];
-        for (i = 0; i < iMax; i++)
-            [(SKThumbnailItem *)[overviewView itemAtIndex:i] setBackgroundStyle:style];
-    } else if (RUNNING_BEFORE(10_14)) {
+    if (RUNNING_BEFORE(10_14)) {
         [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:isPresentation ? NSVisualEffectMaterialDark : NSVisualEffectMaterialSidebar];
         [[overviewView visibleItems] setValue:[NSNumber numberWithInteger:isPresentation ? NSBackgroundStyleDark : NSBackgroundStyleLight] forKey:@"backgroundStyle"];
     } else if (isPresentation) {
@@ -3018,15 +2973,10 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     if ([[pdfView document] isLocked])
         return NO;
     
-    BOOL isScrolling = ([(SKScroller *)[leftSideController.thumbnailTableView.enclosingScrollView verticalScroller] isScrolling] || [[presentationSheetController verticalScroller] isScrolling]);
-    
-    if (RUNNING_BEFORE(10_12) && isScrolling)
-        return NO;
-    
     PDFPage *page = [self pageForThumbnail:thumbnail];
     SKReadingBar *readingBar = [[[pdfView readingBar] page] isEqual:page] ? [pdfView readingBar] : nil;
     PDFDisplayBox box = [pdfView displayBox];
-    dispatch_queue_t queue = RUNNING_AFTER(10_11) ? dispatch_get_global_queue(isScrolling ? DISPATCH_QUEUE_PRIORITY_LOW : DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) : dispatch_get_main_queue();
+    dispatch_queue_t queue = dispatch_get_main_queue();
     
     dispatch_async(queue, ^{
         NSImage *image = [page thumbnailWithSize:thumbnailCacheSize forBox:box readingBar:readingBar];
@@ -3102,10 +3052,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     [self setThumbnails:newThumbnails];
     [self updateThumbnailSelection];
     if (overviewView) {
-        if (RUNNING_BEFORE(10_11))
-            [overviewView setContent:newThumbnails];
-        else
-            [overviewView reloadData];
+        [overviewView reloadData];
         [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
         [self updateOverviewItemSize];
     }

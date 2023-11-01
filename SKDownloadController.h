@@ -39,7 +39,6 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 #import "SKTableView.h"
-#import "NSTouchBar_SKForwardDeclarations.h"
 
 
 @class SKDownload;

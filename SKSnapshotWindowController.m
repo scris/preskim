@@ -114,8 +114,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
 }
 
 - (void)windowDidLoad {
-    if ([NSWindow instancesRespondToSelector:@selector(setTabbingMode:)])
-        [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
+    [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
     [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
     [self updateWindowLevel];
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:@[SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey] context:&SKSnaphotWindowDefaultsObservationContext];
@@ -223,9 +222,6 @@ static char SKSnaphotWindowDefaultsObservationContext;
     if ([[self delegate] respondsToSelector:@selector(snapshotControllerWillClose:)])
         [[self delegate] snapshotControllerWillClose:self];
     [self setDelegate:nil];
-    // Yosemite and El Capitan have a retain cycle when we leave the PDFView with a document
-    if (RUNNING_BEFORE(10_12))
-        [pdfView setDocument:nil];
 }
 
 - (void)windowDidMove:(NSNotification *)notification {

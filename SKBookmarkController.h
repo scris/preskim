@@ -39,7 +39,6 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 #import "SKOutlineView.h"
-#import "NSTouchBar_SKForwardDeclarations.h"
 
 @class SKBookmark, SKStatusBar;
 

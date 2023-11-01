@@ -92,9 +92,9 @@
 #pragma mark Touch Bar
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
+    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
     [touchBar setDelegate:self];
-    [touchBar setDefaultItemIdentifiers:@[@"NSTouchBarItemIdentifierFlexibleSpace", SKTouchBarItemIdentifierDone, @"NSTouchBarItemIdentifierFixedSpaceLarge"]];
+    [touchBar setDefaultItemIdentifiers:@[NSTouchBarItemIdentifierFlexibleSpace, SKTouchBarItemIdentifierDone, NSTouchBarItemIdentifierFixedSpaceLarge]];
     return touchBar;
 }
 
@@ -103,7 +103,7 @@
     if ([identifier isEqualToString:SKTouchBarItemIdentifierDone]) {
         NSButton *button = [NSButton buttonWithTitle:[doneButton title] target:[doneButton target] action:[doneButton action]];
         [doneButton setKeyEquivalent:@"\r"];
-        item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
         [(NSCustomTouchBarItem *)item setView:button];
     }
     return item;

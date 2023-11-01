@@ -291,15 +291,6 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
 }
 
 - (id)initVectorWithSize:(NSSize)size drawingHandler:(void (^)(NSRect dstRect))drawingHandler {
-    if (RUNNING_BEFORE(10_11)) {
-        self = [self initWithSize:size];
-        if (self) {
-            [self lockFocus];
-            if (drawingHandler) drawingHandler((NSRect){NSZeroPoint, size});
-            [self unlockFocus];
-            return self;
-        }
-    }
     return [self initPDFWithSize:size drawingHandler:drawingHandler];
 }
 
@@ -315,19 +306,13 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     CGColorSpaceRelease(colorspace);
     CGFunctionRelease(function);
     NSImage *image = [[[NSImage alloc] initWithSize:NSMakeSize(24.0, 24.0)] autorelease];;
-    if (RUNNING_BEFORE(10_11)) {
-        [image lockFocus];
+    NSSize size = NSMakeSize(24.0, 24.0);
+    CGFloat scale;
+    void (^drawingHandler)(NSRect) = ^(NSRect rect){
         CGContextDrawShading([[NSGraphicsContext currentContext] CGContext], shading);
-        [image unlockFocus];
-    } else {
-        NSSize size = NSMakeSize(24.0, 24.0);
-        CGFloat scale;
-        void (^drawingHandler)(NSRect) = ^(NSRect rect){
-            CGContextDrawShading([[NSGraphicsContext currentContext] CGContext], shading);
-        };
-        for (scale = 1.0; scale <= 8.0; scale *= 2.0)
-            [image addRepresentation:[NSBitmapImageRep imageRepWithSize:size scale:scale drawingHandler:drawingHandler]];
-    }
+    };
+    for (scale = 1.0; scale <= 8.0; scale *= 2.0)
+        [image addRepresentation:[NSBitmapImageRep imageRepWithSize:size scale:scale drawingHandler:drawingHandler]];
     CGShadingRelease(shading);
     return image;
 }
@@ -1627,8 +1612,6 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
 + (void)makeCursorImages {
     
     MAKE_VECTOR_IMAGE(SKImageNameResizeDiagonal45Cursor, NO, 16.0, 16.0,
-        if (RUNNING_BEFORE(10_11))
-            [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
         [[NSGraphicsContext currentContext] setShouldAntialias:NO];
         [[NSColor whiteColor] setFill];
         NSBezierPath *path = [NSBezierPath bezierPath];
@@ -1652,8 +1635,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path lineToPoint:NSMakePoint(2.0, 9.5)];
         [path closePath];
         [NSGraphicsContext saveGraphicsState];
-        if (RUNNING_AFTER(10_11))
-            [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
+        [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
         [path fill];
         [NSGraphicsContext restoreGraphicsState];
         [[NSColor blackColor] setFill];
@@ -1678,12 +1660,9 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path lineToPoint:NSMakePoint(3.0, 7.0)];
         [path closePath];
         [path fill];
-        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
     );
     
     MAKE_VECTOR_IMAGE(SKImageNameResizeDiagonal135Cursor, NO, 16.0, 16.0,
-        if (RUNNING_BEFORE(10_11))
-            [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
         [[NSGraphicsContext currentContext] setShouldAntialias:NO];
         [[NSColor whiteColor] setFill];
         NSBezierPath *path = [NSBezierPath bezierPath];
@@ -1707,8 +1686,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path lineToPoint:NSMakePoint(6.5, 2.0)];
         [path closePath];
         [NSGraphicsContext saveGraphicsState];
-        if (RUNNING_AFTER(10_11))
-            [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
+        [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
         [path fill];
         [NSGraphicsContext restoreGraphicsState];
         [[NSColor blackColor] setFill];
@@ -1733,7 +1711,6 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path lineToPoint:NSMakePoint(9.0, 3.0)];
         [path closePath];
         [path fill];
-        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
     );
     
     MAKE_VECTOR_IMAGE(SKImageNameZoomInCursor, NO, 18.0, 18.0,
@@ -1745,8 +1722,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path lineToPoint:NSMakePoint(9.5, 6.5)];
         [path closePath];
         [NSGraphicsContext saveGraphicsState];
-        if (RUNNING_AFTER(10_11))
-            [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
+        [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
         [path fill];
         [NSGraphicsContext restoreGraphicsState];
         [[NSColor blackColor] setStroke];
@@ -1776,8 +1752,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path lineToPoint:NSMakePoint(9.5, 6.5)];
         [path closePath];
         [NSGraphicsContext saveGraphicsState];
-        if (RUNNING_AFTER(10_11))
-            [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
+        [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
         [path fill];
         [NSGraphicsContext restoreGraphicsState];
         [[NSColor blackColor] setStroke];
@@ -1797,14 +1772,11 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     );
     
     MAKE_VECTOR_IMAGE(SKImageNameCameraCursor, NO, 18.0, 16.0,
-        if (RUNNING_BEFORE(10_11))
-            [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
         [[NSColor whiteColor] set];
         NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(1.0, 2.0, 16.0, 11.0)];
         [path appendBezierPathWithOvalInRect:NSMakeRect(4.7, 6.7, 8.6, 8.6)];
         [NSGraphicsContext saveGraphicsState];
-        if (RUNNING_AFTER(10_11))
-            [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
+        [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
         [path fill];
         [NSGraphicsContext restoreGraphicsState];
         [[NSColor blackColor] set];
@@ -1817,7 +1789,6 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path appendBezierPathWithArcWithCenter:NSMakePoint(9.0, 8.0) radius:1.8 startAngle:45.0 endAngle:225.0];
         [path closePath];
         [path fill];
-        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
     );
     
     NSSize size = [[[NSCursor openHandCursor] image] size];
@@ -1827,8 +1798,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     MAKE_VECTOR_IMAGE(SKImageNameOpenHandBarCursor, NO, 32.0, 32.0,
         [[NSColor blackColor] setFill];
         [NSGraphicsContext saveGraphicsState];
-        if (RUNNING_AFTER(10_11))
-            [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
+        [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
         [NSBezierPath fillRect:NSMakeRect(2.0, 14.0, 28.0, 4.0)];
         [NSGraphicsContext restoreGraphicsState];
         [[[NSCursor openHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
@@ -1837,8 +1807,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     MAKE_VECTOR_IMAGE(SKImageNameClosedHandBarCursor, NO, 32.0, 32.0,
         [[NSColor blackColor] setFill];
         [NSGraphicsContext saveGraphicsState];
-        if (RUNNING_AFTER(10_11))
-            [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
+        [NSShadow setShadowWithWhite:0.0 alpha:0.33333 blurRadius:1.0 yOffset:-1.0];
         [NSBezierPath fillRect:NSMakeRect(2.0, 14.0, 28.0, 4.0)];
         [NSGraphicsContext restoreGraphicsState];
         [[[NSCursor closedHandCursor] image] drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
@@ -1962,8 +1931,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     [self makeNoteImages];
     [self makeToolbarImages];
     [self makeColoredToolbarImages];
-    if (RUNNING_AFTER(10_11))
-        [self makeTouchBarImages];
+    [self makeTouchBarImages];
     [self makeAdornImages];
     [self makeTextAlignImages];
     [self makeCursorImages];

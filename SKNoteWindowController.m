@@ -190,8 +190,7 @@ static NSURL *temporaryDirectoryURL = nil;
     [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
     [[self window] setContentBorderThickness:NSHeight([statusBar frame]) forEdge:NSMinYEdge];
     
-    if ([NSWindow instancesRespondToSelector:@selector(setTabbingMode:)])
-        [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
+    [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
     
     [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
     

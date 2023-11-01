@@ -88,12 +88,6 @@ static BOOL collapseSidePanesInFullScreen = NO;
 
 static CGFloat fullScreenToolbarOffset = 0.0;
 
-#if SDK_BEFORE(10_12)
-@interface NSWorkSpace (BDSKSierraDeclarations)
-- (void)accessibilityDisplayShouldReduceMotion;
-@end
-#endif
-
 #if SDK_BEFORE(10_14)
 @interface PDFView (SKMojaveDeclarations)
 - (void)enablePageShadows:(BOOL)flag;
@@ -408,7 +402,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
         return;
     }
     
-    if ([[self window] respondsToSelector:@selector(moveTabToNewWindow:)] && [[[self window] tabbedWindows] count] > 1)
+    if ([[[self window] tabbedWindows] count] > 1)
         [[self window] moveTabToNewWindow:nil];
     
     PDFPage *page = [[self pdfView] currentPage];
@@ -588,8 +582,6 @@ static inline CGFloat fullScreenOffset(NSWindow *window) {
         offset = fullScreenToolbarOffset;
     else if (RUNNING_AFTER(10_15))
         offset = 16.0;
-    else if (RUNNING_BEFORE(10_11))
-        offset = 13.0;
     return offset;
 }
 
@@ -632,10 +624,7 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
 
 - (NSArray *)customWindowsToEnterFullScreenForWindow:(NSWindow *)window {
     NSArray *windows = [[[self document] windowControllers] valueForKey:WINDOW_KEY];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if (RUNNING_AFTER(10_12) && [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldReduceMotion]) {
-#pragma clang diagnostic pop
+    if ([[NSWorkspace sharedWorkspace] accessibilityDisplayShouldReduceMotion]) {
         animationWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[window frame]];
         windows = [windows arrayByAddingObject:animationWindow];
     }
@@ -730,10 +719,7 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
 
 - (NSArray *)customWindowsToExitFullScreenForWindow:(NSWindow *)window {
     NSArray *windows = [[[self document] windowControllers] valueForKey:WINDOW_KEY];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if (RUNNING_AFTER(10_12) && [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldReduceMotion]) {
-#pragma clang diagnostic pop
+    if ([[NSWorkspace sharedWorkspace] accessibilityDisplayShouldReduceMotion]) {
         animationWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[window frame]];
         windows = [windows arrayByAddingObject:animationWindow];
     }

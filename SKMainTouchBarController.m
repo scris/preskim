@@ -115,10 +115,10 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
 }
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
+    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
     [touchBar setCustomizationIdentifier:SKDocumentTouchBarIdentifier];
     [touchBar setDelegate:self];
-    [touchBar setCustomizationAllowedItemIdentifiers:@[SKTouchBarItemIdentifierNavigation, SKTouchBarItemIdentifierNavigationFull, SKTouchBarItemIdentifierZoom, SKTouchBarItemIdentifierToolMode, SKTouchBarItemIdentifierAddNote, SKTouchBarItemIdentifierFullScreen, SKTouchBarItemIdentifierPresentation, SKTouchBarItemIdentifierFavoriteColors, SKTouchBarItemIdentifierColors, @"NSTouchBarItemIdentifierFlexibleSpace"]];
+    [touchBar setCustomizationAllowedItemIdentifiers:@[SKTouchBarItemIdentifierNavigation, SKTouchBarItemIdentifierNavigationFull, SKTouchBarItemIdentifierZoom, SKTouchBarItemIdentifierToolMode, SKTouchBarItemIdentifierAddNote, SKTouchBarItemIdentifierFullScreen, SKTouchBarItemIdentifierPresentation, SKTouchBarItemIdentifierFavoriteColors, SKTouchBarItemIdentifierColors, NSTouchBarItemIdentifierFlexibleSpace]];
     [touchBar setDefaultItemIdentifiers:@[SKTouchBarItemIdentifierNavigation, SKTouchBarItemIdentifierToolMode, SKTouchBarItemIdentifierAddNote, SKTouchBarItemIdentifierFavoriteColors]];
     return touchBar;
 }
@@ -133,14 +133,11 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
             
             if (previousNextPageButton == nil) {
                 NSArray *images = @[[NSImage imageNamed:SKImageNameTouchBarPageUp], [NSImage imageNamed:SKImageNameTouchBarPageDown]];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
                 previousNextPageButton = [[NSSegmentedControl segmentedControlWithImages:images trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(goToPreviousNextPage:)] retain];
-#pragma clang diagnostic pop
                 [self handlePageChangedNotification:nil];
                 [previousNextPageButton setSegmentStyle:NSSegmentStyleSeparated];
             }
-            item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
             [(NSCustomTouchBarItem *)item setView:previousNextPageButton];
             [(NSCustomTouchBarItem *)item setCustomizationLabel:NSLocalizedString(@"Previous/Next", @"Toolbar item label")];
             
@@ -148,14 +145,11 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
             
             if (previousNextFirstLastPageButton == nil) {
                 NSArray *images = @[[NSImage imageNamed:SKImageNameTouchBarFirstPage], [NSImage imageNamed:SKImageNameTouchBarPageUp], [NSImage imageNamed:SKImageNameTouchBarPageDown], [NSImage imageNamed:SKImageNameTouchBarLastPage]];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
                 previousNextFirstLastPageButton = [[NSSegmentedControl segmentedControlWithImages:images trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(goToPreviousNextPage:)] retain];
-#pragma clang diagnostic pop
                 [self handlePageChangedNotification:nil];
                 [previousNextFirstLastPageButton setSegmentStyle:NSSegmentStyleSeparated];
             }
-            item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
             [(NSCustomTouchBarItem *)item setView:previousNextFirstLastPageButton];
             [(NSCustomTouchBarItem *)item setCustomizationLabel:NSLocalizedString(@"Previous/Next", @"Toolbar item label")];
             
@@ -163,21 +157,18 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
             
             if (zoomInActualOutButton == nil) {
                 NSArray *images = @[[NSImage imageNamed:SKImageNameTouchBarZoomOut], [NSImage imageNamed:SKImageNameTouchBarZoomActual], [NSImage imageNamed:SKImageNameTouchBarZoomIn]];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
                 zoomInActualOutButton = [[NSSegmentedControl segmentedControlWithImages:images trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(zoomInActualOut:)] retain];
-#pragma clang diagnostic pop
                 [zoomInActualOutButton setSegmentStyle:NSSegmentStyleSeparated];
                 [self handleScaleChangedNotification:nil];
                 [self overviewChanged];
             }
-            item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
             [(NSCustomTouchBarItem *)item setView:zoomInActualOutButton];
             [(NSCustomTouchBarItem *)item setCustomizationLabel:NSLocalizedString(@"Zoom", @"Toolbar item label")];
             
         } else if ([identifier isEqualToString:SKTouchBarItemIdentifierToolMode]) {
             
-            NSTouchBar *popoverTouchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
+            NSTouchBar *popoverTouchBar = [[[NSTouchBar alloc] init] autorelease];
             [popoverTouchBar setDelegate:self];
             [popoverTouchBar setDefaultItemIdentifiers:@[SKTouchBarItemIdentifierAnnotationMode]];
             if (toolModeButton == nil) {
@@ -186,15 +177,12 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
                                    [NSImage imageNamed:SKImageNameTouchBarMagnifyTool],
                                    [NSImage imageNamed:SKImageNameTouchBarSelectTool],
                                    [NSImage imageNamed:SKImageNameTouchBarTextNotePopover]];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
                 toolModeButton = [[NSSegmentedControl segmentedControlWithImages:images trackingMode:NSSegmentSwitchTrackingSelectOne target:self action:@selector(changeToolMode:)] retain];
-#pragma clang diagnostic pop
                 [self handleToolModeChangedNotification:nil];
                 [self handleAnnotationModeChangedNotification:nil];
                 [self interactionModeChanged];
             }
-            item = [[[NSClassFromString(@"NSPopoverTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+            item = [[[NSPopoverTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
             [(NSPopoverTouchBarItem *)item setCollapsedRepresentation:toolModeButton];
             [(NSPopoverTouchBarItem *)item setPopoverTouchBar:popoverTouchBar];
             [(NSPopoverTouchBarItem *)item setPressAndHoldTouchBar:popoverTouchBar];
@@ -213,21 +201,18 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
                                    [NSImage imageNamed:SKImageNameTouchBarStrikeOutNote],
                                    [NSImage imageNamed:SKImageNameTouchBarLineNote],
                                    [NSImage imageNamed:SKImageNameTouchBarInkNote]];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
                 annotationModeButton = [[NSSegmentedControl segmentedControlWithImages:images trackingMode:NSSegmentSwitchTrackingSelectOne target:self action:@selector(changeAnnotationMode:)] retain];
-#pragma clang diagnostic pop
                 [self handleAnnotationModeChangedNotification:nil];
                 [self interactionModeChanged];
             }
-            item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
             [(NSCustomTouchBarItem *)item setView:annotationModeButton];
         } else if ([identifier isEqualToString:SKTouchBarItemIdentifierAddNote]) {
-            NSTouchBar *popoverTouchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
+            NSTouchBar *popoverTouchBar = [[[NSTouchBar alloc] init] autorelease];
             [popoverTouchBar setDelegate:self];
             [popoverTouchBar setDefaultItemIdentifiers:@[SKTouchBarItemIdentifierAddNoteTypes]];
-            item = [[[NSClassFromString(@"NSPopoverTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
-            [(NSPopoverTouchBarItem *)item setCollapsedRepresentationImage:[NSImage imageNamed:@"NSTouchBarAddTemplate"]];
+            item = [[[NSPopoverTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+            [(NSPopoverTouchBarItem *)item setCollapsedRepresentationImage:[NSImage imageNamed:NSImageNameTouchBarAddTemplate]];
             [(NSPopoverTouchBarItem *)item setPopoverTouchBar:popoverTouchBar];
             [(NSPopoverTouchBarItem *)item setCustomizationLabel:NSLocalizedString(@"Add Note", @"Toolbar item label")];
             
@@ -243,38 +228,29 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
                                    [NSImage imageNamed:SKImageNameTouchBarAddStrikeOutNote],
                                    [NSImage imageNamed:SKImageNameTouchBarAddLineNote],
                                    [NSImage imageNamed:SKImageNameTouchBarAddInkNote]];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
                 noteButton = [[NSSegmentedControl segmentedControlWithImages:images trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(createNewNote:)] retain];
-#pragma clang diagnostic pop
                 [self handleToolModeChangedNotification:nil];
                 [self interactionModeChanged];
             }
-            item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
             [(NSCustomTouchBarItem *)item setView:noteButton];
             
         } else if ([identifier isEqualToString:SKTouchBarItemIdentifierFullScreen]) {
             
             if (fullScreenButton == nil) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-                fullScreenButton = [[NSSegmentedControl segmentedControlWithImages:@[[NSImage imageNamed:@"NSTouchBarEnterFullScreenTemplate"]] trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(toggleFullscreen:)] retain];
-#pragma clang diagnostic pop
+                fullScreenButton = [[NSSegmentedControl segmentedControlWithImages:@[[NSImage imageNamed:NSImageNameTouchBarEnterFullScreenTemplate]] trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(toggleFullscreen:)] retain];
                 [self interactionModeChanged];
             }
-            item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
             [(NSCustomTouchBarItem *)item setView:fullScreenButton];
             [(NSCustomTouchBarItem *)item setCustomizationLabel:NSLocalizedString(@"Full Screen", @"Toolbar item label")];
             
         } else if ([identifier isEqualToString:SKTouchBarItemIdentifierPresentation]) {
             
             if (presentationButton == nil) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-                presentationButton = [[NSSegmentedControl segmentedControlWithImages:@[[NSImage imageNamed:@"NSTouchBarSlideshowTemplate"]] trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(togglePresentation:)] retain];
-#pragma clang diagnostic pop
+                presentationButton = [[NSSegmentedControl segmentedControlWithImages:@[[NSImage imageNamed:NSImageNameTouchBarSlideshowTemplate]] trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(togglePresentation:)] retain];
             }
-            item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
             [(NSCustomTouchBarItem *)item setView:presentationButton];
             [(NSCustomTouchBarItem *)item setCustomizationLabel:NSLocalizedString(@"Presentation", @"Toolbar item label")];
             
@@ -284,13 +260,13 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
                 colorPicker = [[SKColorPicker alloc] init];
                 [colorPicker setDelegate:self];
             }
-            item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
             [(NSCustomTouchBarItem *)item setViewController:colorPicker];
             [(NSCustomTouchBarItem *)item setCustomizationLabel:NSLocalizedString(@"Favorite Colors", @"Toolbar item label")];
             
         } else if ([identifier isEqualToString:SKTouchBarItemIdentifierColors]) {
             
-            item = [[[NSClassFromString(@"NSColorPickerTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+            item = [[[NSColorPickerTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
             [(NSColorPickerTouchBarItem *)item setColorList:[SKColorList favoriteColorList]];
             [(NSColorPickerTouchBarItem *)item setAction:@selector(chooseColor:)];
             [(NSColorPickerTouchBarItem *)item setTarget:self];

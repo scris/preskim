@@ -102,12 +102,7 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 - (NSColor *)fallback_interiorColor { return nil; }
 
 - (NSString *)fallback_fieldName {
-    if ([[self type] isEqualToString:SKNWidgetString] && [self respondsToSelector:@selector(valueForAnnotationKey:)])
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        return [self valueForAnnotationKey:@"/T"];
-#pragma clang diagnostic pop
-    return nil;
+    return [self valueForAnnotationKey:@"/T"];
 }
 
 + (void)load {
@@ -449,42 +444,20 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 - (PDFSelection *)selection { return nil; }
 
 - (id)objectValue {
-    if ([[self type] isEqualToString:SKNWidgetString]) {
-        if ([self widgetType] == kSKNPDFWidgetTypeButton) {
-            if ([self respondsToSelector:@selector(buttonWidgetState)])
-                return [NSNumber numberWithInteger:[self buttonWidgetState]];
-            else if ([self respondsToSelector:@selector(valueForAnnotationKey:)])
-                return [NSNumber numberWithInteger:[[self valueForAnnotationKey:@"/V"] isEqual:@"Off"] ? 0 : 1];
-        } else {
-            if ([self respondsToSelector:@selector(widgetStringValue)])
-                return [self widgetStringValue];
-            else if ([self respondsToSelector:@selector(valueForAnnotationKey:)])
-                return [self valueForAnnotationKey:@"/V"];
-        }
-        return nil;
-    } else {
+    if ([[self type] isEqualToString:SKNWidgetString] == NO)
         return [self string];
-    }
+    else if ([self widgetType] == kSKNPDFWidgetTypeButton)
+        return [NSNumber numberWithInteger:[self buttonWidgetState]];
+    else
+        return [self widgetStringValue];
 }
 
 - (void)setObjectValue:(id)newObjectValue {
     if ([[self type] isEqualToString:SKNWidgetString]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        if ([self widgetType] == kSKNPDFWidgetTypeButton) {
-            if ([self respondsToSelector:@selector(setButtonWidgetState:)])
-                [self setButtonWidgetState:[newObjectValue integerValue]];
-            else if ([self respondsToSelector:@selector(setValue:forAnnotationKey:)])
-                [self setValue:[newObjectValue integerValue] == 0 ? @"Off" : @"Yes" forAnnotationKey:@"/V"];
-        } else {
-            if ([self respondsToSelector:@selector(setWidgetStringValue:)])
-                [self setWidgetStringValue:newObjectValue];
-            else if ([newObjectValue isKindOfClass:[NSString class]] && [self respondsToSelector:@selector(setValue:forAnnotationKey:)])
-                [self setValue:newObjectValue forAnnotationKey:@"/V"];
-            else if ([self respondsToSelector:@selector(removeValueForAnnotationKey:)])
-                [self removeValueForAnnotationKey:@"/V"];
-        }
-#pragma clang diagnostic pop
+        if ([self widgetType] == kSKNPDFWidgetTypeButton)
+            [self setButtonWidgetState:[newObjectValue integerValue]];
+        else
+            [self setWidgetStringValue:newObjectValue];
     } else if ([newObjectValue isKindOfClass:[NSString class]]) {
         [self setString:newObjectValue];
     }
@@ -492,18 +465,13 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 - (SKNPDFWidgetType)widgetType {
     if ([[self type] isEqualToString:SKNWidgetString]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        if ([self respondsToSelector:@selector(valueForAnnotationKey:)]) {
-            NSString *ft = [self valueForAnnotationKey:@"/FT"];
-            if ([ft isEqualToString:@"/Tx"])
-                return kSKNPDFWidgetTypeText;
-            else if ([ft isEqualToString:@"/Btn"])
-                return kSKNPDFWidgetTypeButton;
-            else if ([ft isEqualToString:@"/Ch"])
-                return kSKNPDFWidgetTypeChoice;
-        }
-#pragma clang diagnostic pop
+        NSString *ft = [self valueForAnnotationKey:@"/FT"];
+        if ([ft isEqualToString:@"/Tx"])
+            return kSKNPDFWidgetTypeText;
+        else if ([ft isEqualToString:@"/Btn"])
+            return kSKNPDFWidgetTypeButton;
+        else if ([ft isEqualToString:@"/Ch"])
+            return kSKNPDFWidgetTypeChoice;
     }
     return kSKNPDFWidgetTypeUnknown;
 }

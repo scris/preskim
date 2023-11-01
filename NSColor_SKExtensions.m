@@ -44,11 +44,6 @@
 
 @implementation NSColor (SKExtensions)
 
-+ (void)load {
-    SKAddClassMethodImplementationFromSelector(self, @selector(separatorColor), @selector(gridColor));
-    SKAddClassMethodImplementationFromSelector(self, @selector(findHighlightColor), @selector(yellowColor));
-}
-
 #pragma mark Note Highlight Colors
 
 static NSColor *activeSelectionHighlightColor = nil;

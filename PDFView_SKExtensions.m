@@ -53,22 +53,6 @@
 #import "NSResponder_SKExtensions.h"
 
 
-#if SDK_BEFORE(10_13)
-
-typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
-    kPDFDisplayDirectionVertical = 0,
-    kPDFDisplayDirectionHorizontal = 1,
-};
-
-@interface PDFView (SKHighSierraDeclarations)
-- (CGFloat)minScaleFactor;
-- (CGFloat)maxScaleFactor;
-@property (nonatomic) PDFDisplayDirection displayDirection;
-@property (nonatomic) NSEdgeInsets pageBreakMargins;
-@end
-
-#endif
-
 @interface PDFView (SKPrivatePageViewDeclarations)
 - (id)pageViewForPageAtIndex:(NSUInteger)index;
 @end
@@ -83,7 +67,7 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 
 @implementation PDFView (SKExtensions)
 
-@dynamic physicalScaleFactor, scrollView, displayedPages, minimumScaleFactor, maximumScaleFactor, visibleContentRect, drawsActiveSelections;
+@dynamic physicalScaleFactor, scrollView, displayedPages, visibleContentRect, drawsActiveSelections;
 
 static inline CGFloat physicalScaleFactorForView(NSView *view) {
     NSScreen *screen = [[view window] screen];
@@ -121,13 +105,10 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 
 - (void)setNeedsDisplayInRect:(NSRect)rect ofPage:(PDFPage *)page {
     if ([self isPageAtIndexDisplayed:[page pageIndex]]) {
-        // for some versions we need to dirty the documentView, otherwise it won't redisplay when scrolled out of view,
-        // for 10.12 dirtying the documentView dioes not do anything
-        NSView *view = RUNNING_BEFORE(10_12) ? [self documentView] : self;
         rect = NSIntegralRect([self convertRect:NSInsetRect(rect, -1.0, -1.0) fromPage:page]);
-        rect = NSIntersectionRect([view bounds], [self convertRect:rect toView:view]);
+        rect = NSIntersectionRect([self bounds], [self convertRect:rect toView:self]);
         if (NSIsEmptyRect(rect) == NO)
-            [view setNeedsDisplayInRect:rect];
+            [self setNeedsDisplayInRect:rect];
     }
 }
 
@@ -144,8 +125,7 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 }
 
 - (void)requiresDisplay {
-    NSView *view = RUNNING_BEFORE(10_12) ? [self documentView] : self;
-    [view setNeedsDisplay:YES];
+    [self setNeedsDisplay:YES];
 }
 
 - (void)setNeedsDisplayForAddedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
@@ -303,15 +283,6 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     return displayedPages;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-
-- (CGFloat)minimumScaleFactor {
-    if ([self respondsToSelector:@selector(minScaleFactor)])
-        return [self minScaleFactor];
-    return 0.1;
-}
-
 - (NSRect)visibleContentRect {
     NSScrollView *scrollView = [self scrollView];
     NSView *clipView = [scrollView contentView];
@@ -323,55 +294,38 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 - (NSRect)layoutBoundsForPage:(PDFPage *)page {
     NSRect pageRect = [page boundsForBox:[self displayBox]];
     if ([self displaysPageBreaks]) {
-        if (RUNNING_BEFORE(10_13)) {
-            pageRect = NSInsetRect(pageRect, -PAGE_BREAK_MARGIN, -PAGE_BREAK_MARGIN);
-        } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-            NSEdgeInsets margins = [self pageBreakMargins];
-#pragma clang diagnostic pop
-            switch ([page rotation]) {
-                case 0:
-                    pageRect = NSInsetRect(pageRect, -margins.left, -margins.bottom);
-                    pageRect.size.width += margins.right - margins.left;
-                    pageRect.size.height += margins.top - margins.bottom;
-                    break;
-                case 90:
-                    pageRect = NSInsetRect(pageRect, -margins.top, -margins.left);
-                    pageRect.size.width += margins.bottom - margins.top;
-                    pageRect.size.height += margins.right - margins.left;
-                    break;
-                case 180:
-                    pageRect = NSInsetRect(pageRect, -margins.right, -margins.top);
-                    pageRect.size.width += margins.left - margins.right;
-                    pageRect.size.height += margins.bottom - margins.top;
-                    break;
-                case 270:
-                    pageRect = NSInsetRect(pageRect, -margins.bottom, -margins.right);
-                    pageRect.size.width += margins.top - margins.bottom;
-                    pageRect.size.height += margins.left - margins.right;
-                    break;
-            }
+        NSEdgeInsets margins = [self pageBreakMargins];
+        switch ([page rotation]) {
+            case 0:
+                pageRect = NSInsetRect(pageRect, -margins.left, -margins.bottom);
+                pageRect.size.width += margins.right - margins.left;
+                pageRect.size.height += margins.top - margins.bottom;
+                break;
+            case 90:
+                pageRect = NSInsetRect(pageRect, -margins.top, -margins.left);
+                pageRect.size.width += margins.bottom - margins.top;
+                pageRect.size.height += margins.right - margins.left;
+                break;
+            case 180:
+                pageRect = NSInsetRect(pageRect, -margins.right, -margins.top);
+                pageRect.size.width += margins.left - margins.right;
+                pageRect.size.height += margins.bottom - margins.top;
+                break;
+            case 270:
+                pageRect = NSInsetRect(pageRect, -margins.bottom, -margins.right);
+                pageRect.size.width += margins.top - margins.bottom;
+                pageRect.size.height += margins.left - margins.right;
+                break;
         }
     }
     return pageRect;
 }
 
-- (CGFloat)maximumScaleFactor {
-    if ([self respondsToSelector:@selector(maxScaleFactor)])
-        return [self maxScaleFactor];
-    return 20.0;
-}
-
-#pragma clang diagnostic pop
-
 - (BOOL)drawsActiveSelections {
     if (RUNNING_AFTER(10_14))
         return [[self window] isKeyWindow];
-    else if (RUNNING_AFTER(10_11))
-        return YES;
     else
-        return ([[self window] isKeyWindow] && [[[self window] firstResponder] isDescendantOf:self]);
+        return YES;
 }
 
 static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *darkBackgroundColorKey) {

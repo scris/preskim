@@ -332,8 +332,8 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [item setViewWithSizes:scaleField];
             [item setMenuFormRepresentation:menuItem];
             
-            [(NSNumberFormatter *)[scaleField formatter] setMinimum:[NSNumber numberWithDouble:[mainController.pdfView minimumScaleFactor]]];
-            [(NSNumberFormatter *)[scaleField formatter] setMaximum:[NSNumber numberWithDouble:[mainController.pdfView maximumScaleFactor]]];
+            [(NSNumberFormatter *)[scaleField formatter] setMinimum:[NSNumber numberWithDouble:[mainController.pdfView minScaleFactor]]];
+            [(NSNumberFormatter *)[scaleField formatter] setMaximum:[NSNumber numberWithDouble:[mainController.pdfView maxScaleFactor]]];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarZoomActualItemIdentifier]) {
             
@@ -650,9 +650,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [displayModeButton setHelp:NSLocalizedString(@"Two Pages Continuous", @"Tool tip message") forSegment:kPDFDisplayTwoUpContinuous];
             [displayModeButton setHelp:NSLocalizedString(@"Horizontal Continuous", @"Tool tip message") forSegment:4];
             
-            if (RUNNING_BEFORE(10_13))
-                [displayModeButton setSegmentCount:4];
-            
             [item setViewWithSizes:displayModeButton];
             [item setMenuFormRepresentation:menuItem];
             
@@ -918,53 +915,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
-    if (RUNNING_BEFORE(10_13))
-        return @[SKDocumentToolbarPreviousNextItemIdentifier,
-            SKDocumentToolbarPreviousNextFirstLastItemIdentifier,
-            SKDocumentToolbarPreviousItemIdentifier,
-            SKDocumentToolbarPageNumberItemIdentifier,
-            SKDocumentToolbarNextItemIdentifier,
-            SKDocumentToolbarBackForwardItemIdentifier,
-            SKDocumentToolbarZoomInActualOutItemIdentifier,
-            SKDocumentToolbarZoomInOutItemIdentifier,
-            SKDocumentToolbarZoomActualItemIdentifier,
-            SKDocumentToolbarZoomToFitItemIdentifier,
-            SKDocumentToolbarZoomToSelectionItemIdentifier,
-            SKDocumentToolbarAutoScalesItemIdentifier,
-            SKDocumentToolbarScaleItemIdentifier,
-            SKDocumentToolbarDisplayModeItemIdentifier,
-            SKDocumentToolbarSingleTwoUpItemIdentifier,
-            SKDocumentToolbarContinuousItemIdentifier,
-            SKDocumentToolbarBookModeItemIdentifier,
-            SKDocumentToolbarPageBreaksItemIdentifier,
-            SKDocumentToolbarDisplayBoxItemIdentifier,
-            SKDocumentToolbarFullScreenItemIdentifier,
-            SKDocumentToolbarPresentationItemIdentifier,
-            SKDocumentToolbarContentsPaneItemIdentifier,
-            SKDocumentToolbarNotesPaneItemIdentifier,
-            SKDocumentToolbarSplitPDFItemIdentifier,
-            SKDocumentToolbarRotateRightItemIdentifier,
-            SKDocumentToolbarRotateLeftItemIdentifier,
-            SKDocumentToolbarRotateLeftRightItemIdentifier,
-            SKDocumentToolbarCropItemIdentifier,
-            SKDocumentToolbarNewNoteItemIdentifier,
-            SKDocumentToolbarNewTextNoteItemIdentifier,
-            SKDocumentToolbarNewCircleNoteItemIdentifier,
-            SKDocumentToolbarNewMarkupItemIdentifier,
-            SKDocumentToolbarNewLineItemIdentifier,
-            SKDocumentToolbarToolModeItemIdentifier,
-            SKDocumentToolbarColorSwatchItemIdentifier,
-            SKDocumentToolbarShareItemIdentifier,
-            SKDocumentToolbarPacerItemIdentifier,
-            SKDocumentToolbarInfoItemIdentifier,
-            SKDocumentToolbarColorsItemIdentifier,
-            SKDocumentToolbarFontsItemIdentifier,
-            SKDocumentToolbarLinesItemIdentifier,
-            SKDocumentToolbarPrintItemIdentifier,
-            NSToolbarFlexibleSpaceItemIdentifier,
-            NSToolbarSpaceItemIdentifier,
-            NSToolbarSeparatorItemIdentifier,
-            SKDocumentToolbarCustomizeItemIdentifier];
     return @[SKDocumentToolbarPreviousNextItemIdentifier,
         SKDocumentToolbarPreviousNextFirstLastItemIdentifier,
         SKDocumentToolbarPreviousItemIdentifier,
@@ -1036,9 +986,9 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     } else if ([identifier isEqualToString:SKDocumentToolbarDisplayBoxItemIdentifier] || [identifier isEqualToString:SKDocumentToolbarDisplayModeItemIdentifier] || [identifier isEqualToString:SKDocumentToolbarSingleTwoUpItemIdentifier] || [identifier isEqualToString:SKDocumentToolbarContinuousItemIdentifier] || [identifier isEqualToString:SKDocumentToolbarPageBreaksItemIdentifier]) {
         return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarDisplayDirectionItemIdentifier]) {
-        return RUNNING_AFTER(10_12) && [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && [mainController.pdfView displayMode] == kPDFDisplaySinglePageContinuous;
+        return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO && [mainController.pdfView displayMode] == kPDFDisplaySinglePageContinuous;
     } else if ([identifier isEqualToString:SKDocumentToolbarDisplaysRTLItemIdentifier]) {
-        return RUNNING_AFTER(10_12) && [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO;
+        return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarBookModeItemIdentifier]) {
         return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO;
     } else if ([identifier isEqualToString:SKDocumentToolbarToolModeItemIdentifier]) {
@@ -1143,8 +1093,8 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 - (IBAction)chooseScale:(id)sender {
     SKTextFieldSheetController *scaleSheetController = [[[SKTextFieldSheetController alloc] initWithWindowNibName:@"ScaleSheet"] autorelease];
     
-    [(NSNumberFormatter *)[[scaleSheetController textField] formatter] setMinimum:[NSNumber numberWithDouble:[mainController.pdfView minimumScaleFactor]]];
-    [(NSNumberFormatter *)[[scaleSheetController textField] formatter] setMaximum:[NSNumber numberWithDouble:[mainController.pdfView maximumScaleFactor]]];
+    [(NSNumberFormatter *)[[scaleSheetController textField] formatter] setMinimum:[NSNumber numberWithDouble:[mainController.pdfView minScaleFactor]]];
+    [(NSNumberFormatter *)[[scaleSheetController textField] formatter] setMaximum:[NSNumber numberWithDouble:[mainController.pdfView maxScaleFactor]]];
     [[scaleSheetController textField] setDoubleValue:[mainController.pdfView scaleFactor]];
     
     [scaleSheetController beginSheetModalForWindow:[mainController window] completionHandler:^(NSInteger result) {

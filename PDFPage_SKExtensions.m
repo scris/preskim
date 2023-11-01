@@ -279,13 +279,8 @@ static BOOL usesSequentialPageNumbering = NO;
     NSData *data = nil;
     PDFPage *page = [self copy];
     
-    if (RUNNING(10_11)) {
-        // on 10.11 the media box is shifted back to the origin without the contents being shifted
-        [page setBounds:rect forBox:kPDFDisplayBoxCropBox];
-    } else {
-        [page setBounds:rect forBox:kPDFDisplayBoxMediaBox];
-        [page setBounds:NSZeroRect forBox:kPDFDisplayBoxCropBox];
-    }
+    [page setBounds:rect forBox:kPDFDisplayBoxMediaBox];
+    [page setBounds:NSZeroRect forBox:kPDFDisplayBoxCropBox];
     [page setBounds:NSZeroRect forBox:kPDFDisplayBoxBleedBox];
     [page setBounds:NSZeroRect forBox:kPDFDisplayBoxTrimBox];
     [page setBounds:NSZeroRect forBox:kPDFDisplayBoxArtBox];

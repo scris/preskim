@@ -191,25 +191,6 @@ enum {
 
 #pragma mark -
 
-#if SDK_BEFORE(10_12)
-@interface PDFView (SKSierraDeclarations)
-- (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context;
-@end
-#endif
-
-#if SDK_BEFORE(10_13)
-typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
-    kPDFDisplayDirectionVertical = 0,
-    kPDFDisplayDirectionHorizontal = 1,
-};
-@interface PDFView (SKHighSierraDeclarations)
-@property (nonatomic) PDFDisplayDirection displayDirection;
-@property (nonatomic) BOOL displaysRTL;
-@end
-#endif
-
-#pragma mark -
-
 @interface SKPDFView () <SKReadingBarDelegate, SKLayerDelegate>
 @property (retain) SKReadingBar *readingBar;
 @property (retain) SKSyncDot *syncDot;
@@ -461,10 +442,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 - (BOOL)drawsActiveSelections {
     if (RUNNING_AFTER(10_14))
         return atomic_load(&inKeyWindow);
-    else if (RUNNING_AFTER(10_11))
-        return YES;
     else
-        return (inKeyWindow && [[[self window] firstResponder] isDescendantOf:self]);
+        return YES;
 }
 
 - (CGFloat)unitWidthOnPage:(PDFPage *)page {
@@ -537,15 +516,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     // Let PDFView do most of the hard work.
     [super drawPage:pdfPage toContext:context];
     [self drawPageHighlights:pdfPage toContext:context];
-}
-
-- (void)drawPage:(PDFPage *)pdfPage {
-    // Let PDFView do most of the hard work.
-    [super drawPage:pdfPage];
-    if ([PDFView instancesRespondToSelector:@selector(drawPage:toContext:)] == NO) {
-        // on 10.12+ this should be called from drawPage:toContext:
-        [self drawPageHighlights:pdfPage toContext:[[NSGraphicsContext currentContext] CGContext]];
-    }
 }
 
 - (void)drawLayerController:(SKLayerController *)controller inContext:(CGContextRef)context {
@@ -800,13 +770,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (void)_setDisplaysHorizontally:(BOOL)flag {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if (RUNNING_AFTER(10_12) && flag != ([self displayDirection] == kPDFDisplayDirectionHorizontal)) {
+    if (flag != ([self displayDirection] == kPDFDisplayDirectionHorizontal)) {
         [super setDisplayDirection:flag ? kPDFDisplayDirectionHorizontal : kPDFDisplayDirectionVertical];
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDisplaysHorizontallyChangedNotification object:self];
     }
-#pragma clang diagnostic pop
 }
 
 - (PDFDisplayMode)extendedDisplayMode {
@@ -842,16 +809,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (BOOL)displaysHorizontally {
-    if (RUNNING_BEFORE(10_13))
-        return NO;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
     return [self displayDirection] == kPDFDisplayDirectionHorizontal;
-#pragma clang diagnostic pop
 }
 
 - (void)setDisplaysHorizontally:(BOOL)flag {
-    if (RUNNING_AFTER(10_12) && flag != [self displaysHorizontally]) {
+    if (flag != [self displaysHorizontally]) {
         PDFPage *page = [self currentPage];
         [self _setDisplaysHorizontally:flag];
         if (page && [page isEqual:[self currentPage]] == NO)
@@ -862,25 +824,18 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (void)setDisplaysHorizontallyAndRewind:(BOOL)flag {
-    if (RUNNING_AFTER(10_12) && flag != [self displaysHorizontally]) {
+    if (flag != [self displaysHorizontally]) {
         [self setNeedsRewind:YES];
         [self setDisplaysHorizontally:flag];
     }
 }
 
 - (BOOL)displaysRightToLeft {
-    if (RUNNING_BEFORE(10_13))
-        return NO;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
     return [self displaysRTL];
-#pragma clang diagnostic pop
 }
 
 - (void)setDisplaysRightToLeft:(BOOL)flag {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if (RUNNING_AFTER(10_12) && flag != [self displaysRTL]) {
+    if (flag != [self displaysRTL]) {
         PDFPage *page = [self currentPage];
         [self setDisplaysRTL:flag];
         // on 10.15 this does not relayout the view...
@@ -891,11 +846,10 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
         [editor layoutWithEvent:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewDisplaysRTLChangedNotification object:self];
     }
-#pragma clang diagnostic pop
 }
 
 - (void)setDisplaysRightToLeftAndRewind:(BOOL)flag {
-    if (RUNNING_AFTER(10_12) && flag != [self displaysRightToLeft]) {
+    if (flag != [self displaysRightToLeft]) {
         if ([self displayMode] != kPDFDisplaySinglePage)
             [self setNeedsRewind:YES];
         [self setDisplaysRightToLeft:flag];
@@ -1271,10 +1225,6 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (IBAction)goToNextPage:(id)sender {
-    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
-        [self setToolMode:([self toolMode] + 1) % TOOL_MODE_COUNT];
-        return;
-    }
     if (interactionMode == SKPresentationMode && [self window] && [transitionController hasTransition] && [self canGoToNextPage])
         [self animateTransitionForNextPage:YES];
     else
@@ -1283,33 +1233,11 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
 }
 
 - (IBAction)goToPreviousPage:(id)sender {
-    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
-        [self setToolMode:([self toolMode] + TOOL_MODE_COUNT - 1) % TOOL_MODE_COUNT];
-        return;
-    }
     if (interactionMode == SKPresentationMode && [self window] && [transitionController hasTransition] && [self canGoToPreviousPage])
         [self animateTransitionForNextPage:NO];
     else
         [super goToPreviousPage:sender];
     [self doAutoHideCursorIfNeeded];
-}
-
-- (IBAction)goToFirstPage:(id)sender {
-    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
-        [self setAnnotationMode:([self annotationMode] + ANNOTATION_MODE_COUNT - 1) % ANNOTATION_MODE_COUNT];
-        return;
-    } else {
-        [super goToFirstPage:sender];
-    }
-}
-
-- (IBAction)goToLastPage:(id)sender {
-    if (RUNNING(10_12) && [NSEvent standardModifierFlags] == (NSEventModifierFlagCommand | NSEventModifierFlagOption)) {
-        [self setAnnotationMode:([self annotationMode] + 1) % ANNOTATION_MODE_COUNT];
-        return;
-    } else {
-        [super goToLastPage:sender];
-    }
 }
 
 - (IBAction)delete:(id)sender
@@ -2180,10 +2108,8 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
     
     i = [menu indexOfItemWithTarget:self andAction:NSSelectorFromString(@"_setDoublePageScrolling:")];
     if (i != -1) {
-        if (RUNNING_AFTER(10_12)) {
-            [menu insertItem:[NSMenuItem separatorItem] atIndex:i + 1];
-            item = [menu insertItemWithTitle:NSLocalizedString(@"Horizontal Continuous", @"Menu item title") action:@selector(setHorizontalScrolling:) target:self atIndex:i + 1];
-        }
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:i + 1];
+        item = [menu insertItemWithTitle:NSLocalizedString(@"Horizontal Continuous", @"Menu item title") action:@selector(setHorizontalScrolling:) target:self atIndex:i + 1];
     }
     
     [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
@@ -3357,7 +3283,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)handleKeyStateChangedNotification:(NSNotification *)notification {
     atomic_store(&inKeyWindow, [[self window] isKeyWindow]);
-    if (RUNNING_BEFORE(10_12) || RUNNING_AFTER(10_14)) {
+    if (RUNNING_AFTER(10_14)) {
         if (selectionPageIndex != NSNotFound) {
             CGFloat margin = HANDLE_SIZE / [self scaleFactor];
             for (PDFPage *page in [self displayedPages])
@@ -3423,31 +3349,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [super viewWillMoveToWindow:newWindow];
 }
 
-- (BOOL)becomeFirstResponder {
-    if ([super becomeFirstResponder]) {
-        if (RUNNING_BEFORE(10_12))
-            [self handleKeyStateChangedNotification:nil];
-        return YES;
-    }
-    return NO;
-}
-
-- (BOOL)resignFirstResponder {
-    if ([super resignFirstResponder]) {
-        if (RUNNING_BEFORE(10_12))
-            [self handleKeyStateChangedNotification:nil];
-        return YES;
-    }
-    return NO;
-}
-
 #pragma mark Dark mode
 
 - (void)viewDidChangeEffectiveAppearance {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
     [super viewDidChangeEffectiveAppearance];
-#pragma clang diagnostic pop
     [loupeController updateColorFilters];
 }
 
@@ -4310,11 +4215,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     // Hit-test for resize box.
     SKRectEdges resizeHandle = [currentAnnotation resizeHandleForPoint:pagePoint scaleFactor:[self scaleFactor]];
     
-    if (RUNNING_AFTER(10_11)) {
-        atomic_store(&highlightLayerState, SKLayerAdd);
-        if (currentAnnotation)
-            [self setNeedsDisplayForAnnotation:currentAnnotation];
-    }
+    atomic_store(&highlightLayerState, SKLayerAdd);
+    if (currentAnnotation)
+        [self setNeedsDisplayForAnnotation:currentAnnotation];
     
     if (shouldAddAnnotation) {
         if (annotationMode == SKAnchoredNote) {
@@ -4371,8 +4274,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [self doResizeLineAnnotationWithEvent:lastMouseEvent fromPoint:pagePoint originalStartPoint:originalStartPoint originalEndPoint:originalEndPoint resizeHandle:resizeHandle];
         else
             [self doResizeAnnotationWithEvent:lastMouseEvent fromPoint:pagePoint originalBounds:originalBounds originalPaths:originalPaths margin:margin resizeHandle:&resizeHandle];
-        if (RUNNING_AFTER(10_11))
-            [[highlightLayerController layer] setNeedsDisplay];
+        [[highlightLayerController layer] setNeedsDisplay];
     }
     
     if (resizeHandle == 0) {
@@ -4387,10 +4289,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         if (shouldAddAnnotation && toolMode == SKNoteToolMode && (annotationMode == SKAnchoredNote || annotationMode == SKFreeTextNote))
             [self editCurrentAnnotation:self]; 	 
         
-        if (RUNNING_AFTER(10_11))
-            atomic_store(&highlightLayerState, SKLayerRemove);
+        atomic_store(&highlightLayerState, SKLayerRemove);
         [self setNeedsDisplayForAnnotation:currentAnnotation];
-    } else if (RUNNING_AFTER(10_11)) {
+    } else {
         atomic_store(&highlightLayerState, SKLayerNone);
         [self removeHighlightLayer];
     }
@@ -4433,7 +4334,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         PDFAnnotation *linkAnnotation = nil;
         BOOL foundCoveringAnnotation = NO;
-        id annotations = RUNNING(10_12) ? [page annotations] : [[page annotations] reverseObjectEnumerator];
+        id annotations = [[page annotations] reverseObjectEnumerator];
         
         // Hit test for annotation.
         for (PDFAnnotation *annotation in annotations) {
@@ -4659,7 +4560,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         NSPoint point = NSZeroPoint;
         PDFPage *page = [self pageAndPoint:&point forEvent:theEvent nearest:YES];
-        id annotations = RUNNING(10_12) ? [page annotations] : [[page annotations] reverseObjectEnumerator];
+        id annotations = [[page annotations] reverseObjectEnumerator];
         
         for (PDFAnnotation *annotation in annotations) {
             if ([annotation isSkimNote] && [annotation hitTest:point] && [self isEditingAnnotation:annotation] == NO) {

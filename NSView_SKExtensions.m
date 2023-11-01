@@ -41,12 +41,6 @@
 #import "SKFontWell.h"
 #import "SKStringConstants.h"
 
-#if SDK_BEFORE(10_12)
-@interface NSWorkSpace (BDSKSierraDeclarations)
-- (void)accessibilityDisplayShouldReduceMotion;
-@end
-#endif
-
 @implementation NSView (SKExtensions)
 
 - (id)descendantOfClass:(Class)aClass {
@@ -138,11 +132,8 @@
 + (BOOL)shouldShowSlideAnimation {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableAnimationsKey])
         return NO;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if (RUNNING_AFTER(10_12) && [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldReduceMotion])
+    if ([[NSWorkspace sharedWorkspace] accessibilityDisplayShouldReduceMotion])
         return NO;
-#pragma clang diagnostic pop
     return YES;
 }
 

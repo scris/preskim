@@ -86,16 +86,6 @@
         [[self childAtIndex:i] pageLabelDidUpdate];
 }
 
-// on 10.12 the document is not weakly linked, so we need to clear it to avoid a retain cycle
-- (void)clearDocument {
-    if ([self respondsToSelector:@selector(setDocument:)] == NO || RUNNING(10_12) == NO)
-        return;
-    NSUInteger i, iMax = [self numberOfChildren];
-    for (i = 0; i < iMax; i++)
-         [[self childAtIndex:i] clearDocument];
-    [self setDocument:nil];
-}
-
 - (NSScriptObjectSpecifier *)objectSpecifier {
     NSUInteger idx = [self index];
     if (idx != NSNotFound) {

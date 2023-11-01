@@ -37,7 +37,6 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "NSTouchBar_SKForwardDeclarations.h"
 
 
 @interface SKDownloadPreferenceController : NSWindowController <NSTouchBarDelegate> {

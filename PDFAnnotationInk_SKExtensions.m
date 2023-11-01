@@ -55,51 +55,11 @@
 NSString *SKPDFAnnotationBezierPathsKey = @"bezierPaths";
 NSString *SKPDFAnnotationScriptingPointListsKey = @"scriptingPointLists";
 
-#if SDK_BEFORE(10_12)
-@interface PDFAnnotation (SKSierraDeclarations)
-// before 10.12 this was a private method, called by drawWithBox:
-- (void)drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
-@end
-#endif
-
 @implementation PDFAnnotationInk (SKExtensions)
-
-static void (*original_drawWithBox_inContext)(id, SEL, PDFDisplayBox, CGContextRef) = NULL;
-
-- (void)replacement_drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
-    if ([self hasAppearanceStream]) {
-        original_drawWithBox_inContext(self, _cmd, box, context);
-    } else {
-        CGContextSaveGState(context);
-        [[self page] transformContext:context forBox:box];
-        CGContextTranslateCTM(context, NSMinX([self bounds]), NSMinY([self bounds]));
-        CGContextSetStrokeColorWithColor(context, [[self color] CGColor]);
-        CGContextSetLineWidth(context, [self lineWidth]);
-        CGContextSetLineJoin(context, kCGLineJoinRound);
-        if ([self borderStyle] == kPDFBorderStyleDashed) {
-            NSArray *dashPattern = [self dashPattern];
-            NSUInteger i, count = [dashPattern count];
-            CGFloat dash[count];
-            for (i = 0; i < count; i++)
-                dash[i] = [[dashPattern objectAtIndex:i] doubleValue];
-            CGContextSetLineDash(context, 0.0, dash, count);
-            CGContextSetLineCap(context, kCGLineCapButt);
-        } else {
-            CGContextSetLineCap(context, kCGLineCapRound);
-        }
-        CGContextBeginPath(context);
-        for (NSBezierPath *path in [self paths])
-            CGContextAddPath(context, [path CGPath]);
-        CGContextStrokePath(context);
-        CGContextRestoreGState(context);
-    }
-}
 
 static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
 
 + (void)load {
-    if (RUNNING(10_11))
-        original_drawWithBox_inContext = (void (*)(id, SEL, PDFDisplayBox, CGContextRef))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(drawWithBox:inContext:), @selector(replacement_drawWithBox:inContext:));
     CGContextGetBaseCTM_func = (typeof(CGContextGetBaseCTM_func))CFBundleGetFunctionPointerForName(CFBundleGetBundleWithIdentifier(CFSTR("com.apple.CoreGraphics")), CFSTR("CGContextGetBaseCTM"));
 }
 

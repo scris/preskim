@@ -541,9 +541,9 @@ static char *SKTransitionPropertiesObservationContext;
 #pragma mark Touch Bar
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSClassFromString(@"NSTouchBar") alloc] init] autorelease];
+    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
     [touchBar setDelegate:self];
-    [touchBar setDefaultItemIdentifiers:@[@"NSTouchBarItemIdentifierFlexibleSpace", SKTouchBarItemIdentifierCancel, SKTouchBarItemIdentifierOK, @"NSTouchBarItemIdentifierFixedSpaceLarge"]];
+    [touchBar setDefaultItemIdentifiers:@[NSTouchBarItemIdentifierFlexibleSpace, SKTouchBarItemIdentifierCancel, SKTouchBarItemIdentifierOK, NSTouchBarItemIdentifierFixedSpaceLarge]];
     return touchBar;
 }
 
@@ -553,12 +553,12 @@ static char *SKTransitionPropertiesObservationContext;
         NSButton *button = [NSButton buttonWithTitle:[okButton title] target:[okButton target] action:[okButton action]];
         [button setTag:NSModalResponseOK];
         [button setKeyEquivalent:@"\r"];
-        item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
         [(NSCustomTouchBarItem *)item setView:button];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierCancel]) {
         NSButton *button = [NSButton buttonWithTitle:[cancelButton title] target:[cancelButton target] action:[cancelButton action]];
         [button setTag:NSModalResponseCancel];
-        item = [[[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier] autorelease];
+        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
         [(NSCustomTouchBarItem *)item setView:button];
     }
     return item;
