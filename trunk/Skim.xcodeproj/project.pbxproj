@@ -860,7 +860,6 @@
 		CE3B8650260B994A00E18388 /* Skim.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Skim.entitlements; sourceTree = "<group>"; };
 		CE3ED11F218CAA7900474EF3 /* NSScroller_SKExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSScroller_SKExtensions.h; sourceTree = "<group>"; };
 		CE3ED120218CAA7900474EF3 /* NSScroller_SKExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSScroller_SKExtensions.m; sourceTree = "<group>"; };
-		CE406978228B20F700C4F958 /* NSScrubber_SKForwardDeclarations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSScrubber_SKForwardDeclarations.h; sourceTree = "<group>"; };
 		CE40D6141677A9DC00573882 /* SKTextNoteEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTextNoteEditor.h; sourceTree = "<group>"; };
 		CE40D6151677A9DC00573882 /* SKTextNoteEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTextNoteEditor.m; sourceTree = "<group>"; };
 		CE41A6CB0B975E5000ECF819 /* Skim.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.sdef; path = Skim.sdef; sourceTree = "<group>"; };
@@ -1023,7 +1022,6 @@
 		CE8388BB115BC61F00DB1AD7 /* SKNoteTypeSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKNoteTypeSheetController.m; sourceTree = "<group>"; };
 		CE85D73D2280814B0022C560 /* SKMainTouchBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKMainTouchBarController.h; sourceTree = "<group>"; };
 		CE85D73E2280814B0022C560 /* SKMainTouchBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKMainTouchBarController.m; sourceTree = "<group>"; };
-		CE85D7502280A4F10022C560 /* NSTouchBar_SKForwardDeclarations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSTouchBar_SKForwardDeclarations.h; sourceTree = "<group>"; };
 		CE8978CB0CBFC70B00EA2D98 /* SKTemplateTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTemplateTag.h; sourceTree = "<group>"; };
 		CE8978CC0CBFC70B00EA2D98 /* SKTemplateTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTemplateTag.m; sourceTree = "<group>"; };
 		CE898F050C843A8B008A0856 /* PDFDDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = PDFDDocument.icns; sourceTree = "<group>"; };
@@ -2101,12 +2099,10 @@
 				CEFDEA9011F6FF8300D6FEBA /* NSScreen_SKExtensions.m */,
 				CE3ED11F218CAA7900474EF3 /* NSScroller_SKExtensions.h */,
 				CE3ED120218CAA7900474EF3 /* NSScroller_SKExtensions.m */,
-				CE406978228B20F700C4F958 /* NSScrubber_SKForwardDeclarations.h */,
 				CEE54F6E0DA3FBE00037169F /* NSSegmentedControl_SKExtensions.h */,
 				CEE54F6F0DA3FBE00037169F /* NSSegmentedControl_SKExtensions.m */,
 				CE5234A41A6424F200710CF2 /* NSShadow_SKExtensions.h */,
 				CE5234A51A6424F200710CF2 /* NSShadow_SKExtensions.m */,
-				CE85D7502280A4F10022C560 /* NSTouchBar_SKForwardDeclarations.h */,
 				CEF7119F0B90B714003A2771 /* NSUserDefaultsController_SKExtensions.h */,
 				CEF711A00B90B714003A2771 /* NSUserDefaultsController_SKExtensions.m */,
 				CE20B1920C9F23CC007C72F9 /* NSView_SKExtensions.h */,
