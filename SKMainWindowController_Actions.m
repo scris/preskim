@@ -299,7 +299,7 @@
 }
 
 - (IBAction)toggleDisplaysRTL:(id)sender {
-    [pdfView setDisplaysRightToLeftAndRewind:[pdfView displaysRightToLeft] == NO];
+    [pdfView setDisplaysRTLAndRewind:[pdfView displaysRTL] == NO];
     [pdfView setExtendedDisplayMode:[pdfView displayMode] | kPDFDisplayTwoUp];
 }
 

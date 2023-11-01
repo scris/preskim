@@ -175,7 +175,6 @@ enum {
 
 @property (nonatomic) PDFDisplayMode extendedDisplayMode;
 @property (nonatomic) BOOL displaysHorizontally;
-@property (nonatomic) BOOL displaysRightToLeft;
 @property (nonatomic) SKToolMode toolMode;
 @property (nonatomic) SKNoteType annotationMode;
 @property (nonatomic) SKTemporaryToolMode temporaryToolMode;
@@ -216,7 +215,7 @@ enum {
 - (void)setDisplayModeAndRewind:(PDFDisplayMode)mode;
 - (void)setExtendedDisplayModeAndRewind:(PDFDisplayMode)mode;
 - (void)setDisplaysHorizontallyAndRewind:(BOOL)flag;
-- (void)setDisplaysRightToLeftAndRewind:(BOOL)flag;
+- (void)setDisplaysRTLAndRewind:(BOOL)flag;
 - (void)setDisplayBoxAndRewind:(PDFDisplayBox)box;
 - (void)setDisplaysAsBookAndRewind:(BOOL)asBook;
 

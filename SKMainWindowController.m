@@ -671,7 +671,7 @@ static char SKMainWindowContentLayoutObservationContext;
     if ((number = [setup objectForKey:DISPLAYDIRECTION_KEY]))
         [pdfView setDisplaysHorizontally:[number boolValue]];
     if ((number = [setup objectForKey:DISPLAYSRTL_KEY]))
-        [pdfView setDisplaysRightToLeft:[number boolValue]];
+        [pdfView setDisplaysRTL:[number boolValue]];
     if ((number = [setup objectForKey:DISPLAYBOX_KEY]))
         [pdfView setDisplayBox:[number integerValue]];
 }
@@ -686,7 +686,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [setup setObject:[NSNumber numberWithBool:[pdfView autoScales]] forKey:AUTOSCALES_KEY];
     [setup setObject:[NSNumber numberWithInteger:[pdfView displayMode]] forKey:DISPLAYMODE_KEY];
     [setup setObject:[NSNumber numberWithInteger:[pdfView displaysHorizontally] ? 1 : 0] forKey:DISPLAYDIRECTION_KEY];
-    [setup setObject:[NSNumber numberWithBool:[pdfView displaysRightToLeft]] forKey:DISPLAYSRTL_KEY];
+    [setup setObject:[NSNumber numberWithBool:[pdfView displaysRTL]] forKey:DISPLAYSRTL_KEY];
     
     return setup;
 }

@@ -1708,7 +1708,7 @@ static NSArray *allMainDocumentPDFViews() {
         [menuItem setState:[pdfView displaysHorizontally] == (BOOL)[menuItem tag] ? NSOnState : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && [pdfView displayMode] == kPDFDisplaySinglePageContinuous;
     } else if (action == @selector(toggleDisplaysRTL:)) {
-        [menuItem setState:[pdfView displaysRightToLeft] ? NSOnState : NSOffState];
+        [menuItem setState:[pdfView displaysRTL] ? NSOnState : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(toggleDisplaysAsBook:)) {
         [menuItem setState:[pdfView displaysAsBook] ? NSOnState : NSOffState];
