@@ -184,7 +184,7 @@ static char *SKTransitionPropertiesObservationContext;
     // collapse the table, it is already hidden
     [boxLeadingConstraint setConstant:BOX_OFFSET];
     
-    [tableView registerForDraggedTypes:[SKTransitionInfo readableTypesForPasteboard:[NSPasteboard pasteboardWithName:NSDragPboard]]];
+    [tableView registerForDraggedTypes:[SKTransitionInfo readableTypesForPasteboard:[NSPasteboard pasteboardWithName:NSPasteboardNameDrag]]];
     
     [tableView setTypeSelectHelper:[SKTypeSelectHelper typeSelectHelperWithMatchOption:SKFullStringMatch]];
     

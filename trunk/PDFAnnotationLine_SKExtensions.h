@@ -50,11 +50,6 @@ extern NSString *SKPDFAnnotationScriptingEndLineStyleKey;
 
 @interface PDFAnnotationLine (SKExtensions)
 
-- (NSPoint)observedStartPoint;
-- (void)setObservedStartPoint:(NSPoint)point;
-- (NSPoint)observedEndPoint;
-- (void)setObservedEndPoint:(NSPoint)point;
-
 - (void)setStartPointAsQDPoint:(NSData *)inQDPointAsData;
 - (void)setEndPointAsQDPoint:(NSData *)inQDPointAsData;
 - (void)setScriptingStartLineStyle:(PDFLineStyle)style;

@@ -279,7 +279,10 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGFloat scale) {
     
     CGAffineTransform t = CGAffineTransformTranslate(CGAffineTransformScale(CGAffineTransformMakeTranslation(mouseLoc.x - NSMinX(magRect), mouseLoc.y - NSMinY(magRect)), magnification, magnification), -mouseLoc.x, -mouseLoc.y);
     CGInterpolationQuality interpolation = [pdfView interpolationQuality] + 1;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     BOOL shouldAntiAlias = [pdfView shouldAntiAlias];
+#pragma clang diagnostic pop
     PDFDisplayBox box = [pdfView displayBox];
     NSRect scaledRect = NSMakeRect(mouseLoc.x + (NSMinX(magRect) - mouseLoc.x) / magnification, mouseLoc.y + (NSMinY(magRect) - mouseLoc.y) / magnification, NSWidth(magRect) / magnification, NSHeight(magRect) / magnification);
     CGFloat backingScale = [pdfView backingScale];
@@ -335,17 +338,9 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGFloat scale) {
         CGContextSaveGState(context);
         CGContextConcatCTM(context, CGAffineTransformScale(CGAffineTransformTranslate(t, pageOrigin.x, pageOrigin.y), scaleFactor, scaleFactor));
         CGContextSetShouldAntialias(context, shouldAntiAlias);
-        if ([PDFView instancesRespondToSelector:@selector(drawPage:toContext:)]) {
-            CGContextSetInterpolationQuality(context, interpolation);
-            [pdfView drawPage:page toContext:context];
-        } else {
-            [NSGraphicsContext saveGraphicsState];
-            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
-            [[NSGraphicsContext currentContext] setImageInterpolation:interpolation];
-            [pdfView drawPage:page];
-            [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
-            [NSGraphicsContext restoreGraphicsState];
-        }
+        CGContextSetInterpolationQuality(context, interpolation);
+        [pdfView drawPage:page toContext:context];
+        CGContextSetInterpolationQuality(context, kCGInterpolationDefault);
         CGContextRestoreGState(context);
     }
     

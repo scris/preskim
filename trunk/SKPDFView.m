@@ -2516,9 +2516,9 @@ typedef NS_ENUM(NSInteger, PDFDisplayDirection) {
                     [highlightAnnotation setBorderStyle:[number integerValue]];
                 if ([highlightAnnotation isLine]) {
                     if ((number = [dict objectForKey:SKLineWellStartLineStyleKey]))
-                        [(PDFAnnotationLine *)highlightAnnotation setStartLineStyle:[number integerValue]];
+                        [highlightAnnotation setStartLineStyle:[number integerValue]];
                     if ((number = [dict objectForKey:SKLineWellEndLineStyleKey]))
-                        [(PDFAnnotationLine *)highlightAnnotation setEndLineStyle:[number integerValue]];
+                        [highlightAnnotation setEndLineStyle:[number integerValue]];
                 }
                 performedDrag = YES;
             }
@@ -2945,7 +2945,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if ([self isEditingAnnotation:currentAnnotation])
         return;
     
-    editor = [[SKTextNoteEditor alloc] initWithPDFView:self annotation:(PDFAnnotationFreeText *)currentAnnotation];
+    editor = [[SKTextNoteEditor alloc] initWithPDFView:self annotation:currentAnnotation];
     [[self window] makeFirstResponder:self];
     [editor layoutWithEvent:theEvent];
     
@@ -3731,7 +3731,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
     if ([currentAnnotation isLine]) {
         
-        PDFAnnotationLine *annotation = (PDFAnnotationLine *)currentAnnotation;
+        PDFAnnotation *annotation = currentAnnotation;
         NSPoint startPoint = SKIntegralPoint(SKAddPoints([annotation startPoint], bounds.origin));
         NSPoint endPoint = SKIntegralPoint(SKAddPoints([annotation endPoint], bounds.origin));
         NSPoint oldEndPoint = endPoint;
@@ -3962,17 +3962,17 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         if (NSEqualRects(bounds, newBounds) == NO) {
             if ([currentAnnotation isInk]) {
-                CGFloat margin = [(PDFAnnotationInk *)currentAnnotation pathInset];
+                CGFloat margin = [currentAnnotation pathInset];
                 NSMutableArray *paths = [NSMutableArray array];
                 NSAffineTransform *transform = [NSAffineTransform transform];
                 [transform translateXBy:margin yBy:margin];
                 [transform scaleXBy:fmax(1.0, NSWidth(newBounds) - 2.0 * margin) / fmax(1.0, NSWidth(bounds) - 2.0 * margin) yBy:fmax(1.0, NSHeight(newBounds) - 2.0 * margin) / fmax(1.0, NSHeight(bounds) - 2.0 * margin)];
                 [transform translateXBy:-margin yBy:-margin];
                 
-                for (NSBezierPath *path in [(PDFAnnotationInk *)currentAnnotation paths])
+                for (NSBezierPath *path in [currentAnnotation paths])
                     [paths addObject:[transform transformBezierPath:path]];
                 
-                [(PDFAnnotationInk *)currentAnnotation setBezierPaths:paths];
+                [currentAnnotation setBezierPaths:paths];
             }
             
             [currentAnnotation setBounds:newBounds];
@@ -4134,8 +4134,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             newBounds.origin.y = floor(0.5 * ((startPoint.y + endPoint.y) - MIN_NOTE_SIZE));
         }
         
-        [(PDFAnnotationLine *)currentAnnotation setObservedStartPoint:SKSubstractPoints(startPoint, newBounds.origin)];
-        [(PDFAnnotationLine *)currentAnnotation setObservedEndPoint:SKSubstractPoints(endPoint, newBounds.origin)];
+        [currentAnnotation setObservedStartPoint:SKSubstractPoints(startPoint, newBounds.origin)];
+        [currentAnnotation setObservedEndPoint:SKSubstractPoints(endPoint, newBounds.origin)];
         [currentAnnotation setBounds:newBounds];
     }
 }
@@ -4283,7 +4283,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         for (NSBezierPath *path in originalPaths)
             [paths addObject:[transform transformBezierPath:path]];
         
-        [(PDFAnnotationInk *)currentAnnotation setBezierPaths:paths];
+        [currentAnnotation setBezierPaths:paths];
     }
     
     [currentAnnotation setBounds:newBounds];
@@ -4331,11 +4331,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             }
         }
     } else if (isLine) {
-        originalStartPoint = SKIntegralPoint(SKAddPoints([(PDFAnnotationLine *)currentAnnotation startPoint], originalBounds.origin));
-        originalEndPoint = SKIntegralPoint(SKAddPoints([(PDFAnnotationLine *)currentAnnotation endPoint], originalBounds.origin));
+        originalStartPoint = SKIntegralPoint(SKAddPoints([currentAnnotation startPoint], originalBounds.origin));
+        originalEndPoint = SKIntegralPoint(SKAddPoints([currentAnnotation endPoint], originalBounds.origin));
     } else if ([currentAnnotation isInk]) {
-        originalPaths = [[[(PDFAnnotationInk *)currentAnnotation paths] copy] autorelease];
-        margin = [(PDFAnnotationInk *)currentAnnotation pathInset];
+        originalPaths = [[[currentAnnotation paths] copy] autorelease];
+        margin = [currentAnnotation pathInset];
     }
     
     // we move or resize the annotation in an event loop, which ensures it's enclosed in a single undo group
@@ -4481,8 +4481,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                 newAnnotation = [[PDFAnnotation newSkimNoteWithSelection:sel forType:type] autorelease];
                 [newAnnotation setString:[sel cleanedString]];
             } else if ([currentAnnotation isInk]) {
-                NSMutableArray *paths = [[(PDFAnnotationInk *)currentAnnotation pagePaths] mutableCopy];
-                [paths addObjectsFromArray:[(PDFAnnotationInk *)newCurrentAnnotation pagePaths]];
+                NSMutableArray *paths = [[currentAnnotation pagePaths] mutableCopy];
+                [paths addObjectsFromArray:[newCurrentAnnotation pagePaths]];
                 NSString *string1 = [currentAnnotation string];
                 NSString *string2 = [newCurrentAnnotation string];
                 
@@ -4617,7 +4617,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (bezierPath) {
         NSMutableArray *paths = [[NSMutableArray alloc] init];
         if (currentAnnotation)
-            [paths addObjectsFromArray:[(PDFAnnotationInk *)currentAnnotation pagePaths]];
+            [paths addObjectsFromArray:[currentAnnotation pagePaths]];
         [paths addObject:bezierPath];
         
         PDFAnnotation *annotation = [PDFAnnotation newSkimNoteWithPaths:paths];

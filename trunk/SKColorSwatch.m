@@ -130,7 +130,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     
     bezelHeight = 22.0;
     
-    [self registerForDraggedTypes:[NSColor readableTypesForPasteboard:[NSPasteboard pasteboardWithName:NSDragPboard]]];
+    [self registerForDraggedTypes:[NSColor readableTypesForPasteboard:[NSPasteboard pasteboardWithName:NSPasteboardNameDrag]]];
 }
 
 - (id)initWithFrame:(NSRect)frame {

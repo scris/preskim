@@ -113,38 +113,6 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     [border release];
 }
 
-- (CGFloat)pathInset {
-    NSRect bounds = NSZeroRect;
-    NSSize size = [self bounds].size;
-    for (NSBezierPath *path in [self paths])
-        bounds = NSUnionRect(bounds, [path nonEmptyBounds]);
-    return floor(fmin(8.0, fmax(0.0, fmin(NSMinX(bounds), fmin(NSMinY(bounds), fmin(size.width - NSMaxX(bounds), size.height - NSMaxY(bounds)))))));
-}
-
-// use a copy of the paths so to ensure different old and new values for undo
-- (NSArray *)bezierPaths {
-    return [[[self paths] copy] autorelease];
-}
-
-- (void)setBezierPaths:(NSArray *)newPaths {
-    NSArray *paths = [[self paths] copy];
-    NSBezierPath *path;
-    for (path in paths)
-        [self removeBezierPath:path];
-    [paths release];
-    for (path in newPaths)
-        [self addBezierPath:path];
-}
-
-- (NSArray *)pagePaths {
-    NSMutableArray *paths = [[[NSMutableArray alloc] initWithArray:[self paths] copyItems:YES] autorelease];
-    NSRect bounds = [self bounds];
-    NSAffineTransform *transform = [NSAffineTransform transform];
-    [transform translateXBy:NSMinX(bounds) yBy:NSMinY(bounds)];
-    [paths makeObjectsPerformSelector:@selector(transformUsingAffineTransform:) withObject:transform];
-    return paths;
-}
-
 - (NSString *)fdfString {
     NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
     NSPoint point;

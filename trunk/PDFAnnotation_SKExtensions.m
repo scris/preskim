@@ -133,7 +133,10 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
         [propertyList isKindOfClass:[NSData class]]) {
         self = [self initSkimNoteWithProperties:[NSKeyedUnarchiver unarchiveObjectWithData:propertyList]];
     } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         [[self initWithBounds:NSZeroRect] release];
+#pragma clang diagnostic pop
         self = nil;
     }
     return self;
@@ -216,7 +219,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     PDFAnnotation *annotation = [[PDFAnnotationInk alloc] initSkimNoteWithBounds:bounds forType:SKNInkString];
 #pragma clang diagnostic pop
     for (path in paths)
-        [(PDFAnnotationInk *)annotation addBezierPath:[transform transformBezierPath:path]];
+        [annotation addBezierPath:[transform transformBezierPath:path]];
     return annotation;
 }
 
@@ -304,78 +307,11 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 }
 
 - (PDFDestination *)linkDestination {
-    if ([self respondsToSelector:@selector(destination)]) {
-        return [(PDFAnnotationLink *)self destination];
-    } else if ([self isLink] && [self respondsToSelector:@selector(valueForAnnotationKey:)]) {
-        id dest = nil;
-        id action = [self valueForAnnotationKey:@"/A"];
-        if ([action isKindOfClass:[PDFActionGoTo class]]) {
-            dest = [(PDFActionGoTo *)action destination];
-        } else if ([action isKindOfClass:[NSDictionary class]]) {
-            if ([[action objectForKey:@"/S"] isEqualToString:@"/GoTo"])
-                dest = [action objectForKey:@"/D"];
-        } else {
-            dest = [self valueForAnnotationKey:@"/Dest"];
-        }
-        if ([dest isKindOfClass:[PDFDestination class]]) {
-            return dest;
-        } else if ([dest isKindOfClass:[NSArray class]] && [dest count] > 1) {
-            PDFPage *page = [dest objectAtIndex:0];
-            if ([page isKindOfClass:[PDFPage class]]) {
-                NSPoint point;
-                NSString *type = [dest objectAtIndex:1];
-                if ([type isEqualToString:@"/XYZ"] && [dest count] > 3)
-                    point = NSMakePoint([[dest objectAtIndex:2] doubleValue], [[dest objectAtIndex:3] doubleValue]);
-                else if ([page rotation] == 0)
-                    point = SKTopLeftPoint([page boundsForBox:kPDFDisplayBoxCropBox]);
-                else if ([page rotation] == 90)
-                    point = SKBottomLeftPoint([page boundsForBox:kPDFDisplayBoxCropBox]);
-                else if ([page rotation] == 180)
-                    point = SKBottomRightPoint([page boundsForBox:kPDFDisplayBoxCropBox]);
-                else
-                    point = SKTopRightPoint([page boundsForBox:kPDFDisplayBoxCropBox]);
-                return [[[PDFDestination alloc] initWithPage:page atPoint:point] autorelease];
-            }
-        }
-    }
-    return nil;
+    return [self destination];
 }
 
 - (NSURL *)linkURL {
-    if ([self respondsToSelector:@selector(URL)]) {
-        return [(PDFAnnotationLink *)self URL];
-    } else if ([self isLink] && [self respondsToSelector:@selector(valueForAnnotationKey:)]) {
-        id action = [self valueForAnnotationKey:@"/A"];
-        if ([action isKindOfClass:[PDFActionURL class]]) {
-            return [(PDFActionURL *)action URL];
-        } else if ([action isKindOfClass:[PDFActionRemoteGoTo class]]) {
-            return [(PDFActionRemoteGoTo *)action URL];
-        } else if ([action isKindOfClass:[NSDictionary class]]) {
-            NSString *type = [action objectForKey:@"/S"];
-            if ([type isEqualToString:@"/URI"]) {
-                id uri = [action objectForKey:@"/URI"];
-                if ([uri isKindOfClass:[NSURL class]])
-                    return (NSURL *)uri;
-                else if ([uri isKindOfClass:[NSString class]])
-                    return [NSURL URLWithString:(NSString *)uri];
-            } else if ([type isEqualToString:@"/GoToR"]) {
-                id file = [action objectForKey:@"/F"];
-                if ([file isKindOfClass:[NSDictionary class]])
-                    file = [(NSDictionary *)file objectForKey:@"/Unix"] ?: [(NSDictionary *)file objectForKey:@"/F"];
-                if ([file isKindOfClass:[NSURL class]]) {
-                    return (NSURL *)file;
-                } else if ([file isKindOfClass:[NSString class]]) {
-                    if ([file rangeOfString:@"://"].location != NSNotFound)
-                        return [NSURL URLWithString:file];
-                    else if ([file isAbsolutePath])
-                        return [NSURL fileURLWithPath:file];
-                    else
-                        return [NSURL URLWithString:file relativeToURL:[[[[self page] document] documentURL] URLByDeletingLastPathComponent]];
-                }
-            }
-        }
-    }
-    return nil;
+    return [self URL];
 }
 
 - (NSUInteger)pageIndex {
@@ -452,6 +388,54 @@ static inline Class SKAnnotationClassForType(NSString *type) {
         [self setBorder:border];
         [border release];
     }
+}
+
+- (NSPoint)observedStartPoint {
+    return [self startPoint];
+}
+
+- (void)setObservedStartPoint:(NSPoint)point {
+    [self setStartPoint:point];
+}
+
+- (NSPoint)observedEndPoint {
+    return [self endPoint];
+}
+
+- (void)setObservedEndPoint:(NSPoint)point {
+    [self setEndPoint:point];
+}
+
+- (CGFloat)pathInset {
+    NSRect bounds = NSZeroRect;
+    NSSize size = [self bounds].size;
+    for (NSBezierPath *path in [self paths])
+        bounds = NSUnionRect(bounds, [path nonEmptyBounds]);
+    return floor(fmin(8.0, fmax(0.0, fmin(NSMinX(bounds), fmin(NSMinY(bounds), fmin(size.width - NSMaxX(bounds), size.height - NSMaxY(bounds)))))));
+}
+
+// use a copy of the paths so to ensure different old and new values for undo
+- (NSArray *)bezierPaths {
+    return [[[self paths] copy] autorelease];
+}
+
+- (void)setBezierPaths:(NSArray *)newPaths {
+    NSArray *paths = [[self paths] copy];
+    NSBezierPath *path;
+    for (path in paths)
+        [self removeBezierPath:path];
+    [paths release];
+    for (path in newPaths)
+        [self addBezierPath:path];
+}
+
+- (NSArray *)pagePaths {
+    NSMutableArray *paths = [[[NSMutableArray alloc] initWithArray:[self paths] copyItems:YES] autorelease];
+    NSRect bounds = [self bounds];
+    NSAffineTransform *transform = [NSAffineTransform transform];
+    [transform translateXBy:NSMinX(bounds) yBy:NSMinY(bounds)];
+    [paths makeObjectsPerformSelector:@selector(transformUsingAffineTransform:) withObject:transform];
+    return paths;
 }
 
 - (NSImage *)image { return nil; }

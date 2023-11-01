@@ -111,9 +111,9 @@
 - (IBAction)changeFont:(id)sender{
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     if (mwcFlags.updatingFont == 0 && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
-        NSFont *font = [sender convertFont:[(PDFAnnotationFreeText *)annotation font]];
+        NSFont *font = [sender convertFont:[annotation font]];
         mwcFlags.updatingFont = 1;
-        [(PDFAnnotationFreeText *)annotation setFont:font];
+        [annotation setFont:font];
         mwcFlags.updatingFont = 0;
     }
 }
@@ -121,11 +121,11 @@
 - (IBAction)changeAttributes:(id)sender{
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     if (mwcFlags.updatingFontAttributes == 0 && mwcFlags.updatingColor == 0 && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
-        NSColor *color = [(PDFAnnotationFreeText *)annotation fontColor];
+        NSColor *color = [annotation fontColor];
         NSColor *newColor = [[sender convertAttributes:[NSDictionary dictionaryWithObjectsAndKeys:color, NSForegroundColorAttributeName, nil]] valueForKey:NSForegroundColorAttributeName];
         if ([newColor isEqual:color] == NO) {
             mwcFlags.updatingFontAttributes = 1;
-            [(PDFAnnotationFreeText *)annotation setFontColor:newColor];
+            [annotation setFontColor:newColor];
             mwcFlags.updatingFontAttributes = 0;
         }
     }
@@ -134,21 +134,21 @@
 - (IBAction)alignLeft:(id)sender {
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     if ([self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
-        [(PDFAnnotationFreeText *)annotation setAlignment:NSTextAlignmentLeft];
+        [annotation setAlignment:NSTextAlignmentLeft];
     }
 }
 
 - (IBAction)alignRight:(id)sender {
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     if ([self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
-        [(PDFAnnotationFreeText *)annotation setAlignment:NSTextAlignmentRight];
+        [annotation setAlignment:NSTextAlignmentRight];
     }
 }
 
 - (IBAction)alignCenter:(id)sender {
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     if ([self hasOverview] == NO && [annotation isSkimNote] && [annotation isText]) {
-        [(PDFAnnotationFreeText *)annotation setAlignment:NSTextAlignmentCenter];
+        [annotation setAlignment:NSTextAlignmentCenter];
     }
 }
 
@@ -169,11 +169,11 @@
                 break;
             case SKLineChangeActionStartLineStyle:
                 if ([annotation isLine])
-                    [(PDFAnnotationLine *)annotation setStartLineStyle:[sender startLineStyle]];
+                    [annotation setStartLineStyle:[sender startLineStyle]];
                 break;
             case SKLineChangeActionEndLineStyle:
                 if ([annotation isLine])
-                    [(PDFAnnotationLine *)annotation setEndLineStyle:[sender endLineStyle]];
+                    [annotation setEndLineStyle:[sender endLineStyle]];
                 break;
             case SKNoLineChangeAction:
                 break;
@@ -850,7 +850,7 @@ static NSArray *allMainDocumentPDFViews() {
         else
             [self displayGroupedFindViewAnimating:YES];
         
-        NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSFindPboard];
+        NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSPasteboardNameFind];
         [findPboard clearContents];
         [findPboard writeObjects:@[searchString]];
     }
@@ -863,7 +863,7 @@ static NSArray *allMainDocumentPDFViews() {
         [self updateSnapshotFilterPredicate];
     NSString *searchString = [sender stringValue];
     if ([searchString length]) {
-        NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSFindPboard];
+        NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSPasteboardNameFind];
         [findPboard clearContents];
         [findPboard writeObjects:@[searchString]];
     }
@@ -1177,7 +1177,7 @@ static NSArray *allMainDocumentPDFViews() {
             if ([[findController view] window]) {
                 [findController findForward:forward];
             } else {
-                NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSFindPboard];
+                NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSPasteboardNameFind];
                 NSArray *strings = [findPboard readObjectsForClasses:@[[NSString class]] options:@{}];
                 if ([strings count] > 0)
                     findString = [strings objectAtIndex:0];
@@ -1195,7 +1195,7 @@ static NSArray *allMainDocumentPDFViews() {
                 [findController setFindString:findString];
                 [findController updateFindPboard];
             } else {
-                NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSFindPboard];
+                NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSPasteboardNameFind];
                 [findPboard clearContents];
                 [findPboard writeObjects:@[findString]];
             }

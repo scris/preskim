@@ -2930,12 +2930,12 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                 }
                 if (mwcFlags.updatingFont == 0 && ([keyPath isEqualToString:SKNPDFAnnotationFontKey])) {
                     mwcFlags.updatingFont = 1;
-                    [[NSFontManager sharedFontManager] setSelectedFont:[(PDFAnnotationFreeText *)note font] isMultiple:NO];
+                    [[NSFontManager sharedFontManager] setSelectedFont:[note font] isMultiple:NO];
                     mwcFlags.updatingFont = 0;
                 }
                 if (mwcFlags.updatingFontAttributes == 0 && ([keyPath isEqualToString:SKNPDFAnnotationFontColorKey])) {
                     mwcFlags.updatingFontAttributes = 1;
-                    [[NSFontManager sharedFontManager] setSelectedAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[(PDFAnnotationFreeText *)note fontColor], NSForegroundColorAttributeName, nil] isMultiple:NO];
+                    [[NSFontManager sharedFontManager] setSelectedAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[note fontColor], NSForegroundColorAttributeName, nil] isMultiple:NO];
                     mwcFlags.updatingFontAttributes = 0;
                 }
                 if (mwcFlags.updatingLine == 0 && ([keyPath isEqualToString:SKNPDFAnnotationBorderKey] || [keyPath isEqualToString:SKNPDFAnnotationStartLineStyleKey] || [keyPath isEqualToString:SKNPDFAnnotationEndLineStyleKey])) {
