@@ -1189,7 +1189,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (IBAction)changeDisplaysRTL:(id)sender {
-    [mainController.pdfView setDisplaysRightToLeftAndRewind:NO == [mainController.pdfView displaysRightToLeft]];
+    [mainController.pdfView setDisplaysRTLAndRewind:NO == [mainController.pdfView displaysRTL]];
     [mainController.pdfView setExtendedDisplayMode:[mainController.pdfView displayMode] | kPDFDisplayTwoUp];
 }
 
@@ -1358,7 +1358,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (void)handleDisplaysRTLChangedNotification:(NSNotification *)notification {
-    BOOL displaysRTL = [mainController.pdfView displaysRightToLeft];
+    BOOL displaysRTL = [mainController.pdfView displaysRTL];
     [displaysRTLButton setSelected:displaysRTL forSegment:0];
 }
 

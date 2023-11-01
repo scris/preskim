@@ -251,7 +251,7 @@ enum {
 @implementation SKPDFView
 
 @synthesize toolMode, annotationMode, temporaryToolMode, interactionMode, currentAnnotation, readingBar, pacerSpeed, transitionController, typeSelectHelper, syncDot, zooming;
-@dynamic extendedDisplayMode, displaysHorizontally, displaysRightToLeft, hideNotes, canSelectNote, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing;
+@dynamic extendedDisplayMode, displaysHorizontally, hideNotes, canSelectNote, hasReadingBar, hasPacer, currentSelectionPage, currentSelectionRect, currentMagnification, needsRewind, editing;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -830,14 +830,10 @@ enum {
     }
 }
 
-- (BOOL)displaysRightToLeft {
-    return [self displaysRTL];
-}
-
-- (void)setDisplaysRightToLeft:(BOOL)flag {
+- (void)setDisplaysRTL:(BOOL)flag {
     if (flag != [self displaysRTL]) {
         PDFPage *page = [self currentPage];
-        [self setDisplaysRTL:flag];
+        [super setDisplaysRTL:flag];
         // on 10.15 this does not relayout the view...
         [self layoutDocumentView];
         if (page && [page isEqual:[self currentPage]] == NO)
@@ -848,11 +844,11 @@ enum {
     }
 }
 
-- (void)setDisplaysRightToLeftAndRewind:(BOOL)flag {
-    if (flag != [self displaysRightToLeft]) {
+- (void)setDisplaysRTLAndRewind:(BOOL)flag {
+    if (flag != [self displaysRTL]) {
         if ([self displayMode] != kPDFDisplaySinglePage)
             [self setNeedsRewind:YES];
-        [self setDisplaysRightToLeft:flag];
+        [self setDisplaysRTL:flag];
     }
 }
 
