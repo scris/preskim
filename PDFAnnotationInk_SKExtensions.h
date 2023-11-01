@@ -44,11 +44,4 @@ extern NSString *SKPDFAnnotationScriptingPointListsKey;
 
 @interface PDFAnnotationInk (SKExtensions)
 
-- (CGFloat)pathInset;
-
-- (NSArray *)bezierPaths;
-- (void)setBezierPaths:(NSArray *)newPaths;
-
-- (NSArray *)pagePaths;
-
 @end

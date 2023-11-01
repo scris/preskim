@@ -96,8 +96,7 @@ static NSImage *noteIcons[7] = {nil, nil, nil, nil, nil, nil, nil};
     if (noteIcons[0]) return;
     
     NSRect bounds = {NSZeroPoint, SKNPDFAnnotationNoteSize};
-    PDFAnnotationText *annotation = [[SKNPDFAnnotationNote alloc] initWithBounds:bounds];
-    [annotation setColor:[NSColor clearColor]];
+    PDFAnnotation *annotation = [[PDFAnnotation alloc] initWithBounds:bounds forType:PDFAnnotationSubtypeText withProperties:@{PDFAnnotationKeyColor:[NSColor clearColor]}];
     PDFPage *page = [[PDFPage alloc] init];
     [page setBounds:bounds forBox:kPDFDisplayBoxMediaBox];
     [page addAnnotation:annotation];
@@ -108,7 +107,7 @@ static NSImage *noteIcons[7] = {nil, nil, nil, nil, nil, nil, nil};
         [annotation setIconType:i];
         noteIcons[i] = [[NSImage alloc] initWithSize:SKNPDFAnnotationNoteSize];
         [noteIcons[i] lockFocus];
-        [page drawWithBox:kPDFDisplayBoxMediaBox];
+        [page drawWithBox:kPDFDisplayBoxMediaBox toContext:[[NSGraphicsContext currentContext] CGContext]];
         [noteIcons[i] unlockFocus];
         [noteIcons[i] setTemplate:YES];
     }
@@ -257,8 +256,6 @@ static NSURL *temporaryDirectoryURL = nil;
 - (void)windowWillClose:(NSNotification *)aNotification {
     if ([self commitEditing] == NO)
         [self discardEditing];
-    if ([note respondsToSelector:@selector(setWindowIsOpen:)])
-        [(PDFAnnotationText *)note setWindowIsOpen:NO];
     if ([[self window] isKeyWindow])
         [[[[self document] mainWindowController] window] makeKeyWindow];
     else if ([[self window] isMainWindow])
@@ -300,12 +297,6 @@ static NSURL *temporaryDirectoryURL = nil;
         }
     }
     [super setDocument:document];
-}
-
-- (IBAction)showWindow:(id)sender {
-    [super showWindow:sender];
-    if ([note respondsToSelector:@selector(setWindowIsOpen:)])
-        [(PDFAnnotationText *)note setWindowIsOpen:YES];
 }
 
 - (NSString *)windowTitleForDocumentDisplayName:(NSString *)displayName {

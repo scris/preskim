@@ -101,7 +101,10 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
 + (NSSet *)customScriptingKeys {
     static NSSet *customNoteScriptingKeys = nil;
     if (customNoteScriptingKeys == nil) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         NSMutableSet *customKeys = [[super customScriptingKeys] mutableCopy];
+#pragma clang diagnostic pop
         [customKeys addObject:SKPDFAnnotationRichTextKey];
         customNoteScriptingKeys = [customKeys copy];
         [customKeys release];

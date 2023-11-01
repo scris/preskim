@@ -79,6 +79,18 @@ extern NSString *SKPasteboardTypeSkimNote;
 - (NSArray *)dashPattern;
 - (void)setDashPattern:(NSArray *)pattern;
 
+- (NSPoint)observedStartPoint;
+- (void)setObservedStartPoint:(NSPoint)point;
+- (NSPoint)observedEndPoint;
+- (void)setObservedEndPoint:(NSPoint)point;
+
+- (CGFloat)pathInset;
+
+- (NSArray *)bezierPaths;
+- (void)setBezierPaths:(NSArray *)newPaths;
+
+- (NSArray *)pagePaths;
+
 - (NSImage *)image;
 - (NSAttributedString *)text;
 

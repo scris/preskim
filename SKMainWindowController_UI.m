@@ -215,10 +215,10 @@
         if ([annotation isSkimNote]) {
             if ([annotation isText]) {
                 mwcFlags.updatingFont = 1;
-                [[NSFontManager sharedFontManager] setSelectedFont:[(PDFAnnotationFreeText *)annotation font] isMultiple:NO];
+                [[NSFontManager sharedFontManager] setSelectedFont:[annotation font] isMultiple:NO];
                 mwcFlags.updatingFont = 0;
                 mwcFlags.updatingFontAttributes = 1;
-                [[NSFontManager sharedFontManager] setSelectedAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[(PDFAnnotationFreeText *)annotation fontColor], NSForegroundColorAttributeName, nil] isMultiple:NO];
+                [[NSFontManager sharedFontManager] setSelectedAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[annotation fontColor], NSForegroundColorAttributeName, nil] isMultiple:NO];
                 mwcFlags.updatingFontAttributes = 0;
             }
         }

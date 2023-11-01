@@ -62,7 +62,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     return @[SKNPDFAnnotationBoundsKey, SKNPDFAnnotationFontKey, SKNPDFAnnotationFontColorKey, SKNPDFAnnotationAlignmentKey, SKNPDFAnnotationColorKey, SKNPDFAnnotationBorderKey, SKNPDFAnnotationStringKey];
 }
 
-- (id)initWithPDFView:(PDFView *)aPDFView annotation:(PDFAnnotationFreeText *)anAnnotation {
+- (id)initWithPDFView:(PDFView *)aPDFView annotation:(PDFAnnotation *)anAnnotation {
     self = [super initWithFrame:[annotation bounds]];
     if (self) {
         pdfView = aPDFView;

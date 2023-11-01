@@ -328,8 +328,8 @@ static SKLineInspector *sharedLineInspector = nil;
         [self setStyle:[annotation border] ? [[annotation border] style] : 0];
     }
     if ([type isEqualToString:SKNLineString]) {
-        [self setStartLineStyle:[(PDFAnnotationLine *)annotation startLineStyle]];
-        [self setEndLineStyle:[(PDFAnnotationLine *)annotation endLineStyle]];
+        [self setStartLineStyle:[annotation startLineStyle]];
+        [self setEndLineStyle:[annotation endLineStyle]];
     }
 }
 

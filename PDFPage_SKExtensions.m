@@ -118,23 +118,19 @@ static BOOL usesSequentialPageNumbering = NO;
                                                       bytesPerRow:0 
                                                      bitsPerPixel:32];
     if (imageRep) {
-        [NSGraphicsContext saveGraphicsState];
-        [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:imageRep]];
-        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
-        [[NSGraphicsContext currentContext] setShouldAntialias:NO];
+        CGContextRef context = [[NSGraphicsContext graphicsContextWithBitmapImageRep:imageRep] CGContext];
+        CGContextSetInterpolationQuality(context, kCGInterpolationNone);
+        CGContextSetShouldAntialias(context, false);
         if ([self rotation]) {
-            NSAffineTransform *transform = [NSAffineTransform transform];
             switch ([self rotation]) {
-                case 90:  [transform translateXBy:NSWidth(bounds) yBy:0.0]; break;
-                case 180: [transform translateXBy:NSHeight(bounds) yBy:NSWidth(bounds)]; break;
-                case 270: [transform translateXBy:0.0 yBy:NSHeight(bounds)]; break;
+                case 90:  CGContextTranslateCTM(context, NSWidth(bounds), 0.0); break;
+                case 180: CGContextTranslateCTM(context, NSHeight(bounds), NSWidth(bounds)); break;
+                case 270: CGContextTranslateCTM(context, 0.0, NSHeight(bounds)); break;
             }
-            [transform rotateByDegrees:[self rotation]];
-            [transform concat];
+            CGContextRotateCTM(context, [self rotation] * M_PI / 180.0);
         }
-        [self drawWithBox:box]; 
-        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
-        [NSGraphicsContext restoreGraphicsState];
+        [self drawWithBox:box toContext:context];
+        CGContextSetInterpolationQuality(context, kCGInterpolationDefault);
     }
     return imageRep;
 }
@@ -231,7 +227,7 @@ static BOOL usesSequentialPageNumbering = NO;
         [transform concat];
     }
     
-    [self drawWithBox:box]; 
+    [self drawWithBox:box toContext:[[NSGraphicsContext currentContext] CGContext]];
     
     for (id highlight in highlights) {
         // highlight should be a PDFSelection or SKReadingBar

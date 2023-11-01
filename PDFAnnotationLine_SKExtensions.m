@@ -197,22 +197,6 @@ static inline void addLineTipToPath(CGMutablePathRef path, NSPoint point, CGFloa
     return fdfString;
 }
 
-- (NSPoint)observedStartPoint {
-    return [self startPoint];
-}
-
-- (void)setObservedStartPoint:(NSPoint)point {
-    [self setStartPoint:point];
-}
-
-- (NSPoint)observedEndPoint {
-    return [self endPoint];
-}
-
-- (void)setObservedEndPoint:(NSPoint)point {
-    [self setEndPoint:point];
-}
-
 - (BOOL)isLine { return YES; }
 
 - (BOOL)isWidget { return NO; }

@@ -416,7 +416,10 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
     PDFDisplayBox *box = [self displayBox];
     CGFloat scale = [self scaleFactor];
     CGContextSetInterpolationQuality(context, [self interpolationQuality] + 1);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     CGContextSetShouldAntialias(context, [self shouldAntiAlias]);
+#pragma clang diagnostic pop
     for (PDFPage *page in [self visiblePages]) {
         NSRect pageRect = [self convertRect:[page boundsForBox:box] fromPage:page];
         if (NSIntersectsRect(pageRect, rect) == NO) continue;
