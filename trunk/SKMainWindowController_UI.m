@@ -406,15 +406,7 @@
         }
     } else if ([tv isEqual:rightSideController.snapshotTableView]) {
         SKSnapshotWindowController *snapshot = [[rightSideController.snapshotArrayController arrangedObjects] objectAtIndex:row];
-        Class promiseClass = NSClassFromString(@"NSFilePromiseProvider");
-        if (promiseClass) {
-            return [[[promiseClass alloc] initWithFileType:NSPasteboardTypeTIFF delegate:snapshot] autorelease];
-        } else {
-            NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
-            [item setString:(NSString *)kUTTypeTIFF forType:(NSString *)kPasteboardTypeFilePromiseContent];
-            [item setDataProvider:snapshot forTypes:@[(NSString *)kPasteboardTypeFileURLPromise, NSPasteboardTypeTIFF]];
-            return item;
-        }
+        return [[[NSFilePromiseProvider alloc] initWithFileType:NSPasteboardTypeTIFF delegate:snapshot] autorelease];
     }
     return nil;
 }

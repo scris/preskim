@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
     SKSnapshotOpenPreview
 };
 
-@interface SKSnapshotWindowController : NSWindowController <NSWindowDelegate, NSPasteboardItemDataProvider, NSFilePromiseProviderDelegate, SKSnapshotPDFViewDelegate> {
+@interface SKSnapshotWindowController : NSWindowController <NSWindowDelegate, NSFilePromiseProviderDelegate, SKSnapshotPDFViewDelegate> {
     SKSnapshotPDFView* pdfView;
     NSImage *thumbnail;
     id <SKSnapshotWindowControllerDelegate> delegate;
