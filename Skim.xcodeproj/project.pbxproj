@@ -210,8 +210,8 @@
 		CE8BF02A115F7C5C0029020F /* SKRightSideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8BF029115F7C5C0029020F /* SKRightSideViewController.m */; };
 		CE8BF069115F859A0029020F /* LeftSideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8BF068115F859A0029020F /* LeftSideView.xib */; };
 		CE8BF070115F892A0029020F /* RightSideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8BF06F115F892A0029020F /* RightSideView.xib */; };
-		CE8DC47024620A7E00BD5D50 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8DC45E24620A7E00BD5D50 /* MetalKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		CE8DC47124620A7E00BD5D50 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8DC46F24620A7E00BD5D50 /* Metal.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		CE8DC47024620A7E00BD5D50 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8DC45E24620A7E00BD5D50 /* MetalKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		CE8DC47124620A7E00BD5D50 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8DC46F24620A7E00BD5D50 /* Metal.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		CE8DEF0820D2702A00A10FFE /* NSDate_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8DEF0720D2702A00A10FFE /* NSDate_SKExtensions.m */; };
 		CE91C7962449F56600D04039 /* SKFileShare.m in Sources */ = {isa = PBXBuildFile; fileRef = CE91C7952449F56600D04039 /* SKFileShare.m */; };
 		CE94D17B125535DE0053A520 /* synctex_parser_utils.m in Sources */ = {isa = PBXBuildFile; fileRef = CE94D17A125535DE0053A520 /* synctex_parser_utils.m */; };
