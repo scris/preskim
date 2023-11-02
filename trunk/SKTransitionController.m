@@ -47,8 +47,6 @@
 #import "SKStringConstants.h"
 #import "NSGraphics_SKExtensions.h"
 #import <Quartz/Quartz.h>
-#import <OpenGL/OpenGL.h>
-#import <OpenGL/gl.h>
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 
@@ -125,17 +123,6 @@ static OSStatus (*CGSReleaseTransition_func)(const CGSConnection cid, int transi
     CIImage *image;
     CGRect extent;
     CIFilter *filter;
-}
-@end
-
-#pragma mark -
-
-@interface SKOpenGLTransitionView : NSOpenGLView <SKTransitionView> {
-    CIImage *image;
-    CGRect extent;
-    CIFilter *filter;
-    CIContext *context;
-    BOOL needsReshape;
 }
 @end
 
@@ -399,10 +386,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 
 - (void)showTransitionViewForRect:(NSRect)rect image:(CIImage *)image extent:(CGRect)extent {
     if (transitionView == nil) {
-        if ([MTKView class])
-            transitionView = [[SKMetalTransitionView alloc] init];
-        else
-            transitionView = [[SKOpenGLTransitionView alloc] init];
+        transitionView = [[SKMetalTransitionView alloc] init];
         [transitionView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         CAAnimation *animation = [CABasicAnimation animation];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
@@ -607,126 +591,6 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     [[NSColor blackColor] setFill];
     NSRectFill(rect);
     [image drawInRect:[self bounds] fromRect:extent operation:NSCompositingOperationSourceOver fraction:1.0];
-}
-
-@end
-
-#pragma mark -
-
-@implementation SKOpenGLTransitionView
-
-@synthesize image, extent, filter;
-@dynamic progress;
-
-+ (NSOpenGLPixelFormat *)defaultPixelFormat {
-    static NSOpenGLPixelFormat *pf;
-
-    if (pf == nil) {
-        NSOpenGLPixelFormatAttribute attr[] = {
-            NSOpenGLPFAAccelerated,
-            NSOpenGLPFANoRecovery,
-            NSOpenGLPFAColorSize,
-            32,
-            0
-        };
-        
-        pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attr];
-    }
-
-    return pf;
-}
-
-- (id)init {
-    self = [super init];
-    if (self) {
-        [self setWantsBestResolutionOpenGLSurface:YES];
-    }
-    return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(image);
-    SKDESTROY(filter);
-    SKDESTROY(context);
-    [super dealloc];
-}
-
-- (CGFloat)progress {
-    NSNumber *number = [filter valueForKey:kCIInputTimeKey];
-    return number ? [number doubleValue] : 0.0;
-}
-
-- (void)setProgress:(CGFloat)newProgress {
-    if (filter) {
-        [filter setValue:[NSNumber numberWithDouble:newProgress] forKey:kCIInputTimeKey];
-        [self setImage:[filter outputImage]];
-        [self setNeedsDisplay:YES];
-    }
-}
-
-- (void)reshape    {
-    [super reshape];
-    needsReshape = YES;
-}
-
-- (void)prepareOpenGL {
-    [super prepareOpenGL];
-    
-    // Enable beam-synced updates.
-    GLint parm = 1;
-    [[self openGLContext] setValues:&parm forParameter:NSOpenGLCPSwapInterval];
-    
-    // Make sure that everything we don't need is disabled.
-    // Some of these are enabled by default and can slow down rendering.
-    
-    glDisable(GL_ALPHA_TEST);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_SCISSOR_TEST);
-    glDisable(GL_BLEND);
-    glDisable(GL_DITHER);
-    glDisable(GL_CULL_FACE);
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    glDepthMask(GL_FALSE);
-    glStencilMask(0);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glHint(GL_TRANSFORM_HINT_APPLE, GL_FASTEST);
-    
-    needsReshape = YES;
-}
-
-- (void)drawRect:(NSRect)dirtyRect {
-    NSRect bounds = [self bounds];
-    CGRect rect = NSRectToCGRect([self wantsBestResolutionOpenGLSurface] ? [self convertRectToBacking:bounds] : bounds);
-    
-    [[self openGLContext] makeCurrentContext];
-    
-    if (needsReshape) {
-        [[self openGLContext] update];
-        
-        glViewport(0, 0, (GLint)CGRectGetWidth(rect), (GLint)CGRectGetHeight(rect));
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(CGRectGetMinX(rect), CGRectGetMaxX(rect), CGRectGetMinY(rect), CGRectGetMaxY(rect), -1, 1);
-
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        
-        needsReshape = NO;
-    }
-    
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    if (image) {
-        if (context == nil) {
-            NSOpenGLPixelFormat *pf = [self pixelFormat] ?: [[self class] defaultPixelFormat];
-            context = [[CIContext contextWithCGLContext:[[self openGLContext] CGLContextObj] pixelFormat:[pf CGLPixelFormatObj] colorSpace:nil options:nil] retain];
-        }
-        [context drawImage:image inRect:rect fromRect:extent];
-    }
-    
-    glFlush();
 }
 
 @end
