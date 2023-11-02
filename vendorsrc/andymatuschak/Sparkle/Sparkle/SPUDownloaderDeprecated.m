@@ -39,7 +39,10 @@
             self.desiredFilename = desiredFilename;
             self.bundleIdentifier = bundleIdentifier;
             
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             self.download = [[NSURLDownload alloc] initWithRequest:request.request delegate:self];
+#pragma clang diagnostic pop
         }
     });
 }
@@ -53,7 +56,10 @@
             self.disabledAutomaticTermination = YES;
             
             self.mode = SPUDownloadModeTemporary;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             self.download = [[NSURLDownload alloc] initWithRequest:request.request delegate:self];
+#pragma clang diagnostic pop
         }
     });
 }

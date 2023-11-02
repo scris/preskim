@@ -626,7 +626,8 @@
         NSError *error = nil;
         success = [[NSFileManager defaultManager] removeItemAtPath:self.tempDir error:&error]; // Clean up the copied relauncher
         if (!success)
-            [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation source:[self.tempDir stringByDeletingLastPathComponent] destination:@"" files:@[[self.tempDir lastPathComponent]] tag:NULL];
+            [[NSWorkspace sharedWorkspace]
+             recycleURLs:@[[NSURL fileURLWithPath:self.tempDir]] completionHandler:nil];
     }
 }
 
