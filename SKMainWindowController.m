@@ -385,11 +385,8 @@ static char SKMainWindowContentLayoutObservationContext;
     // Set up the window
     [window setCollectionBehavior:[window collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
     
-    if ([window respondsToSelector:@selector(setToolbarStyle:)])
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
+    if (@available(macOS 11.0, *))
         [window setToolbarStyle:NSWindowToolbarStyleExpanded];
-#pragma clang diagnostic pop
     
     [window setStyleMask:[window styleMask] | NSWindowStyleMaskFullSizeContentView];
     if (mwcFlags.fullSizeContent) {
@@ -429,7 +426,7 @@ static char SKMainWindowContentLayoutObservationContext;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [pdfView setShouldAntiAlias:[sud boolForKey:SKShouldAntiAliasKey]];
-    if (RUNNING_BEFORE(10_14))
+    if (@available(macOS 10.14, *)) {} else
         [pdfView setGreekingThreshold:[sud floatForKey:SKGreekingThresholdKey]];
 #pragma clang diagnostic pop
     [pdfView setInterpolationQuality:[sud integerForKey:SKInterpolationQualityKey]];
@@ -1707,18 +1704,17 @@ static char SKMainWindowContentLayoutObservationContext;
     [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
     [overviewView setAllowsMultipleSelection:isPresentation == NO];
     
-    if (RUNNING_BEFORE(10_14)) {
+    if (@available(macOS 10.14, *)) {
+        if (isPresentation) {
+            SKSetHasDarkAppearance(overviewContentView);
+            [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialUnderPageBackground];
+        } else {
+            SKSetHasDefaultAppearance(overviewContentView);
+            [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialSidebar];
+        }
+    } else {
         [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:isPresentation ? NSVisualEffectMaterialDark : NSVisualEffectMaterialSidebar];
         [[overviewView visibleItems] setValue:[NSNumber numberWithInteger:isPresentation ? NSBackgroundStyleDark : NSBackgroundStyleLight] forKey:@"backgroundStyle"];
-    } else if (isPresentation) {
-        SKSetHasDarkAppearance(overviewContentView);
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialUnderPageBackground];
-#pragma clang diagnostic pop
-    } else {
-        SKSetHasDefaultAppearance(overviewContentView);
-        [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialSidebar];
     }
     [overviewView setSingleClickAction:isPresentation ? @selector(hideOverview:) : NULL];
     
@@ -1817,7 +1813,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [item setHighlightLevel:[self thumbnailHighlightLevelForRow:i]];
     if (markedPageIndex == i)
         [item setMarked:YES];
-    if (RUNNING_BEFORE(10_14))
+    if (@available(macOS 10.14, *)) {} else
         [item setBackgroundStyle:[self interactionMode] == SKPresentationMode ? NSBackgroundStyleDark : NSBackgroundStyleLight];
     return item;
 }
@@ -2596,7 +2592,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                                   SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
                                   SKTableFontSizeKey]
         context:&SKMainWindowDefaultsObservationContext];
-    if (RUNNING_AFTER(10_13))
+    if (@available(macOS 10.14, *))
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKMainWindowAppObservationContext];
     if (mwcFlags.fullSizeContent)
         [[self window] addObserver:self forKeyPath:@"contentLayoutRect" options:0 context:&SKMainWindowContentLayoutObservationContext];
@@ -2612,7 +2608,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
           SKTableFontSizeKey] context:&SKMainWindowDefaultsObservationContext];
     }
     @catch (id e) {}
-    if (RUNNING_AFTER(10_13)) {
+    if (@available(macOS 10.14, *)) {
         @try { [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:&SKMainWindowAppObservationContext]; }
         @catch (id e) {}
     }
@@ -2705,12 +2701,14 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             [pdfView requiresDisplay];
             [secondaryPdfView requiresDisplay];
             [self allThumbnailsNeedUpdate];
-        } else if ([key isEqualToString:SKGreekingThresholdKey] && RUNNING_BEFORE(10_14)) {
+        } else if ([key isEqualToString:SKGreekingThresholdKey]) {
+            if (@available(macOS 10.14, *)) {} else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
-            [secondaryPdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
+                [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
+                [secondaryPdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
 #pragma clang diagnostic pop
+            }
         } else if ([key isEqualToString:SKTableFontSizeKey]) {
             [self updateTableFont];
             [self updatePageColumnWidthForTableViews:[NSArray arrayWithObjects:leftSideController.tocOutlineView, rightSideController.noteOutlineView, leftSideController.findTableView, leftSideController.groupedFindTableView, nil]];

@@ -189,7 +189,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (void)updateImageHighlight {
-    if (RUNNING_AFTER(10_15)) {
+    if (@available(macOS 11.0, *)) {
         if ([self isSelected] || [self isMenuHighlighted]) {
             if (imageHighlightView == nil) {
                 imageHighlightView = [self newHighlightView];
@@ -226,7 +226,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (void)updateLabelHighlight {
-    if (RUNNING_AFTER(10_15)) {
+    if (@available(macOS 11.0, *)) {
         if ([self isSelected] || [self highlightLevel] > 0) {
             if (labelHighlightView == nil) {
                 labelHighlightView = [self newHighlightView];
@@ -318,7 +318,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 #pragma mark Drawing
 
 - (void)drawRect:(NSRect)dirtyRect {
-    if (RUNNING_AFTER(10_15))
+    if (@available(macOS 11.0, *))
         return;
     
     if ([self isSelected] || [self isMenuHighlighted]) {
@@ -370,7 +370,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         } else if ([keyPath isEqualToString:LABEL_KEY]) {
             [labelView setObjectValue:[thumbnail label]];
             if ([self isSelected] || [self highlightLevel] > 0) {
-                if (RUNNING_AFTER(10_15))
+                if (@available(macOS 11.0, *))
                     [self updateLabelHighlightMask:nil];
                 else
                     [self setNeedsDisplayInRect:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
@@ -384,7 +384,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)handleKeyStateChangedNotification:(NSNotification *)note {
     if ([self isSelected] || [self highlightLevel] > 0) {
         [self updateBackgroundStyle];
-        if (RUNNING_AFTER(10_15))
+        if (@available(macOS 11.0, *))
             [labelHighlightView setEmphasized:[[self window] isKeyWindow]];
         else
             [self setNeedsDisplayInRect:[labelView frame]];

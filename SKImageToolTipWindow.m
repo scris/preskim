@@ -82,12 +82,9 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orderOut:) 
                                                      name:NSApplicationWillResignActiveNotification object:NSApp];
-        if (RUNNING_AFTER(10_13)) {
+        if (@available(macOS 10.14, *)) {
             NSVisualEffectView *backgroundView = [[[NSVisualEffectView alloc] init] autorelease];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
             [backgroundView setMaterial:NSVisualEffectMaterialToolTip];
-#pragma clang diagnostic push
             [backgroundView setState:NSVisualEffectStateActive];
             [backgroundView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [self setContentView:backgroundView];

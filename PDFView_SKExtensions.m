@@ -322,7 +322,7 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 }
 
 - (BOOL)drawsActiveSelections {
-    if (RUNNING_AFTER(10_14))
+    if (@available(macOS 10.15, *))
         return [[self window] isKeyWindow];
     else
         return YES;

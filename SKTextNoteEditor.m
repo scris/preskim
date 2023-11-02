@@ -117,7 +117,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     [textView setDefaultParagraphStyle:parStyle];
     [[textView textStorage] addAttribute:NSParagraphStyleAttributeName value:parStyle range:NSMakeRange(0, [[textView string] length])];
     [textView setTypingAttributes:typingAttrs];
-    if (RUNNING_AFTER(10_13))
+    if (@available(macOS 10.14, *))
         [textView setTextContainerInset:NSMakeSize(0.0, 3.0 + round(descent) - descent)];
     [parStyle release];
     [typingAttrs release];
@@ -144,7 +144,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     [[textView textContainer] setContainerSize:NSMakeSize(NSWidth([self bounds]), CGFLOAT_MAX)];
     [[textView textContainer] setWidthTracksTextView:YES];
     [[textView textContainer] setLineFragmentPadding:2.0];
-    if (RUNNING_AFTER(10_13))
+    if (@available(macOS 10.14, *))
         [textView setTextContainerInset:NSMakeSize(0.0, 3.0)];
     [textView setSelectedRange:NSMakeRange(0, 0)];
     NSClipView *clipView = [[[NSClipView alloc] initWithFrame:[self bounds]] autorelease];
@@ -282,7 +282,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     
     [NSGraphicsContext saveGraphicsState];
     
-    if ((RUNNING(10_13) || RUNNING(10_14)) && (color == nil || [color alphaComponent] < 1.0)) {
+    if (@available(macOS 10.15, *)) {} else if (color == nil || [color alphaComponent] < 1.0) {
         [[NSColor whiteColor] setFill];
         [NSBezierPath fillRect:bounds];
     }

@@ -341,10 +341,11 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
             [remoteStateWindow setAutoHideTimeInterval:timeInterval];
             contentRect.origin = NSZeroPoint;
             NSVisualEffectView *contentView = [[NSVisualEffectView alloc] init];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-            [contentView setMaterial:RUNNING_BEFORE(10_14) ? NSVisualEffectMaterialAppearanceBased : NSVisualEffectMaterialUnderWindowBackground];
-#pragma clang diagnostic pop
+
+            if (@available(macOS 10.14, *))
+                [contentView setMaterial:NSVisualEffectMaterialUnderWindowBackground];
+            else
+                [contentView setMaterial:NSVisualEffectMaterialAppearanceBased];
             [contentView setState:NSVisualEffectStateActive];
             [remoteStateWindow setContentView:contentView];
             [contentView setMaskImage:[NSImage maskImageWithSize:contentRect.size cornerRadius:10.0]];

@@ -215,11 +215,8 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     [pdfView setDisplayMode:kPDFDisplaySinglePage];
     [pdfView setDisplayBox:kPDFDisplayBoxCropBox];
     [pdfView setDisplaysPageBreaks:NO];
-    if ([pdfView respondsToSelector:@selector(enablePageShadows:)])
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
+    if (@available(macOS 10.14, *))
         [pdfView enablePageShadows:NO];
-#pragma clang diagnostic pop
     [scrollView setAutohidesScrollers:YES];
     [scrollView setHasHorizontalScroller:NO];
     [scrollView setHasVerticalScroller:NO];
@@ -274,11 +271,8 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     [self removePresentationNotesNavigation];
     
-    if ([pdfView respondsToSelector:@selector(enablePageShadows:)])
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
+    if (@available(macOS 10.14, *))
         [pdfView enablePageShadows:YES];
-#pragma clang diagnostic pop
     
     NSScrollView *scrollView = [pdfView scrollView];
     [scrollView setHasHorizontalScroller:[[savedNormalSetup objectForKey:HASHORIZONTALSCROLLER_KEY] boolValue]];
@@ -580,7 +574,7 @@ static inline CGFloat fullScreenOffset(NSWindow *window) {
         offset = NSHeight([NSWindow frameRectForContentRect:NSZeroRect styleMask:NSWindowStyleMaskTitled]);
     else if (fullScreenToolbarOffset > 0.0)
         offset = fullScreenToolbarOffset;
-    else if (RUNNING_AFTER(10_15))
+    else if (@available(macOS 11.0, *))
         offset = 16.0;
     return offset;
 }
@@ -657,7 +651,7 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
         [(SKMainWindow *)window setDisableConstrainedFrame:YES];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
                 [context setDuration:duration - 0.02];
-                if (RUNNING_AFTER(11_0))
+                if (@available(macOS 12.0, *))
                     [[(SKMainWindow *)window animator] setWindowFrame:frame];
                 else
                     [[window animator] setFrame:frame display:NO];

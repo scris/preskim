@@ -440,7 +440,7 @@ enum {
 #pragma mark Drawing
 
 - (BOOL)drawsActiveSelections {
-    if (RUNNING_AFTER(10_14))
+    if (@available(macOS 10.15, *))
         return atomic_load(&inKeyWindow);
     else
         return YES;
@@ -638,7 +638,7 @@ enum {
 }
 
 - (NSColor *)backgroundColor {
-    if (RUNNING(10_15))
+    if (@available(macOS 11.0, *)) {} else if (@available(macOS 10.15, *))
         return [super backgroundColor] ?: [[self scrollView] backgroundColor];
     return [super backgroundColor];
 }
@@ -3279,7 +3279,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)handleKeyStateChangedNotification:(NSNotification *)notification {
     atomic_store(&inKeyWindow, [[self window] isKeyWindow]);
-    if (RUNNING_AFTER(10_14)) {
+    if (@available(macOS 10.15, *)) {
         if (selectionPageIndex != NSNotFound) {
             CGFloat margin = HANDLE_SIZE / [self scaleFactor];
             for (PDFPage *page in [self displayedPages])
@@ -3348,10 +3348,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 #pragma mark Dark mode
 
 - (void)viewDidChangeEffectiveAppearance {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    [super viewDidChangeEffectiveAppearance];
-#pragma clang diagnostic pop
+    if (@available(macOS 10.14, *))
+        [super viewDidChangeEffectiveAppearance];
     [loupeController updateColorFilters];
 }
 
@@ -5469,7 +5467,10 @@ static inline NSSize SKFitTextNoteSize(NSString *string, NSFont *font, CGFloat w
     [attrs release];
     [attrString release];
     size.width = ceil(size.width + 4.0);
-    size.height = ceil(size.height + (RUNNING_AFTER(10_13) ? 6.0 : 2.0));
+    if (@available(macOS 10.14, *))
+        size.height = ceil(size.height + 6.0);
+    else
+        size.height = ceil(size.height + 2.0);
     return size;
 }
 

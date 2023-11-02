@@ -46,7 +46,7 @@ static char SKThumbnailImageViewDefaultsObservationContext;
 @implementation SKThumbnailImageView
 
 static inline NSArray *defaultKeysToObserve() {
-    if (RUNNING_AFTER(10_13))
+    if (@available(macOS 10.14, *))
         return @[SKInvertColorsInDarkModeKey, SKSepiaToneKey, SKWhitePointKey];
     else
         return @[SKSepiaToneKey, SKWhitePointKey];
@@ -80,10 +80,8 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)viewDidChangeEffectiveAppearance {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    [super viewDidChangeEffectiveAppearance];
-#pragma clang diagnostic pop
+    if (@available(macOS 10.14, *))
+        [super viewDidChangeEffectiveAppearance];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
         [self setContentFilters:SKColorEffectFilters()];
 }

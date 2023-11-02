@@ -84,7 +84,8 @@
 
 #define SKImageNameSeparator @"SKSeparator"
 
-#define INDENT (RUNNING_AFTER(10_15) ? 9.0 : 16.0)
+#define INDENT 9.0
+#define OLD_INDENT 16.0
 
 #define SAVE_DELAY 10.0
 
@@ -903,7 +904,11 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
         NSTableColumn *tableColumn = [ov outlineTableColumn];
         NSTableCellView *view = [ov makeViewWithIdentifier:[tableColumn identifier] owner:self];
         __block NSInteger validCount = 0;
-        NSRect frame = NSMakeRect(0.0, 0.0, [tableColumn width] - INDENT, [ov rowHeight]);
+        NSRect frame = NSMakeRect(0.0, 0.0, [tableColumn width], [ov rowHeight]);
+        if (@available(macOS 11.0, *))
+            frame.size.width -= INDENT;
+        else
+            frame.size.width -= OLD_INDENT;
         [view setFrame:frame];
         frame.origin = [draggingInfo draggingLocation];
         
@@ -1005,7 +1010,7 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
     BOOL isSep = ([item bookmarkType] == SKBookmarkTypeSeparator);
     NSString *identifier = isSep ? @"separator" : [tableColumn identifier];
     NSTableCellView *view = [ov makeViewWithIdentifier:identifier owner:self];
-    if (!RUNNING_AFTER(10_15)) {
+    if (@available(macOS 11.0, *)) {} else {
         BOOL isLast = [[tableColumn identifier] isEqualToString:FILE_COLUMNID];
         if (isLast || isSep)
             [[view constraintWithFirstItem:view firstAttribute:NSLayoutAttributeTrailing] setConstant:isSep == NO ? 4.0 : isLast ? 2.0 : 0.0];
@@ -1158,7 +1163,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     [item setLabels:NSLocalizedString(@"New Folder", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Add a New Folder", @"Tool tip message")];
     [item setViewWithSizes:folderSegmentedControl];
-    if (!RUNNING_AFTER(10_15))
+    if (@available(macOS 11.0, *)) {} else
         [folderSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksNewFolderToolbarItemIdentifier];
     [item release];
@@ -1168,7 +1173,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     [item setToolTip:NSLocalizedString(@"Add a New Separator", @"Tool tip message")];
     [item setImage:[NSImage imageNamed:SKImageNameToolbarNewSeparator]];
     [item setViewWithSizes:separatorSegmentedControl];
-    if (!RUNNING_AFTER(10_15))
+    if (@available(macOS 11.0, *)) {} else
         [separatorSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksNewSeparatorToolbarItemIdentifier];
     [item release];
@@ -1179,7 +1184,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     [item setImage:[NSImage imageNamed:SKImageNameToolbarDelete]];
     [item setViewWithSizes:deleteSegmentedControl];
     [deleteSegmentedControl setEnabled:[outlineView canDelete]];
-    if (!RUNNING_AFTER(10_15))
+    if (@available(macOS 11.0, *)) {} else
         [deleteSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksDeleteToolbarItemIdentifier];
     [item release];

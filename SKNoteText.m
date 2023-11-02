@@ -87,7 +87,7 @@
 - (id)objectValue {
     if ([note isNote] == NO)
         return [note textString];
-    else if (RUNNING_AFTER(10_13))
+    else if (@available(macOS 10.14, *))
         return [[note text] attributedStringByAddingControlTextColorAttribute];
     else
         return [note text];

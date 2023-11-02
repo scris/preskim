@@ -95,7 +95,7 @@
     [layer setActions:@{@"contents":[NSNull null]}];
     [layer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
     [layer setFrame:NSRectToCGRect([pdfView bounds])];
-    if (RUNNING_BEFORE(10_14)) {
+    if (@available(macOS 10.14, *)) {} else {
         CGColorRef borderColor = CGColorCreateGenericGray(LOUPE_BORDER_GRAY, 1.0);
         [layer setBorderColor:borderColor];
         [layer setBorderWidth:LOUPE_BORDER_WIDTH];
@@ -116,7 +116,7 @@
 }
 
 - (void)updateBackgroundColor {
-    if (RUNNING_AFTER(10_13)) {
+    if (@available(macOS 10.14, *)) {
         BOOL hasBackgroundView = NO;
         NSView *loupeView = [window contentView];
         if ([[loupeView subviews] count] > 0) {
@@ -125,15 +125,12 @@
         }
         NSColor *bgColor = [pdfView backgroundColor];
         NSVisualEffectMaterial material = 0;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
         if ([bgColor isEqual:[NSColor windowBackgroundColor]])
             material = NSVisualEffectMaterialWindowBackground;
         else if ([bgColor isEqual:[NSColor controlBackgroundColor]] || [bgColor isEqual:[NSColor textBackgroundColor]])
             material = NSVisualEffectMaterialContentBackground;
         else if ([bgColor isEqual:[NSColor underPageBackgroundColor]])
             material = NSVisualEffectMaterialUnderPageBackground;
-#pragma clang diagnostic pop
         if (material == 0) {
             __block CGColorRef cgColor = NULL;
             SKRunWithAppearance([pdfView scrollView], ^{
@@ -203,7 +200,7 @@
         }
         
         NSView *loupeView = [window contentView];
-        if (RUNNING_AFTER(10_13))
+        if (@available(macOS 10.14, *))
             loupeView = [[loupeView subviews] firstObject] ?: loupeView;
         BOOL needsMask = loupeView != [window contentView] && NSEqualSizes([window frame].size, magRect.size) == NO;
         [window setFrame:magRect display:YES];
@@ -267,7 +264,7 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGFloat scale) {
         shadowColor = CGColorCreateGenericGray(0.0, 0.3);
         shadowBlurRadius = 4.0 * magnification * scaleFactor;
         shadowOffset.height = -magnification * scaleFactor;
-        if (RUNNING_AFTER(10_13))
+        if (@available(macOS 10.14, *))
             borderColor = CGColorCreateGenericGray(0.925, 1.0);
     }
     

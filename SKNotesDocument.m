@@ -914,7 +914,7 @@
     [item setLabels:NSLocalizedString(@"Search", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Search Notes", @"Tool tip message")];
     [item setView:searchField];
-    if (!RUNNING_AFTER(10_15)) {
+    if (@available(macOS 11.0, *)) {} else {
         NSSize size = [searchField frame].size;
         [item setMinSize:size];
         size.width = 240.0;

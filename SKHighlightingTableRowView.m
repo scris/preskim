@@ -99,7 +99,7 @@ static BOOL supportsHighlights = YES;
     if (highlightLevel != newHighlightLevel) {
         highlightLevel = newHighlightLevel;
         if (supportsHighlights) {
-            if (RUNNING_AFTER(10_15))
+            if (@available(macOS 11.0, *))
                 [self updateHighlightView];
             else
                 [self setNeedsDisplay:YES];
@@ -110,15 +110,17 @@ static BOOL supportsHighlights = YES;
 - (void)setSelected:(BOOL)selected {
     if (selected != [self isSelected]) {
         [super setSelected:selected];
-        if (supportsHighlights && RUNNING_AFTER(10_15))
-            [self updateHighlightView];
+        if (supportsHighlights) {
+            if (@available(macOS 11.0, *))
+                [self updateHighlightView];
+        }
     }
 }
 
 - (void)setEmphasized:(BOOL)emphasized {
     [super setEmphasized:emphasized];
     if (supportsHighlights) {
-        if (RUNNING_AFTER(10_15))
+        if (@available(macOS 11.0, *))
             [highlightView setEmphasized:emphasized];
         else if ([self isSelected] == NO && [self highlightLevel] > 0)
             [self setNeedsDisplay:YES];
@@ -137,21 +139,23 @@ static void evaluateHighlight(void *info, const CGFloat *in, CGFloat *out) {
 }
 
 - (void)drawBackgroundInRect:(NSRect)dirtyRect {
-    if (!RUNNING_AFTER(10_15) && supportsHighlights &&
-        [self isSelected] == NO && [self highlightLevel] > 0 && [self isEmphasized]) {
-        NSRect rect = [[self viewAtColumn:0] frame];
-        rgba color;
-        [[[NSColor selectedMenuItemColor] colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&color.r green:&color.g blue:&color.b alpha:NULL];
-        color.a = fmin(1.0, 0.1 * [self highlightLevel]);
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
-        CGFloat domain[] = {0.0, 1.0};
-        CGFloat range[] = {0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0};
-        CGFunctionCallbacks callbacks = {0, &evaluateHighlight, NULL};
-        CGFunctionRef function = CGFunctionCreate((void *)&color, 1, domain, 4, range, &callbacks);
-        CGShadingRef shading = CGShadingCreateAxial(colorSpace, CGPointMake(NSMinX(rect), 0.0), CGPointMake(NSMaxX(rect), 0.0), function, false, false);
-        CGColorSpaceRelease(colorSpace);
-        CGContextDrawShading([[NSGraphicsContext currentContext] CGContext], shading);
-        CGShadingRelease(shading);
+    if (@available(macOS 11.0, *)) {} else {
+        if (supportsHighlights &&
+            [self isSelected] == NO && [self highlightLevel] > 0 && [self isEmphasized]) {
+            NSRect rect = [[self viewAtColumn:0] frame];
+            rgba color;
+            [[[NSColor selectedMenuItemColor] colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&color.r green:&color.g blue:&color.b alpha:NULL];
+            color.a = fmin(1.0, 0.1 * [self highlightLevel]);
+            CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
+            CGFloat domain[] = {0.0, 1.0};
+            CGFloat range[] = {0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0};
+            CGFunctionCallbacks callbacks = {0, &evaluateHighlight, NULL};
+            CGFunctionRef function = CGFunctionCreate((void *)&color, 1, domain, 4, range, &callbacks);
+            CGShadingRef shading = CGShadingCreateAxial(colorSpace, CGPointMake(NSMinX(rect), 0.0), CGPointMake(NSMaxX(rect), 0.0), function, false, false);
+            CGColorSpaceRelease(colorSpace);
+            CGContextDrawShading([[NSGraphicsContext currentContext] CGContext], shading);
+            CGShadingRelease(shading);
+        }
     }
     
     [super drawBackgroundInRect:dirtyRect];

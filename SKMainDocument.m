@@ -322,7 +322,10 @@ enum {
 
 - (void)changeExportType:(id)sender {
     NSString *type = [exportAccessoryController selectedFileType];
-    [[exportAccessoryController savePanel] setAllowedFileTypes:[NSArray arrayWithObjects:RUNNING_AFTER(10_15) ? type : [self fileNameExtensionForType:type saveOperation:NSSaveToOperation], nil]];
+    if (@available(macOS 11.0, *))
+        [[exportAccessoryController savePanel] setAllowedFileTypes:[NSArray arrayWithObjects:type, nil]];
+    else
+        [[exportAccessoryController savePanel] setAllowedFileTypes:[NSArray arrayWithObjects:[self fileNameExtensionForType:type saveOperation:NSSaveToOperation], nil]];
     if ([self canAttachNotesForType:type] == NO) {
         [exportAccessoryController setHasExportOptions:NO];
     } else {
@@ -783,9 +786,11 @@ enum {
             [tmpTypes removeObject:SKDVIDocumentType];
         if ([SKConversionProgressController toolPathForType:SKXDVDocumentType] == nil)
             [tmpTypes removeObject:SKXDVDocumentType];
-        if (RUNNING_AFTER(13_0) && [SKConversionProgressController toolPathForType:SKPostScriptDocumentType] == nil) {
-            [tmpTypes removeObject:SKPostScriptDocumentType];
-            [tmpTypes removeObject:SKEncapsulatedPostScriptDocumentType];
+        if (@available(macOS 14.0, *)) {
+            if ([SKConversionProgressController toolPathForType:SKPostScriptDocumentType] == nil) {
+                [tmpTypes removeObject:SKPostScriptDocumentType];
+                [tmpTypes removeObject:SKEncapsulatedPostScriptDocumentType];
+            }
         }
         readableTypes = tmpTypes;
     }

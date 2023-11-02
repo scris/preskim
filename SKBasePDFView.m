@@ -70,7 +70,7 @@ static char SKBasePDFViewDefaultsObservationContext;
 #pragma mark Dark mode and color inversion
 
 static inline NSArray *defaultKeysToObserve() {
-    if (RUNNING_AFTER(10_13))
+    if (@available(macOS 10.14, *))
         return @[SKInvertColorsInDarkModeKey, SKSepiaToneKey, SKWhitePointKey];
     else
         return @[SKSepiaToneKey, SKWhitePointKey];
@@ -78,17 +78,17 @@ static inline NSArray *defaultKeysToObserve() {
 
 // make sure we don't use the same method name as a superclass or a subclass
 - (void)commonBaseInitialization {
-    if (RUNNING_AFTER(10_13)) {
+    if (@available(macOS 10.14, *)) {
         SKSetHasDefaultAppearance(self);
         SKSetHasLightAppearance([[self scrollView] contentView]);
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
             SKSetHasLightAppearance([self scrollView]);
         
-        if (RUNNING(10_14)) {
+        if (@available(macOS 10.15, *)) {} else if (@available(macOS 10.14, *)) {
             [self handleScrollerStyleChangedNotification:nil];
             
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
-                                                         name:NSPreferredScrollerStyleDidChangeNotification object:nil];
+                                                             name:NSPreferredScrollerStyleDidChangeNotification object:nil];
         }
     }
     
@@ -137,10 +137,8 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)viewDidChangeEffectiveAppearance {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    [super viewDidChangeEffectiveAppearance];
-#pragma clang diagnostic pop
+    if (@available(macOS 10.14, *))
+        [super viewDidChangeEffectiveAppearance];
     [[self scrollView] setContentFilters:SKColorEffectFilters()];
 }
 
@@ -156,23 +154,20 @@ static inline NSArray *defaultKeysToObserve() {
 
 - (void)setDisplaysPageBreaks:(BOOL)pageBreaks {
     [super setDisplaysPageBreaks:pageBreaks];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if ([self respondsToSelector:@selector(enablePageShadows:)])
+    if (@available(macOS 10.14, *))
         [self enablePageShadows:pageBreaks];
-#pragma clang diagnostic pop
 }
 
 #pragma mark Bug fixes
 
 - (void)goToRect:(NSRect)rect onPage:(PDFPage *)page {
-    if (RUNNING(10_13)) {
+    if (@available(macOS 10.14, *)) {
+        [super goToRect:rect onPage:page];
+    } else {
         NSView *docView = [self documentView];
         if ([self isPageAtIndexDisplayed:[page pageIndex]] == NO)
             [self goToPage:page];
         [docView scrollRectToVisible:[self convertRect:[self convertRect:rect fromPage:page] toView:docView]];
-    } else {
-        [super goToRect:rect onPage:page];
     }
 }
 

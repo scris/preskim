@@ -74,47 +74,6 @@
 
 #if SDK_BEFORE(10_14)
 
-static const NSAppKitVersion NSAppKitVersionNumber10_13 = 1561;
-static const NSAppKitVersion NSAppKitVersionNumber10_14 = 1671;
-static const NSAppKitVersion NSAppKitVersionNumber10_15 = 1894;
-static const NSAppKitVersion NSAppKitVersionNumber11_0 = 2022;
-static const NSAppKitVersion NSAppKitVersionNumber12_0 = 2113;
-static const NSAppKitVersion NSAppKitVersionNumber13_0 = 2299;
-
-#elif SDK_BEFORE(10_15)
-
-static const NSAppKitVersion NSAppKitVersionNumber10_14 = 1671;
-static const NSAppKitVersion NSAppKitVersionNumber10_15 = 1894;
-static const NSAppKitVersion NSAppKitVersionNumber11_0 = 2022;
-static const NSAppKitVersion NSAppKitVersionNumber12_0 = 2113;
-static const NSAppKitVersion NSAppKitVersionNumber13_0 = 2299;
-
-#elif SDK_BEFORE(11_0)
-
-static const NSAppKitVersion NSAppKitVersionNumber10_15 = 1894;
-static const NSAppKitVersion NSAppKitVersionNumber11_0 = 2022;
-static const NSAppKitVersion NSAppKitVersionNumber12_0 = 2113;
-static const NSAppKitVersion NSAppKitVersionNumber13_0 = 2299;
-
-#elif SDK_BEFORE(12_0)
-
-static const NSAppKitVersion NSAppKitVersionNumber11_0 = 2022;
-static const NSAppKitVersion NSAppKitVersionNumber12_0 = 2113;
-static const NSAppKitVersion NSAppKitVersionNumber13_0 = 2299;
-
-#elif SDK_BEFORE(13_0)
-
-static const NSAppKitVersion NSAppKitVersionNumber12_0 = 2113;
-static const NSAppKitVersion NSAppKitVersionNumber13_0 = 2299;
-
-#elif SDK_BEFORE(14_0)
-
-static const NSAppKitVersion NSAppKitVersionNumber13_0 = 2299;
-
-#endif
-
-#if SDK_BEFORE(10_14)
-
 enum {
     NSVisualEffectMaterialHeaderView = 10,
     NSVisualEffectMaterialSheet = 11,

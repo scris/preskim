@@ -302,7 +302,9 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 - (void)drawFocusRingMask {
     NSRect rect = [self focusRingMaskBounds];
     if (NSIsEmptyRect(rect) == NO) {
-        CGFloat r = RUNNING_AFTER(10_15) ? 3.0 : 2.0;
+        CGFloat r = 2.0;
+        if (@available(macOS 11.0, *))
+            r = 3.0;
         [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:r yRadius:r] fill];
     }
 }
@@ -376,7 +378,9 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
                     draggedIndex = i;
                     
                     NSColor *color = [colors objectAtIndex:i];
-                    CGFloat r = RUNNING_AFTER(10_15) ? 2.5 : 1.5;
+                    CGFloat r = 1.5;
+                    if (@available(macOS 11.0, *))
+                        r = 2.5;
                     
                     NSImage *image = [NSImage bitmapImageWithSize:NSMakeSize(12.0, 12.0) scale:[self backingScale] drawingHandler:^(NSRect rect){
                         [color drawSwatchInRect:NSInsetRect(rect, 1.0, 1.0)];
@@ -977,8 +981,12 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     if (NSWidth(rect) < 5.0)
         return;
     rect = NSInsetRect(rect, 2.0, 2.0);
-    CGFloat r = RUNNING_AFTER(10_15) ? 3.0 : 2.0;
-    BOOL disabled = RUNNING_AFTER(10_13) && [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO && ([self isDescendantOf:[[self window] contentView]] == NO || [[self window] isKindOfClass:NSClassFromString(@"NSToolbarSnapshotWindow")]);
+    CGFloat r = 2.0;
+    if (@available(macOS 11.0, *))
+        r = 3.0;
+    BOOL disabled = NO;
+    if (@available(macOS 10.14, *))
+        disabled = [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO && ([self isDescendantOf:[[self window] contentView]] == NO || [[self window] isKindOfClass:NSClassFromString(@"NSToolbarSnapshotWindow")]);
     CGFloat stroke = [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 0.55 : 0.25;
     NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, 0.5, 0.5) xRadius:r - 0.5 yRadius:r - 0.5];
 

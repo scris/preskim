@@ -87,7 +87,7 @@
                         [templates addObject:file];
                         NSString *type = [[templateFileNames allKeysForObject:file] firstObject];
                         if (type == nil) {
-                            if (RUNNING_AFTER(10_15)) {
+                            if (@available(macOS 11.0, *)) {
                                 // create a unique but deterministic dynamic UTI that knows the extension
                                 CFStringRef baseType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassNSPboardType, (CFStringRef)file, NULL);
                                 type = [(NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)[file pathExtension], baseType) autorelease];

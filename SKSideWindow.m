@@ -78,12 +78,15 @@ static CGFloat WINDOW_OFFSET = 8.0;
 		[self setHasShadow:YES];
         [self setDisplaysWhenScreenProfileChanges:YES];
         [self setReleasedWhenClosed:NO];
-        [self setAlphaValue:RUNNING_AFTER(10_13) ? 1.0 : 0.95];
+        if (@available(macOS 10.14, *))
+            [self setAlphaValue:1.0];
+        else
+            [self setAlphaValue:0.95];
         [self setAnimationBehavior:NSWindowAnimationBehaviorNone];
         
         NSView *backgroundView = [[[SKSideWindowContentView alloc] init] autorelease];
         
-        if (RUNNING_AFTER(10_13)) {
+        if (@available(macOS 10.14, *)) {
             NSVisualEffectView *contentView = [[NSVisualEffectView alloc] init];
             [contentView setMaterial:NSVisualEffectMaterialSidebar];
             [self setContentView:contentView];
