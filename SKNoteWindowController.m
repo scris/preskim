@@ -393,37 +393,16 @@ static NSURL *temporaryDirectoryURL = nil;
 
 - (id<NSPasteboardWriting>)draggedObjectForDragImageView:(SKDragImageView *)view {
     NSImage *image = [note image];
-    if (image) {
-        Class promiseClass = NSClassFromString(@"NSFilePromiseProvider");
-        if (promiseClass) {
-            return [[[promiseClass alloc] initWithFileType:(NSString *)kUTTypeTIFF delegate:self] autorelease];
-        } else {
-            NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
-            [item setString:(NSString *)kUTTypeTIFF forType:(NSString *)kPasteboardTypeFilePromiseContent];
-            [item setDataProvider:self forTypes:@[(NSString *)kPasteboardTypeFileURLPromise, NSPasteboardTypeTIFF]];
-            return item;
-        }
-    } else return nil;
+    if (image)
+        return [[[NSFilePromiseProvider alloc] initWithFileType:(NSString *)kUTTypeTIFF delegate:self] autorelease];
+    else
+        return nil;
 }
 
 - (void)showImageForDragImageView:(SKDragImageView *)view {
     NSURL *fileURL = [self writeImageToDestination:[[self class] temporaryDirectoryURL]];
     if (fileURL)
         [[NSWorkspace sharedWorkspace] openURL:fileURL];
-}
-
-#pragma mark NSPasteboardItemDataProvider protocol
-
-- (void)pasteboard:(NSPasteboard *)pboard item:(NSPasteboardItem *)item provideDataForType:(NSString *)type {
-    if ([type isEqualToString:(NSString *)kPasteboardTypeFileURLPromise]) {
-        NSURL *dropDestination = [pboard pasteLocationURL];
-        NSURL *fileURL = [self writeImageToDestination:dropDestination];
-        if (fileURL)
-            [item setString:[fileURL absoluteString] forType:type];
-    } else if ([type isEqualToString:NSPasteboardTypeTIFF]) {
-        NSImage *image = [note image];
-        [item setData:[image TIFFRepresentation] forType:type];
-    }
 }
 
 #pragma mark NSFilePromiseProviderDelegate protocol

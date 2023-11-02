@@ -330,49 +330,6 @@ static BOOL usesSequentialPageNumbering = NO;
     return data;
 }
 
-// the page is set as owner in -filePromise
-- (void)pasteboard:(NSPasteboard *)pboard item:(NSPasteboardItem *)item provideDataForType:(NSString *)type {
-    if ([type isEqualToString:(NSString *)kPasteboardTypeFileURLPromise]) {
-        NSString *label = [self displayLabel];
-        NSString *pathExt = nil;
-        NSData *data = nil;
-        
-        if ([[self document] allowsPrinting]) {
-            pathExt = @"pdf";
-            NSIndexSet *pageIndexes = nil;
-            NSData *indexData = [item dataForType:SKPasteboardTypePageIndexes];
-            if (indexData) {
-                pageIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:indexData];
-                NSMutableArray *labels = [NSMutableArray array];
-                [pageIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
-                    [labels addObject:[[[self document] pageAtIndex:i] displayLabel]];
-                }];
-                if ([labels count])
-                    label = [labels componentsJoinedByString:@", "];
-            }
-            data = [self dataRepresentationForPageIndexes:pageIndexes];
-        } else {
-            pathExt = @"tiff";
-            data = [self TIFFDataForRect:[self boundsForBox:kPDFDisplayBoxCropBox]];
-        }
-        
-        NSURL *dropDestination = [pboard pasteLocationURL];
-        NSString *filename = [([[[self containingDocument] displayName] stringByDeletingPathExtension] ?: @"PDF") stringByAppendingDashAndString:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), label]];
-        NSURL *fileURL = [dropDestination URLByAppendingPathComponent:filename isDirectory:NO];
-        fileURL = [[fileURL URLByAppendingPathExtension:pathExt] uniqueFileURL];
-        if ([data writeToURL:fileURL atomically:YES])
-            [item setString:[fileURL absoluteString] forType:type];
-    } else if ([type isEqualToString:NSPasteboardTypePDF]) {
-        NSIndexSet *pageIndexes = nil;
-        NSData *indexData = [item dataForType:SKPasteboardTypePageIndexes];
-        if (indexData)
-            pageIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:indexData];
-        [item setData:[self dataRepresentationForPageIndexes:pageIndexes] forType:type];
-    } else if ([type isEqualToString:NSPasteboardTypeTIFF]) {
-        [item setData:[self TIFFDataForRect:[self boundsForBox:kPDFDisplayBoxCropBox]] forType:type];
-    }
-}
-
 #pragma mark NSFilePromiseProviderDelegate protocol
 
 // the page is set as delegate in -filePromise
@@ -406,21 +363,10 @@ static BOOL usesSequentialPageNumbering = NO;
 - (id<NSPasteboardWriting>)filePromiseForPageIndexes:(NSIndexSet *)pageIndexes {
     if ([[self document] isLocked] == NO) {
         NSString *fileUTI = [[self document] allowsPrinting] ? (NSString *)kUTTypePDF : (NSString *)kUTTypeTIFF;
-        Class promiseClass = NSClassFromString(@"NSFilePromiseProvider");
-        if (promiseClass) {
-            NSFilePromiseProvider *item = [[[promiseClass alloc] initWithFileType:fileUTI delegate:self] autorelease];
-            if (pageIndexes)
-                [item setUserInfo:pageIndexes];
-            return item;
-        } else {
-            NSString *pdfType = [[self document] allowsPrinting] ? NSPasteboardTypePDF : nil;
-            NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
-            [item setString:fileUTI forType:(NSString *)kPasteboardTypeFilePromiseContent];
-            [item setDataProvider:self forTypes:@[(NSString *)kPasteboardTypeFileURLPromise, NSPasteboardTypeTIFF, pdfType]];
-            if (pageIndexes)
-                [item setData:[NSKeyedArchiver archivedDataWithRootObject:pageIndexes] forType:SKPasteboardTypePageIndexes];
-            return item;
-        }
+        NSFilePromiseProvider *item = [[[NSFilePromiseProvider alloc] initWithFileType:fileUTI delegate:self] autorelease];
+        if (pageIndexes)
+            [item setUserInfo:pageIndexes];
+        return item;
     }
     return nil;
 }
