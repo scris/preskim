@@ -85,7 +85,6 @@
 		CE1E2B290BDAB6180011D9DD /* SKPDFSynchronizer.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1E2B270BDAB6180011D9DD /* SKPDFSynchronizer.m */; };
 		CE1E301D0BDB9D5C0011D9DD /* NSScanner_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1E301B0BDB9D5C0011D9DD /* NSScanner_SKExtensions.m */; };
 		CE1E30290BDB9D8E0011D9DD /* NSCharacterSet_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1E30270BDB9D8E0011D9DD /* NSCharacterSet_SKExtensions.m */; };
-		CE1E82212460D0F60004801E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1E82102460D0F60004801E /* OpenGL.framework */; };
 		CE2083E416ADFFD600BC5AFB /* SKAlias.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2083E316ADFFD600BC5AFB /* SKAlias.m */; };
 		CE2093910C5F9A8D009D3EFB /* SKTopBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE20938F0C5F9A8D009D3EFB /* SKTopBarView.m */; };
 		CE209FAA0C9D38C6007C72F9 /* SKProgressController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE209FA80C9D38C6007C72F9 /* SKProgressController.m */; };
@@ -1387,7 +1386,6 @@
 				CEE8DFCF0E5C809C00EFA97F /* Sparkle.framework in Frameworks */,
 				CEA1CD1B0C9864470061A6D4 /* Security.framework in Frameworks */,
 				CE5F43730BF8A3410069D89C /* IOKit.framework in Frameworks */,
-				CE1E82212460D0F60004801E /* OpenGL.framework in Frameworks */,
 				CE8DC47124620A7E00BD5D50 /* Metal.framework in Frameworks */,
 				CE8DC47024620A7E00BD5D50 /* MetalKit.framework in Frameworks */,
 				CE3364320E2761EF005F99E6 /* libz.dylib in Frameworks */,
