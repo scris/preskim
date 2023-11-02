@@ -374,7 +374,7 @@
 }
 
 - (void)updateTocHighlights {
-    if (RUNNING_AFTER(10_15)) {
+    if (@available(macOS 11.0, *)) {
         [leftSideController.tocOutlineView enumerateAvailableRowViewsUsingBlock:^(SKHighlightingTableRowView *rowView, NSInteger row){
             [rowView setHighlightLevel:[self tocHighlightLevelForRow:row]];
         }];

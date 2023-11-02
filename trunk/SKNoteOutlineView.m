@@ -190,17 +190,16 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
 }
 
 - (CGFloat)outlineIndentation {
-    if ([self respondsToSelector:@selector(style)] == NO)
+    if (@available(macOS 11.0, *)) {
+        if ([self style] == NSTableViewStylePlain)
+            return 18.0;
+        else if ([self outlineColumnIsFirst])
+            return 9.0;
+        else
+            return 15.0 - floor(0.5 * [self intercellSpacing].width);
+    } else {
         return 16.0;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    else if ([self style] == NSTableViewStylePlain)
-#pragma clang diagnostic pop
-        return 18.0;
-    else if ([self outlineColumnIsFirst])
-        return 9.0;
-    else
-        return 15.0 - floor(0.5 * [self intercellSpacing].width);
+    }
 }
 
 #pragma mark Delegate

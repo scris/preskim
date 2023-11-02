@@ -56,48 +56,48 @@
 #endif
 
 BOOL SKHasDarkAppearance(id object) {
-    if (RUNNING_AFTER(10_13)) {
+    if (@available(macOS 10.14, *)) {
         id appearance = nil;
         if (object == nil)
             appearance = [NSAppearance currentAppearance];
         else if ([object respondsToSelector:@selector(effectiveAppearance)])
             appearance = [(id<NSAppearanceCustomization>)object effectiveAppearance];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
         return [[appearance bestMatchFromAppearancesWithNames:@[@"NSAppearanceNameAqua", @"NSAppearanceNameDarkAqua"]] isEqualToString:@"NSAppearanceNameDarkAqua"];
-#pragma clang diagnostic pop
     }
     return NO;
 }
 
 BOOL SKHasHighContrastDarkAppearance(id object) {
-    if (RUNNING_AFTER(10_13)) {
+    if (@available(macOS 10.14, *)) {
         id appearance = nil;
         if (object == nil)
             appearance = [NSAppearance currentAppearance];
         else if ([object respondsToSelector:@selector(effectiveAppearance)])
             appearance = [(id<NSAppearanceCustomization>)object effectiveAppearance];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
         return [[appearance bestMatchFromAppearancesWithNames:@[@"NSAppearanceNameDarkAqua", @"NSAppearanceNameAccessibilityDarkAqua"]] isEqualToString:@"NSAppearanceNameAccessibilityDarkAqua"];
-#pragma clang diagnostic pop
     }
     return NO;
 }
 
 void SKSetHasDarkAppearance(id object) {
-    if (RUNNING_AFTER(10_13) && [object respondsToSelector:@selector(setAppearance:)])
-        [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:@"NSAppearanceNameDarkAqua"]];
+    if (@available(macOS 10.14, *)) {
+        if ([object respondsToSelector:@selector(setAppearance:)])
+            [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:@"NSAppearanceNameDarkAqua"]];
+    }
 }
 
 void SKSetHasLightAppearance(id object) {
-    if (RUNNING_AFTER(10_13) && [object respondsToSelector:@selector(setAppearance:)])
-        [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:@"NSAppearanceNameAqua"]];
+    if (@available(macOS 10.14, *)) {
+        if ([object respondsToSelector:@selector(setAppearance:)])
+            [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:@"NSAppearanceNameAqua"]];
+    }
 }
 
 void SKSetHasDefaultAppearance(id object) {
-    if (RUNNING_AFTER(10_13) && [object respondsToSelector:@selector(setAppearance:)])
-        [(id<NSAppearanceCustomization>)object setAppearance:nil];
+    if (@available(macOS 10.14, *)) {
+        if ([object respondsToSelector:@selector(setAppearance:)])
+            [(id<NSAppearanceCustomization>)object setAppearance:nil];
+    }
 }
 
 void SKRunWithAppearance(id object, void (^code)(void)) {

@@ -89,10 +89,10 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         contentRect.origin = NSZeroPoint;
         NSVisualEffectView *contentView = [[NSVisualEffectView alloc] initWithFrame:contentRect];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        [contentView setMaterial:RUNNING_BEFORE(10_14) ? NSVisualEffectMaterialDark : NSVisualEffectMaterialFullScreenUI];
-#pragma clang diagnostic pop
+        if (@available(macOS 10.14, *))
+            [contentView setMaterial:NSVisualEffectMaterialFullScreenUI];
+        else
+            [contentView setMaterial:NSVisualEffectMaterialDark];
         [contentView setState:NSVisualEffectStateActive];
         
         [self setContentView:contentView];
@@ -284,7 +284,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [[styleButton cell] selectSegmentWithTag:[pdfView cursorStyle]];
         [styleButton setTarget:pdfView];
         [styleButton setAction:@selector(changeCursorStyle:)];
-        if (RUNNING_BEFORE(10_14))
+        if (@available(macOS 10.14, *))
             [[styleButton cell] setBackgroundStyle:NSBackgroundStyleDark];
         NSArray *segments = [NSAccessibilityUnignoredDescendant(styleButton) accessibilityChildren];
         [[segments objectAtIndex:0] setAccessibilityLabel:NSLocalizedString(@"arrow", @"Accessibility description")];
@@ -306,7 +306,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [removeShadowButton setSelected:[pdfView removeCursorShadow] forSegment:0];
         [removeShadowButton setTarget:pdfView];
         [removeShadowButton setAction:@selector(toggleRemoveCursorShadow:)];
-        if (RUNNING_BEFORE(10_14))
+        if (@available(macOS 10.14, *))
             [[removeShadowButton cell] setBackgroundStyle:NSBackgroundStyleDark];
         [removeShadowButton setWidth:ceil([[removeShadowButton labelForSegment:0] sizeWithAttributes:@{NSFontAttributeName:[removeShadowButton font]}].width) + 8.0 forSegment:0];
         [removeShadowButton sizeToFit];
@@ -327,7 +327,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [drawButton setSelected:[pdfView drawInPresentation] forSegment:0];
         [drawButton setTarget:pdfView];
         [drawButton setAction:@selector(toggleDrawInPresentation:)];
-        if (RUNNING_BEFORE(10_14))
+        if (@available(macOS 10.14, *))
             [[drawButton cell] setBackgroundStyle:NSBackgroundStyleDark];
         [[[NSAccessibilityUnignoredDescendant(drawButton) accessibilityChildren] firstObject] setAccessibilityLabel:[SKNInkString typeName]];
         [drawButton sizeToFit];
@@ -351,7 +351,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [closeButton setImage:[NSImage imageNamed:NSImageNameStopProgressTemplate] forSegment:0];
         [closeButton setTarget:pdfView];
         [closeButton setAction:@selector(closeCursorStyleWindow:)];
-        if (RUNNING_BEFORE(10_14))
+        if (@available(macOS 10.14, *))
             [[closeButton cell] setBackgroundStyle:NSBackgroundStyleDark];
         [[[NSAccessibilityUnignoredDescendant(closeButton) accessibilityChildren] firstObject] setAccessibilityLabel:NSLocalizedString(@"close", @"Accessibility description")];
         [closeButton sizeToFit];

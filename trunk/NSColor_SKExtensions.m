@@ -56,7 +56,9 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
     __block NSColor *inactiveOut = nil;
     __block NSColor *activeIn = nil;
     __block NSColor *inactiveIn = nil;
-    NSColorSpace *colorSpace = RUNNING_BEFORE(10_14) ? [NSColorSpace genericRGBColorSpace] : [NSColorSpace sRGBColorSpace];
+    NSColorSpace *colorSpace = [NSColorSpace genericRGBColorSpace];
+    if (@available(macOS 10.14, *))
+        colorSpace = [NSColorSpace sRGBColorSpace];
     SKRunWithLightAppearance(^{
         activeOut = [[NSColor alternateSelectedControlColor] colorUsingColorSpace:colorSpace];
         inactiveOut = [[NSColor grayColor] colorUsingColorSpace:colorSpace];

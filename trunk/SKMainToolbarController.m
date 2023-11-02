@@ -1058,7 +1058,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (void)handleColorSwatchFrameChangedNotification:(NSNotification *)notification {
-    if (RUNNING_AFTER(10_15))
+    if (@available(macOS 11.0, *))
         return;
     NSToolbarItem *toolbarItem = [self toolbarItemForItemIdentifier:SKDocumentToolbarColorSwatchItemIdentifier];
     NSSize size = [colorSwatch bounds].size;

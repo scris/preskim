@@ -230,12 +230,16 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
     NSString *toolPath = [toolPaths objectForKey:fileType];
     if (toolPath == nil) {
         NSWorkspace *ws = [NSWorkspace sharedWorkspace];
-        if ([ws type:fileType conformsToType:SKDVIDocumentType])
-            toolPath = toolPathForCommand(SKDviConversionCommandKey, RUNNING_AFTER(13_0) ? @[@"dvipdfmx", @"dvipdfm", @"dvipdf"] : @[@"dvipdfmx", @"dvipdfm", @"dvipdf", @"dvips"]);
-        else if ([ws type:fileType conformsToType:SKXDVDocumentType])
+        if ([ws type:fileType conformsToType:SKDVIDocumentType]) {
+            if (@available(macOS 14.0, *))
+                toolPath = toolPathForCommand(SKDviConversionCommandKey, @[@"dvipdfmx", @"dvipdfm", @"dvipdf"]);
+            else
+                toolPath = toolPathForCommand(SKDviConversionCommandKey, @[@"dvipdfmx", @"dvipdfm", @"dvipdf", @"dvips"]);
+        } else if ([ws type:fileType conformsToType:SKXDVDocumentType]) {
             toolPath = toolPathForCommand(SKXdvConversionCommandKey, @[@"xdvipdfmx", @"dvipdfmx", @"xdv2pdf"]);
-        else if ([ws type:fileType conformsToType:SKPostScriptDocumentType])
+        } else if ([ws type:fileType conformsToType:SKPostScriptDocumentType]) {
             toolPath = toolPathForCommand(SKPSConversionCommandKey, @[@"ps2pdf", @"ps2pdf12", @"ps2pdf13", @"ps2pdf14", @"pstopdf"]);
+        }
         if (toolPath) {
             if (toolPaths == nil)
                 toolPaths = [[NSMutableDictionary alloc] init];
@@ -272,8 +276,11 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
     
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     CGDataProviderRef provider = NULL;
+    BOOL useTask = [ws type:fileType conformsToType:SKPostScriptDocumentType] == NO;
+    if (@available(macOS 14.0, *))
+        useTask = YES;
     
-    if (RUNNING_AFTER(13_0) || [ws type:fileType conformsToType:SKPostScriptDocumentType] == NO) {
+    if (useTask) {
         
         NSString *toolPath = [[self class] toolPathForType:fileType];
         if (toolPath) {

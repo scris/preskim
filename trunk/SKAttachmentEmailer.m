@@ -50,11 +50,8 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
 
 + (BOOL)permissionToComposeMessage {
 #if !SDK_BEFORE(10_14)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if (AEDeterminePermissionToAutomateTarget != NULL)
+    if (@available(macOS 10.14, *))
         return [[[[self alloc] init] autorelease] permissionToComposeMessage];
-#pragma clang diagnostic pop
 #endif
     return YES;
 }
@@ -86,13 +83,10 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
 
 - (BOOL)permissionToComposeMessage {
 #if !SDK_BEFORE(10_14)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if (AEDeterminePermissionToAutomateTarget != NULL) {
+    if (@available(macOS 10.14, *)) {
         NSAppleEventDescriptor *targetDescriptor = [NSAppleEventDescriptor descriptorWithBundleIdentifier:mailAppID];
         return noErr == AEDeterminePermissionToAutomateTarget(targetDescriptor.aeDesc, typeWildCard, typeWildCard, true);
     }
-#pragma clang diagnostic pop
 #endif
     return YES;
 }

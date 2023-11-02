@@ -90,12 +90,14 @@
 @implementation SKNoteTableCellView
 
 - (void)setFrame:(NSRect)frame {
-    if (!RUNNING_AFTER(10_15) && [[self objectValue] isKindOfClass:[SKNoteText class]]) {
-        SKNoteOutlineView *ov = (id)[[self superview] superview];
-        if ([ov isKindOfClass:[SKNoteOutlineView class]]) {
-            NSInteger row = [ov rowForView:self];
-            if (row != -1)
-                frame = [ov convertRect:[ov frameOfCellAtColumn:-1 row:row] toView:[self superview]];
+    if (@available(macOS 11.0, *)) {} else {
+        if ([[self objectValue] isKindOfClass:[SKNoteText class]]) {
+            SKNoteOutlineView *ov = (id)[[self superview] superview];
+            if ([ov isKindOfClass:[SKNoteOutlineView class]]) {
+                NSInteger row = [ov rowForView:self];
+                if (row != -1)
+                    frame = [ov convertRect:[ov frameOfCellAtColumn:-1 row:row] toView:[self superview]];
+            }
         }
     }
     [super setFrame:frame];

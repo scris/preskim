@@ -141,7 +141,7 @@
         
         BOOL hasLayer = YES;
         
-        if (RUNNING_AFTER(10_13)) {
+        if (@available(macOS 10.14, *)) {
             hasLayer = [[self view] wantsLayer] || [[self view] layer] != nil;
             if (hasLayer == NO) {
                 [[self view] setWantsLayer:YES];
@@ -170,7 +170,7 @@
             }
             completionHandler:^{
                 if (hasLayer == NO) {
-                    if (RUNNING_AFTER(10_13)) {
+                    if (@available(macOS 10.14, *)) {
                         [[self view] setWantsLayer:NO];
                     } else {
                         [contentView setWantsLayer:NO];

@@ -123,13 +123,16 @@
 - (void)setStyle:(SKTopBarStyle)newStyle {
     style = newStyle;
     NSColor *sepColor = nil;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
     switch (style) {
         case SKTopBarStyleDefault:
-            [blurView setMaterial:RUNNING_AFTER(10_15) || RUNNING_BEFORE(10_14) ? NSVisualEffectMaterialTitlebar : NSVisualEffectMaterialHeaderView];
+            if (@available(macOS 11.0, *))
+                [blurView setMaterial:NSVisualEffectMaterialTitlebar];
+            else if (@available(macOS 10.14, *))
+                [blurView setMaterial:NSVisualEffectMaterialHeaderView];
+            else
+                [blurView setMaterial:NSVisualEffectMaterialTitlebar];
             [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
-            if (RUNNING_AFTER(10_13)) {
+            if (@available(macOS 10.14, *)) {
                 sepColor = [NSColor separatorColor];
             } else{
                 [backgroundView setBackgroundColor:[NSColor colorWithGenericGamma22White:1.0 alpha:0.25]];
@@ -137,14 +140,19 @@
             }
             break;
         case SKTopBarStylePDFControlBackground:
-            [blurView setMaterial:RUNNING_AFTER(10_15) ? NSVisualEffectMaterialTitlebar : RUNNING_AFTER(10_13) ? NSVisualEffectMaterialHeaderView : NSVisualEffectMaterialLight];
+            if (@available(macOS 11.0, *))
+                [blurView setMaterial:NSVisualEffectMaterialTitlebar];
+            else if (@available(macOS 10.14, *))
+                [blurView setMaterial:NSVisualEffectMaterialHeaderView];
+            else
+                [blurView setMaterial:NSVisualEffectMaterialLight];
             [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
-            if (RUNNING_BEFORE(10_14)) {
+            if (@available(macOS 10.14, *)) {} else {
                 [backgroundView setBackgroundColor:[NSColor colorWithGenericGamma22White:0.98 alpha:0.5]];
             }
             break;
         case SKTopBarStylePresentation:
-            if (RUNNING_AFTER(10_13)) {
+            if (@available(macOS 10.14, *)) {
                 [blurView setMaterial:NSVisualEffectMaterialSidebar];
                 [blurView setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
             } else {
@@ -152,7 +160,6 @@
             }
             break;
     }
-#pragma clang diagnostic pop
     [backgroundView setSeparatorColor:sepColor];
     [backgroundView setNeedsDisplay:YES];
 }

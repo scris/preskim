@@ -154,12 +154,9 @@ static SKInfoWindowController *sharedInstance = nil;
 - (void)windowDidLoad {
     [self setWindowFrameAutosaveName:SKInfoWindowFrameAutosaveName];
     
-    if ([summaryTableView respondsToSelector:@selector(setStyle:)]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
+    if (@available(macOS 11.0, *)) {
         [summaryTableView setStyle:NSTableViewStylePlain];
         [attributesTableView setStyle:NSTableViewStylePlain];
-#pragma clang diagnostic pop
     }
     
     NSArray *tables = [NSArray arrayWithObjects:summaryTableView, attributesTableView, nil];

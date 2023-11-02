@@ -288,7 +288,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [pdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
-    if (RUNNING_BEFORE(10_14))
+    if (@available(macOS 10.14, *)) {} else
         [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
 #pragma clang diagnostic pop
     [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
@@ -676,10 +676,11 @@ static char SKSnaphotWindowDefaultsObservationContext;
         } else if ([key isEqualToString:SKInterpolationQualityKey]) {
             [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
             [pdfView requiresDisplay];
-        } else if ([key isEqualToString:SKGreekingThresholdKey] && RUNNING_BEFORE(10_14)) {
+        } else if ([key isEqualToString:SKGreekingThresholdKey]) {
+            if (@available(macOS 10.14, *)) {} else
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
+                [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
 #pragma clang diagnostic pop
         }
     } else {

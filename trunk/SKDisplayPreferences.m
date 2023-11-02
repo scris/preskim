@@ -63,7 +63,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
 @dynamic allowsDarkMode;
 
 - (void)dealloc {
-    if (RUNNING_AFTER(10_13)) {
+    if (@available(macOS 10.14, *)) {
         @try {
             [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:@[SKBackgroundColorKey, SKFullScreenBackgroundColorKey, SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,] context:&SKDisplayPreferencesDefaultsObservationContext];
         }
@@ -97,7 +97,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
     [colorSwatch addObserver:self forKeyPath:@"selectedColorIndex" options:0 context:&SKDisplayPreferencesColorSwatchObservationContext];
     [colorSwatch addObserver:self forKeyPath:@"colors" options:0 context:&SKDisplayPreferencesColorSwatchObservationContext];
     
-    if (RUNNING_AFTER(10_13)) {
+    if (@available(macOS 10.14, *)) {
         [normalColorWell unbind:NSValueBinding];
         [normalColorWell setAction:@selector(changeBackgroundColor:)];
         [normalColorWell setTarget:self];
@@ -125,7 +125,10 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
 }
 
 - (BOOL)allowsDarkMode {
-    return RUNNING_AFTER(10_13);
+    if (@available(macOS 10.14, *))
+        return YES;
+    else
+        return NO;
 }
 
 #pragma mark Actions

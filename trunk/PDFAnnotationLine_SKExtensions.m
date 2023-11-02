@@ -105,7 +105,7 @@ static inline void addLineTipToPath(CGMutablePathRef path, NSPoint point, CGFloa
 }
 
 + (void)load {
-    if (RUNNING(10_13))
+    if (@available(macOS 10.14, *)) {} else
         original_setBounds = (void (*)(id, SEL, NSRect))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(setBounds:), @selector(replacement_setBounds:));
 }
 

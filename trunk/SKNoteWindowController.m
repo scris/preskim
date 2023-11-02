@@ -194,22 +194,19 @@ static NSURL *temporaryDirectoryURL = nil;
     
     [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
     
-    if (RUNNING_AFTER(10_13))
+    if (@available(macOS 10.14, *))
         [textView setDrawsBackground:NO];
     
     if ([self isNoteType]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        if (RUNNING_AFTER(10_13))
+        if (@available(macOS 10.14, *))
             [edgeView setFillColor:[NSColor separatorColor]];
-#pragma clang diagnostic push
         
         NSFont *font = [[NSUserDefaults standardUserDefaults] fontForNameKey:SKAnchoredNoteFontNameKey sizeKey:SKAnchoredNoteFontSizeKey];
         if (font)
             [textView setFont:font];
         
         NSDictionary *options = nil;
-        if (RUNNING_AFTER(10_13))
+        if (@available(macOS 10.14, *))
             options = @{NSValueTransformerBindingOption:[[[SKAddTextColorTransformer alloc] init] autorelease]};
         [textView bind:@"attributedString" toObject:noteController withKeyPath:@"selection.text" options:options];
         
@@ -349,7 +346,7 @@ static NSURL *temporaryDirectoryURL = nil;
 }
 
 - (void)textDidChange:(NSNotification *)notification {
-    if (RUNNING_AFTER(10_13))
+    if (@available(macOS 10.14, *))
         [[textView textStorage] addTextColorAttribute];
 }
 

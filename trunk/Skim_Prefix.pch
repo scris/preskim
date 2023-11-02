@@ -51,10 +51,6 @@
     #define SKZONEDESTROY(variable) do { if (variable) NSZoneFree(NSZoneFromPointer((void*)variable), (void *)variable); variable = NULL; } while (0)
     #define SKDISPATCHDESTROY(variable) do { if (variable) dispatch_release(variable); variable = nil; } while (0)
 
-    #define RUNNING(version) ((NSInteger)floor(NSAppKitVersionNumber) == (NSInteger)NSAppKitVersionNumber ## version)
-    #define RUNNING_BEFORE(version) (floor(NSAppKitVersionNumber) < NSAppKitVersionNumber ## version)
-    #define RUNNING_AFTER(version) (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber ## version)
-
     #define DISPATCH_MAIN_AFTER_SEC(time, block) dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_main_queue(), block)
 
 
