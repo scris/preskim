@@ -41,10 +41,10 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 @interface SKNAgentListener : NSObject <NSConnectionDelegate>
-#pragma clang diagnostic pop
 {
     NSConnection *connection;
 }
+#pragma clang diagnostic pop
 
 - (id)initWithServerName:(NSString *)serverName;
 - (void)destroyConnection;

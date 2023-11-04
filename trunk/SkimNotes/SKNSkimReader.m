@@ -51,7 +51,10 @@
 }
 
 - (void)destroyConnection {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:connection];
+#pragma clang diagnostic pop
     [agent release];
     agent = nil;
     
@@ -98,7 +101,10 @@
 }
 
 - (void)handleConnectionDied:(NSNotification *)note {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:[note object]];
+#pragma clang diagnostic pop
     // ensure the proxy ivar and ports are cleaned up; is it still okay to message it?
     [self destroyConnection];
 }
@@ -150,18 +156,27 @@
     // no point in trying to connect if the task didn't launch
     if ([self launchedTask]) {
         int maxTries = 5;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         connection = [[NSConnection connectionWithRegisteredName:[self agentIdentifier] host:nil] retain];
+#pragma clang diagnostic pop
         
         // if we try to read data before the server is fully set up, connection will still be nil
         while (nil == connection && maxTries--) { 
             [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             connection = [[NSConnection connectionWithRegisteredName:[self agentIdentifier] host:nil] retain];
+#pragma clang diagnostic pop
         }
         
         if (connection) {
             
             // keep an eye on the connection from our end, so we can retain the proxy object
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleConnectionDied:) name:NSConnectionDidDieNotification object:connection];
+#pragma clang diagnostic pop
             
             // if we don't set these explicitly, timeout never seems to take place
             [connection setRequestTimeout:AGENT_TIMEOUT];
