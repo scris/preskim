@@ -45,7 +45,10 @@
 {
     self = [super init];
     if (self) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
+#pragma clang diagnostic pop
         NSProtocolChecker *checker = [NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(SKNAgentListenerProtocol)];
         [connection setRootObject:checker];
         [connection setDelegate:self];
@@ -92,7 +95,10 @@
 }
 
 // first app to connect will be the owner of this instance of the program; when the connection dies, so do we
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (BOOL)makeNewConnection:(NSConnection *)newConnection sender:(NSConnection *)parentConnection
+#pragma clang diagnostic pop
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(portDied:) name:NSPortDidBecomeInvalidNotification object:[newConnection sendPort]];
     fprintf(stderr, "skimnotes agent pid %d connection registered\n", getpid());
