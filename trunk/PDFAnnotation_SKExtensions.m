@@ -128,10 +128,7 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
         [propertyList isKindOfClass:[NSData class]]) {
         self = [self initSkimNoteWithProperties:[NSKeyedUnarchiver unarchiveObjectWithData:propertyList]];
     } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        [[self initWithBounds:NSZeroRect] release];
-#pragma clang diagnostic pop
+        [[self initWithBounds:NSZeroRect forType:@"" withProperties:nil] release];
         self = nil;
     }
     return self;
