@@ -3,5 +3,5 @@
 #include "ConfigSwift.xcconfig"
 
 SWIFT_OBJC_BRIDGING_HEADER = generate_keys/Bridging-Header.h
-MACOSX_DEPLOYMENT_TARGET = 10.11
+MACOSX_DEPLOYMENT_TARGET = 10.13
 PRODUCT_NAME = generate_keys
