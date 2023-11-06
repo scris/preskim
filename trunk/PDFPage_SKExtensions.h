@@ -118,9 +118,3 @@ extern NSString *SKPDFPageActionRotate;
 - (id)handleGrabScriptCommand:(NSScriptCommand *)command;
 
 @end
-
-#if SDK_BEFORE(12)
-@interface PDFPage (SKSierraDeclarations)
-- (void)transformContext:(CGContextRef)context forBox:(PDFDisplayBox)box;
-@end
-#endif
