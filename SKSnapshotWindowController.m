@@ -117,7 +117,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
     [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
     [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
     [self updateWindowLevel];
-    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:@[SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey] context:&SKSnaphotWindowDefaultsObservationContext];
+    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:@[SKSnapshotsOnTopKey, SKInterpolationQualityKey] context:&SKSnaphotWindowDefaultsObservationContext];
     // the window is initialially exposed. The windowDidExpose notification is useless, it has nothing to do with showing the window
     [self setHasWindow:YES];
 }
@@ -217,7 +217,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:@[SKSnapshotsOnTopKey, SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey] context:&SKSnaphotWindowDefaultsObservationContext]; }
+    @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:@[SKSnapshotsOnTopKey, SKInterpolationQualityKey] context:&SKSnaphotWindowDefaultsObservationContext]; }
     @catch (id e) {}
     if ([[self delegate] respondsToSelector:@selector(snapshotControllerWillClose:)])
         [[self delegate] snapshotControllerWillClose:self];
@@ -285,12 +285,6 @@ static char SKSnaphotWindowDefaultsObservationContext;
     [pdfView setAutoScales:NO];
     [pdfView setDisplaysPageBreaks:NO];
     [pdfView setDisplayBox:kPDFDisplayBoxCropBox];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    [pdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
-    if (@available(macOS 10.14, *)) {} else
-        [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
-#pragma clang diagnostic pop
     [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
     [pdfView setBackgroundColor:[NSColor whiteColor]];
     [pdfView setDocument:pdfDocument];
@@ -667,21 +661,10 @@ static char SKSnaphotWindowDefaultsObservationContext;
         if ([key isEqualToString:SKSnapshotsOnTopKey]) {
             if ([[self window] isVisible])
                 [self updateWindowLevel];
-        } else if ([key isEqualToString:SKShouldAntiAliasKey]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [pdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
-#pragma clang diagnostic pop
             [pdfView requiresDisplay];
         } else if ([key isEqualToString:SKInterpolationQualityKey]) {
             [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
             [pdfView requiresDisplay];
-        } else if ([key isEqualToString:SKGreekingThresholdKey]) {
-            if (@available(macOS 10.14, *)) {} else
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
-#pragma clang diagnostic pop
         }
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];

@@ -423,12 +423,6 @@ static char SKMainWindowContentLayoutObservationContext;
     }
     
     // Set up the PDF
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    [pdfView setShouldAntiAlias:[sud boolForKey:SKShouldAntiAliasKey]];
-    if (@available(macOS 10.14, *)) {} else
-        [pdfView setGreekingThreshold:[sud floatForKey:SKGreekingThresholdKey]];
-#pragma clang diagnostic pop
     [pdfView setInterpolationQuality:[sud integerForKey:SKInterpolationQualityKey]];
     [pdfView setBackgroundColor:[PDFView defaultBackgroundColor]];
     
@@ -2587,10 +2581,10 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 - (void)registerAsObserver {
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:
         @[SKBackgroundColorKey, SKFullScreenBackgroundColorKey,
-                                  SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,
-                                  SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
-                                  SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
-                                  SKTableFontSizeKey]
+          SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,
+          SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
+          SKInterpolationQualityKey,
+          SKTableFontSizeKey]
         context:&SKMainWindowDefaultsObservationContext];
     if (@available(macOS 10.14, *))
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKMainWindowAppObservationContext];
@@ -2602,10 +2596,11 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     @try {
         [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:
          @[SKBackgroundColorKey, SKFullScreenBackgroundColorKey,
-                                   SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,
-                                   SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
-                                   SKShouldAntiAliasKey, SKInterpolationQualityKey, SKGreekingThresholdKey,
-          SKTableFontSizeKey] context:&SKMainWindowDefaultsObservationContext];
+           SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,
+           SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
+           SKInterpolationQualityKey,
+           SKTableFontSizeKey]
+         context:&SKMainWindowDefaultsObservationContext];
     }
     @catch (id e) {}
     if (@available(macOS 10.14, *)) {
@@ -2687,28 +2682,12 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         } else if ([key isEqualToString:SKSnapshotThumbnailSizeKey]) {
             [self resetSnapshotSizeIfNeeded];
             [rightSideController.snapshotTableView noteHeightOfRowsChangedAnimating:YES];
-        } else if ([key isEqualToString:SKShouldAntiAliasKey]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [pdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
-            [secondaryPdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
-#pragma clang diagnostic pop
-            [pdfView requiresDisplay];
-            [secondaryPdfView requiresDisplay];
         } else if ([key isEqualToString:SKInterpolationQualityKey]) {
             [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
             [secondaryPdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
             [pdfView requiresDisplay];
             [secondaryPdfView requiresDisplay];
             [self allThumbnailsNeedUpdate];
-        } else if ([key isEqualToString:SKGreekingThresholdKey]) {
-            if (@available(macOS 10.14, *)) {} else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                [pdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
-                [secondaryPdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
-#pragma clang diagnostic pop
-            }
         } else if ([key isEqualToString:SKTableFontSizeKey]) {
             [self updateTableFont];
             [self updatePageColumnWidthForTableViews:[NSArray arrayWithObjects:leftSideController.tocOutlineView, rightSideController.noteOutlineView, leftSideController.findTableView, leftSideController.groupedFindTableView, nil]];
