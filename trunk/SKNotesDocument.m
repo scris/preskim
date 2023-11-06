@@ -163,8 +163,6 @@
     
     [[aController window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
     
-    [[aController window] setCollectionBehavior:[[aController window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
-    
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowNotesStatusBarKey] == NO)
         [self toggleStatusBar:nil];
     else

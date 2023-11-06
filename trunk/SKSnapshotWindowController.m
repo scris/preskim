@@ -114,8 +114,6 @@ static char SKSnaphotWindowDefaultsObservationContext;
 }
 
 - (void)windowDidLoad {
-    [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
-    [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
     [self updateWindowLevel];
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:@[SKSnapshotsOnTopKey, SKInterpolationQualityKey] context:&SKSnaphotWindowDefaultsObservationContext];
     // the window is initialially exposed. The windowDidExpose notification is useless, it has nothing to do with showing the window
