@@ -46,8 +46,6 @@
     NSString *subject;
 }
 
-+ (BOOL)permissionToComposeMessage;
-
 @property (nonatomic, readonly) BOOL permissionToComposeMessage;
 
 @property (nonatomic, readonly) NSString *title;

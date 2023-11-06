@@ -48,14 +48,6 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
 @synthesize delegate, subject;
 @dynamic title, image;
 
-+ (BOOL)permissionToComposeMessage {
-#if !SDK_BEFORE(10_14)
-    if (@available(macOS 10.14, *))
-        return [[[[self alloc] init] autorelease] permissionToComposeMessage];
-#endif
-    return YES;
-}
-
 - (id)init {
     self = [super init];
     if (self) {
