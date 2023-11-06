@@ -1093,12 +1093,6 @@ static NSArray *allMainDocumentPDFViews() {
             [secondaryPdfView setBackgroundColor:[pdfView backgroundColor]];
             [[secondaryPdfView scrollView] setDrawsBackground:[[pdfView scrollView] drawsBackground]];
             [secondaryPdfView setDisplaysPageBreaks:NO];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [secondaryPdfView setShouldAntiAlias:[[NSUserDefaults standardUserDefaults] boolForKey:SKShouldAntiAliasKey]];
-            if (@available(macOS 10.14, *)) {} else
-                [secondaryPdfView setGreekingThreshold:[[NSUserDefaults standardUserDefaults] floatForKey:SKGreekingThresholdKey]];
-#pragma clang diagnostic pop
             [secondaryPdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
             [secondaryPdfView setSynchronizeZoom:YES];
             [secondaryPdfView setDocument:[pdfView document]];
