@@ -90,7 +90,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
 
 #if SDK_BEFORE(10_14)
 @interface PDFView (SKMojaveDeclarations)
-- (void)enablePageShadows:(BOOL)flag;
+@property (nonatomic, setter=enablePageShadows:) BOOL pageShadowsEnabled;
 @end
 #endif
 

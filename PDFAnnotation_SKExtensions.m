@@ -78,23 +78,6 @@ NSString *SKPDFAnnotationBoundsOrderKey = @"boundsOrder";
 NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimnote";
 
 
-#if SDK_BEFORE(12)
-@interface PDFAnnotation (SKSierraDeclarations)
-- (id)valueForAnnotationKey:(NSString *)key;
-- (BOOL)setValue:(id)value forAnnotationKey:(NSString *)key;
-- (BOOL)removeValueForAnnotationKey:(NSString *)key;
-@end
-#endif
-
-#if SDK_BEFORE(13)
-@interface PDFAnnotation (SKHighSierraDeclarations)
-- (NSInteger)buttonWidgetState;
-- (void)setButtonWidgetState:(NSInteger)state;
-- (NSString *)widgetStringValue;
-- (void)setWidgetStringValue:(NSString *)value;
-@end
-#endif
-
 @implementation PDFAnnotation (SKExtensions)
 
 - (PDFTextAnnotationIconType)fallback_iconType { return kPDFTextAnnotationIconNote; }
