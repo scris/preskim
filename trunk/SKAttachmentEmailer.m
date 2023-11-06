@@ -51,7 +51,11 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
 - (id)init {
     self = [super init];
     if (self) {
-        mailAppID = (NSString *)LSCopyDefaultHandlerForURLScheme(CFSTR("mailto"));
+        NSURL *appURL = [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL:[NSURL URLWithString:@"mailto://"]];
+        if (appURL)
+            mailAppID = [[[NSBundle bundleWithURL:appURL] bundleIdentifier] retain];
+        else
+            mailAppID = [@"com.apple.Mail" retain];
         if ([@"com.microsoft.entourage" isCaseInsensitiveEqual:mailAppID] == NO &&
             [@"com.microsoft.outlook" isCaseInsensitiveEqual:mailAppID] == NO &&
             [@"com.barebones.mailsmith" isCaseInsensitiveEqual:mailAppID] == NO &&
