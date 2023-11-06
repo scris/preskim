@@ -190,10 +190,6 @@ static NSURL *temporaryDirectoryURL = nil;
     [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
     [[self window] setContentBorderThickness:NSHeight([statusBar frame]) forEdge:NSMinYEdge];
     
-    [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
-    
-    [[self window] setCollectionBehavior:[[self window] collectionBehavior] | NSWindowCollectionBehaviorFullScreenAuxiliary];
-    
     if (@available(macOS 10.14, *))
         [textView setDrawsBackground:NO];
     

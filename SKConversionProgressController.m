@@ -126,7 +126,6 @@ CGPSConverterCallbacks SKPSConverterCallbacks = {
 }
 
 - (void)windowDidLoad {
-    [[self window] setCollectionBehavior:NSWindowCollectionBehaviorMoveToActiveSpace];
     [progressBar setUsesThreadedAnimation:YES];
     [self setButtonTitle:NSLocalizedString(@"Cancel", @"Button title") action:@selector(cancel:)];
     [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Converting %@", @"PS conversion progress message"), [[NSDocumentController sharedDocumentController] displayNameForType:fileType]]];

@@ -19,6 +19,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="5" userLabel="Window" customClass="SKMainWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="302" y="310" width="480" height="360"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="775"/>
@@ -103,13 +104,13 @@
                                                             <rect key="frame" x="0.0" y="-3" width="21" height="23"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="sVs-LE-rAz" customClass="SKAnnotationTypeImageCell"/>
                                                             <connections>
-                                                                <binding destination="E1b-NS-HOF" name="toolTip" keyPath="objectValue.type.typeName" id="zRB-h8-XKB"/>
                                                                 <binding destination="E1b-NS-HOF" name="value" keyPath="objectValue.type" id="Nm4-sv-rEC">
                                                                     <dictionary key="options">
                                                                         <bool key="NSConditionallySetsEnabled" value="NO"/>
                                                                         <string key="NSValueTransformerName">SKTypeImage</string>
                                                                     </dictionary>
                                                                 </binding>
+                                                                <binding destination="E1b-NS-HOF" name="toolTip" keyPath="objectValue.type.typeName" id="zRB-h8-XKB"/>
                                                             </connections>
                                                         </imageView>
                                                     </subviews>
@@ -357,6 +358,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="114"/>
             </connections>
+            <point key="canvasLocation" x="139" y="133"/>
         </menu>
     </objects>
     <resources>

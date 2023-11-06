@@ -383,12 +383,10 @@ static char SKMainWindowContentLayoutObservationContext;
     [toolbarController setupToolbar];
     
     // Set up the window
-    [window setCollectionBehavior:[window collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
     
     if (@available(macOS 11.0, *))
         [window setToolbarStyle:NSWindowToolbarStyleExpanded];
     
-    [window setStyleMask:[window styleMask] | NSWindowStyleMaskFullSizeContentView];
     if (mwcFlags.fullSizeContent) {
         titleBarHeight = NSHeight([window frame]) - NSHeight([window contentLayoutRect]);
         [leftSideController setTopInset:titleBarHeight];

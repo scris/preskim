@@ -142,10 +142,6 @@ static SKDownloadController *sharedDownloadController = nil;
 - (void)windowDidLoad {
     [self setupToolbar];
     
-    [[self window] setTitleVisibility:NSWindowTitleHidden];
-    
-    [[self window] setTabbingMode:NSWindowTabbingModeDisallowed];
-    
     [self updateClearButton];
     
     [self setWindowFrameAutosaveName:SKDownloadsWindowFrameAutosaveName];
