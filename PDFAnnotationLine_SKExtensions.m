@@ -64,38 +64,6 @@ NSString *SKPDFAnnotationScriptingEndLineStyleKey = @"scriptingEndLineStyle";
 
 static void (*original_setBounds)(id, SEL, NSRect) = NULL;
 
-static inline void addLineTipToPath(CGMutablePathRef path, NSPoint point, CGFloat angle, PDFLineStyle lineStyle, CGFloat lineWidth) {
-    CGAffineTransform transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(point.x, point.y), angle);
-    switch (lineStyle) {
-        case kPDFLineStyleNone:
-            return;
-        case kPDFLineStyleSquare:
-            CGPathAddRect(path, &transform, CGRectMake(-1.5 * lineWidth, -1.5 * lineWidth, 3.0 * lineWidth, 3.0 * lineWidth));
-            break;
-        case kPDFLineStyleCircle:
-            CGPathAddEllipseInRect(path, &transform, CGRectMake(-1.5 * lineWidth, -1.5 * lineWidth, 3.0 * lineWidth, 3.0 * lineWidth));
-            break;
-        case kPDFLineStyleDiamond:
-            CGPathMoveToPoint(path, &transform, 1.5 * lineWidth, 0.0);
-            CGPathAddLineToPoint(path, &transform, 0.0,  1.5 * lineWidth);
-            CGPathAddLineToPoint(path, &transform, -1.5 * lineWidth, 0.0);
-            CGPathAddLineToPoint(path, &transform, 0.0,  -1.5 * lineWidth);
-            CGPathCloseSubpath(path);
-            break;
-        case kPDFLineStyleOpenArrow:
-            CGPathMoveToPoint(path, &transform, -3.0 * lineWidth, 1.5 * lineWidth);
-            CGPathAddLineToPoint(path, &transform, 0.0,  0.0);
-            CGPathAddLineToPoint(path, &transform, -3.0 * lineWidth, -1.5 * lineWidth);
-            break;
-        case kPDFLineStyleClosedArrow:
-            CGPathMoveToPoint(path, &transform, -3.0 * lineWidth, 1.5 * lineWidth);
-            CGPathAddLineToPoint(path, &transform, 0.0,  0.0);
-            CGPathAddLineToPoint(path, &transform, -3.0 * lineWidth, -1.5 * lineWidth);
-            CGPathCloseSubpath(path);
-            break;
-    }
-}
-
 - (void)replacement_setBounds:(NSRect)newBounds {
     NSPoint startPoint = [self startPoint];
     NSPoint endPoint = [self endPoint];
