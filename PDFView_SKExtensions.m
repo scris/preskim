@@ -67,7 +67,7 @@
 
 @implementation PDFView (SKExtensions)
 
-@dynamic physicalScaleFactor, scrollView, displayedPages, visibleContentRect, drawsActiveSelections;
+@dynamic physicalScaleFactor, scrollView, displayedPages, visibleContentRect;
 
 static inline CGFloat physicalScaleFactorForView(NSView *view) {
     NSScreen *screen = [[view window] screen];
@@ -319,13 +319,6 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
         }
     }
     return pageRect;
-}
-
-- (BOOL)drawsActiveSelections {
-    if (@available(macOS 10.15, *))
-        return [[self window] isKeyWindow];
-    else
-        return YES;
 }
 
 static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *darkBackgroundColorKey) {
