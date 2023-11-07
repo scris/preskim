@@ -6,7 +6,6 @@
 //  Copyright 2006 Andy Matuschak. All rights reserved.
 //
 
-#import "SUOperatingSystem.h"
 #import "SUStatusController.h"
 #import "SUHost.h"
 #import "SULocalizations.h"
@@ -57,11 +56,8 @@ static NSString *const SUStatusControllerTouchBarIndentifier = @"" SPARKLE_BUNDL
     [[self window] setFrameAutosaveName:@"SUStatusFrame"];
     [self.progressBar setUsesThreadedAnimation:YES];
 
-    if (SUAVAILABLE(10, 11)) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
+    if (@available(macOS 10.11, *)) {
         [self.statusTextField setFont:[NSFont monospacedDigitSystemFontOfSize:0 weight:NSFontWeightRegular]];
-#pragma clang diagnostic pop
     }
 }
 

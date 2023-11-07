@@ -13,7 +13,6 @@
 #import "SUErrors.h"
 
 #import "SPUURLRequest.h"
-#import "SUOperatingSystem.h"
 #import "SPUDownloadData.h"
 #import "SPUDownloaderDelegate.h"
 #import "SPUDownloaderDeprecated.h"
@@ -86,11 +85,8 @@
     [request setValue:@"application/rss+xml,*/*;q=0.1" forHTTPHeaderField:@"Accept"];
 
     
-    if (SUAVAILABLE(10, 9)) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
+    if (@available(macOS 10.9, *)) {
         self.download = [[SPUDownloaderSession alloc] initWithDelegate:self];
-#pragma clang diagnostic pop
     }
     else {
         self.download = [[SPUDownloaderDeprecated alloc] initWithDelegate:self];
