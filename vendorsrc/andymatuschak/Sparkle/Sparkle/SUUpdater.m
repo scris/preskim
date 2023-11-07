@@ -26,7 +26,6 @@
 #import "SUSystemProfiler.h"
 #import "SUSystemUpdateInfo.h"
 #import "SUSignatures.h"
-#import "SUOperatingSystem.h"
 
 NSString *const SUUpdaterDidFinishLoadingAppCastNotification = @"SUUpdaterDidFinishLoadingAppCastNotification";
 NSString *const SUUpdaterDidFindValidUpdateNotification = @"SUUpdaterDidFindValidUpdateNotification";
@@ -298,11 +297,8 @@ static NSString *const SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaults
     BOOL automatic = [self automaticallyDownloadsUpdates];
 
     if (!automatic) {
-        if (SUAVAILABLE(10, 9)) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
+        if (@available(macOS 10.9, *)) {
             NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:@"com.apple.notificationcenterui"];
-#pragma clang diagnostic pop
             BOOL dnd = [defaults boolForKey:@"doNotDisturb"];
             if (dnd) {
                 SULog(SULogLevelDefault, @"Delayed update, because Do Not Disturb is on");
