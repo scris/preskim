@@ -68,8 +68,6 @@
 
 - (NSRect)layoutBoundsForPage:(PDFPage *)page;
 
-@property (nonatomic, readonly) BOOL drawsActiveSelections;
-
 + (NSColor *)defaultBackgroundColor;
 + (NSColor *)defaultFullScreenBackgroundColor;
 
