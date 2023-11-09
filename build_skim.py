@@ -395,7 +395,7 @@ def signature_and_size(archive_path):
     
     # now run the signature for Sparkle...
     sha_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-binary"], stdin=open(archive_path, "rb"), stdout=PIPE)
-    dss_task = Popen(["/usr/bin/openssl", "dgst", "-dss1", "-sign", keyFile.name], stdin=sha_task.stdout, stdout=PIPE)
+    dss_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-sign", keyFile.name], stdin=sha_task.stdout, stdout=PIPE)
     b64_task = Popen(["/usr/bin/openssl", "enc", "-base64"], stdin=dss_task.stdout, stdout=PIPE)
     
     # now compute the variables we need for writing the new appcast
