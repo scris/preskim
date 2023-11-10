@@ -20,7 +20,7 @@ SKIM_ENTITLEMENTS=$(dirname "$0")/Skim.entitlements
 
 # see https://mjtsai.com/blog/2021/02/18/code-signing-when-building-on-apple-silicon/
 # and https://developer.apple.com/forums/thread/130855
-CODESIGN_FLAGS="-v --timestamp -f --digest-algorithm=sha1,sha256"
+CODESIGN_FLAGS="-v --timestamp -f"
 
 CONTENTS_DIR="${SKIM_BUNDLE_PATH}/Contents"
 
