@@ -362,7 +362,7 @@ def release_notes():
 def keyFromSecureNote():
     
     # see http://www.entropy.ch/blog/Developer/2008/09/22/Sparkle-Appcast-Automation-in-Xcode.html
-    pwtask = Popen(["/usr/bin/security", "find-generic-password", "-g", "-s", KEY_NAME], stdout=PIPE, stderr=PIPE)
+    pwtask = Popen(["/usr/bin/security", "find-generic-password", "-g", "-s", KEY_NAME], stdout=DEVNULL, stderr=PIPE)
     # security returns the password in stderr for some reason
     pwoutput = pwtask.communicate()[1].decode("utf-8")
 
