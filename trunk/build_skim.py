@@ -62,8 +62,7 @@
 #
 
 import os, sys, io, getopt
-import codecs
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, DEVNULL
 from stat import ST_SIZE
 from time import gmtime, strftime, localtime, sleep
 import plistlib
@@ -108,7 +107,8 @@ def bump_versions(newVersion):
     assert rc == 0, "agvtool bump failed"
     
     # change CFBundleVersion and rewrite the Info.plist
-    infoPlist = plistlib.readPlist(SOURCE_PLIST_PATH)
+    with open(SOURCE_PLIST_PATH, "rb") as plistFile:
+        infoPlist = plistlib.load(plistFile)
     assert infoPlist is not None, "unable to read Info.plist"
     if newVersion == "+":
         oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
@@ -133,13 +133,15 @@ def bump_versions(newVersion):
         oldVersion = [str(int(oldVersion[0]) + 1), "0"]
         newVersion = ".".join(oldVersion)
     infoPlist["CFBundleShortVersionString"] = newVersion
-    plistlib.writePlist(infoPlist, SOURCE_PLIST_PATH)
+    with open(SOURCE_PLIST_PATH, "wb") as plistFile:
+        plistlib.dump(infoPlist, plistFile)
     print("version string updated to %s" % (newVersion))
 
 def read_versions():
     
     # read CFBundleVersion, CFBundleShortVersionString, LSMinimumSystemVersion and from Info.plist
-    infoPlist = plistlib.readPlist(PLIST_PATH)
+    with open(PLIST_PATH, "rb") as plistFile:
+        infoPlist = plistlib.load(plistFile)
     assert infoPlist is not None, "unable to read Info.plist"
     newVersion = infoPlist["CFBundleVersion"]
     newVersionString = infoPlist["CFBundleShortVersionString"]
@@ -193,12 +195,10 @@ def create_dmg_of_application(new_version_number, create_new):
     if os.path.exists(temp_dmg_path):
         os.unlink(temp_dmg_path)
     
-    nullDevice = open("/dev/null", "w")
-    
     if create_new:
         cmd = ["/usr/bin/hdiutil", "create", "-fs", "HFS+", "-srcfolder", BUILT_APP, temp_dmg_path]
         print(" ".join(cmd))
-        x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+        x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         rc = x.wait()
         assert rc == 0, "hdiutil create failed"
     else:
@@ -219,31 +219,30 @@ def create_dmg_of_application(new_version_number, create_new):
         # pass o to overwrite, or unzip waits for stdin
         # when trying to unpack the resource fork/EA
         
-        nullDevice = open("/dev/null", "w")
         cmd = ["/usr/bin/unzip", "-uo", zip_dmg_name, "-d", BUILD_ROOT]
         print(" ".join(cmd))
-        x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+        x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         rc = x.wait()
         assert rc == 0, "failed to unzip %s" % (zip_dmg_name)
         
         # mount image
         cmd = ["/usr/bin/hdiutil", "attach", "-nobrowse", "-noautoopen", temp_dmg_path]
         print(" ".join(cmd))
-        x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+        x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         rc = x.wait()
         assert rc == 0, "failed to mount %s" % (temp_dmg_path)
         
         # use cp to copy all files
         cmd = ["/bin/cp", "-R", BUILT_APP, dst_volume_name]
         print(" ".join(cmd))
-        x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+        x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         rc = x.wait()
         assert rc == 0, "failed to copy %s" % (BUILT_APP)
         
         # tell finder to set the icon position
         cmd = ["/usr/bin/osascript", "-e", """tell application "Finder" to set the position of application file "Skim.app" of disk named "Skim" to {90, 206}"""]
         print(" ".join(cmd))
-        x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+        x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         rc = x.wait()
         assert rc == 0, "Finder failed to set position"
         
@@ -251,32 +250,31 @@ def create_dmg_of_application(new_version_number, create_new):
         n_tries = 0
         cmd = ["/usr/sbin/diskutil", "eject", dst_volume_name]
         print(" ".join(cmd))
-        x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+        x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         rc = x.wait()
         while rc != 0:
             assert n_tries < 12, "failed to eject %s" % (dst_volume_name)
             n_tries += 1
             sleep(5)
-            x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+            x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
             rc = x.wait()
         
         # resize image to fit
         cmd = ["/usr/bin/hdiutil", "resize", temp_dmg_path]
         print(" ".join(cmd))
-        x = Popen(cmd, stdout=PIPE, stderr=nullDevice)
-        size = x.communicate()[0].split(None, 1)[0]
+        x = Popen(cmd, stdout=PIPE, stderr=DEVNULL)
+        size = x.communicate()[0].decode("ascii").split(None, 1)[0]
         cmd = ["/usr/bin/hdiutil", "resize", "-size", size + "b", temp_dmg_path]
-        x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+        x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         assert rc == 0, "failed to resize  %s" % (temp_dmg_path)
     
     # convert image to read only and compress
     cmd = ["/usr/bin/hdiutil", "convert", temp_dmg_path, "-format", "UDZO", "-imagekey", "zlib-level=9", "-o", final_dmg_name]
     print(" ".join(cmd))
-    x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+    x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
     rc = x.wait()
     assert rc == 0, "hdiutil convert failed"
     
-    nullDevice.close()
     os.unlink(temp_dmg_path)
     
     return final_dmg_name
@@ -287,7 +285,6 @@ def create_zip_of_application(new_version_number):
     # of date, since I sometimes want to upload multiple betas per day.
     final_zip_name = os.path.join(BUILD_DIR, os.path.splitext(os.path.basename(BUILT_APP))[0] + "-" + new_version_number + ".zip")
     
-    nullDevice = open("/dev/null", "w")
     cmd = ["/usr/bin/ditto", "-c", "-k", "--keepParent", BUILT_APP, final_zip_name]
     print(" ".join(cmd))
     x = Popen(cmd)
@@ -298,9 +295,8 @@ def create_zip_of_application(new_version_number):
 
 def release_notes():
     
-    f = codecs.open(RELNOTES_PATH, "r", encoding="utf-8")
-    relNotes = f.read()
-    f.close()
+    with open(RELNOTES_PATH, "r", encoding="utf-8") as f:
+        relNotes = f.read()
     
     changeString = "Changes since "
     endLineString = "\\\n"
@@ -367,8 +363,8 @@ def keyFromSecureNote():
     
     # see http://www.entropy.ch/blog/Developer/2008/09/22/Sparkle-Appcast-Automation-in-Xcode.html
     pwtask = Popen(["/usr/bin/security", "find-generic-password", "-g", "-s", KEY_NAME], stdout=PIPE, stderr=PIPE)
-    [output, error] = pwtask.communicate()
-    pwoutput = (output + error).decode("utf-8")
+    # security returns the password in stderr for some reason
+    pwoutput = pwtask.communicate()[1].decode("utf-8")
 
     # notes are evidently stored as archived RTF data, so find start/end markers
     start = pwoutput.find("-----BEGIN DSA PRIVATE KEY-----")
@@ -399,7 +395,7 @@ def signature_and_size(archive_path):
     b64_task = Popen(["/usr/bin/openssl", "enc", "-base64"], stdin=dss_task.stdout, stdout=PIPE)
     
     # now compute the variables we need for writing the new appcast
-    appcastSignature = b64_task.communicate()[0].strip()
+    appcastSignature = b64_task.communicate()[0].decode("ascii").strip()
     fileSize = str(os.stat(archive_path)[ST_SIZE])
     
     return appcastSignature, fileSize
@@ -466,9 +462,8 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
         appcastName = "skim-" + newVersionString + ".xml"
     
     appcastPath = os.path.join(outputPath , appcastName)
-    appcastFile = codecs.open(appcastPath, "w", "utf-8")
-    appcastFile.write(appcastString)
-    appcastFile.close()
+    with open(appcastPath, "w", "utf-8") as appcastFile:
+        appcastFile.write(appcastString)
     
     # construct the ReadMe file
     readMe = "Release notes for Skim version " + newVersionString + "\n"
@@ -485,9 +480,8 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     
     # write the ReadMe file
     readMePath = os.path.join(outputPath , "ReadMe-" + newVersionString + ".txt")
-    readMeFile = codecs.open(readMePath, "w", "utf-8")
-    readMeFile.write(readMe)
-    readMeFile.close()
+    with open(readMePath, "w", "utf-8") as readMeFile:
+        readMeFile.write(readMe)
 
 def get_options():
     
