@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 #
 # This script is part of Skim.  Various paths are hardcoded near
@@ -368,7 +368,7 @@ def keyFromSecureNote():
     # see http://www.entropy.ch/blog/Developer/2008/09/22/Sparkle-Appcast-Automation-in-Xcode.html
     pwtask = Popen(["/usr/bin/security", "find-generic-password", "-g", "-s", KEY_NAME], stdout=PIPE, stderr=PIPE)
     [output, error] = pwtask.communicate()
-    pwoutput = output + error
+    pwoutput = (output + error).decode("utf-8")
 
     # notes are evidently stored as archived RTF data, so find start/end markers
     start = pwoutput.find("-----BEGIN DSA PRIVATE KEY-----")
