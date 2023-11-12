@@ -38,7 +38,6 @@
 
 #import "SKLevelIndicatorCell.h"
 #import "NSGeometry_SKExtensions.h"
-#import "NSGraphics_SKExtensions.h"
 
 #define EDGE_HEIGHT 4.0
 

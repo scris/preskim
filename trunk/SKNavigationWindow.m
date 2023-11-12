@@ -42,7 +42,6 @@
 #import "SKPDFView.h"
 #import "NSParagraphStyle_SKExtensions.h"
 #import "NSGeometry_SKExtensions.h"
-#import "NSGraphics_SKExtensions.h"
 #import "PDFView_SKExtensions.h"
 #import "NSShadow_SKExtensions.h"
 #import "NSView_SKExtensions.h"
