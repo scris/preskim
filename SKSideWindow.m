@@ -42,7 +42,6 @@
 #import "NSGeometry_SKExtensions.h"
 #import "NSShadow_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
-#import "NSGraphics_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 
 #define DEFAULT_WINDOW_WIDTH    300.0

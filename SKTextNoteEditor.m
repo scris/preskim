@@ -41,7 +41,6 @@
 #import "PDFAnnotation_SKExtensions.h"
 #import "PDFPage_SKExtensions.h"
 #import "NSView_SKExtensions.h"
-#import "NSGraphics_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
 #import "SKChainedUndoManager.h"
 #import "SKStringConstants.h"

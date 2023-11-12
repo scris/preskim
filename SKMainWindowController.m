@@ -100,7 +100,6 @@
 #import "SKScroller.h"
 #import "SKMainWindow.h"
 #import "PDFOutline_SKExtensions.h"
-#import "NSGraphics_SKExtensions.h"
 #import "NSWindow_SKExtensions.h"
 #import "SKMainTouchBarController.h"
 #import "SKOverviewView.h"
