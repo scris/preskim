@@ -1002,7 +1002,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:r yRadius:r] addClip];
         [aColor drawSwatchInRect:rect];
         
-        if (SKHasDarkAppearance(self)) {
+        if (SKHasDarkAppearance()) {
             [[NSColor colorWithGenericGamma22White:1.0 alpha:stroke] setStroke];
             [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationScreen];
         } else {

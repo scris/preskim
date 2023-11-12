@@ -57,15 +57,9 @@
 
 #endif
 
-BOOL SKHasDarkAppearance(id object) {
-    if (@available(macOS 10.14, *)) {
-        id appearance = nil;
-        if (object == nil)
-            appearance = [NSAppearance currentAppearance];
-        else if ([object respondsToSelector:@selector(effectiveAppearance)])
-            appearance = [(id<NSAppearanceCustomization>)object effectiveAppearance];
-        return [[appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
-    }
+BOOL SKHasDarkAppearance() {
+    if (@available(macOS 10.14, *))
+        return [[[NSApp effectiveAppearance] bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     return NO;
 }
 
@@ -187,7 +181,7 @@ extern NSArray *SKColorEffectFilters(void) {
         if ((filter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [[[CIColor alloc] initWithColor:white] autorelease], nil]))
             [filters addObject:filter];
     }
-    if (SKHasDarkAppearance(NSApp) && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+    if (SKHasDarkAppearance() && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         // map the white page background to 45/255, or 30/255 with high contrast
         CGFloat f = [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9337 : 1.8972;
         // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
