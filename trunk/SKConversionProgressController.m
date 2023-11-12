@@ -203,7 +203,7 @@ CGPSConverterCallbacks SKPSConverterCallbacks = {
 static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTools) {
     NSString *commandPath = [[NSUserDefaults standardUserDefaults] stringForKey:defaultKey];
     NSString *commandName = [commandPath lastPathComponent];
-    NSArray *paths = @[@"/Library/TeX/texbin", @"/usr/texbin", @"/sw/bin", @"/opt/sw/bin", @"/opt/local/bin", @"/usr/local/bin"];
+    NSArray *paths = @[@"/Library/TeX/texbin", @"/usr/texbin", @"/sw/bin", @"/opt/sw/bin", @"/opt/local/bin", @"/usr/local/bin", @"/opt/homebrew/bin"];
     NSInteger i = 0, iMax = [paths count];
     NSFileManager *fm = [NSFileManager defaultManager];
     NSEnumerator *toolEnum = [supportedTools objectEnumerator];
