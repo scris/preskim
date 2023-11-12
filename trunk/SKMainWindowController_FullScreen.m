@@ -470,7 +470,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     if ([presentationNotes count]) {
         PDFDocument *pdfDoc = [self pdfDocument];
-        for (PDFAnnotation *annotation in presentationNotes)
+        for (PDFAnnotation *annotation in [[presentationNotes copy] autorelease])
             [pdfDoc removeAnnotation:annotation];
     }
     SKDESTROY(presentationNotes);
