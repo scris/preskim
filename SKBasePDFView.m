@@ -79,10 +79,10 @@ static inline NSArray *defaultKeysToObserve() {
 // make sure we don't use the same method name as a superclass or a subclass
 - (void)commonBaseInitialization {
     if (@available(macOS 10.14, *)) {
-        SKSetHasDefaultAppearance(self);
-        SKSetHasLightAppearance([[self scrollView] contentView]);
+        [self setAppearance:nil];
+        [[[self scrollView] contentView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-            SKSetHasLightAppearance([self scrollView]);
+            [[self scrollView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         
         if (@available(macOS 10.15, *)) {} else if (@available(macOS 10.14, *)) {
             [self handleScrollerStyleChangedNotification:nil];
@@ -128,10 +128,11 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)colorFiltersDidChange {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        SKSetHasLightAppearance([self scrollView]);
-    } else {
-        SKSetHasDefaultAppearance([self scrollView]);
+    if (@available(macOS 10.14, *)) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+            [[self scrollView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
+        else
+            [[self scrollView] setAppearance:nil];
     }
     [[self scrollView] setContentFilters:SKColorEffectFilters()];
 }
@@ -143,12 +144,14 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {
-    if ([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy) {
-        SKSetHasDefaultAppearance([[self scrollView] verticalScroller]);
-        SKSetHasDefaultAppearance([[self scrollView] horizontalScroller]);
-    } else {
-        SKSetHasLightAppearance([[self scrollView] verticalScroller]);
-        SKSetHasLightAppearance([[self scrollView] horizontalScroller]);
+    if (@available(macOS 10.14, *)) {
+        if ([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy) {
+            [[[self scrollView] verticalScroller] setAppearance:nil];
+            [[[self scrollView] horizontalScroller] setAppearance:nil];
+        } else {
+            [[[self scrollView] verticalScroller] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
+            [[[self scrollView] horizontalScroller] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
+        }
     }
 }
 

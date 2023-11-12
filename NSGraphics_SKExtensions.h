@@ -39,9 +39,6 @@
 #import <Cocoa/Cocoa.h>
 
 extern BOOL SKHasDarkAppearance(id object);
-extern void SKSetHasDarkAppearance(id object);
-extern void SKSetHasLightAppearance(id object);
-extern void SKSetHasDefaultAppearance(id object);
 
 extern void SKRunWithAppearance(id object, void (^code)(void));
 extern void SKRunWithLightAppearance(void (^code)(void));
