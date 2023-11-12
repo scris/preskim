@@ -64,21 +64,18 @@ BOOL SKHasDarkAppearance() {
 }
 
 void SKRunWithAppearance(id object, void (^code)(void)) {
-    NSAppearance *appearance = nil;
-    if ([object respondsToSelector:@selector(effectiveAppearance)]) {
-        appearance = [[[NSAppearance currentAppearance] retain] autorelease];
-        [NSAppearance setCurrentAppearance:[(id<NSAppearanceCustomization>)object effectiveAppearance]];
+    if (@available(macOS 10.14, *)) {
+        NSAppearance *appearance = nil;
+        if ([object respondsToSelector:@selector(effectiveAppearance)]) {
+            appearance = [[[NSAppearance currentAppearance] retain] autorelease];
+            [NSAppearance setCurrentAppearance:[(id<NSAppearanceCustomization>)object effectiveAppearance]];
+        }
+        code();
+        if ([object respondsToSelector:@selector(effectiveAppearance)])
+            [NSAppearance setCurrentAppearance:appearance];
+    } else {
+        code();
     }
-    code();
-    if ([object respondsToSelector:@selector(effectiveAppearance)])
-        [NSAppearance setCurrentAppearance:appearance];
-}
-
-void SKRunWithLightAppearance(void (^code)(void)) {
-    NSAppearance *appearance = [[[NSAppearance currentAppearance] retain] autorelease];
-    [NSAppearance setCurrentAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
-    code();
-    [NSAppearance setCurrentAppearance:appearance];
 }
 
 #pragma mark -
