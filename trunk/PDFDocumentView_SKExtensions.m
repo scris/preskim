@@ -53,7 +53,7 @@
 
 #pragma mark -
 
-static NSString *pdfViewIvarKeyPath = @"private.pdfView";
+static NSString *pdfViewIvarKeyPath = @"_private.pdfView";
 
 static id fallback_ivar_getPDFView(id self, SEL _cmd) {
     id pdfView = nil;
@@ -154,9 +154,6 @@ void SKSwizzlePDFDocumentViewMethods() {
     if ([PDFDocumentViewClass instancesRespondToSelector:@selector(pdfView)] == NO) {
         if ([PDFDocumentViewClass instancesRespondToSelector:@selector(getPDFView)]) {
             SKAddInstanceMethodImplementationFromSelector(PDFDocumentViewClass, @selector(pdfView), @selector(getPDFView));
-        } else if (class_getInstanceVariable(PDFDocumentViewClass, "_pdfView")) {
-            pdfViewIvarKeyPath = @"pdfView";
-            SKAddInstanceMethodImplementation(PDFDocumentViewClass, @selector(pdfView), (IMP)fallback_ivar_getPDFView, "@@:");
         } else if (class_getInstanceVariable(PDFDocumentViewClass, "_private")) {
             SKAddInstanceMethodImplementation(PDFDocumentViewClass, @selector(pdfView), (IMP)fallback_ivar_getPDFView, "@@:");
         } else {
