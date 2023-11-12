@@ -273,11 +273,10 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
     fileType = [aFileType retain];
     cancelled = NO;
     
-    NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     CGDataProviderRef provider = NULL;
-    BOOL useTask = [ws type:fileType conformsToType:SKPostScriptDocumentType] == NO;
-    if (@available(macOS 14.0, *))
-        useTask = YES;
+    BOOL useTask = YES;
+    if (@available(macOS 14.0, *)) {} else if ([[NSWorkspace sharedWorkspace] type:fileType conformsToType:SKPostScriptDocumentType])
+        useTask = NO;
     
     if (useTask) {
         
