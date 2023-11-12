@@ -323,7 +323,7 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 
 static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *darkBackgroundColorKey) {
     NSColor *color = nil;
-    if (SKHasDarkAppearance(NSApp))
+    if (SKHasDarkAppearance())
         color = [[NSUserDefaults standardUserDefaults] colorForKey:darkBackgroundColorKey];
     if (color == nil)
         color = [[NSUserDefaults standardUserDefaults] colorForKey:backgroundColorKey];

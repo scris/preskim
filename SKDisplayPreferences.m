@@ -134,14 +134,14 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
 #pragma mark Actions
 
 - (IBAction)changeBackgroundColor:(id)sender {
-    NSString *key = SKHasDarkAppearance(NSApp) ? SKDarkBackgroundColorKey : SKBackgroundColorKey;
+    NSString *key = SKHasDarkAppearance() ? SKDarkBackgroundColorKey : SKBackgroundColorKey;
     changingColors = YES;
     [[NSUserDefaults standardUserDefaults] setColor:[sender color] forKey:key];
     changingColors = YES;
 }
 
 - (IBAction)changeFullScreenBackgroundColor:(id)sender{
-    NSString *key = SKHasDarkAppearance(NSApp) ? SKDarkFullScreenBackgroundColorKey : SKFullScreenBackgroundColorKey;
+    NSString *key = SKHasDarkAppearance() ? SKDarkFullScreenBackgroundColorKey : SKFullScreenBackgroundColorKey;
     changingColors = YES;
     [[NSUserDefaults standardUserDefaults] setColor:[sender color] forKey:key];
     changingColors = NO;
@@ -180,7 +180,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
     NSColor *color = nil;
     NSColor *fsColor = nil;
     NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-    if (SKHasDarkAppearance(NSApp)) {
+    if (SKHasDarkAppearance()) {
         color = [sud colorForKey:SKDarkBackgroundColorKey];
         fsColor = [sud colorForKey:SKDarkFullScreenBackgroundColorKey];
     }

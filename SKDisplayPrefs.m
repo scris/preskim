@@ -91,7 +91,7 @@
 
 - (NSColor *)backgroundColor {
     NSColor *backgroundColor = nil;
-    if (SKHasDarkAppearance(NSApp))
+    if (SKHasDarkAppearance())
         backgroundColor = [[NSUserDefaults standardUserDefaults] colorForKey:fullScreen ? SKDarkFullScreenBackgroundColorKey : SKDarkBackgroundColorKey];
     if (backgroundColor == nil)
         backgroundColor = [[NSUserDefaults standardUserDefaults] colorForKey:fullScreen ? SKFullScreenBackgroundColorKey : SKBackgroundColorKey];
@@ -99,7 +99,7 @@
 }
 
 - (void)setBackgroundColor:(NSColor *)color {
-    if (SKHasDarkAppearance(NSApp))
+    if (SKHasDarkAppearance())
         [[NSUserDefaults standardUserDefaults] setColor:color forKey:fullScreen ? SKDarkFullScreenBackgroundColorKey : SKDarkBackgroundColorKey];
     else
         [[NSUserDefaults standardUserDefaults] setColor:color forKey:fullScreen ? SKFullScreenBackgroundColorKey : SKBackgroundColorKey];
