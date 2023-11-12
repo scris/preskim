@@ -20,18 +20,18 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="434" y="471" width="420" height="129"/>
+            <rect key="contentRect" x="434" y="471" width="360" height="116"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="775"/>
-            <value key="minSize" type="size" width="300" height="129"/>
+            <value key="minSize" type="size" width="300" height="116"/>
             <view key="contentView" id="6">
-                <rect key="frame" x="0.0" y="0.0" width="420" height="128"/>
+                <rect key="frame" x="0.0" y="0.0" width="360" height="116"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <progressIndicator autoresizesSubviews="NO" wantsLayer="YES" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="9">
-                        <rect key="frame" x="20" y="89" width="380" height="20"/>
+                        <rect key="frame" x="20" y="77" width="320" height="20"/>
                     </progressIndicator>
                     <button autoresizesSubviews="NO" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="10">
-                        <rect key="frame" x="377" y="13" width="30" height="32"/>
+                        <rect key="frame" x="317" y="13" width="30" height="32"/>
                         <buttonCell key="cell" type="push" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="18">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -41,7 +41,7 @@
                         </connections>
                     </button>
                     <textField autoresizesSubviews="NO" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="11">
-                        <rect key="frame" x="20" y="60" width="380" height="22"/>
+                        <rect key="frame" x="20" y="48" width="320" height="22"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="Ods-Kg-ax3"/>
                         </constraints>
@@ -61,7 +61,7 @@
                     <constraint firstAttribute="trailing" secondItem="10" secondAttribute="trailing" constant="20" symbolic="YES" id="rrX-m0-3uv"/>
                     <constraint firstItem="9" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="vxV-sg-hEp"/>
                     <constraint firstItem="11" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="8" symbolic="YES" id="wrY-6K-o0C"/>
-                    <constraint firstItem="10" firstAttribute="top" secondItem="11" secondAttribute="bottom" constant="20" id="yN3-5w-UDX"/>
+                    <constraint firstItem="10" firstAttribute="top" secondItem="11" secondAttribute="bottom" constant="8" symbolic="YES" id="yN3-5w-UDX"/>
                 </constraints>
             </view>
             <connections>
