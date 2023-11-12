@@ -52,19 +52,26 @@ static NSColor *activeSelectionHighlightInteriorColor = nil;
 static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 
 + (void)handleSystemColorsDidChange:(NSNotification *)notification {
-    __block NSColor *activeOut = nil;
-    __block NSColor *inactiveOut = nil;
-    __block NSColor *activeIn = nil;
-    __block NSColor *inactiveIn = nil;
-    NSColorSpace *colorSpace = [NSColorSpace genericRGBColorSpace];
-    if (@available(macOS 10.14, *))
-        colorSpace = [NSColorSpace sRGBColorSpace];
-    SKRunWithLightAppearance(^{
+    NSColor *activeOut = nil;
+    NSColor *inactiveOut = nil;
+    NSColor *activeIn = nil;
+    NSColor *inactiveIn = nil;
+    if (@available(macOS 10.14, *)) {
+        NSColorSpace *colorSpace = [NSColorSpace sRGBColorSpace];
+        NSAppearance *appearance = [[[NSAppearance currentAppearance] retain] autorelease];
+        [NSAppearance setCurrentAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         activeOut = [[NSColor alternateSelectedControlColor] colorUsingColorSpace:colorSpace];
         inactiveOut = [[NSColor grayColor] colorUsingColorSpace:colorSpace];
         activeIn = [[[[NSColor alternateSelectedControlColor] colorUsingColorSpace:colorSpace] highlightWithLevel:0.66667] colorWithAlphaComponent:0.8];
         inactiveIn = [[[NSColor secondarySelectedControlColor] colorUsingColorSpace:colorSpace] colorWithAlphaComponent:0.8];
-    });
+        [NSAppearance setCurrentAppearance:appearance];
+    } else {
+        NSColorSpace *colorSpace = [NSColorSpace genericRGBColorSpace];
+        activeOut = [[NSColor alternateSelectedControlColor] colorUsingColorSpace:colorSpace];
+        inactiveOut = [[NSColor grayColor] colorUsingColorSpace:colorSpace];
+        activeIn = [[[[NSColor alternateSelectedControlColor] colorUsingColorSpace:colorSpace] highlightWithLevel:0.66667] colorWithAlphaComponent:0.8];
+        inactiveIn = [[[NSColor secondarySelectedControlColor] colorUsingColorSpace:colorSpace] colorWithAlphaComponent:0.8];
+    }
     @synchronized (self) {
         [activeSelectionHighlightColor release];
         activeSelectionHighlightColor = [activeOut retain];

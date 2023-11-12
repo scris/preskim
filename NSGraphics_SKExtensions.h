@@ -41,7 +41,6 @@
 extern BOOL SKHasDarkAppearance(void);
 
 extern void SKRunWithAppearance(id object, void (^code)(void));
-extern void SKRunWithLightAppearance(void (^code)(void));
 
 #pragma mark -
 
