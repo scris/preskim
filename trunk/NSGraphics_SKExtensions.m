@@ -69,27 +69,6 @@ BOOL SKHasDarkAppearance(id object) {
     return NO;
 }
 
-void SKSetHasDarkAppearance(id object) {
-    if (@available(macOS 10.14, *)) {
-        if ([object respondsToSelector:@selector(setAppearance:)])
-            [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]];
-    }
-}
-
-void SKSetHasLightAppearance(id object) {
-    if (@available(macOS 10.14, *)) {
-        if ([object respondsToSelector:@selector(setAppearance:)])
-            [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
-    }
-}
-
-void SKSetHasDefaultAppearance(id object) {
-    if (@available(macOS 10.14, *)) {
-        if ([object respondsToSelector:@selector(setAppearance:)])
-            [(id<NSAppearanceCustomization>)object setAppearance:nil];
-    }
-}
-
 void SKRunWithAppearance(id object, void (^code)(void)) {
     NSAppearance *appearance = nil;
     if ([object respondsToSelector:@selector(effectiveAppearance)]) {

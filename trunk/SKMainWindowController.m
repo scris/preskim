@@ -1698,10 +1698,10 @@ static char SKMainWindowContentLayoutObservationContext;
     
     if (@available(macOS 10.14, *)) {
         if (isPresentation) {
-            SKSetHasDarkAppearance(overviewContentView);
+            [overviewContentView setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]];
             [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialUnderPageBackground];
         } else {
-            SKSetHasDefaultAppearance(overviewContentView);
+            [overviewContentView setAppearance:nil];
             [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialSidebar];
         }
     } else {

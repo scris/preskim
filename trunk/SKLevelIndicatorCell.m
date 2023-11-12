@@ -95,11 +95,13 @@
 }
 
 - (void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle {
-    if ([self levelIndicatorStyle] == NSLevelIndicatorStyleRelevancy && [[self controlView] isKindOfClass:[NSLevelIndicator class]]) {
-        if (backgroundStyle == NSBackgroundStyleDark)
-            SKSetHasDarkAppearance([self controlView]);
-        else
-            SKSetHasDefaultAppearance([self controlView]);
+    if (@available(macOS 10.14, *)) {
+        if ([self levelIndicatorStyle] == NSLevelIndicatorStyleRelevancy && [[self controlView] isKindOfClass:[NSLevelIndicator class]]) {
+            if (backgroundStyle == NSBackgroundStyleDark)
+                [[self controlView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]];
+            else
+                [[self controlView] setAppearance:nil];
+        }
     }
     [super setBackgroundStyle:backgroundStyle];
 }

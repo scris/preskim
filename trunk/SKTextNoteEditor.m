@@ -71,7 +71,8 @@ static char SKPDFAnnotationPropertiesObservationContext;
         for (NSString *key in [[self class] keysToObserve])
             [annotation addObserver:self forKeyPath:key options:0 context:&SKPDFAnnotationPropertiesObservationContext];
         
-        SKSetHasLightAppearance(self);
+        if (@available(macOS 10.14, *))
+            [self setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
     }
     return self;
 }

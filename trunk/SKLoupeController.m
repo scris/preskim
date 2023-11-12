@@ -172,10 +172,12 @@
 
 - (void)updateColorFilters {
     [[window contentView] setContentFilters:SKColorEffectFilters()];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        SKSetHasLightAppearance(window);
-    else
-        SKSetHasDefaultAppearance(window);
+    if (@available(macOS 10.14, *)) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+            [window setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
+        else
+            [window setAppearance:nil];
+    }
     [self updateBackgroundColor];
 }
 

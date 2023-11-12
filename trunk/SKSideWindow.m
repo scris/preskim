@@ -96,7 +96,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
             [contentView release];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentViewFrameChanged:) name:NSViewFrameDidChangeNotification object:contentView];
             [self contentViewFrameChanged:nil];
-            SKSetHasDarkAppearance(self);
+            [self setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         } else {
             [self setContentView:backgroundView];
         }

@@ -98,7 +98,8 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [self setContentView:contentView];
         [contentView release];
         
-        SKSetHasDarkAppearance(self);
+        if (@available(macOS 10.14, *))
+            [self setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]];
         
     }
     return self;
