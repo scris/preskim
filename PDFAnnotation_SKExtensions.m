@@ -80,8 +80,6 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 
 @implementation PDFAnnotation (SKExtensions)
 
-- (PDFTextAnnotationIconType)fallback_iconType { return kPDFTextAnnotationIconNote; }
-
 - (NSColor *)fallback_interiorColor { return nil; }
 
 - (NSString *)fallback_fieldName {
@@ -89,7 +87,6 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
 }
 
 + (void)load {
-    SKAddInstanceMethodImplementationFromSelector(self, @selector(iconType), @selector(fallback_iconType));
     SKAddInstanceMethodImplementationFromSelector(self, @selector(interiorColor), @selector(fallback_interiorColor));
     SKAddInstanceMethodImplementationFromSelector(self, @selector(fieldName), @selector(fallback_fieldName));
 }
