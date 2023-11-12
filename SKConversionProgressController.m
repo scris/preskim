@@ -57,6 +57,9 @@
 
 #define SKTouchBarItemIdentifierCancel @"net.sourceforge.skim-app.touchbar-item.cancel"
 
+#define PS_SEARCH_PATHS @[@"/usr/local/bin", @"/opt/sw/bin", @"/opt/local/bin", @"/opt/homebrew/bin"]
+#define DVI_SEARCH_PATHS @[@"/Library/TeX/texbin", @"/opt/sw/bin", @"/opt/local/bin", @"/usr/local/bin"]
+
 #define MIN_BUTTON_WIDTH 90.0
 
 enum {
@@ -203,7 +206,7 @@ CGPSConverterCallbacks SKPSConverterCallbacks = {
 static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTools) {
     NSString *commandPath = [[NSUserDefaults standardUserDefaults] stringForKey:defaultKey];
     NSString *commandName = [commandPath lastPathComponent];
-    NSArray *paths = [[supportedTools firstObject] isEqualToString:@"ps2pdf"] ? @[@"/usr/local/bin", @"/opt/sw/bin", @"/opt/local/bin", @"/opt/homebrew/bin"] : @[@"/Library/TeX/texbin", @"/opt/sw/bin", @"/opt/local/bin", @"/usr/local/bin"];
+    NSArray *paths = [[supportedTools firstObject] isEqualToString:@"ps2pdf"] ? PS_SEARCH_PATHS : DVI_SEARCH_PATHS;
     NSInteger i = 0, iMax = [paths count];
     NSFileManager *fm = [NSFileManager defaultManager];
     NSEnumerator *toolEnum = [supportedTools objectEnumerator];
@@ -286,7 +289,8 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
             NSURL *tmpDirURL = [[NSFileManager defaultManager] URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:aURL create:YES error:NULL];
             BOOL outputPS = [commandName isEqualToString:@"dvips"];
             NSURL *outFileURL = [tmpDirURL URLByAppendingPathComponent:[aURL lastPathComponentReplacingPathExtension:outputPS ? @"ps" : @"pdf"] isDirectory:NO];
-            NSArray *arguments = [toolPath isEqualToString:@"/usr/local/bin/ps2pdf"] ? @[@"-dALLOWPSTRANSPARENCY", [aURL path], [outFileURL path]] : [commandName isEqualToString:@"dvipdf"] || [commandName hasPrefix:@"ps2pdf"] ? @[[aURL path], [outFileURL path]] : @[@"-o", [outFileURL path], [aURL path]];
+            BOOL isStandardPS = [commandName hasPrefix:@"ps2pdf"] && ([PS_SEARCH_PATHS containsObject:[toolPath stringByDeletingLastPathComponent]]);
+            NSArray *arguments = isStandardPS ? @[@"-dALLOWPSTRANSPARENCY", [aURL path], [outFileURL path]] : [commandName isEqualToString:@"dvipdf"] || [commandName hasPrefix:@"ps2pdf"] ? @[[aURL path], [outFileURL path]] : @[@"-o", [outFileURL path], [aURL path]];
             
             task = [[NSTask alloc] init];
             [task setLaunchPath:toolPath];
