@@ -53,6 +53,9 @@
 @interface NSApplication (SKMojaveExtensions) <NSAppearanceCustomization>
 @end
 
+#define NSAppearanceNameDarkAqua @"NSAppearanceNameDarkAqua"
+#define NSAppearanceNameAccessibilityHighContrastDarkAqua @"NSAppearanceNameAccessibilityDarkAqua"
+
 #endif
 
 BOOL SKHasDarkAppearance(id object) {
@@ -62,7 +65,7 @@ BOOL SKHasDarkAppearance(id object) {
             appearance = [NSAppearance currentAppearance];
         else if ([object respondsToSelector:@selector(effectiveAppearance)])
             appearance = [(id<NSAppearanceCustomization>)object effectiveAppearance];
-        return [[appearance bestMatchFromAppearancesWithNames:@[@"NSAppearanceNameAqua", @"NSAppearanceNameDarkAqua"]] isEqualToString:@"NSAppearanceNameDarkAqua"];
+        return [[appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     }
     return NO;
 }
@@ -74,7 +77,7 @@ BOOL SKHasHighContrastDarkAppearance(id object) {
             appearance = [NSAppearance currentAppearance];
         else if ([object respondsToSelector:@selector(effectiveAppearance)])
             appearance = [(id<NSAppearanceCustomization>)object effectiveAppearance];
-        return [[appearance bestMatchFromAppearancesWithNames:@[@"NSAppearanceNameDarkAqua", @"NSAppearanceNameAccessibilityDarkAqua"]] isEqualToString:@"NSAppearanceNameAccessibilityDarkAqua"];
+        return [[appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameDarkAqua, NSAppearanceNameAccessibilityHighContrastDarkAqua]] isEqualToString:NSAppearanceNameAccessibilityHighContrastDarkAqua];
     }
     return NO;
 }
@@ -82,14 +85,14 @@ BOOL SKHasHighContrastDarkAppearance(id object) {
 void SKSetHasDarkAppearance(id object) {
     if (@available(macOS 10.14, *)) {
         if ([object respondsToSelector:@selector(setAppearance:)])
-            [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:@"NSAppearanceNameDarkAqua"]];
+            [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]];
     }
 }
 
 void SKSetHasLightAppearance(id object) {
     if (@available(macOS 10.14, *)) {
         if ([object respondsToSelector:@selector(setAppearance:)])
-            [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:@"NSAppearanceNameAqua"]];
+            [(id<NSAppearanceCustomization>)object setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
     }
 }
 
