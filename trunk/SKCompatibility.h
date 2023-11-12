@@ -90,6 +90,8 @@ enum {
 - (void)viewDidChangeEffectiveAppearance;
 @end
 
+#define NSAppearanceNameDarkAqua @"NSAppearanceNameDarkAqua"
+
 #endif
 
 #if SDK_BEFORE(11_0)

@@ -53,8 +53,6 @@
 @interface NSApplication (SKMojaveExtensions) <NSAppearanceCustomization>
 @end
 
-#define NSAppearanceNameDarkAqua @"NSAppearanceNameDarkAqua"
-
 #endif
 
 BOOL SKHasDarkAppearance() {
