@@ -47,7 +47,6 @@
 #import "NSGeometry_SKExtensions.h"
 #import "NSData_SKExtensions.h"
 #import "NSCharacterSet_SKExtensions.h"
-#import "SKRuntime.h"
 #import "NSPointerArray_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "PDFSelection_SKExtensions.h"
@@ -56,32 +55,13 @@
 #import "NSView_SKExtensions.h"
 #import "SKNoteText.h"
 #import "PDFView_SKExtensions.h"
-
+#import <objc/objc-runtime.h>
 
 NSString *SKPDFAnnotationSelectionSpecifierKey = @"selectionSpecifier";
 
-
-@interface SKPDFAnnotationMarkupExtraIvars : NSObject {
-    NSPointerArray *lineRects;
-    NSString *textString;
-    SKNoteText *noteText;
-}
-@property (nonatomic, retain) NSPointerArray *lineRects;
-@property (nonatomic, retain) NSString *textString;
-@property (nonatomic, retain) SKNoteText *noteText;
-@end
-
-@implementation SKPDFAnnotationMarkupExtraIvars
-@synthesize lineRects, textString, noteText;
-- (void)dealloc {
-    SKDESTROY(lineRects);
-    SKDESTROY(textString);
-    SKDESTROY(noteText);
-    [super dealloc];
-}
-@end
-
-#pragma mark -
+static char SKLineRectsKey;
+static char SKTextStringKey;
+static char SKNoteTextKey;
 
 @implementation PDFAnnotationMarkup (SKExtensions)
 
@@ -109,22 +89,6 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
         [quadPoints addObject:[NSValue valueWithPoint:p[i]]];
 }
 
-static NSMapTable *extraIvarsTable = nil;
-
-static void (*original_dealloc)(id, SEL) = NULL;
-
-- (void)replacement_dealloc {
-    @synchronized([self class]) {
-        [extraIvarsTable removeObjectForKey:self];
-    }
-    original_dealloc(self, _cmd);
-}
-
-+ (void)load {
-    original_dealloc = (void (*)(id, SEL))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(dealloc), @selector(replacement_dealloc));
-    extraIvarsTable = [[NSMapTable weakToStrongObjectsMapTable] retain];
-}
-
 - (void)setDefaultSkimNoteProperties {
     NSString *key = nil;
     switch ([self markupType]) {
@@ -133,20 +97,6 @@ static void (*original_dealloc)(id, SEL) = NULL;
         default: key = SKHighlightNoteColorKey; break;
     }
     [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:key]];
-}
-
-
-- (SKPDFAnnotationMarkupExtraIvars *)extraIvars {
-    SKPDFAnnotationMarkupExtraIvars *extraIvars = nil;
-    @synchronized([self class]) {
-        extraIvars = [extraIvarsTable objectForKey:self];
-        if (extraIvars == nil) {
-            extraIvars = [[SKPDFAnnotationMarkupExtraIvars alloc] init];
-            [extraIvarsTable setObject:extraIvars forKey:self];
-            [extraIvars release];
-        }
-    }
-    return extraIvars;
 }
 
 - (id)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type {
@@ -177,7 +127,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
             for (i = 0; i < iMax; i++)
                 addQuadPointsWithBounds(quadPoints, [lines rectAtIndex:i], bounds.origin, lineAngle);
             [self setQuadrilateralPoints:quadPoints];
-            [[self extraIvars] setLineRects:lines];
+            objc_setAssociatedObject(self, &SKLineRectsKey, lines, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             [quadPoints release];
             [lines release];
         }
@@ -200,8 +150,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
 }
 
 - (NSPointerArray *)lineRects {
-    SKPDFAnnotationMarkupExtraIvars *extraIvars = [self extraIvars];
-    NSPointerArray *lineRects = [extraIvars lineRects];
+    NSPointerArray *lineRects = objc_getAssociatedObject(self, &SKLineRectsKey);
     if (lineRects == nil) {
         lineRects = [[NSPointerArray alloc] initForRectPointers];
         
@@ -238,7 +187,7 @@ static void (*original_dealloc)(id, SEL) = NULL;
             [lineRects addPointer:&lineRect];
         }
         
-        [extraIvars setLineRects:lineRects];
+        objc_setAssociatedObject(self, &SKLineRectsKey, lineRects, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [lineRects release];
     }
     return lineRects;
@@ -318,11 +267,10 @@ static void (*original_dealloc)(id, SEL) = NULL;
 - (SKNoteText *)noteText {
     if ([self isEditable] == NO)
         return nil;
-    SKPDFAnnotationMarkupExtraIvars *extraIvars = [self extraIvars];
-    SKNoteText *noteText = [extraIvars noteText];
+    SKNoteText *noteText = objc_getAssociatedObject(self, &SKNoteTextKey);
     if (noteText == nil) {
         noteText = [[SKNoteText alloc] initWithNote:self];
-        [extraIvars setNoteText:noteText];
+        objc_setAssociatedObject(self, &SKNoteTextKey, noteText, OBJC_ASSOCIATION_RETAIN);
         [noteText release];
     }
     return noteText;
@@ -331,11 +279,10 @@ static void (*original_dealloc)(id, SEL) = NULL;
 - (NSString *)textString {
     if ([[self page] pageRef] == NULL)
         return nil;
-    SKPDFAnnotationMarkupExtraIvars *extraIvars = [self extraIvars];
-    NSString *textString = [extraIvars textString];
+    NSString *textString = objc_getAssociatedObject(self, &SKTextStringKey);
     if (textString == nil) {
         textString = [[self selection] cleanedString] ?: @"";
-        [extraIvars setTextString:textString];
+        objc_setAssociatedObject(self, &SKTextStringKey, textString, OBJC_ASSOCIATION_RETAIN);
     }
     return textString;
 }
