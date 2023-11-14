@@ -136,4 +136,6 @@
     }
 }
 
+- (BOOL)isRestorable { return NO; }
+
 @end
