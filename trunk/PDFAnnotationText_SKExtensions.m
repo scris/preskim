@@ -55,6 +55,8 @@ NSString *SKPDFAnnotationScriptingIconTypeKey = @"scriptingIconType";
 
 - (BOOL)isWidget { return NO; }
 
+- (BOOL)isLnk { return NO; }
+
 - (BOOL)isMovable { return [self isSkimNote]; }
 
 - (BOOL)isConvertibleAnnotation { return YES; }

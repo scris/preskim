@@ -43,22 +43,6 @@
 
 @implementation PDFAnnotationLink (SKExtensions)
 
-// override these Leopard methods to avoid showing the standard tool tips over our own
-
-static id (*original_toolTip)(id, SEL) = NULL;
-
-- (NSString *)replacement_toolTip {
-    return ([self destination] || original_toolTip == NULL) ? @"" : original_toolTip(self, _cmd);
-}
-
-+ (void)load {
-    original_toolTip = (id (*)(id, SEL))SKReplaceInstanceMethodImplementationFromSelector(self, @selector(toolTip), @selector(replacement_toolTip));
-}
-
 - (BOOL)isLink { return YES; }
-
-- (PDFDestination *)linkDestination { return [self destination]; }
-
-- (NSURL *)linkURL { return [self URL]; }
 
 @end

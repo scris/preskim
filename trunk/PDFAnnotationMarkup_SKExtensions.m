@@ -258,6 +258,8 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
 
 - (BOOL)isWidget { return NO; }
 
+- (BOOL)isLnk { return NO; }
+
 - (BOOL)hasBorder { return NO; }
 
 - (BOOL)isConvertibleAnnotation { return YES; }

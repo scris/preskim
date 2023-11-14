@@ -218,9 +218,9 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 - (NSImage *)toolTipImageWithScale:(CGFloat)scale {
 
     if ([self isLink]) {
-        NSImage *image = [[self linkDestination] toolTipImageWithOffset:NSZeroPoint scale:scale selections:nil label:nil];
+        NSImage *image = [[self destination] toolTipImageWithOffset:NSZeroPoint scale:scale selections:nil label:nil];
         if (image == nil) {
-            NSURL *url = [self linkURL];
+            NSURL *url = [self URL];
             if (url) {
                 NSAttributedString *attrString = toolTipAttributedString([url absoluteString]);
                 if ([attrString length])

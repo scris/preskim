@@ -412,7 +412,7 @@ enum {
         
         for (PDFPage *page in [self visiblePages]) {
             for (PDFAnnotation *annotation in [page annotations]) {
-                if ([annotation isNote] || (hasLinkToolTips && [annotation linkDestination])) {
+                if ([annotation isNote] || (hasLinkToolTips && [annotation destination])) {
                     NSRect rect = NSIntersectionRect([self convertRect:[annotation bounds] fromPage:page], visibleRect);
                     if (NSIsEmptyRect(rect) == NO) {
                         rect = [self convertRect:rect toView:docView];
@@ -2835,11 +2835,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if ([currentAnnotation isLink]) {
         
         [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
-        PDFDestination *dest = [currentAnnotation linkDestination];
+        PDFDestination *dest = [currentAnnotation destination];
         NSURL *url;
         if (dest)
             [self goToDestination:dest];
-        else if ((url = [currentAnnotation linkURL]))
+        else if ((url = [currentAnnotation URL]))
             [[NSWorkspace sharedWorkspace] openURL:url];
         [self setCurrentAnnotation:nil];
         
@@ -4994,7 +4994,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         
         PDFAnnotation *annotation = [page annotationAtPoint:[self convertPoint:point toPage:page]];
         if ([annotation isLink]) {
-            PDFDestination *destination = [annotation linkDestination];
+            PDFDestination *destination = [annotation destination];
             if ([destination page]) {
                 page = [destination page];
                 point = [[destination effectiveDestinationForView:nil] point];
