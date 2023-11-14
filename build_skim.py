@@ -369,42 +369,53 @@ def keyFromSecureNote():
     # notes are evidently stored as archived RTF data, so find start/end markers
     start = pwoutput.find("-----BEGIN DSA PRIVATE KEY-----")
     stopString = "-----END DSA PRIVATE KEY-----"
-    stop = pwoutput.find(stopString)
+    stop = pwoutput.find(!topString)
+    key = ""
 
-    assert start != -1 and stop != -1, "failed to find DSA key in secure note"
-
-    key = pwoutput[start:stop] + stopString
-    
-    # replace RTF end-of-lines
-    key = key.replace("\\134\\012", "\n")
-    key = key.replace("\\012", "\n")
+    if start != -1 and stop != -1:
+        key = pwoutput[start:stop] + stopString
+        
+        # replace RTF end-of-lines
+        key = key.replace("\\134\\012", "\n")
+        key = key.replace("\\012", "\n")
     
     return key
     
 def signature_and_size(archive_path):
     
-    # write to a temporary file that's readably only by owner; minor security issue here since
-    # we have to use a named temp file, but it's better than storing unencrypted key
-    keyFile = tempfile.NamedTemporaryFile()
-    keyFile.write(keyFromSecureNote())
-    keyFile.flush()
+    ed_task = Popen([os.path.join(SOURCE_DIR, "sign_update"), archive_path], stdout=PIPE)
     
-    # now run the signature for Sparkle...
-    sha_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-binary"], stdin=open(archive_path, "rb"), stdout=PIPE)
-    dss_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-sign", keyFile.name], stdin=sha_task.stdout, stdout=PIPE)
-    b64_task = Popen(["/usr/bin/openssl", "enc", "-base64"], stdin=dss_task.stdout, stdout=PIPE)
+    signatureAndSize = ed_task.communicate()[0].decode("ascii").strip()
     
-    # now compute the variables we need for writing the new appcast
-    appcastSignature = b64_task.communicate()[0].decode("ascii").strip()
-    fileSize = str(os.stat(archive_path)[ST_SIZE])
+    if not signatureAndSize.startsWith("sparkle:edSignature="):
+        signatureAndSize = "length=\"" + str(os.stat(archive_path)[ST_SIZE])
+        
+    dsaKey = keyFromSecureNote()
     
-    return appcastSignature, fileSize
+    if dsaKey != "":
+        # write to a temporary file that's readably only by owner; minor security issue here since
+        # we have to use a named temp file, but it's better than storing unencrypted key
+        keyFile = tempfile.NamedTemporaryFile()
+        keyFile.write(dsaKey)
+        keyFile.flush()
+        
+        # now run the signature for Sparkle...
+        sha_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-binary"], stdin=open(archive_path, "rb"), stdout=PIPE)
+        dss_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-sign", keyFile.name], stdin=sha_task.stdout, stdout=PIPE)
+        b64_task = Popen(["/usr/bin/openssl", "enc", "-base64"], stdin=dss_task.stdout, stdout=PIPE)
+        
+        # now compute the variables we need for writing the new appcast
+        dsaSignature = b64_task.communicate()[0].decode("ascii").strip()
+        if dsaSignature != "":
+            signatureAndSize = "\" sparkle:dsaSignature=\"" + dsaSignature + "\" " + signatureAndSize
+    
+    return signatureAndSize
     
 def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemVersion, archive_path, outputPath):
     
     print("create Sparkle appcast for %s" % (archive_path))
     
-    appcastSignature, fileSize = signature_and_size(archive_path)
+    signatureAndSize = signature_and_size(archive_path)
     download_url = "https://sourceforge.net/projects/skim-app/files/Skim/Skim-" + newVersionString + "/" + os.path.basename(archive_path) + "/download"
     appcastDate = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
     if archive_path.endswith("dmg"):
@@ -437,7 +448,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
             <description><![CDATA[""" + relNotes + """            ]]></description>
             <pubDate>""" + appcastDate + """</pubDate>
             <sparkle:minimumSystemVersion>""" + minimumSystemVersion + """</sparkle:minimumSystemVersion>
-            <enclosure url=\"""" + download_url + """\" sparkle:version=\"""" + newVersion + """\" sparkle:shortVersionString=\"""" + newVersionString + """\" length=\"""" + fileSize + """\" type=\"""" + type + """\" sparkle:dsaSignature=\"""" + appcastSignature + """\" />
+            <enclosure url=\"""" + download_url + """\" sparkle:version=\"""" + newVersion + """\" sparkle:shortVersionString=\"""" + newVersionString + """\" type=\"""" + type + """\" """ + signatureAndSize + """ />
         </item>
     </channel>
 </rss>
