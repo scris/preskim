@@ -206,11 +206,8 @@ static NSUInteger maxRecentDocumentsCount = 0;
     
     [self setWindowFrameAutosaveName:SKBookmarksWindowFrameAutosaveName];
     
-    [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowBookmarkStatusBarKey] == NO)
         [self toggleStatusBar:nil];
-    else
-        [[self window] setContentBorderThickness:22.0 forEdge:NSMinYEdge];
     
     [outlineView setStronglyReferencesItems:YES];
     
