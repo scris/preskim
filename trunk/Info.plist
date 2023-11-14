@@ -465,8 +465,8 @@
 	<string>Skim.sdef</string>
 	<key>SUFeedURL</key>
 	<string>https://skim-app.sourceforge.io/skim.xml</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>dsa_pub.pem</string>
+	<key>SUPublicEDKey</key>
+	<string>OJbci+AJM5DdGKcbQUBWDXiktAQJvyD81XgPJQWRHC0=</string>
 	<key>SUScheduledCheckInterval</key>
 	<integer>86400</integer>
 	<key>UTExportedTypeDeclarations</key>
