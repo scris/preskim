@@ -187,9 +187,6 @@ static NSURL *temporaryDirectoryURL = nil;
     [[self window] setLevel:keepOnTop || forceOnTop ? NSFloatingWindowLevel : NSNormalWindowLevel];
     [[self window] setHidesOnDeactivate:keepOnTop || forceOnTop];
     
-    [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-    [[self window] setContentBorderThickness:NSHeight([statusBar frame]) forEdge:NSMinYEdge];
-    
     if (@available(macOS 10.14, *))
         [textView setDrawsBackground:NO];
     

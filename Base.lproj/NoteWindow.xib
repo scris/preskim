@@ -198,6 +198,7 @@
                     <constraint firstItem="39" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="wiZ-vv-dWU"/>
                 </constraints>
             </view>
+            <contentBorderThickness minY="22"/>
             <connections>
                 <outlet property="delegate" destination="-2" id="18"/>
                 <outlet property="initialFirstResponder" destination="46" id="53"/>

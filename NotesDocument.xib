@@ -322,6 +322,7 @@
                     <constraint firstAttribute="bottom" secondItem="sbg-jM-cv9" secondAttribute="bottom" id="pjj-Ub-sdR"/>
                 </constraints>
             </view>
+            <contentBorderThickness minY="22"/>
             <connections>
                 <outlet property="delegate" destination="-2" id="32"/>
             </connections>

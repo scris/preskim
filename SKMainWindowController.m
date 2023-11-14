@@ -400,15 +400,11 @@ static char SKMainWindowContentLayoutObservationContext;
     
     [self setWindowFrameAutosaveNameOrCascade:SKMainWindowFrameAutosaveName];
     
-    [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-    
     [[statusBar rightField] setAction:@selector(statusBarClicked:)];
     [[statusBar rightField] setTarget:self];
 
     if ([sud boolForKey:SKShowStatusBarKey] == NO)
         [self toggleStatusBar:nil];
-    else
-        [window setContentBorderThickness:22.0 forEdge:NSMinYEdge];
     
     NSInteger windowSizeOption = [sud integerForKey:SKInitialWindowSizeOptionKey];
     if (hasWindowSetup) {

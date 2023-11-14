@@ -161,12 +161,8 @@
     
     [aController setWindowFrameAutosaveNameOrCascade:SKNotesDocumentWindowFrameAutosaveName];
     
-    [[aController window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-    
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowNotesStatusBarKey] == NO)
         [self toggleStatusBar:nil];
-    else
-        [[self window] setContentBorderThickness:STATUSBAR_HEIGHT forEdge:NSMinYEdge];
     
     if (NSEqualRects(windowRect, NSZeroRect) == NO)
         [[aController window] setFrame:windowRect display:NO];

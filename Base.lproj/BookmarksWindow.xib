@@ -252,6 +252,7 @@
                     <constraint firstItem="56" firstAttribute="trailing" secondItem="6" secondAttribute="trailing" id="hUc-Wx-VsZ"/>
                 </constraints>
             </view>
+            <contentBorderThickness minY="22"/>
             <connections>
                 <outlet property="delegate" destination="-2" id="20"/>
                 <outlet property="initialFirstResponder" destination="57" id="90"/>
