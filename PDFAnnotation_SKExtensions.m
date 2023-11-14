@@ -278,14 +278,6 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     return fdfString;
 }
 
-- (PDFDestination *)linkDestination {
-    return [self destination];
-}
-
-- (NSURL *)linkURL {
-    return [self URL];
-}
-
 - (NSUInteger)pageIndex {
     PDFPage *page = [self page];
     return page ? [page pageIndex] : NSNotFound;

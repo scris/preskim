@@ -119,6 +119,8 @@ static void (*original_setBounds)(id, SEL, NSRect) = NULL;
 
 - (BOOL)isWidget { return NO; }
 
+- (BOOL)isLnk { return NO; }
+
 - (BOOL)isResizable { return [self isSkimNote]; }
 
 - (BOOL)isMovable { return [self isSkimNote]; }
