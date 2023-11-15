@@ -21,7 +21,7 @@
 #   -a, --archive
 #      The type of archive the app bundle is wrapped in, the prepared disk image when empty
 #   -v, --version
-#      The new short version string, also bumps the version when this is passed
+#      The new short version string or +, ++, or +++, also bumps the version when this is passed
 #   -t, --test
 #      Prepare a test version, don't create appcast and release notes
 #
