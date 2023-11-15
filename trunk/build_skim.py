@@ -81,12 +81,12 @@ KEY_NAME = "Skim Sparkle Key"
 APPCAST_URL = "https://skim-app.sourceforge.io/skim.xml"
 
 # create a private temporary directory
-BUILD_ROOT = os.path.join("/tmp", "Skim-%s" % (getuser()))
+BUILD_ROOT = os.path.join("/tmp", f"Skim-{getuser()}")
 try:
     # should already exist after the first run
     os.mkdir(BUILD_ROOT)
 except Exception as e:
-    assert os.path.isdir(BUILD_ROOT), "%s does not exist" % (BUILD_ROOT)
+    assert os.path.isdir(BUILD_ROOT), f"{BUILD_ROOT} does not exist"
 
 # derived paths
 SYMROOT = os.path.join(BUILD_ROOT, "Products")
@@ -135,7 +135,7 @@ def bump_versions(newVersion):
     infoPlist["CFBundleShortVersionString"] = newVersion
     with open(SOURCE_PLIST_PATH, "wb") as plistFile:
         plistlib.dump(infoPlist, plistFile)
-    print("version string updated to %s" % (newVersion))
+    print(f"version string updated to {newVersion}")
 
 def read_versions():
     
@@ -158,7 +158,7 @@ def clean_and_build():
     print(" ".join(buildCmd))
     x = Popen(buildCmd, cwd=SOURCE_DIR)
     rc = x.wait()
-    print("xcodebuild clean exited with status %s" % (rc))
+    print(f"xcodebuild clean exited with status {rc}")
 
     buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "Skim", "-scheme", "Skim", "-destination", "generic/platform=macOS", "-derivedDataPath", DERIVED_DATA_DIR, "SYMROOT=" + SYMROOT, "CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO"]
     print(" ".join(buildCmd))
@@ -172,7 +172,7 @@ def codesign(identity):
     print(" ".join(sign_cmd))
     x = Popen(sign_cmd, cwd=SOURCE_DIR)
     rc = x.wait()
-    print("codesign_skim.sh exited with status %s" % (rc))
+    print(f"codesign_skim.sh exited with status {rc}")
     assert rc == 0, "code signing failed"
 
 def notarize_archive(archive_path, password):
@@ -181,7 +181,7 @@ def notarize_archive(archive_path, password):
     print(" ".join(notarize_cmd))
     x = Popen(notarize_cmd, cwd=SOURCE_DIR)
     rc = x.wait()
-    print("notarytool exited with status %s" % (rc))
+    print(f"notarytool exited with status {rc}")
     assert rc == 0, "notarization failed"
 
 def create_dmg_of_application(new_version_number, create_new):
@@ -209,11 +209,11 @@ def create_dmg_of_application(new_version_number, create_new):
         dst_volume_name = "/Volumes/Skim"
         
         # see if this file already exists and bail
-        assert not os.path.exists(final_dmg_name), "%s exists" % (final_dmg_name)
+        assert not os.path.exists(final_dmg_name), f"{final_dmg_name} exists"
         
         # see if a volume is already mounted or a
         # previous cp operation was botched
-        assert not os.path.exists(dst_volume_name), "%s exists" % (dst_volume_name)
+        assert not os.path.exists(dst_volume_name), f"{dst_volume_name} exists"
         
         # stored zipped in svn, so unzip if needed
         # pass o to overwrite, or unzip waits for stdin
@@ -223,21 +223,21 @@ def create_dmg_of_application(new_version_number, create_new):
         print(" ".join(cmd))
         x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         rc = x.wait()
-        assert rc == 0, "failed to unzip %s" % (zip_dmg_name)
+        assert rc == 0, f"failed to unzip {zip_dmg_name}"
         
         # mount image
         cmd = ["/usr/bin/hdiutil", "attach", "-nobrowse", "-noautoopen", temp_dmg_path]
         print(" ".join(cmd))
         x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         rc = x.wait()
-        assert rc == 0, "failed to mount %s" % (temp_dmg_path)
+        assert rc == 0, f"failed to mount {temp_dmg_path}"
         
         # use cp to copy all files
         cmd = ["/bin/cp", "-R", BUILT_APP, dst_volume_name]
         print(" ".join(cmd))
         x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         rc = x.wait()
-        assert rc == 0, "failed to copy %s" % (BUILT_APP)
+        assert rc == 0, f"failed to copy {BUILT_APP}"
         
         # tell finder to set the icon position
         cmd = ["/usr/bin/osascript", "-e", """tell application "Finder" to set the position of application file "Skim.app" of disk named "Skim" to {90, 206}"""]
@@ -253,7 +253,7 @@ def create_dmg_of_application(new_version_number, create_new):
         x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
         rc = x.wait()
         while rc != 0:
-            assert n_tries < 12, "failed to eject %s" % (dst_volume_name)
+            assert n_tries < 12, f"failed to eject {dst_volume_name}"
             n_tries += 1
             sleep(5)
             x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
@@ -266,7 +266,7 @@ def create_dmg_of_application(new_version_number, create_new):
         size = x.communicate()[0].decode("ascii").split(None, 1)[0]
         cmd = ["/usr/bin/hdiutil", "resize", "-size", size + "b", temp_dmg_path]
         x = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
-        assert rc == 0, "failed to resize  %s" % (temp_dmg_path)
+        assert rc == 0, f"failed to resize  {temp_dmg_path}"
     
     # convert image to read only and compress
     cmd = ["/usr/bin/hdiutil", "convert", temp_dmg_path, "-format", "UDZO", "-imagekey", "zlib-level=9", "-o", final_dmg_name]
@@ -413,7 +413,7 @@ def signature_and_size(archive_path):
     
 def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemVersion, archive_path, outputPath):
     
-    print("create Sparkle appcast for %s" % (archive_path))
+    print(f"create Sparkle appcast for {archive_path}")
     
     signatureAndSize = signature_and_size(archive_path)
     download_url = "https://sourceforge.net/projects/skim-app/files/Skim/Skim-" + newVersionString + "/" + os.path.basename(archive_path) + "/download"
@@ -574,7 +574,7 @@ if __name__ == '__main__':
         # probably already exists
         os.mkdirs(out)
     except Exception as e:
-        assert os.path.isdir(out), "%s does not exist" % (out)
+        assert os.path.isdir(out), f"{out} does not exist"
     
     if not test:
         write_appcast_and_release_notes(new_version, new_version_string, minimum_system_version, archive_path, out)
