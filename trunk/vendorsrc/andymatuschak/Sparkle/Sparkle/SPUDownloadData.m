@@ -8,15 +8,18 @@
 
 #import "SPUDownloadData.h"
 
+
 #include "AppKitPrevention.h"
 
 static NSString *SPUDownloadDataKey = @"SPUDownloadData";
+static NSString *SPUDownloadURLKey = @"SPUDownloadURL";
 static NSString *SPUDownloadTextEncodingKey = @"SPUDownloadTextEncoding";
 static NSString *SPUDownloadMIMETypeKey = @"SPUDownloadMIMEType";
 
 @implementation SPUDownloadData
 
 @synthesize data = _data;
+@synthesize URL = _URL;
 @synthesize textEncodingName = _textEncodingName;
 @synthesize MIMEType = _MIMEType;
 
@@ -25,11 +28,12 @@ static NSString *SPUDownloadMIMETypeKey = @"SPUDownloadMIMEType";
     return YES;
 }
 
-- (instancetype)initWithData:(NSData *)data textEncodingName:(NSString * _Nullable)textEncodingName MIMEType:(NSString *)MIMEType
+- (instancetype)initWithData:(NSData *)data URL:(NSURL *)URL textEncodingName:(NSString * _Nullable)textEncodingName MIMEType:(NSString *)MIMEType
 {
     self = [super init];
     if (self != nil) {
         _data = data;
+        _URL = URL;
         _textEncodingName = textEncodingName;
         _MIMEType = MIMEType;
     }
@@ -38,33 +42,35 @@ static NSString *SPUDownloadMIMETypeKey = @"SPUDownloadMIMEType";
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-    [coder encodeObject:self.data forKey:SPUDownloadDataKey];
-    
-    if (self.textEncodingName != nil) {
-        [coder encodeObject:self.textEncodingName forKey:SPUDownloadTextEncodingKey];
+    [coder encodeObject:_data forKey:SPUDownloadDataKey];
+    [coder encodeObject:_URL forKey:SPUDownloadURLKey];
+
+    if (_textEncodingName != nil) {
+        [coder encodeObject:_textEncodingName forKey:SPUDownloadTextEncodingKey];
     }
     
-    if (self.MIMEType != nil) {
-        [coder encodeObject:self.MIMEType forKey:SPUDownloadMIMETypeKey];
+    if (_MIMEType != nil) {
+        [coder encodeObject:_MIMEType forKey:SPUDownloadMIMETypeKey];
     }
 }
 
 - (nullable instancetype)initWithCoder:(NSCoder *)decoder
 {
-    if (@available(macOS 10.8, *)) {
-        NSData *data = [decoder decodeObjectOfClass:[NSData class] forKey:SPUDownloadDataKey];
-        if (data == nil) {
-            return nil;
-        }
-
-        NSString *textEncodingName = [decoder decodeObjectOfClass:[NSString class] forKey:SPUDownloadTextEncodingKey];
-
-        NSString *MIMEType = [decoder decodeObjectOfClass:[NSString class] forKey:SPUDownloadMIMETypeKey];
-
-        return [self initWithData:data textEncodingName:textEncodingName MIMEType:MIMEType];
-    } else {
-        abort(); // Not used on 10.7
+    NSData *data = [decoder decodeObjectOfClass:[NSData class] forKey:SPUDownloadDataKey];
+    if (data == nil) {
+        return nil;
     }
+
+    NSURL *URL = [decoder decodeObjectOfClass:[NSURL class] forKey:SPUDownloadURLKey];
+    if (URL == nil) {
+        return nil;
+    }
+
+    NSString *textEncodingName = [decoder decodeObjectOfClass:[NSString class] forKey:SPUDownloadTextEncodingKey];
+    
+    NSString *MIMEType = [decoder decodeObjectOfClass:[NSString class] forKey:SPUDownloadMIMETypeKey];
+    
+    return [self initWithData:data URL:URL textEncodingName:textEncodingName MIMEType:MIMEType];
 }
 
 @end

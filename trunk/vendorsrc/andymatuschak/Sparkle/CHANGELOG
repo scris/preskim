@@ -1,3 +1,354 @@
+# 2.5.1
+
+* Default to English for XML nodes when no xml:lang is present (#2440) (Zorg)
+* Filter for archive files in generate_appcast more intelligently (#2448) (Zorg)
+* Use correct entitlements and dsym files when using custom bundle id and XPC names in ConfigCommon (#2446) (floorish)
+
+# 2.5.0
+
+* Add ability to adapt release notes based on the currently installed version (#2373) (Nathan Manceaux-Panot)
+* Allow developers to use custom URL schemes in the release notes view (#2393) (Zorg)
+* Adopt cooperative app activation APIs in macOS 14 Sonoma (#2409) (Zorg)
+* Improve permission prompt layout (#2420) (Zorg)
+* Remove hyphenation in "You're up to date" message (#2425) (Zorg, Dom Neill)
+* Pre-warm installs before relaunch and resolve sporadic failures in CI (#2421) (Zorg)
+* Fix make release not building distribution successfully (#2430) (Zorg)
+* Fix Updater app not starting when running Sparkle as root (e.g. from CLI with sudo or a daemon) on macOS 14 Sonoma (#2432) (Zorg)
+* Fix KVO usage for updaterController.updater.* (#2404) (Zorg)
+* Replace CFUUID* with NSUUID (#2395) (Eitot)
+* Report an error when detecting duplicate updates in generate_appcast (#2407) (Zorg)
+* Improve error for rejecting xattr based code signing for delta updates (#2408) (Zorg)
+* Fail gracefully when auxiliary tool cannot be located (#2436) (Zorg)
+
+# 2.4.2
+
+* Ignore release notes download when we shouldn't show release notes (#2381) (Zorg)
+* Fix NSKeyedUnarchiver warning for not specifying keyed NSString class (#2381) (Zorg)
+* Harden verification of Sparkle update download (#2392) (Zorg)
+
+# 2.4.1
+
+* Remove auxiliary apps and relocate symbols in SPM package to resolve missing AvailableLibraries warnings (#2356) (Zorg)
+* Add -Wno-declaration-after-statement to silence warnings that only apply to pre-C99 (#2345) (Kent Sutherland)
+* Fix compile error when setting SPARKLE_EMBED_DOWNLOADER_XPC_SERVICE=0 (#2346) (Zorg)
+* Improve how downloaded update is passed to the installer (#2359) (Zorg)
+
+# 2.4.0
+
+* Reduce code size
+  * Enable deployment postprocessing in Release to properly strip debug symbols and strip all non-global symbols (#2286, #2305) (Zorg)
+  * Remove duplicate Sparkle localization strings in Updater app (#2288) (Zorg)
+  * Optimize codebase for generated code size (less properties, direct methods, etc) (#2305) (Zorg)
+  * Add additional settings to `ConfigCommon.xcconfig` for disabling features
+* Ask permission for automatically downloading and installing new updates (#2285) (Zorg)
+* Add support for plain text release notes view that does not use web view (#2315) (Zorg)
+* Update `SUVersionDisplay` to better customize and display how versions are shown (#2321) (Zorg)
+* Add deprecations/warnings for incorrect background update checking usage (#2295) (Zorg)
+* Deprecate `-[SPUUpdater setFeedURL:]` API and add `-[SPUUpdater clearFeedURLFromUserDefaults]` for migrating away from `-[SPUUpdater setFeedURL:]` (#2295)
+* Trigger a new update check in `-[SPUUpdater resetUpdateCycle]` if the updater's feed or allowed channels have changed (#2324) (Zorg)
+* Exit with an error if generate_appcast cannot sign an update that must be signed (#2322) (Zorg)
+* Remove a redundant Apple code signing check when verifying new updates (#2341) (Zorg)
+* Turn off auto-linking for XPC targets to alleviate circular dependency issues (#2332) (Daniel Jalkut)
+
+# 2.3.2
+
+* Fix potential crash during download if appcast item includes invalid enclosure URL (#2317) (Zorg)
+* Add delegate method to hide showing version history option (#2303) (Zorg)
+* Finnish localization grammar fixes (#2311) (Lauri-Matti Parppei)
+
+# 2.3.1
+
+* Fix update permission alert title text overlapping with question text in some languages (#2284) (Zorg)
+* Log the URL that failed to download correctly (#2296) (Zorg)
+* Update Czech translation (#2275) (Sam)
+* Add zh_HK (Chinese, Hong Kong) localization (#2273) (Bing Zheung)
+
+# 2.3.0
+
+* Bump minimum deployment target to macOS 10.13 (#2196) (Zorg)
+* Remove and preserve necessary updates in generate_appcast (#2218) (Zorg)
+* Move old update files no longer needed to old_updates/ in archive directory in generate_appcast (#2228) (Zorg)
+* Expose maximum-versions option (per branch) in generate_appcast to preserve in the feed (#2259) (Zorg)
+* Add -p option to sign_update to only print the signed signature (#2268) (Zorg)
+* Hide automatic install check box when allowsAutomaticUpdates is disabled (#2202) (Jie)
+* Allow developer to always force allowing automatic updates (#2266) (Zorg)
+* Fix update window going haywire during resize when release notes are hidden by disabling resizing (#2200) (Zorg)
+* Allow user to re-try installing/relaunching application when quit is delayed/cancelled (#2234) (Zorg)
+* Add delta update attributes for validating an app hasn't been stripped from removed localizations or architectures (#2219) (Zorg)
+* Fix delta patches not applying edge case if files from source that need to be diffed are not writeable (#2211) (Zorg)
+* Add delegate callback when user makes choice to install, dismiss, or skip an update (#2250) (Zorg)
+* Reject serving updates with DSA only and no EdDSA (#2167) (Zorg)
+* Find potential matching running apps that are translocated in the updater agent (#2233) (Zorg)
+* Expose -[SPUStandardUserDriver activeUpdateAlert] as private API (#2255) (Zorg)
+* Add zh_CN l10n for "Version History" (#2247) (kakaiikaka)
+* Update zh_TW localization (#2271) (Chiahong)
+* Remove ed25519 git submodule in favor of including the dependency directly (#2244) (Zorg)
+* Clean up left-over code (#2243) (Eitot)
+* Update Package.resolved (#2245) (Zorg)
+* Remove model translation table for system profiling (#2188) (Zorg)
+* Improve documentation usage for SPUUpdater properties (#2256) (Zorg)
+
+This release improves generate_appcast by automatically removing updates that are no longer needed in the generated appcast, and moving old update files to old_updates/ in the archives directory. New delta update attributes are also added to let Sparkle know when to skip downloading delta updates if the application has been stripped.
+
+macOS 10.13 or later is now required (due to Xcode 14 dropping support for deploying to older OS versions).
+
+If you're not generating appcasts automatically, remember to add `<sparkle:minimumSystemVersion>10.13</sparkle:minimumSystemVersion>` element to `<item>`s in your appcast.
+
+# 2.2.2
+
+* Critical update alerts may not show up as promptly as they should when they are being automatically installed (#2230) (Zorg)
+* Remove module imports from framework headers (#2217) (Zorg)
+* Update Portuguese localization (#2224) (Kent Sutherland)
+* Update zh_TW localization (#2246) (Chiahong)
+
+# 2.2.1
+
+* Make scroll bar dark in dark theme for Release Notes by default (#2187) (Pavel Moiseenko)
+* Fix memory leaks when using generate_appcast (#2193) (Zorg)
+* Update Italian localization (#2192) (VinBoiSoft)
+
+# 2.2.0
+
+* Update Focus Improvements (#924)
+  * Present new scheduled updates in utmost focus only at opportune times (Zorg)
+    * For regular apps opportune times are: app launch, app re-activation, and system being idle (without a power assertion being held to prevent display sleep).
+    * For background (dockless) apps opportune time is just app launch. Otherwise, the update is now shown behind other applications and windows, instead of previously stealing focus from other active apps.
+  * Add APIs and documentation for adding gentle update reminders to compliment Sparkle's standard user interface (Zorg) (#2122)
+  * Allow status window to be minimizable for regular app installs (Zorg) (#2100)
+  * Center status window and inherit key focus from the previously shown update alert window (Zorg)
+  * Activate app when checking for updates if the app is not currently active (e.g, from a menu bar extra menu item) (Zorg)
+  * Fix issue where bringing status window to front made other active windows exit in macOS Ventura's Stage Manager (#2153) (Zorg)
+  * Fix showing update in focus not bringing the "checking for updates" window in focus (Zorg) (#2150)
+* Rename XPC Service filenames for Sandboxing to show more friendly human-readable name in authorization dialog (Zorg) (#2096)
+* Add support for running the framework and sparkle-cli as root (Zorg) (#2119)
+* Fix issue where update cycle may not complete in unusual configuration if automatic checks are disabled + automatic downloading is enabled + install requires user interaction (Zorg) (#2133)
+* Synchronize usage of XPC connections to main queue to fix potential race conditions (Zorg) (#2178)
+* Update last update check time when choosing to install an update & relaunch (Zorg) (#2136)
+* Improve error reporting in the framework and sparkle-cli when installation fails with no write permission (Zorg) (#2157)
+* Use displayVersionString instead of versionString for OS version mismatch error message (samschott) (#2138)
+* Make displayVersionString non-null and update fallback documentation (Zorg) (#2139)
+* Ignore custom icons set via resource forks when applying delta updates (Zorg) (#2114)
+* Fall back to regular update if delta update fails to download (Zorg) (#2118)
+* Skip downloading delta updates when application has been moved to a file system (like FAT) that doesn't support regular permission modes (Zorg) (#2148)
+* Bump initial installer message timeouts and declare daemon/agents processes as Interactive (Zorg) (#2162)
+* Add and improve translation strings and update pt-BR (BR Lingo) (#2094)
+* Update localisations (Eitot) (#2113)
+* Update Greek localizations (seitsme) (#2184, #2185)
+* Update Japanese localization (1024jp) (#2182)
+* Replace deprecated code with newer APIs (Eitot) (#2112)
+* Remove obsolete fallbacks for older OS versions (Eitot) (#2110)
+* Remove SPUURLRequest (Zorg) (#2124)
+* Silence ivar deprecation warnings (Zorg) (#2099)
+* Fix Xcode 14 project warnings (Zorg) (#2147, #2179)
+* Deprecate -s flag and add --ed-key-file option to generate_appcast (Zorg) (#2170)
+* Update text for external licenses (Zorg) (#2164)
+
+This update renames the bundled XPC Services, brings improvements to notifying users of new updates without disrupting their focus, and adds [gentle update reminder APIs](https://sparkle-project.org/documentation/gentle-reminders/) to further customize how Sparkle's standard user interface delivers new update alerts.
+
+The `-s` flag for passing a raw private EdDSA key to sign_update and generate_appcast is now deprecated. If you were using this option previously, please see the help pages of these tools for more information.
+
+# 2.1.0
+
+* New Binary Delta format (version 3)
+  * Features a custom and more efficient container format, migrating away from the deprecated xar format (Zorg) (#2051)
+  * Adds delta compression options for lzma, bzip2, zlib, lzfse, lz4, and no compression (Zorg) (#2051)
+  * Changes default delta format compression from bzip2 (in version 2) to lzma (in version 3) resulting in smaller deltas (Zorg) (#2051)
+  * Preserve file system (HFS+/apfs) level compression when applying delta updates (Zorg) (#2084)
+  * Tracks renames and binary diffs for files that have moved around to new locations using intelligent heuristics (Zorg) (#2051, #2053)
+  * Added more unit tests, UI tests, and generate_appcast/BinaryDelta tools support for the new format (Zorg) (#2052, #2054)
+* Major upgrade improvements (#2070)
+  * Fix skipping a major version to not skip subsequent major versions (Zorg) (#2079)
+  * Add sparkle:belowVersion element for informational updates (Zorg) (#2080)
+  * Add option to allow developers to ignore/reset user skipped upgrades (Zorg) (#2081)
+* Fix progress bar and button alignment for checking updates (Zorg) (#2066)
+  * This deprecates `-[SPUUserDriver showInstallingUpdate]` and `-[SPUUserDriver showSendingTerminationSignal]` in favor for `-[SPUUserDriver showInstallingUpdateWithApplicationTerminated:]`
+* Fix unsteady progress when installing updates (Zorg) (#2072)
+* Check http statusCode in didFinishDownloadingToURL (Eric Shapiro, Zorg) (#2049, #2073)
+* Use strcoll_l() for locale-independent comparisons for delta updates (Dan Rigdon-Bel) (#2087)
+* Fix version compare not treating '2.1.0' and '2.1' as being equal (Zorg) (#2065)
+* Add verify and account options for signing updates (Zorg) (#2074)
+* Add delta patch and Apple code signing verification in generate_appcast (Zorg) (#2076, #2077)
+* Use more modern NSSecureCoding APIs when available (Zorg) (#2058)
+* Use more modern FileManager APIs for copying files (Zorg) (#2059)
+* Fix make release failing when customizing XPC_SERVICE_BUNDLE_ID_PREFIX (Zorg) (#2060)
+* Preserve the Entitlements directory in podspec (digitalMoksha) (#2062)
+* Add hidden option to generate_appcast to set max CDATA threshold (Zorg) (#2075)
+
+This update introduces a new major format for [delta updates](https://sparkle-project.org/documentation/delta-updates/), which migrates away from deprecated APIs (xar) and creates smaller patches. If you don't use `generate_appcast`, please check the [compatibility notes for creating delta updates](https://sparkle-project.org/documentation/delta-updates/#compatibility).
+
+# 2.0.0
+
+* Support for Sandboxed Applications (Zorg)
+* Support for writing custom user interfaces (Zorg)
+* Support for updating external Sparkle-based bundles (Zorg)
+  * Added command line utility to update Sparkle-based bundles (Zorg)
+* Modern architecture
+  * Moves extraction, validation, and installation into a submitted launchd agent/daemon with XPC communication (Zorg)
+  * Features faster installs with shorter update/relaunch times (#1802) (Zorg)
+  * Provides more robust installs when user authorization is needed (Zorg)
+  * Adoption of improved atomic-safe updates leveraging APFS (#1801) (Zorg)
+* API Changes
+  * Introduced new SPUStandardUpdaterController, SPUUpdater, SPUUserDriver classes/protocols (Zorg)
+  * Decoupled AppKit and UI logic in the framework from core functionality (Zorg)
+  * Ensure (most) API compatibility with Sparkle 1; you can likely test Sparkle 2 in an existing app with little to no changes (Zorg)
+  * Deprecated SUUpdater, albeit it is still functional for testing and transitional purposes (Zorg)
+  * `-bestValidUpdateInAppcast:forUpdater:` delegate method behavior has been refined and discouraged for some cases. Please review its updated header documentation in `SPUUpdaterDelegate.h` if you use this method. (#1838, #1862, #1879, #1880) (Zorg)
+  * Delegation methods may have been removed or added to the newer updater API. Please review `SPUUpdaterDelegate` if using `SPUUpdater`. (Zorg)
+* Updater Changes
+  * Automatic silent and manual update alert prompts are now merged together (Zorg)
+  * Updates will attempt to install even if the user quits the application without relaunching the application update explicitly (Zorg)
+  * Updates can be downloaded in the background automatically but later prompt the user to install them, particularly if Sparkle doesn't have sufficient permission to install them without the user's permission (Zorg)
+  * Authorization now occurs before launching the installer and before terminating the application, which can be canceled by the user cleanly (Zorg)
+  * Sparkle uses the icon of the bundle to update for its authorization dialog. A 32x32 image representation of the icon is needed. (Zorg)
+  * Sudden termination for silent automatic updates isn't disabled anymore (Zorg)
+* Policy Changes
+  * Non-bare package based updates that are zipped or archived must add sparkle:installationType="package" to the appcast item enclosure (this doesn't apply to bare packages which aren't archived) (Zorg)
+  * We now recommend using sparkle:version and sparkle:shortVersionString top level elements instead of enclosure attributes (#1878) (Zorg)
+  * The link element in an appcast item is now used for directing users to the product's website if they don't meet minimum system requirements (#1877) (Zorg)
+* Expose why a new update is unavailable and direct user to prior release notes or website info (#1877, #1886) (Zorg)
+  * Add <sparkle:fullReleaseNotesLink> element allowing Sparkle to show a better stylized and full changelog to the user (#2001) (aONe)
+  * Add delegate API allowing applications to show full in-app or offline version history to the user (#1989) (Billy Gray)
+* Major/Paid Upgrades Enhancements
+  * Latest minor updates are preferred over major updates (specified by sparkle:minimumAutoupdateVersion) (#1850) (Zorg)
+  * Major updates can be skipped with a user confirmation (#1853) (Zorg)
+* Informational only and critical updates can be specified selectively by app version (#1862)
+* Add support for posting updates only on specific channels (eg for supporting beta updates) (#1879) (Zorg)
+* System profiler privacy and transparency (#1690) (Martin Pilkington)
+* Support getting app icon from asset catalog (#1694) (Charles Srstka)
+* Don't bring up authorization just because group ID doesn't match (#1830) (Zorg)
+* Raise minimum system version to macOS 10.11 (Zorg)
+* Special thanks to developers using early builds of this release in production and contributors for keeping this running (Kornel, Jonas Zaugg, Gwynne Raskind, Jordan Rose, Tony Arnold, Bryan Jones, Christian Tietze, Jakob Egger, and many more)
+
+Please visit [Sparkle's website](http://sparkle-project.org) for more information on documentation and migration.
+
+If you are migrating from earlier beta versions of Sparkle 2 and use sandboxing, please re-familiarize yourself with the [Sandboxing guide](https://sparkle-project.org/documentation/sandboxing/). Some of the XPC Services are now optional and integration with XPC Services and code signing have been simplified. The SPUUserDriver protocol for custom user interfaces has been greatly simplified too.
+
+# 1.27.1
+
+ * Use px instead of pt when specifying font size to fix default font size in WebView from #1962 (regressed in 1.25.0 with WKWebView adoption) (Daniel Jalkut)
+ * Fix to prevent Sparkle manipulating the host app's high level WebView defaults from #1961 (affecting only macOS versions before 10.11 in 1.x branch) (Daniel Jalkut)
+ * Add safer handling of applying binary delta files from #1990 (Zorg)
+ * Don't use current date unless necessary when scheduling next update from #1991 (Zorg)
+ * Whitelist about:srcdoc as a safe web URL from #1938, #2007 (Louis Pontoise, Zorg)
+ * Backport not hiding update window on deactivation from #2008 (Zorg)
+
+# 1.27.0
+
+ * Deprecate not using EdDSA and skip DSA verification when possible in #1892 (Zorg)
+ * Pass http headers and user agent when downloading release notes from #1873 (Zorg)
+ * Fix project warnings from #1893 (Zorg)
+ * Update sample appcast from #1895 (Zorg)
+ * Fix appcast pubDate tag generation in different locales from #1898 (Sungbin Jo)
+ * Create valid xar archives for generating binary delta files from #1906 (Zorg)
+ * Fix a few issues with German localization from #1931 (J-rg)
+ * Fix issues with Russian localizations from #1947 (Konstantin Zamyakin)
+ * Fix issues with Czech localizations from #1943 (Vojtěch Koňařík)
+ * Add an automated workflow that builds and publishes official Sparkle releases (Tony Arnold, Zorg)
+
+# 1.26.0
+
+ * Flat package support from #1745 (Zorg)
+ * Correct generate_appcast -s command line argument usage help (Lance Lovette)
+ * Fix -f command line argument handling (Lance Lovette)
+ * Fix progress for guided pkg install (Zorg)
+ * Fix XQuartz update failing because NSLog caused issues (Zorg)
+ * Update localization (Vojtěch Koňařík)
+ * Various fixes to SPM logic (Jonas Zaugg)
+
+# 1.25.0
+
+ * Raise minimum system version to 10.9 (Kornel)
+ * Allow an appcast to prevent the new version from being installed automatically (#1688) (pierswalter)
+ * UI fixes
+   * Show check for updates button only when automatic updates are enabled (Lorena Rangel)
+   * Don't initialize the webview if we don't show release notes (Tobias Fonfara)
+   * Keep skip button available if there is a minimum autoupdate version (Zorg)
+   * Fix automatic updates checkbox state when not showing release notes (Zorg)
+   * Fix edge cases with hiding alert buttons and using "Install Later" (Zorg)
+   * Re-add setting WebUIDelegate fix for legacy web view (Zorg)
+   * Adopt WKWebView for 1.x (Zorg)
+   * Add auto layout constraints to SUAutomaticUpdateAlert window (Zorg)
+   * Made buttons wide enough to display the full text. Made window wide enough to display the widened buttons (el, fi, ru, uk) (Piers Uso Walter)
+   * Remove max size from update alert. (George Nachman)
+ * Integrate generate_keys export/import options changes from #1730 (Zorg)
+ * Add `—release-notes-url-prefix` support to localized release notes (Adam Tharani)
+ * Translations
+   * Enable base internalization for alert xibs (Zorg)
+   * Capitalizes french translation of "Vous utilisez actuellement..." ("You are currently running...") (Micah Moore)
+   * Fix and cleanup Hebrew, Catalan, Finnish localizations (Zorg)
+   * Remove non-english localizations from TestApplication (Zorg)
+ * Fix catch-22 Swift Package Manager binary target (Jonas Zaugg)
+ * Add explicit dependencies to fix Xcode linking errors (Kornel)
+ * Add phased rollouts feature to automatic update driver too (Zorg)
+ * Remove hiding skip button and retitling later button (Zorg)
+ * Deprecate installUpdatesIfAvailable (Zorg)
+ * Apply custom headers to app download (Geraint White)
+
+ # 1.24.0
+
+ * Prioritize UserDefaults when fetching value for EnableAutomaticChecks (Nicolas Bosi)
+ * Improve best appcast item selection handling (Ian Bytchek)
+ * Create lockfile for improved compatibility with 3rd party updaters (CoreCode)
+ * Enable SPM support via binary target (Jonas Zaugg)
+ * `generate_appcast` improvements:
+     * follow symbolic links (Denis Dzyubenko)
+     * update the release notes element’s URL when required (Brad Andalman)
+     * Added output filename option to generate_appcast (Brad Andalman)
+     * Added —release-notes-url-prefix to generate_appcast (Brad Andalman)
+     * Command line option to provide a download url prefix is now parsed and set on each archive item (Dominik H)
+     * Added help command line option (Dominik H)
+ * Locale updates:
+     * Update zh_CN localization (柳东原 · Dongyuan Liu)
+     * Update Sparkle.strings (Vojtěch Koňařík)
+     * Update Croatian (#1603) (milotype)
+     * Update SUUpdateAlert.xib (DanielFirlej)
+ * fix: read SUAutomaticallyUpdate from Info.plist (Trevor DeVore)
+ * Fix casting Boolean to BOOL on Apple Silicon (Kevin Wojniak)
+ * Use build matrix to test on multiple Xcode versions (Rajiv Shah)
+ * Set UpdateAlert and AutomaticUpdateAlert window's fullscreen collectionBehavior to NSWindowCollectionBehaviorFullScreenAuxiliary to allow them to present on top of the Main App's window if it's fullscreen. (Micah Moore)
+ * Fixed error about "about:blank" release notes (Louis Pontoise)
+ * Support App Store URL scheme in release note webview (Bi11)
+ * Use the SHA-256 hash of the archive as the cache path (Nate Weaver)
+ * Don't return an optional from the FileHandle method (Nate Weaver)
+ * Added URL+Hashing (Nate Weaver)
+
+# 1.23.0
+
+ * Support generating appcast with localizations (#1499) (Alik Vovkotrub)
+ * Support versions with git commit SHA (#1504) (Alec Larson)
+ * Hide "Skip..." and "Remind..." buttons when they're not relevant (#1480) (Kenneth Johnsen)
+ * Preserve Finder tags while updating apps (#1512) (CoreCode)
+ * Read-only update alert dialog formatting improvements (#1515) (Quinn Taylor)
+ * Check if `SUBundleName` is set before normalizing (Jake Fenton)
+ * `NSInteger` cast warning on Xcode 11 (Marga Keuvelaar)
+ * Correct appcast file extension (Tom Vos)
+ * Update Sparkle.strings (Emir Sarı)
+ * Fix spelling (#1508) (Frank Chiarulli Jr)
+
+# 1.22.0
+
+ * Enabled "Hardened Runtime" build option for Apple's notarization requirement
+ * Add delegate methods to suppress update alerts (George Nachman)
+ * Improved error when running from translocated location (Michael Buckley)
+ * Add phased rollout feature (#1381) (Fabian Jäger)
+ * Ignore non-standard permissions in delta updates instead of failing the build (Kornel Lesiński)
+ * Notify user when installed version is newer than the latest in the appcast (CoreCode)
+ * Reset timers after computer sleep (CoreCode)
+ * Block-based alternatives to `NSInvocation`-based delegate methods (Fabian Jäger)
+ * Add delegate `userDidSkipThisVersion` (BobZombie, Leo Natan, bono yusuke)
+ * Pass item to updaterShouldShowUpdateAlertForScheduledUpdate delegate method (George Nachman)
+ * Support providing private key as argument in `generate_appcast` (Yakuhzi, marchyang)
+ * Separate the ed25519 sources into a new static library (Tony Arnold)
+ * Disambiguate signing error messages (Nate Weaver)
+ * Use `XMLNode.Options.nodePrettyPrint` in `generate_appcast` instead of trying to add whitespace manually (fumoboy007)
+ * Annotate SUHost for nullability (Michael Buckley)
+ * Use SUAVAILABLE macro (Christiaan Hofman)
+ * Fix warnings when using modules (nivekkagicom)
+ * Correction of Czech localization inconsistency (#1403) (vojtakonarik)
+ * BR locale fix (BR Lingo)
+ * Update Japanese localization (fujisoft)
+ * French Sparkle.strings (Jean-Baptiste)
+
 # 1.21.3
 
  * Losslessly reduced the size of PNG (Barijaona Ramaholimihaso)

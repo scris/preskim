@@ -6,101 +6,95 @@
 //  Copyright 2008 Andy Matuschak. All rights reserved.
 //
 
+#if SPARKLE_BUILD_UI_BITS
+
 #import "SUUpdatePermissionPrompt.h"
+#import "SPUUpdatePermissionRequest.h"
 #import "SUUpdatePermissionResponse.h"
+#import "SULocalizations.h"
 
 #import "SUHost.h"
 #import "SUConstants.h"
-#import "SULocalizations.h"
 #import "SUApplicationInfo.h"
-#import "SUTouchBarForwardDeclarations.h"
 #import "SUTouchBarButtonGroup.h"
 
 static NSString *const SUUpdatePermissionPromptTouchBarIndentifier = @"" SPARKLE_BUNDLE_IDENTIFIER ".SUUpdatePermissionPrompt";
 
 @interface SUUpdatePermissionPrompt () <NSTouchBarDelegate>
 
-@property (assign) BOOL isShowingMoreInfo;
-@property (assign) BOOL shouldSendProfile;
-
-@property (strong) SUHost *host;
-@property (strong) NSArray *systemProfileInformationArray;
-@property (weak) IBOutlet NSTextField *descriptionTextField;
-@property (weak) IBOutlet NSView *moreInfoView;
-@property (weak) IBOutlet NSButton *moreInfoButton;
-@property (weak) IBOutlet NSTableView *profileTableView;
-@property (weak) IBOutlet NSButton *cancelButton;
-@property (weak) IBOutlet NSButton *checkButton;
-
-@property (nonatomic, readonly) void (^reply)(SUUpdatePermissionResponse *);
+// These properties are used for bindings
+@property (nonatomic, readonly) NSArray *systemProfileInformationArray;
+@property (nonatomic) BOOL shouldSendProfile;
+@property (nonatomic) BOOL automaticallyDownloadUpdates;
 
 @end
 
 @implementation SUUpdatePermissionPrompt
-
-@synthesize reply = _reply;
-@synthesize isShowingMoreInfo = _isShowingMoreInfo;
-@synthesize shouldSendProfile = _shouldSendProfile;
-@synthesize host;
-@synthesize systemProfileInformationArray;
-@synthesize descriptionTextField;
-@synthesize moreInfoView;
-@synthesize moreInfoButton;
-@synthesize profileTableView;
-@synthesize cancelButton;
-@synthesize checkButton;
-
-- (BOOL)shouldAskAboutProfile
 {
-    return [(NSNumber *)[self.host objectForInfoDictionaryKey:SUEnableSystemProfilingKey] boolValue];
+    SUHost *_host;
+    
+    IBOutlet NSStackView *_stackView;
+    IBOutlet NSView *_promptView;
+    IBOutlet NSView *_moreInfoView;
+    IBOutlet NSView *_placeholderView;
+    IBOutlet NSView *_responseView;
+    IBOutlet NSView *_infoChoiceView;
+    IBOutlet NSView *_automaticallyDownloadUpdatesView;
+    IBOutlet NSButton *_cancelButton;
+    IBOutlet NSButton *_checkButton;
+    IBOutlet NSButton *_anonymousInfoDisclosureButton;
+    IBOutlet NSLayoutConstraint *_placeholderHeightLayoutConstraint;
+    
+    void (^_reply)(SUUpdatePermissionResponse *);
 }
 
-- (instancetype)initWithHost:(SUHost *)aHost systemProfile:(NSArray *)profile reply:(void (^)(SUUpdatePermissionResponse *))reply
+@synthesize shouldSendProfile = _shouldSendProfile;
+@synthesize automaticallyDownloadUpdates = _automaticallyDownloadUpdates;
+@synthesize systemProfileInformationArray = _systemProfileInformationArray;
+
+- (instancetype)initPromptWithHost:(SUHost *)theHost request:(SPUUpdatePermissionRequest *)request reply:(void (^)(SUUpdatePermissionResponse *))reply
 {
     self = [super initWithWindowNibName:@"SUUpdatePermissionPrompt"];
-	if (self)
-	{
-        _reply = reply;
-        host = aHost;
-        self.isShowingMoreInfo = NO;
-        self.shouldSendProfile = [self shouldAskAboutProfile];
-        systemProfileInformationArray = profile;
+    if (self)
+    {
+        _reply = [reply copy];
+        _host = theHost;
+        _shouldSendProfile = [self shouldAskAboutProfile];
+        _systemProfileInformationArray = request.systemProfile;
+        _automaticallyDownloadUpdates = [theHost boolForKey:SUAutomaticallyUpdateKey];
         [self setShouldCascadeWindows:NO];
+    } else {
+        assert(false);
     }
     return self;
 }
 
-+ (void)promptWithHost:(SUHost *)host systemProfile:(NSArray *)profile reply:(void (^)(SUUpdatePermissionResponse *))reply
+- (BOOL)shouldAskAboutProfile
 {
-    // If this is a background application we need to focus it in order to bring the prompt
-    // to the user's attention. Otherwise the prompt would be hidden behind other applications and
-    // the user would not know why the application was paused.
-	if ([SUApplicationInfo isBackgroundApplication:[NSApplication sharedApplication]]) {
-        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-    }
-
-    if (![NSApp modalWindow]) { // do not prompt if there is is another modal window on screen
-        SUUpdatePermissionPrompt *prompt = [(SUUpdatePermissionPrompt *)[[self class] alloc] initWithHost:host systemProfile:profile reply:reply];
-        NSWindow *window = [prompt window];
-        if (window) {
-            [NSApp runModalForWindow:window];
-        }
-    }
+    return [(NSNumber *)[_host objectForInfoDictionaryKey:SUEnableSystemProfilingKey] boolValue];
 }
 
-- (NSString *)description { return [NSString stringWithFormat:@"%@ <%@>", [self class], [self.host bundlePath]]; }
+- (BOOL)allowsAutomaticUpdates
+{
+    NSNumber *allowsAutomaticUpdates = [_host objectForInfoDictionaryKey:SUAllowsAutomaticUpdatesKey];
+    return (allowsAutomaticUpdates == nil || allowsAutomaticUpdates.boolValue);
+}
+
+- (NSString *)description { return [NSString stringWithFormat:@"%@ <%@>", [self class], _host.bundlePath]; }
 
 - (void)windowDidLoad
 {
-	if (![self shouldAskAboutProfile])
-	{
-        NSRect frame = [[self window] frame];
-        frame.size.height -= [self.moreInfoButton frame].size.height;
-        [[self window] setFrame:frame display:YES];
-    } else {
-        // Set the table view's delegate so we can disable row selection.
-        [self.profileTableView setDelegate:(id)self];
-    }
+    [self.window center];
+    
+    _infoChoiceView.hidden = ![self shouldAskAboutProfile];
+    _automaticallyDownloadUpdatesView.hidden = ![self allowsAutomaticUpdates];
+    
+    [_stackView addArrangedSubview:_promptView];
+    [_stackView addArrangedSubview:_automaticallyDownloadUpdatesView];
+    [_stackView addArrangedSubview:_infoChoiceView];
+    [_stackView addArrangedSubview:_placeholderView];
+    [_stackView addArrangedSubview:_moreInfoView];
+    [_stackView addArrangedSubview:_responseView];
 }
 
 - (BOOL)tableView:(NSTableView *) __unused tableView shouldSelectRow:(NSInteger) __unused row { return NO; }
@@ -108,83 +102,86 @@ static NSString *const SUUpdatePermissionPromptTouchBarIndentifier = @"" SPARKLE
 
 - (NSImage *)icon
 {
-    return [SUApplicationInfo bestIconForHost:self.host];
+    return [SUApplicationInfo bestIconForHost:_host];
 }
 
 - (NSString *)promptDescription
 {
-    return [NSString stringWithFormat:SULocalizedString(@"Should %1$@ automatically check for updates? You can always check for updates manually from the %1$@ menu.", nil), [self.host name]];
+    return [NSString stringWithFormat:SULocalizedStringFromTableInBundle(@"Should %1$@ automatically check for updates? You can always check for updates manually from the %1$@ menu.", SPARKLE_TABLE, SUSparkleBundle(), nil), _host.name];
 }
 
 - (IBAction)toggleMoreInfo:(id)__unused sender
 {
-    self.isShowingMoreInfo = !self.isShowingMoreInfo;
-
-    NSView *contentView = [[self window] contentView];
-    NSRect contentViewFrame = [contentView frame];
-    NSRect windowFrame = [[self window] frame];
-
-    NSRect profileMoreInfoViewFrame = [self.moreInfoView frame];
-    NSRect profileMoreInfoButtonFrame = [self.moreInfoButton frame];
-    NSRect descriptionFrame = [self.descriptionTextField frame];
-
-	if (self.isShowingMoreInfo)
-	{
-        // Add the subview
-        contentViewFrame.size.height += profileMoreInfoViewFrame.size.height;
-        profileMoreInfoViewFrame.origin.y = profileMoreInfoButtonFrame.origin.y - profileMoreInfoViewFrame.size.height;
-        profileMoreInfoViewFrame.origin.x = descriptionFrame.origin.x;
-        profileMoreInfoViewFrame.size.width = descriptionFrame.size.width;
-
-        windowFrame.size.height += profileMoreInfoViewFrame.size.height;
-        windowFrame.origin.y -= profileMoreInfoViewFrame.size.height;
-
-        [self.moreInfoView setFrame:profileMoreInfoViewFrame];
-        [self.moreInfoView setHidden:YES];
-        [contentView addSubview:self.moreInfoView
-                     positioned:NSWindowBelow
-                     relativeTo:self.moreInfoButton];
+    // Use a placeholder view to unhide/hide before putting the more info view in place
+    // This allows us to animate resizing the more info view in place more easily
+    
+    static const CGFloat TOGGLE_INFO_ANIMATION_DURATION = 0.2;
+    
+    BOOL disclosingInfo = (_anonymousInfoDisclosureButton.state == NSControlStateValueOn);
+    
+    if (disclosingInfo) {
+        _placeholderHeightLayoutConstraint.constant = 0.0;
+        _placeholderView.hidden = NO;
+        
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+            context.duration = TOGGLE_INFO_ANIMATION_DURATION;
+            
+            self->_placeholderHeightLayoutConstraint.animator.constant = _moreInfoView.frame.size.height;
+        } completionHandler:^{
+            self->_placeholderView.hidden = YES;
+            self->_moreInfoView.hidden = NO;
+        }];
     } else {
-        // Remove the subview
-        [self.moreInfoView setHidden:NO];
-        [self.moreInfoView removeFromSuperview];
-        contentViewFrame.size.height -= profileMoreInfoViewFrame.size.height;
-
-        windowFrame.size.height -= profileMoreInfoViewFrame.size.height;
-        windowFrame.origin.y += profileMoreInfoViewFrame.size.height;
+        _placeholderHeightLayoutConstraint.constant = _moreInfoView.frame.size.height;
+        _moreInfoView.hidden = YES;
+        _placeholderView.hidden = NO;
+        
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+            context.duration = TOGGLE_INFO_ANIMATION_DURATION;
+            
+            self->_placeholderHeightLayoutConstraint.animator.constant = 0.0;
+        } completionHandler:^{
+            self->_placeholderView.hidden = YES;
+        }];
     }
-    [[self window] setFrame:windowFrame display:YES animate:YES];
-    [contentView setFrame:contentViewFrame];
-    [contentView setNeedsDisplay:YES];
-    [self.moreInfoView setHidden:!self.isShowingMoreInfo];
 }
 
 - (IBAction)finishPrompt:(NSButton *)sender
 {
-    SUUpdatePermissionResponse *response = [[SUUpdatePermissionResponse alloc] initWithAutomaticUpdateChecks:([sender tag] == 1) sendSystemProfile:self.shouldSendProfile];
-    self.reply(response);
+    BOOL automaticUpdateChecksEnabled = ([sender tag] == 1);
     
-    [[self window] close];
-    [NSApp stopModal];
+    NSNumber *automaticUpdateDownloading;
+    if ([self allowsAutomaticUpdates]) {
+        automaticUpdateDownloading = @(automaticUpdateChecksEnabled && _automaticallyDownloadUpdates);
+    } else {
+        automaticUpdateDownloading = nil;
+    }
+    
+    SUUpdatePermissionResponse *response = [[SUUpdatePermissionResponse alloc] initWithAutomaticUpdateChecks:automaticUpdateChecksEnabled automaticUpdateDownloading:automaticUpdateDownloading sendSystemProfile:_shouldSendProfile];
+    _reply(response);
+    
+    [self close];
 }
 
 - (NSTouchBar *)makeTouchBar
 {
-    NSTouchBar *touchBar = [(NSTouchBar *)[NSClassFromString(@"NSTouchBar") alloc] init];
+    NSTouchBar *touchBar = [[NSTouchBar alloc] init];
     touchBar.defaultItemIdentifiers = @[SUUpdatePermissionPromptTouchBarIndentifier,];
     touchBar.principalItemIdentifier = SUUpdatePermissionPromptTouchBarIndentifier;
     touchBar.delegate = self;
     return touchBar;
 }
 
-- (NSTouchBarItem *)touchBar:(NSTouchBar * __unused)touchBar makeItemForIdentifier:(NSTouchBarItemIdentifier)identifier API_AVAILABLE(macos(10.12.2))
+- (NSTouchBarItem *)touchBar:(NSTouchBar * __unused)touchBar makeItemForIdentifier:(NSTouchBarItemIdentifier)identifier
 {
     if ([identifier isEqualToString:SUUpdatePermissionPromptTouchBarIndentifier]) {
-        NSCustomTouchBarItem* item = [(NSCustomTouchBarItem *)[NSClassFromString(@"NSCustomTouchBarItem") alloc] initWithIdentifier:identifier];
-        item.viewController = [[SUTouchBarButtonGroup alloc] initByReferencingButtons:@[self.checkButton, self.cancelButton]];
+        NSCustomTouchBarItem* item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
+        item.viewController = [[SUTouchBarButtonGroup alloc] initByReferencingButtons:@[_checkButton, _cancelButton]];
         return item;
     }
     return nil;
 }
 
 @end
+
+#endif

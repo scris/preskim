@@ -8,36 +8,57 @@
 
 #import <Foundation/Foundation.h>
 
-#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1090
-typedef NS_OPTIONS(NSUInteger, NSDataBase64DecodingOptions) {
-    NSDataBase64DecodingIgnoreUnknownCharacters = 1UL << 0
-}
-@interface NSData (SUDSAVerifier)
-- (id)initWithBase64Encoding:(NSString *)base64String;
-- (id)initWithBase64EncodedString:(NSString *)base64String options:(NSDataBase64DecodingOptions)options;
-@end
-#endif
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SUSignatures : NSObject {
-    unsigned char ed25519_signature[64];
-}
-@property (strong, readonly, nullable) NSData *dsaSignature;
-@property (readonly, nullable, nonatomic) const unsigned char *ed25519Signature;
+typedef NS_ENUM(uint8_t, SUSigningInputStatus) {
+    /// An input was not provided at all.
+    SUSigningInputStatusAbsent = 0,
 
-- (instancetype)initWithDsa:(NSString * _Nullable)dsa ed:(NSString * _Nullable)ed;
+    /// An input was provided, but did not have the correct format.
+    SUSigningInputStatusInvalid,
+
+    /// An input was provided and can be used for verifying signing information.
+    SUSigningInputStatusPresent,
+    SUSigningInputStatusLastValidCase = SUSigningInputStatusPresent
+};
+
+#ifndef BUILDING_SPARKLE_TESTS
+SPU_OBJC_DIRECT_MEMBERS
+#endif
+@interface SUSignatures : NSObject <NSSecureCoding>
+#if SPARKLE_BUILD_LEGACY_DSA_SUPPORT
+@property (nonatomic, readonly, nullable) NSData *dsaSignature;
+@property (nonatomic, readonly) SUSigningInputStatus dsaSignatureStatus;
+#endif
+
+@property (nonatomic, readonly, nullable) const unsigned char *ed25519Signature;
+@property (nonatomic, readonly) SUSigningInputStatus ed25519SignatureStatus;
+
+- (instancetype)initWithEd:(NSString * _Nullable)ed
+#if SPARKLE_BUILD_LEGACY_DSA_SUPPORT
+                       dsa:(NSString * _Nullable)dsa
+#endif
+;
 @end
 
 
-@interface SUPublicKeys : NSObject {
-    unsigned char ed25519_public_key[32];
-}
-@property (strong, readonly, nullable) NSString *dsaPubKey;
-@property (readonly, nullable, nonatomic) const unsigned char *ed25519PubKey;
+#ifndef BUILDING_SPARKLE_TESTS
+SPU_OBJC_DIRECT_MEMBERS
+#endif
+@interface SUPublicKeys : NSObject
 
-- (instancetype)initWithDsa:(NSString * _Nullable)dsa ed:(NSString * _Nullable)ed;
-- (BOOL) isEqualToKey:(SUPublicKeys *)key;
+@property (nonatomic, readonly, nullable) NSString *dsaPubKey;
+@property (nonatomic, readonly) SUSigningInputStatus dsaPubKeyStatus;
+
+@property (nonatomic, readonly, nullable) const unsigned char *ed25519PubKey;
+@property (nonatomic, readonly) SUSigningInputStatus ed25519PubKeyStatus;
+
+/// Returns YES if either key is present (though they may be invalid).
+@property (nonatomic, readonly) BOOL hasAnyKeys;
+
+- (instancetype)initWithEd:(NSString * _Nullable)ed
+                       dsa:(NSString * _Nullable)dsa
+;
 
 @end
 

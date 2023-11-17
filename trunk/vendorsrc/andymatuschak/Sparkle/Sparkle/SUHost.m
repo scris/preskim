@@ -12,7 +12,10 @@
 #import "SULog.h"
 #import "SUSignatures.h"
 
+
 #include "AppKitPrevention.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 // This class should not rely on AppKit and should also be process independent
 // For example, it should not have code that tests writabilty to somewhere on disk,
@@ -20,56 +23,48 @@
 // if the process is sandboxed or not; eg: finding the user's caches directory. Or code that depends
 // on compilation flags and if other files exist relative to the host bundle.
 
-@interface SUHost ()
-
-@property (strong, readwrite) NSBundle *bundle;
-@property (nonatomic, readonly) BOOL isMainBundle;
-@property (copy) NSString *defaultsDomain;
-@property (assign) BOOL usesStandardUserDefaults;
-@property (readonly, copy) NSString *publicDSAKey;
-
-@end
-
 @implementation SUHost
+{
+    NSString *_defaultsDomain;
+    
+    BOOL _usesStandardUserDefaults;
+    BOOL _isMainBundle;
+}
 
-@synthesize bundle;
-@synthesize isMainBundle = _isMainBundle;
-@synthesize defaultsDomain;
-@synthesize usesStandardUserDefaults;
+@synthesize bundle = _bundle;
 
 - (instancetype)initWithBundle:(NSBundle *)aBundle
 {
 	if ((self = [super init]))
 	{
         NSParameterAssert(aBundle);
-        self.bundle = aBundle;
-        if (![self.bundle bundleIdentifier]) {
-            SULog(SULogLevelError, @"Error: the bundle being updated at %@ has no %@! This will cause preference read/write to not work properly.", self.bundle, kCFBundleIdentifierKey);
+        _bundle = aBundle;
+        if (_bundle.bundleIdentifier == nil) {
+            SULog(SULogLevelError, @"Error: the bundle being updated at %@ has no %@! This will cause preference read/write to not work properly.", _bundle, kCFBundleIdentifierKey);
         }
         
         _isMainBundle = [aBundle isEqualTo:[NSBundle mainBundle]];
 
-        self.defaultsDomain = [self objectForInfoDictionaryKey:SUDefaultsDomainKey];
-        if (!self.defaultsDomain) {
-            self.defaultsDomain = [self.bundle bundleIdentifier];
+        _defaultsDomain = [self objectForInfoDictionaryKey:SUDefaultsDomainKey];
+        if (_defaultsDomain == nil) {
+            _defaultsDomain = [_bundle bundleIdentifier];
         }
 
         // If we're using the main bundle's defaults we'll use the standard user defaults mechanism, otherwise we have to get CF-y.
         NSString *mainBundleIdentifier = NSBundle.mainBundle.bundleIdentifier;
-        usesStandardUserDefaults = !self.defaultsDomain || [self.defaultsDomain isEqualToString:mainBundleIdentifier];
+        _usesStandardUserDefaults = _defaultsDomain == nil || [_defaultsDomain isEqualToString:mainBundleIdentifier];
     }
     return self;
 }
-
 
 - (NSString *)description { return [NSString stringWithFormat:@"%@ <%@>", [self class], [self bundlePath]]; }
 
 - (NSString *)bundlePath
 {
-    return [self.bundle bundlePath];
+    return _bundle.bundlePath;
 }
 
-- (NSString *__nonnull)name
+- (NSString * _Nonnull)name
 {
     NSString *name;
 
@@ -86,15 +81,34 @@
     return [[[NSFileManager defaultManager] displayNameAtPath:[self bundlePath]] stringByDeletingPathExtension];
 }
 
-- (NSString *__nonnull)version
+- (BOOL)validVersion
+{
+    return [self isValidVersion:[self _version]];
+}
+
+- (BOOL)isValidVersion:(NSString * _Nullable)version SPU_OBJC_DIRECT
+{
+    return (version != nil && version.length != 0);
+}
+
+- (NSString * _Nullable)_version SPU_OBJC_DIRECT
 {
     NSString *version = [self objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleVersionKey];
-    if (!version || [version isEqualToString:@""])
-        [NSException raise:@"SUNoVersionException" format:@"This host (%@) has no %@! This attribute is required.", [self bundlePath], (__bridge NSString *)kCFBundleVersionKey];
+    return ([self isValidVersion:version] ? version : nil);
+}
+
+- (NSString * _Nonnull)version
+{
+    NSString *version = [self _version];
+    if (version == nil) {
+        SULog(SULogLevelError, @"This host (%@) has no %@! This attribute is required.", [self bundlePath], (__bridge NSString *)kCFBundleVersionKey);
+        // Instead of abort()-ing, return an empty string to satisfy the _Nonnull contract.
+        return @"";
+    }
     return version;
 }
 
-- (NSString *__nonnull)displayVersion
+- (NSString * _Nonnull)displayVersion
 {
     NSString *shortVersionString = [self objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     if (shortVersionString)
@@ -106,16 +120,22 @@
 - (BOOL)isRunningOnReadOnlyVolume
 {
     struct statfs statfs_info;
-    statfs([[self.bundle bundlePath] fileSystemRepresentation], &statfs_info);
+    statfs(_bundle.bundlePath.fileSystemRepresentation, &statfs_info);
     return (statfs_info.f_flags & MNT_RDONLY) != 0;
 }
 
-- (NSString *__nullable)publicEDKey
+- (BOOL)isRunningTranslocated
+{
+    NSString *path = _bundle.bundlePath;
+    return [path rangeOfString:@"/AppTranslocation/"].location != NSNotFound;
+}
+
+- (NSString *_Nullable)publicEDKey SPU_OBJC_DIRECT
 {
     return [self objectForInfoDictionaryKey:SUPublicEDKeyKey];
 }
 
-- (NSString *__nullable)publicDSAKey
+- (NSString *_Nullable)publicDSAKey SPU_OBJC_DIRECT
 {
     // Maybe the key is just a string in the Info.plist.
     NSString *key = [self objectForInfoDictionaryKey:SUPublicDSAKeyKey];
@@ -129,7 +149,7 @@
         return nil;
     }
 
-    NSString *keyPath = [self.bundle pathForResource:keyFilename ofType:nil];
+    NSString *keyPath = [_bundle pathForResource:keyFilename ofType:nil];
     if (!keyPath) {
         return nil;
     }
@@ -143,27 +163,28 @@
 
 - (SUPublicKeys *)publicKeys
 {
-    return [[SUPublicKeys alloc] initWithDsa:[self publicDSAKey] ed:[self publicEDKey]];
+    return [[SUPublicKeys alloc] initWithEd:[self publicEDKey]
+                                        dsa:[self publicDSAKey]];
 }
 
-- (NSString * __nullable)publicDSAKeyFileKey
+- (NSString * _Nullable)publicDSAKeyFileKey
 {
     return [self objectForInfoDictionaryKey:SUPublicDSAKeyFileKey];
 }
 
-- (id)objectForInfoDictionaryKey:(NSString *)key
+- (nullable id)objectForInfoDictionaryKey:(NSString *)key
 {
-    if (self.isMainBundle) {
+    if (_isMainBundle) {
         // Common fast path - if we're updating the main bundle, that means our updater and host bundle's lifetime is the same
         // If the bundle happens to be updated or change, that means our updater process needs to be terminated first to do it safely
         // Thus we can rely on the cached Info dictionary
-        return [self.bundle objectForInfoDictionaryKey:key];
+        return [_bundle objectForInfoDictionaryKey:key];
     } else {
         // Slow path - if we're updating another bundle, we should read in the most up to date Info dictionary because
         // the bundle can be replaced externally or even by us.
         // This is the easiest way to read the Info dictionary values *correctly* despite some performance loss.
         // A mutable method to reload the Info dictionary at certain points and have it cached at other points is challenging to do correctly.
-        CFDictionaryRef cfInfoDictionary = CFBundleCopyInfoDictionaryInDirectory((CFURLRef)self.bundle.bundleURL);
+        CFDictionaryRef cfInfoDictionary = CFBundleCopyInfoDictionaryInDirectory((CFURLRef)_bundle.bundleURL);
         NSDictionary *infoDictionary = CFBridgingRelease(cfInfoDictionary);
         
         return [infoDictionary objectForKey:key];
@@ -175,45 +196,45 @@
     return [(NSNumber *)[self objectForInfoDictionaryKey:key] boolValue];
 }
 
-- (id)objectForUserDefaultsKey:(NSString *)defaultName
+- (nullable id)objectForUserDefaultsKey:(NSString *)defaultName
 {
-    if (!defaultName || !self.defaultsDomain) {
+    if (!defaultName || _defaultsDomain == nil) {
         return nil;
     }
 
     // Under Tiger, CFPreferencesCopyAppValue doesn't get values from NSRegistrationDomain, so anything
     // passed into -[NSUserDefaults registerDefaults:] is ignored.  The following line falls
     // back to using NSUserDefaults, but only if the host bundle is the main bundle.
-    if (self.usesStandardUserDefaults) {
+    if (_usesStandardUserDefaults) {
         return [[NSUserDefaults standardUserDefaults] objectForKey:defaultName];
     }
 
-    CFPropertyListRef obj = CFPreferencesCopyAppValue((__bridge CFStringRef)defaultName, (__bridge CFStringRef)self.defaultsDomain);
+    CFPropertyListRef obj = CFPreferencesCopyAppValue((__bridge CFStringRef)defaultName, (__bridge CFStringRef)_defaultsDomain);
     return CFBridgingRelease(obj);
 }
 
 // Note this handles nil being passed for defaultName, in which case the user default will be removed
-- (void)setObject:(id)value forUserDefaultsKey:(NSString *)defaultName
+- (void)setObject:(nullable id)value forUserDefaultsKey:(NSString *)defaultName
 {
-	if (self.usesStandardUserDefaults)
+	if (_usesStandardUserDefaults)
 	{
         [[NSUserDefaults standardUserDefaults] setObject:value forKey:defaultName];
 	}
 	else
 	{
-        CFPreferencesSetValue((__bridge CFStringRef)defaultName, (__bridge CFPropertyListRef)(value), (__bridge CFStringRef)self.defaultsDomain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-        CFPreferencesSynchronize((__bridge CFStringRef)self.defaultsDomain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+        CFPreferencesSetValue((__bridge CFStringRef)defaultName, (__bridge CFPropertyListRef)(value), (__bridge CFStringRef)_defaultsDomain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+        CFPreferencesSynchronize((__bridge CFStringRef)_defaultsDomain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
     }
 }
 
 - (BOOL)boolForUserDefaultsKey:(NSString *)defaultName
 {
-    if (self.usesStandardUserDefaults) {
+    if (_usesStandardUserDefaults) {
         return [[NSUserDefaults standardUserDefaults] boolForKey:defaultName];
     }
 
     BOOL value;
-    CFPropertyListRef plr = CFPreferencesCopyAppValue((__bridge CFStringRef)defaultName, (__bridge CFStringRef)self.defaultsDomain);
+    CFPropertyListRef plr = CFPreferencesCopyAppValue((__bridge CFStringRef)defaultName, (__bridge CFStringRef)_defaultsDomain);
     if (plr == NULL) {
         value = NO;
 	}
@@ -227,18 +248,18 @@
 
 - (void)setBool:(BOOL)value forUserDefaultsKey:(NSString *)defaultName
 {
-	if (self.usesStandardUserDefaults)
+	if (_usesStandardUserDefaults)
 	{
         [[NSUserDefaults standardUserDefaults] setBool:value forKey:defaultName];
 	}
 	else
 	{
-        CFPreferencesSetValue((__bridge CFStringRef)defaultName, (__bridge CFBooleanRef) @(value), (__bridge CFStringRef)self.defaultsDomain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-        CFPreferencesSynchronize((__bridge CFStringRef)self.defaultsDomain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+        CFPreferencesSetValue((__bridge CFStringRef)defaultName, (__bridge CFBooleanRef) @(value), (__bridge CFStringRef)_defaultsDomain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+        CFPreferencesSynchronize((__bridge CFStringRef)_defaultsDomain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
     }
 }
 
-- (id)objectForKey:(NSString *)key {
+- (nullable id)objectForKey:(NSString *)key {
     return [self objectForUserDefaultsKey:key] ? [self objectForUserDefaultsKey:key] : [self objectForInfoDictionaryKey:key];
 }
 
@@ -247,3 +268,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
