@@ -49,7 +49,7 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
 
 @implementation SKApplication
 
-@synthesize userAttentionDisabled;
+@synthesize updaterController, userAttentionDisabled;
 
 - (NSInteger)requestUserAttention:(NSRequestUserAttentionType)requestType {
     return userAttentionDisabled ? 0 : [super requestUserAttention:requestType];

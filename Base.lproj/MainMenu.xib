@@ -5,9 +5,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+        <customObject id="-2" userLabel="File's Owner" customClass="SKApplication">
             <connections>
                 <outlet property="delegate" destination="210" id="211"/>
+                <outlet property="updaterController" destination="728" id="sOn-3e-h4U"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
@@ -1298,9 +1299,9 @@
         </customObject>
         <customObject id="457" userLabel="Font Manager" customClass="NSFontManager"/>
         <customObject id="518" userLabel="SKDocumentController" customClass="SKDocumentController"/>
-        <customObject id="728" userLabel="SUUpdater" customClass="SUUpdater">
+        <customObject id="728" userLabel="SPUStandardUpdaterController" customClass="SPUStandardUpdaterController">
             <connections>
-                <outlet property="delegate" destination="210" id="967"/>
+                <outlet property="updaterDelegate" destination="210" id="m9q-R1-qhl"/>
             </connections>
         </customObject>
         <customObject id="1086" customClass="SKBookmarkController"/>
