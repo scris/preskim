@@ -45,6 +45,7 @@
 #import "NSImage_SKExtensions.h"
 #import "SKViewSettingsController.h"
 #import "NSWindowController_SKExtensions.h"
+#import "SKApplication.h"
 
 #define UPDATEINTERVAL_KEY @"updateInterval"
 #define AUTOMATICALLYCHECKSFORUPDATES_KEY @"automaticallyChecksForUpdates"
@@ -54,18 +55,20 @@
 
 static char SKGeneralPreferencesUpdaterObservationContext;
 
-@interface SKGeneralPreferences (Private)
+@interface SKGeneralPreferences ()
+@property (nonatomic, readonly) SPUUpdater *updater;
 - (void)synchronizeUpdateInterval;
 @end
 
 @implementation SKGeneralPreferences
 
 @synthesize updateIntervalPopUpButton, updateInterval;
+@dynamic updater;
 
 - (void)dealloc {
     @try {
-        [[SUUpdater sharedUpdater] removeObserver:self forKeyPath:AUTOMATICALLYCHECKSFORUPDATES_KEY context:&SKGeneralPreferencesUpdaterObservationContext];
-        [[SUUpdater sharedUpdater] removeObserver:self forKeyPath:UPDATECHECKINTERVAL_KEY context:&SKGeneralPreferencesUpdaterObservationContext];
+        [[self updater] removeObserver:self forKeyPath:AUTOMATICALLYCHECKSFORUPDATES_KEY context:&SKGeneralPreferencesUpdaterObservationContext];
+        [[self updater] removeObserver:self forKeyPath:UPDATECHECKINTERVAL_KEY context:&SKGeneralPreferencesUpdaterObservationContext];
     }
     @catch(id e) {}
     SKDESTROY(updateIntervalPopUpButton);
@@ -81,8 +84,8 @@ static char SKGeneralPreferencesUpdaterObservationContext;
     
     [self synchronizeUpdateInterval];
     
-    [[SUUpdater sharedUpdater] addObserver:self forKeyPath:AUTOMATICALLYCHECKSFORUPDATES_KEY options:0 context:&SKGeneralPreferencesUpdaterObservationContext];
-    [[SUUpdater sharedUpdater] addObserver:self forKeyPath:UPDATECHECKINTERVAL_KEY options:0 context:&SKGeneralPreferencesUpdaterObservationContext];
+    [[self updater] addObserver:self forKeyPath:AUTOMATICALLYCHECKSFORUPDATES_KEY options:0 context:&SKGeneralPreferencesUpdaterObservationContext];
+    [[self updater] addObserver:self forKeyPath:UPDATECHECKINTERVAL_KEY options:0 context:&SKGeneralPreferencesUpdaterObservationContext];
 }
 
 #pragma mark Accessors
@@ -91,9 +94,13 @@ static char SKGeneralPreferencesUpdaterObservationContext;
 
 - (void)setUpdateInterval:(NSInteger)interval {
     if (interval > 0)
-        [[SUUpdater sharedUpdater] setUpdateCheckInterval:interval];
-    [[SUUpdater sharedUpdater] setAutomaticallyChecksForUpdates:interval > 0];
+        [[self updater] setUpdateCheckInterval:interval];
+    [[self updater] setAutomaticallyChecksForUpdates:interval > 0];
     updateInterval = interval;
+}
+
+- (SPUUpdater *)updater {
+    return [[NSApp updaterController] updater];
 }
 
 #pragma mark Actions
@@ -128,7 +135,7 @@ static char SKGeneralPreferencesUpdaterObservationContext;
 
 - (void)synchronizeUpdateInterval {
     [self willChangeValueForKey:UPDATEINTERVAL_KEY];
-    updateInterval = (NSInteger)[[SUUpdater sharedUpdater] automaticallyChecksForUpdates] ? (NSInteger)[[SUUpdater sharedUpdater] updateCheckInterval] : 0;
+    updateInterval = (NSInteger)[[self updater] automaticallyChecksForUpdates] ? (NSInteger)[[self updater] updateCheckInterval] : 0;
     [self didChangeValueForKey:UPDATEINTERVAL_KEY];
 }
 
@@ -136,8 +143,8 @@ static char SKGeneralPreferencesUpdaterObservationContext;
 
 - (void)defaultsDidRevert {
     NSTimeInterval interval = [[[NSBundle mainBundle] objectForInfoDictionaryKey:SUScheduledCheckIntervalKey] doubleValue];
-    [[SUUpdater sharedUpdater] setUpdateCheckInterval:interval];
-    [[SUUpdater sharedUpdater] setAutomaticallyChecksForUpdates:interval > 0.0];
+    [[self updater] setUpdateCheckInterval:interval];
+    [[self updater] setAutomaticallyChecksForUpdates:interval > 0.0];
 }
 
 @end

@@ -42,9 +42,14 @@ extern NSString *SKApplicationStartsTerminatingNotification;
 
 @protocol SKApplicationDelegate;
 
+@class SPUStandardUpdaterController;
+
 @interface SKApplication : NSApplication {
     BOOL userAttentionDisabled;
+    SPUStandardUpdaterController *updaterController;
 }
+
+@property (nonatomic, retain) IBOutlet SPUStandardUpdaterController *updaterController;
 
 @property (nonatomic, getter=isUserAttentionDisabled) BOOL userAttentionDisabled;
 

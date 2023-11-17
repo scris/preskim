@@ -267,7 +267,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
 
 #pragma mark Updater
 
-- (void)updaterWillRelaunchApplication:(SUUpdater *)updater {
+- (void)updaterWillRelaunchApplication:(SPUUpdater *)updater {
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SKIsRelaunchKey];
 }
 
