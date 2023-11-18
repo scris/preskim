@@ -33,7 +33,7 @@ SPARKLE_LOCATION="${LOCATION}/Sparkle.framework/Versions/Current"
 codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" -i "org.sparkle-project.Sparkle.Autoupdate" "${SPARKLE_LOCATION}/Autoupdate"
 codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" ${CODESIGN_OPTIONS:+--entitlements "${DOWNLOADER_ENTITLEMENTS}"} "${SPARKLE_LOCATION}/XPCServices/Downloader.xpc"
 codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" "${SPARKLE_LOCATION}/XPCServices/Installer.xpc"
-codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" "${SPARKLE_LOCATION}/Autoupdate.app"
+codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" "${SPARKLE_LOCATION}/Updater.app"
 codesign ${CODESIGN_FLAGS} -s "${IDENTITY}" "${LOCATION}/Sparkle.framework"
 
 LOCATION="${CONTENTS_DIR}/Library"
