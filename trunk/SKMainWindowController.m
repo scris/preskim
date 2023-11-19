@@ -1854,7 +1854,7 @@ static char SKMainWindowContentLayoutObservationContext;
 	}
 }
 
-- (void)removeFindController:(SKFindController *)aFindController {
+- (void)removeFindController {
     if (mwcFlags.isAnimatingFindBar)
         return;
     

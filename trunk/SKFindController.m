@@ -152,7 +152,7 @@
     
     [messageField setHidden:YES];
     
-    [delegate removeFindController:self];
+    [delegate removeFindController];
 }
 
 - (IBAction)toggleCaseInsensitiveFind:(id)sender {
