@@ -39,7 +39,6 @@
 #import "SKDragImageView.h"
 #import "NSMenu_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
-#import "NSView_SKExtensions.h"
 #import "NSImage_SKExtensions.h"
 #import "NSBitmapImageRep_SKExtensions.h"
 
@@ -124,7 +123,7 @@
                     if (object) {
                         
                         NSRect bounds = [self bounds];
-                        CGFloat scale = [self backingScale];
+                        CGFloat scale = [[self window] backingScaleFactor];
                         
                         NSImage *dragImage = [NSImage bitmapImageWithSize:bounds.size scale:scale drawingHandler:^(NSRect rect){
                             [[self cell] drawInteriorWithFrame:rect inView:self];

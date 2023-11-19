@@ -73,10 +73,6 @@
     return nil;
 }
 
-- (CGFloat)backingScale {
-    return [self convertSizeToBacking:NSMakeSize(1.0, 1.0)].width;
-}
-
 - (NSRect)convertRectToScreen:(NSRect)rect {
     return [[self window] convertRectToScreen:[self convertRect:rect toView:nil]];
 }

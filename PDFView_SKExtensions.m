@@ -205,7 +205,7 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     if (page == nil || NSPointInRect(point, [[self currentSelection] boundsForPage:page]) == NO || [NSApp willDragMouse] == NO)
         return NO;
     
-    NSImage *dragImage = [NSImage bitmapImageWithSize:NSMakeSize(32.0, 32.0) scale:[self backingScale] drawingHandler:^(NSRect rect){
+    NSImage *dragImage = [NSImage bitmapImageWithSize:NSMakeSize(32.0, 32.0) scale:[[self window] backingScaleFactor] drawingHandler:^(NSRect rect){
         [[[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kClippingTextType)] drawInRect:rect fromRect:rect operation:NSCompositingOperationCopy fraction:1.0 respectFlipped:YES hints:nil];
     }];
     

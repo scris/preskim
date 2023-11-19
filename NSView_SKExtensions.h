@@ -49,8 +49,6 @@
 
 - (SKFontWell *)activeFontWell;
 
-- (CGFloat)backingScale;
-
 - (NSRect)convertRectToScreen:(NSRect)rect;
 - (NSRect)convertRectFromScreen:(NSRect)rect;
 - (NSPoint)convertPointToScreen:(NSPoint)point;

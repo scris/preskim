@@ -1166,7 +1166,7 @@ enum {
             interval = PACER_LINE_HEIGHT / pacerSpeed;
             selector = @selector(pacerMoveReadingBar:);
         } else {
-            interval = 1.0 / (pacerSpeed * [self backingScale] * [self scaleFactor]);
+            interval = 1.0 / (pacerSpeed * [([self window] ?: (NSWindow *)[NSScreen mainScreen]) backingScaleFactor] * [self scaleFactor]);
             selector = @selector(pacerScroll:);
         }
         pacerTimer = [[NSTimer scheduledTimerWithTimeInterval:interval target:self selector:selector userInfo:nil repeats:YES] retain];

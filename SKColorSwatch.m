@@ -382,7 +382,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
                     if (@available(macOS 11.0, *))
                         r = 2.5;
                     
-                    NSImage *image = [NSImage bitmapImageWithSize:NSMakeSize(12.0, 12.0) scale:[self backingScale] drawingHandler:^(NSRect rect){
+                    NSImage *image = [NSImage bitmapImageWithSize:NSMakeSize(12.0, 12.0) scale:[[self window] backingScaleFactor] drawingHandler:^(NSRect rect){
                         [color drawSwatchInRect:NSInsetRect(rect, 1.0, 1.0)];
                         [[NSColor blackColor] set];
                         [NSBezierPath setDefaultLineWidth:1.0];
