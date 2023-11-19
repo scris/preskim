@@ -74,13 +74,13 @@ typedef NS_ENUM(NSInteger, SKTypeSelectMatchOption) {
 
 @protocol SKTypeSelectDelegate <NSObject>
 
-- (NSArray *)typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)typeSelectHelper; // required
-- (NSUInteger)typeSelectHelperCurrentlySelectedIndex:(SKTypeSelectHelper *)typeSelectHelper; // required
-- (void)typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper selectItemAtIndex:(NSUInteger)itemIndex; // required
+- (NSArray *)typeSelectHelperSelectionStrings; // required
+- (NSUInteger)typeSelectHelperCurrentlySelectedIndex; // required
+- (void)typeSelectHelperSelectItemAtIndex:(NSUInteger)itemIndex; // required
 
 @optional
 
-- (void)typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper didFailToFindMatchForSearchString:(NSString *)searchString; // optional
-- (void)typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper updateSearchString:(NSString *)searchString; // optional
+- (void)typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString; // optional
+- (void)typeSelectHelperUpdateSearchString:(NSString *)searchString; // optional
 
 @end

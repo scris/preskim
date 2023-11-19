@@ -531,7 +531,7 @@ static char *SKTransitionPropertiesObservationContext;
     [selTransitions setValue:empty forKey:PROPERTIES_KEY];
 }
 
-- (NSArray *)tableView:(NSTableView *)tv typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)typeSelectHelper {
+- (NSArray *)tableViewTypeSelectHelperSelectionStrings:(NSTableView *)tv {
     return [transitions valueForKeyPath:@"thumbnail.label"];
 }
 

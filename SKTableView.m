@@ -392,29 +392,29 @@
 
 #pragma mark SKTypeSelectHelper datasource protocol
 
-- (NSArray *)typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)aTypeSelectHelper {
-    if ([[self delegate] respondsToSelector:@selector(tableView:typeSelectHelperSelectionStrings:)])
-        return [[self delegate] tableView:self typeSelectHelperSelectionStrings:aTypeSelectHelper];
+- (NSArray *)typeSelectHelperSelectionStrings {
+    if ([[self delegate] respondsToSelector:@selector(tableViewTypeSelectHelperSelectionStrings:)])
+        return [[self delegate] tableViewTypeSelectHelperSelectionStrings:self];
     return nil;
 }
 
-- (NSUInteger)typeSelectHelperCurrentlySelectedIndex:(SKTypeSelectHelper *)aTypeSelectHelper {
+- (NSUInteger)typeSelectHelperCurrentlySelectedIndex {
     return [[self selectedRowIndexes] lastIndex];
 }
 
-- (void)typeSelectHelper:(SKTypeSelectHelper *)aTypeSelectHelper selectItemAtIndex:(NSUInteger)itemIndex {
+- (void)typeSelectHelperSelectItemAtIndex:(NSUInteger)itemIndex {
     [self selectRowIndexes:[NSIndexSet indexSetWithIndex:itemIndex] byExtendingSelection:NO];
     [self scrollRowToVisible:itemIndex];
 }
 
-- (void)typeSelectHelper:(SKTypeSelectHelper *)aTypeSelectHelper didFailToFindMatchForSearchString:(NSString *)searchString {
-    if ([[self delegate] respondsToSelector:@selector(tableView:typeSelectHelper:didFailToFindMatchForSearchString:)])
-        [[self delegate] tableView:self typeSelectHelper:aTypeSelectHelper didFailToFindMatchForSearchString:searchString];
+- (void)typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString {
+    if ([[self delegate] respondsToSelector:@selector(tableView:typeSelectHelperDidFailToFindMatchForSearchString:)])
+        [[self delegate] tableView:self typeSelectHelperDidFailToFindMatchForSearchString:searchString];
 }
 
-- (void)typeSelectHelper:(SKTypeSelectHelper *)aTypeSelectHelper updateSearchString:(NSString *)searchString {
-    if ([[self delegate] respondsToSelector:@selector(tableView:typeSelectHelper:updateSearchString:)])
-        [[self delegate] tableView:self typeSelectHelper:aTypeSelectHelper updateSearchString:searchString];
+- (void)typeSelectHelperUpdateSearchString:(NSString *)searchString {
+    if ([[self delegate] respondsToSelector:@selector(tableView:typeSelectHelperUpdateSearchString:)])
+        [[self delegate] tableView:self typeSelectHelperUpdateSearchString:searchString];
 }
 
 - (id <SKTableViewDelegate>)delegate {

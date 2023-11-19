@@ -375,29 +375,29 @@
 
 #pragma mark SKTypeSelectHelper datasource protocol
 
-- (NSArray *)typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)aTypeSelectHelper {
-    if ([[self delegate] respondsToSelector:@selector(outlineView:typeSelectHelperSelectionStrings:)])
-        return [[self delegate] outlineView:self typeSelectHelperSelectionStrings:aTypeSelectHelper];
+- (NSArray *)typeSelectHelperSelectionStrings {
+    if ([[self delegate] respondsToSelector:@selector(outlineViewTypeSelectHelperSelectionStrings:)])
+        return [[self delegate] outlineViewTypeSelectHelperSelectionStrings:self];
     return nil;
 }
 
-- (NSUInteger)typeSelectHelperCurrentlySelectedIndex:(SKTypeSelectHelper *)aTypeSelectHelper {
+- (NSUInteger)typeSelectHelperCurrentlySelectedIndex {
     return [[self selectedRowIndexes] lastIndex];
 }
 
-- (void)typeSelectHelper:(SKTypeSelectHelper *)aTypeSelectHelper selectItemAtIndex:(NSUInteger)itemIndex {
+- (void)typeSelectHelperSelectItemAtIndex:(NSUInteger)itemIndex {
     [self selectRowIndexes:[NSIndexSet indexSetWithIndex:itemIndex] byExtendingSelection:NO];
     [self scrollRowToVisible:itemIndex];
 }
 
-- (void)typeSelectHelper:(SKTypeSelectHelper *)aTypeSelectHelper didFailToFindMatchForSearchString:(NSString *)searchString {
-    if ([[self delegate] respondsToSelector:@selector(outlineView:typeSelectHelper:didFailToFindMatchForSearchString:)])
-        [[self delegate] outlineView:self typeSelectHelper:aTypeSelectHelper didFailToFindMatchForSearchString:searchString];
+- (void)typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString {
+    if ([[self delegate] respondsToSelector:@selector(outlineView:typeSelectHelperDidFailToFindMatchForSearchString:)])
+        [[self delegate] outlineView:self typeSelectHelperDidFailToFindMatchForSearchString:searchString];
 }
 
-- (void)typeSelectHelper:(SKTypeSelectHelper *)aTypeSelectHelper updateSearchString:(NSString *)searchString {
-    if ([[self delegate] respondsToSelector:@selector(outlineView:typeSelectHelper:updateSearchString:)])
-        [[self delegate] outlineView:self typeSelectHelper:aTypeSelectHelper updateSearchString:searchString];
+- (void)typeSelectHelperUpdateSearchString:(NSString *)searchString {
+    if ([[self delegate] respondsToSelector:@selector(outlineView:typeSelectHelperUpdateSearchString:)])
+        [[self delegate] outlineView:self typeSelectHelperUpdateSearchString:searchString];
 }
 
 - (id <SKOutlineViewDelegate>)delegate {

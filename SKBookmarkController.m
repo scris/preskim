@@ -1115,7 +1115,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     return [NSURL canReadFileURLFromPasteboard:pboard];
 }
 
-- (NSArray *)outlineView:(NSOutlineView *)ov typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)typeSelectHelper {
+- (NSArray *)outlineViewTypeSelectHelperSelectionStrings:(NSOutlineView *)ov {
     NSInteger i, count = [outlineView numberOfRows];
     NSMutableArray *labels = [NSMutableArray arrayWithCapacity:count];
     for (i = 0; i < count; i++) {
@@ -1125,11 +1125,11 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     return labels;
 }
 
-- (void)outlineView:(NSOutlineView *)ov typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper didFailToFindMatchForSearchString:(NSString *)searchString {
+- (void)outlineView:(NSOutlineView *)ov typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString {
     [[statusBar leftField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"No match: \"%@\"", @"Status message"), searchString]];
 }
 
-- (void)outlineView:(NSOutlineView *)ov typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper updateSearchString:(NSString *)searchString {
+- (void)outlineView:(NSOutlineView *)ov typeSelectHelperUpdateSearchString:(NSString *)searchString {
     if (searchString)
         [[statusBar leftField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Finding: \"%@\"", @"Status message"), searchString]];
     else

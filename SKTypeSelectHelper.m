@@ -172,8 +172,8 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
 
 - (void)updateSearchString:(NSString *)string {
     id del = [self delegate];
-    if ([del respondsToSelector:@selector(typeSelectHelper:updateSearchString:)])
-        [del typeSelectHelper:self updateSearchString:string];
+    if ([del respondsToSelector:@selector(typeSelectHelperUpdateSearchString:)])
+        [del typeSelectHelperUpdateSearchString:string];
 }
 
 - (void)searchWithEvent:(NSEvent *)keyEvent {
@@ -263,7 +263,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
     NSArray *cache = nil;
     @synchronized(self) {
         if (searchCache == nil)
-            searchCache = [[delegate typeSelectHelperSelectionStrings:self] retain];
+            searchCache = [[delegate typeSelectHelperSelectionStrings] retain];
         cache = [[searchCache retain] autorelease];
     }
     return cache;
@@ -303,7 +303,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
         NSUInteger selectedIndex, startIndex, foundIndex;
         
         if (matchOption != SKFullStringMatch) {
-            selectedIndex = [[self delegate] typeSelectHelperCurrentlySelectedIndex:self];
+            selectedIndex = [[self delegate] typeSelectHelperCurrentlySelectedIndex];
             if (selectedIndex >= [[self searchCache] count])
                 selectedIndex = NSNotFound;
         } else {
@@ -318,11 +318,11 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
         
         if (foundIndex == NSNotFound) {
             id del = [self delegate];
-            if ([del respondsToSelector:@selector(typeSelectHelper:didFailToFindMatchForSearchString:)])
-                [del typeSelectHelper:self didFailToFindMatchForSearchString:searchString];
+            if ([del respondsToSelector:@selector(typeSelectHelperDidFailToFindMatchForSearchString:)])
+                [del typeSelectHelperDidFailToFindMatchForSearchString:searchString];
         } else if (foundIndex != selectedIndex) {
             // Avoid flashing a selection all over the place while you're still typing the thing you have selected
-            [[self delegate] typeSelectHelper:self selectItemAtIndex:foundIndex];
+            [[self delegate] typeSelectHelperSelectItemAtIndex:foundIndex];
         }
     }
 }

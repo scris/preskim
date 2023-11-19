@@ -88,8 +88,8 @@
 
 - (id <SKImageToolTipContext>)outlineView:(NSOutlineView *)anOutlineView imageContextForItem:(id)item scale:(CGFloat *)scale;
 
-- (NSArray *)outlineView:(NSOutlineView *)anOutlineView typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)aTypeSelectHelper;
-- (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelper:(SKTypeSelectHelper *)aTypeSelectHelper didFailToFindMatchForSearchString:(NSString *)searchString;
-- (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelper:(SKTypeSelectHelper *)aTypeSelectHelper updateSearchString:(NSString *)searchString;
+- (NSArray *)outlineViewTypeSelectHelperSelectionStrings:(NSOutlineView *)anOutlineView;
+- (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString;
+- (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelperUpdateSearchString:(NSString *)searchString;
 
 @end
