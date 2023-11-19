@@ -172,7 +172,7 @@ enum {
 };
 
 @protocol SKLayerDelegate <NSObject>
-- (void)drawLayerController:(SKLayerController *)controller inContext:(CGContextRef)context;
+- (void)drawLayerControllerInContext:(CGContextRef)context;
 @end
 
 // this class is a proxy for the layer delegate
@@ -518,8 +518,8 @@ enum {
     [self drawPageHighlights:pdfPage toContext:context];
 }
 
-- (void)drawLayerController:(SKLayerController *)controller inContext:(CGContextRef)context {
-    if ([controller type] == SKLayerTypeNote) {
+- (void)drawLayerControllerInContext:(CGContextRef)context {
+    if ([highlightLayerController type] == SKLayerTypeNote) {
         if (currentAnnotation == nil)
             return;
         PDFPage *page = [currentAnnotation page];
@@ -532,7 +532,7 @@ enum {
         [currentAnnotation drawSelectionHighlightWithLineWidth:1.0 / scaleFactor active:[self drawsActiveSelections] inContext:context];
         CGContextRestoreGState(context);
     } else {
-        CGRect rect = NSRectToCGRect([controller rect]);
+        CGRect rect = NSRectToCGRect([highlightLayerController rect]);
         if (CGRectIsEmpty(rect))
             return;
         rect = CGContextConvertRectToUserSpace(context, CGRectIntegral(CGContextConvertRectToDeviceSpace(context, NSRectToCGRect(rect))));
@@ -5487,7 +5487,7 @@ static inline NSSize SKFitTextNoteSize(NSString *string, NSFont *font, CGFloat w
 }
 
 - (void)drawLayer:(CALayer *)aLayer inContext:(CGContextRef)context {
-    [delegate drawLayerController:self inContext:context];
+    [delegate drawLayerControllerInContext:context];
 }
 
 @end
