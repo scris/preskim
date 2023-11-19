@@ -454,11 +454,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         
         animating = YES;
         
-        NSWindow *viewWindow = [view window];
         CIImage *initialImage = [self currentImageForRect:rect scale:NULL];
-        
-        // We don't want the window to draw the next state before the animation is run
-        [viewWindow disableFlushWindow];
         
         NSRect toRect = change();
 
@@ -477,9 +473,6 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         
         // Update the view and its window, so it shows the correct state when it is shown.
         [view display];
-        // Remember we disabled flushing in the previous method, we need to balance that.
-        [viewWindow enableFlushWindow];
-        [viewWindow flushWindow];
         
         [transitionView setFilter:transitionFilter];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
