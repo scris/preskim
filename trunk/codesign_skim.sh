@@ -17,7 +17,6 @@ else
 fi
 
 SKIM_ENTITLEMENTS=$(dirname "$0")/Skim.entitlements
-DOWNLOADER_ENTITLEMENTS=$(dirname "$0")/vendorsrc/andymatuschak/Sparkle/Downloader/org.sparkle-project.Downloader.entitlements
 
 # see https://mjtsai.com/blog/2021/02/18/code-signing-when-building-on-apple-silicon/
 # and https://developer.apple.com/forums/thread/130855
@@ -31,8 +30,6 @@ codesign ${CODESIGN_FLAGS} -s "${IDENTITY}" "${LOCATION}/SkimNotes.framework"
 
 SPARKLE_LOCATION="${LOCATION}/Sparkle.framework/Versions/Current"
 codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" -i "org.sparkle-project.Sparkle.Autoupdate" "${SPARKLE_LOCATION}/Autoupdate"
-codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" ${CODESIGN_OPTIONS:+--entitlements "${DOWNLOADER_ENTITLEMENTS}"} "${SPARKLE_LOCATION}/XPCServices/Downloader.xpc"
-codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" "${SPARKLE_LOCATION}/XPCServices/Installer.xpc"
 codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" "${SPARKLE_LOCATION}/Updater.app"
 codesign ${CODESIGN_FLAGS} -s "${IDENTITY}" "${LOCATION}/Sparkle.framework"
 
