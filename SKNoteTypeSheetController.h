@@ -57,6 +57,6 @@
 
 
 @protocol SKNoteTypeSheetControllerDelegate <NSObject>
-- (void)noteTypeSheetControllerNoteTypesDidChange:(SKNoteTypeSheetController *)controller;
-- (NSWindow *)windowForNoteTypeSheetController:(SKNoteTypeSheetController *)controller;
+- (void)noteTypeSheetControllerNoteTypesDidChange;
+- (NSWindow *)windowForNoteTypeSheetController;
 @end

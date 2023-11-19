@@ -85,6 +85,6 @@
 
 @protocol SKReadingBarDelegate <NSObject>
 
-- (void)readingBar:(SKReadingBar *)readingBar didChangeBounds:(NSRect)oldBounds onPage:(PDFPage *)oldPage toBounds:(NSRect)newBounds onPage:(PDFPage *)newPage scroll:(BOOL)shouldScroll;
+- (void)readingBarDidChangeBounds:(NSRect)oldBounds onPage:(PDFPage *)oldPage toBounds:(NSRect)newBounds onPage:(PDFPage *)newPage scroll:(BOOL)shouldScroll;
 
 @end

@@ -381,7 +381,7 @@ static NSURL *temporaryDirectoryURL = nil;
 
 #pragma mark SKDragImageView delegate protocol
 
-- (id<NSPasteboardWriting>)draggedObjectForDragImageView:(SKDragImageView *)view {
+- (id<NSPasteboardWriting>)draggedObjectForDragImageView {
     NSImage *image = [note image];
     if (image)
         return [[[NSFilePromiseProvider alloc] initWithFileType:(NSString *)kUTTypeTIFF delegate:self] autorelease];
@@ -389,7 +389,7 @@ static NSURL *temporaryDirectoryURL = nil;
         return nil;
 }
 
-- (void)showImageForDragImageView:(SKDragImageView *)view {
+- (void)showImageForDragImageView {
     NSURL *fileURL = [self writeImageToDestination:[[self class] temporaryDirectoryURL]];
     if (fileURL)
         [[NSWorkspace sharedWorkspace] openURL:fileURL];

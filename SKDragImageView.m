@@ -49,8 +49,8 @@
 @synthesize delegate;
 
 - (IBAction)show:(id)sender {
-    if ([self isEditable] && [delegate respondsToSelector:@selector(showImageForDragImageView:)])
-        [delegate showImageForDragImageView:self];
+    if ([self isEditable] && [delegate respondsToSelector:@selector(showImageForDragImageView)])
+        [delegate showImageForDragImageView];
 }
 
 - (IBAction)togglePreviewPanel:(id)sender {
@@ -119,8 +119,8 @@
         isInside = [self mouse:mouseLoc inRect:[self bounds]];
         switch ([theEvent type]) {
             case NSEventTypeLeftMouseDragged:
-                if(isInside && [delegate respondsToSelector:@selector(draggedObjectForDragImageView:)]) {
-                    id<NSPasteboardWriting> object = [delegate draggedObjectForDragImageView:self];
+                if(isInside && [delegate respondsToSelector:@selector(draggedObjectForDragImageView)]) {
+                    id<NSPasteboardWriting> object = [delegate draggedObjectForDragImageView];
                     if (object) {
                         
                         NSRect bounds = [self bounds];

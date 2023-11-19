@@ -119,7 +119,7 @@ static char SKColorPickerDefaultsObservationContext;
 - (void)scrubber:(NSScrubber *)aScrubber didSelectItemAtIndex:(NSInteger)selectedIndex {
     if (selectedIndex >= 0 && selectedIndex < (NSInteger)[[self colors] count]) {
         NSColor *color = [[self colors] objectAtIndex:selectedIndex];
-        [[self delegate] colorPicker:self didSelectColor:color];
+        [[self delegate] colorPickerDidSelectColor:color];
     }
     [aScrubber setSelectedIndex:-1];
 }

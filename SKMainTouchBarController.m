@@ -283,7 +283,7 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
 
 #pragma mark SKColorPickerDelegate
 
-- (void)colorPicker:(SKColorPicker *)colorPicker didSelectColor:(NSColor *)color {
+- (void)colorPickerDidSelectColor:(NSColor *)color {
     PDFAnnotation *annotation = [mainController.pdfView currentAnnotation];
     BOOL isShift = ([NSEvent standardModifierFlags] & NSEventModifierFlagShift) != 0;
     BOOL isAlt = ([NSEvent standardModifierFlags] & NSEventModifierFlagOption) != 0;
@@ -299,7 +299,7 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
 #pragma mark Actions
 
 - (void)chooseColor:(id)sender {
-    [self colorPicker:nil didSelectColor:[sender color]];
+    [self colorPickerDidSelectColor:[sender color]];
 }
 
 - (void)goToPreviousNextPage:(id)sender {

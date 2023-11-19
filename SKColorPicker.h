@@ -54,5 +54,5 @@
 
 
 @protocol SKColorPickerDelegate <NSObject>
-- (void)colorPicker:(SKColorPicker *)colorPicker didSelectColor:(NSColor *)color;
+- (void)colorPickerDidSelectColor:(NSColor *)color;
 @end
