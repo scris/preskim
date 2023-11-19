@@ -1063,7 +1063,7 @@ enum {
     [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewReadingBarDidChangeNotification object:self userInfo:userInfo];
 }
 
-- (void)readingBar:(SKReadingBar *)aReadingBar didChangeBounds:(NSRect)oldBounds onPage:(PDFPage *)oldPage toBounds:(NSRect)newBounds onPage:(PDFPage *)newPage scroll:(BOOL)shouldScroll {
+- (void)readingBarDidChangeBounds:(NSRect)oldBounds onPage:(PDFPage *)oldPage toBounds:(NSRect)newBounds onPage:(PDFPage *)newPage scroll:(BOOL)shouldScroll {
     [syncDot setShouldHideReadingBar:NO];
     
     if (shouldScroll) {

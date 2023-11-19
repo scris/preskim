@@ -147,14 +147,14 @@
 - (void)toggleDisplayNoteType:(id)sender {
     NSMenuItem *item = [noteTypeMenu itemWithTag:[sender tag]];
     [item setState:NO == [item state]];
-    [delegate noteTypeSheetControllerNoteTypesDidChange:self];
+    [delegate noteTypeSheetControllerNoteTypesDidChange];
 }
 
 - (void)displayAllNoteTypes:(id)sender {
     NSInteger i;
     for (i = 0; i < NOTETYPES_COUNT; i++)
         [[noteTypeMenu itemAtIndex:i] setState:NSOnState];
-    [delegate noteTypeSheetControllerNoteTypesDidChange:self];
+    [delegate noteTypeSheetControllerNoteTypesDidChange];
 }
 
 - (void)selectNoteTypes:(id)sender {
@@ -164,12 +164,12 @@
     for (i = 0; i < NOTETYPES_COUNT; i++)
         [[self switchForTag:i] setState:[[noteTypeMenu itemAtIndex:i] state]];
 	
-    [self beginSheetModalForWindow:[delegate windowForNoteTypeSheetController:self] completionHandler:^(NSInteger result) {
+    [self beginSheetModalForWindow:[delegate windowForNoteTypeSheetController] completionHandler:^(NSInteger result) {
             if (result == NSModalResponseOK) {
                 NSInteger idx;
                 for (idx = 0; idx < NOTETYPES_COUNT; idx++)
                     [[noteTypeMenu itemAtIndex:idx] setState:[[self switchForTag:idx] state]];
-                [delegate noteTypeSheetControllerNoteTypesDidChange:self];
+                [delegate noteTypeSheetControllerNoteTypesDidChange];
             }
         }];
 }

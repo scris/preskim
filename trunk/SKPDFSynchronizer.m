@@ -593,7 +593,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
             
             if (success && [self shouldKeepRunning]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [delegate synchronizer:self foundLine:foundLine inFile:foundFile];
+                    [delegate synchronizerFoundLine:foundLine inFile:foundFile];
                 });
             }
         }
@@ -622,7 +622,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
                 else
                     foundOptions |= SKPDFSynchronizerFlippedMask;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [delegate synchronizer:self foundLocation:foundPoint atPageIndex:foundPageIndex options:foundOptions];
+                    [delegate synchronizerFoundLocation:foundPoint atPageIndex:foundPageIndex options:foundOptions];
                 });
             }
         }

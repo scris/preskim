@@ -1382,11 +1382,11 @@
 
 #pragma mark SKNoteTypeSheetController delegate protocol
 
-- (void)noteTypeSheetControllerNoteTypesDidChange:(SKNoteTypeSheetController *)controller {
+- (void)noteTypeSheetControllerNoteTypesDidChange {
     [self updateNoteFilterPredicate];
 }
 
-- (NSWindow *)windowForNoteTypeSheetController:(SKNoteTypeSheetController *)controller {
+- (NSWindow *)windowForNoteTypeSheetController {
     return [self window];
 }
 

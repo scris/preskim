@@ -1470,7 +1470,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     }
 }
 
-- (void)synchronizer:(SKPDFSynchronizer *)aSynchronizer foundLine:(NSInteger)line inFile:(NSString *)file {
+- (void)synchronizerFoundLine:(NSInteger)line inFile:(NSString *)file {
     if ([[NSFileManager defaultManager] fileExistsAtPath:file]) {
         
         NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
@@ -1552,7 +1552,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     }
 }
 
-- (void)synchronizer:(SKPDFSynchronizer *)aSynchronizer foundLocation:(NSPoint)point atPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOption)options {
+- (void)synchronizerFoundLocation:(NSPoint)point atPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOption)options {
     PDFDocument *pdfDoc = [self pdfDocument];
     if (pageIndex < [pdfDoc pageCount]) {
         PDFPage *page = [pdfDoc pageAtIndex:pageIndex];

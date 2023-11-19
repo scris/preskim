@@ -86,7 +86,7 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
 
 @protocol SKPDFSynchronizerDelegate <NSObject>
 
-- (void)synchronizer:(SKPDFSynchronizer *)synchronizer foundLine:(NSInteger)line inFile:(NSString *)file;
-- (void)synchronizer:(SKPDFSynchronizer *)synchronizer foundLocation:(NSPoint)point atPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOption)options;
+- (void)synchronizerFoundLine:(NSInteger)line inFile:(NSString *)file;
+- (void)synchronizerFoundLocation:(NSPoint)point atPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOption)options;
 
 @end
