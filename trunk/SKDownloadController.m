@@ -488,7 +488,7 @@ static SKDownloadController *sharedDownloadController = nil;
     return [NSURL canReadURLFromPasteboard:pboard];
 }
 
-- (NSArray *)tableView:(NSTableView *)aTableView typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)typeSelectHelper {
+- (NSArray *)tableViewTypeSelectHelperSelectionStrings:(NSTableView *)aTableView {
     return [downloads valueForKey:SKDownloadFileNameKey];
 }
 

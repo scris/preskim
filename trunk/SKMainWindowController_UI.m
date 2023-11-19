@@ -622,20 +622,20 @@
     return nil;
 }
 
-- (NSArray *)tableView:(NSTableView *)tv typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)typeSelectHelper {
+- (NSArray *)tableViewTypeSelectHelperSelectionStrings:(NSTableView *)tv {
     if ([tv isEqual:leftSideController.thumbnailTableView]) {
         return pageLabels;
     }
     return nil;
 }
 
-- (void)tableView:(NSTableView *)tv typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper didFailToFindMatchForSearchString:(NSString *)searchString {
+- (void)tableView:(NSTableView *)tv typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString {
     if ([tv isEqual:leftSideController.thumbnailTableView]) {
         [[statusBar leftField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"No match: \"%@\"", @"Status message"), searchString]];
     }
 }
 
-- (void)tableView:(NSTableView *)tv typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper updateSearchString:(NSString *)searchString {
+- (void)tableView:(NSTableView *)tv typeSelectHelperUpdateSearchString:(NSString *)searchString {
     if ([tv isEqual:leftSideController.thumbnailTableView]) {
         if (searchString)
             [[statusBar leftField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Go to page: %@", @"Status message"), searchString]];
@@ -940,7 +940,7 @@
     return nil;
 }
 
-- (NSArray *)outlineView:(NSOutlineView *)ov typeSelectHelperSelectionStrings:(SKTypeSelectHelper *)typeSelectHelper {
+- (NSArray *)outlineViewTypeSelectHelperSelectionStrings:(NSOutlineView *)ov {
     if ([ov isEqual:rightSideController.noteOutlineView]) {
         NSInteger i, count = [rightSideController.noteOutlineView numberOfRows];
         NSMutableArray *texts = [NSMutableArray arrayWithCapacity:count];
@@ -960,7 +960,7 @@
     return nil;
 }
 
-- (void)outlineView:(NSOutlineView *)ov typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper didFailToFindMatchForSearchString:(NSString *)searchString {
+- (void)outlineView:(NSOutlineView *)ov typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString {
     if ([ov isEqual:rightSideController.noteOutlineView]) {
         [[statusBar rightField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"No match: \"%@\"", @"Status message"), searchString]];
     } else if ([ov isEqual:leftSideController.tocOutlineView]) {
@@ -968,7 +968,7 @@
     }
 }
 
-- (void)outlineView:(NSOutlineView *)ov typeSelectHelper:(SKTypeSelectHelper *)typeSelectHelper updateSearchString:(NSString *)searchString {
+- (void)outlineView:(NSOutlineView *)ov typeSelectHelperUpdateSearchString:(NSString *)searchString {
     if ([ov isEqual:rightSideController.noteOutlineView]) {
         if (searchString)
             [[statusBar rightField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Finding note: \"%@\"", @"Status message"), searchString]];
