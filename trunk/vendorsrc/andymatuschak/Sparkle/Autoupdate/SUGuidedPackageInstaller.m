@@ -89,4 +89,8 @@
 
 @end
 
+#else
+
+typedef int silence_iso_compiler_warning;
+
 #endif

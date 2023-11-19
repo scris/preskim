@@ -78,4 +78,8 @@ static NSString *SUOpenUtilityPath = @"/usr/bin/open";
 
 @end
 
+#else
+
+typedef int silence_iso_compiler_warning;
+
 #endif
