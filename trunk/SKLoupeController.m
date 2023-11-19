@@ -274,7 +274,7 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGFloat scale) {
     CGInterpolationQuality interpolation = [pdfView interpolationQuality] + 1;
     PDFDisplayBox box = [pdfView displayBox];
     NSRect scaledRect = NSMakeRect(mouseLoc.x + (NSMinX(magRect) - mouseLoc.x) / magnification, mouseLoc.y + (NSMinY(magRect) - mouseLoc.y) / magnification, NSWidth(magRect) / magnification, NSHeight(magRect) / magnification);
-    CGFloat backingScale = [pdfView backingScale];
+    CGFloat backingScale = [window backingScaleFactor];
     NSRange pageRange;
     if ([pdfView displaysRTL] && ([pdfView displayMode] & kPDFDisplayTwoUp)) {
         pageRange.location = [[pdfView pageForPoint:SKTopRightPoint(scaledRect) nearest:YES] pageIndex];
