@@ -410,4 +410,8 @@ static xar_file_t _xarAddFile(NSMutableDictionary<NSString *, NSValue *> *fileTa
 
 @end
 
+#else
+
+typedef int silence_iso_compiler_warning;
+
 #endif
