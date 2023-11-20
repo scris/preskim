@@ -40,8 +40,8 @@
 
 
 @interface SKNotesPanelController : NSWindowController <NSWindowDelegate>
-+ (id)sharedController;
-+ (BOOL)sharedControllerExists;
+@property (class, nonatomic, readonly) id sharedController;
+@property (class, nonatomic, readonly) BOOL sharedControllerExists;
 - (IBAction)addNote:(id)sender;
 @end
 

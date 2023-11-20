@@ -40,5 +40,5 @@
 
 
 @interface NSApplication (SKScriptMenu)
-- (NSMenu *)scriptMenu;
+@property (nonatomic, readonly) NSMenu *scriptMenu;
 @end

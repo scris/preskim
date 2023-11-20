@@ -41,23 +41,23 @@
 
 @interface NSCursor (SKExtensions)
 
-+ (NSCursor *)zoomInCursor;
-+ (NSCursor *)zoomOutCursor;
-+ (NSCursor *)resizeDiagonal45Cursor;
-+ (NSCursor *)resizeDiagonal135Cursor;
-+ (NSCursor *)cameraCursor;
-+ (NSCursor *)openHandBarCursor;
-+ (NSCursor *)closedHandBarCursor;
-+ (NSCursor *)textNoteCursor;
-+ (NSCursor *)anchoredNoteCursor;
-+ (NSCursor *)circleNoteCursor;
-+ (NSCursor *)squareNoteCursor;
-+ (NSCursor *)highlightNoteCursor;
-+ (NSCursor *)underlineNoteCursor;
-+ (NSCursor *)strikeOutNoteCursor;
-+ (NSCursor *)lineNoteCursor;
-+ (NSCursor *)inkNoteCursor;
-+ (NSCursor *)emptyCursor;
+@property (class, nonatomic, readonly) NSCursor *zoomInCursor;
+@property (class, nonatomic, readonly) NSCursor *zoomOutCursor;
+@property (class, nonatomic, readonly) NSCursor *resizeDiagonal45Cursor;
+@property (class, nonatomic, readonly) NSCursor *resizeDiagonal135Cursor;
+@property (class, nonatomic, readonly) NSCursor *cameraCursor;
+@property (class, nonatomic, readonly) NSCursor *openHandBarCursor;
+@property (class, nonatomic, readonly) NSCursor *closedHandBarCursor;
+@property (class, nonatomic, readonly) NSCursor *textNoteCursor;
+@property (class, nonatomic, readonly) NSCursor *anchoredNoteCursor;
+@property (class, nonatomic, readonly) NSCursor *circleNoteCursor;
+@property (class, nonatomic, readonly) NSCursor *squareNoteCursor;
+@property (class, nonatomic, readonly) NSCursor *highlightNoteCursor;
+@property (class, nonatomic, readonly) NSCursor *underlineNoteCursor;
+@property (class, nonatomic, readonly) NSCursor *strikeOutNoteCursor;
+@property (class, nonatomic, readonly) NSCursor *lineNoteCursor;
+@property (class, nonatomic, readonly) NSCursor *inkNoteCursor;
+@property (class, nonatomic, readonly) NSCursor *emptyCursor;
 
 + (NSCursor *)laserPointerCursorWithColor:(NSInteger)color;
 + (NSCursor *)safeLaserPointerCursorWithColor:(NSInteger)color;

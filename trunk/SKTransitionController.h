@@ -56,7 +56,7 @@
 @property (nonatomic, copy) NSArray *pageTransitions;
 @property (nonatomic) BOOL hasTransition;
 
-+ (NSArray *)transitionNames;
+@property (class, nonatomic, readonly) NSArray *transitionNames;
 
 + (NSString *)nameForStyle:(SKTransitionStyle)style;
 + (SKTransitionStyle)styleForName:(NSString *)name;

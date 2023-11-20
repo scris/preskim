@@ -61,7 +61,7 @@
 - (NSLayoutConstraint *)constraintWithFirstItem:(id)item firstAttribute:(NSLayoutAttribute)attribute;
 - (NSLayoutConstraint *)constraintWithSecondItem:(id)item secondAttribute:(NSLayoutAttribute)attribute;
 
-+ (BOOL)shouldShowSlideAnimation;
-+ (BOOL)shouldShowFadeAnimation;
+@property (class, nonatomic, readonly) BOOL shouldShowSlideAnimation;
+@property (class, nonatomic, readonly) BOOL shouldShowFadeAnimation;
 
 @end

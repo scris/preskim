@@ -44,6 +44,6 @@
 
 @property (nonatomic, retain) IBOutlet NSTextView *textView;
 
-+ (id)sharedReleaseNotesController;
+@property (class, nonatomic, readonly) id sharedReleaseNotesController;
 
 @end

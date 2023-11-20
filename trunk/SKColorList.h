@@ -45,6 +45,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @property (nonatomic, getter=isEditable) BOOL editable;
 
-+ (NSColorList *)favoriteColorList;
+@property (class, nonatomic, readonly) NSColorList *favoriteColorList;
 
 @end
