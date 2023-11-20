@@ -52,6 +52,7 @@
 #import "NSImage_SKExtensions.h"
 #import "NSResponder_SKExtensions.h"
 
+const NSPoint SKUnspecifiedPoint = (NSPoint){FLT_MAX, FLT_MAX};
 
 @interface PDFView (SKPrivatePageViewDeclarations)
 - (id)pageViewForPageAtIndex:(NSUInteger)index;
@@ -241,7 +242,9 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 
 - (void)goToPageAtIndex:(NSUInteger)pageIndex point:(NSPoint)point {
     PDFPage *page = [[self document] pageAtIndex:pageIndex];
-    if (@available(macOS 12.0, *)) {
+    if (NSEqualPoints(point, SKUnspecifiedPoint)) {
+        [self goToCurrentPage:page];
+    } else if (@available(macOS 12.0, *)) {
         NSScrollView *scrollView = [self scrollView];
         NSClipView *clipView = [scrollView contentView];
         if (NSLocationInRange(pageIndex, [self displayedPageIndexRange]) == NO)

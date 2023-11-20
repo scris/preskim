@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+extern const NSPoint SKUnspecifiedPoint;
 
 @interface PDFView (SKExtensions) <NSDraggingSource>
 
