@@ -1183,7 +1183,7 @@ static char SKMainWindowContentLayoutObservationContext;
             if ([pdfDocument isLocked] && ([self interactionMode] == SKNormalMode || [self interactionMode] == SKFullScreenMode)) {
                 [savedNormalSetup setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
             } else {
-                [pdfView goToPageAtIndex:pageIndex point:rotated ? point : SKUnspecifiedPoint];
+                [pdfView goToPageAtIndex:pageIndex point:rotated ? SKUnspecifiedPoint : point];
             }
         }
         if (secondaryPageIndex != NSNotFound) {
@@ -1191,7 +1191,7 @@ static char SKMainWindowContentLayoutObservationContext;
                 secondaryPageIndex = [pdfDocument pageCount] - 1;
                 secondaryPoint = SKUnspecifiedPoint;
             }
-            [secondaryPdfView goToPageAtIndex:secondaryPageIndex point:secondaryRotated ? secondaryPoint : SKUnspecifiedPoint];
+            [secondaryPdfView goToPageAtIndex:secondaryPageIndex point:secondaryRotated ? SKUnspecifiedPoint : secondaryPoint];
         }
         [pdfView resetHistory];
     }
