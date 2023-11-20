@@ -1085,7 +1085,7 @@ static char SKMainWindowContentLayoutObservationContext;
     PDFDocument *oldPdfDoc = [pdfView document];
     NSUInteger pageIndex = NSNotFound, secondaryPageIndex = NSNotFound;
     NSPoint point = NSZeroPoint, secondaryPoint = NSZeroPoint;
-    BOOL rotated = NO, secondaryRotated = NO;
+    BOOL rotated = NO;
     NSArray *snapshotDicts = nil;
     NSDictionary *openState = nil;
     
@@ -1106,8 +1106,13 @@ static char SKMainWindowContentLayoutObservationContext;
         // this is a revert
         // need to clean up data and actions, and remember settings to restore
         pageIndex = [pdfView currentPageIndexAndPoint:&point rotated:&rotated];
-        if (secondaryPdfView)
-            secondaryPageIndex = [secondaryPdfView currentPageIndexAndPoint:&secondaryPoint rotated:&secondaryRotated];
+        if (rotated)
+            point = SKUnspecifiedPoint;
+        if (secondaryPdfView) {
+            secondaryPageIndex = [secondaryPdfView currentPageIndexAndPoint:&secondaryPoint rotated:&rotated];
+            if (rotated)
+                secondaryPoint = SKUnspecifiedPoint;
+        }
         openState = [self expansionStateForOutline:[[pdfView document] outlineRoot]];
         
         [oldPdfDoc cancelFindString];
@@ -1183,7 +1188,7 @@ static char SKMainWindowContentLayoutObservationContext;
             if ([pdfDocument isLocked] && ([self interactionMode] == SKNormalMode || [self interactionMode] == SKFullScreenMode)) {
                 [savedNormalSetup setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
             } else {
-                [pdfView goToPageAtIndex:pageIndex point:rotated ? SKUnspecifiedPoint : point];
+                [pdfView goToPageAtIndex:pageIndex point:point];
             }
         }
         if (secondaryPageIndex != NSNotFound) {
@@ -1191,7 +1196,7 @@ static char SKMainWindowContentLayoutObservationContext;
                 secondaryPageIndex = [pdfDocument pageCount] - 1;
                 secondaryPoint = SKUnspecifiedPoint;
             }
-            [secondaryPdfView goToPageAtIndex:secondaryPageIndex point:secondaryRotated ? SKUnspecifiedPoint : secondaryPoint];
+            [secondaryPdfView goToPageAtIndex:secondaryPageIndex point:secondaryPoint];
         }
         [pdfView resetHistory];
     }
