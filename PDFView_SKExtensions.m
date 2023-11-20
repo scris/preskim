@@ -242,13 +242,14 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 - (void)goToPageAtIndex:(NSUInteger)pageIndex point:(NSPoint)point {
     PDFPage *page = [[self document] pageAtIndex:pageIndex];
     if (@available(macOS 12.0, *)) {
-        NSView *docView = [self documentView];
+        NSScrollView *scrollView = [self scrollView];
+        NSClipView *clipView = [scrollView contentView];
         if (NSLocationInRange(pageIndex, [self displayedPageIndexRange]) == NO)
             [self goToPage:page];
-        point = [self convertPoint:[self convertPoint:point fromPage:page] toView:docView];
-        if ([[[docView enclosingScrollView] contentView] isFlipped] == NO)
-            point.y -= [docView isFlipped] ? -NSHeight([docView visibleRect]) + [[docView enclosingScrollView] contentInsets].top : NSHeight([docView visibleRect]) - [[docView enclosingScrollView] contentInsets].top;
-        [docView scrollPoint:point];
+        point = [self convertPoint:[self convertPoint:point fromPage:page] toView:clipView];
+        if ([clipView isFlipped] == NO)
+            point.y -= NSHeight([clipView visibleRect]) - [self convertSize:NSMakeSize(0.0, [scrollView contentInsets].top) toView:clipView].height;
+        [clipView scrollToPoint:point];
     } else {
         PDFDestination *destination = [[PDFDestination alloc] initWithPage:page atPoint:point];
         [self goToDestination:destination];
