@@ -58,7 +58,7 @@
 @property (nonatomic, readonly) NSMenu *scriptMenu;
 @property (nonatomic) BOOL menuNeedsUpdate;
 
-+ (id)sharedController;
+@property (class, nonatomic, readonly) id sharedController;
 
 - (void)handleApplicationWillTerminateNotification:(NSNotification *)notification;
 - (NSArray *)directoryContentsAtURL:(NSURL *)url recursionDepth:(NSInteger)depth;

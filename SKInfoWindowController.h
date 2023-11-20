@@ -54,7 +54,7 @@
 @property (nonatomic, copy) NSDictionary *info;
 @property (nonatomic, readonly) NSArray *keys;
 
-+ (id)sharedInstance;
+@property (class, nonatomic, readonly) id sharedInstance;
 
 - (NSDictionary *)infoForDocument:(NSDocument *)doc;
 

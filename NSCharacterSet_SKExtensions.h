@@ -40,7 +40,7 @@
 
 
 @interface NSCharacterSet (SKExtensions)
-+ (id)nonWhitespaceAndNewlineCharacterSet;
-+ (id)URLBookmarkNameAllowedCharacterSet;
-+ (id)URLGenericAllowedCharacterSet;
+@property (class, nonatomic, readonly) NSCharacterSet *nonWhitespaceAndNewlineCharacterSet;
+@property (class, nonatomic, readonly) NSCharacterSet *URLBookmarkNameAllowedCharacterSet;
+@property (class, nonatomic, readonly) NSCharacterSet *URLGenericAllowedCharacterSet;
 @end

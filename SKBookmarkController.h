@@ -62,7 +62,7 @@
     BOOL needsBeginUpdates;
 }
 
-+ (id)sharedBookmarkController;
+@property (class, nonatomic, readonly) id sharedBookmarkController;
 
 @property (nonatomic, retain) IBOutlet SKOutlineView *outlineView;
 @property (nonatomic, retain) IBOutlet SKStatusBar *statusBar;

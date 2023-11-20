@@ -72,8 +72,8 @@ typedef NS_ENUM(NSUInteger, SKLineChangeAction) {
 @property (nonatomic) PDFLineStyle startLineStyle, endLineStyle;
 @property (nonatomic, readonly) SKLineChangeAction currentLineChangeAction;
 
-+ (id)sharedLineInspector;
-+ (BOOL)sharedLineInspectorExists;
+@property (class, nonatomic, readonly) id sharedLineInspector;
+@property (class, nonatomic, readonly) BOOL sharedLineInspectorExists;
 
 - (void)setAnnotationStyle:(PDFAnnotation *)annotation;
 

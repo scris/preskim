@@ -44,7 +44,7 @@
     NSMutableDictionary *templateFileNames;
 }
 
-+ (id)sharedManager;
+@property (class, nonatomic, readonly) id sharedManager;
 
 @property (nonatomic, readonly) NSArray *customTemplateTypes;
 

@@ -41,14 +41,14 @@
 
 @implementation NSCharacterSet (SKExtensions)
 
-+ (id)nonWhitespaceAndNewlineCharacterSet {
++ (NSCharacterSet *)nonWhitespaceAndNewlineCharacterSet {
     static NSCharacterSet *nonWhitespaceAndNewlineCharacterSet = nil;
     if (nonWhitespaceAndNewlineCharacterSet == nil)
         nonWhitespaceAndNewlineCharacterSet = [[[NSCharacterSet whitespaceAndNewlineCharacterSet] invertedSet] copy];
     return nonWhitespaceAndNewlineCharacterSet;
 }
 
-+ (id)URLBookmarkNameAllowedCharacterSet {
++ (NSCharacterSet *)URLBookmarkNameAllowedCharacterSet {
     static NSCharacterSet *URLBookmarkNameAllowedCharacterSet = nil;
     if (URLBookmarkNameAllowedCharacterSet == nil) {
         NSMutableCharacterSet *tmpSet = [[self URLPathAllowedCharacterSet] mutableCopy];
@@ -59,7 +59,7 @@
     return URLBookmarkNameAllowedCharacterSet;
 }
 
-+ (id)URLGenericAllowedCharacterSet {
++ (NSCharacterSet *)URLGenericAllowedCharacterSet {
     static NSCharacterSet *URLGenericAllowedCharacterSet = nil;
     if (URLGenericAllowedCharacterSet == nil) {
         NSMutableCharacterSet *tmpSet = [[self URLPathAllowedCharacterSet] mutableCopy];

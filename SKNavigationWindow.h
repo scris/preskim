@@ -74,7 +74,7 @@
 @interface SKNavigationToolTipWindow : NSPanel {
     NSView *view;
 }
-+ (id)sharedToolTipWindow;
+@property (class, nonatomic, readonly) id sharedToolTipWindow;
 - (void)showToolTip:(NSString *)toolTip forView:(NSView *)aView;
 @property (nonatomic, readonly) NSView *view;
 @end
