@@ -85,7 +85,7 @@
     
 #else
     
-    return [super writeToURL:absoluteURL ofType:typeName error:outError];
+    return [super writeToURL:absoluteURL ofType:docType error:outError];
     
 #endif
     
@@ -105,9 +105,10 @@
     NSArray *array = nil;
     NSError *error = nil;
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
-    NSFileManager *fm = [NSFileManager defaultManager];
     
 #if defined(FrameworkSample)
+    
+    NSFileManager *fm = [NSFileManager defaultManager];
     
     if ([ws type:docType conformsToType:SKNPDFDocumentType]) {
         array = [fm readSkimNotesFromExtendedAttributesAtURL:absoluteURL error:&error];
@@ -134,6 +135,9 @@
     }
 
 #elif defined(ToolSample)
+    
+    NSData *data = nil;
+    NSFileManager *fm = [NSFileManager defaultManager];
     
     if ([ws type:docType conformsToType:SKNPDFDocumentType]) {
         NSString *path = [absoluteURL path];
@@ -192,7 +196,7 @@
             @try { array = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
             @catch (id e) {}
             if (array == nil)
-                array = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL errorDescription:NULL];
+                array = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
         } else {
             array = [NSArray array];
         }
