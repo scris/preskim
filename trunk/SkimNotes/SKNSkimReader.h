@@ -41,7 +41,10 @@
 
 @interface SKNSkimReader : NSObject {
     NSString *agentIdentifier;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSConnection *connection;
+#pragma clang diagnostic pop
     id agent;
 }
 

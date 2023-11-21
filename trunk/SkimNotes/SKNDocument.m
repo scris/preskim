@@ -103,7 +103,6 @@
 
 - (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)docType error:(NSError **)outError {
     NSArray *array = nil;
-    NSData *data = nil;
     NSError *error = nil;
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     NSFileManager *fm = [NSFileManager defaultManager];
@@ -119,6 +118,8 @@
     }
     
 #elif defined(AgentSample)
+    
+    NSData *data = nil;
     
     if ([ws type:docType conformsToType:SKNPDFDocumentType] ||
         [ws type:docType conformsToType:SKNPDFBundleDocumentType] ||
