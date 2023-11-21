@@ -79,8 +79,8 @@
 - (void)setAgentIdentifier:(NSString *)identifier {
     NSAssert(connection == nil, @"agentIdentifier must be set before connecting");
     if (connection == nil && agentIdentifier != identifier) {
-        [identifier release];
-        identifier = [agentIdentifier retain];
+        [agentIdentifier release];
+        agentIdentifier = [identifier retain];
     }
 }
 
