@@ -210,7 +210,7 @@
 - (NSString *)textNotesAtURL:(NSURL *)fileURL {
     __block NSString *string = nil;
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:YES])
-        [agent readTextNotesAtURL:fileURL reply:^(NSString *s){ string = [s retain]; }];
+        [agent readTextNotesAtURL:fileURL reply:^(NSString *s){ string = [[s retain] autorelease]; }];
     return string;
 }
 
