@@ -46,7 +46,7 @@
     BOOL synchronous;
 }
 
-+ (id)sharedReader;
+@property (class, nonatomic, readonly) id sharedReader;
 
 // this should only be set before any of the following calls is made
 @property (nonatomic, retain) NSString *agentIdentifier;

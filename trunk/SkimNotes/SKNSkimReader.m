@@ -118,7 +118,7 @@
         
         NSTask *task = [[NSTask alloc] init];
         [task setLaunchPath:launchPath];
-        [task setArguments:[NSArray arrayWithObjects:@"agent", [self agentIdentifier], nil]];
+        [task setArguments:@[@"agent", [self agentIdentifier]]];
         
         // task will print the identifier to standard output; we don't care about it, since we specified it
         [task setStandardOutput:[NSFileHandle fileHandleWithNullDevice]];
