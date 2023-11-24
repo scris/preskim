@@ -111,9 +111,9 @@ static char *protocolStr = "@protocol SKNAgentListenerProtocol\n"
                            "@end";
 
 static char *xpcProtocolStr = "@protocol SKNAgentListenerProtocol\n"
-                              "- (void)SkimNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply;\n"
-                              "- (void)RTFNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply;\n"
-                              "- (void)textNotesAtPath:(NSString *)aFile encoding:(NSStringEncoding)encoding reply:(void (^)(NSData *))reply;\n"
+                              "- (void)readSkimNotesAttURL:(NSURL *)aURL reply:(void (^)(NSData *))reply;\n"
+                              "- (void)readRTFNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply;\n"
+                              "- (void)readTextNotesAtURL:(NSURL *)aURL reply:(void (^)(NSString *))reply;\n"
                              "@end";
 
 #define ACTION_GET_STRING       @"get"

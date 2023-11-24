@@ -37,6 +37,7 @@
 
 #import "SKNAgentListener.h"
 #import "SKNAgentListenerProtocol.h"
+#import "SKNXPCAgentListenerProtocol.h"
 #import "NSFileManager_SKNToolExtensions.h"
 
 
@@ -242,7 +243,7 @@
 
 #pragma mark SKNXPCAgentListenerProtocol
 
-- (void)SkimNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply
+- (void)readSkimNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply
 {
     NSError *error = nil;
     NSData *data = [[NSFileManager defaultManager] SkimNotesAtPath:aFile error:&error];
@@ -251,7 +252,7 @@
     reply(data);
 }
 
-- (void)RTFNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply
+- (void)readRTFNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply
 {
     NSError *error = nil;
     NSData *data = [[NSFileManager defaultManager] SkimRTFNotesAtPath:aFile error:&error];
@@ -260,14 +261,13 @@
     reply(data);
 }
 
-- (void)textNotesAtPath:(NSString *)aFile encoding:(NSStringEncoding)encoding reply:(void (^)(NSData *))reply
+- (void)readTextNotesAtPath:(NSString *)aFile reply:(void (^)(NSString *))reply
 {
     NSError *error = nil;
     NSString *string = [[NSFileManager defaultManager] SkimTextNotesAtPath:aFile error:&error];
     if (nil == string)
         fprintf(stderr, "skimnotes agent pid %d: error getting text notes (%s)\n", getpid(), [[error description] UTF8String]);
-    // Returning the string directly can fail under some conditions.  For some strings with corrupt copy-paste characters (typical for notes), -[NSString canBeConvertedToEncoding:NSUTF8StringEncoding] returns YES but the actual conversion fails.  A result seems to be that encoding the string also fails, which causes the DO client to get a timeout.  Returning NSUnicodeStringEncoding data seems to work in those cases (and is safe since we're not going over the wire between big/little-endian systems).
-    reply([string dataUsingEncoding:encoding]);
+    reply(string);
 }
 
 @end
