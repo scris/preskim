@@ -64,8 +64,7 @@
 
 @implementation SKNAgentListener
 
-- (id)initWithServerName:(NSString *)serverName xpc:(BOOL)isXPC;
-{
+- (id)initWithServerName:(NSString *)serverName xpc:(BOOL)isXPC {
     self = [super init];
     if (self) {
         // user can pass nil, in which case we generate a server name to be read from standard output
@@ -100,8 +99,7 @@
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self destroyConnection];
 #if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_8
@@ -116,8 +114,7 @@
 
 @implementation SKNAgentListener (SKNConnection)
 
-- (BOOL)startConnectionWithServerName:(NSString *)serverName
-{
+- (BOOL)startConnectionWithServerName:(NSString *)serverName {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
@@ -135,8 +132,7 @@
     return YES;
 }
 
-- (void)destroyConnection;
-{
+- (void)destroyConnection {
     [connection registerName:nil];
     [[connection receivePort] invalidate];
     [[connection sendPort] invalidate];
@@ -145,8 +141,7 @@
     connection = nil;
 }
 
-- (void)portDied:(NSNotification *)notification
-{
+- (void)portDied:(NSNotification *)notification {
     [self destroyConnection];
     fprintf(stderr, "skimnotes agent pid %d dying because port %s is invalid\n", getpid(), [[[notification object] description] UTF8String]);
     exit(0);
@@ -155,9 +150,8 @@
 // first app to connect will be the owner of this instance of the program; when the connection dies, so do we
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-- (BOOL)makeNewConnection:(NSConnection *)newConnection sender:(NSConnection *)parentConnection
+- (BOOL)makeNewConnection:(NSConnection *)newConnection sender:(NSConnection *)parentConnection {
 #pragma clang diagnostic pop
-{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(portDied:) name:NSPortDidBecomeInvalidNotification object:[newConnection sendPort]];
     fprintf(stderr, "skimnotes agent pid %d connection registered\n", getpid());
     return YES;
@@ -165,8 +159,7 @@
 
 #pragma mark SKNAgentListenerProtocol
 
-- (bycopy NSData *)SkimNotesAtPath:(in bycopy NSString *)aFile;
-{
+- (bycopy NSData *)SkimNotesAtPath:(in bycopy NSString *)aFile {
     NSError *error = nil;
     NSData *data = [[NSFileManager defaultManager] SkimNotesAtPath:aFile error:&error];
     if (nil == data)
@@ -174,8 +167,7 @@
     return data;
 }
 
-- (bycopy NSData *)RTFNotesAtPath:(in bycopy NSString *)aFile;
-{
+- (bycopy NSData *)RTFNotesAtPath:(in bycopy NSString *)aFile {
     NSError *error = nil;
     NSData *data = [[NSFileManager defaultManager] SkimRTFNotesAtPath:aFile error:&error];
     if (nil == data)
@@ -183,8 +175,7 @@
     return data;
 }
 
-- (bycopy NSData *)textNotesAtPath:(in bycopy NSString *)aFile encoding:(NSStringEncoding)encoding;
-{
+- (bycopy NSData *)textNotesAtPath:(in bycopy NSString *)aFile encoding:(NSStringEncoding)encoding {
     NSError *error = nil;
     NSString *string = [[NSFileManager defaultManager] SkimTextNotesAtPath:aFile error:&error];
     if (nil == string)
@@ -200,8 +191,7 @@
 #if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_8
 @implementation SKNAgentListener (SKNXPCConnection)
 
-- (BOOL)startXPCListenerWithServerName:(NSString *)serverName
-{
+- (BOOL)startXPCListenerWithServerName:(NSString *)serverName {
     xpcListener = [[NSXPCListener alloc] initWithMachServiceName:serverName];
     [xpcListener setDelegate:self];
     [xpcListener resume];
@@ -209,8 +199,7 @@
     return YES;
 }
 
-- (void)destroyXPCConnection
-{
+- (void)destroyXPCConnection {
     [xpcConnection invalidate];
     [xpcConnection release];
     xpcConnection = nil;
@@ -221,8 +210,7 @@
 }
 
 // first app to connect will be the owner of this instance of the program; when the connection dies, so do we
-- (BOOL)listener:(NSXPCListener *)listener shouldAcceptNewConnection:(NSXPCConnection *)newConnection
-{
+- (BOOL)listener:(NSXPCListener *)listener shouldAcceptNewConnection:(NSXPCConnection *)newConnection {
     if (xpcConnection) {
         [newConnection invalidate];
         return NO;
@@ -243,8 +231,7 @@
 
 #pragma mark SKNXPCAgentListenerProtocol
 
-- (void)readSkimNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply
-{
+- (void)readSkimNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply {
     NSError *error = nil;
     NSData *data = [[NSFileManager defaultManager] SkimNotesAtPath:aFile error:&error];
     if (nil == data)
@@ -252,8 +239,7 @@
     reply(data);
 }
 
-- (void)readRTFNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply
-{
+- (void)readRTFNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply {
     NSError *error = nil;
     NSData *data = [[NSFileManager defaultManager] SkimRTFNotesAtPath:aFile error:&error];
     if (nil == data)
@@ -261,8 +247,7 @@
     reply(data);
 }
 
-- (void)readTextNotesAtPath:(NSString *)aFile reply:(void (^)(NSString *))reply
-{
+- (void)readTextNotesAtPath:(NSString *)aFile reply:(void (^)(NSString *))reply {
     NSError *error = nil;
     NSString *string = [[NSFileManager defaultManager] SkimTextNotesAtPath:aFile error:&error];
     if (nil == string)
