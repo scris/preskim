@@ -38,15 +38,18 @@
 #import <Foundation/Foundation.h>
 
 
+@interface SKNAgentListener : NSObject
+{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-@interface SKNAgentListener : NSObject <NSConnectionDelegate>
-{
     NSConnection *connection;
-}
 #pragma clang diagnostic pop
+#if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_8
+    NSXPCListener *xpcListener;
+    NSXPCConnection *xpcConnection;
+#endif
+}
 
-- (id)initWithServerName:(NSString *)serverName;
-- (void)destroyConnection;
+- (id)initWithServerName:(NSString *)serverName xpc:(BOOL)isXPC;
 
 @end
