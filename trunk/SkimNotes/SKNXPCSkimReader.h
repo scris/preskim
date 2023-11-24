@@ -1,11 +1,11 @@
 //
-//  SKNSkimReader.h
-//  SkimNotes
+//  SKNXPCSkimReader.h
+//  SkimNotesTest
 //
-//  Created by Adam Maxwell on 04/09/07.
+//  Created by Christiaan Hofman on 24/11/2023.
 /*
- This software is Copyright (c) 2007-2023
- Adam Maxwell. All rights reserved.
+ This software is Copyright (c) 2023
+ Christiaan Hofman. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions
@@ -39,22 +39,28 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface SKNSkimReader : NSObject {
+@interface SKNXPCSkimReader : NSObject {
     NSString *agentIdentifier;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    NSConnection *connection;
-#pragma clang diagnostic pop
+    NSXPCConnection *connection;
     id agent;
+    BOOL synchronous;
 }
 
-@property (class, nonatomic, readonly) id sharedReader;
++ (id)sharedReader;
 
 // this should only be set before any of the following calls is made
 @property (nonatomic, retain) NSString *agentIdentifier;
 
+// should use either the synchronous or the asynchronous methods, not both
+
+// synchronous retrieval
 - (NSData *)SkimNotesAtURL:(NSURL *)fileURL;
 - (NSData *)RTFNotesAtURL:(NSURL *)fileURL;
 - (NSString *)textNotesAtURL:(NSURL *)fileURL;
+
+// asynchronous retrieval
+- (void)readSkimNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSData *))reply;
+- (void)readRTFNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSData *))reply;
+- (void)readTextNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSString *))reply;
 
 @end

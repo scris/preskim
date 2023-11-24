@@ -120,6 +120,7 @@
 		CEDB9B040E2EA0200057FD09 /* skimnotes in Resources */ = {isa = PBXBuildFile; fileRef = CEBA2B550E0566B00000B2E6 /* skimnotes */; };
 		CEDB9B060E2EA0450057FD09 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		CEDB9B210E2EA2F30057FD09 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB9B200E2EA2F30057FD09 /* main.m */; };
+		CEED30562B10B02C003F138F /* SKNXPCSkimReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CEED30552B10B02C003F138F /* SKNXPCSkimReader.m */; };
 		CEEEEFFE2996564500A0D98F /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD92988180700594EC0 /* Quartz.framework */; };
 		CEEEEFFF2996564F00A0D98F /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD92988180700594EC0 /* Quartz.framework */; };
 		CEEEF0012996568E00A0D98F /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD92988180700594EC0 /* Quartz.framework */; };
@@ -269,6 +270,8 @@
 		CEDB9B0D0E2EA1380057FD09 /* SkimNotes-App.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SkimNotes-App.xcconfig"; sourceTree = "<group>"; };
 		CEDB9B200E2EA2F30057FD09 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CEED30532B10AE38003F138F /* SKNXPCAgentListenerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKNXPCAgentListenerProtocol.h; sourceTree = "<group>"; };
+		CEED30542B10B02C003F138F /* SKNXPCSkimReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKNXPCSkimReader.h; sourceTree = "<group>"; };
+		CEED30552B10B02C003F138F /* SKNXPCSkimReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKNXPCSkimReader.m; sourceTree = "<group>"; };
 		CEF57FCF2988170B00594EC0 /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
 		CEF57FD12988171C00594EC0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CEF57FD32988172600594EC0 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -520,6 +523,8 @@
 				CEDB9AC40E2E9D760057FD09 /* SKNDocument.m */,
 				CEDB9AC50E2E9D760057FD09 /* SKNSkimReader.h */,
 				CEDB9AC60E2E9D760057FD09 /* SKNSkimReader.m */,
+				CEED30542B10B02C003F138F /* SKNXPCSkimReader.h */,
+				CEED30552B10B02C003F138F /* SKNXPCSkimReader.m */,
 			);
 			name = "Test App Classes";
 			sourceTree = "<group>";
@@ -937,6 +942,7 @@
 				CEDB9AF40E2E9F250057FD09 /* SKNDocument.m in Sources */,
 				CEDB9AF50E2E9F260057FD09 /* SKNSkimReader.m in Sources */,
 				CEDB9B210E2EA2F30057FD09 /* main.m in Sources */,
+				CEED30562B10B02C003F138F /* SKNXPCSkimReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

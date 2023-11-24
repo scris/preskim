@@ -39,10 +39,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-// Uncomment one of these three #defines
+// Uncomment one of these four #defines
 
 #define FrameworkSample
 //#define AgentSample
+//#define XPCAgentSample
 //#define ToolSample
 
 @interface SKNDocument : NSDocument {
