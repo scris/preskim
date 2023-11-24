@@ -43,6 +43,8 @@
 
 @implementation SKNSkimReader
 
+@synthesize agentIdentifier;
+
 + (id)sharedReader {
     static id sharedReader = nil;
     if (nil == sharedReader)
@@ -70,10 +72,6 @@
     [self destroyConnection];
     [agentIdentifier release];
     [super dealloc];
-}
-
-- (NSString *)agentIdentifier {
-    return agentIdentifier;
 }
 
 - (void)setAgentIdentifier:(NSString *)identifier {

@@ -39,6 +39,7 @@
 #import "SKNDocument.h"
 #import <SkimNotesBase/SkimNotesBase.h>
 #import "SKNSkimReader.h"
+#import "SKNXPCSkimReader.h"
 
 #define SKNPDFDocumentType @"com.adobe.pdf"
 #define SKNPDFBundleDocumentType @"net.sourceforge.skim-app.pdfd"
@@ -53,11 +54,15 @@
 + (void)initialize {
     [NSValueTransformer setValueTransformer:[[[SKNPlusOneTransformer alloc] init] autorelease] forName:@"SKNPlusOne"];
 }
- 
+
++ (BOOL)autosavesInPlace {
+    return NO;
+}
+
 - (id)init {
     self = [super init];
     if (self) {
-        notes = [[NSArray alloc] init];    
+        notes = [[NSArray alloc] init];
     }
     return self;
 }
@@ -126,6 +131,22 @@
         [ws type:docType conformsToType:SKNPDFBundleDocumentType] ||
         [ws type:docType conformsToType:SKNSkimNotesDocumentType]) {
         data = [[SKNSkimReader sharedReader] SkimNotesAtURL:absoluteURL];
+        if (data) {
+            @try { array = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
+            @catch (id e) {}
+            if (array == nil)
+                array = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
+        }
+    }
+
+#elif defined(XPCAgentSample)
+    
+    NSData *data = nil;
+    
+    if ([ws type:docType conformsToType:SKNPDFDocumentType] ||
+        [ws type:docType conformsToType:SKNPDFBundleDocumentType] ||
+        [ws type:docType conformsToType:SKNSkimNotesDocumentType]) {
+        data = [[SKNXPCSkimReader sharedReader] SkimNotesAtURL:absoluteURL];
         if (data) {
             @try { array = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
             @catch (id e) {}
