@@ -49,8 +49,8 @@ static char *usageStr = "Usage:\n"
                         " skimnotes convert [-s|-n] IN_PDF_FILE [OUT_PDF_FILE]\n"
                         " skimnotes format archive|plist|text|rtf IN_SKIM_FILE|- [OUT_FILE|-]\n"
                         " skimnotes offset DX DY IN_SKIM_FILE|- [OUT_SKIM_FILE|-]\n"
-                        " skimnotes agent [SERVER_NAME]\n"
-                        " skimnotes protocol\n"
+                        " skimnotes agent [-xpc] [SERVER_NAME]\n"
+                        " skimnotes protocol [-xpc]\n"
                         " skimnotes help [VERB]\n"
                         " skimnotes version";
 static char *versionStr = "SkimNotes command-line client, version 2.9.3";
@@ -88,18 +88,15 @@ static char *offsetHelpStr = "skimnotes offsets: offsets all notes in a SKIM fil
                              "Offsets all notes in IN_SKIM_FILE or standard input by an amount (DX, DY) and writes the result to OUT_SKIM_FILE or standard output.\n"
                              "Writes back to IN_SKIM_FILE (or standard output) if OUT_SKIM_FILE is not provided.";
 static char *agentHelpStr = "skimnotes agent: run the Skim Notes agent\n"
-                            "Usage: skimnotes agent [SERVER_NAME]\n\n"
+                            "Usage: skimnotes agent [-xpc] [SERVER_NAME]\n\n"
                             "Runs a Skim Notes agent server with server name SERVER_NAME, to which a Cocoa application can connect using DO.\n"
+                            "Runs a XPC based agent when the -xpc option is provided.\n"
                             "When SERVER_NAME is not provided, a unique name is generated and returned on standard output.\n"
-                            "The DO server conforms to the following formal protocol.\n\n"
-                            "@protocol SKNAgentListenerProtocol\n"
-                            "- (bycopy NSData *)SkimNotesAtPath:(in bycopy NSString *)aFile;\n"
-                            "- (bycopy NSData *)RTFNotesAtPath:(in bycopy NSString *)aFile;\n"
-                            "- (bycopy NSData *)textNotesAtPath:(in bycopy NSString *)aFile encoding:(NSStringEncoding)encoding;\n"
-                            "@end";
+                            "The DO server conforms to the formal protocol returned by the protocol action.";
 static char *protocolHelpStr = "skimnotes protocol: write the DO server protocol to standard output\n"
-                               "Usage: skimnotes protocol\n\n"
-                               "Write the DO server protocol for the agent to standard output.";
+                               "Usage: skimnotes protocol [-xpc]\n\n"
+                               "Write the DO server protocol for the agent to standard output."
+                               "Returns a protocol for a XPC connection when the -xpc option is provided.\n";
 static char *helpHelpStr = "skimnotes help: get help on the skimnotes tool\n"
                            "Usage: skimnotes help [VERB]\n\n"
                            "Get help on the verb VERB.";
@@ -113,6 +110,12 @@ static char *protocolStr = "@protocol SKNAgentListenerProtocol\n"
                            "- (bycopy NSData *)textNotesAtPath:(in bycopy NSString *)aFile encoding:(NSStringEncoding)encoding;\n"
                            "@end";
 
+static char *xpcProtocolStr = "@protocol SKNAgentListenerProtocol\n"
+                              "- (void)SkimNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply;\n"
+                              "- (void)RTFNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply;\n"
+                              "- (void)textNotesAtPath:(NSString *)aFile encoding:(NSStringEncoding)encoding reply:(void (^)(NSData *))reply;\n"
+                             "@end";
+
 #define ACTION_GET_STRING       @"get"
 #define ACTION_SET_STRING       @"set"
 #define ACTION_REMOVE_STRING    @"remove"
@@ -124,6 +127,8 @@ static char *protocolStr = "@protocol SKNAgentListenerProtocol\n"
 #define ACTION_PROTOCOL_STRING  @"protocol"
 #define ACTION_VERSION_STRING   @"version"
 #define ACTION_HELP_STRING      @"help"
+
+#define XPC_OPTION_STRING   @"-xpc"
 
 #define FORMAT_OPTION_STRING        @"-format"
 #define SYNCABLE_OPTION_STRING      @"-s"
@@ -248,8 +253,10 @@ int main (int argc, const char * argv[]) {
         
     } else if (action == SKNActionAgent) {
         
-        NSString *serverName = [args count] > 2 ? [args lastObject] : nil;
-        SKNAgentListener *listener = [[SKNAgentListener alloc] initWithServerName:serverName];
+        BOOL isXPC = ([args count] > 2 && [[args objectAtIndex:2] isEqualToString:XPC_OPTION_STRING]);
+        NSString *serverName = [args count] > (isXPC ? 3 : 2) ? [args lastObject] : nil;
+        
+        SKNAgentListener *listener = [[SKNAgentListener alloc] initWithServerName:serverName xpc:isXPC];
         
         NSRunLoop *rl = [NSRunLoop currentRunLoop];
         BOOL didRun;
@@ -266,7 +273,11 @@ int main (int argc, const char * argv[]) {
         
     } else if (action == SKNActionProtocol) {
         
-        WRITE_OUT(protocolStr);
+        if ([args count] > 2 && [[args objectAtIndex:2] isEqualToString:XPC_OPTION_STRING]) {
+            WRITE_OUT(xpcProtocolStr);
+        } else {
+            WRITE_OUT(protocolStr);
+        }
         
     } else if (action == SKNActionHelp) {
         

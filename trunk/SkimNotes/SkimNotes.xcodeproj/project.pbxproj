@@ -268,6 +268,7 @@
 		CEDB9AFE0E2E9F8A0057FD09 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		CEDB9B0D0E2EA1380057FD09 /* SkimNotes-App.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SkimNotes-App.xcconfig"; sourceTree = "<group>"; };
 		CEDB9B200E2EA2F30057FD09 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CEED30532B10AE38003F138F /* SKNXPCAgentListenerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKNXPCAgentListenerProtocol.h; sourceTree = "<group>"; };
 		CEF57FCF2988170B00594EC0 /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
 		CEF57FD12988171C00594EC0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CEF57FD32988172600594EC0 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -489,6 +490,7 @@
 				CEBA2B5A0E0566DF0000B2E6 /* SKNAgentListener.h */,
 				CEBA2B5B0E0566DF0000B2E6 /* SKNAgentListener.m */,
 				CEBA2B5C0E0566DF0000B2E6 /* SKNAgentListenerProtocol.h */,
+				CEED30532B10AE38003F138F /* SKNXPCAgentListenerProtocol.h */,
 			);
 			name = "SkimNotes Tool Classes";
 			sourceTree = "<group>";

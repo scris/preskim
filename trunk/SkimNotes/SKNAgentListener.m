@@ -39,33 +39,62 @@
 #import "SKNAgentListenerProtocol.h"
 #import "NSFileManager_SKNToolExtensions.h"
 
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+@interface SKNAgentListener (SKNConnection) <NSConnectionDelegate>
+#pragma clang diagnostic pop
+- (BOOL)startConnectionWithServerName:(NSString *)serverName;
+- (void)destroyConnection;
+@end
+
+#pragma mark -
+
+#if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_8
+@interface SKNAgentListener (SKNXPCConnection) <NSXPCListenerDelegate>
+- (BOOL)startXPCListenerWithServerName:(NSString *)serverName;
+- (void)destroyXPCConnection;
+@end
+#else
+#define NSAppKitVersionNumber10_8 1187
+#endif
+
+#pragma mark -
+
 @implementation SKNAgentListener
 
-- (id)initWithServerName:(NSString *)serverName;
+- (id)initWithServerName:(NSString *)serverName xpc:(BOOL)isXPC;
 {
     self = [super init];
     if (self) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
-#pragma clang diagnostic pop
-        NSProtocolChecker *checker = [NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(SKNAgentListenerProtocol)];
-        [connection setRootObject:checker];
-        [connection setDelegate:self];
-        
         // user can pass nil, in which case we generate a server name to be read from standard output
-        if (nil == serverName)
-            serverName = [[NSProcessInfo processInfo] globallyUniqueString];
-
-        if ([connection registerName:serverName] == NO) {
-            fprintf(stderr, "skimnotes agent pid %d: unable to register connection name %s; another process must be running\n", getpid(), [serverName UTF8String]);
-            [self destroyConnection];
+        if (nil == serverName) {
+            if (isXPC)
+                serverName = [NSString stringWithFormat:@"net.sourceforge.skim-app.skimnotes-%@", [[NSProcessInfo processInfo] globallyUniqueString]];
+            else
+                serverName = [[NSProcessInfo processInfo] globallyUniqueString];
+        }
+        
+        BOOL success = NO;
+        if (isXPC) {
+#if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_8
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_8
+            if (floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_8)
+#endif
+            success = [self startXPCListenerWithServerName:serverName];
+#endif
+        } else {
+            success = [self startConnectionWithServerName:serverName];
+        }
+        
+        if (success) {
+            NSFileHandle *fh = [NSFileHandle fileHandleWithStandardOutput];
+            [fh writeData:[serverName dataUsingEncoding:NSUTF8StringEncoding]];
+            [fh closeFile];
+        } else {
             [self release];
             self = nil;
         }
-        NSFileHandle *fh = [NSFileHandle fileHandleWithStandardOutput];
-        [fh writeData:[serverName dataUsingEncoding:NSUTF8StringEncoding]];
-        [fh closeFile];
     }
     return self;
 }
@@ -74,7 +103,35 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self destroyConnection];
+#if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_8
+    [self destroyXPCConnection];
+#endif
     [super dealloc];
+}
+
+@end
+
+#pragma mark -
+
+@implementation SKNAgentListener (SKNConnection)
+
+- (BOOL)startConnectionWithServerName:(NSString *)serverName
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
+#pragma clang diagnostic pop
+    NSProtocolChecker *checker = [NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(SKNAgentListenerProtocol)];
+    [connection setRootObject:checker];
+    [connection setDelegate:self];
+    
+    if ([connection registerName:serverName] == NO) {
+        fprintf(stderr, "skimnotes agent pid %d: unable to register connection name %s; another process must be running\n", getpid(), [serverName UTF8String]);
+        [self destroyConnection];
+        return NO;
+    }
+    
+    return YES;
 }
 
 - (void)destroyConnection;
@@ -136,3 +193,82 @@
 }
 
 @end
+
+#pragma mark -
+
+#if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_8
+@implementation SKNAgentListener (SKNXPCConnection)
+
+- (BOOL)startXPCListenerWithServerName:(NSString *)serverName
+{
+    xpcListener = [[NSXPCListener alloc] initWithMachServiceName:serverName];
+    [xpcListener setDelegate:self];
+    [xpcListener resume];
+    
+    return YES;
+}
+
+- (void)destroyXPCConnection
+{
+    [xpcConnection invalidate];
+    [xpcConnection release];
+    xpcConnection = nil;
+    
+    [xpcListener invalidate];
+    [xpcListener release];
+    xpcListener = nil;
+}
+
+// first app to connect will be the owner of this instance of the program; when the connection dies, so do we
+- (BOOL)listener:(NSXPCListener *)listener shouldAcceptNewConnection:(NSXPCConnection *)newConnection
+{
+    if (xpcConnection) {
+        [newConnection invalidate];
+        return NO;
+    }
+    
+    [newConnection setExportedInterface:[NSXPCInterface interfaceWithProtocol:@protocol(SKNXPCAgentListenerProtocol)]];
+    NSString *description = [newConnection description];
+    [newConnection setInvalidationHandler:^{
+        [self destroyXPCConnection];
+        fprintf(stderr, "skimnotes agent pid %d dying because port %s is invalid\n", getpid(), [description UTF8String]);
+        exit(0);
+    }];
+    xpcConnection = [newConnection retain];
+    [xpcConnection resume];
+    
+    return YES;
+}
+
+#pragma mark SKNXPCAgentListenerProtocol
+
+- (void)SkimNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply
+{
+    NSError *error = nil;
+    NSData *data = [[NSFileManager defaultManager] SkimNotesAtPath:aFile error:&error];
+    if (nil == data)
+        fprintf(stderr, "skimnotes agent pid %d: error getting Skim notes (%s)\n", getpid(), [[error description] UTF8String]);
+    reply(data);
+}
+
+- (void)RTFNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply
+{
+    NSError *error = nil;
+    NSData *data = [[NSFileManager defaultManager] SkimRTFNotesAtPath:aFile error:&error];
+    if (nil == data)
+        fprintf(stderr, "skimnotes agent pid %d: error getting RTF notes (%s)\n", getpid(), [[error description] UTF8String]);
+    reply(data);
+}
+
+- (void)textNotesAtPath:(NSString *)aFile encoding:(NSStringEncoding)encoding reply:(void (^)(NSData *))reply
+{
+    NSError *error = nil;
+    NSString *string = [[NSFileManager defaultManager] SkimTextNotesAtPath:aFile error:&error];
+    if (nil == string)
+        fprintf(stderr, "skimnotes agent pid %d: error getting text notes (%s)\n", getpid(), [[error description] UTF8String]);
+    // Returning the string directly can fail under some conditions.  For some strings with corrupt copy-paste characters (typical for notes), -[NSString canBeConvertedToEncoding:NSUTF8StringEncoding] returns YES but the actual conversion fails.  A result seems to be that encoding the string also fails, which causes the DO client to get a timeout.  Returning NSUnicodeStringEncoding data seems to work in those cases (and is safe since we're not going over the wire between big/little-endian systems).
+    reply([string dataUsingEncoding:encoding]);
+}
+
+@end
+#endif
