@@ -38,8 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @protocol SKNXPCAgentListenerProtocol
 
-- (void)SkimNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply;
-- (void)RTFNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply;
-- (void)textNotesAtPath:(NSString *)aFile encoding:(NSStringEncoding)encoding reply:(void (^)(NSData *))reply;
+- (void)readSkimNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply;
+- (void)readRTFNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply;
+- (void)readTextNotesAtURL:(NSURL *)aFaURLile reply:(void (^)(NSString *))reply;
 
 @end
