@@ -155,6 +155,25 @@
         }
     }
 
+#elif defined(AsyncXPCAgentSample)
+    
+    if ([ws type:docType conformsToType:SKNPDFDocumentType] ||
+        [ws type:docType conformsToType:SKNPDFBundleDocumentType] ||
+        [ws type:docType conformsToType:SKNSkimNotesDocumentType]) {
+        [[SKNXPCSkimReader sharedReader] readSkimNotesAtURL:absoluteURL reply:(NSData *data){
+            if (data) {
+                NSArray *arr = nil;
+                @try { arr = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
+                @catch (id e) {}
+                if (arr == nil)
+                    arr = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
+                if (arr)
+                    [self setNotes:arr];
+            }
+        }];
+        array = [NSArray array];
+    }
+
 #elif defined(ToolSample)
     
     NSData *data = nil;
