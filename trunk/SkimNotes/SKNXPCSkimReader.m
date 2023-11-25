@@ -135,7 +135,7 @@
                 }
             }
             
-            NSDictionary *jobDictionary = @{@"Label" : label, @"ProgramArguments" : arguments, @"EnableTransactions" : @NO, @"KeepAlive" : @{@"SuccessfulExit" : @NO}, @"RunAtLoad" : @NO, @"Nice" : @0, @"ProcessType": @"Interactive", @"LaunchOnlyOnce": @YES, @"MachServices" : @{[self agentIdentifier] : @YES}};
+            NSDictionary *jobDictionary = @{@"Label" : label, @"ProgramArguments" : arguments, @"EnableTransactions" : @NO, @"Nice" : @0, @"ProcessType": @"Interactive", @"MachServices" : @{[self agentIdentifier] : @YES}};
             
             CFErrorRef submitError = NULL;
 #pragma clang diagnostic push
