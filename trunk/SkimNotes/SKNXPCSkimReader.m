@@ -114,7 +114,6 @@
             NSLog(@"failed to create authorization reference: %d", createStatus);
         }
         
-        Boolean submittedJob = false;
         if (auth != NULL) {
             NSString *label = [NSString stringWithFormat:@"%@.skimnotes-agent", bundleIdentifier];
             
@@ -141,20 +140,17 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
             // SMJobSubmit is deprecated but is the only way to submit a non-permanent
             // helper and allows us to submit to user domain without requiring authorization
-            submittedJob = SMJobSubmit(kSMDomainUserLaunchd, (CFDictionaryRef)(jobDictionary), auth, &submitError);
+            if (SMJobSubmit(kSMDomainUserLaunchd, (CFDictionaryRef)jobDictionary, auth, &submitError)) {
 #pragma clang diagnostic pop
-            if (submittedJob == false) {
+                taskLaunched = YES;
+            } else {
                 if (submitError != NULL) {
                     NSLog(@"submit job error: %@", submitError);
                     CFRelease(submitError);
                 }
-            } else {
-                taskLaunched = YES;
             }
-        }
-        
-        if (auth != NULL)
             AuthorizationFree(auth, kAuthorizationFlagDefaults);
+        }
     } else {
         NSLog(@"failed to find skimnotes tool");
     }
@@ -201,22 +197,22 @@
 - (NSData *)SkimNotesAtURL:(NSURL *)fileURL {
     __block NSData *data = nil;
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:YES])
-        [agent readSkimNotesAtURL:fileURL reply:^(NSData *d){ data = [[d retain] autorelease]; }];
-    return data;
+        [agent readSkimNotesAtURL:fileURL reply:^(NSData *outData){ data = [outData retain]; }];
+    return [data autorelease];
 }
 
 - (NSData *)RTFNotesAtURL:(NSURL *)fileURL {
     __block NSData *data = nil;
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:YES])
-        [agent readRTFNotesAtURL:fileURL reply:^(NSData *d){ data = [[d retain] autorelease]; }];
-    return data;
+        [agent readRTFNotesAtURL:fileURL reply:^(NSData *outData){ data = [outData retain]; }];
+    return [data autorelease];
 }
 
 - (NSString *)textNotesAtURL:(NSURL *)fileURL {
     __block NSString *string = nil;
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:YES])
-        [agent readTextNotesAtURL:fileURL reply:^(NSString *s){ string = [[s retain] autorelease]; }];
-    return string;
+        [agent readTextNotesAtURL:fileURL reply:^(NSString *outString){ string = [outString retain]; }];
+    return [string autorelease];
 }
 
 - (void)readSkimNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSData *))reply {
