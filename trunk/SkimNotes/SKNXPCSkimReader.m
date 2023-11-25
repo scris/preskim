@@ -173,6 +173,7 @@
         else
             agent = [[connection remoteObjectProxy] retain];
         synchronous = sync;
+        [connection resume];
     }
 }
 
