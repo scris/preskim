@@ -98,8 +98,12 @@
         NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
         
         // can also use a fixed identifier, or let the tool decide about an identifier and read it from stdout
-        if (nil == [self agentIdentifier])
-            [self setAgentIdentifier:[NSString stringWithFormat:@"%@.skimnotes-%@@", bundleIdentifier, [[NSProcessInfo processInfo] globallyUniqueString]]];
+        if (nil == [self agentIdentifier]) {
+            NSString *identifier = [NSString stringWithFormat:@"%@.skimnotes-%@", bundleIdentifier, [[NSProcessInfo processInfo] globallyUniqueString]];
+            if ([identifier length] > 127)
+                identifier = [identifier substringFromIndex:[identifier length] - 127];
+            [self setAgentIdentifier:identifier];
+        }
         
         NSArray *arguments = @[launchPath, @"agent", @"-xpc", [self agentIdentifier]];
 
