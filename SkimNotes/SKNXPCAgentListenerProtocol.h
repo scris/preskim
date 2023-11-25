@@ -40,6 +40,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 - (void)readSkimNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply;
 - (void)readRTFNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply;
-- (void)readTextNotesAtURL:(NSURL *)aFaURLile reply:(void (^)(NSString *))reply;
+- (void)readTextNotesAtURL:(NSURL *)aURL reply:(void (^)(NSString *))reply;
 
 @end

@@ -231,25 +231,25 @@
 
 #pragma mark SKNXPCAgentListenerProtocol
 
-- (void)readSkimNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply {
+- (void)readSkimNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply {
     NSError *error = nil;
-    NSData *data = [[NSFileManager defaultManager] SkimNotesAtPath:aFile error:&error];
+    NSData *data = [[NSFileManager defaultManager] SkimNotesAtPath:[aURL path] error:&error];
     if (nil == data)
         fprintf(stderr, "skimnotes agent pid %d: error getting Skim notes (%s)\n", getpid(), [[error description] UTF8String]);
     reply(data);
 }
 
-- (void)readRTFNotesAtPath:(NSString *)aFile reply:(void (^)(NSData *))reply {
+- (void)readRTFNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply {
     NSError *error = nil;
-    NSData *data = [[NSFileManager defaultManager] SkimRTFNotesAtPath:aFile error:&error];
+    NSData *data = [[NSFileManager defaultManager] SkimRTFNotesAtPath:[aURL path] error:&error];
     if (nil == data)
         fprintf(stderr, "skimnotes agent pid %d: error getting RTF notes (%s)\n", getpid(), [[error description] UTF8String]);
     reply(data);
 }
 
-- (void)readTextNotesAtPath:(NSString *)aFile reply:(void (^)(NSString *))reply {
+- (void)readTextNotesAtURL:(NSURL *)aURL reply:(void (^)(NSString *))reply {
     NSError *error = nil;
-    NSString *string = [[NSFileManager defaultManager] SkimTextNotesAtPath:aFile error:&error];
+    NSString *string = [[NSFileManager defaultManager] SkimTextNotesAtPath:[aURL path] error:&error];
     if (nil == string)
         fprintf(stderr, "skimnotes agent pid %d: error getting text notes (%s)\n", getpid(), [[error description] UTF8String]);
     reply(string);
