@@ -194,9 +194,6 @@
 }    
 
 - (BOOL)connectAndCheckTypeOfFile:(NSURL *)fileURL {
-    if (nil == connection)
-        [self establishConnection];
-    
     // these checks are client side to avoid connecting to the server unless it's really necessary
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     NSString *fileType = [ws typeOfFile:[fileURL path] error:NULL];
@@ -204,9 +201,11 @@
     if (fileType != nil &&
         ([ws type:fileType conformsToType:(NSString *)kUTTypePDF] ||
          [ws type:fileType conformsToType:@"net.sourceforge.skim-app.pdfd"] ||
-         [ws type:fileType conformsToType:@"net.sourceforge.skim-app.skimnotes"]))
+         [ws type:fileType conformsToType:@"net.sourceforge.skim-app.skimnotes"])) {
+        if (nil == connection)
+            [self establishConnection];
         return YES;
-    
+    }
     return NO;
 }
 

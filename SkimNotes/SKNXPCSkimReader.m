@@ -177,9 +177,7 @@
 }
 
 - (BOOL)connectAndCheckTypeOfFile:(NSURL *)fileURL synchronous:(BOOL)sync {
-    if (nil == connection) {
-        [self establishSynchronousConnection:sync];
-    } else if (synchronous != sync) {
+    if (connection && synchronous != sync) {
         NSLog(@"attempt to mix synchronous and asynchronous skim notes retrieval");
         return NO;
     }
@@ -191,9 +189,11 @@
     if (fileType != nil &&
         ([ws type:fileType conformsToType:(NSString *)kUTTypePDF] ||
          [ws type:fileType conformsToType:@"net.sourceforge.skim-app.pdfd"] ||
-         [ws type:fileType conformsToType:@"net.sourceforge.skim-app.skimnotes"]))
+         [ws type:fileType conformsToType:@"net.sourceforge.skim-app.skimnotes"])) {
+        if (nil == connection)
+            [self establishSynchronousConnection:sync];
         return YES;
-    
+    }
     return NO;
 }
 
