@@ -47,8 +47,10 @@
 
 + (id)sharedReader {
     static id sharedReader = nil;
-    if (nil == sharedReader)
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
         sharedReader = [[self alloc] init];
+    });
     return sharedReader;
 }
 
