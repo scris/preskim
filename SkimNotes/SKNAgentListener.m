@@ -217,6 +217,7 @@
     }
     
     [newConnection setExportedInterface:[NSXPCInterface interfaceWithProtocol:@protocol(SKNXPCAgentListenerProtocol)]];
+    [newConnection setExportedObject:self];
     NSString *description = [newConnection description];
     [newConnection setInvalidationHandler:^{
         [self destroyXPCConnection];
