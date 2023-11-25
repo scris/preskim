@@ -180,7 +180,7 @@
     if (nil == connection) {
         [self establishSynchronousConnection:sync];
     } else if (synchronous != sync) {
-        NSLog(@"attempt to mix synxhronous and asynchronous skim notes retrieval");
+        NSLog(@"attempt to mix synchronous and asynchronous skim notes retrieval");
         return NO;
     }
     
