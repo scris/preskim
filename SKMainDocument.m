@@ -1329,7 +1329,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
             [service setSubject:[self displayName]];
             [service performWithItems:items];
         } else {
-            [[NSFileManager defaultManager] removeItemAtURL:targetFileURL error:NULL];
+            [[NSFileManager defaultManager] removeItemAtURL:targetDirURL error:NULL];
         }
     }
 }
