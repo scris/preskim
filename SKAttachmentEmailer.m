@@ -98,7 +98,7 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
     NSImage *image = [[[NSImage alloc] initWithSize:NSMakeSize(16.0, 16.0)] autorelease];
     [image lockFocus];
     [icon drawInRect:NSMakeRect(0.0, 0.0, 16.0, 16.0)];
-    [image lockFocus];
+    [image unlockFocus];
     return image;
 }
 
