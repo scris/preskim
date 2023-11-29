@@ -60,10 +60,10 @@ typedef NS_ENUM(NSInteger, SKTypeSelectMatchOption) {
 @property (assign) id <SKTypeSelectDelegate> delegate;
 @property SKTypeSelectMatchOption matchOption;
 
-+ (id)typeSelectHelper;
-+ (id)typeSelectHelperWithMatchOption:(SKTypeSelectMatchOption)aMatchOption;
++ (instancetype)typeSelectHelper;
++ (instancetype)typeSelectHelperWithMatchOption:(SKTypeSelectMatchOption)aMatchOption;
 
-- (id)initWithMatchOption:(SKTypeSelectMatchOption)aMatchOption;
+- (instancetype)initWithMatchOption:(SKTypeSelectMatchOption)aMatchOption;
 
 - (void)rebuildTypeSelectSearchCache;
 

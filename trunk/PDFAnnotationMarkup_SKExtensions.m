@@ -99,7 +99,7 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
     [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:key]];
 }
 
-- (id)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type {
+- (instancetype)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type {
     if (page == nil)
         page = [selection safeFirstPage];
     NSRect bounds = NSZeroRect;

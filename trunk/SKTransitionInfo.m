@@ -51,7 +51,7 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
 @synthesize transitionStyle, duration, shouldRestrict;
 @dynamic properties, label, title;
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         transitionStyle = SKNoTransition;
@@ -61,7 +61,7 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
     return self;
 }
 
-- (id)initWithProperties:(NSDictionary *)properies {
+- (instancetype)initWithProperties:(NSDictionary *)properies {
     self = [self init];
     [self setProperties:properies];
     return self;
@@ -87,7 +87,7 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
     return nil;
 }
 
-- (id)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type {
+- (instancetype)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type {
     if ([type isEqualToString:SKPasteboardTypeTransition]) {
         self = [self initWithProperties:propertyList];
     } else {

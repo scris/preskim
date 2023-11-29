@@ -62,7 +62,7 @@ static BOOL canUpdateFromURL(NSURL *fileURL);
 
 @dynamic enabled, fileChangedOnDisk, isUpdatingFile;
 
-- (id)initForDocument:(NSDocument *)aDocument {
+- (instancetype)initForDocument:(NSDocument *)aDocument {
     self = [super init];
     if (self) {
         document = aDocument;

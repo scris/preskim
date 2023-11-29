@@ -73,17 +73,17 @@
 
 static SKPreferenceController *sharedPrefenceController = nil;
 
-+ (id)sharedPrefenceController {
++ (SKPreferenceController *)sharedPrefenceController {
     if (sharedPrefenceController == nil)
         [[[self alloc] init] autorelease];
     return sharedPrefenceController;
 }
 
-+ (id)allocWithZone:(NSZone *)zone {
++ (instancetype)allocWithZone:(NSZone *)zone {
     return [sharedPrefenceController retain] ?: [super allocWithZone:zone];
 }
 
-- (id)init {
+- (instancetype)init {
     if (sharedPrefenceController == nil) {
         self = [super initWithWindowNibName:@"PreferenceWindow"];
         if (self) {

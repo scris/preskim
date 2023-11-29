@@ -47,7 +47,7 @@
     NSUndoManager *undoManager;
 }
 
-- (id)initWithPDFView:(PDFView *)aPDFView annotation:(PDFAnnotation *)anAnnotation;
+- (instancetype)initWithPDFView:(PDFView *)aPDFView annotation:(PDFAnnotation *)anAnnotation;
 
 @property (nonatomic, readonly) NSString *currentString;
 

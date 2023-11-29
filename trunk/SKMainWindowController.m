@@ -228,7 +228,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 + (BOOL)automaticallyNotifiesObserversOfPageLabel { return NO; }
 
-- (id)init {
+- (instancetype)init {
     self = [super initWithWindowNibName:@"MainWindow"];
     if (self) {
         NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];

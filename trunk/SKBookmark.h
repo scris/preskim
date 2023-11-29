@@ -50,22 +50,22 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
     SKBookmark *parent;
 }
 
-+ (id)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
-+ (id)bookmarkWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
-+ (id)bookmarkFolderWithLabel:(NSString *)aLabel;
-+ (id)bookmarkSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
-+ (id)bookmarkSeparator;
++ (instancetype)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
++ (instancetype)bookmarkWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
++ (instancetype)bookmarkFolderWithLabel:(NSString *)aLabel;
++ (instancetype)bookmarkSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
++ (instancetype)bookmarkSeparator;
 
 + (NSArray *)bookmarksForURLs:(NSArray *)urls;
 
-- (id)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
-- (id)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
-- (id)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel;
-- (id)initFolderWithLabel:(NSString *)aLabel;
-- (id)initRootWithChildrenProperties:(NSArray *)childrenProperties;
-- (id)initSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
-- (id)initSeparator;
-- (id)initWithProperties:(NSDictionary *)dictionary;
+- (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
+- (instancetype)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
+- (instancetype)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel;
+- (instancetype)initFolderWithLabel:(NSString *)aLabel;
+- (instancetype)initRootWithChildrenProperties:(NSArray *)childrenProperties;
+- (instancetype)initSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
+- (instancetype)initSeparator;
+- (instancetype)initWithProperties:(NSDictionary *)dictionary;
 
 @property (nonatomic, readonly) NSDictionary *properties;
 @property (nonatomic, readonly) SKBookmarkType bookmarkType;

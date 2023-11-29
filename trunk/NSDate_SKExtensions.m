@@ -43,7 +43,7 @@
     NSDateFormatter *formatter;
 }
 
-- (id)initWithDate:(NSDate *)aDate;
+- (instancetype)initWithDate:(NSDate *)aDate;
 
 @end
 
@@ -119,11 +119,11 @@
 
 @implementation SKFormattedDate
 
-- (id)init {
+- (instancetype)init {
     return [self initWithDate:[NSDate date]];
 }
 
-- (id)initWithDate:(NSDate *)aDate {
+- (instancetype)initWithDate:(NSDate *)aDate {
     if (aDate == nil) {
         [self release];
         return nil;
@@ -139,7 +139,7 @@
     return self;
 }
 
-- (id)initWithTimeIntervalSinceReferenceDate:(NSTimeInterval)timeInterval {
+- (instancetype)initWithTimeIntervalSinceReferenceDate:(NSTimeInterval)timeInterval {
     return [self initWithDate:[[[NSDate alloc] initWithTimeIntervalSinceReferenceDate:timeInterval
                 ] autorelease]];
 }

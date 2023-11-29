@@ -97,7 +97,7 @@ static inline NSArray *defaultKeysToObserve() {
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeys:defaultKeysToObserve() context:&SKBasePDFViewDefaultsObservationContext];
 }
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (instancetype)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if (self) {
         [self commonBaseInitialization];
@@ -105,7 +105,7 @@ static inline NSArray *defaultKeysToObserve() {
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
         [self commonBaseInitialization];

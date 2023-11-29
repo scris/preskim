@@ -110,7 +110,7 @@ static char SKFontWellFontSizeObservationContext;
     [self registerForDraggedTypes:@[SKNSFontPanelDescriptorsPboardType, SKNSFontPanelFamiliesPboardType, NSPasteboardTypeColor]];
 }
 
-- (id)initWithFrame:(NSRect)frame {
+- (instancetype)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         [self commonInit];
@@ -118,7 +118,7 @@ static char SKFontWellFontSizeObservationContext;
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
 		NSButtonCell *oldCell = [self cell];
@@ -463,7 +463,7 @@ static char SKFontWellFontSizeObservationContext;
     [self setState:NSOffState];
 }
  
-- (id)initTextCell:(NSString *)aString {
+- (instancetype)initTextCell:(NSString *)aString {
 	self = [super initTextCell:aString];
     if (self) {
 		[self commonInit];
@@ -471,7 +471,7 @@ static char SKFontWellFontSizeObservationContext;
 	return self;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder *)decoder {
 	self = [super initWithCoder:decoder];
     if (self) {
         [self setTextColor:[decoder decodeObjectForKey:TEXTCOLOR_KEY]];
@@ -487,7 +487,7 @@ static char SKFontWellFontSizeObservationContext;
     [coder encodeObject:textColor forKey:HASTEXTCOLOR_KEY];
 }
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
     SKFontWellCell *copy = [super copyWithZone:zone];
     copy->textColor = [textColor copyWithZone:zone];
     copy->hasTextColor = hasTextColor;

@@ -46,7 +46,7 @@
 
 @dynamic name, pdfViewSettings, backgroundColor, sepiaTone, whitePoint, inverted;
 
-- (id)initForFullScreen:(BOOL)isFullScreen {
+- (instancetype)initForFullScreen:(BOOL)isFullScreen {
     self = [super init];
     if (self) {
         fullScreen = isFullScreen;
@@ -54,7 +54,7 @@
     return self;
 }
 
-- (id)initWithName:(NSString *)name {
+- (instancetype)initWithName:(NSString *)name {
     if ([name isEqualToString:@"Normal"] || [name isEqualToString:@"normal mode"])
         self =  [self initForFullScreen:NO];
     else if ([name isEqualToString:@"FullScreen"] || [name isEqualToString:@"full screen mode"])

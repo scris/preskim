@@ -45,7 +45,7 @@
     BOOL resizing;
 }
 
-- (id)initWithView:(NSView *)view;
+- (instancetype)initWithView:(NSView *)view;
 - (void)attachToWindow:(NSWindow *)window;
 - (void)remove;
 - (void)resizeWithEvent:(NSEvent *)theEvent;

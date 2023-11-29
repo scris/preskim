@@ -79,15 +79,15 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
     nonAlphanumericCharacterSet = [[[NSCharacterSet alphanumericCharacterSet] invertedSet] copy];
 }
 
-+ (id)typeSelectHelper {
++ (instancetype)typeSelectHelper {
     return [[[self alloc] init] autorelease];
 }
 
-+ (id)typeSelectHelperWithMatchOption:(SKTypeSelectMatchOption)aMatchOption {
++ (instancetype)typeSelectHelperWithMatchOption:(SKTypeSelectMatchOption)aMatchOption {
     return [[[self alloc] initWithMatchOption:aMatchOption] autorelease];
 }
 
-- (id)initWithMatchOption:(SKTypeSelectMatchOption)aMatchOption {
+- (instancetype)initWithMatchOption:(SKTypeSelectMatchOption)aMatchOption {
     self = [super init];
     if (self){
         delegate = nil;
@@ -101,7 +101,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
     return self;
 }
 
-- (id)init {
+- (instancetype)init {
     return [self initWithMatchOption:SKPrefixMatch];
 }
 

@@ -49,8 +49,8 @@
 @property (nonatomic, readonly) NSURL *fileURL;
 @property (nonatomic, readonly) NSURL *fileURLNoUI;
 
-- (id)initWithAliasData:(NSData *)data;
-- (id)initWithBookmarkData:(NSData *)data;
-- (id)initWithURL:(NSURL *)fileURL;
+- (instancetype)initWithAliasData:(NSData *)data;
+- (instancetype)initWithBookmarkData:(NSData *)data;
+- (instancetype)initWithURL:(NSURL *)fileURL;
 
 @end

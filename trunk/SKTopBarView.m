@@ -57,7 +57,7 @@
 
 @synthesize style, drawsBackground;
 
-- (id)initWithFrame:(NSRect)frame {
+- (instancetype)initWithFrame:(NSRect)frame {
     wantsSubviews = YES;
     self = [super initWithFrame:frame];
     if (self) {

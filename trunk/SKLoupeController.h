@@ -48,7 +48,7 @@
     NSInteger level;
 }
 
-- (id)initWithPDFView:(PDFView *)aPdfView;
+- (instancetype)initWithPDFView:(PDFView *)aPdfView;
 
 @property (nonatomic) CGFloat magnification;
 @property (nonatomic) NSInteger level;

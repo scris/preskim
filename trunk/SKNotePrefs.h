@@ -60,6 +60,6 @@
 @property (nonatomic, retain) NSString *scriptingUserName;
 @property (nonatomic, retain) NSDictionary *scriptingProperties;
 
-- (id)initWithType:(NSString *)aType;
+- (instancetype)initWithType:(NSString *)aType;
 
 @end

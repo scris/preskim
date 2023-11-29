@@ -43,7 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     NSDocument *document;
 }
 
-- (id)initForDocument:(NSDocument *)aDocument;
+- (instancetype)initForDocument:(NSDocument *)aDocument;
 
 @property (nonatomic, assign) NSDocument *document;
 

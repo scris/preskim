@@ -44,7 +44,7 @@
     NSTimeInterval autoHideTimeInterval;
 }
 
-- (id)initWithContentRect:(NSRect)contentRect;
+- (instancetype)initWithContentRect:(NSRect)contentRect;
 
 @property (nonatomic) CGFloat defaultAlphaValue;
 @property (nonatomic) NSTimeInterval autoHideTimeInterval;

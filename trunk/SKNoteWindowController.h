@@ -77,7 +77,7 @@
 @property (nonatomic, readonly) PDFAnnotation *note;
 @property (nonatomic) BOOL keepOnTop, forceOnTop, isNoteType;
 
-- (id)initWithNote:(PDFAnnotation *)aNote;
+- (instancetype)initWithNote:(PDFAnnotation *)aNote;
 
 - (void)statusBarClicked:(id)sender;
 

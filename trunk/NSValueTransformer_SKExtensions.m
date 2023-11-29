@@ -71,7 +71,7 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 @interface SKRadioTransformer : NSValueTransformer {
     NSInteger targetValue;
 }
-- (id)initWithTargetValue:(NSInteger)value;
+- (instancetype)initWithTargetValue:(NSInteger)value;
 @end
 
 #pragma mark -
@@ -244,7 +244,7 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
     return [NSNumber class];
 }
 
-- (id)initWithTargetValue:(NSInteger)value {
+- (instancetype)initWithTargetValue:(NSInteger)value {
     self = [super init];
     if (self) {
         targetValue = value;

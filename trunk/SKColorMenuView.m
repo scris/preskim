@@ -52,7 +52,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @implementation SKColorMenuView
 
-- (id)initWithAnnotation:(PDFAnnotation *)anAnnotation {
+- (instancetype)initWithAnnotation:(PDFAnnotation *)anAnnotation {
     NSArray *favoriteColors = [NSColor favoriteColors];
     self = [super initWithFrame:NSMakeRect(0.0, 0.0, ([favoriteColors count] - 1) * OFFSET + ITEM_SIZE + MARGIN, ITEM_SIZE)];
     if (self) {

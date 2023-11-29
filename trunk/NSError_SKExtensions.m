@@ -44,27 +44,27 @@ NSString *SKDocumentErrorDomain = @"SKDocumentErrorDomain";
 
 @implementation NSError (SKExtensions)
 
-+ (id)writeFileErrorWithLocalizedDescription:(NSString *)description {
++ (instancetype)writeFileErrorWithLocalizedDescription:(NSString *)description {
     return [NSError errorWithDomain:SKDocumentErrorDomain code:SKWriteFileError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:description, NSLocalizedDescriptionKey, nil]];
 }
 
-+ (id)readFileErrorWithLocalizedDescription:(NSString *)description {
++ (instancetype)readFileErrorWithLocalizedDescription:(NSString *)description {
     return [NSError errorWithDomain:SKDocumentErrorDomain code:SKReadFileError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:description, NSLocalizedDescriptionKey, nil]];
 }
 
-+ (id)readPasteboardErrorWithLocalizedDescription:(NSString *)description {
++ (instancetype)readPasteboardErrorWithLocalizedDescription:(NSString *)description {
     return [NSError errorWithDomain:SKDocumentErrorDomain code:SKReadPasteboardError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:description, NSLocalizedDescriptionKey, nil]];
 }
 
-+ (id)printDocumentErrorWithLocalizedDescription:(NSString *)description {
++ (instancetype)printDocumentErrorWithLocalizedDescription:(NSString *)description {
     return [NSError errorWithDomain:SKDocumentErrorDomain code:SKPrintDocumentError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:description, NSLocalizedDescriptionKey, nil]];
 }
 
-+ (id)failedToCommitErrorWithLocalizedDescription:(NSString *)description {
++ (instancetype)failedToCommitErrorWithLocalizedDescription:(NSString *)description {
     return [NSError errorWithDomain:SKDocumentErrorDomain code:SKFailedToCommitError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:description, NSLocalizedDescriptionKey, nil]];
 }
 
-+ (id)userCancelledErrorWithUnderlyingError:(NSError *)error {
++ (instancetype)userCancelledErrorWithUnderlyingError:(NSError *)error {
     return [NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:error, NSUnderlyingErrorKey, nil]];
 }
 

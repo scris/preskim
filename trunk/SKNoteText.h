@@ -44,7 +44,7 @@
     PDFAnnotation *note;
 }
 
-- (id)initWithNote:(PDFAnnotation *)aNote;
+- (instancetype)initWithNote:(PDFAnnotation *)aNote;
 
 @property (nonatomic, readonly) PDFAnnotation *note;
 

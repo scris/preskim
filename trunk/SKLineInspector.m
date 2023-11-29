@@ -70,7 +70,7 @@ return YES; \
 
 static SKLineInspector *sharedLineInspector = nil;
 
-+ (id)sharedLineInspector {
++ (SKLineInspector *)sharedLineInspector {
     if (sharedLineInspector == nil)
         sharedLineInspector = [[self alloc] init];
     return sharedLineInspector;
@@ -80,7 +80,7 @@ static SKLineInspector *sharedLineInspector = nil;
     return sharedLineInspector != nil;
 }
 
-- (id)init {
+- (instancetype)init {
     if (sharedLineInspector) NSLog(@"Attempt to allocate second instance of %@", [self class]);
     self = [super initWithWindowNibName:@"LineInspector"];
     if (self) {

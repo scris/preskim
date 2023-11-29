@@ -44,7 +44,7 @@
 
 static SKNotesPanelController *sharedController = nil;
 
-+ (id)sharedController {
++ (SKNotesPanelController *)sharedController {
     if (sharedController == nil)
         sharedController = [[self alloc] init];
     return sharedController;
@@ -54,7 +54,7 @@ static SKNotesPanelController *sharedController = nil;
     return sharedController != nil;
 }
 
-- (id)init {
+- (instancetype)init {
     if (sharedController) NSLog(@"Attempt to allocate second instance of %@", self);
     return [super initWithWindowNibName:@"NotesPanel"];
 }

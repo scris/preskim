@@ -102,13 +102,13 @@ static NSString *SKDownloadsIdentifier = nil;
 
 static SKDownloadController *sharedDownloadController = nil;
 
-+ (id)sharedDownloadController {
++ (SKDownloadController *)sharedDownloadController {
     if (sharedDownloadController == nil)
         sharedDownloadController = [[self alloc] init];
     return sharedDownloadController;
 }
 
-- (id)init {
+- (instancetype)init {
     if (sharedDownloadController) NSLog(@"Attempt to allocate second instance of %@", [self class]);
     self = [super initWithWindowNibName:@"DownloadsWindow"];
     if (self) {

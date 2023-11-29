@@ -57,7 +57,7 @@ typedef void (^SKSyncDotUpdateBlock)(BOOL finished);
 @property (nonatomic, readonly) NSRect bounds;
 @property (nonatomic) BOOL shouldHideReadingBar;
 
-- (id)initWithPoint:(NSPoint)aPoint page:(PDFPage *)aPage updateHandler:(SKSyncDotUpdateBlock)aHandler;
+- (instancetype)initWithPoint:(NSPoint)aPoint page:(PDFPage *)aPage updateHandler:(SKSyncDotUpdateBlock)aHandler;
 
 - (void)invalidate;
 

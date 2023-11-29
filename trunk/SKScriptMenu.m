@@ -58,7 +58,7 @@
 @property (nonatomic, readonly) NSMenu *scriptMenu;
 @property (nonatomic) BOOL menuNeedsUpdate;
 
-@property (class, nonatomic, readonly) id sharedController;
+@property (class, nonatomic, readonly) SKScriptMenuController *sharedController;
 
 - (void)handleApplicationWillTerminateNotification:(NSNotification *)notification;
 - (NSArray *)directoryContentsAtURL:(NSURL *)url recursionDepth:(NSInteger)depth;
@@ -70,7 +70,7 @@
 
 @synthesize scriptMenu, menuNeedsUpdate;
 
-+ (id)sharedController {
++ (SKScriptMenuController *)sharedController {
     static SKScriptMenuController *sharedController = nil;
     if (sharedController == nil)
         sharedController = [[self alloc] init];
@@ -81,7 +81,7 @@ static void fsevents_callback(FSEventStreamRef streamRef, void *clientCallBackIn
     [(id)clientCallBackInfo setMenuNeedsUpdate:YES];
 }
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         

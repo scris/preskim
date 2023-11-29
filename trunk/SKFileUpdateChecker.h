@@ -60,7 +60,7 @@
 @property (nonatomic, getter=isEnabled) BOOL enabled;
 @property (nonatomic, readonly) BOOL fileChangedOnDisk, isUpdatingFile;
 
-- (id)initForDocument:(NSDocument *)aDocument;
+- (instancetype)initForDocument:(NSDocument *)aDocument;
 
 - (void)terminate;
 

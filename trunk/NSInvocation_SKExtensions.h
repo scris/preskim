@@ -40,5 +40,5 @@
 
 
 @interface NSInvocation (SKExtensions)
-+ (id)invocationWithTarget:(id)target selector:(SEL)selector;
++ (instancetype)invocationWithTarget:(id)target selector:(SEL)selector;
 @end

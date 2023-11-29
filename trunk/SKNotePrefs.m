@@ -82,7 +82,7 @@ static NSDictionary *propertyKeys = nil;
     propertyKeys = [dict copy];
 }
 
-- (id)initWithType:(NSString *)aType {
+- (instancetype)initWithType:(NSString *)aType {
     if (aType && [propertyKeys objectForKey:aType] == nil)
         aType = [alternateTypeNames objectForKey:aType];
     if (aType == nil) {

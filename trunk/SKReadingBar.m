@@ -61,7 +61,7 @@
 @synthesize page, currentLine, numberOfLines, currentBounds, delegate;
 @dynamic maxLine, boundsAsQDRect;
 
-- (id)initWithPage:(PDFPage *)aPage line:(NSInteger)line delegate:(id <SKReadingBarDelegate>)aDelegate {
+- (instancetype)initWithPage:(PDFPage *)aPage line:(NSInteger)line delegate:(id <SKReadingBarDelegate>)aDelegate {
     self = [super init];
     if (self) {
         numberOfLines = MAX(1, [[NSUserDefaults standardUserDefaults] integerForKey:SKReadingBarNumberOfLinesKey]);
@@ -110,7 +110,7 @@
     return self;
 }
 
-- (id)init {
+- (instancetype)init {
     return [self initWithPage:nil line:-1 delegate:nil];
 }
 

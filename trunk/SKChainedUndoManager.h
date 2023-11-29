@@ -42,5 +42,5 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @interface SKChainedUndoManager : NSUndoManager {
     NSUndoManager *nextUndoManager;
 }
-- (id)initWithNextUndoManager:(NSUndoManager *)undoManager;
+- (instancetype)initWithNextUndoManager:(NSUndoManager *)undoManager;
 @end

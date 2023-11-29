@@ -61,7 +61,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     return @[SKNPDFAnnotationBoundsKey, SKNPDFAnnotationFontKey, SKNPDFAnnotationFontColorKey, SKNPDFAnnotationAlignmentKey, SKNPDFAnnotationColorKey, SKNPDFAnnotationBorderKey, SKNPDFAnnotationStringKey];
 }
 
-- (id)initWithPDFView:(PDFView *)aPDFView annotation:(PDFAnnotation *)anAnnotation {
+- (instancetype)initWithPDFView:(PDFView *)aPDFView annotation:(PDFAnnotation *)anAnnotation {
     self = [super initWithFrame:[annotation bounds]];
     if (self) {
         pdfView = aPDFView;
@@ -311,7 +311,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
 
 @implementation SKTextNoteTextView
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (instancetype)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if (self) {
         NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];

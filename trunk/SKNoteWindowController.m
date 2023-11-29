@@ -139,11 +139,11 @@ static NSURL *temporaryDirectoryURL = nil;
     return temporaryDirectoryURL;
 }
 
-- (id)init {
+- (instancetype)init {
     return [self initWithNote:nil];
 }
 
-- (id)initWithNote:(PDFAnnotation *)aNote {
+- (instancetype)initWithNote:(PDFAnnotation *)aNote {
     self = [super initWithWindowNibName:@"NoteWindow"];
     if (self) {
         note = [aNote retain];

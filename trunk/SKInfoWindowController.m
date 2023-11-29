@@ -80,13 +80,13 @@
 
 static SKInfoWindowController *sharedInstance = nil;
     
-+ (id)sharedInstance {
++ (SKInfoWindowController *)sharedInstance {
     if (sharedInstance == nil)
         sharedInstance = [[self alloc] init];
     return sharedInstance;
 }
 
-- (id)init {
+- (instancetype)init {
     if (sharedInstance) NSLog(@"Attempt to allocate second instance of %@", [self class]);
     self = [super initWithWindowNibName:@"InfoWindow"];
     if (self){

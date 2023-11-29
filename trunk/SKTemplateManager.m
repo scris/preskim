@@ -48,14 +48,14 @@
 
 @dynamic customTemplateTypes;
 
-+ (id)sharedManager {
++ (SKTemplateManager *)sharedManager {
     static id sharedManager = nil;
     if (sharedManager == nil)
         sharedManager = [[self alloc] init];
     return sharedManager;
 }
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         templateFileNames = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"notesTemplate.txt", SKNotesTextDocumentType, @"notesTemplate.rtf", SKNotesRTFDocumentType, @"notesTemplate.rtfd", SKNotesRTFDDocumentType, nil];

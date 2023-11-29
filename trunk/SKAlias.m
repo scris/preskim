@@ -80,7 +80,7 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
 }
 #pragma clang diagnostic pop
 
-- (id)initWithAliasData:(NSData *)aliasData {
+- (instancetype)initWithAliasData:(NSData *)aliasData {
     if (aliasData == nil) {
         [self release];
         self = nil;
@@ -100,7 +100,7 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
     return self;
 }
 
-- (id)initWithBookmarkData:(NSData *)bookmarkData {
+- (instancetype)initWithBookmarkData:(NSData *)bookmarkData {
     if (bookmarkData == nil) {
         [self release];
         self = nil;
@@ -113,7 +113,7 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
     return self;
 }
 
-- (id)initWithURL:(NSURL *)fileURL {
+- (instancetype)initWithURL:(NSURL *)fileURL {
     return [self initWithBookmarkData:[fileURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:NULL]];
 }
 

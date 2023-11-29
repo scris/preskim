@@ -81,7 +81,7 @@ static unsigned char hexDecodeTable[256] =
     xx, xx, xx, xx, xx, xx, xx, xx, xx, xx, xx, xx, xx, xx, xx, xx, 
 };
 
-- (id)initWithHexString:(NSString *)hexString {
+- (instancetype)initWithHexString:(NSString *)hexString {
     NSData *data = [hexString dataUsingEncoding:NSASCIIStringEncoding];
     size_t length = [data length];
     const unsigned char *inputBuffer = (const unsigned char *)[data bytes];

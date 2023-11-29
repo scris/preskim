@@ -133,7 +133,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     [self registerForDraggedTypes:[NSColor readableTypesForPasteboard:[NSPasteboard pasteboardWithName:NSPasteboardNameDrag]]];
 }
 
-- (id)initWithFrame:(NSRect)frame {
+- (instancetype)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         colors = [[NSMutableArray alloc] initWithObjects:[NSColor whiteColor], nil];
@@ -160,7 +160,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
         colors = [[NSMutableArray alloc] initWithArray:[decoder decodeObjectForKey:COLORS_KEY]];
@@ -883,7 +883,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
         return [super defaultAnimationForKey:key];
 }
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (instancetype)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if (self) {
         NSSegmentedCell *cell = [[[NSSegmentedCell alloc] init] autorelease];
@@ -929,7 +929,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 
 @synthesize color, highlighted, selected, dropLocation;
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
         color = [[decoder decodeObjectForKey:COLOR_KEY] retain];

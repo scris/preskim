@@ -91,7 +91,7 @@ static char *SKTransitionPropertiesObservationContext;
     return keyPaths;
 }
 
-- (id)initForController:(SKMainWindowController *)aController {
+- (instancetype)initForController:(SKMainWindowController *)aController {
     self = [super init];
     if (self) {
         controller = aController;

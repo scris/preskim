@@ -53,7 +53,7 @@
     return keyPaths;
 }
 
-- (id)initWithNote:(id)aNote {
+- (instancetype)initWithNote:(id)aNote {
     self = [super init];
     if (self) {
         note = aNote;

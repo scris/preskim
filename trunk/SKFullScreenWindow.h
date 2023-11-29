@@ -42,7 +42,7 @@
 
 @interface SKFullScreenWindow : SKMainWindow <NSAnimationDelegate>
 
-- (id)initWithScreen:(NSScreen *)screen;
+- (instancetype)initWithScreen:(NSScreen *)screen;
 
 @end
 

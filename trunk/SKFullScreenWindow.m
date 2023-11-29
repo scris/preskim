@@ -40,7 +40,7 @@
 
 @implementation SKFullScreenWindow
 
-- (id)initWithScreen:(NSScreen *)screen {
+- (instancetype)initWithScreen:(NSScreen *)screen {
     NSRect screenFrame = [(screen ?: [NSScreen mainScreen]) frame];
     self = [self initWithContentRect:screenFrame styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
     if (self) {

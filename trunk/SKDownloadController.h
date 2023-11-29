@@ -59,7 +59,7 @@
 @property (nonatomic, retain) IBOutlet SKTableView *tableView;
 @property (nonatomic, retain) IBOutlet NSButton *clearButton;
 
-@property (class, nonatomic, readonly) id  sharedDownloadController;
+@property (class, nonatomic, readonly) SKDownloadController *sharedDownloadController;
 
 - (SKDownload *)addDownloadForURL:(NSURL *)aURL;
 

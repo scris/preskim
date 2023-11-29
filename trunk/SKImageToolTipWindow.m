@@ -59,13 +59,13 @@
 
 static SKImageToolTipWindow *sharedToolTipWindow = nil;
 
-+ (id)sharedToolTipWindow {
++ (SKImageToolTipWindow *)sharedToolTipWindow {
     if (sharedToolTipWindow == nil)
         sharedToolTipWindow = [[self alloc] init];
     return sharedToolTipWindow;
 }
 
-- (id)init {
+- (instancetype)init {
     if (sharedToolTipWindow) NSLog(@"Attempt to allocate second instance of %@", self);
     self = [super initWithContentRect:NSZeroRect];
     if (self) {

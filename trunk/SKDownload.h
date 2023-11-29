@@ -97,8 +97,8 @@ typedef NS_ENUM(NSInteger, SKDownloadStatus) {
 @property (class, nonatomic, readonly) NSImage *cancelImage;
 @property (class, nonatomic, readonly) NSImage *resumeImage;
 
-- (id)initWithURL:(NSURL *)aURL;
-- (id)initWithProperties:(NSDictionary *)properties;
+- (instancetype)initWithURL:(NSURL *)aURL;
+- (instancetype)initWithProperties:(NSDictionary *)properties;
 
 - (void)start;
 - (void)cancel;

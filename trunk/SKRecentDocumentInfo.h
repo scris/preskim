@@ -46,8 +46,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     NSArray *snapshots;
 }
 
-- (id)initWithProperties:(NSDictionary *)properties;
-- (id)initWithURL:(NSURL *)fileURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray *)aSnapshots;
+- (instancetype)initWithProperties:(NSDictionary *)properties;
+- (instancetype)initWithURL:(NSURL *)fileURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray *)aSnapshots;
 
 @property (nonatomic, readonly) NSURL *fileURL;
 @property (nonatomic, readonly) NSUInteger pageIndex;

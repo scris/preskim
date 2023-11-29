@@ -65,7 +65,7 @@
 @synthesize animating, leftField, rightField, progressIndicator;
 @dynamic visible, icon, progressIndicatorStyle;
 
-- (id)initWithFrame:(NSRect)frame {
+- (instancetype)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         leftField = [[SKStatusTextField alloc] init];
@@ -109,7 +109,7 @@
 	[super dealloc];
 }
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder *)decoder {
 	self = [super initWithCoder:decoder];
     if (self) {
         leftField = [[decoder decodeObjectForKey:@"leftField"] retain];
@@ -347,7 +347,7 @@
 
 + (Class)cellClass { return [SKStatusTextFieldCell class]; }
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (instancetype)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if (self) {
         NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:[self bounds] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect owner:self userInfo:nil];

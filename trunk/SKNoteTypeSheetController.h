@@ -45,7 +45,7 @@
     id <SKNoteTypeSheetControllerDelegate> delegate;
 }
 
-- (id)initIncludingWidgets:(BOOL)includeWidgets;
+- (instancetype)initIncludingWidgets:(BOOL)includeWidgets;
 
 @property (nonatomic, assign) id <SKNoteTypeSheetControllerDelegate> delegate;
 @property (nonatomic, readonly) NSArray *noteTypes;
