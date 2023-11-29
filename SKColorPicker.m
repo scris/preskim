@@ -51,7 +51,7 @@ static char SKColorPickerDefaultsObservationContext;
 @synthesize delegate;
 @dynamic colors;
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         scrubber = [[NSScrubber alloc] initWithFrame:NSMakeRect(0.0, 0.0, 180, 22.0)];

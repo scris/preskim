@@ -48,7 +48,7 @@ static char SKNoteTextViewDefaultsObservationContext;
 
 @synthesize usesDefaultFontSize;
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (instancetype)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if (self) {
         NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
@@ -58,7 +58,7 @@ static char SKNoteTextViewDefaultsObservationContext;
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
+- (instancetype)initWithCoder:(NSCoder *)coder {
     self = [super initWithCoder:coder];
     if (self) {
         NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];

@@ -49,21 +49,21 @@
     [numberFormatter setMinimum:[NSNumber numberWithDouble:0.0]];
 }
 
- - (id)init {
+ - (instancetype)init {
     self = [super init];
     if (self)
         [self commonInit];
     return self;
  }
 
- - (id)initWithCoder:(NSCoder *)aCoder {
+ - (instancetype)initWithCoder:(NSCoder *)aCoder {
     self = [super initWithCoder:aCoder];
     if (self)
         [self commonInit];
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
     SKNumberArrayFormatter *copy = [super copyWithZone:zone];
     copy->numberFormatter = [numberFormatter copyWithZone:zone];
     return copy;

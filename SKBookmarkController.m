@@ -135,17 +135,17 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [separatorImage setAccessibilityDescription:NSLocalizedString(@"separator", @"Accessibility description")];
 }
 
-+ (id)sharedBookmarkController {
++ (SKBookmarkController *)sharedBookmarkController {
     if (sharedBookmarkController == nil)
         [[[self alloc] init] release];
     return sharedBookmarkController;
 }
 
-+ (id)allocWithZone:(NSZone *)zone {
++ (instancetype)allocWithZone:(NSZone *)zone {
     return [sharedBookmarkController retain] ?: [super allocWithZone:zone];
 }
 
-- (id)init {
+- (instancetype)init {
     if (sharedBookmarkController == nil) {
         self = [super initWithWindowNibName:@"BookmarksWindow"];
         if (self) {

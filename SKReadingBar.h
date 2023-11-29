@@ -59,7 +59,7 @@
 @property (readonly) NSRect currentBounds;
 @property (nonatomic, assign) id <SKReadingBarDelegate> delegate;
 
-- (id)initWithPage:(PDFPage *)aPage line:(NSInteger)line delegate:(id <SKReadingBarDelegate>)aDelegate;
+- (instancetype)initWithPage:(PDFPage *)aPage line:(NSInteger)line delegate:(id <SKReadingBarDelegate>)aDelegate;
 
 - (BOOL)goToNextLine;
 - (BOOL)goToPreviousLine;

@@ -55,7 +55,7 @@
 @synthesize delegate, noteTypeMenu;
 @dynamic noteTypes;
 
-- (id)initIncludingWidgets:(BOOL)includeWidgets {
+- (instancetype)initIncludingWidgets:(BOOL)includeWidgets {
     self = [super initWithWindowNibName:@"NoteTypeSheet"];
     if (self) {
         noteTypeMenu = [[NSMenu alloc] init];
@@ -75,7 +75,7 @@
     return self;
 }
 
-- (id)init {
+- (instancetype)init {
     return [self initIncludingWidgets:NO];
 }
 

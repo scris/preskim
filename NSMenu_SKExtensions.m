@@ -107,15 +107,15 @@
     return [[[NSMenuItem alloc] initWithSubmenuAndTitle:aString] autorelease];
 }
 
-- (id)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget {
+- (instancetype)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget {
     return [self initWithTitle:aString imageNamed:nil action:aSelector target:aTarget tag:0];
 }
 
-- (id)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag {
+- (instancetype)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag {
     return [self initWithTitle:aString imageNamed:nil action:aSelector target:aTarget tag:aTag];
 }
 
-- (id)initWithTitle:(NSString *)aString imageNamed:(NSString *)anImageName action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag {
+- (instancetype)initWithTitle:(NSString *)aString imageNamed:(NSString *)anImageName action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag {
     self = [self initWithTitle:aString action:aSelector keyEquivalent:@""];
     if (self) {
         if (anImageName)
@@ -126,7 +126,7 @@
     return self;
 }
 
-- (id)initWithSubmenuAndTitle:(NSString *)aString {
+- (instancetype)initWithSubmenuAndTitle:(NSString *)aString {
     self = [self initWithTitle:aString action:NULL keyEquivalent:@""];
     if (self) {
         NSMenu *menu = [[NSMenu alloc] initWithTitle:aString];

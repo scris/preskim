@@ -54,7 +54,7 @@
 @property (nonatomic, copy) NSDictionary *info;
 @property (nonatomic, readonly) NSArray *keys;
 
-@property (class, nonatomic, readonly) id sharedInstance;
+@property (class, nonatomic, readonly) SKInfoWindowController *sharedInstance;
 
 - (NSDictionary *)infoForDocument:(NSDocument *)doc;
 

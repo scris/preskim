@@ -48,7 +48,7 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
 @synthesize delegate, subject;
 @dynamic title, image;
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         NSURL *appURL = [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL:[NSURL URLWithString:@"mailto://"]];

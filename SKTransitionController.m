@@ -595,7 +595,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 @synthesize image, extent, filter;
 @dynamic progress;
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (instancetype)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if (self && [MTKView class]) {
         id<MTLDevice> device = MTLCreateSystemDefaultDevice();

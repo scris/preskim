@@ -103,27 +103,27 @@ static Class SKBookmarkClass = Nil;
     defaultPlaceholderBookmark = (SKPlaceholderBookmark *)NSAllocateObject([SKPlaceholderBookmark class], 0, NSDefaultMallocZone());
 }
 
-+ (id)allocWithZone:(NSZone *)aZone {
++ (instancetype)allocWithZone:(NSZone *)aZone {
     return SKBookmarkClass == self ? defaultPlaceholderBookmark : [super allocWithZone:aZone];
 }
 
-+ (id)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
++ (instancetype)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
     return [[[self alloc] initWithURL:aURL pageIndex:aPageIndex label:aLabel] autorelease];
 }
 
-+ (id)bookmarkWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel {
++ (instancetype)bookmarkWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel {
     return [[[self alloc] initWithSetup:aSetupDict label:aLabel] autorelease];
 }
 
-+ (id)bookmarkFolderWithLabel:(NSString *)aLabel {
++ (instancetype)bookmarkFolderWithLabel:(NSString *)aLabel {
     return [[[self alloc] initFolderWithLabel:aLabel] autorelease];
 }
 
-+ (id)bookmarkSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel {
++ (instancetype)bookmarkSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel {
     return [[[self alloc] initSessionWithSetups:aSetupDicts label:aLabel] autorelease];
 }
 
-+ (id)bookmarkSeparator {
++ (instancetype)bookmarkSeparator {
     return [[[self alloc] initSeparator] autorelease];
 }
 
@@ -155,47 +155,47 @@ static Class SKBookmarkClass = Nil;
     return array;
 }
 
-- (id)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
+- (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (id)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel {
+- (instancetype)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (id)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel {
+- (instancetype)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (id)initFolderWithLabel:(NSString *)aLabel {
+- (instancetype)initFolderWithLabel:(NSString *)aLabel {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (id)initRootWithChildrenProperties:(NSArray *)childrenProperties {
+- (instancetype)initRootWithChildrenProperties:(NSArray *)childrenProperties {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (id)initSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel {
+- (instancetype)initSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (id)initSeparator {
+- (instancetype)initSeparator {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (id)initWithProperties:(NSDictionary *)dictionary {
+- (instancetype)initWithProperties:(NSDictionary *)dictionary {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (id)copyWithZone:(NSZone *)aZone { 	 
+- (instancetype)copyWithZone:(NSZone *)aZone { 	 
     return [[SKBookmark alloc] initWithProperties:[self properties]];
 }
 
@@ -336,27 +336,27 @@ static Class SKBookmarkClass = Nil;
 
 @implementation SKPlaceholderBookmark
 
-- (id)init {
+- (instancetype)init {
     return nil;
 }
 
-- (id)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
+- (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
     return (id)[[SKFileBookmark alloc] initWithURL:aURL pageIndex:aPageIndex label:aLabel];
 }
 
-- (id)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel {
+- (instancetype)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel {
     return (id)[[SKFileBookmark alloc] initWithSetup:aSetupDict label:aLabel];
 }
 
-- (id)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel {
+- (instancetype)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel {
     return (id)[[SKFolderBookmark alloc] initFolderWithChildren:aChildren label:aLabel];
 }
 
-- (id)initFolderWithLabel:(NSString *)aLabel {
+- (instancetype)initFolderWithLabel:(NSString *)aLabel {
     return [self initFolderWithChildren:nil label:aLabel];
 }
 
-- (id)initRootWithChildrenProperties:(NSArray *)childrenProperties {
+- (instancetype)initRootWithChildrenProperties:(NSArray *)childrenProperties {
     NSMutableArray *aChildren = [NSMutableArray array];
     SKBookmark *child;
     for (NSDictionary *dict in childrenProperties) {
@@ -368,7 +368,7 @@ static Class SKBookmarkClass = Nil;
     return (id)[[SKRootBookmark alloc] initFolderWithChildren:aChildren label:NSLocalizedString(@"Bookmarks Menu", @"Menu item title")];
 }
 
-- (id)initSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel {
+- (instancetype)initSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel {
     NSMutableArray *aChildren = [NSMutableArray array];
     SKBookmark *child;
     for (NSDictionary *setup in aSetupDicts) {
@@ -380,11 +380,11 @@ static Class SKBookmarkClass = Nil;
     return (id)[[SKSessionBookmark alloc] initFolderWithChildren:aChildren label:aLabel];
 }
 
-- (id)initSeparator {
+- (instancetype)initSeparator {
     return (id)[[SKSeparatorBookmark alloc] init];
 }
 
-- (id)initWithProperties:(NSDictionary *)dictionary {
+- (instancetype)initWithProperties:(NSDictionary *)dictionary {
     NSString *type = [dictionary objectForKey:TYPE_KEY];
     if ([type isEqualToString:SEPARATOR_STRING]) {
         return (id)[[SKSeparatorBookmark alloc] init];
@@ -474,7 +474,7 @@ static Class SKBookmarkClass = Nil;
     return icon;
 }
 
-- (id)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
+- (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
     self = [super init];
     if (self) {
         alias = [[SKAlias alloc] initWithURL:aURL];
@@ -490,7 +490,7 @@ static Class SKBookmarkClass = Nil;
     return self;
 }
 
-- (id)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel {
+- (instancetype)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel {
     self = [super init];
     if (self) {
         NSData *data;
@@ -626,7 +626,7 @@ static Class SKBookmarkClass = Nil;
     return keyPaths;
 }
 
-- (id)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel {
+- (instancetype)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel {
     self = [super init];
     if (self) {
         label = [aLabel copy];

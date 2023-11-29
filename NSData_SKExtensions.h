@@ -56,7 +56,7 @@
 - (NSString *)md5String;
 - (NSString *)xmlString;
 
-- (id)initWithHexString:(NSString *)hexString;
+- (instancetype)initWithHexString:(NSString *)hexString;
 - (NSString *)hexString;
 
 + (NSData *)dataWithPointAsQDPoint:(NSPoint)point;

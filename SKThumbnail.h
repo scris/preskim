@@ -60,7 +60,7 @@
 @property (nonatomic, readonly) NSSize size;
 @property (nonatomic, readonly) PDFPage *page;
 
-- (id)initWithImage:(NSImage *)anImage label:(NSString *)aLabel pageIndex:(NSUInteger)anIndex;
+- (instancetype)initWithImage:(NSImage *)anImage label:(NSString *)aLabel pageIndex:(NSUInteger)anIndex;
 
 - (void)dirtyIfNeeded;
 

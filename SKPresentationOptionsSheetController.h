@@ -75,7 +75,7 @@
 @property (nonatomic, readonly) SKScroller *verticalScroller;
 @property (nonatomic, readonly) NSUndoManager *undoManager;
 
-- (id)initForController:(SKMainWindowController *)aController;
+- (instancetype)initForController:(SKMainWindowController *)aController;
 
 - (void)startObservingTransitions:(NSArray *)infos;
 - (void)stopObservingTransitions:(NSArray *)infos;

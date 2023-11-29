@@ -322,7 +322,7 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
     return NSPasteboardReadingAsData;
 }
 
-- (id)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type {
+- (instancetype)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type {
     [self release];
     self = nil;
     if ([propertyList isKindOfClass:[NSString class]]) {

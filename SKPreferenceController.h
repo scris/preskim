@@ -53,7 +53,7 @@
 
 @property (nonatomic, retain) IBOutlet NSButton *resetButton, *resetAllButton;
 
-@property (class, nonatomic, readonly) id sharedPrefenceController;
+@property (class, nonatomic, readonly) SKPreferenceController *sharedPrefenceController;
 
 - (IBAction)resetAll:(id)sender;
 - (IBAction)resetCurrent:(id)sender;

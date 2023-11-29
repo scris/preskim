@@ -44,7 +44,7 @@
 
 @synthesize shouldFill;
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
         color = [[decoder decodeObjectForKey:@"color"] retain];
@@ -59,7 +59,7 @@
     [coder encodeBool:shouldFill forKey:@"shouldFill"];
 }
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
     SKColorCell *copy = [super copyWithZone:zone];
     copy->color = [color retain];
     copy->shouldFill = shouldFill;

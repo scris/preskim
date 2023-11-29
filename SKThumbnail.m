@@ -44,7 +44,7 @@
 @synthesize delegate, dirty, image, label, pageIndex;
 @dynamic size, page;
 
-- (id)initWithImage:(NSImage *)anImage label:(NSString *)aLabel pageIndex:(NSUInteger)anIndex {
+- (instancetype)initWithImage:(NSImage *)anImage label:(NSString *)aLabel pageIndex:(NSUInteger)anIndex {
     self = [super init];
     if (self) {
         image = [anImage retain];

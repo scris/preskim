@@ -87,7 +87,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     [self registerForDraggedTypes:@[SKPasteboardTypeLineStyle]];
 }
 
-- (id)initWithFrame:(NSRect)frame {
+- (instancetype)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         lineWidth = 1.0;
@@ -108,7 +108,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
         lineWidth = [decoder decodeDoubleForKey:SKLineWellLineWidthKey];

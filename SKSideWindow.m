@@ -69,7 +69,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
     [contentView setMaskImage:mask];
 }
 
-- (id)initWithView:(NSView *)view {
+- (instancetype)initWithView:(NSView *)view {
     self = [super initWithContentRect:NSMakeRect(0.0, 0.0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
     if (self) {
 		[self setBackgroundColor:[NSColor clearColor]];

@@ -59,7 +59,7 @@
     return NO;
 }
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         notes = [[NSArray alloc] init];

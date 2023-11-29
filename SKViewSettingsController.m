@@ -58,7 +58,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     return @[@"autoScales", @"scaleFactor", @"displayMode", @"displayDirection", @"displaysAsBook", @"displaysRTL", @"displaysPageBreaks", @"displayBox"];
 }
 
-- (id)initWithSettings:(NSDictionary *)settings defaultSettings:(NSDictionary *)aDefaultSettings {
+- (instancetype)initWithSettings:(NSDictionary *)settings defaultSettings:(NSDictionary *)aDefaultSettings {
     self = [super init];
     if (self) {
         defaultSettings = [aDefaultSettings copy];

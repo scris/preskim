@@ -49,22 +49,22 @@ static NSString *rectDescriptionFunction(const void *item) { return NSStringFrom
 
 static NSString *rangeDescriptionFunction(const void *item) { return [NSString stringWithFormat:@"(%lu, %lu)", (unsigned long)(((NSRange *)item)->location), (unsigned long)(((NSRange *)item)->length)]; }
 
-+ (id)rectPointerArray { return [[[self alloc] initForRectPointers] autorelease]; }
++ (instancetype)rectPointerArray { return [[[self alloc] initForRectPointers] autorelease]; }
 
-+ (id)rangePointerArray { return [[[self alloc] initForRangePointers] autorelease]; }
++ (instancetype)rangePointerArray { return [[[self alloc] initForRangePointers] autorelease]; }
 
-- (id)initForStructPointersWithSizeFunction:(NSUInteger (*)(const void *))sizeFunction descriptionFunction:(NSString *(*)(const void *))descriptionFunction {
+- (instancetype)initForStructPointersWithSizeFunction:(NSUInteger (*)(const void *))sizeFunction descriptionFunction:(NSString *(*)(const void *))descriptionFunction {
     NSPointerFunctions *pointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsMallocMemory | NSPointerFunctionsCopyIn | NSPointerFunctionsStructPersonality];
     [pointerFunctions setSizeFunction:sizeFunction];
     [pointerFunctions setDescriptionFunction:descriptionFunction];
     return [self initWithPointerFunctions:pointerFunctions];
 }
 
-- (id)initForRectPointers {
+- (instancetype)initForRectPointers {
     return [self initForStructPointersWithSizeFunction:&rectSizeFunction descriptionFunction:&rectDescriptionFunction];
 }
 
-- (id)initForRangePointers {
+- (instancetype)initForRangePointers {
     return [self initForStructPointersWithSizeFunction:&rangeSizeFunction descriptionFunction:&rangeDescriptionFunction];
 }
 

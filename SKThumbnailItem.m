@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @synthesize backgroundStyle, highlightLevel, marked;
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
     SKThumbnailItem *copy = [super copyWithZone:zone];
     [copy setBackgroundStyle:[self backgroundStyle]];
     [copy setHighlightLevel:[self highlightLevel]];

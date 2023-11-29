@@ -50,7 +50,7 @@
 @property (nonatomic, retain) NSColor *whitePoint;
 @property (nonatomic, getter=isInverted) BOOL inverted;
 
-- (id)initForFullScreen:(BOOL)isFullScreen;
-- (id)initWithName:(NSString *)name;
+- (instancetype)initForFullScreen:(BOOL)isFullScreen;
+- (instancetype)initWithName:(NSString *)name;
 
 @end

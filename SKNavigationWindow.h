@@ -42,7 +42,7 @@
 @class SKPDFView, SKNavigationToolTipView, SKNavigationButton;
 
 @interface SKHUDWindow : SKAnimatedBorderlessWindow
-- (id)initWithPDFView:(SKPDFView *)pdfView;
+- (instancetype)initWithPDFView:(SKPDFView *)pdfView;
 - (void)showForWindow:(NSWindow *)window;
 - (void)handleParentWindowDidResizeNotification:(NSNotification *)notification;
 @end
@@ -74,7 +74,7 @@
 @interface SKNavigationToolTipWindow : NSPanel {
     NSView *view;
 }
-@property (class, nonatomic, readonly) id sharedToolTipWindow;
+@property (class, nonatomic, readonly) SKNavigationToolTipWindow *sharedToolTipWindow;
 - (void)showToolTip:(NSString *)toolTip forView:(NSView *)aView;
 @property (nonatomic, readonly) NSView *view;
 @end

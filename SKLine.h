@@ -45,7 +45,7 @@
     NSInteger index;
 }
 
-- (id)initWithPage:(PDFPage *)aPage index:(NSInteger)anIndex;
+- (instancetype)initWithPage:(PDFPage *)aPage index:(NSInteger)anIndex;
 
 @property (nonatomic, readonly) PDFPage *page;
 @property (nonatomic, readonly) NSInteger index;

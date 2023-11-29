@@ -97,7 +97,7 @@ NSString *SKDocumentControllerDocumentKey = @"document";
 
 @synthesize openedFile;
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         [self setAutosavingDelay:[[NSUserDefaults standardUserDefaults] doubleForKey:SKAutosaveIntervalKey]];

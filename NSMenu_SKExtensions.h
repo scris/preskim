@@ -64,10 +64,10 @@
 + (NSMenuItem *)menuItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag;
 + (NSMenuItem *)menuItemWithSubmenuAndTitle:(NSString *)aString;
 
-- (id)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget;
-- (id)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag;
-- (id)initWithTitle:(NSString *)aString imageNamed:(NSString *)anImageName action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag;
-- (id)initWithSubmenuAndTitle:(NSString *)aString;
+- (instancetype)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget;
+- (instancetype)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag;
+- (instancetype)initWithTitle:(NSString *)aString imageNamed:(NSString *)anImageName action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag;
+- (instancetype)initWithSubmenuAndTitle:(NSString *)aString;
 
 - (void)setImageAndSize:(NSImage *)image;
 

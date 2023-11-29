@@ -48,7 +48,7 @@
 @synthesize page, index;
 @dynamic bounds, scriptingIndex, boundsAsQDRect, selectionSpecifier;
 
-- (id)initWithPage:(PDFPage *)aPage index:(NSInteger)anIndex {
+- (instancetype)initWithPage:(PDFPage *)aPage index:(NSInteger)anIndex {
     self = [super init];
     if (self) {
         page = [aPage retain];

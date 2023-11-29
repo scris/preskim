@@ -66,7 +66,7 @@ static NSUInteger caseInsensitiveStringHash(const void *item, NSUInteger (*size)
     SKPDFSynchronizerTexExtensions = [[NSArray alloc] initWithObjects:@"tex", @"ltx", @"latex", @"ctx", @"lyx", @"rnw", nil];
 }
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         queue = NULL;

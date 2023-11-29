@@ -47,7 +47,7 @@
     CGFloat scale;
 }
 
-@property (class, nonatomic, readonly) id sharedToolTipWindow;
+@property (class, nonatomic, readonly) SKImageToolTipWindow *sharedToolTipWindow;
 
 // aContext can be a PDFAnnotation, PDFDestination, or PDFPage
 - (void)showForImageContext:(id <SKImageToolTipContext>)aContext scale:(CGFloat)aScale atPoint:(NSPoint)aPoint;

@@ -80,7 +80,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 
 @synthesize keyPath;
 
-- (id)initWithKeyPath:(NSString *)aKeyPath {
+- (instancetype)initWithKeyPath:(NSString *)aKeyPath {
     self = [super init];
     if (self) {
         keyPath = [aKeyPath copy];
@@ -103,7 +103,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 
 @synthesize attributes;
 
-- (id)initWithKeyPath:(NSString *)aKeyPath attributes:(NSDictionary *)anAttributes {
+- (instancetype)initWithKeyPath:(NSString *)aKeyPath attributes:(NSDictionary *)anAttributes {
     self = [super initWithKeyPath:aKeyPath];
     if (self) {
         attributes = [anAttributes copy];
@@ -131,7 +131,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 
 @dynamic itemTemplate, separatorTemplate;
 
-- (id)initWithKeyPath:(NSString *)aKeyPath itemTemplateString:(NSString *)anItemTemplateString separatorTemplateString:(NSString *)aSeparatorTemplateString {
+- (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateString:(NSString *)anItemTemplateString separatorTemplateString:(NSString *)aSeparatorTemplateString {
     self = [super initWithKeyPath:aKeyPath];
     if (self) {
         itemTemplateString = [anItemTemplateString retain];
@@ -172,7 +172,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 
 @dynamic itemTemplate, separatorTemplate;
 
-- (id)initWithKeyPath:(NSString *)aKeyPath itemTemplateAttributedString:(NSAttributedString *)anItemTemplateAttributedString separatorTemplateAttributedString:(NSAttributedString *)aSeparatorTemplateAttributedString {
+- (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateAttributedString:(NSAttributedString *)anItemTemplateAttributedString separatorTemplateAttributedString:(NSAttributedString *)aSeparatorTemplateAttributedString {
     self = [super initWithKeyPath:aKeyPath];
     if (self) {
         itemTemplateAttributedString = [anItemTemplateAttributedString retain];
@@ -213,7 +213,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 
 @synthesize matchType, matchStrings;
 
-- (id)initWithKeyPath:(NSString *)aKeyPath matchType:(SKTemplateTagMatchType)aMatchType matchStrings:(NSArray *)aMatchStrings subtemplates:(NSArray *)aSubtemplates {
+- (instancetype)initWithKeyPath:(NSString *)aKeyPath matchType:(SKTemplateTagMatchType)aMatchType matchStrings:(NSArray *)aMatchStrings subtemplates:(NSArray *)aSubtemplates {
     self = [super initWithKeyPath:aKeyPath];
     if (self) {
         matchType = aMatchType;
@@ -267,7 +267,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 
 @synthesize text;
 
-- (id)initWithText:(NSString *)aText {
+- (instancetype)initWithText:(NSString *)aText {
     self = [super init];
     if (self) {
         text = [aText retain];
@@ -295,7 +295,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 @synthesize attributedText;
 @dynamic linkTemplates;
 
-- (id)initWithAttributedText:(NSAttributedString *)anAttributedText {
+- (instancetype)initWithAttributedText:(NSAttributedString *)anAttributedText {
     self = [super init];
     if (self) {
         attributedText = [anAttributedText retain];
@@ -333,7 +333,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 
 @synthesize range, template, attributeClass;
 
-- (id)initWithTemplate:(NSArray *)aTemplate range:(NSRange)aRange attributeClass:(Class)aClass {
+- (instancetype)initWithTemplate:(NSArray *)aTemplate range:(NSRange)aRange attributeClass:(Class)aClass {
     self = [super init];
     if (self) {
         template = [aTemplate copy];
@@ -343,7 +343,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
     return self;
 }
 
-- (id)init {
+- (instancetype)init {
     return [self initWithTemplate:nil range:NSMakeRange(0, 0) attributeClass:NULL];
 }
 

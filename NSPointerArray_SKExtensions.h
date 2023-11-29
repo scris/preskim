@@ -41,11 +41,11 @@
 
 @interface NSPointerArray (SKExtensions)
 
-+ (id)rectPointerArray;
-+ (id)rangePointerArray;
-- (id)initForStructPointersWithSizeFunction:(NSUInteger (*)(const void *))sizeFunction descriptionFunction:(NSString *(*)(const void *))descriptionFunction;
-- (id)initForRectPointers;
-- (id)initForRangePointers;
++ (instancetype)rectPointerArray;
++ (instancetype)rangePointerArray;
+- (instancetype)initForStructPointersWithSizeFunction:(NSUInteger (*)(const void *))sizeFunction descriptionFunction:(NSString *(*)(const void *))descriptionFunction;
+- (instancetype)initForRectPointers;
+- (instancetype)initForRangePointers;
 
 - (NSRect)rectAtIndex:(NSUInteger)anIndex;
 - (NSRange)rangeAtIndex:(NSUInteger)anIndex;

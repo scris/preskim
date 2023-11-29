@@ -54,6 +54,6 @@
 @property (nonatomic, retain) NSString *file;
 @property (nonatomic) NSInteger line;
 
-- (id)initWithRecordIndex:(NSInteger)aRecordIndex;
+- (instancetype)initWithRecordIndex:(NSInteger)aRecordIndex;
 
 @end

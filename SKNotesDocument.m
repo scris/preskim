@@ -103,7 +103,7 @@
 @synthesize outlineView, statusBar, arrayController, searchField, notes, pdfDocument, sourceFileURL;
 @dynamic window, interactionMode;
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         notes = [[NSArray alloc] init];

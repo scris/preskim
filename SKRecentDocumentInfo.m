@@ -49,7 +49,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @synthesize pageIndex, snapshots;
 @dynamic fileURL, properties;
 
-- (id)initWithProperties:(NSDictionary *)properties {
+- (instancetype)initWithProperties:(NSDictionary *)properties {
     self = [super init];
     if (self) {
         NSNumber *pageNumber = [properties objectForKey:PAGEINDEX_KEY];
@@ -64,7 +64,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     return self;
 }
 
-- (id)initWithURL:(NSURL *)fileURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray *)aSnapshots {
+- (instancetype)initWithURL:(NSURL *)fileURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray *)aSnapshots {
     self = [super init];
     if (self) {
         alias = [[SKAlias alloc] initWithURL:fileURL];

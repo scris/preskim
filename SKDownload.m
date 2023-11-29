@@ -118,7 +118,7 @@ static NSSet *keysAffectedByStatus = nil;
     return resumeImage;
 }
 
-- (id)initWithURL:(NSURL *)aURL {
+- (instancetype)initWithURL:(NSURL *)aURL {
     self = [super init];
     if (self) {
         URL = [aURL retain];
@@ -136,7 +136,7 @@ static NSSet *keysAffectedByStatus = nil;
     return self;
 }
 
-- (id)initWithProperties:(NSDictionary *)properties {
+- (instancetype)initWithProperties:(NSDictionary *)properties {
     NSString *URLString = [properties objectForKey:@"URL"];
     self = [self initWithURL:URLString ? [NSURL URLWithString:URLString] : nil];
     if (self) {
@@ -155,7 +155,7 @@ static NSSet *keysAffectedByStatus = nil;
     return self;
 }
 
-- (id)init {
+- (instancetype)init {
     return [self initWithURL:nil];
 }
 

@@ -74,7 +74,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 @implementation SKHUDWindow
 
-- (id)initWithPDFView:(SKPDFView *)pdfView {
+- (instancetype)initWithPDFView:(SKPDFView *)pdfView {
     NSScreen *screen = [[pdfView window] screen] ?: [NSScreen mainScreen];
     CGFloat width = 5 * BUTTON_WIDTH + 3 * SEP_WIDTH + 2 * BUTTON_MARGIN;
     NSRect contentRect = NSMakeRect(NSMidX([screen frame]) - 0.5 * width, NSMinY([screen frame]) + WINDOW_OFFSET, width, BUTTON_HEIGHT + 2 * BUTTON_MARGIN);
@@ -148,7 +148,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 @implementation SKNavigationWindow
 
-- (id)initWithPDFView:(SKPDFView *)pdfView {
+- (instancetype)initWithPDFView:(SKPDFView *)pdfView {
     self = [super initWithPDFView:pdfView];
     if (self) {
         
@@ -262,7 +262,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 @implementation SKCursorStyleWindow
 
-- (id)initWithPDFView:(SKPDFView *)pdfView {
+- (instancetype)initWithPDFView:(SKPDFView *)pdfView {
     self = [super initWithPDFView:pdfView];
     if (self) {
         
@@ -429,14 +429,14 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 @synthesize view;
 
-+ (id)sharedToolTipWindow {
++ (SKNavigationToolTipWindow *)sharedToolTipWindow {
     static SKNavigationToolTipWindow *sharedToolTipWindow = nil;
     if (sharedToolTipWindow == nil)
         sharedToolTipWindow = [[self alloc] init];
     return sharedToolTipWindow;
 }
 
-- (id)init {
+- (instancetype)init {
     self = [super initWithContentRect:NSZeroRect styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:YES];
     if (self) {
 		[self setBackgroundColor:[NSColor clearColor]];
@@ -486,7 +486,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 @synthesize stringValue;
 @dynamic attributedStringValue;
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (instancetype)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if (self) {
         stringValue = nil;
@@ -494,7 +494,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
         stringValue = [[decoder decodeObjectForKey:@"stringValue"] retain];
@@ -593,7 +593,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 @synthesize path, alternatePath, toolTip, alternateToolTip;
 
-- (id)initTextCell:(NSString *)aString {
+- (instancetype)initTextCell:(NSString *)aString {
     self = [super initTextCell:@""];
     if (self) {
 		[self setBezelStyle:NSShadowlessSquareBezelStyle]; // this is mainly to make it selectable
@@ -603,7 +603,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
         toolTip = [[decoder decodeObjectForKey:@"toolTip"] retain];
@@ -622,7 +622,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     [coder encodeObject:alternatePath forKey:@"alternatePath"];
 }
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
     SKNavigationButtonCell *copy = [super copyWithZone:zone];
     copy->toolTip = [toolTip retain];
     copy->alternateToolTip = [alternateToolTip retain];

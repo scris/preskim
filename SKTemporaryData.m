@@ -43,7 +43,7 @@
 
 @synthesize pdfDocument, noteDicts, presentationOptions, openMetaTags, openMetaRating;
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         pdfDocument = nil;

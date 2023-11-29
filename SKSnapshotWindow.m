@@ -51,7 +51,7 @@
 @synthesize windowControllerMiniaturizesWindow;
 @dynamic windowImage;
 
-- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSWindowStyleMask)styleMask backing:(NSBackingStoreType)bufferingType defer:(BOOL)deferCreation {
+- (instancetype)initWithContentRect:(NSRect)contentRect styleMask:(NSWindowStyleMask)styleMask backing:(NSBackingStoreType)bufferingType defer:(BOOL)deferCreation {
     self = [super initWithContentRect:contentRect styleMask:styleMask backing:bufferingType defer:deferCreation];
     if (self) {
         windowControllerMiniaturizesWindow = YES;

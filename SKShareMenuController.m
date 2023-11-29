@@ -46,7 +46,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @synthesize document;
 
-- (id)initForDocument:(NSDocument *)aDocument {
+- (instancetype)initForDocument:(NSDocument *)aDocument {
     self = [super init];
     if (self) {
         document = aDocument;
@@ -54,7 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
+- (instancetype)initWithCoder:(NSCoder *)coder {
     [self release];
     return nil;
 }

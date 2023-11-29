@@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     NSDictionary *defaultSettings;
 }
 
-- (id)initWithSettings:(NSDictionary *)settings defaultSettings:(NSDictionary *)aDefaultSettings;
+- (instancetype)initWithSettings:(NSDictionary *)settings defaultSettings:(NSDictionary *)aDefaultSettings;
 
 @property (nonatomic, getter=isCustom) BOOL custom;
 

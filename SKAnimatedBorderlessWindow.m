@@ -51,7 +51,7 @@
 @synthesize defaultAlphaValue, autoHideTimeInterval;
 @dynamic fadeInDuration, fadeOutDuration, backgroundImage;
 
-- (id)initWithContentRect:(NSRect)contentRect {
+- (instancetype)initWithContentRect:(NSRect)contentRect {
     self = [super initWithContentRect:contentRect styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
     if (self) {
         defaultAlphaValue = ALPHA_VALUE;

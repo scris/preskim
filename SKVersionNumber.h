@@ -62,7 +62,7 @@ typedef NS_ENUM(NSInteger, SKVersionType) {
 
 + (NSComparisonResult)compareVersionString:(NSString *)versionString toVersionString:(NSString *)otherVersionString;
 
-- (id)initWithVersionString:(NSString *)versionString;
+- (instancetype)initWithVersionString:(NSString *)versionString;
 
 - (NSInteger)componentAtIndex:(NSUInteger)componentIndex;
 

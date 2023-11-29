@@ -50,12 +50,12 @@ enum {
 
 @interface NSError (SKExtensions)
 
-+ (id)writeFileErrorWithLocalizedDescription:(NSString *)description;
-+ (id)readFileErrorWithLocalizedDescription:(NSString *)description;
-+ (id)readPasteboardErrorWithLocalizedDescription:(NSString *)description;
-+ (id)userCancelledErrorWithUnderlyingError:(NSError *)error;
-+ (id)printDocumentErrorWithLocalizedDescription:(NSString *)description;
-+ (id)failedToCommitErrorWithLocalizedDescription:(NSString *)description;
++ (instancetype)writeFileErrorWithLocalizedDescription:(NSString *)description;
++ (instancetype)readFileErrorWithLocalizedDescription:(NSString *)description;
++ (instancetype)readPasteboardErrorWithLocalizedDescription:(NSString *)description;
++ (instancetype)userCancelledErrorWithUnderlyingError:(NSError *)error;
++ (instancetype)printDocumentErrorWithLocalizedDescription:(NSString *)description;
++ (instancetype)failedToCommitErrorWithLocalizedDescription:(NSString *)description;
 
 + (NSError *)combineErrors:(NSArray *)errors maximum:(NSUInteger)max;
 

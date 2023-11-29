@@ -45,7 +45,7 @@
 @synthesize recordIndex, pageIndex, point, file, line;
 @dynamic x, y;
 
-- (id)initWithRecordIndex:(NSInteger)aRecordIndex {
+- (instancetype)initWithRecordIndex:(NSInteger)aRecordIndex {
     self = [super init];
     if (self) {
         recordIndex = aRecordIndex;

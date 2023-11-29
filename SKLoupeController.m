@@ -65,7 +65,7 @@
 
 @synthesize magnification, level;
 
-- (id)initWithPDFView:(PDFView *)aPdfView {
+- (instancetype)initWithPDFView:(PDFView *)aPdfView {
     self = [super init];
     if (self) {
         pdfView = aPdfView;

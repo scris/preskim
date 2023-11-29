@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @implementation SKChainedUndoManager
 
-- (id)initWithNextUndoManager:(NSUndoManager *)undoManager {
+- (instancetype)initWithNextUndoManager:(NSUndoManager *)undoManager {
     self = [super init];
     if (self) {
         nextUndoManager = [undoManager retain];

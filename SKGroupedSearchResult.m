@@ -55,11 +55,11 @@ NSString *SKGroupedSearchResultCountKey = @"count";
     return keyPaths;
 }
 
-+ (id)groupedSearchResultWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount {
++ (instancetype)groupedSearchResultWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount {
     return [[[self alloc] initWithPage:aPage maxCount:aMaxCount] autorelease];
 }
 
-- (id)initWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount {
+- (instancetype)initWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount {
     self = [super init];
     if (self) {
         page = [aPage retain];

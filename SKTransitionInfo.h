@@ -51,7 +51,7 @@ typedef NS_ENUM(NSUInteger, SKTransitionStyle) {
     BOOL shouldRestrict;
 }
 
-- (id)initWithProperties:(NSDictionary *)properies;
+- (instancetype)initWithProperties:(NSDictionary *)properies;
 
 @property (nonatomic, copy) NSDictionary *properties;
 

@@ -271,7 +271,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     return image;
 }
 
-- (id)initPDFWithSize:(NSSize)size drawingHandler:(void (^)(NSRect dstRect))drawingHandler {
+- (instancetype)initPDFWithSize:(NSSize)size drawingHandler:(void (^)(NSRect dstRect))drawingHandler {
     CFMutableDataRef pdfData = CFDataCreateMutable(NULL, 0);
     CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData(pdfData);
     CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
@@ -290,7 +290,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     return self;
 }
 
-- (id)initVectorWithSize:(NSSize)size drawingHandler:(void (^)(NSRect dstRect))drawingHandler {
+- (instancetype)initVectorWithSize:(NSSize)size drawingHandler:(void (^)(NSRect dstRect))drawingHandler {
     return [self initPDFWithSize:size drawingHandler:drawingHandler];
 }
 

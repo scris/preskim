@@ -59,8 +59,8 @@
 
 - (CGFloat)boundsOrderForPage:(PDFPage *)page;
 
-+ (id)selectionWithSpecifier:(id)specifier;
-+ (id)selectionWithSpecifier:(id)specifier onPage:(PDFPage *)aPage;
++ (instancetype)selectionWithSpecifier:(id)specifier;
++ (instancetype)selectionWithSpecifier:(id)specifier onPage:(PDFPage *)aPage;
 - (id)objectSpecifiers;
 
 @end

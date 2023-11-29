@@ -41,7 +41,7 @@
 
 @implementation NSInvocation (SKExtensions)
 
-+ (id)invocationWithTarget:(id)target selector:(SEL)selector {
++ (instancetype)invocationWithTarget:(id)target selector:(SEL)selector {
     NSMethodSignature *ms = [target methodSignatureForSelector:selector];
     NSInvocation *invocation = [self invocationWithMethodSignature:ms];
     [invocation setTarget:target];
