@@ -859,26 +859,26 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 }
 
 - (BOOL)isSkimNote {
+#if !defined(PDFKIT_PLATFORM_IOS) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
     BOOL isSkimNote;
     @synchronized([PDFAnnotation self]) {
-#if !defined(PDFKIT_PLATFORM_IOS) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
         isSkimNote = [SkimNotes containsObject:self];
-#else
-        isSkimNote = [objc_getAssociatedObject(self, &SKNIsSkimNoteKey) boolValue];
-#endif
     }
     return isSkimNote;
+#else
+    return [objc_getAssociatedObject(self, &SKNIsSkimNoteKey) boolValue];
+#endif
 }
 
 - (void)setSkimNote:(BOOL)flag {
-    @synchronized([PDFAnnotation self]) {
 #if !defined(PDFKIT_PLATFORM_IOS) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
+    @synchronized([PDFAnnotation self]) {
         if (flag) [SkimNotes addObject:self];
         else [SkimNotes removeObject:self];
-#else
-        objc_setAssociatedObject(self, &SKNIsSkimNoteKey, flag ? [NSNumber numberWithBool:YES] : nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-#endif
     }
+#else
+    objc_setAssociatedObject(self, &SKNIsSkimNoteKey, flag ? [NSNumber numberWithBool:YES] : nil, OBJC_ASSOCIATION_RETAIN);
+#endif
 }
 
 - (NSString *)string {
