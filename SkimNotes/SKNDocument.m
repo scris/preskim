@@ -52,7 +52,7 @@
 @synthesize notes;
 
 + (void)initialize {
-    [NSValueTransformer setValueTransformer:[[[SKNPlusOneTransformer alloc] init] autorelease] forName:@"SKNPlusOne"];
+    [NSValueTransformer setValueTransformer:[[SKNPlusOneTransformer alloc] init] forName:@"SKNPlusOne"];
 }
 
 + (BOOL)autosavesInPlace {
@@ -65,11 +65,6 @@
         notes = [[NSArray alloc] init];
     }
     return self;
-}
-
-- (void)dealloc {
-    [notes release];
-    [super dealloc];
 }
 
 - (NSString *)windowNibName {
@@ -171,7 +166,7 @@
                     [self setNotes:arr];
             }
         }];
-        array = [NSArray array];
+        array = @[];
     }
 
 #elif defined(ToolSample)
@@ -212,7 +207,6 @@
         if (success && [task terminationStatus] == 0 && data == nil)
             data = [NSData data];
         
-        [task release];
         task = nil;
         [fm removeItemAtPath:tmpDir error:NULL];
     } else if ([ws type:docType conformsToType:SKNPDFBundleDocumentType]) {
@@ -238,7 +232,7 @@
             if (array == nil)
                 array = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
         } else {
-            array = [NSArray array];
+            array = @[];
         }
     }
     

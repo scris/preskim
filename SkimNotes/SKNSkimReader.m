@@ -59,28 +59,22 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:connection];
 #pragma clang diagnostic pop
-    [agent release];
     agent = nil;
     
     [[connection receivePort] invalidate];
     [[connection sendPort] invalidate];
     [connection invalidate];
-    [connection release];
     connection = nil;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self destroyConnection];
-    [agentIdentifier release];
-    [super dealloc];
 }
 
 - (void)setAgentIdentifier:(NSString *)identifier {
     NSAssert(connection == nil, @"agentIdentifier must be set before connecting");
     if (connection == nil && agentIdentifier != identifier) {
-        [agentIdentifier release];
-        agentIdentifier = [identifier retain];
+        agentIdentifier = identifier;
     }
 }
 
@@ -133,7 +127,7 @@
             NSLog(@"failed to launch skimnotes agent: %@", exception);
             taskLaunched = NO;
         }
-        [task release];
+        task = nil;
     } else {
         NSLog(@"failed to find skimnotes tool");
     }
@@ -158,7 +152,7 @@
         int maxTries = 5;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        connection = [[NSConnection connectionWithRegisteredName:[self agentIdentifier] host:nil] retain];
+        connection = [NSConnection connectionWithRegisteredName:[self agentIdentifier] host:nil];
 #pragma clang diagnostic pop
         
         // if we try to read data before the server is fully set up, connection will still be nil
@@ -166,7 +160,7 @@
             [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            connection = [[NSConnection connectionWithRegisteredName:[self agentIdentifier] host:nil] retain];
+            connection = [NSConnection connectionWithRegisteredName:[self agentIdentifier] host:nil];
 #pragma clang diagnostic pop
         }
         
@@ -185,7 +179,7 @@
             @try {
                 id server = [connection rootProxy];
                 [server setProtocolForProxy:@protocol(SKNAgentListenerProtocol)];
-                agent = [server retain];
+                agent = server;
             }
             @catch(id exception) {
                 NSLog(@"Error: exception \"%@\" caught when contacting SkimNotesAgent", exception);
@@ -201,7 +195,7 @@
     NSString *fileType = [ws typeOfFile:[fileURL path] error:NULL];
     
     if (fileType != nil &&
-        ([ws type:fileType conformsToType:(NSString *)kUTTypePDF] ||
+        ([ws type:fileType conformsToType:(__bridge NSString *)kUTTypePDF] ||
          [ws type:fileType conformsToType:@"net.sourceforge.skim-app.pdfd"] ||
          [ws type:fileType conformsToType:@"net.sourceforge.skim-app.skimnotes"])) {
         if (nil == connection)
@@ -253,7 +247,7 @@
             [self destroyConnection];
         }
     }
-    return textData ? [[[NSString alloc] initWithData:textData encoding:NSUnicodeStringEncoding] autorelease] : nil;
+    return textData ? [[NSString alloc] initWithData:textData encoding:NSUnicodeStringEncoding] : nil;
 }
 
 

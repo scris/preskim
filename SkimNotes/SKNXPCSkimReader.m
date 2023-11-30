@@ -54,25 +54,20 @@
 }
 
 - (void)destroyConnection {
-    [agent release];
     agent = nil;
     
     [connection invalidate];
-    [connection release];
     connection = nil;
 }
 
 - (void)dealloc {
     [self destroyConnection];
-    [agentIdentifier release];
-    [super dealloc];
 }
 
 - (void)setAgentIdentifier:(NSString *)identifier {
     NSAssert(connection == nil, @"agentIdentifier must be set before connecting");
     if (connection == nil && agentIdentifier != identifier) {
-        [agentIdentifier release];
-        agentIdentifier = [identifier retain];
+        agentIdentifier = identifier;
     }
 }
 
@@ -125,7 +120,7 @@
             CFErrorRef removeError = NULL;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            if (false == SMJobRemove(kSMDomainUserLaunchd, (CFStringRef)(label), auth, true, &removeError)) {
+            if (false == SMJobRemove(kSMDomainUserLaunchd, (__bridge CFStringRef)(label), auth, true, &removeError)) {
 #pragma clang diagnostic pop
                 if (removeError != NULL) {
                     // It's normal for a job to not be found, so this is not an interesting error
@@ -142,7 +137,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
             // SMJobSubmit is deprecated but is the only way to submit a non-permanent
             // helper and allows us to submit to user domain without requiring authorization
-            if (SMJobSubmit(kSMDomainUserLaunchd, (CFDictionaryRef)jobDictionary, auth, &submitError)) {
+            if (SMJobSubmit(kSMDomainUserLaunchd, (__bridge CFDictionaryRef)jobDictionary, auth, &submitError)) {
 #pragma clang diagnostic pop
                 taskLaunched = YES;
             } else {
@@ -163,13 +158,14 @@
     if ([self launchedTask]) {
         connection = [[NSXPCConnection alloc] initWithMachServiceName:[self agentIdentifier] options:0];
         [connection setRemoteObjectInterface:[NSXPCInterface interfaceWithProtocol:@protocol(SKNXPCAgentListenerProtocol)]];
+        __weak SKNXPCSkimReader *weakSelf = self;
         [connection setInvalidationHandler:^{
-            [self destroyConnection];
+            [weakSelf destroyConnection];
         }];
         if (sync)
-            agent = [[connection synchronousRemoteObjectProxyWithErrorHandler:^(NSError *error){}] retain];
+            agent = [connection synchronousRemoteObjectProxyWithErrorHandler:^(NSError *error){}];
         else
-            agent = [[connection remoteObjectProxy] retain];
+            agent = [connection remoteObjectProxy];
         synchronous = sync;
         [connection resume];
     }
@@ -186,7 +182,7 @@
     NSString *fileType = [ws typeOfFile:[fileURL path] error:NULL];
     
     if (fileType != nil &&
-        ([ws type:fileType conformsToType:(NSString *)kUTTypePDF] ||
+        ([ws type:fileType conformsToType:(__bridge NSString *)kUTTypePDF] ||
          [ws type:fileType conformsToType:@"net.sourceforge.skim-app.pdfd"] ||
          [ws type:fileType conformsToType:@"net.sourceforge.skim-app.skimnotes"])) {
         if (nil == connection)
@@ -199,22 +195,22 @@
 - (NSData *)SkimNotesAtURL:(NSURL *)fileURL {
     __block NSData *data = nil;
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:YES])
-        [agent readSkimNotesAtURL:fileURL reply:^(NSData *outData){ data = [outData retain]; }];
-    return [data autorelease];
+        [agent readSkimNotesAtURL:fileURL reply:^(NSData *outData){ data = outData; }];
+    return data;
 }
 
 - (NSData *)RTFNotesAtURL:(NSURL *)fileURL {
     __block NSData *data = nil;
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:YES])
-        [agent readRTFNotesAtURL:fileURL reply:^(NSData *outData){ data = [outData retain]; }];
-    return [data autorelease];
+        [agent readRTFNotesAtURL:fileURL reply:^(NSData *outData){ data = outData; }];
+    return data;
 }
 
 - (NSString *)textNotesAtURL:(NSURL *)fileURL {
     __block NSString *string = nil;
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:YES])
-        [agent readTextNotesAtURL:fileURL reply:^(NSString *outString){ string = [outString retain]; }];
-    return [string autorelease];
+        [agent readTextNotesAtURL:fileURL reply:^(NSString *outString){ string = outString; }];
+    return string;
 }
 
 - (void)readSkimNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSData *))reply {
