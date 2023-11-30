@@ -205,6 +205,8 @@ static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment)
 
 @implementation PDFAnnotation (SKNExtensions)
 
+#if !defined(PDFKIT_PLATFORM_IOS) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
+
 static NSHashTable *SkimNotes = nil;
 
 static void (*original_dealloc)(id, SEL) = NULL;
@@ -218,14 +220,16 @@ static void replacement_dealloc(id self, SEL _cmd) {
 
 + (void)load {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
-#if !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_8) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_8)
     SkimNotes = [[NSHashTable alloc] initWithOptions:NSHashTableZeroingWeakMemory | NSHashTableObjectPointerPersonality capacity:0];
-#else
-    SkimNotes = [[NSHashTable alloc] initWithOptions:NSHashTableWeakMemory | NSHashTableObjectPointerPersonality capacity:0];
-#endif
     original_dealloc = (void(*)(id,SEL))method_setImplementation(class_getInstanceMethod(self, @selector(dealloc)), (IMP)replacement_dealloc);
     [pool release];
 }
+
+#else
+
+char SKNIsSkimNoteKey;
+
+#endif
 
 #if !defined(PDFKIT_PLATFORM_IOS)
 static inline Class SKNAnnotationClassForType(NSString *type) {
@@ -857,15 +861,23 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 - (BOOL)isSkimNote {
     BOOL isSkimNote;
     @synchronized([PDFAnnotation self]) {
+#if !defined(PDFKIT_PLATFORM_IOS) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
         isSkimNote = [SkimNotes containsObject:self];
+#else
+        isSkimNote = [objc_getAssociatedObject(self, &SKNIsSkimNoteKey) boolValue];
+#endif
     }
     return isSkimNote;
 }
 
 - (void)setSkimNote:(BOOL)flag {
     @synchronized([PDFAnnotation self]) {
+#if !defined(PDFKIT_PLATFORM_IOS) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
         if (flag) [SkimNotes addObject:self];
         else [SkimNotes removeObject:self];
+#else
+        objc_setAssociatedObject(self, &SKNIsSkimNoteKey, flag ? [NSNumber numberWithBool:YES] : nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+#endif
     }
 }
 
