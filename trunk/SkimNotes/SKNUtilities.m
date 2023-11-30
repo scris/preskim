@@ -187,7 +187,7 @@ static NSArray *SKNCreateArrayFromColor(SKNColor *color, NSMapTable **colors, NS
                 array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:r], [NSNumber numberWithDouble:g], [NSNumber numberWithDouble:b], [NSNumber numberWithDouble:a], nil];
             }
 #endif
-            if (colors == NULL)
+            if (*colors == nil)
                 *colors = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
             [*colors setObject:array forKey:color];
         } else {
