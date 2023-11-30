@@ -1097,7 +1097,6 @@
 		CE665A860E1C086F00D0704D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = HeaderDocs;
 			};
 			name = Debug;
@@ -1105,7 +1104,6 @@
 		CE665A870E1C086F00D0704D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = HeaderDocs;
 			};
 			name = Release;
@@ -1141,7 +1139,6 @@
 		CEBA2EA30E0673B60000B2E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = Archive;
 			};
 			name = Debug;
@@ -1149,7 +1146,6 @@
 		CEBA2EA40E0673B60000B2E6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = Archive;
 			};
 			name = Release;

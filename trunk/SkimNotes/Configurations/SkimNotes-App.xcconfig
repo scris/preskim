@@ -10,3 +10,5 @@ LD_RUNPATH_SEARCH_PATHS = @loader_path/../Frameworks
 
 GCC_PRECOMPILE_PREFIX_HEADER = YES
 GCC_PREFIX_HEADER = $(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h
+
+CLANG_ENABLE_OBJC_ARC = YES
