@@ -133,15 +133,13 @@ static inline NSString *SKNFieldNameForAnnotation(PDFAnnotation *annotation) {
 }
 
 - (NSArray *)addSkimNotesWithProperties:(NSArray *)noteDicts {
-    NSEnumerator *e = [noteDicts objectEnumerator];
     PDFAnnotation *annotation;
-    NSDictionary *dict;
     NSMutableArray *notes = [NSMutableArray array];
     
     if ([self pageCount] == 0) return nil;
     
     // create new annotations from the dictionary and add them to their page and to the document
-    while (dict = [e nextObject]) {
+    while (NSDictionary *dict in noteDicts) {
         NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
         if ([[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString]) {
             if (pageIndex >= [self pageCount])

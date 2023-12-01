@@ -193,12 +193,10 @@ static id sharedNoSplitManager = nil;
         return nil;
     }
     
-    NSEnumerator *e = [attrNames objectEnumerator];
     NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithCapacity:[attrNames count]];
     NSData *data = nil;
-    NSString *attrName = nil;
     
-    while((attrName = [e nextObject])){
+    for (NSString *attrName in attrNames){
         data = [self extendedAttributeNamed:attrName atPath:path traverseLink:follow error:&anError];
         if(data != nil){
             [attributes setObject:data forKey:attrName];
@@ -540,9 +538,7 @@ static id sharedNoSplitManager = nil;
     else
         xopts = XATTR_NOFOLLOW;
     
-    NSEnumerator *e = [allAttributes objectEnumerator];
-    NSString *attrName;
-    while ((attrName = [e nextObject])) {
+    for (NSString *attrName in allAttributes) {
         
         status = removexattr(fsPath, [attrName UTF8String], xopts);
         

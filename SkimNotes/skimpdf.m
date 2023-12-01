@@ -376,10 +376,9 @@ int main (int argc, const char * argv[]) {
             for (i = 0; i < iMax; i++) {
                 PDFPage *page = [pdfDoc pageAtIndex:i];
                 NSPoint pageOrigin = [page boundsForBox:kPDFDisplayBoxMediaBox].origin;
-                NSEnumerator *e = [[[[page annotations] copy] autorelease] objectEnumerator];
-                PDFAnnotation *annotation;
+                NSArray *annotations = [[page annotations] copy];
                 
-                while ((annotation = [e nextObject])) {
+                for (PDFAnnotation *annotation in annotations) {
                     if ([convertibleTypes containsObject:[annotation type]]) {
                         NSDictionary *note = [annotation SkimNoteProperties];
                         if ([[annotation type] isEqualToString:SKNTextString]) {
@@ -418,6 +417,7 @@ int main (int argc, const char * argv[]) {
                         [page removeAnnotation:annotation];
                     }
                 }
+                [annotations release];
             }
             
             if ([notes count] > [inNotes count]) {
@@ -439,10 +439,8 @@ int main (int argc, const char * argv[]) {
             NSArray *notes1 = [fm readSkimNotesFromExtendedAttributesAtURL:inURL error:NULL];
             NSArray *notes2 = [fm readSkimNotesFromExtendedAttributesAtURL:inURL2 error:NULL];
             NSMutableArray *notes = [NSMutableArray arrayWithArray:notes1];
-            NSEnumerator *e = [notes2 objectEnumerator];
-            NSDictionary *note;
             
-            while ((note = [e nextObject])) {
+            for (NSDictionary *note in notes2) {
                 NSMutableDictionary *mutableNote = [note mutableCopy];
                 NSUInteger pageIndex = [[note objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue] + count;
                 [mutableNote setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:SKNPDFAnnotationPageIndexKey];
@@ -509,10 +507,8 @@ int main (int argc, const char * argv[]) {
                 
                 NSArray *inNotes = [fm readSkimNotesFromExtendedAttributesAtURL:inURL error:NULL];
                 NSMutableArray *notes = [NSMutableArray array];
-                NSEnumerator *e = [inNotes objectEnumerator];
-                NSDictionary *note;
                 
-                while ((note = [e nextObject])) {
+                for (NSDictionary *note in inNotes) {
                     NSUInteger pageIndex = [[note objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
                     if ([indexes containsIndex:pageIndex]) {
                         NSUInteger newPageIndex = [indexes countOfIndexesInRange:NSMakeRange(0, pageIndex)];
