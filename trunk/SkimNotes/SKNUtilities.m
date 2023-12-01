@@ -77,10 +77,8 @@
 
 NSString *SKNSkimTextNotes(NSArray *noteDicts) {
     NSMutableString *textString = [NSMutableString string];
-    NSEnumerator *dictEnum = [noteDicts objectEnumerator];
-    NSDictionary *dict;
     
-    while (dict = [dictEnum nextObject]) {
+    for (NSDictionary *dict in noteDicts) {
         NSString *type = [dict objectForKey:NOTE_TYPE_KEY];
         
         if ([type isEqualToString:NOTE_WIDGET_TYPE])
@@ -111,10 +109,8 @@ NSString *SKNSkimTextNotes(NSArray *noteDicts) {
 
 NSData *SKNSkimRTFNotes(NSArray *noteDicts) {
     NSMutableAttributedString *attrString = [[[NSMutableAttributedString alloc] init] autorelease];
-    NSEnumerator *dictEnum = [noteDicts objectEnumerator];
-    NSDictionary *dict;
     
-    while (dict = [dictEnum nextObject]) {
+    for (NSDictionary *dict in noteDicts) {
         NSString *type = [dict objectForKey:NOTE_TYPE_KEY];
         
         if ([type isEqualToString:NOTE_WIDGET_TYPE])
