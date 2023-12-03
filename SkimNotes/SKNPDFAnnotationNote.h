@@ -44,6 +44,8 @@
 #import <Foundation/Foundation.h>
 #import <PDFKit/PDFKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #ifndef PDFKitPlatformImage
 #define PDFKitPlatformImage NSImage
 #endif
@@ -92,19 +94,19 @@ extern PDFSize SKNPDFAnnotationNoteSize;
     @discussion This should give a short string value for the anchored note annotation.  Setting this updates the contents using <code>updateContents</code>.
     @result     A string representing the string value associated with the annotation.
 */
-@property (nonatomic, copy) NSString *string;
+@property (nonatomic, copy, nullable) NSString *string;
 
 /*!
     @abstract   The rich text of the annotation.
     @discussion This is the longer rich text contents of the anchored note annotation.  Setting this updates the contents using <code>updateContents</code>.
 */
-@property (nonatomic, copy) NSAttributedString *text;
+@property (nonatomic, copy, nullable) NSAttributedString *text;
 
 /*!
     @abstract   The image of the annotation.
     @discussion 
 */
-@property (nonatomic, retain) PDFKitPlatformImage *image;
+@property (nonatomic, strong, nullable) PDFKitPlatformImage *image;
 
 /*!
     @abstract   Synchronizes the contents of the annotation with the string and text.
@@ -113,3 +115,5 @@ extern PDFSize SKNPDFAnnotationNoteSize;
 - (void)updateContents;
 
 @end
+
+NS_ASSUME_NONNULL_END

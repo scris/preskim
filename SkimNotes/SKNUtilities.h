@@ -38,6 +38,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #define SKIM_NOTES_KEY      @"net_sourceforge_skim-app_notes"
 #define SKIM_RTF_NOTES_KEY  @"net_sourceforge_skim-app_rtf_notes"
 #define SKIM_TEXT_NOTES_KEY @"net_sourceforge_skim-app_text_notes"
@@ -50,8 +52,10 @@
 #define RTF_EXTENSION   @"rtf"
 #define FDF_EXTENSION   @"fdf"
 
-extern NSString *SKNSkimTextNotes(NSArray *noteDicts);
-extern NSData *SKNSkimRTFNotes(NSArray *noteDicts);
+extern NSString * _Nullable SKNSkimTextNotes(NSArray * _Nullable noteDicts);
+extern NSData * _Nullable SKNSkimRTFNotes(NSArray * _Nullable noteDicts);
 
-extern NSArray *SKNSkimNotesFromData(NSData *data);
-extern NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist);
+extern NSArray * _Nullable SKNSkimNotesFromData(NSData * _Nullable data);
+extern NSData * _Nullable SKNDataFromSkimNotes(NSArray * _Nullable noteDicts, BOOL asPlist);
+
+NS_ASSUME_NONNULL_END

@@ -39,6 +39,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Uncomment one of these five #defines
 
 #define FrameworkSample
@@ -50,9 +52,11 @@
 @interface SKNDocument : NSDocument {
     NSArray *_notes;
 }
-@property (nonatomic, copy) NSArray *notes;
+@property (nonatomic, copy, nullable) NSArray *notes;
 @end
 
 
 @interface SKNPlusOneTransformer : NSValueTransformer
 @end
+
+NS_ASSUME_NONNULL_END

@@ -44,6 +44,8 @@
 #import <Foundation/Foundation.h>
 #import <PDFKit/PDFKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #ifndef PDFRect
 #define PDFRect NSRect
 #endif
@@ -265,7 +267,7 @@ typedef NSInteger SKNPDFWidgetType;
     @param      bounds The bounding box of the annotation, in page space.
     @result     An initialized Skim note annotation instance, or <code>NULL</code> if the object could not be initialized.
 */
-- (id)initSkimNoteWithBounds:(NSRect)bounds;
+- (nullable id)initSkimNoteWithBounds:(NSRect)bounds;
 #endif
 
 /*!
@@ -275,7 +277,7 @@ typedef NSInteger SKNPDFWidgetType;
     @param      type The type of the note .
     @result     An initialized Skim note annotation instance, or <code>NULL</code> if the object could not be initialized.
 */
-- (id)initSkimNoteWithBounds:(PDFRect)bounds forType:(NSString *)type;
+- (nullable id)initSkimNoteWithBounds:(PDFRect)bounds forType:(NSString *)type;
 
 /*!
     @abstract   Initializes a new Skim note annotation with the given properties.
@@ -283,7 +285,7 @@ typedef NSInteger SKNPDFWidgetType;
     @param      dict A dictionary with Skim notes properties, as returned from properties.  This is required to contain values for <code>"type"</code> and <code>"bounds"</code>.
     @result     An initialized Skim note annotation instance, or <code>NULL</code> if the object could not be initialized.
 */
-- (id)initSkimNoteWithProperties:(NSDictionary *)dict;
+- (nullable id)initSkimNoteWithProperties:(NSDictionary *)dict;
 
 /*!
     @abstract   The Skim notes properties.
@@ -304,7 +306,7 @@ typedef NSInteger SKNPDFWidgetType;
     @discussion By default, this is just the same as the contents.  However for <code>SKNPDFAnnotationNote</code> the contents will contain both string and text.  Normally you set this by setting the <code>content</code> property.
     @result     A string representing the string value associated with the annotation.
 */
-@property (nonatomic, retain) NSString *string;
+@property (nonatomic, strong, nullable) NSString *string;
 
 /*!
     @abstract   Method to get the points from a path of an Ink Skim note.
@@ -451,3 +453,5 @@ typedef NSInteger SKNPDFWidgetType;
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END

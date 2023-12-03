@@ -70,7 +70,7 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 
 @interface SKNPDFAnnotationNote ()
 @property (nonatomic, readonly) NSTextStorage *mutableText;
-@property (nonatomic, retain) NSArray *texts;
+@property (nonatomic, strong, nullable) NSArray *texts;
 @end
 
 #endif
