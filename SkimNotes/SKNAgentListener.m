@@ -92,7 +92,6 @@
             [fh writeData:[serverName dataUsingEncoding:NSUTF8StringEncoding]];
             [fh closeFile];
         } else {
-            [self release];
             self = nil;
         }
     }
@@ -100,12 +99,10 @@
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self destroyConnection];
 #if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_8
     [self destroyXPCConnection];
 #endif
-    [super dealloc];
 }
 
 @end
@@ -117,13 +114,13 @@
 - (BOOL)startConnectionWithServerName:(NSString *)serverName {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
+    _connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
 #pragma clang diagnostic pop
     NSProtocolChecker *checker = [NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(SKNAgentListenerProtocol)];
-    [connection setRootObject:checker];
-    [connection setDelegate:self];
+    [_connection setRootObject:checker];
+    [_connection setDelegate:self];
     
-    if ([connection registerName:serverName] == NO) {
+    if ([_connection registerName:serverName] == NO) {
         fprintf(stderr, "skimnotes agent pid %d: unable to register connection name %s; another process must be running\n", getpid(), [serverName UTF8String]);
         [self destroyConnection];
         return NO;
@@ -133,12 +130,11 @@
 }
 
 - (void)destroyConnection {
-    [connection registerName:nil];
-    [[connection receivePort] invalidate];
-    [[connection sendPort] invalidate];
-    [connection invalidate];
-    [connection release];
-    connection = nil;
+    [_connection registerName:nil];
+    [[_connection receivePort] invalidate];
+    [[_connection sendPort] invalidate];
+    [_connection invalidate];
+    _connection = nil;
 }
 
 - (void)portDied:(NSNotification *)notification {
@@ -192,40 +188,39 @@
 @implementation SKNAgentListener (SKNXPCConnection)
 
 - (BOOL)startXPCListenerWithServerName:(NSString *)serverName {
-    xpcListener = [[NSXPCListener alloc] initWithMachServiceName:serverName];
-    [xpcListener setDelegate:self];
-    [xpcListener resume];
+    _xpcListener = [[NSXPCListener alloc] initWithMachServiceName:serverName];
+    [_xpcListener setDelegate:self];
+    [_xpcListener resume];
     
     return YES;
 }
 
 - (void)destroyXPCConnection {
-    [xpcConnection invalidate];
-    [xpcConnection release];
-    xpcConnection = nil;
+    [_xpcConnection invalidate];
+    _xpcConnection = nil;
     
-    [xpcListener invalidate];
-    [xpcListener release];
-    xpcListener = nil;
+    [_xpcListener invalidate];
+    _xpcListener = nil;
 }
 
 // first app to connect will be the owner of this instance of the program; when the connection dies, so do we
 - (BOOL)listener:(NSXPCListener *)listener shouldAcceptNewConnection:(NSXPCConnection *)newConnection {
-    if (xpcConnection) {
+    if (_xpcConnection) {
         [newConnection invalidate];
         return NO;
     }
     
     [newConnection setExportedInterface:[NSXPCInterface interfaceWithProtocol:@protocol(SKNXPCAgentListenerProtocol)]];
     [newConnection setExportedObject:self];
+    __weak SKNAgentListener *weakSelf = self;
     NSString *description = [newConnection description];
     [newConnection setInvalidationHandler:^{
-        [self destroyXPCConnection];
+        [weakSelf destroyXPCConnection];
         fprintf(stderr, "skimnotes agent pid %d dying because port %s is invalid\n", getpid(), [description UTF8String]);
         exit(0);
     }];
-    xpcConnection = [newConnection retain];
-    [xpcConnection resume];
+    _xpcConnection = newConnection;
+    [_xpcConnection resume];
     
     return YES;
 }

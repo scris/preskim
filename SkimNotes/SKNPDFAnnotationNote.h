@@ -78,54 +78,33 @@ extern PDFSize SKNPDFAnnotationNoteSize;
 @interface SKNPDFAnnotationNote : PDFAnnotation
 #endif
 {
-    NSString *string;
-    PDFKitPlatformImage *image;
-    NSAttributedString *text;
+    NSString *_string;
+    PDFKitPlatformImage *_image;
+    NSAttributedString *_text;
 #if !defined(PDFKIT_PLATFORM_IOS)
-    NSTextStorage *textStorage;
-    NSArray *texts;
+    NSTextStorage *_textStorage;
+    NSArray *_texts;
 #endif
 }
 
 /*!
     @abstract   This is overridden and different from the contents.
-    @discussion This should give a short string value for the anchored note annotation. 
+    @discussion This should give a short string value for the anchored note annotation.  Setting this updates the contents using <code>updateContents</code>.
     @result     A string representing the string value associated with the annotation.
 */
-- (NSString *)string;
-
-/*!
-    @abstract   This is overridden and different from the contents.
-    @discussion This should set the short string value of the annotation.  This updates the contents using <code>updateContents</code>.
-    @param      newString The new string value for the annotation.
-*/
-- (void)setString:(NSString *)newString;
+@property (nonatomic, copy) NSString *string;
 
 /*!
     @abstract   The rich text of the annotation.
-    @discussion This is the longer rich text contents of the anchored note annotation.
+    @discussion This is the longer rich text contents of the anchored note annotation.  Setting this updates the contents using <code>updateContents</code>.
 */
-- (NSAttributedString *)text;
-
-/*!
-    @abstract   Sets the rich text of the annotation.
-    @discussion This should set the longer rich text contents of the annotation.  This updates the contents using <code>updateContents</code>.
-    @param      newText The new rich text value for the annotation.
-*/
-- (void)setText:(NSAttributedString *)newText;
+@property (nonatomic, copy) NSAttributedString *text;
 
 /*!
     @abstract   The image of the annotation.
     @discussion 
 */
-- (PDFKitPlatformImage *)image;
-
-/*!
-    @abstract   Sets the image of the annotation.
-    @discussion 
-    @param      newImage The new image for the annotation.
-*/
-- (void)setImage:(PDFKitPlatformImage *)newImage;
+@property (nonatomic, retain) PDFKitPlatformImage *image;
 
 /*!
     @abstract   Synchronizes the contents of the annotation with the string and text.

@@ -290,35 +290,21 @@ typedef NSInteger SKNPDFWidgetType;
     @discussion These properties can be used to initialize a new copy, and to save to extended attributes or file.
     @result     A dictionary with properties of the Skim note.  All values are standard Cocoa objects conforming to <code>NSCoding</code> and <code>NSCopying</code>.
 */
-- (NSDictionary *)SkimNoteProperties;
+@property (nonatomic, readonly) NSDictionary *SkimNoteProperties;
 
 /*!
     @abstract   Returns whether the annotation is a Skim note.  
-    @discussion An annotation initalized with initializers starting with initSkimNote will return <code>YES</code> by default.
+    @discussion An annotation initalized with initializers starting with initSkimNote will return <code>YES</code> by default.  You normally would not set this yourself, but rely on the initializer to set the <code>isSkimNote</code> flag.
     @result     YES if the annotation is a Skim note; otherwise NO.
 */
-- (BOOL)isSkimNote;
-
-/*!
-    @abstract   Sets whether the receiver is to be interpreted as a Skim note.
-    @discussion You normally would not use this yourself, but rely on the initializer to set the <code>isSkimNote</code> flag.
-    @param      flag Set this value to <code>YES</code> if you want the annotation to be interpreted as a Skim note.
-*/
-- (void)setSkimNote:(BOOL)flag;
+@property (nonatomic, getter=isSkimNote) BOOL SkimNote;
 
 /*!
     @abstract   The string value of the annotation.
-    @discussion By default, this is just the same as the contents.  However for <code>SKNPDFAnnotationNote</code> the contents will contain both string and text.
+    @discussion By default, this is just the same as the contents.  However for <code>SKNPDFAnnotationNote</code> the contents will contain both string and text.  Normally you set this by setting the <code>content</code> property.
     @result     A string representing the string value associated with the annotation.
 */
-- (NSString *)string;
-
-/*!
-    @abstract   Sets the string of the annotation.  By default just sets the contents.
-    @discussion By default just calls <code>setContent:</code>.
-    @param      newString The new string value for the annotation.
-*/
-- (void)setString:(NSString *)newString;
+@property (nonatomic, retain) NSString *string;
 
 /*!
     @abstract   Method to get the points from a path of an Ink Skim note.

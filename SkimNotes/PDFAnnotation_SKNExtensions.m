@@ -151,11 +151,6 @@ static PDFKitPlatformColor *SKNColorFromArray(NSArray *array) {
 #if defined(PDFKIT_PLATFORM_IOS)
         return [UIColor colorWithWhite:c[0] alpha:c[1]];
 #else
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
-        if ([NSColorSpace respondsToSelector:@selector(genericGamma22GrayColorSpace)] == NO)
-            return [NSColor colorWithColorSpace:[NSColorSpace genericGrayColorSpace] components:c count:2];
-        else
-#endif
         return [NSColor colorWithColorSpace:[NSColorSpace genericGamma22GrayColorSpace] components:c count:2];
 #endif
     } else {
@@ -205,31 +200,7 @@ static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment)
 
 @implementation PDFAnnotation (SKNExtensions)
 
-#if !defined(PDFKIT_PLATFORM_IOS) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
-
-static NSHashTable *SkimNotes = nil;
-
-static void (*original_dealloc)(id, SEL) = NULL;
-
-static void replacement_dealloc(id self, SEL _cmd) {
-    @synchronized([PDFAnnotation self]) {
-        [SkimNotes removeObject:self];
-    }
-    original_dealloc(self, _cmd);
-}
-
-+ (void)load {
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
-    SkimNotes = [[NSHashTable alloc] initWithOptions:NSHashTableZeroingWeakMemory | NSHashTableObjectPointerPersonality capacity:0];
-    original_dealloc = (void(*)(id,SEL))method_setImplementation(class_getInstanceMethod(self, @selector(dealloc)), (IMP)replacement_dealloc);
-    [pool release];
-}
-
-#else
-
 char SKNIsSkimNoteKey;
-
-#endif
 
 #if !defined(PDFKIT_PLATFORM_IOS)
 static inline Class SKNAnnotationClassForType(NSString *type) {
@@ -266,7 +237,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString]) {
         if ([self isMemberOfClass:[PDFAnnotation class]]) {
             // replace by our subclass
-            [[self init] release];
+            [self init];
             self = [[SKNPDFAnnotationNote alloc] initSkimNoteWithBounds:bounds forType:type];
             return self;
         } else if ([self isKindOfClass:[SKNPDFAnnotationNote class]]) {
@@ -291,7 +262,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        [[self initWithBounds:NSZeroRect] release];
+        self = [self initWithBounds:NSZeroRect];
 #pragma clang diagnostic pop
         self = [annotationClass alloc];
     }
@@ -349,7 +320,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     
     if (([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString]) && [self isMemberOfClass:[PDFAnnotation class]]) {
         // replace by our subclass
-        [[self init] release];
+        [self init];
         self = [[SKNPDFAnnotationNote alloc] initSkimNoteWithProperties:dict];
         return self;
     }
@@ -362,7 +333,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        [[self initWithBounds:NSZeroRect] release];
+        self = [self initWithBounds:NSZeroRect];
 #pragma clang diagnostic pop
         self = [[annotationClass alloc] initSkimNoteWithProperties:dict];
         return self;
@@ -399,7 +370,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
             if ([borderStyle respondsToSelector:@selector(integerValue)] == NO)
                 borderStyle = nil;
             if ([self border] == nil)
-                [self setBorder:[[[PDFBorder alloc] init] autorelease]];
+                [self setBorder:[[PDFBorder alloc] init]];
             if ([lineWidth respondsToSelector:@selector(doubleValue)])
                 [[self border] setLineWidth:[lineWidth doubleValue]];
             if ([dashPattern isKindOfClass:arrayClass])
@@ -468,10 +439,8 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
                 PDFPoint p = SKNPointFromString([pointStrings objectAtIndex:i]);
                 NSValue *val = [[NSValue alloc] initWithBytes:&p objCType:@encode(PDFPoint)];
                 [pointValues addObject:val];
-                [val release];
             }
             [self setQuadrilateralPoints:pointValues];
-            [pointValues release];
         }
         
         if ([type isEqualToString:SKNTextString] || [type isEqualToString:SKNNoteString]) {
@@ -490,7 +459,6 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
                         PDFKitPlatformBezierPath *path = [[PDFKitPlatformBezierPath alloc] init];
                         [[self class] setPoints:pointStrings ofSkimNotePath:path];
                         [self addBezierPath:path];
-                        [path release];
                     }
                 }
             }
@@ -684,7 +652,6 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                     for (i = 0; i < iMax; i++)
                         [quadPointStrings addObject:SKNStringFromPoint(SKNPointFromValue([quadPoints objectAtIndex:i]))];
                     [dict setValue:quadPointStrings forKey:SKNPDFAnnotationQuadrilateralPointsKey];
-                    [quadPointStrings release];
                 }
             } else if ((value = [self valueForAnnotationKey:@"/QuadPoints"])) {
                 if ([value isKindOfClass:arrayClass] && [value count] % 4 == 0) {
@@ -724,7 +691,6 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                             [pointLists addObject:pointStrings];
                     }
                     [dict setValue:pointLists forKey:SKNPDFAnnotationPointListsKey];
-                    [pointLists release];
                 }
            } else if ((value = [self valueForAnnotationKey:@"/InkList"])) {
                 if ([value isKindOfClass:arrayClass]) {
@@ -789,7 +755,6 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                         }
                     }
                 }
-                [scanner release];
             }
             if (font)
                 [dict setObject:font forKey:SKNPDFAnnotationFontKey];
@@ -811,7 +776,6 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                         while ([scanner scanDouble:&c])
                             [array addObject:[NSNumber numberWithDouble:c]];
                         fontColor = SKNColorFromArray(array);
-                        [scanner release];
                     }
                 }
             }
@@ -859,26 +823,11 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 }
 
 - (BOOL)isSkimNote {
-#if !defined(PDFKIT_PLATFORM_IOS) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
-    BOOL isSkimNote;
-    @synchronized([PDFAnnotation self]) {
-        isSkimNote = [SkimNotes containsObject:self];
-    }
-    return isSkimNote;
-#else
     return [objc_getAssociatedObject(self, &SKNIsSkimNoteKey) boolValue];
-#endif
 }
 
 - (void)setSkimNote:(BOOL)flag {
-#if !defined(PDFKIT_PLATFORM_IOS) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
-    @synchronized([PDFAnnotation self]) {
-        if (flag) [SkimNotes addObject:self];
-        else [SkimNotes removeObject:self];
-    }
-#else
     objc_setAssociatedObject(self, &SKNIsSkimNoteKey, flag ? [NSNumber numberWithBool:YES] : nil, OBJC_ASSOCIATION_RETAIN);
-#endif
 }
 
 - (NSString *)string {
@@ -906,8 +855,8 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     return [self contents];
 }
 
-- (void)setString:(NSString *)newString {
-    [self setContents:newString];
+- (void)setString:(NSString *)string {
+    [self setContents:string];
 }
 
 + (NSArray *)pointsFromSkimNotePath:(PDFKitPlatformBezierPath *)path {
@@ -1258,11 +1207,9 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
                 for (j = 0; j < 4; j++) {
                     NSValue *value = [[NSValue alloc] initWithBytes:&p[j] objCType:@encode(NSPoint)];
                     [quadPoints addObject:value];
-                    [value release];
                 }
             }
             [self setQuadrilateralPoints:quadPoints];
-            [quadPoints release];
         }
         
     }
@@ -1278,7 +1225,6 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
         for (i = 0; i < iMax; i++)
             [quadPointStrings addObject:NSStringFromPoint([[quadPoints objectAtIndex:i] pointValue])];
         [dict setValue:quadPointStrings forKey:SKNPDFAnnotationQuadrilateralPointsKey];
-        [quadPointStrings release];
     }
     return dict;
 }
@@ -1325,7 +1271,6 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
                     NSBezierPath *path = [[NSBezierPath alloc] init];
                     [selfClass setPoints:pointStrings ofSkimNotePath:path];
                     [self addBezierPath:path];
-                    [path release];
                 }
             }
         }
@@ -1347,7 +1292,6 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
                 [pointLists addObject:pointStrings];
         }
         [dict setValue:pointLists forKey:SKNPDFAnnotationPointListsKey];
-        [pointLists release];
     }
     return dict;
 }
@@ -1388,8 +1332,8 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
     return [self stringValue];
 }
 
-- (void)setString:(NSString *)newString {
-    [self setStringValue:newString];
+- (void)setString:(NSString *)string {
+    [self setStringValue:string];
 }
 
 @end
@@ -1427,8 +1371,8 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
     return [NSString stringWithFormat:@"%ld", (long)[self state]];
 }
 
-- (void)setString:(NSString *)newString {
-    [self setState:[newString integerValue]];
+- (void)setString:(NSString *)string {
+    [self setState:[string integerValue]];
 }
 
 @end
@@ -1467,55 +1411,10 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
     return [self stringValue];
 }
 
-- (void)setString:(NSString *)newString {
-    [self setStringValue:newString];
+- (void)setString:(NSString *)string {
+    [self setStringValue:string];
 }
 
 @end
-
-#pragma mark -
-
-#if __LP64__ && MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_5
-
-// the implementation of -[PDFBorder dashPattern] is badly broken on 10.4 and 10.5 in the 64-bit binary, probably due to the wrong type for _pdfPriv.dashCount or _pdfPriv.dashPattern
-
-@implementation PDFBorder (SKNExtensions)
-
-static NSArray *replacement_dashPattern(id self, SEL _cmd) {
-    NSMutableArray *pattern = [NSMutableArray array];
-    @try {
-        id vars = nil;
-        if (NULL != object_getInstanceVariable(vars, "_pdfPriv", (void **)&vars)) {
-            Ivar countIvar = object_getInstanceVariable(vars, "dashCount", NULL);
-            if (countIvar != NULL) {
-                NSUInteger i, count = *(unsigned int *)((void *)vars + ivar_getOffset(countIvar));
-                Ivar patternIvar = object_getInstanceVariable(vars, "dashPattern", NULL);
-                if (patternIvar != NULL) {
-                    float *dashPattern = *(float **)((void *)vars + ivar_getOffset(patternIvar));
-                    for (i = 0; i < count; i++)
-                        [pattern addObject:[NSNumber numberWithDouble:dashPattern[i]]];
-                }
-            }
-        }
-    }
-    @catch (id e) {}
-    return pattern;
-}
-
-+ (void)load {
-    if (class_getInstanceVariable(self, "_pdfPriv")) {
-        Class cls = NSClassFromString(@"PDFBorderPrivateVars");
-        if (cls) {
-            Ivar dashCountIvar = class_getInstanceVariable(cls, "dashCount");
-            Ivar dashPatternIvar = class_getInstanceVariable(cls, "dashPattern");
-            if (dashCountIvar && 0 == strcmp(ivar_getTypeEncoding(dashCountIvar), @encode(unsigned int)) && dashPatternIvar && 0 == strcmp(ivar_getTypeEncoding(dashPatternIvar), @encode(float *)))
-                class_replaceMethod(self, @selector(dashPattern), (IMP)replacement_dashPattern, "@@:");
-        }
-    }
-}
-
-@end
-
-#endif
 
 #endif

@@ -40,13 +40,13 @@
 
 
 @interface SKNXPCSkimReader : NSObject {
-    NSString *agentIdentifier;
-    NSXPCConnection *connection;
-    id agent;
-    BOOL synchronous;
+    NSString *_agentIdentifier;
+    NSXPCConnection *_connection;
+    id _agent;
+    BOOL _synchronous;
 }
 
-@property (class, nonatomic, readonly) id sharedReader;
+@property (class, nonatomic, readonly) SKNXPCSkimReader *sharedReader;
 
 // this should only be set before any of the following calls is made
 @property (nonatomic, retain) NSString *agentIdentifier;
