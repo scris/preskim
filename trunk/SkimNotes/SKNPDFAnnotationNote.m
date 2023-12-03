@@ -68,8 +68,9 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 @end
 #endif
 
-@interface SKNPDFAnnotationNote (SKNPrivate)
-- (NSTextStorage *)mutableText;
+@interface SKNPDFAnnotationNote ()
+@property (nonatomic, readonly) NSTextStorage *mutableText;
+@property (nonatomic, retain) NSArray *texts;
 @end
 
 #endif
@@ -80,13 +81,19 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 
 @implementation SKNPDFAnnotationNote
 
+@synthesize string = _string;
+@synthesize text = _text;
+@dynamic image;
+@dynamic mutableText;
+@synthesize texts = _texts;
+
 - (void)updateContents {
     NSMutableString *contents = [NSMutableString string];
-    if ([string length])
-        [contents appendString:string];
-    if ([text length]) {
+    if ([_string length])
+        [contents appendString:_string];
+    if ([_text length]) {
         [contents appendString:@"  "];
-        [contents appendString:[text string]];
+        [contents appendString:[_text string]];
     }
     [super setContents:contents];
 }
@@ -101,30 +108,18 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
         NSAttributedString *aText = [dict objectForKey:SKNPDFAnnotationTextKey];
         PDFKitPlatformImage *anImage = [dict objectForKey:SKNPDFAnnotationImageKey];
         if ([anImage isKindOfClass:imageClass])
-            image = [anImage retain];
+            _image = anImage;
         else if ([anImage isKindOfClass:dataClass])
-            image = [[PDFKitPlatformImage alloc] initWithData:(NSData *)anImage];
+            _image = [[PDFKitPlatformImage alloc] initWithData:(NSData *)anImage];
         if ([aText isKindOfClass:stringClass])
-            aText = [[[NSAttributedString alloc] initWithString:(NSString *)aText] autorelease];
+            aText = [[NSAttributedString alloc] initWithString:(NSString *)aText];
         else if ([aText isKindOfClass:dataClass])
-            aText = [[[NSAttributedString alloc] initWithData:(NSData *)aText options:[NSDictionary dictionary] documentAttributes:NULL error:NULL] autorelease];
+            aText = [[NSAttributedString alloc] initWithData:(NSData *)aText options:[NSDictionary dictionary] documentAttributes:NULL error:NULL];
         if ([aText isKindOfClass:attrStringClass])
             [self setText:aText];
         [self updateContents];
     }
     return self;
-}
-
-- (void)dealloc {
-#if !defined(PDFKIT_PLATFORM_IOS)
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [textStorage release];
-    [texts release];
-#endif
-    [string release];
-    [text release];
-    [image release];
-    [super dealloc];
 }
 
 - (NSDictionary *)SkimNoteProperties{
@@ -139,40 +134,19 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
     return SKNNoteString;
 }
 
-- (NSString *)string {
-    return string;
-}
-
-- (void)setString:(NSString *)newString {
-    if (string != newString) {
-        [string release];
-        string = [newString copy];
+- (void)setString:(NSString *)string {
+    if (_string != string) {
+        _string = [string copy];
         // update the contents to string + text
         [self updateContents];
     }
 }
 
-- (PDFKitPlatformImage *)image {
-    return image;
-}
-
-- (void)setImage:(PDFKitPlatformImage *)newImage {
-    if (image != newImage) {
-        [image release];
-        image = [newImage retain];
-    }
-}
-
-- (NSAttributedString *)text {
-    return text;
-}
-
 #if defined(PDFKIT_PLATFORM_IOS)
 
-- (void)setText:(NSAttributedString *)newText {
-    if (text != newText) {
-        [text release];
-        text = [newText copy];
+- (void)setText:(NSAttributedString *)text {
+    if (_text != text) {
+        _text = [text copy];
         // update the contents to string + text
         [self updateContents];
     }
@@ -180,13 +154,13 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 
 #else
 
-- (void)setText:(NSAttributedString *)newText {
-    if ([self mutableText] != newText) {
+- (void)setText:(NSAttributedString *)text {
+    if ([self mutableText] != text) {
         // edit the textStorage, this will trigger KVO and update the text automatically
-        if (newText)
-            [textStorage replaceCharactersInRange:NSMakeRange(0, [textStorage length]) withAttributedString:newText];
+        if (text)
+            [_textStorage replaceCharactersInRange:NSMakeRange(0, [_textStorage length]) withAttributedString:text];
         else
-            [textStorage deleteCharactersInRange:NSMakeRange(0, [textStorage length])];
+            [_textStorage deleteCharactersInRange:NSMakeRange(0, [_textStorage length])];
     }
 }
 
@@ -204,24 +178,23 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 
 - (void)textDidChange:(NSNotification *)notification {
     // texts should be an array of objects wrapping the text of the note, used by Skim to provide a data source for the children in the outlineView
-    [texts makeObjectsPerformSelector:@selector(willChangeValueForKey:) withObject:SKNPDFAnnotationTextKey];
+    [_texts makeObjectsPerformSelector:@selector(willChangeValueForKey:) withObject:SKNPDFAnnotationTextKey];
     // trigger KVO manually
     [self willChangeValueForKey:SKNPDFAnnotationTextKey];
     // update the text
-    [text release];
-    text = [[NSAttributedString alloc] initWithAttributedString:textStorage];
+    _text = [[NSAttributedString alloc] initWithAttributedString:_textStorage];
     [self didChangeValueForKey:SKNPDFAnnotationTextKey];
-    [texts makeObjectsPerformSelector:@selector(didChangeValueForKey:) withObject:SKNPDFAnnotationTextKey];
+    [_texts makeObjectsPerformSelector:@selector(didChangeValueForKey:) withObject:SKNPDFAnnotationTextKey];
     // update the contents to string + text
     [self updateContents];
 }
 
 - (NSTextStorage *)mutableText {
-    if (textStorage == nil) {
-        textStorage = [[NSTextStorage alloc] init];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextStorageDidProcessEditingNotification object:textStorage];
+    if (_textStorage == nil) {
+        _textStorage = [[NSTextStorage alloc] init];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextStorageDidProcessEditingNotification object:_textStorage];
     }
-    return textStorage;
+    return _textStorage;
 }
 
 // private method called by -drawWithBox: before to 10.12, made public on 10.12, now calling -drawWithBox:

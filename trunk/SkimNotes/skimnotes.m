@@ -231,391 +231,383 @@ static inline NSString *SKNNormalizedPath(NSString *path) {
 }
 
 int main (int argc, const char * argv[]) {
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
- 
-    NSArray *args = [[NSProcessInfo processInfo] arguments];
-    
-    if (argc < 2) {
-        WRITE_ERROR;
-        [pool release];
-        exit(EXIT_FAILURE);
-    }
-    
-    NSInteger action = SKNActionForName([args objectAtIndex:1]);
-    
     BOOL success = NO;
     
-    if (action == SKNActionUnknown) {
+    @autoreleasepool {
+        NSArray *args = [[NSProcessInfo processInfo] arguments];
         
-        WRITE_ERROR;
-        [pool release];
-        exit(EXIT_FAILURE);
-        
-    } else if (action == SKNActionAgent) {
-        
-        BOOL isXPC = ([args count] > 2 && [[args objectAtIndex:2] isEqualToString:XPC_OPTION_STRING]);
-        NSString *serverName = [args count] > (isXPC ? 3 : 2) ? [args lastObject] : nil;
-        
-        SKNAgentListener *listener = [[SKNAgentListener alloc] initWithServerName:serverName xpc:isXPC];
-        
-        NSRunLoop *rl = [NSRunLoop currentRunLoop];
-        BOOL didRun;
-        
-        do {
-            [pool release];
-            pool = [NSAutoreleasePool new];
-            didRun = [rl runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-        } while (listener && didRun);
-        
-        [listener release];
-        
-        success = YES;
-        
-    } else if (action == SKNActionProtocol) {
-        
-        if ([args count] > 2 && [[args objectAtIndex:2] isEqualToString:XPC_OPTION_STRING]) {
-            WRITE_OUT(xpcProtocolStr);
-        } else {
-            WRITE_OUT(protocolStr);
-        }
-        
-    } else if (action == SKNActionHelp) {
-        
-        NSInteger helpAction = SKNActionForName([args count] > 2 ? [args objectAtIndex:2] : @"");
-        
-        switch (helpAction) {
-            case SKNActionUnknown:
-                WRITE_OUT_VERSION(usageStr);
-                break;
-            case SKNActionGet:
-                WRITE_OUT(getHelpStr);
-                break;
-            case SKNActionSet:
-                WRITE_OUT(setHelpStr);
-                break;
-            case SKNActionRemove:
-                WRITE_OUT(removeHelpStr);
-                break;
-            case SKNActionTest:
-                WRITE_OUT(testHelpStr);
-                break;
-            case SKNActionConvert:
-                WRITE_OUT(convertHelpStr);
-                break;
-            case SKNActionFormat:
-                WRITE_OUT(formatHelpStr);
-                break;
-            case SKNActionOffset:
-                WRITE_OUT(offsetHelpStr);
-                break;
-            case SKNActionAgent:
-                WRITE_OUT(agentHelpStr);
-                break;
-            case SKNActionProtocol:
-                WRITE_OUT(protocolHelpStr);
-                break;
-            case SKNActionVersion:
-                WRITE_OUT(versionHelpStr);
-                break;
-            case SKNActionHelp:
-                WRITE_OUT(helpHelpStr);
-                break;
-        }
-        success = YES;
-        
-    } else if (action == SKNActionVersion) {
-        
-        WRITE_OUT(versionStr);
-        
-    } else {
-        
-        if (argc < 3) {
+        if (argc < 2) {
             WRITE_ERROR;
-            [pool release];
             exit(EXIT_FAILURE);
         }
         
-        NSInteger format = SKNFormatAuto;
-        CGFloat dx = 0.0, dy = 0.0;
-        SKNSyncability syncable = SKNAnySyncable;
-        int offset = 2;
+        NSInteger action = SKNActionForName([args objectAtIndex:1]);
         
-        if (action == SKNActionGet && [[args objectAtIndex:2] isEqualToString:FORMAT_OPTION_STRING]) {
-            if (argc < 5) {
-                WRITE_ERROR;
-                [pool release];
-                exit(EXIT_FAILURE);
-            }
-            offset = 4;
-            format = SKNFormatForString([args objectAtIndex:3]);
-        } else if ((action == SKNActionSet || action == SKNActionConvert || action == SKNActionTest) && ([[args objectAtIndex:2] isEqualToString:SYNCABLE_OPTION_STRING] || [[args objectAtIndex:2] isEqualToString:NONSYNCABLE_OPTION_STRING])) {
-            if (argc < 4) {
-                WRITE_ERROR;
-                [pool release];
-                exit(EXIT_FAILURE);
-            }
-            syncable = [[args objectAtIndex:2] isEqualToString:SYNCABLE_OPTION_STRING] ? SKNSyncable : SKNNonSyncable;
-            offset = 3;
-        } else if (action == SKNActionFormat) {
-            if (argc < 4) {
-                WRITE_ERROR;
-                [pool release];
-                exit(EXIT_FAILURE);
-            }
-            offset = 3;
-            format = SKNFormatForString([args objectAtIndex:2]);
-        } else if (action == SKNActionOffset) {
-            if (argc < 5) {
-                WRITE_ERROR;
-                [pool release];
-                exit(EXIT_FAILURE);
-            }
-            offset = 4;
-            dx = [[args objectAtIndex:2] doubleValue];
-            dy = [[args objectAtIndex:3] doubleValue];
-        }
-        
-        NSFileManager *fm = [NSFileManager defaultManager];
-        NSString *inPath = SKNNormalizedPath([args objectAtIndex:offset]);
-        NSString *outPath = argc < offset + 2 ? nil : SKNNormalizedPath([args objectAtIndex:offset + 1]);
-        BOOL isBundle = NO;
-        BOOL isDir = NO;
-        BOOL isStdIn = NO;
-        NSError *error = nil;
-        
-        if (action == SKNActionOffset || action == SKNActionFormat) {
-            if ([inPath isEqualToString:STD_IN_OUT_FILE])
-                isStdIn = YES;
-            else if ([[inPath pathExtension] caseInsensitiveCompare:SKIM_EXTENSION] != NSOrderedSame)
-                inPath = [[inPath stringByDeletingPathExtension] stringByAppendingPathExtension:SKIM_EXTENSION];
-        } else if ([[inPath pathExtension] caseInsensitiveCompare:PDFD_EXTENSION] == NSOrderedSame) {
-            isBundle = YES;
-        } else if ([[inPath pathExtension] caseInsensitiveCompare:PDF_EXTENSION] != NSOrderedSame) {
-            inPath = [[inPath stringByDeletingPathExtension] stringByAppendingPathExtension:PDF_EXTENSION];
-        }
-        
-        if (action != SKNActionRemove && action != SKNActionTest && outPath == nil) {
-            outPath = [inPath stringByDeletingPathExtension];
-            if (action == SKNActionConvert)
-                outPath = [outPath stringByAppendingPathExtension:isBundle ? PDF_EXTENSION : PDFD_EXTENSION];
-            else if (action == SKNActionOffset)
-                outPath = inPath;
-            else if ([outPath isEqualToString:STD_IN_OUT_FILE] == NO)
-                outPath = [outPath stringByAppendingPathExtension:format == SKNFormatText ? TXT_EXTENSION : format == SKNFormatRTF ? RTF_EXTENSION : SKIM_EXTENSION];
-        }
-        
-        if (((action != SKNActionOffset && action != SKNActionFormat) || isStdIn == NO) && ([fm fileExistsAtPath:inPath isDirectory:&isDir] == NO || isBundle != isDir)) {
+        if (action == SKNActionUnknown) {
             
-            error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:(action == SKNActionOffset || action == SKNActionFormat) ? @"Skim file does not exist" : isBundle ? @"PDF bundle does not exist" : @"PDF file does not exist", NSLocalizedDescriptionKey, nil]];
+            WRITE_ERROR;
+            exit(EXIT_FAILURE);
             
-        } else if (action == SKNActionGet) {
+        } else if (action == SKNActionAgent) {
             
-            NSData *data = nil;
-            if (format == SKNFormatAuto) {
-                NSString *extension = [outPath pathExtension];
-                if ([extension caseInsensitiveCompare:RTF_EXTENSION] == NSOrderedSame)
-                    format = SKNFormatRTF;
-                else if ([extension caseInsensitiveCompare:TXT_EXTENSION] == NSOrderedSame || [extension caseInsensitiveCompare:TEXT_EXTENSION] == NSOrderedSame)
-                    format = SKNFormatText;
-                else
-                    format = SKNFormatSkim;
-            }
-            if (format == SKNFormatSkim) {
-                data = [fm SkimNotesAtPath:inPath error:&error];
-            } else if (format == SKNFormatText) {
-                data = [[fm SkimTextNotesAtPath:inPath error:&error] dataUsingEncoding:NSUTF8StringEncoding];
-            } else if (format == SKNFormatRTF) {
-                data = [fm SkimRTFNotesAtPath:inPath error:&error];
-            } else if (format == SKNFormatArchive || format == SKNFormatPlist) {
-                data = [fm SkimNotesAtPath:inPath error:&error];
-                BOOL hasEncoding = NO;
-                if ([data length] > 8) {
-                    char bytes[100];
-                    [data getBytes:bytes range:NSMakeRange(0, format == SKNFormatPlist ? 9 : MIN(100, [data length]))];
-                    if (strncmp(bytes, "bplist00", 8) != 0) {
-                        unsigned char marker = (unsigned char)bytes[8] >> 4;
-                        hasEncoding = format == SKNFormatPlist ? (marker == 0xA) : (marker == 0xD && strstr(bytes, "$archiver") != NULL);
-                    }
+            BOOL isXPC = ([args count] > 2 && [[args objectAtIndex:2] isEqualToString:XPC_OPTION_STRING]);
+            NSString *serverName = [args count] > (isXPC ? 3 : 2) ? [args lastObject] : nil;
+            
+            SKNAgentListener *listener = [[SKNAgentListener alloc] initWithServerName:serverName xpc:isXPC];
+            
+            NSRunLoop *rl = [NSRunLoop currentRunLoop];
+            BOOL didRun;
+            
+            do {
+                @autoreleasepool {
+                    didRun = [rl runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
                 }
-                if (hasEncoding == NO)
-                    data = SKNDataFromSkimNotes(SKNSkimNotesFromData(data), format == SKNFormatPlist);
+            } while (listener && didRun);
+            
+            success = YES;
+            
+        } else if (action == SKNActionProtocol) {
+            
+            if ([args count] > 2 && [[args objectAtIndex:2] isEqualToString:XPC_OPTION_STRING]) {
+                WRITE_OUT(xpcProtocolStr);
+            } else {
+                WRITE_OUT(protocolStr);
             }
-            if (data) {
-                if ([outPath isEqualToString:STD_IN_OUT_FILE]) {
-                    if ([data length])
-                        [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:data];
-                    success = YES;
-                } else {
-                    if ([data length]) {
-                        success = [data writeToFile:outPath options:NSAtomicWrite error:&error];
-                    } else if ([fm fileExistsAtPath:outPath isDirectory:&isDir] && isDir == NO) {
-                        success = [fm removeItemAtPath:outPath error:NULL];
-                        if (success == NO)
-                            error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EACCES userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Unable to remove file", NSLocalizedDescriptionKey, nil]];
-                    } else {
-                        success = YES;
-                    }
+            success = YES;
+            
+        } else if (action == SKNActionHelp) {
+            
+            NSInteger helpAction = SKNActionForName([args count] > 2 ? [args objectAtIndex:2] : @"");
+            
+            switch (helpAction) {
+                case SKNActionUnknown:
+                    WRITE_OUT_VERSION(usageStr);
+                    break;
+                case SKNActionGet:
+                    WRITE_OUT(getHelpStr);
+                    break;
+                case SKNActionSet:
+                    WRITE_OUT(setHelpStr);
+                    break;
+                case SKNActionRemove:
+                    WRITE_OUT(removeHelpStr);
+                    break;
+                case SKNActionTest:
+                    WRITE_OUT(testHelpStr);
+                    break;
+                case SKNActionConvert:
+                    WRITE_OUT(convertHelpStr);
+                    break;
+                case SKNActionFormat:
+                    WRITE_OUT(formatHelpStr);
+                    break;
+                case SKNActionOffset:
+                    WRITE_OUT(offsetHelpStr);
+                    break;
+                case SKNActionAgent:
+                    WRITE_OUT(agentHelpStr);
+                    break;
+                case SKNActionProtocol:
+                    WRITE_OUT(protocolHelpStr);
+                    break;
+                case SKNActionVersion:
+                    WRITE_OUT(versionHelpStr);
+                    break;
+                case SKNActionHelp:
+                    WRITE_OUT(helpHelpStr);
+                    break;
+            }
+            success = YES;
+            
+        } else if (action == SKNActionVersion) {
+            
+            WRITE_OUT(versionStr);
+            success = YES;
+            
+        } else {
+            
+            if (argc < 3) {
+                WRITE_ERROR;
+                exit(EXIT_FAILURE);
+            }
+            
+            NSInteger format = SKNFormatAuto;
+            CGFloat dx = 0.0, dy = 0.0;
+            SKNSyncability syncable = SKNAnySyncable;
+            int offset = 2;
+            
+            if (action == SKNActionGet && [[args objectAtIndex:2] isEqualToString:FORMAT_OPTION_STRING]) {
+                if (argc < 5) {
+                    WRITE_ERROR;
+                    exit(EXIT_FAILURE);
                 }
+                offset = 4;
+                format = SKNFormatForString([args objectAtIndex:3]);
+            } else if ((action == SKNActionSet || action == SKNActionConvert || action == SKNActionTest) && ([[args objectAtIndex:2] isEqualToString:SYNCABLE_OPTION_STRING] || [[args objectAtIndex:2] isEqualToString:NONSYNCABLE_OPTION_STRING])) {
+                if (argc < 4) {
+                    WRITE_ERROR;
+                    exit(EXIT_FAILURE);
+                }
+                syncable = [[args objectAtIndex:2] isEqualToString:SYNCABLE_OPTION_STRING] ? SKNSyncable : SKNNonSyncable;
+                offset = 3;
+            } else if (action == SKNActionFormat) {
+                if (argc < 4) {
+                    WRITE_ERROR;
+                    exit(EXIT_FAILURE);
+                }
+                offset = 3;
+                format = SKNFormatForString([args objectAtIndex:2]);
+            } else if (action == SKNActionOffset) {
+                if (argc < 5) {
+                    WRITE_ERROR;
+                    exit(EXIT_FAILURE);
+                }
+                offset = 4;
+                dx = [[args objectAtIndex:2] doubleValue];
+                dy = [[args objectAtIndex:3] doubleValue];
             }
             
-        } else if (action == SKNActionSet) {
+            NSFileManager *fm = [NSFileManager defaultManager];
+            NSString *inPath = SKNNormalizedPath([args objectAtIndex:offset]);
+            NSString *outPath = argc < offset + 2 ? nil : SKNNormalizedPath([args objectAtIndex:offset + 1]);
+            BOOL isBundle = NO;
+            BOOL isDir = NO;
+            BOOL isStdIn = NO;
+            NSError *error = nil;
             
-            if (outPath && ([outPath isEqualToString:STD_IN_OUT_FILE] || ([fm fileExistsAtPath:outPath isDirectory:&isDir] && isDir == NO))) {
+            if (action == SKNActionOffset || action == SKNActionFormat) {
+                if ([inPath isEqualToString:STD_IN_OUT_FILE])
+                    isStdIn = YES;
+                else if ([[inPath pathExtension] caseInsensitiveCompare:SKIM_EXTENSION] != NSOrderedSame)
+                    inPath = [[inPath stringByDeletingPathExtension] stringByAppendingPathExtension:SKIM_EXTENSION];
+            } else if ([[inPath pathExtension] caseInsensitiveCompare:PDFD_EXTENSION] == NSOrderedSame) {
+                isBundle = YES;
+            } else if ([[inPath pathExtension] caseInsensitiveCompare:PDF_EXTENSION] != NSOrderedSame) {
+                inPath = [[inPath stringByDeletingPathExtension] stringByAppendingPathExtension:PDF_EXTENSION];
+            }
+            
+            if (action != SKNActionRemove && action != SKNActionTest && outPath == nil) {
+                outPath = [inPath stringByDeletingPathExtension];
+                if (action == SKNActionConvert)
+                    outPath = [outPath stringByAppendingPathExtension:isBundle ? PDF_EXTENSION : PDFD_EXTENSION];
+                else if (action == SKNActionOffset)
+                    outPath = inPath;
+                else if ([outPath isEqualToString:STD_IN_OUT_FILE] == NO)
+                    outPath = [outPath stringByAppendingPathExtension:format == SKNFormatText ? TXT_EXTENSION : format == SKNFormatRTF ? RTF_EXTENSION : SKIM_EXTENSION];
+            }
+            
+            if (((action != SKNActionOffset && action != SKNActionFormat) || isStdIn == NO) && ([fm fileExistsAtPath:inPath isDirectory:&isDir] == NO || isBundle != isDir)) {
+                
+                error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:(action == SKNActionOffset || action == SKNActionFormat) ? @"Skim file does not exist" : isBundle ? @"PDF bundle does not exist" : @"PDF file does not exist", NSLocalizedDescriptionKey, nil]];
+                
+            } else if (action == SKNActionGet) {
+                
                 NSData *data = nil;
-                NSString *textString = nil;
-                NSData *rtfData = nil;
-                if ([outPath isEqualToString:STD_IN_OUT_FILE])
-                    data = [[NSFileHandle fileHandleWithStandardInput] readDataToEndOfFile];
-                else
-                    data = [NSData dataWithContentsOfFile:outPath];
-                if (argc > offset + 2) {
-                    NSString *outPath2 = SKNNormalizedPath([args objectAtIndex:offset + 2]);
-                    NSString *outPath3 = argc < offset + 4 ? nil : SKNNormalizedPath([args objectAtIndex:offset + 3]);
-                    if ([[outPath2 pathExtension] caseInsensitiveCompare:TXT_EXTENSION] == NSOrderedSame || [[outPath2 pathExtension] caseInsensitiveCompare:TEXT_EXTENSION] == NSOrderedSame)
-                        textString = [NSString stringWithContentsOfFile:outPath2 encoding:NSUTF8StringEncoding error:NULL];
-                    else if ([[outPath3 pathExtension] caseInsensitiveCompare:TXT_EXTENSION] == NSOrderedSame || [[outPath3 pathExtension] caseInsensitiveCompare:TEXT_EXTENSION] == NSOrderedSame)
-                        textString = [NSString stringWithContentsOfFile:outPath3 encoding:NSUTF8StringEncoding error:NULL];
-                    if ([[outPath3 pathExtension] caseInsensitiveCompare:RTF_EXTENSION] == NSOrderedSame)
-                        rtfData = [NSData dataWithContentsOfFile:outPath3];
-                    else if ([[outPath2 pathExtension] caseInsensitiveCompare:RTF_EXTENSION] == NSOrderedSame)
-                        rtfData = [NSData dataWithContentsOfFile:outPath2];
+                if (format == SKNFormatAuto) {
+                    NSString *extension = [outPath pathExtension];
+                    if ([extension caseInsensitiveCompare:RTF_EXTENSION] == NSOrderedSame)
+                        format = SKNFormatRTF;
+                    else if ([extension caseInsensitiveCompare:TXT_EXTENSION] == NSOrderedSame || [extension caseInsensitiveCompare:TEXT_EXTENSION] == NSOrderedSame)
+                        format = SKNFormatText;
+                    else
+                        format = SKNFormatSkim;
                 }
-                if ([data length])
-                    success = [fm writeSkimNotes:data textNotes:textString RTFNotes:rtfData atPath:inPath syncable:syncable != SKNNonSyncable error:&error];
-                else if (data)
-                    success = [fm removeSkimNotesAtPath:inPath error:&error];
-            } else {
-                error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Notes file does not exist", NSLocalizedDescriptionKey, nil]];
-            }
-            
-        } else if (action == SKNActionRemove) {
-            
-            success = [fm removeSkimNotesAtPath:inPath error:&error];
-            
-        } else if (action == SKNActionTest) {
-            
-            success = [fm hasSkimNotesAtPath:inPath syncable:syncable];
-            
-        } else if (action == SKNActionConvert) {
-            
-            if (isBundle) {
-                NSString *pdfFilePath = nil;
-                NSArray *files = [fm subpathsAtPath:inPath];
-                NSString *filename = [[[inPath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:PDF_EXTENSION];
-                if ([files containsObject:filename] == NO) {
-                    NSUInteger idx = [[files valueForKeyPath:@"pathExtension.lowercaseString"] indexOfObject:PDF_EXTENSION];
-                    filename = idx == NSNotFound ? nil : [files objectAtIndex:idx];
+                if (format == SKNFormatSkim) {
+                    data = [fm SkimNotesAtPath:inPath error:&error];
+                } else if (format == SKNFormatText) {
+                    data = [[fm SkimTextNotesAtPath:inPath error:&error] dataUsingEncoding:NSUTF8StringEncoding];
+                } else if (format == SKNFormatRTF) {
+                    data = [fm SkimRTFNotesAtPath:inPath error:&error];
+                } else if (format == SKNFormatArchive || format == SKNFormatPlist) {
+                    data = [fm SkimNotesAtPath:inPath error:&error];
+                    BOOL hasEncoding = NO;
+                    if ([data length] > 8) {
+                        char bytes[100];
+                        [data getBytes:bytes range:NSMakeRange(0, format == SKNFormatPlist ? 9 : MIN(100, [data length]))];
+                        if (strncmp(bytes, "bplist00", 8) != 0) {
+                            unsigned char marker = (unsigned char)bytes[8] >> 4;
+                            hasEncoding = format == SKNFormatPlist ? (marker == 0xA) : (marker == 0xD && strstr(bytes, "$archiver") != NULL);
+                        }
+                    }
+                    if (hasEncoding == NO)
+                        data = SKNDataFromSkimNotes(SKNSkimNotesFromData(data), format == SKNFormatPlist);
                 }
-                if (filename)
-                    pdfFilePath = [inPath stringByAppendingPathComponent:filename];
-                success = [fm copyItemAtPath:pdfFilePath toPath:outPath error:NULL];
-            } else if ([[outPath pathExtension] caseInsensitiveCompare:PDFD_EXTENSION] == NSOrderedSame) {
-                success = [fm createDirectoryAtPath:outPath withIntermediateDirectories:NO attributes:nil error:NULL];
-                if (success) {
-                    NSString *pdfFilePath = [outPath stringByAppendingPathComponent:[[[outPath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:PDF_EXTENSION]];
-                    success = [[NSData dataWithContentsOfFile:inPath options:0 error:&error] writeToFile:pdfFilePath options:0 error:&error];
-                }
-            } else if ([inPath isEqualToString:outPath]) {
-                success = YES;
-            } else {
-                success = [fm copyItemAtPath:inPath toPath:outPath error:NULL];
-            }
-            if (success) {
-                NSData *notesData = [fm SkimNotesAtPath:inPath error:&error];
-                NSString *textNotes = [fm SkimTextNotesAtPath:inPath error:&error];
-                NSData *rtfNotesData = [fm SkimRTFNotesAtPath:inPath error:&error];
-                if (notesData)
-                    success = [fm writeSkimNotes:notesData textNotes:textNotes RTFNotes:rtfNotesData atPath:outPath syncable:syncable != SKNNonSyncable error:&error];
-            }
-            
-        } else if (action == SKNActionFormat) {
-            
-            NSData *data;
-            if (isStdIn)
-                data = [(NSFileHandle *)[NSFileHandle fileHandleWithStandardInput] readDataToEndOfFile];
-            else
-                data = [NSData dataWithContentsOfFile:inPath];
-            if (format == SKNFormatText) {
-                data = [SKNSkimTextNotes(SKNSkimNotesFromData(data)) dataUsingEncoding:NSUTF8StringEncoding];
-            } else if (format == SKNFormatRTF) {
-                data = SKNSkimRTFNotes(SKNSkimNotesFromData(data));
-            } else if (format == SKNFormatArchive || format == SKNFormatPlist) {
-                BOOL hasEncoding = NO;
-                if ([data length] > 8) {
-                    char bytes[100];
-                    [data getBytes:bytes range:NSMakeRange(0, format == SKNFormatPlist ? 9 : MIN(100, [data length]))];
-                    if (strncmp(bytes, "bplist00", 8) != 0) {
-                        unsigned char marker = (unsigned char)bytes[8] >> 4;
-                        hasEncoding = format == SKNFormatPlist ? (marker == 0xA) : (marker == 0xD && strstr(bytes, "$archiver") != NULL);
+                if (data) {
+                    if ([outPath isEqualToString:STD_IN_OUT_FILE]) {
+                        if ([data length])
+                            [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:data];
+                        success = YES;
+                    } else {
+                        if ([data length]) {
+                            success = [data writeToFile:outPath options:NSAtomicWrite error:&error];
+                        } else if ([fm fileExistsAtPath:outPath isDirectory:&isDir] && isDir == NO) {
+                            success = [fm removeItemAtPath:outPath error:NULL];
+                            if (success == NO)
+                                error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EACCES userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Unable to remove file", NSLocalizedDescriptionKey, nil]];
+                        } else {
+                            success = YES;
+                        }
                     }
                 }
-                if (hasEncoding == NO)
-                    data = SKNDataFromSkimNotes(SKNSkimNotesFromData(data), format == SKNFormatPlist);
-            }
-            if (data) {
-                if ([outPath isEqualToString:STD_IN_OUT_FILE]) {
-                    [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:data];
+                
+            } else if (action == SKNActionSet) {
+                
+                if (outPath && ([outPath isEqualToString:STD_IN_OUT_FILE] || ([fm fileExistsAtPath:outPath isDirectory:&isDir] && isDir == NO))) {
+                    NSData *data = nil;
+                    NSString *textString = nil;
+                    NSData *rtfData = nil;
+                    if ([outPath isEqualToString:STD_IN_OUT_FILE])
+                        data = [[NSFileHandle fileHandleWithStandardInput] readDataToEndOfFile];
+                    else
+                        data = [NSData dataWithContentsOfFile:outPath];
+                    if (argc > offset + 2) {
+                        NSString *outPath2 = SKNNormalizedPath([args objectAtIndex:offset + 2]);
+                        NSString *outPath3 = argc < offset + 4 ? nil : SKNNormalizedPath([args objectAtIndex:offset + 3]);
+                        if ([[outPath2 pathExtension] caseInsensitiveCompare:TXT_EXTENSION] == NSOrderedSame || [[outPath2 pathExtension] caseInsensitiveCompare:TEXT_EXTENSION] == NSOrderedSame)
+                            textString = [NSString stringWithContentsOfFile:outPath2 encoding:NSUTF8StringEncoding error:NULL];
+                        else if ([[outPath3 pathExtension] caseInsensitiveCompare:TXT_EXTENSION] == NSOrderedSame || [[outPath3 pathExtension] caseInsensitiveCompare:TEXT_EXTENSION] == NSOrderedSame)
+                            textString = [NSString stringWithContentsOfFile:outPath3 encoding:NSUTF8StringEncoding error:NULL];
+                        if ([[outPath3 pathExtension] caseInsensitiveCompare:RTF_EXTENSION] == NSOrderedSame)
+                            rtfData = [NSData dataWithContentsOfFile:outPath3];
+                        else if ([[outPath2 pathExtension] caseInsensitiveCompare:RTF_EXTENSION] == NSOrderedSame)
+                            rtfData = [NSData dataWithContentsOfFile:outPath2];
+                    }
+                    if ([data length])
+                        success = [fm writeSkimNotes:data textNotes:textString RTFNotes:rtfData atPath:inPath syncable:syncable != SKNNonSyncable error:&error];
+                    else if (data)
+                        success = [fm removeSkimNotesAtPath:inPath error:&error];
+                } else {
+                    error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Notes file does not exist", NSLocalizedDescriptionKey, nil]];
+                }
+                
+            } else if (action == SKNActionRemove) {
+                
+                success = [fm removeSkimNotesAtPath:inPath error:&error];
+                
+            } else if (action == SKNActionTest) {
+                
+                success = [fm hasSkimNotesAtPath:inPath syncable:syncable];
+                
+            } else if (action == SKNActionConvert) {
+                
+                if (isBundle) {
+                    NSString *pdfFilePath = nil;
+                    NSArray *files = [fm subpathsAtPath:inPath];
+                    NSString *filename = [[[inPath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:PDF_EXTENSION];
+                    if ([files containsObject:filename] == NO) {
+                        NSUInteger idx = [[files valueForKeyPath:@"pathExtension.lowercaseString"] indexOfObject:PDF_EXTENSION];
+                        filename = idx == NSNotFound ? nil : [files objectAtIndex:idx];
+                    }
+                    if (filename)
+                        pdfFilePath = [inPath stringByAppendingPathComponent:filename];
+                    success = [fm copyItemAtPath:pdfFilePath toPath:outPath error:NULL];
+                } else if ([[outPath pathExtension] caseInsensitiveCompare:PDFD_EXTENSION] == NSOrderedSame) {
+                    success = [fm createDirectoryAtPath:outPath withIntermediateDirectories:NO attributes:nil error:NULL];
+                    if (success) {
+                        NSString *pdfFilePath = [outPath stringByAppendingPathComponent:[[[outPath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:PDF_EXTENSION]];
+                        success = [[NSData dataWithContentsOfFile:inPath options:0 error:&error] writeToFile:pdfFilePath options:0 error:&error];
+                    }
+                } else if ([inPath isEqualToString:outPath]) {
                     success = YES;
                 } else {
-                    success = [data writeToFile:outPath options:NSAtomicWrite error:&error];
+                    success = [fm copyItemAtPath:inPath toPath:outPath error:NULL];
                 }
-            }
-            
-        } else if (action == SKNActionOffset) {
-            
-            NSData *data;
-            if (isStdIn)
-                data = [(NSFileHandle *)[NSFileHandle fileHandleWithStandardInput] readDataToEndOfFile];
-            else
-                data = [NSData dataWithContentsOfFile:inPath];
-            if (data) {
-                NSArray *inNotes = nil;
-                BOOL isPlist = NO;
-                @try { inNotes = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
-                @catch (id e) {}
-                if (inNotes == nil) {
-                    inNotes = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
-                    isPlist = YES;
+                if (success) {
+                    NSData *notesData = [fm SkimNotesAtPath:inPath error:&error];
+                    NSString *textNotes = [fm SkimTextNotesAtPath:inPath error:&error];
+                    NSData *rtfNotesData = [fm SkimRTFNotesAtPath:inPath error:&error];
+                    if (notesData)
+                        success = [fm writeSkimNotes:notesData textNotes:textNotes RTFNotes:rtfNotesData atPath:outPath syncable:syncable != SKNNonSyncable error:&error];
                 }
-                if ([inNotes isKindOfClass:[NSArray class]]) {
-                    NSMutableArray *outNotes = [NSMutableArray array];
-                    for (NSDictionary *inNote in inNotes) {
-                        if ([inNote isKindOfClass:[NSDictionary class]]) {
-                            NSMutableDictionary *outNote = [inNote mutableCopy];
-                            NSString *boundsString = [inNote objectForKey:@"bounds"];
-                            if ([boundsString isKindOfClass:[NSString class]]) {
-                                NSRect bounds = NSRectFromString(boundsString);
-                                bounds = NSOffsetRect(bounds, dx, dy);
-                                [outNote setObject:NSStringFromRect(bounds) forKey:@"bounds"];
+                
+            } else if (action == SKNActionFormat) {
+                
+                NSData *data;
+                if (isStdIn)
+                    data = [(NSFileHandle *)[NSFileHandle fileHandleWithStandardInput] readDataToEndOfFile];
+                else
+                    data = [NSData dataWithContentsOfFile:inPath];
+                if (format == SKNFormatText) {
+                    data = [SKNSkimTextNotes(SKNSkimNotesFromData(data)) dataUsingEncoding:NSUTF8StringEncoding];
+                } else if (format == SKNFormatRTF) {
+                    data = SKNSkimRTFNotes(SKNSkimNotesFromData(data));
+                } else if (format == SKNFormatArchive || format == SKNFormatPlist) {
+                    BOOL hasEncoding = NO;
+                    if ([data length] > 8) {
+                        char bytes[100];
+                        [data getBytes:bytes range:NSMakeRange(0, format == SKNFormatPlist ? 9 : MIN(100, [data length]))];
+                        if (strncmp(bytes, "bplist00", 8) != 0) {
+                            unsigned char marker = (unsigned char)bytes[8] >> 4;
+                            hasEncoding = format == SKNFormatPlist ? (marker == 0xA) : (marker == 0xD && strstr(bytes, "$archiver") != NULL);
+                        }
+                    }
+                    if (hasEncoding == NO)
+                        data = SKNDataFromSkimNotes(SKNSkimNotesFromData(data), format == SKNFormatPlist);
+                }
+                if (data) {
+                    if ([outPath isEqualToString:STD_IN_OUT_FILE]) {
+                        [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:data];
+                        success = YES;
+                    } else {
+                        success = [data writeToFile:outPath options:NSAtomicWrite error:&error];
+                    }
+                }
+                
+            } else if (action == SKNActionOffset) {
+                
+                NSData *data;
+                if (isStdIn)
+                    data = [(NSFileHandle *)[NSFileHandle fileHandleWithStandardInput] readDataToEndOfFile];
+                else
+                    data = [NSData dataWithContentsOfFile:inPath];
+                if (data) {
+                    NSArray *inNotes = nil;
+                    BOOL isPlist = NO;
+                    @try { inNotes = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
+                    @catch (id e) {}
+                    if (inNotes == nil) {
+                        inNotes = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
+                        isPlist = YES;
+                    }
+                    if ([inNotes isKindOfClass:[NSArray class]]) {
+                        NSMutableArray *outNotes = [NSMutableArray array];
+                        for (NSDictionary *inNote in inNotes) {
+                            if ([inNote isKindOfClass:[NSDictionary class]]) {
+                                NSMutableDictionary *outNote = [inNote mutableCopy];
+                                NSString *boundsString = [inNote objectForKey:@"bounds"];
+                                if ([boundsString isKindOfClass:[NSString class]]) {
+                                    NSRect bounds = NSRectFromString(boundsString);
+                                    bounds = NSOffsetRect(bounds, dx, dy);
+                                    [outNote setObject:NSStringFromRect(bounds) forKey:@"bounds"];
+                                }
+                                [outNotes addObject:outNote];
+                            } else {
+                                [outNotes addObject:inNote];
                             }
-                            [outNotes addObject:outNote];
-                        } else {
-                            [outNotes addObject:inNote];
                         }
-                    }
-                    if (isPlist)
-                        data = [NSPropertyListSerialization dataWithPropertyList:outNotes format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
-                    else
-                        data = [NSKeyedArchiver archivedDataWithRootObject:outNotes];
-                    if (data) {
-                        if ([outPath isEqualToString:STD_IN_OUT_FILE]) {
-                            [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:data];
-                            success = YES;
-                        } else {
-                            success = [data writeToFile:outPath options:NSAtomicWrite error:&error];
+                        if (isPlist)
+                            data = [NSPropertyListSerialization dataWithPropertyList:outNotes format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
+                        else
+                            data = [NSKeyedArchiver archivedDataWithRootObject:outNotes];
+                        if (data) {
+                            if ([outPath isEqualToString:STD_IN_OUT_FILE]) {
+                                [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:data];
+                                success = YES;
+                            } else {
+                                success = [data writeToFile:outPath options:NSAtomicWrite error:&error];
+                            }
                         }
                     }
                 }
+                
             }
+            
+            if (success == NO && error)
+                [(NSFileHandle *)[NSFileHandle fileHandleWithStandardError] writeData:[[[error localizedDescription] stringByAppendingString:@"\n"] dataUsingEncoding:NSUTF8StringEncoding]];
             
         }
-        
-        if (success == NO && error)
-            [(NSFileHandle *)[NSFileHandle fileHandleWithStandardError] writeData:[[[error localizedDescription] stringByAppendingString:@"\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-        
-    }
     
-    [pool release];
+    }
     
     return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }

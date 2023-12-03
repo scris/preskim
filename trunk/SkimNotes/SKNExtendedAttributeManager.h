@@ -91,18 +91,18 @@ enum {
     @discussion  This class is the core object to read and write extended attributes, which are used to store Skim notes with PDF files.
 */
 @interface SKNExtendedAttributeManager : NSObject {
-    NSString *namePrefix;
-    NSString *uniqueKey;
-    NSString *wrapperKey;
-    NSString *fragmentsKey;
+    NSString *_namePrefix;
+    NSString *_uniqueKey;
+    NSString *_wrapperKey;
+    NSString *_fragmentsKey;
 }
 
 /*!
-    @abstract   Returns the shared instance.  You probably always should use this instance, and is required for Skim notes.
+    @abstract   Returns the shared instance.  You should use always this instance for Skim notes.
     @discussion This shared manager uses the default prefix and is used for reading and writing Skim notes to PDF files.  It may split attributes into fragments if the data is too long.
     @result     The default shared EA manager used for Skim notes.
 */
-+ (id)sharedManager;
++ (SKNExtendedAttributeManager *)sharedManager;
 
 /*!
     @abstract   Returns a shared instance with nil prefix.  This instance never splits attributes, and can also not reassemble splitted attributes.
@@ -110,7 +110,14 @@ enum {
                 However attributes that were set using this manager will be readable also by managers with different prefixes, such as the <code>sharedManager</code>.
     @result     A shared EA manager that never splits extended attributes.
 */
-+ (id)sharedNoSplitManager;
++ (SKNExtendedAttributeManager *)sharedNoSplitManager;
+
+/*!
+    @abstract   Returns a shared instance appropriate for the containg application.  You may use this instance for attributes specific for the application.
+    @discussion This shared manager uses the identifier of the containg application as prefix.  It may split attributes into fragments if the data is too long.
+    @result     The default shared EA manager used for app specific attributes.
+*/
++ (SKNExtendedAttributeManager *)mainManager;
 
 /*!
     @abstract   Initializes a new extended attribute manager with keys and attribute name prefixes used for segments determined by a prefix.

@@ -92,7 +92,7 @@ NSString *SKNSkimTextNotes(NSArray *noteDicts) {
             pageIndex = 0;
         
         if ([text isKindOfClass:[NSData class]])
-            text = [[[NSAttributedString alloc] initWithData:(NSData *)text options:[NSDictionary dictionary] documentAttributes:NULL error:NULL] autorelease];
+            text = [[NSAttributedString alloc] initWithData:(NSData *)text options:[NSDictionary dictionary] documentAttributes:NULL error:NULL];
         
         [textString appendFormat:@"* %@, page %lu\n\n", type, (long)pageIndex + 1];
         if ([string length]) {
@@ -108,7 +108,7 @@ NSString *SKNSkimTextNotes(NSArray *noteDicts) {
 }
 
 NSData *SKNSkimRTFNotes(NSArray *noteDicts) {
-    NSMutableAttributedString *attrString = [[[NSMutableAttributedString alloc] init] autorelease];
+    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] init];
     
     for (NSDictionary *dict in noteDicts) {
         NSString *type = [dict objectForKey:NOTE_TYPE_KEY];
@@ -124,7 +124,7 @@ NSData *SKNSkimRTFNotes(NSArray *noteDicts) {
             pageIndex = 0;
         
         if ([text isKindOfClass:[NSData class]])
-            text = [[[NSAttributedString alloc] initWithData:(NSData *)text options:[NSDictionary dictionary] documentAttributes:NULL error:NULL] autorelease];
+            text = [[NSAttributedString alloc] initWithData:(NSData *)text options:[NSDictionary dictionary] documentAttributes:NULL error:NULL];
         
         [attrString replaceCharactersInRange:NSMakeRange([attrString length], 0) withString:[NSString stringWithFormat:@"* %@, page %lu\n\n", type, (long)pageIndex + 1]];
         if ([string length]) {
@@ -153,52 +153,37 @@ static inline BOOL SKNIsNumberArray(id array) {
     return YES;
 }
 
-static NSArray *SKNCreateArrayFromColor(SKNColor *color, NSMapTable **colors, NSMutableSet **arrays) {
+static NSArray *SKNArrayFromColor(SKNColor *color, NSMapTable *colors) {
+    NSArray *array = [colors objectForKey:color];
+    if (array)
+        return array;
     if ([color isKindOfClass:[SKNColor class]]) {
-        NSArray *array = [*colors objectForKey:color];
-        if (array == nil) {
 #if defined(SKIMNOTES_PLATFORM_IOS)
-            if (CGColorSpaceGetModel(CGColorGetColorSpace([color CGColor])) == kCGColorSpaceModelMonochrome) {
-                CGFloat w = 0.0, a = 1.0;
-                [color getWhite:&w alpha:&a];
-                array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:w], [NSNumber numberWithDouble:a], nil];
-            } else {
-                CGFloat r = 0.0, g = 0.0, b = 0.0, a = 1.0;
-                [color getRed:&r green:&g blue:&b alpha:&a];
-                array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:r], [NSNumber numberWithDouble:g], [NSNumber numberWithDouble:b], [NSNumber numberWithDouble:a], nil];
-            }
-#else
-            if ([[color colorSpace] colorSpaceModel] == NSGrayColorSpaceModel) {
-                CGFloat w = 0.0, a = 1.0;
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
-                if ([NSColorSpace respondsToSelector:@selector(genericGamma22GrayColorSpace)] == NO)
-                    [[color colorUsingColorSpace:[NSColorSpace genericGrayColorSpace]] getWhite:&w alpha:&a];
-                else
-#endif
-                [[color colorUsingColorSpace:[NSColorSpace genericGamma22GrayColorSpace]] getWhite:&w alpha:&a];
-                array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:w], [NSNumber numberWithDouble:a], nil];
-            } else {
-                CGFloat r = 0.0, g = 0.0, b = 0.0, a = 1.0;
-                [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&r green:&g blue:&b alpha:&a];
-                array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:r], [NSNumber numberWithDouble:g], [NSNumber numberWithDouble:b], [NSNumber numberWithDouble:a], nil];
-            }
-#endif
-            if (*colors == nil)
-                *colors = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
-            [*colors setObject:array forKey:color];
+        if (CGColorSpaceGetModel(CGColorGetColorSpace([color CGColor])) == kCGColorSpaceModelMonochrome) {
+            CGFloat w = 0.0, a = 1.0;
+            [color getWhite:&w alpha:&a];
+            array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:w], [NSNumber numberWithDouble:a], nil];
         } else {
-            [array retain];
+            CGFloat r = 0.0, g = 0.0, b = 0.0, a = 1.0;
+            [color getRed:&r green:&g blue:&b alpha:&a];
+            array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:r], [NSNumber numberWithDouble:g], [NSNumber numberWithDouble:b], [NSNumber numberWithDouble:a], nil];
         }
+#else
+        if ([[color colorSpace] colorSpaceModel] == NSGrayColorSpaceModel) {
+            CGFloat w = 0.0, a = 1.0;
+            [[color colorUsingColorSpace:[NSColorSpace genericGamma22GrayColorSpace]] getWhite:&w alpha:&a];
+            array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:w], [NSNumber numberWithDouble:a], nil];
+        } else {
+            CGFloat r = 0.0, g = 0.0, b = 0.0, a = 1.0;
+            [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&r green:&g blue:&b alpha:&a];
+            array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:r], [NSNumber numberWithDouble:g], [NSNumber numberWithDouble:b], [NSNumber numberWithDouble:a], nil];
+        }
+#endif
+        [colors setObject:array forKey:color];
         return array;
     } else if (SKNIsNumberArray(color)) {
-        NSArray *array = [*arrays member:color];
-        if (array == nil) {
-            if (*arrays == nil)
-                *arrays = [[NSMutableSet alloc] init];
-            [*arrays addObject:color];
-            array = (NSArray *)color;
-        }
-        return [array retain];
+        [colors setObject:color forKey:color];
+        return (NSArray *)color;
     } else {
         return nil;
     }
@@ -224,12 +209,7 @@ static SKNColor *SKNColorFromArray(NSArray *array) {
 #if defined(SKIMNOTES_PLATFORM_IOS)
             return [UIColor colorWithWhite:c[0] alpha:c[1]];
 #else
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
-            if ([NSColorSpace respondsToSelector:@selector(genericGamma22GrayColorSpace)] == NO)
-                return [NSColor colorWithColorSpace:[NSColorSpace genericGrayColorSpace] components:c count:2];
-            else
-#endif
-                return [NSColor colorWithColorSpace:[NSColorSpace genericGamma22GrayColorSpace] components:c count:2];
+            return [NSColor colorWithColorSpace:[NSColorSpace genericGamma22GrayColorSpace] components:c count:2];
 #endif
         } else {
             return [SKNColor clearColor];
@@ -259,15 +239,15 @@ NSArray *SKNSkimNotesFromData(NSData *data) {
                     id value;
                     if ((value = [dict objectForKey:NOTE_COLOR_KEY])) {
                         value = SKNColorFromArray(value);
-                        [dict setObject:value forKey:NOTE_COLOR_KEY];
+                        [dict setValue:value forKey:NOTE_COLOR_KEY];
                     }
                     if ((value = [dict objectForKey:NOTE_INTERIOR_COLOR_KEY])) {
                         value = SKNColorFromArray(value);
-                        [dict setObject:value forKey:NOTE_INTERIOR_COLOR_KEY];
+                        [dict setValue:value forKey:NOTE_INTERIOR_COLOR_KEY];
                     }
                     if ((value = [dict objectForKey:NOTE_FONT_COLOR_KEY])) {
                         value = SKNColorFromArray(value);
-                        [dict setObject:value forKey:NOTE_FONT_COLOR_KEY];
+                        [dict setValue:value forKey:NOTE_FONT_COLOR_KEY];
                     }
                     if ((value = [dict objectForKey:NOTE_FONT_NAME_KEY])) {
                         NSNumber *fontSize = [dict objectForKey:NOTE_FONT_SIZE_KEY];
@@ -282,12 +262,7 @@ NSArray *SKNSkimNotesFromData(NSData *data) {
                     if ((value = [dict objectForKey:NOTE_TEXT_KEY])) {
                         if ([value isKindOfClass:[NSData class]]) {
                             value = [[NSAttributedString alloc] initWithData:value options:[NSDictionary dictionary] documentAttributes:NULL error:NULL];
-                            if (value) {
-                                [dict setObject:value forKey:NOTE_TEXT_KEY];
-                                [value release];
-                            } else {
-                                [dict removeObjectForKey:NOTE_TEXT_KEY];
-                            }
+                            [dict setValue:value forKey:NOTE_TEXT_KEY];
                         } else if ([value isKindOfClass:[NSAttributedString class]] == NO) {
                             [dict removeObjectForKey:NOTE_TEXT_KEY];
                         }
@@ -295,8 +270,7 @@ NSArray *SKNSkimNotesFromData(NSData *data) {
                     if ((value = [dict objectForKey:NOTE_IMAGE_KEY])) {
                         if ([value isKindOfClass:[NSData class]]) {
                             value = [[SKNImage alloc] initWithData:value];
-                            [dict setObject:value forKey:NOTE_IMAGE_KEY];
-                            [value release];
+                            [dict setValue:value forKey:NOTE_IMAGE_KEY];
                         } else if ([value isKindOfClass:[SKNImage class]] == NO) {
                             [dict removeObjectForKey:NOTE_IMAGE_KEY];
                         }
@@ -321,25 +295,21 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
 #endif
         if (asPlist) {
             NSMutableArray *array = [[NSMutableArray alloc] init];
-            NSMapTable *colors = nil;
-            NSMutableSet *arrays = nil;
+            NSMapTable *colors = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
             for (NSDictionary *noteDict in noteDicts) {
                 NSMutableDictionary *dict = [noteDict mutableCopy];
                 id value;
                 if ((value = [dict objectForKey:NOTE_COLOR_KEY])) {
-                    value = SKNCreateArrayFromColor(value, &colors, &arrays);
-                    [dict setObject:value forKey:NOTE_COLOR_KEY];
-                    [value release];
+                    value = SKNArrayFromColor(value, colors);
+                    [dict setValue:value forKey:NOTE_COLOR_KEY];
                 }
                 if ((value = [dict objectForKey:NOTE_INTERIOR_COLOR_KEY])) {
-                    value = SKNCreateArrayFromColor(value, &colors, &arrays);
-                    [dict setObject:value forKey:NOTE_INTERIOR_COLOR_KEY];
-                    [value release];
+                    value = SKNArrayFromColor(value, colors);
+                    [dict setValue:value forKey:NOTE_INTERIOR_COLOR_KEY];
                 }
                 if ((value = [dict objectForKey:NOTE_FONT_COLOR_KEY])) {
-                    value = SKNCreateArrayFromColor(value, &colors, &arrays);
-                    [dict setObject:value forKey:NOTE_FONT_COLOR_KEY];
-                    [value release];
+                    value = SKNArrayFromColor(value, colors);
+                    [dict setValue:value forKey:NOTE_FONT_COLOR_KEY];
                 }
                 if ((value = [dict objectForKey:NOTE_FONT_KEY])) {
                     if ([value isKindOfClass:[SKNFont class]]) {
@@ -384,12 +354,8 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
                     }
                 }
                 [array addObject:dict];
-                [dict release];
             }
             data = [NSPropertyListSerialization dataWithPropertyList:array format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
-            [array release];
-            [colors release];
-            [arrays release];
         } else {
             data = [NSKeyedArchiver archivedDataWithRootObject:noteDicts];
         }

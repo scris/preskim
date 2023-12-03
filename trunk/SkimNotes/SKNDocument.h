@@ -48,7 +48,7 @@
 //#define ToolSample
 
 @interface SKNDocument : NSDocument {
-    NSArray *notes;
+    NSArray *_notes;
 }
 @property (nonatomic, copy) NSArray *notes;
 @end

@@ -45,7 +45,7 @@
 
 @synthesize agentIdentifier;
 
-+ (id)sharedReader {
++ (SKNSkimReader *)sharedReader {
     static id sharedReader = nil;
     static dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
@@ -57,14 +57,14 @@
 - (void)destroyConnection {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:connection];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
 #pragma clang diagnostic pop
-    agent = nil;
+    _agent = nil;
     
-    [[connection receivePort] invalidate];
-    [[connection sendPort] invalidate];
-    [connection invalidate];
-    connection = nil;
+    [[_connection receivePort] invalidate];
+    [[_connection sendPort] invalidate];
+    [_connection invalidate];
+    _connection = nil;
 }
 
 - (void)dealloc {
@@ -72,9 +72,9 @@
 }
 
 - (void)setAgentIdentifier:(NSString *)identifier {
-    NSAssert(connection == nil, @"agentIdentifier must be set before connecting");
-    if (connection == nil && agentIdentifier != identifier) {
-        agentIdentifier = identifier;
+    NSAssert(_connection == nil, @"agentIdentifier must be set before connecting");
+    if (_connection == nil && _agentIdentifier != identifier) {
+        _agentIdentifier = identifier;
     }
 }
 
@@ -152,34 +152,34 @@
         int maxTries = 5;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        connection = [NSConnection connectionWithRegisteredName:[self agentIdentifier] host:nil];
+        _connection = [NSConnection connectionWithRegisteredName:[self agentIdentifier] host:nil];
 #pragma clang diagnostic pop
         
         // if we try to read data before the server is fully set up, connection will still be nil
-        while (nil == connection && maxTries--) { 
+        while (nil == _connection && maxTries--) {
             [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            connection = [NSConnection connectionWithRegisteredName:[self agentIdentifier] host:nil];
+            _connection = [NSConnection connectionWithRegisteredName:[self agentIdentifier] host:nil];
 #pragma clang diagnostic pop
         }
         
-        if (connection) {
+        if (_connection) {
             
             // keep an eye on the connection from our end, so we can retain the proxy object
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleConnectionDied:) name:NSConnectionDidDieNotification object:connection];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleConnectionDied:) name:NSConnectionDidDieNotification object:_connection];
 #pragma clang diagnostic pop
             
             // if we don't set these explicitly, timeout never seems to take place
-            [connection setRequestTimeout:AGENT_TIMEOUT];
-            [connection setReplyTimeout:AGENT_TIMEOUT];
+            [_connection setRequestTimeout:AGENT_TIMEOUT];
+            [_connection setReplyTimeout:AGENT_TIMEOUT];
             
             @try {
-                id server = [connection rootProxy];
+                id server = [_connection rootProxy];
                 [server setProtocolForProxy:@protocol(SKNAgentListenerProtocol)];
-                agent = server;
+                _agent = server;
             }
             @catch(id exception) {
                 NSLog(@"Error: exception \"%@\" caught when contacting SkimNotesAgent", exception);
@@ -198,7 +198,7 @@
         ([ws type:fileType conformsToType:(__bridge NSString *)kUTTypePDF] ||
          [ws type:fileType conformsToType:@"net.sourceforge.skim-app.pdfd"] ||
          [ws type:fileType conformsToType:@"net.sourceforge.skim-app.skimnotes"])) {
-        if (nil == connection)
+        if (nil == _connection)
             [self establishConnection];
         return YES;
     }
@@ -209,7 +209,7 @@
     NSData *data = nil;
     if ([self connectAndCheckTypeOfFile:fileURL]) {
         @try{
-            data = [agent SkimNotesAtPath:[fileURL path]];
+            data = [_agent SkimNotesAtPath:[fileURL path]];
         }
         @catch(id exception){
             data = nil;
@@ -224,7 +224,7 @@
     NSData *data = nil;
     if ([self connectAndCheckTypeOfFile:fileURL]) {
         @try{
-            data = [agent RTFNotesAtPath:[fileURL path]];
+            data = [_agent RTFNotesAtPath:[fileURL path]];
         }
         @catch(id exception){
             data = nil;
@@ -239,7 +239,7 @@
     NSData *textData = nil;
     if ([self connectAndCheckTypeOfFile:fileURL]) {
         @try{
-            textData = [agent textNotesAtPath:[fileURL path] encoding:NSUnicodeStringEncoding];
+            textData = [_agent textNotesAtPath:[fileURL path] encoding:NSUnicodeStringEncoding];
         }
         @catch(id exception){
             textData = nil;

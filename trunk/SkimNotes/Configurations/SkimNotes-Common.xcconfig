@@ -21,6 +21,8 @@ ALWAYS_SEARCH_USER_PATHS = NO
 // GC is not supported in Xcode 5, and we never need it
 //GCC_ENABLE_OBJC_GC = supported
 
+CLANG_ENABLE_OBJC_ARC = YES
+
 ENABLE_STRICT_OBJC_MSGSEND = YES
 
 GCC_C_LANGUAGE_STANDARD = c99

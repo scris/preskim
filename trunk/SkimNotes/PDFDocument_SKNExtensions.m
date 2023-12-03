@@ -139,7 +139,7 @@ static inline NSString *SKNFieldNameForAnnotation(PDFAnnotation *annotation) {
     if ([self pageCount] == 0) return nil;
     
     // create new annotations from the dictionary and add them to their page and to the document
-    while (NSDictionary *dict in noteDicts) {
+    for (NSDictionary *dict in noteDicts) {
         NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
         if ([[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString]) {
             if (pageIndex >= [self pageCount])
@@ -179,7 +179,6 @@ static inline NSString *SKNFieldNameForAnnotation(PDFAnnotation *annotation) {
             PDFPage *page = [self pageAtIndex:pageIndex];
             [page addAnnotation:annotation];
             [notes addObject:annotation];
-            [annotation release];
         }
     }
     

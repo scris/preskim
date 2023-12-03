@@ -40,15 +40,15 @@
 
 
 @interface SKNSkimReader : NSObject {
-    NSString *agentIdentifier;
+    NSString *_agentIdentifier;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    NSConnection *connection;
+    NSConnection *_connection;
 #pragma clang diagnostic pop
-    id agent;
+    id _agent;
 }
 
-@property (class, nonatomic, readonly) id sharedReader;
+@property (class, nonatomic, readonly) SKNSkimReader *sharedReader;
 
 // this should only be set before any of the following calls is made
 @property (nonatomic, retain) NSString *agentIdentifier;

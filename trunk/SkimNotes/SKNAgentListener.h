@@ -42,11 +42,11 @@
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    NSConnection *connection;
+    NSConnection *_connection;
 #pragma clang diagnostic pop
 #if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_8
-    NSXPCListener *xpcListener;
-    NSXPCConnection *xpcConnection;
+    NSXPCListener *_xpcListener;
+    NSXPCConnection *_xpcConnection;
 #endif
 }
 

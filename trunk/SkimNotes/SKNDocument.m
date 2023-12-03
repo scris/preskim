@@ -49,7 +49,7 @@
 
 @implementation SKNDocument
 
-@synthesize notes;
+@synthesize notes = _notes;
 
 + (void)initialize {
     [NSValueTransformer setValueTransformer:[[SKNPlusOneTransformer alloc] init] forName:@"SKNPlusOne"];
@@ -62,7 +62,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        notes = [[NSArray alloc] init];
+        _notes = [[NSArray alloc] init];
     }
     return self;
 }
@@ -76,7 +76,7 @@
 #if defined(FrameworkSample)
     
     if ([[NSWorkspace sharedWorkspace] type:SKNSkimNotesDocumentType conformsToType:docType]) {
-        return [[NSFileManager defaultManager] writeSkimNotes:notes toSkimFileAtURL:absoluteURL error:outError];
+        return [[NSFileManager defaultManager] writeSkimNotes:_notes toSkimFileAtURL:absoluteURL error:outError];
     } else {
         if (outError)
             *outError = [NSError errorWithDomain:SKNDocumentErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Unable to save notes", @""), NSLocalizedDescriptionKey, nil]];
@@ -94,7 +94,7 @@
 - (NSData *)dataOfType:(NSString *)docType error:(NSError **)outError {
     NSData *data = nil;
     if ([[NSWorkspace sharedWorkspace] type:SKNSkimNotesDocumentType conformsToType:docType]) {
-        data = [NSKeyedArchiver archivedDataWithRootObject:notes];
+        data = [NSKeyedArchiver archivedDataWithRootObject:_notes];
     }
     if (data == nil && outError)
         *outError = [NSError errorWithDomain:SKNDocumentErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Unable to save notes", @""), NSLocalizedDescriptionKey, nil]];

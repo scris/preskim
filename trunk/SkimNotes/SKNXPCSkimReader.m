@@ -42,9 +42,9 @@
 
 @implementation SKNXPCSkimReader
 
-@synthesize agentIdentifier;
+@synthesize agentIdentifier=_agentIdentifier;
 
-+ (id)sharedReader {
++ (SKNXPCSkimReader *)sharedReader {
     static id sharedReader = nil;
     static dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
@@ -54,10 +54,10 @@
 }
 
 - (void)destroyConnection {
-    agent = nil;
+    _agent = nil;
     
-    [connection invalidate];
-    connection = nil;
+    [_connection invalidate];
+    _connection = nil;
 }
 
 - (void)dealloc {
@@ -65,9 +65,9 @@
 }
 
 - (void)setAgentIdentifier:(NSString *)identifier {
-    NSAssert(connection == nil, @"agentIdentifier must be set before connecting");
-    if (connection == nil && agentIdentifier != identifier) {
-        agentIdentifier = identifier;
+    NSAssert(_connection == nil, @"agentIdentifier must be set before connecting");
+    if (_connection == nil && _agentIdentifier != identifier) {
+        _agentIdentifier = identifier;
     }
 }
 
@@ -156,23 +156,23 @@
 
 - (void)establishSynchronousConnection:(BOOL)sync {
     if ([self launchedTask]) {
-        connection = [[NSXPCConnection alloc] initWithMachServiceName:[self agentIdentifier] options:0];
-        [connection setRemoteObjectInterface:[NSXPCInterface interfaceWithProtocol:@protocol(SKNXPCAgentListenerProtocol)]];
+        _connection = [[NSXPCConnection alloc] initWithMachServiceName:[self agentIdentifier] options:0];
+        [_connection setRemoteObjectInterface:[NSXPCInterface interfaceWithProtocol:@protocol(SKNXPCAgentListenerProtocol)]];
         __weak SKNXPCSkimReader *weakSelf = self;
-        [connection setInvalidationHandler:^{
+        [_connection setInvalidationHandler:^{
             [weakSelf destroyConnection];
         }];
         if (sync)
-            agent = [connection synchronousRemoteObjectProxyWithErrorHandler:^(NSError *error){}];
+            _agent = [_connection synchronousRemoteObjectProxyWithErrorHandler:^(NSError *error){}];
         else
-            agent = [connection remoteObjectProxy];
-        synchronous = sync;
-        [connection resume];
+            _agent = [_connection remoteObjectProxy];
+        _synchronous = sync;
+        [_connection resume];
     }
 }
 
 - (BOOL)connectAndCheckTypeOfFile:(NSURL *)fileURL synchronous:(BOOL)sync {
-    if (connection && synchronous != sync) {
+    if (_connection && _synchronous != sync) {
         NSLog(@"attempt to mix synchronous and asynchronous skim notes retrieval");
         return NO;
     }
@@ -185,7 +185,7 @@
         ([ws type:fileType conformsToType:(__bridge NSString *)kUTTypePDF] ||
          [ws type:fileType conformsToType:@"net.sourceforge.skim-app.pdfd"] ||
          [ws type:fileType conformsToType:@"net.sourceforge.skim-app.skimnotes"])) {
-        if (nil == connection)
+        if (nil == _connection)
             [self establishSynchronousConnection:sync];
         return YES;
     }
@@ -195,41 +195,41 @@
 - (NSData *)SkimNotesAtURL:(NSURL *)fileURL {
     __block NSData *data = nil;
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:YES])
-        [agent readSkimNotesAtURL:fileURL reply:^(NSData *outData){ data = outData; }];
+        [_agent readSkimNotesAtURL:fileURL reply:^(NSData *outData){ data = outData; }];
     return data;
 }
 
 - (NSData *)RTFNotesAtURL:(NSURL *)fileURL {
     __block NSData *data = nil;
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:YES])
-        [agent readRTFNotesAtURL:fileURL reply:^(NSData *outData){ data = outData; }];
+        [_agent readRTFNotesAtURL:fileURL reply:^(NSData *outData){ data = outData; }];
     return data;
 }
 
 - (NSString *)textNotesAtURL:(NSURL *)fileURL {
     __block NSString *string = nil;
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:YES])
-        [agent readTextNotesAtURL:fileURL reply:^(NSString *outString){ string = outString; }];
+        [_agent readTextNotesAtURL:fileURL reply:^(NSString *outString){ string = outString; }];
     return string;
 }
 
 - (void)readSkimNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSData *))reply {
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:NO])
-        [agent readSkimNotesAtURL:fileURL reply:reply];
+        [_agent readSkimNotesAtURL:fileURL reply:reply];
     else
         reply(nil);
 }
 
 - (void)readRTFNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSData *))reply {
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:NO])
-        [agent readRTFNotesAtURL:fileURL reply:reply];
+        [_agent readRTFNotesAtURL:fileURL reply:reply];
     else
         reply(nil);
 }
 
 - (void)readTextNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSString *))reply {
     if ([self connectAndCheckTypeOfFile:fileURL synchronous:NO])
-        [agent readTextNotesAtURL:fileURL reply:reply];
+        [_agent readTextNotesAtURL:fileURL reply:reply];
     else
         reply(nil);
 }

@@ -72,29 +72,34 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
 
 @implementation SKNExtendedAttributeManager
 
-static id sharedManager = nil;
-static id sharedNoSplitManager = nil;
-
-+ (id)sharedManager;
++ (SKNExtendedAttributeManager *)sharedManager;
 {
-    id manager;
-    @synchronized(self) {
-        if (sharedManager == nil)
-            sharedManager = [[[self class] alloc] init];
-        manager = sharedManager;
-    }
-    return manager;
+    static SKNExtendedAttributeManager *sharedManager = nil;
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
+        sharedManager = [[self alloc] init];
+    });
+    return sharedManager;
 }
 
-+ (id)sharedNoSplitManager;
++ (SKNExtendedAttributeManager *)sharedNoSplitManager;
 {
-    id manager;
-    @synchronized(self) {
-        if (sharedNoSplitManager == nil)
-            sharedNoSplitManager = [[[self class] alloc] initWithPrefix:nil];
-        manager = sharedNoSplitManager;
-    }
-    return manager;
+    static SKNExtendedAttributeManager *sharedNoSplitManager = nil;
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
+        sharedNoSplitManager = [[self alloc] initWithPrefix:nil];
+    });
+    return sharedNoSplitManager;
+}
+
++ (SKNExtendedAttributeManager *)mainManager;
+{
+    static SKNExtendedAttributeManager *mainManager = nil;
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
+        mainManager = [[self alloc] initWithPrefix:[[NSBundle mainBundle] bundleIdentifier]];
+    });
+    return mainManager;
 }
 
 - (id)init;
@@ -106,20 +111,12 @@ static id sharedNoSplitManager = nil;
 {
     self = [super init];
     if (self) {
-        namePrefix = [[prefix stringByAppendingString:NAME_SEPARATOR] retain];
-        uniqueKey = [[prefix stringByAppendingString:UNIQUE_KEY_SUFFIX] retain];
-        wrapperKey = [[prefix stringByAppendingString:WRAPPER_KEY_SUFFIX] retain];
-        fragmentsKey = [[prefix stringByAppendingString:FRAGMENTS_KEY_SUFFIX] retain];
+        _namePrefix = [prefix stringByAppendingString:NAME_SEPARATOR];
+        _uniqueKey = [prefix stringByAppendingString:UNIQUE_KEY_SUFFIX];
+        _wrapperKey = [prefix stringByAppendingString:WRAPPER_KEY_SUFFIX];
+        _fragmentsKey = [prefix stringByAppendingString:FRAGMENTS_KEY_SUFFIX];
     }
     return self;
-}
-
-- (void)dealloc {
-    [namePrefix release];
-    [uniqueKey release];
-    [wrapperKey release];
-    [fragmentsKey release];
-    [super dealloc];
 }
 
 - (NSArray *)extendedAttributeNamesAtPath:(NSString *)path traverseLink:(BOOL)follow includeFragments:(BOOL)fragments error:(NSError **)error;
@@ -144,15 +141,14 @@ static id sharedNoSplitManager = nil;
         return nil;
     }
     
-    NSZone *zone = NSDefaultMallocZone();
     bufSize = status;
-    char *namebuf = (char *)NSZoneMalloc(zone, sizeof(char) * bufSize);
+    char *namebuf = (char *)malloc(sizeof(char) * bufSize);
     NSAssert(namebuf != NULL, @"unable to allocate memory");
     status = listxattr(fsPath, namebuf, bufSize, xopts);
     
     if(status == -1){
         if(error) *error = [self xattrError:errno forPath:path];
-        NSZoneFree(zone, namebuf);
+        free(namebuf);
         return nil;
     }
     
@@ -167,15 +163,14 @@ static id sharedNoSplitManager = nil;
         attribute = [[NSString alloc] initWithBytes:&namebuf[start] length:(idx - start) encoding:NSUTF8StringEncoding];
         if(attribute != nil){
             // ignore fragments
-            if(fragments || namePrefix == nil || [attribute hasPrefix:namePrefix] == NO || [attribute length] < [namePrefix length] + MIN_EXTRA_NAME_LENGTH)
+            if(fragments || _namePrefix == nil || [attribute hasPrefix:_namePrefix] == NO || [attribute length] < [_namePrefix length] + MIN_EXTRA_NAME_LENGTH)
                 [attrs addObject:attribute];
-            [attribute release];
             attribute = nil;
         }
         start = idx + 1;
     }
     
-    NSZoneFree(zone, namebuf);
+    free(namebuf);
     return attrs;
 }
 
@@ -230,13 +225,13 @@ static id sharedNoSplitManager = nil;
     }
     
     bufSize = status;
-    char *namebuf = (char *)NSZoneMalloc(NSDefaultMallocZone(), sizeof(char) * bufSize);
+    char *namebuf = (char *)malloc(sizeof(char) * bufSize);
     NSAssert(namebuf != NULL, @"unable to allocate memory");
     status = getxattr(fsPath, attrName, namebuf, bufSize, 0, xopts);
     
     if(status == -1){
         if(error) *error = [self xattrError:errno forPath:path];
-        NSZoneFree(NSDefaultMallocZone(), namebuf);
+        free(namebuf);
         return nil;
     }
     
@@ -258,20 +253,20 @@ static id sharedNoSplitManager = nil;
             *error = err;
     }
     
-    if (namePrefix && [self isPlistData:attribute]) {
+    if (_namePrefix && [self isPlistData:attribute]) {
         id plist = [NSPropertyListSerialization propertyListWithData:attribute options:NSPropertyListImmutable format:NULL error:NULL];
         
         // even if it's a plist, it may not be a dictionary or have the key we're looking for
-        if (plist && [plist respondsToSelector:@selector(objectForKey:)] && [[plist objectForKey:wrapperKey] boolValue]) {
+        if (plist && [plist respondsToSelector:@selector(objectForKey:)] && [[plist objectForKey:_wrapperKey] boolValue]) {
             
-            NSString *uniqueValue = [plist objectForKey:uniqueKey];
-            NSUInteger i, numberOfFragments = [[plist objectForKey:fragmentsKey] unsignedIntegerValue];
+            NSString *uniqueValue = [plist objectForKey:_uniqueKey];
+            NSUInteger i, numberOfFragments = [[plist objectForKey:_fragmentsKey] unsignedIntegerValue];
 
             NSMutableData *buffer = [NSMutableData data];
             BOOL success = (nil != uniqueValue && numberOfFragments > 0);
             
             if (success == NO)
-                NSLog(@"failed to read unique key %@ for %lu fragments from property list.", uniqueKey, (long)numberOfFragments);
+                NSLog(@"failed to read unique key %@ for %lu fragments from property list.", _uniqueKey, (long)numberOfFragments);
             
             NSUInteger j = [attr rangeOfString:@"#"].location;
             NSString *suffix = j == NSNotFound || j == [attr length] - 1 ? @"" : [attr substringFromIndex:j];
@@ -286,20 +281,16 @@ static id sharedNoSplitManager = nil;
                     subdata = [self copyRawExtendedAttributeNamed:oldName atPath:path traverseLink:follow error:&tmpError];
                     if (subdata)
                         suffix = @"";
-                    [oldName release];
                 }
                 if (nil == subdata) {
                     NSLog(@"failed to find subattribute %@ of %lu for attribute named %@. %@", name, (long)numberOfFragments, attr, [tmpError localizedDescription]);
                     success = NO;
                 } else {
                     [buffer appendData:subdata];
-                    [subdata release];
                 }
-                [name release];
             }
             
-            [attribute release];
-            attribute = success ? [[self bunzipData:buffer] retain] : nil;
+            attribute = success ? [self bunzipData:buffer] : nil;
             
             if (success == NO && NULL != error)
                 *error = [NSError errorWithDomain:SKNSkimNotesErrorDomain code:SKNReassembleAttributeFailedError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:path, NSFilePathErrorKey, SKNLocalizedString(@"Failed to reassemble attribute value.", @"Error description"), NSLocalizedDescriptionKey, nil]];
@@ -308,7 +299,7 @@ static id sharedNoSplitManager = nil;
 
         }
     }
-    return [attribute autorelease];
+    return attribute;
 }
 
 - (id)propertyListFromExtendedAttributeNamed:(NSString *)attr atPath:(NSString *)path traverseLink:(BOOL)traverse error:(NSError **)error;
@@ -360,7 +351,7 @@ static id sharedNoSplitManager = nil;
     
     BOOL success;
 
-    if ((options & kSKNXattrNoSplitData) == 0 && namePrefix && [value length] > MAX_XATTR_LENGTH) {
+    if ((options & kSKNXattrNoSplitData) == 0 && _namePrefix && [value length] > MAX_XATTR_LENGTH) {
                     
         // compress to save space, and so we don't identify this as a plist when reading it (in case it really is plist data)
         value = [self bzipData:value];
@@ -368,7 +359,7 @@ static id sharedNoSplitManager = nil;
         // this will be a unique identifier for the set of keys we're about to write (appending a counter to the UUID)
         NSString *uniqueValue = [self uniqueName];
         NSUInteger numberOfFragments = ([value length] / MAX_XATTR_LENGTH) + ([value length] % MAX_XATTR_LENGTH ? 1 : 0);
-        NSDictionary *wrapper = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], wrapperKey, uniqueValue, uniqueKey, [NSNumber numberWithUnsignedInteger:numberOfFragments], fragmentsKey, nil];
+        NSDictionary *wrapper = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], _wrapperKey, uniqueValue, _uniqueKey, [NSNumber numberWithUnsignedInteger:numberOfFragments], _fragmentsKey, nil];
         NSData *wrapperData = [NSPropertyListSerialization dataWithPropertyList:wrapper format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
         NSParameterAssert([wrapperData length] < MAX_XATTR_LENGTH && [wrapperData length] > 0);
         
@@ -396,7 +387,6 @@ static id sharedNoSplitManager = nil;
             if (setxattr(fsPath, [name UTF8String], subdataPtr, subdataLen, 0, xopts)) {
                 NSLog(@"full data length of note named %@ was %lu, subdata length was %lu (failed on pass %lu)", name, (long)[value length], (long)subdataLen, (long)i);
             }
-            [name release];
         }
         
     } else {
@@ -424,7 +414,7 @@ static id sharedNoSplitManager = nil;
         success = NO;
     } else {
         // if we don't split and the data is too long, compress the data using bzip to save space
-        if (((options & kSKNXattrNoSplitData) != 0 || namePrefix == nil) && (options & kSKNXattrNoCompress) == 0 && [data length] > MAX_XATTR_LENGTH)
+        if (((options & kSKNXattrNoSplitData) != 0 || _namePrefix == nil) && (options & kSKNXattrNoCompress) == 0 && [data length] > MAX_XATTR_LENGTH)
             data = [self bzipData:data];
         
         success = [self setExtendedAttributeNamed:attr toValue:data atPath:path options:options error:error];
@@ -461,25 +451,29 @@ static id sharedNoSplitManager = nil;
 
     if(status != -1){
         bufSize = status;
-        char *namebuf = (char *)NSZoneMalloc(NSDefaultMallocZone(), sizeof(char) * bufSize);
+        char *namebuf = (char *)malloc(sizeof(char) * bufSize);
         NSAssert(namebuf != NULL, @"unable to allocate memory");
         status = getxattr(fsPath, attrName, namebuf, bufSize, 0, xopts);
         
-        if(status != -1){
+        if(status == -1){
+            
+            free(namebuf);
+            
+        } else {
             
             // let NSData worry about freeing the buffer
             NSData *attribute = [[NSData alloc] initWithBytesNoCopy:namebuf length:bufSize];
             
             id plist = nil;
             
-            if (namePrefix && [self isPlistData:attribute])
+            if (_namePrefix && [self isPlistData:attribute])
                 plist = [NSPropertyListSerialization propertyListWithData:attribute options:NSPropertyListImmutable format:NULL error:NULL];
             
             // even if it's a plist, it may not be a dictionary or have the key we're looking for
-            if (plist && [plist respondsToSelector:@selector(objectForKey:)] && [[plist objectForKey:wrapperKey] boolValue]) {
+            if (plist && [plist respondsToSelector:@selector(objectForKey:)] && [[plist objectForKey:_wrapperKey] boolValue]) {
                 
-                NSString *uniqueValue = [plist objectForKey:uniqueKey];
-                NSUInteger i, numberOfFragments = [[plist objectForKey:fragmentsKey] unsignedIntegerValue];
+                NSString *uniqueValue = [plist objectForKey:_uniqueKey];
+                NSUInteger i, numberOfFragments = [[plist objectForKey:_fragmentsKey] unsignedIntegerValue];
                 NSString *name;
                 
                 NSUInteger j = [attr rangeOfString:@"#"].location;
@@ -496,16 +490,12 @@ static id sharedNoSplitManager = nil;
                         status = removexattr(fsPath, subAttrName, xopts);
                         if (status != -1)
                             suffix = @"";
-                        [oldName release];
                     }
                     if (status == -1) {
                         NSLog(@"failed to remove subattribute %@ of attribute named %@", name, attr);
                     }
-                    [name release];
                 }
             }
-            
-            [attribute release];
         }
     }
     
@@ -555,7 +545,7 @@ static id sharedNoSplitManager = nil;
 {
     CFUUIDRef uuid = CFUUIDCreate(NULL);
     CFStringRef uuidString = CFUUIDCreateString(NULL, uuid);
-    NSString *uniqueName = [namePrefix stringByAppendingString:(NSString *)uuidString];
+    NSString *uniqueName = [_namePrefix stringByAppendingString:(__bridge NSString *)uuidString];
     CFRelease(uuid);
     CFRelease(uuidString);
     return uniqueName;
@@ -654,7 +644,6 @@ static id sharedNoSplitManager = nil;
     } while(bzret != BZ_STREAM_END && NO == hadError);
     
     BZ2_bzCompressEnd(&stream);
-    [buffer release];
     
     return compressed;
 }
@@ -689,8 +678,7 @@ static id sharedNoSplitManager = nil;
     } while(bzret != BZ_STREAM_END && NO == hadError);
     
     BZ2_bzDecompressEnd(&stream);
-    [buffer release];
-
+    
     return decompressed;
 }
 
