@@ -32,7 +32,7 @@ A category on PDFDocument.  This category defines methods to add Skim notes to a
 \f0\b SKNExtendedAttributeManager
 \f1\b0 \
 \
-A class with a shared object to read and write data from and to extended attributes.  This class is basically an Objective-C wrapper around the low-level BSD functions for accessing extended attributes.  This class also contains logic to split the data into segments, to avoid the effective 2kB size limit of extended attributes on Mac OSX.  You probably don't need to deal directly with this class, you probably use it indirectly through the API provided by the NSFileManager and PDFDocument categories.\
+A class with a shared object to read and write data from and to extended attributes.  This class is basically an Objective-C wrapper around the low-level BSD functions for accessing extended attributes.  This class also contains logic to split the data into segments, to avoid the effective 2kB size limit of extended attributes on Mac OS.  You probably don't need to deal directly with this class, you probably use it indirectly through the API provided by the NSFileManager and PDFDocument categories.\
 \
 
 \f0\b PDFAnnotation (SKNExtensions)
@@ -157,7 +157,7 @@ The skimNotes framework uses
 \f0\b\fs36 \cf0 Notes on Building the Framework
 \fs24 \
 \
-Support for the Cats
+Support for older OS versions
 \f1\b0 \
 \
 If you need to build the frameworks and/or the tools with support for older Mac OS X versions, you will need to change the build configuration and build them yourself.  Easiest is to edit SkimNotes-Common.xcconfig.  Set the deployment target by replacing the 
@@ -170,7 +170,7 @@ If you need to build the frameworks and/or the tools with support for older Mac 
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 
 \f1\fs24 \cf0 \CocoaLigature1 \
-For deployment targets before 10.6, all calls to NSPropertyListSerialization in the code should be replaced by their deprecated versions.\
+The code does not support deployment targets lower than 10.6 currently.\
 \
 Also you may want to support older architectures by changing the 
 \f3\fs22 \CocoaLigature0 ARCHS
