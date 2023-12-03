@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKNSkimReader : NSObject {
     NSString *_agentIdentifier;
@@ -51,10 +52,12 @@
 @property (class, nonatomic, readonly) SKNSkimReader *sharedReader;
 
 // this should only be set before any of the following calls is made
-@property (nonatomic, retain) NSString *agentIdentifier;
+@property (nonatomic, strong, nullable) NSString *agentIdentifier;
 
-- (NSData *)SkimNotesAtURL:(NSURL *)fileURL;
-- (NSData *)RTFNotesAtURL:(NSURL *)fileURL;
-- (NSString *)textNotesAtURL:(NSURL *)fileURL;
+- (nullable NSData *)SkimNotesAtURL:(NSURL *)fileURL;
+- (nullable NSData *)RTFNotesAtURL:(NSURL *)fileURL;
+- (nullable NSString *)textNotesAtURL:(NSURL *)fileURL;
 
 @end
+
+NS_ASSUME_NONNULL_END

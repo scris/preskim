@@ -44,6 +44,7 @@
 #import <Foundation/Foundation.h>
 #import <PDFKit/PDFKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 /*!
     @category    
@@ -60,7 +61,7 @@
     @param      notes An array of <code>PDFAnnotation</code> objects initialized using the Skim note properties read from the extended attributes or bundled Skim file.
     @result     The initialized <code>PDFDocument</code>.
 */
-- (id)initWithURL:(NSURL *)url readSkimNotes:(NSArray **)notes;
+- (nullable id)initWithURL:(NSURL *)url readSkimNotes:(NSArray * _Nullable * _Nullable)notes;
 
 /*!
     @method     
@@ -69,6 +70,8 @@
     @param      noteDicts An array of dictionaries containing Skim note properties as returned by the properties of <code>PDFAnnotation</code> objects.
     @result     An array of <code>PDFAnnotation</code> objects initialized using the Skim note properties read from the extended attributes or bundled Skim file.
 */
-- (NSArray *)addSkimNotesWithProperties:(NSArray *)noteDicts;
+- (nullable NSArray *)addSkimNotesWithProperties:(NSArray *)noteDicts;
 
 @end
+
+NS_ASSUME_NONNULL_END

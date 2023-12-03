@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKNXPCSkimReader : NSObject {
     NSString *_agentIdentifier;
@@ -49,18 +50,20 @@
 @property (class, nonatomic, readonly) SKNXPCSkimReader *sharedReader;
 
 // this should only be set before any of the following calls is made
-@property (nonatomic, retain) NSString *agentIdentifier;
+@property (nonatomic, strong, nullable) NSString *agentIdentifier;
 
 // should use either the synchronous or the asynchronous methods, not both
 
 // synchronous retrieval
-- (NSData *)SkimNotesAtURL:(NSURL *)fileURL;
-- (NSData *)RTFNotesAtURL:(NSURL *)fileURL;
-- (NSString *)textNotesAtURL:(NSURL *)fileURL;
+- (nullable NSData *)SkimNotesAtURL:(NSURL *)fileURL;
+- (nullable NSData *)RTFNotesAtURL:(NSURL *)fileURL;
+- (nullable NSString *)textNotesAtURL:(NSURL *)fileURL;
 
 // asynchronous retrieval
-- (void)readSkimNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSData *))reply;
-- (void)readRTFNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSData *))reply;
-- (void)readTextNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSString *))reply;
+- (void)readSkimNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSData * _Nullable))reply;
+- (void)readRTFNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSData * _Nullable))reply;
+- (void)readTextNotesAtURL:(NSURL *)fileURL reply:(void (^)(NSString * _Nullable))reply;
 
 @end
+
+NS_ASSUME_NONNULL_END

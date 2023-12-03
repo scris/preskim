@@ -38,6 +38,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 enum {
     SKNNonSyncable = -1,
     SKNAnySyncable = 0,
@@ -47,14 +49,16 @@ typedef NSInteger SKNSyncability;
 
 @interface NSFileManager (SKNToolExtensions)
 
-- (NSData *)SkimNotesAtPath:(NSString *)path error:(NSError **)outError;
-- (NSString *)SkimTextNotesAtPath:(NSString *)path error:(NSError **)outError;
-- (NSData *)SkimRTFNotesAtPath:(NSString *)path error:(NSError **)outError;
+- (nullable NSData *)SkimNotesAtPath:(NSString *)path error:(NSError **)outError;
+- (nullable NSString *)SkimTextNotesAtPath:(NSString *)path error:(NSError **)outError;
+- (nullable NSData *)SkimRTFNotesAtPath:(NSString *)path error:(NSError **)outError;
 
-- (BOOL)writeSkimNotes:(NSData *)notesData textNotes:(NSString *)textNotes RTFNotes:(NSData *)rtfNotesData atPath:(NSString *)path syncable:(BOOL)syncable error:(NSError **)outError;
+- (BOOL)writeSkimNotes:(nullable NSData *)notesData textNotes:(nullable NSString *)textNotes RTFNotes:(nullable NSData *)rtfNotesData atPath:(NSString *)path syncable:(BOOL)syncable error:(NSError **)outError;
 
 - (BOOL)removeSkimNotesAtPath:(NSString *)path error:(NSError **)outError;
 
 - (BOOL)hasSkimNotesAtPath:(NSString *)path syncable:(SKNSyncability)syncable;
 
 @end
+
+NS_ASSUME_NONNULL_END

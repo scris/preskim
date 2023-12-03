@@ -51,6 +51,8 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
 
 @interface SKNPDFAnnotationNote (SKPrivateDeclarations)
 - (NSTextStorage *)mutableText;
+- (NSArray *)texts;
+- (void)setTexts:(NSArray *)texts;
 @end
 
 @implementation SKNPDFAnnotationNote (SKExtensions)
@@ -58,8 +60,7 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
 - (void)setDefaultSkimNoteProperties {
     [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKAnchoredNoteColorKey]];
     [self setIconType:[[NSUserDefaults standardUserDefaults] integerForKey:SKAnchoredNoteIconTypeKey]];
-    [texts release];
-    texts = [[NSArray alloc] initWithObjects:[[[SKNoteText alloc] initWithNote:self] autorelease], nil];
+    [self setTexts:@[[[[SKNoteText alloc] initWithNote:self] autorelease]]];
     [self setPopup:nil];
 }
 
@@ -75,7 +76,7 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
 - (BOOL)hasNoteText { return YES; }
 
 - (SKNoteText *)noteText {
-    return [texts firstObject];
+    return [[self texts] firstObject];
 }
 
 - (NSString *)textString {

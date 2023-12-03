@@ -36,10 +36,16 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKNXPCAgentListenerProtocol
 
-- (void)readSkimNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply;
-- (void)readRTFNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply;
-- (void)readTextNotesAtURL:(NSURL *)aURL reply:(void (^)(NSString *))reply;
+- (void)readSkimNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData * _Nullable))reply;
+- (void)readRTFNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData * _Nullable))reply;
+- (void)readTextNotesAtURL:(NSURL *)aURL reply:(void (^)(NSString * _Nullable))reply;
 
 @end
+
+NS_ASSUME_NONNULL_END

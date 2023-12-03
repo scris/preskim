@@ -35,10 +35,16 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKNAgentListenerProtocol
 
-- (bycopy NSData *)SkimNotesAtPath:(in bycopy NSString *)aFile;
-- (bycopy NSData *)RTFNotesAtPath:(in bycopy NSString *)aFile;
-- (bycopy NSData *)textNotesAtPath:(in bycopy NSString *)aFile encoding:(NSStringEncoding)encoding;
+- (bycopy nullable NSData *)SkimNotesAtPath:(in bycopy NSString *)aFile;
+- (bycopy nullable NSData *)RTFNotesAtPath:(in bycopy NSString *)aFile;
+- (bycopy nullable NSData *)textNotesAtPath:(in bycopy NSString *)aFile encoding:(NSStringEncoding)encoding;
 
 @end
+
+NS_ASSUME_NONNULL_END

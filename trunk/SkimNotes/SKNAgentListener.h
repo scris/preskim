@@ -37,6 +37,7 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKNAgentListener : NSObject
 {
@@ -50,6 +51,8 @@
 #endif
 }
 
-- (id)initWithServerName:(NSString *)serverName xpc:(BOOL)isXPC;
+- (nullable id)initWithServerName:(nullable NSString *)serverName xpc:(BOOL)isXPC;
 
 @end
+
+NS_ASSUME_NONNULL_END
