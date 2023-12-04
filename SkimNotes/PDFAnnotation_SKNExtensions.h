@@ -285,14 +285,14 @@ typedef NSInteger SKNPDFWidgetType;
     @param      dict A dictionary with Skim notes properties, as returned from properties.  This is required to contain values for <code>"type"</code> and <code>"bounds"</code>.
     @result     An initialized Skim note annotation instance, or <code>NULL</code> if the object could not be initialized.
 */
-- (nullable id)initSkimNoteWithProperties:(NSDictionary *)dict;
+- (nullable id)initSkimNoteWithProperties:(NSDictionary<NSString *, id> *)dict;
 
 /*!
     @abstract   The Skim notes properties.
     @discussion These properties can be used to initialize a new copy, and to save to extended attributes or file.
     @result     A dictionary with properties of the Skim note.  All values are standard Cocoa objects conforming to <code>NSCoding</code> and <code>NSCopying</code>.
 */
-@property (nonatomic, readonly) NSDictionary *SkimNoteProperties;
+@property (nonatomic, readonly) NSDictionary<NSString *, id> *SkimNoteProperties;
 
 /*!
     @abstract   Returns whether the annotation is a Skim note.  
@@ -314,7 +314,7 @@ typedef NSInteger SKNPDFWidgetType;
     @discussion This method gets the points between which the path interpolates.
     @result     An array of point strings.
 */
-+ (NSArray *)pointsFromSkimNotePath:(PDFKitPlatformBezierPath *)path;
++ (NSArray<NSString *> *)pointsFromSkimNotePath:(PDFKitPlatformBezierPath *)path;
 
 /*!
     @abstract   Method to set the points from a path of an Ink Skim note.

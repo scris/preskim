@@ -71,7 +71,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @param      outError If there is an error reading the Skim notes, upon return contains an <code>NSError</code> object that describes the problem.
     @result     An array of dictionaries with Skim note properties, an empty array if no Skim notes were found, or <code>NULL</code> if there was an error reading the Skim notes.
 */
-- (nullable NSArray *)readSkimNotesFromExtendedAttributesAtURL:(NSURL *)aURL error:(NSError **)outError;
+- (nullable NSArray<NSDictionary<NSString *, id> *> *)readSkimNotesFromExtendedAttributesAtURL:(NSURL *)aURL error:(NSError **)outError;
 
 /*!
     @abstract   Reads text Skim notes as a string from the extended attributes of a file.
@@ -98,7 +98,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @param      outError If there is an error reading the Skim notes, upon return contains an NSError object that describes the problem.
     @result     An array of dictionaries with Skim note properties, an empty array if no Skim notes were found, or <code>NULL</code> if there was an error reading the Skim notes.
 */
-- (nullable NSArray *)readSkimNotesFromPDFBundleAtURL:(NSURL *)aURL error:(NSError **)outError;
+- (nullable NSArray<NSDictionary<NSString *, id> *> *)readSkimNotesFromPDFBundleAtURL:(NSURL *)aURL error:(NSError **)outError;
 
 /*!
     @abstract   Reads text Skim notes as a string from the contents of a PDF bundle.
@@ -125,7 +125,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @param      outError If there is an error reading the Skim notes, upon return contains an <code>NSError</code> object that describes the problem.
     @result     An array of dictionaries with Skim note properties, an empty array if no Skim notes were found, or <code>NULL</code> if there was an error reading the Skim notes.
 */
-- (nullable NSArray *)readSkimNotesFromSkimFileAtURL:(NSURL *)aURL error:(NSError **)outError;
+- (nullable NSArray<NSDictionary<NSString *, id> *> *)readSkimNotesFromSkimFileAtURL:(NSURL *)aURL error:(NSError **)outError;
 
 /*!
     @abstract   Writes Skim notes passed as an array of property dictionaries to the extended attributes of a file, as well as a defaultrepresentation for text Skim notes and RTF Skim notes.
@@ -135,7 +135,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @param      outError If there is an error writing the Skim notes, upon return contains an <code>NSError</code> object that describes the problem.
     @result     Returns <code>YES</code> if writing out the Skim notes was successful; otherwise returns <code>NO</code>.
 */
-- (BOOL)writeSkimNotes:(nullable NSArray *)notes toExtendedAttributesAtURL:(NSURL *)aURL error:(NSError **)outError;
+- (BOOL)writeSkimNotes:(nullable NSArray<NSDictionary<NSString *, id> *> *)notes toExtendedAttributesAtURL:(NSURL *)aURL error:(NSError **)outError;
 
 /*!
     @abstract   Writes Skim notes passed as an array of property dictionaries to the extended attributes of a file, as well as text Skim notes and RTF Skim notes.  The array is converted to <code>NSData</code> using <code>NSKeyedArchiver</code>.
@@ -147,7 +147,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @param      outError If there is an error writing the Skim notes, upon return contains an <code>NSError</code> object that describes the problem.
     @result     Returns <code>YES</code> if writing out the Skim notes was successful; otherwise returns <code>NO</code>.
 */
-- (BOOL)writeSkimNotes:(nullable NSArray *)notes textNotes:(nullable NSString *)notesString richTextNotes:(nullable NSData *)notesRTFData toExtendedAttributesAtURL:(NSURL *)aURL error:(NSError **)outError;
+- (BOOL)writeSkimNotes:(nullable NSArray<NSDictionary<NSString *, id> *> *)notes textNotes:(nullable NSString *)notesString richTextNotes:(nullable NSData *)notesRTFData toExtendedAttributesAtURL:(NSURL *)aURL error:(NSError **)outError;
 
 /*!
  @abstract   Writes Skim notes passed as an array of property dictionaries to the extended attributes of a file, as well as text Skim notes and RTF Skim notes.  The array is converted to <code>NSData</code> using <code>NSKeyedArchiver</code> or as plist data, depending on the options.
@@ -160,7 +160,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
  @param      outError If there is an error writing the Skim notes, upon return contains an <code>NSError</code> object that describes the problem.
  @result     Returns <code>YES</code> if writing out the Skim notes was successful; otherwise returns <code>NO</code>.
  */
-- (BOOL)writeSkimNotes:(nullable NSArray *)notes textNotes:(nullable NSString *)notesString richTextNotes:(nullable NSData *)notesRTFData toExtendedAttributesAtURL:(NSURL *)aURL options:(SKNSkimNotesWritingOptions)options error:(NSError **)outError;
+- (BOOL)writeSkimNotes:(nullable NSArray<NSDictionary<NSString *, id> *> *)notes textNotes:(nullable NSString *)notesString richTextNotes:(nullable NSData *)notesRTFData toExtendedAttributesAtURL:(NSURL *)aURL options:(SKNSkimNotesWritingOptions)options error:(NSError **)outError;
 
 /*!
     @abstract   Writes Skim notes passed as an array of property dictionaries to a .skim file.
@@ -170,7 +170,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @param      outError If there is an error writing the Skim notes, upon return contains an <code>NSError</code> object that describes the problem.
     @result     Returns <code>YES</code> if writing out the Skim notes was successful; otherwise returns <code>NO</code>.
 */
-- (BOOL)writeSkimNotes:(nullable NSArray *)notes toSkimFileAtURL:(NSURL *)aURL error:(NSError **)outError;
+- (BOOL)writeSkimNotes:(nullable NSArray<NSDictionary<NSString *, id> *> *)notes toSkimFileAtURL:(NSURL *)aURL error:(NSError **)outError;
 
 /*!
     @abstract   Writes Skim notes passed as an array of property dictionaries to a .skim file.  The array is converted to <code>NSData</code> using <code>NSKeyedArchiver</code> or as plist data, depending on the options.
@@ -181,7 +181,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @param      outError If there is an error writing the Skim notes, upon return contains an <code>NSError</code> object that describes the problem.
     @result     Returns <code>YES</code> if writing out the Skim notes was successful; otherwise returns <code>NO</code>.
 */
-- (BOOL)writeSkimNotes:(nullable NSArray *)notes toSkimFileAtURL:(NSURL *)aURL options:(SKNSkimNotesWritingOptions)options error:(NSError **)outError;
+- (BOOL)writeSkimNotes:(nullable NSArray<NSDictionary<NSString *, id> *> *)notes toSkimFileAtURL:(NSURL *)aURL options:(SKNSkimNotesWritingOptions)options error:(NSError **)outError;
 
 /*!
     @abstract   Returns the file URL for the file of a given type inside a PDF bundle.
@@ -212,7 +212,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @param      data The data object to extract the notes from, either an archive or plist data.
     @result     An array of dictionaries containing Skim notes properties.
 */
-extern NSArray * _Nullable SKNSkimNotesFromData(NSData * _Nullable data);
+extern NSArray<NSDictionary<NSString *, id> *> * _Nullable SKNSkimNotesFromData(NSData * _Nullable data);
 
 /*!
     @abstract   Returns data for the Skim notes.
@@ -221,7 +221,7 @@ extern NSArray * _Nullable SKNSkimNotesFromData(NSData * _Nullable data);
     @param      asPlist Whether to create universal plist data rather than archived data.  Always returns plist data on iOS.
     @result     A data representation of the notes.
 */
-extern NSData * _Nullable SKNDataFromSkimNotes(NSArray * _Nullable notes, BOOL asPlist);
+extern NSData * _Nullable SKNDataFromSkimNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable notes, BOOL asPlist);
 
 /*!
     @abstract   Returns a string representation of Skim notes.
@@ -229,7 +229,7 @@ extern NSData * _Nullable SKNDataFromSkimNotes(NSArray * _Nullable notes, BOOL a
     @param      noteDicts An array of dictionaries containing Skim note properties, as returned by the properties of a <code>PDFAnnotation</code>.
     @result     A string representation of the notes.
 */
-extern NSString * _Nullable SKNSkimTextNotes(NSArray * _Nullable noteDicts);
+extern NSString * _Nullable SKNSkimTextNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable noteDicts);
 
 /*!
     @abstract   Returns an RTF data representation of Skim notes.
@@ -237,6 +237,6 @@ extern NSString * _Nullable SKNSkimTextNotes(NSArray * _Nullable noteDicts);
     @param      noteDicts An array of dictionaries containing Skim note properties, as returned by the properties of a <code>PDFAnnotation</code>.
     @result     An RTF data representation of the notes.
 */
-extern NSData * _Nullable SKNSkimRTFNotes(NSArray * _Nullable noteDicts);
+extern NSData * _Nullable SKNSkimRTFNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable noteDicts);
 
 NS_ASSUME_NONNULL_END
