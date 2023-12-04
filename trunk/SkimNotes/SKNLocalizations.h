@@ -36,7 +36,7 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(SKIMNOTES_BUNDLE_IDENTIFIER)
+#ifdef SKIMNOTES_BUNDLE_IDENTIFIER
     
     #define SKNLocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key, @"SkimNotes", [NSBundle bundleWithIdentifier:@SKIMNOTES_BUNDLE_IDENTIFIER], comment)
     
