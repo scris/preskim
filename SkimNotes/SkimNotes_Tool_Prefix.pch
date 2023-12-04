@@ -7,13 +7,4 @@
     #import <AppKit/AppKit.h>
     
     #define SKNLocalizedString(key, comment) key
-
-#if !defined(__clang__) || !__has_feature(nullability)
-    #define NS_ASSUME_NONNULL_BEGIN
-    #define NS_ASSUME_NONNULL_END
-    #define _Nullable
-    #define nullable
-#elif __clang_major__==6
-    #define _Nullable __nullable
-#endif
 #endif
