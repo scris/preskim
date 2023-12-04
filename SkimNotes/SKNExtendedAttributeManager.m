@@ -36,6 +36,7 @@
  */
 
 #import "SKNExtendedAttributeManager.h"
+#import "SKNLocalizations.h"
 #include <sys/xattr.h>
 #import <bzlib.h>
 
