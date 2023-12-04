@@ -74,7 +74,7 @@
 
 @implementation PDFDocument (SKNExtensions)
 
-- (id)initWithURL:(NSURL *)url readSkimNotes:(NSArray **)notes {
+- (id)initWithURL:(NSURL *)url readSkimNotes:(NSArray<PDFAnnotation *> **)notes {
     NSFileManager *fm = [NSFileManager defaultManager];
     NSURL *pdfURL = url;
     BOOL isPDFBundle = [[[url path] pathExtension] caseInsensitiveCompare:@"pdfd"] == NSOrderedSame;

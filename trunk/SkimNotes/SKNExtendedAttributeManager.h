@@ -130,7 +130,7 @@ enum {
     @param      prefix Defaults to <code>"net_sourceforge_skim-app"</code> for the shared instance.  If <code>nil</code>, the manager never splits attributes.
     @result     An initialized EA manager object.  This may be one of the shared managers.
 */
-- (id)initWithPrefix:(NSString * _Nullable)prefix;
+- (id)initWithPrefix:(nullable NSString *)prefix;
 
 /*!
     @abstract   Return a list of extended attributes for the given file.
@@ -141,7 +141,7 @@ enum {
     @param      error Error object describing the error if <code>nil</code> was returned.
     @result     Array of strings or <code>nil</code> if an error occurred.
 */
-- (nullable NSArray *)extendedAttributeNamesAtPath:(NSString *)path traverseLink:(BOOL)follow error:(NSError **)error;
+- (nullable NSArray<NSString *> *)extendedAttributeNamesAtPath:(NSString *)path traverseLink:(BOOL)follow error:(NSError **)error;
 
 /*!
     @abstract   Return the extended attribute named <code>attr</code> for a given file.
@@ -162,7 +162,7 @@ enum {
     @param      error Error object describing the error if <code>nil</code> was returned.
     @result     Dictionary of data objects as values and strings as key, or <code>nil</code> if an error occurred.
 */
-- (nullable NSDictionary *)allExtendedAttributesAtPath:(NSString *)path traverseLink:(BOOL)follow error:(NSError **)error;
+- (nullable NSDictionary<NSString *, NSData *> *)allExtendedAttributesAtPath:(NSString *)path traverseLink:(BOOL)follow error:(NSError **)error;
 
 /*!
     @abstract   Returns a property list using NSPropertyListSerialization.
