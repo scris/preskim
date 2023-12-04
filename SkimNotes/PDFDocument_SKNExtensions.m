@@ -57,6 +57,9 @@
 #define SKNRectFromString(string)   NSRectFromString(string)
 #define SKNEqualRects(rect1, rect2) NSEqualRects(NSIntegralRect(rect1), NSIntegralRect(rect2))
 
+#define PDF_EXTENSION  @"pdf"
+#define PDFD_EXTENSION @"pdfd"
+
 #if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_12
 @interface PDFAnnotation (SKNSierraDeclarations)
 - (id)valueForAnnotationKey:(NSString *)key;
@@ -77,9 +80,9 @@
 - (id)initWithURL:(NSURL *)url readSkimNotes:(NSArray<PDFAnnotation *> **)notes {
     NSFileManager *fm = [NSFileManager defaultManager];
     NSURL *pdfURL = url;
-    BOOL isPDFBundle = [[[url path] pathExtension] caseInsensitiveCompare:@"pdfd"] == NSOrderedSame;
+    BOOL isPDFBundle = [[[url path] pathExtension] caseInsensitiveCompare:PDFD_EXTENSION] == NSOrderedSame;
     if (isPDFBundle)
-        pdfURL = [fm bundledFileURLWithExtension:@"pdf" inPDFBundleAtURL:url error:NULL];
+        pdfURL = [fm bundledFileURLWithExtension:PDF_EXTENSION inPDFBundleAtURL:url error:NULL];
     self = [self initWithURL:pdfURL];
     if (self) {
         NSArray *noteDicts = nil;

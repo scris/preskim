@@ -50,7 +50,8 @@
 #define WRAPPER_KEY_SUFFIX      @"_has_wrapper"
 #define FRAGMENTS_KEY_SUFFIX    @"_number_of_fragments"
 
-#define SYNCABLE_FLAG @"#S"
+#define SYNCABLE_FLAG      @"#S"
+#define SYNCABLE_SEPARATOR @"#"
 
 #ifndef NSFoundationVersionNumber10_10
 #define NSFoundationVersionNumber10_10 1151.16
@@ -245,7 +246,7 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
     NSError *err = nil;
     NSData *attribute = [self copyRawExtendedAttributeNamed:attr atPath:path traverseLink:follow error:&err];
     
-    if (attribute == nil && [err code] == ENOATTR && [attr rangeOfString:@"#"].location == NSNotFound) {
+    if (attribute == nil && [err code] == ENOATTR && [attr rangeOfString:SYNCABLE_SEPARATOR].location == NSNotFound) {
         NSString *sattr = [attr stringByAppendingString:SYNCABLE_FLAG];
         attribute = [self copyRawExtendedAttributeNamed:sattr atPath:path traverseLink:follow error:&err];
         if (attribute)
@@ -269,7 +270,7 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
             if (success == NO)
                 NSLog(@"failed to read unique key %@ for %lu fragments from property list.", _uniqueKey, (long)numberOfFragments);
             
-            NSUInteger j = [attr rangeOfString:@"#"].location;
+            NSUInteger j = [attr rangeOfString:SYNCABLE_SEPARATOR].location;
             NSString *suffix = j == NSNotFound || j == [attr length] - 1 ? @"" : [attr substringFromIndex:j];
             
             // reassemble the original data object
@@ -334,7 +335,7 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
 - (BOOL)setExtendedAttributeNamed:(NSString *)attr toValue:(NSData *)value atPath:(NSString *)path options:(SKNXattrFlags)options error:(NSError **)error;
 {
     
-    if((options & kSKNXattrSyncable) && NSFoundationVersionNumber >= NSFoundationVersionNumber10_10 && [attr rangeOfString:@"#"].location == NSNotFound){
+    if((options & kSKNXattrSyncable) && NSFoundationVersionNumber >= NSFoundationVersionNumber10_10 && [attr rangeOfString:SYNCABLE_SEPARATOR].location == NSNotFound){
         attr = [attr stringByAppendingString:SYNCABLE_FLAG];
     }
 
@@ -375,7 +376,7 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
         NSUInteger i;
         const char *valuePtr = [value bytes];
         
-        NSUInteger j = [attr rangeOfString:@"#"].location;
+        NSUInteger j = [attr rangeOfString:SYNCABLE_SEPARATOR].location;
         NSString *suffix = j == NSNotFound || j == [attr length] - 1 ? @"" : [attr substringFromIndex:j];
         
         for (i = 0; success && i < numberOfFragments; i++) {
@@ -440,7 +441,7 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
     ssize_t status;
     status = getxattr(fsPath, attrName, NULL, 0, 0, xopts);
     
-    if (status == -1 && errno == ENOATTR && [attr rangeOfString:@"#"].location == NSNotFound){
+    if (status == -1 && errno == ENOATTR && [attr rangeOfString:SYNCABLE_SEPARATOR].location == NSNotFound){
         NSString *sattr = [attr stringByAppendingString:SYNCABLE_FLAG];
         const char *sattrName = [sattr UTF8String];
         status = getxattr(fsPath, sattrName, NULL, 0, 0, xopts);
@@ -477,7 +478,7 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
                 NSUInteger i, numberOfFragments = [[plist objectForKey:_fragmentsKey] unsignedIntegerValue];
                 NSString *name;
                 
-                NSUInteger j = [attr rangeOfString:@"#"].location;
+                NSUInteger j = [attr rangeOfString:SYNCABLE_SEPARATOR].location;
                 NSString *suffix = j == NSNotFound || j == [attr length] - 1 ? @"" : [attr substringFromIndex:j];
                 
                 // remove the sub attributes
@@ -506,7 +507,7 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
         if(error) *error = [self xattrError:errno forPath:path];
         return NO;
     } else {
-        if ([attr rangeOfString:@"#"].location == NSNotFound){
+        if ([attr rangeOfString:SYNCABLE_SEPARATOR].location == NSNotFound){
             attr = [attr stringByAppendingString:SYNCABLE_FLAG];
             [self removeExtendedAttributeNamed:attr atPath:path traverseLink:follow error:NULL];
         }
