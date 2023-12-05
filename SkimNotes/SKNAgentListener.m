@@ -56,8 +56,6 @@
 - (BOOL)startXPCListenerWithServerName:(NSString *)serverName;
 - (void)destroyXPCConnection;
 @end
-#else
-#define NSAppKitVersionNumber10_8 1187
 #endif
 
 #pragma mark -
@@ -79,7 +77,7 @@
         if (isXPC) {
 #if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_8
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_8
-            if (floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_8)
+            if ([NSXPCConnection class])
 #endif
             success = [self startXPCListenerWithServerName:serverName];
 #endif
