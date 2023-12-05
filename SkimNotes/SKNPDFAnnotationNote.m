@@ -48,6 +48,7 @@ PDFSize SKNPDFAnnotationNoteSize = {16.0, 16.0};
 
 #import <CoreGraphics/CoreGraphics.h>
 
+#if !defined(MAC_OS_X_VERSION_10_15) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_15
 static inline void drawIconComment(CGContextRef context, NSRect bounds);
 static inline void drawIconKey(CGContextRef context, NSRect bounds);
 static inline void drawIconNote(CGContextRef context, NSRect bounds);
@@ -66,6 +67,7 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 @interface PDFPage (SKNSierraDeclarations)
 - (void)transformContext:(CGContextRef)context forBox:(PDFDisplayBox)box;
 @end
+#endif
 #endif
 
 @interface SKNPDFAnnotationNote ()
@@ -197,7 +199,9 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
     return _textStorage;
 }
 
-// private method called by -drawWithBox: before to 10.12, made public on 10.12, now calling -drawWithBox:
+
+#if !defined(MAC_OS_X_VERSION_10_15) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_15
+
 - (void)drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
     if (floor(NSAppKitVersionNumber) < SKNAppKitVersionNumber10_12 || floor(NSAppKitVersionNumber) > SKNAppKitVersionNumber10_14 || [self hasAppearanceStream]) {
         [super drawWithBox:box inContext:context];
@@ -235,9 +239,11 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 
 #endif
 
+#endif
+
 @end
 
-#if !defined(PDFKIT_PLATFORM_IOS)
+#if !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_15) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_15)
 
 static inline void drawIconComment(CGContextRef context, NSRect bounds) {
     bounds = NSInsetRect(bounds, 0.5, 0.5);
