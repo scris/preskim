@@ -1,5 +1,6 @@
 //
 //  SKNExtendedAttributeManager.h
+//  SkimNotes
 //
 //  Created by Adam R. Maxwell on 05/12/05.
 /*

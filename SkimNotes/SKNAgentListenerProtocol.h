@@ -1,8 +1,9 @@
+//
+//  SKNAgentListenerProtocol.h
+//  SkimNotes
+//
+//  Created by Adam Maxwell on 04/10/07.
 /*
- *  SKNAgentListenerProtocol.h
- *
- *  Created by Adam Maxwell on 04/10/07.
- *
  This software is Copyright (c) 2007-2023
  Adam Maxwell. All rights reserved.
  
