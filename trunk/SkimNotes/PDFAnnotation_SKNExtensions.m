@@ -260,10 +260,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         // generic, initalize the class for the type in the dictionary
         Class annotationClass = SKNAnnotationClassForType(type);
         
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        self = [self initWithBounds:NSZeroRect];
-#pragma clang diagnostic pop
+        self = [self init];
         self = [annotationClass alloc];
     }
     
@@ -331,10 +328,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         // generic, initalize the class for the type in the dictionary
         Class annotationClass = SKNAnnotationClassForType(type);
         
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        self = [self initWithBounds:NSZeroRect];
-#pragma clang diagnostic pop
+        self = [self init];
         self = [[annotationClass alloc] initSkimNoteWithProperties:dict];
         return self;
     }
