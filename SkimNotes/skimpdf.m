@@ -275,7 +275,7 @@ int main (int argc, const char * argv[]) {
         } else if (action == SKNActionVersion) {
             
             WRITE_OUT(versionStr);
-            succes = YES;
+            success = YES;
             
         } else {
             
