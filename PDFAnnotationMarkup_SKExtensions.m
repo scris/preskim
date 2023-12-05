@@ -116,7 +116,7 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
         }
     }
     if (lines == nil) {
-        [[self initWithBounds:NSZeroRect] release];
+        [[self init] release];
         self = nil;
     } else {
         self = [self initSkimNoteWithBounds:bounds forType:type];

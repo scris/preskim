@@ -108,7 +108,7 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
         [propertyList isKindOfClass:[NSData class]]) {
         self = [self initSkimNoteWithProperties:[NSKeyedUnarchiver unarchiveObjectWithData:propertyList]];
     } else {
-        [[self initWithBounds:NSZeroRect forType:@"" withProperties:nil] release];
+        [[self init] release];
         self = nil;
     }
     return self;
