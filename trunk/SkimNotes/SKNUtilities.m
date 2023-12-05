@@ -342,8 +342,6 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
                         id imageRep = [[value representations] count] == 1 ? [[value representations] objectAtIndex:0] : nil;
                         if ([imageRep isKindOfClass:[NSPDFImageRep class]]) {
                             value = [imageRep PDFRepresentation];
-                        } else if ([imageRep isKindOfClass:[NSEPSImageRep class]]) {
-                            value = [imageRep EPSRepresentation];
                         } else {
                             value = [value TIFFRepresentation];
                         }
