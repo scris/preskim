@@ -191,7 +191,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @param      outError If there is an error getting the bundled file, upon return contains an <code>NSError</code> object that describes the problem.
     @result     A file URL to the bundled file inside the PDF bundle, or <code>nil</code> if no bundled file was found.
 */
-- (NSURL *)bundledFileURLWithExtension:(NSString *)extension inPDFBundleAtURL:(NSURL *)aURL error:(NSError **)outError;
+- (nullable NSURL *)bundledFileURLWithExtension:(NSString *)extension inPDFBundleAtURL:(NSURL *)aURL error:(NSError **)outError;
 
 /*!
     @abstract   Returns the full path for the file of a given type inside a PDF bundle.
@@ -201,7 +201,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
     @param      outError If there is an error getting the bundled file, upon return contains an <code>NSError</code> object that describes the problem.
     @result     A full path to the bundled file inside the PDF bundle, or <code>nil</code> if no bundled file was found.
 */
-- (NSString *)bundledFileWithExtension:(NSString *)extension inPDFBundleAtPath:(NSString *)path error:(NSError **)outError;
+- (nullable NSString *)bundledFileWithExtension:(NSString *)extension inPDFBundleAtPath:(NSString *)path error:(NSError **)outError;
 
 @end
 
