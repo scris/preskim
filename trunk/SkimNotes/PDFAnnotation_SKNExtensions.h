@@ -265,7 +265,7 @@ typedef NSInteger SKNPDFWidgetType;
     @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim note on macOS.
     @discussion This method can be implemented in subclasses to provide default properties for Skim notes.
     @param      bounds The bounding box of the annotation, in page space.
-    @result     An initialized Skim note annotation instance, or <code>NULL</code> if the object could not be initialized.
+    @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
 */
 - (nullable id)initSkimNoteWithBounds:(NSRect)bounds;
 #endif
@@ -275,7 +275,7 @@ typedef NSInteger SKNPDFWidgetType;
     @discussion On macOS this returns a subclasses initialized with <code>initSkimNoteWithBounds:</code>.
     @param      bounds The bounding box of the annotation, in page space.
     @param      type The type of the note .
-    @result     An initialized Skim note annotation instance, or <code>NULL</code> if the object could not be initialized.
+    @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
 */
 - (nullable id)initSkimNoteWithBounds:(PDFRect)bounds forType:(NSString *)type;
 
@@ -283,7 +283,7 @@ typedef NSInteger SKNPDFWidgetType;
     @abstract   Initializes a new Skim note annotation with the given properties.
     @discussion This method determines the proper subclass from the value for the <code>"type"</code> key in dict, initializes an instance using <code>initSkimNoteWithBounds:</code>, and sets the known properties from dict. Implementations in subclasses should call it on super and set their properties from dict if available.
     @param      dict A dictionary with Skim notes properties, as returned from properties.  This is required to contain values for <code>"type"</code> and <code>"bounds"</code>.
-    @result     An initialized Skim note annotation instance, or <code>NULL</code> if the object could not be initialized.
+    @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
 */
 - (nullable id)initSkimNoteWithProperties:(NSDictionary<NSString *, id> *)dict;
 
