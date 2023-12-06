@@ -98,9 +98,9 @@ This protocol is used by the agent.  You can send messages from this protocol to
 \pard\tx560\pardeftab560\pardirnatural\partightenfactor0
 
 \f3\fs22 \cf2 \CocoaLigature0 @protocol\cf0  SKNAgentListenerProtocol\
-- (\cf2 bycopy\cf0  \cf3 NSData\cf0  *)SkimNotesAtPath:(\cf2 in\cf0  \cf2 bycopy\cf0  \cf3 NSString\cf0  *)aFile;\
-- (\cf2 bycopy\cf0  \cf3 NSData\cf0  *)RTFNotesAtPath:(\cf2 in\cf0  \cf2 bycopy\cf0  \cf3 NSString\cf0  *)aFile;\
-- (\cf2 bycopy\cf0  \cf3 NSData\cf0  *)textNotesAtPath:(\cf2 in\cf0  \cf2 bycopy\cf0  \cf3 NSString\cf0  *)aFile encoding:(\cf3 NSStringEncoding\cf0 )encoding;\
+- (\cf2 bycopy\cf0  \cf2 nullable \cf3 NSData\cf0  *)SkimNotesAtPath:(\cf2 in\cf0  \cf2 bycopy\cf0  \cf3 NSString\cf0  *)aFile;\
+- (\cf2 bycopy\cf0  \cf2 nullable \cf3 NSData\cf0  *)RTFNotesAtPath:(\cf2 in\cf0  \cf2 bycopy\cf0  \cf3 NSString\cf0  *)aFile;\
+- (\cf2 bycopy\cf0  \cf2 nullable \cf3 NSData\cf0  *)textNotesAtPath:(\cf2 in\cf0  \cf2 bycopy\cf0  \cf3 NSString\cf0  *)aFile encoding:(\cf3 NSStringEncoding\cf0 )encoding;\
 \cf2 @end\cf0 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 
@@ -115,9 +115,9 @@ This protocol is used by the XPC agent.  You can send messages from this protoco
 \pard\tx560\pardeftab560\pardirnatural\partightenfactor0
 
 \f3\fs22 \cf2 \CocoaLigature0 @protocol\cf0  SKNAgentListenerProtocol\
-- (\cf2 void\cf0 )readSkimNotesAtURL:(\cf3 NSURL\cf0  *)aURL reply:(\cf2 void\cf0  (^)(\cf3 NSData\cf0  *))reply;\
-- (\cf2 void\cf0 )readRTFNotesAtURL:(\cf3 NSURL\cf0  *)aURL reply:(\cf2 void\cf0  (^)(\cf3 NSData\cf0  *))reply;\
-- (\cf2 void\cf0 )readTextNotesAtURL:(\cf3 NSURL\cf0  *)aURL reply:(\cf2 void\cf0  (^)(\cf3 NSString\cf0  *))reply;\
+- (\cf2 void\cf0 )readSkimNotesAtURL:(\cf3 NSURL\cf0  *)aURL reply:(\cf2 void\cf0  (^)(\cf3 NSData\cf0  * \cf2 _Nullable\cf0 ))reply;\
+- (\cf2 void\cf0 )readRTFNotesAtURL:(\cf3 NSURL\cf0  *)aURL reply:(\cf2 void\cf0  (^)(\cf3 NSData\cf0  * \cf2 _Nullable\cf0 ))reply;\
+- (\cf2 void\cf0 )readTextNotesAtURL:(\cf3 NSURL\cf0  *)aURL reply:(\cf2 void\cf0  (^)(\cf3 NSString\cf0  * \cf2 _Nullable\cf0 ))reply;\
 \cf2 @end\cf0 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 
