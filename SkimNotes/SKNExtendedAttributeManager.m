@@ -42,7 +42,7 @@
 #import <bzlib.h>
 
 #define MAX_XATTR_LENGTH        2048
-#define MAX_XATTR_NAME_LENGTH   127
+#define MAX_NAME_PREFIX_LENGTH  80
 #define MIN_EXTRA_NAME_LENGTH   34
 #define PREFIX                  @"net_sourceforge_skim-app"
 
@@ -115,10 +115,12 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
 {
     self = [super init];
     if (self) {
-        _namePrefix = [prefix stringByAppendingString:NAME_SEPARATOR];
         _uniqueKey = [prefix stringByAppendingString:UNIQUE_KEY_SUFFIX];
         _wrapperKey = [prefix stringByAppendingString:WRAPPER_KEY_SUFFIX];
         _fragmentsKey = [prefix stringByAppendingString:FRAGMENTS_KEY_SUFFIX];
+        if ([prefix length] > MAX_NAME_PREFIX_LENGTH)
+            prefix = [prefix substringToIndex:MAX_NAME_PREFIX_LENGTH];
+        _namePrefix = [prefix stringByAppendingString:NAME_SEPARATOR];
     }
     return self;
 }
@@ -363,13 +365,6 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
         // this will be a unique identifier for the set of keys we're about to write (appending a counter to the UUID)
         NSString *uniqueValue = [self uniqueName];
         NSUInteger numberOfFragments = ([value length] / MAX_XATTR_LENGTH) + ([value length] % MAX_XATTR_LENGTH ? 1 : 0);
-        NSUInteger j = [attr rangeOfString:SYNCABLE_SEPARATOR].location;
-        NSString *suffix = j == NSNotFound || j == [attr length] - 1 ? @"" : [attr substringFromIndex:j];
-        NSUInteger maxSuffixLength = [suffix length] + 2 + (NSUInteger)floor(log10(MAX(2, numberOfFragments) - 1));
-        
-        if ([uniqueValue length] + maxSuffixLength > MAX_XATTR_NAME_LENGTH)
-            uniqueValue = [uniqueValue substringToIndex:MAX_XATTR_NAME_LENGTH - maxSuffixLength];
-        
         NSDictionary *wrapper = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], _wrapperKey, uniqueValue, _uniqueKey, [NSNumber numberWithUnsignedInteger:numberOfFragments], _fragmentsKey, nil];
         NSData *wrapperData = [NSPropertyListSerialization dataWithPropertyList:wrapper format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
         NSParameterAssert([wrapperData length] < MAX_XATTR_LENGTH && [wrapperData length] > 0);
@@ -384,6 +379,9 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
         NSString *name;
         NSUInteger i;
         const char *valuePtr = [value bytes];
+        
+        NSUInteger j = [attr rangeOfString:SYNCABLE_SEPARATOR].location;
+        NSString *suffix = j == NSNotFound || j == [attr length] - 1 ? @"" : [attr substringFromIndex:j];
         
         for (i = 0; success && i < numberOfFragments; i++) {
             name = [[NSString alloc] initWithFormat:@"%@%@%lu%@", uniqueValue, FRAGMENT_NAME_SEPARATOR, (long)i, suffix];
