@@ -105,15 +105,15 @@ static char *versionHelpStr = "skimnotes version: get version of the skimnotes t
                               "Get the version of the tool and exit.";
 
 static char *protocolStr = "@protocol SKNAgentListenerProtocol\n"
-                           "- (bycopy NSData *)SkimNotesAtPath:(in bycopy NSString *)aFile;\n"
-                           "- (bycopy NSData *)RTFNotesAtPath:(in bycopy NSString *)aFile;\n"
-                           "- (bycopy NSData *)textNotesAtPath:(in bycopy NSString *)aFile encoding:(NSStringEncoding)encoding;\n"
+                           "- (bycopy nullable NSData *)SkimNotesAtPath:(in bycopy NSString *)aFile;\n"
+                           "- (bycopy nullable NSData *)RTFNotesAtPath:(in bycopy NSString *)aFile;\n"
+                           "- (bycopy nullable NSData *)textNotesAtPath:(in bycopy NSString *)aFile encoding:(NSStringEncoding)encoding;\n"
                            "@end";
 
 static char *xpcProtocolStr = "@protocol SKNXCPAgentListenerProtocol\n"
-                              "- (void)readSkimNotesAttURL:(NSURL *)aURL reply:(void (^)(NSData *))reply;\n"
-                              "- (void)readRTFNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply;\n"
-                              "- (void)readTextNotesAtURL:(NSURL *)aURL reply:(void (^)(NSString *))reply;\n"
+                              "- (void)readSkimNotesAttURL:(NSURL *)aURL reply:(void (^)(NSData * _Nullable))reply;\n"
+                              "- (void)readRTFNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData * _Nullable))reply;\n"
+                              "- (void)readTextNotesAtURL:(NSURL *)aURL reply:(void (^)(NSString * _Nullable))reply;\n"
                              "@end";
 
 #define ACTION_GET_STRING       @"get"
