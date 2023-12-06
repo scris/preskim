@@ -50,12 +50,8 @@
 #define RTF_EXTENSION   @"rtf"
 #define FDF_EXTENSION   @"fdf"
 
-NS_ASSUME_NONNULL_BEGIN
-
 extern NSString * _Nullable SKNSkimTextNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable noteDicts);
 extern NSData * _Nullable SKNSkimRTFNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable noteDicts);
 
 extern NSArray<NSDictionary<NSString *, id> *> * _Nullable SKNSkimNotesFromData(NSData * _Nullable data);
 extern NSData * _Nullable SKNDataFromSkimNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable noteDicts, BOOL asPlist);
-
-NS_ASSUME_NONNULL_END
