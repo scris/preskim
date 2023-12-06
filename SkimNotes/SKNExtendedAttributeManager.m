@@ -265,7 +265,7 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
         // even if it's a plist, it may not be a dictionary or have the key we're looking for
         if (plist && [plist respondsToSelector:@selector(objectForKey:)] && [[plist objectForKey:_wrapperKey] boolValue]) {
             
-            NSString *uniqueValue = [plist objectForKey:_uniqueKey];
+            NSString *uniqueValue = [[plist objectForKey:_uniqueKey] stringByAppendingString:FRAGMENT_NAME_SEPARATOR];
             NSUInteger i, numberOfFragments = [[plist objectForKey:_fragmentsKey] unsignedIntegerValue];
 
             NSMutableData *buffer = [NSMutableData data];
@@ -280,10 +280,10 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
             // reassemble the original data object
             for (i = 0; success && i < numberOfFragments; i++) {
                 NSError *tmpError = nil;
-                NSString *name = [[NSString alloc] initWithFormat:@"%@%@%lu%@", uniqueValue, FRAGMENT_NAME_SEPARATOR, (long)i, suffix];
+                NSString *name = [[NSString alloc] initWithFormat:@"%@%lu%@", uniqueValue, (long)i, suffix];
                 NSData *subdata = [self copyRawExtendedAttributeNamed:name atPath:path traverseLink:follow error:&tmpError];
                 if (nil == subdata && i == 0 && [suffix length] > 0 && [tmpError code] == ENOATTR) {
-                    NSString *oldName = [[NSString alloc] initWithFormat:@"%@%@%lu", uniqueValue, FRAGMENT_NAME_SEPARATOR, (long)i];
+                    NSString *oldName = [[NSString alloc] initWithFormat:@"%@%lu", uniqueValue, (long)i];
                     subdata = [self copyRawExtendedAttributeNamed:oldName atPath:path traverseLink:follow error:&tmpError];
                     if (subdata)
                         suffix = @"";
@@ -383,8 +383,10 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
         NSUInteger j = [attr rangeOfString:SYNCABLE_SEPARATOR].location;
         NSString *suffix = j == NSNotFound || j == [attr length] - 1 ? @"" : [attr substringFromIndex:j];
         
+        uniqueValue = [uniqueValue stringByAppendingString:FRAGMENT_NAME_SEPARATOR];
+        
         for (i = 0; success && i < numberOfFragments; i++) {
-            name = [[NSString alloc] initWithFormat:@"%@%@%lu%@", uniqueValue, FRAGMENT_NAME_SEPARATOR, (long)i, suffix];
+            name = [[NSString alloc] initWithFormat:@"%@%lu%@", uniqueValue, (long)i, suffix];
             
             char *subdataPtr = (char *)&valuePtr[i * MAX_XATTR_LENGTH];
             size_t subdataLen = i == numberOfFragments - 1 ? ([value length] - i * MAX_XATTR_LENGTH) : MAX_XATTR_LENGTH;
