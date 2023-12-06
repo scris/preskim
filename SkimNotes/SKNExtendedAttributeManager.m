@@ -480,7 +480,7 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
             // even if it's a plist, it may not be a dictionary or have the key we're looking for
             if (plist && [plist respondsToSelector:@selector(objectForKey:)] && [[plist objectForKey:_wrapperKey] boolValue]) {
                 
-                NSString *uniqueValue = [plist objectForKey:_uniqueKey];
+                NSString *uniqueValue = [[plist objectForKey:_uniqueKey] stringByAppendingString:FRAGMENT_NAME_SEPARATOR];
                 NSUInteger i, numberOfFragments = [[plist objectForKey:_fragmentsKey] unsignedIntegerValue];
                 NSString *name;
                 
@@ -489,11 +489,11 @@ NSString *SKNSkimNotesErrorDomain = @"SKNSkimNotesErrorDomain";
                 
                 // remove the sub attributes
                 for (i = 0; i < numberOfFragments; i++) {
-                    name = [[NSString alloc] initWithFormat:@"%@%@%lu%@", uniqueValue, FRAGMENT_NAME_SEPARATOR, (long)i, suffix];
+                    name = [[NSString alloc] initWithFormat:@"%@%lu%@", uniqueValue, (long)i, suffix];
                     const char *subAttrName = [name UTF8String];
                     status = removexattr(fsPath, subAttrName, xopts);
                     if (status == -1 && i == 0 && errno == ENOATTR && [suffix length] > 0) {
-                        NSString *oldName = [[NSString alloc] initWithFormat:@"%@%@%lu", uniqueValue, FRAGMENT_NAME_SEPARATOR, (long)i];
+                        NSString *oldName = [[NSString alloc] initWithFormat:@"%@%lu", uniqueValue, (long)i];
                         subAttrName = [oldName UTF8String];
                         status = removexattr(fsPath, subAttrName, xopts);
                         if (status != -1)
