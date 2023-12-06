@@ -95,8 +95,8 @@ static char *agentHelpStr = "skimnotes agent: run the Skim Notes agent\n"
                             "The DO server conforms to the formal protocol returned by the protocol action.";
 static char *protocolHelpStr = "skimnotes protocol: write the DO server protocol to standard output\n"
                                "Usage: skimnotes protocol [-xpc]\n\n"
-                               "Write the DO server protocol for the agent to standard output."
-                               "Returns a protocol for a XPC connection when the -xpc option is provided.\n";
+                               "Write the DO server protocol for the agent to standard output.\n"
+                               "Returns a protocol for a XPC connection when the -xpc option is provided.";
 static char *helpHelpStr = "skimnotes help: get help on the skimnotes tool\n"
                            "Usage: skimnotes help [VERB]\n\n"
                            "Get help on the verb VERB.";
