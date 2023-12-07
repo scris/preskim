@@ -39,6 +39,7 @@
 #import "NSFileManager_SKNToolExtensions.h"
 #import "SKNExtendedAttributeManager.h"
 #import "SKNUtilities.h"
+#import "SKNDefines.h"
 
 #define BUNDLE_DATA_FILENAME @"data"
 

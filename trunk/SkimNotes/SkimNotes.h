@@ -40,6 +40,8 @@
 
 #import <SkimNotes/NSFileManager_SKNExtensions.h>
 
+#import <SkimNotes/SKNUtilities.h>
+
 #import <SkimNotes/PDFDocument_SKNExtensions.h>
 
 #import <SkimNotes/PDFAnnotation_SKNExtensions.h>

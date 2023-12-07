@@ -43,7 +43,7 @@
 		CE0C360929A9361D0056897C /* NSFileManager_SKNExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = CEBA2BD30E05826D0000B2E6 /* NSFileManager_SKNExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0C360A29A9361D0056897C /* PDFDocument_SKNExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = CEBA2BE00E0587EB0000B2E6 /* PDFDocument_SKNExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0C360B29A9361D0056897C /* SkimNotes.h in Headers */ = {isa = PBXBuildFile; fileRef = CEBA2CD60E058CF00000B2E6 /* SkimNotes.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE0C360C29A9361D0056897C /* SKNUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CE37768A0E2FC26100261604 /* SKNUtilities.h */; };
+		CE0C360C29A9361D0056897C /* SKNUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CE37768A0E2FC26100261604 /* SKNUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0C360E29A9361D0056897C /* SkimNotes.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE3907AF0E082C460015B0B7 /* SkimNotes.strings */; };
 		CE0C361029A9361D0056897C /* SKNExtendedAttributeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B640E05675E0000B2E6 /* SKNExtendedAttributeManager.m */; };
 		CE0C361129A9361D0056897C /* PDFAnnotation_SKNExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B700E0568430000B2E6 /* PDFAnnotation_SKNExtensions.m */; };
@@ -56,7 +56,7 @@
 		CE0C362229A9362B0056897C /* SkimNotesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA5F5490E2CED6D00F65088 /* SkimNotesBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0C362329A9362B0056897C /* NSFileManager_SKNExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = CEBA2BD30E05826D0000B2E6 /* NSFileManager_SKNExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0C362429A9362B0056897C /* SKNExtendedAttributeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CEBA2B630E05675E0000B2E6 /* SKNExtendedAttributeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE0C362529A9362B0056897C /* SKNUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CE37768A0E2FC26100261604 /* SKNUtilities.h */; };
+		CE0C362529A9362B0056897C /* SKNUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CE37768A0E2FC26100261604 /* SKNUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0C362729A9362B0056897C /* SkimNotes.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE3907AF0E082C460015B0B7 /* SkimNotes.strings */; };
 		CE0C362929A9362B0056897C /* NSFileManager_SKNExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2BD40E05826D0000B2E6 /* NSFileManager_SKNExtensions.m */; };
 		CE0C362A29A9362B0056897C /* SKNExtendedAttributeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBA2B640E05675E0000B2E6 /* SKNExtendedAttributeManager.m */; };
@@ -80,12 +80,20 @@
 		CE268622169DB35200B36A1E /* SkimNotesBase.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CEA5F53D0E2CED0E00F65088 /* SkimNotesBase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CE268630169DB39300B36A1E /* SkimNotesBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA5F53D0E2CED0E00F65088 /* SkimNotesBase.framework */; };
 		CE37766F0E2FBB7300261604 /* NSFileManager_SKNToolExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE3776640E2FB47500261604 /* NSFileManager_SKNToolExtensions.m */; };
-		CE37768C0E2FC26100261604 /* SKNUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CE37768A0E2FC26100261604 /* SKNUtilities.h */; };
+		CE37768C0E2FC26100261604 /* SKNUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CE37768A0E2FC26100261604 /* SKNUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE37768D0E2FC26100261604 /* SKNUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37768B0E2FC26100261604 /* SKNUtilities.m */; };
 		CE3776950E2FC51900261604 /* SKNUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37768B0E2FC26100261604 /* SKNUtilities.m */; };
 		CE3776960E2FC52A00261604 /* SKNUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37768B0E2FC26100261604 /* SKNUtilities.m */; };
-		CE3776970E2FC53000261604 /* SKNUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CE37768A0E2FC26100261604 /* SKNUtilities.h */; };
+		CE3776970E2FC53000261604 /* SKNUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CE37768A0E2FC26100261604 /* SKNUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE3907B00E082C460015B0B7 /* SkimNotes.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE3907AF0E082C460015B0B7 /* SkimNotes.strings */; };
+		CE4E365E2B221B2000A609FB /* SKNDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4E365D2B221B1A00A609FB /* SKNDefines.h */; };
+		CE4E365F2B221B2100A609FB /* SKNDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4E365D2B221B1A00A609FB /* SKNDefines.h */; };
+		CE4E36602B221B2200A609FB /* SKNDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4E365D2B221B1A00A609FB /* SKNDefines.h */; };
+		CE4E36612B221B2300A609FB /* SKNDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4E365D2B221B1A00A609FB /* SKNDefines.h */; };
+		CE4E36622B221B2700A609FB /* SKNLocalizations.h in Headers */ = {isa = PBXBuildFile; fileRef = CEB84A342B1E37FC00D93431 /* SKNLocalizations.h */; };
+		CE4E36632B221B2800A609FB /* SKNLocalizations.h in Headers */ = {isa = PBXBuildFile; fileRef = CEB84A342B1E37FC00D93431 /* SKNLocalizations.h */; };
+		CE4E36642B221B2900A609FB /* SKNLocalizations.h in Headers */ = {isa = PBXBuildFile; fileRef = CEB84A342B1E37FC00D93431 /* SKNLocalizations.h */; };
+		CE4E36652B221B2A00A609FB /* SKNLocalizations.h in Headers */ = {isa = PBXBuildFile; fileRef = CEB84A342B1E37FC00D93431 /* SKNLocalizations.h */; };
 		CE91CB7429ACF9290058749E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD7298817CB00594EC0 /* CoreGraphics.framework */; };
 		CE91CB7529ACF9450058749E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF57FD7298817CB00594EC0 /* CoreGraphics.framework */; };
 		CEA5F54E0E2CEDFB00F65088 /* SkimNotesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA5F5490E2CED6D00F65088 /* SkimNotesBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -226,6 +234,7 @@
 		CE3907B70E082C9A0015B0B7 /* de */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/SkimNotes.strings; sourceTree = "<group>"; };
 		CE3907B80E082CAD0015B0B7 /* es */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SkimNotes.strings; sourceTree = "<group>"; };
 		CE3907BA0E082CB40015B0B7 /* ru */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SkimNotes.strings; sourceTree = "<group>"; };
+		CE4E365D2B221B1A00A609FB /* SKNDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKNDefines.h; sourceTree = "<group>"; };
 		CE5280B10E41C137000F9CAC /* SkimNotes-Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SkimNotes-Common.xcconfig"; sourceTree = "<group>"; };
 		CE5280B60E41C20A000F9CAC /* SkimNotesBase-Framework.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SkimNotesBase-Framework.xcconfig"; sourceTree = "<group>"; };
 		CE5A82DD0E6C5403008C0AA9 /* it */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SkimNotes.strings; sourceTree = "<group>"; };
@@ -423,6 +432,7 @@
 				CE37768A0E2FC26100261604 /* SKNUtilities.h */,
 				CE37768B0E2FC26100261604 /* SKNUtilities.m */,
 				CEB84A342B1E37FC00D93431 /* SKNLocalizations.h */,
+				CE4E365D2B221B1A00A609FB /* SKNDefines.h */,
 				CEBA2CD60E058CF00000B2E6 /* SkimNotes.h */,
 				CEA5F5490E2CED6D00F65088 /* SkimNotesBase.h */,
 			);
@@ -560,9 +570,11 @@
 				CEBA2B710E0568430000B2E6 /* PDFAnnotation_SKNExtensions.h in Headers */,
 				CEBA2B8D0E0569010000B2E6 /* SKNPDFAnnotationNote.h in Headers */,
 				CEBA2BD50E05826D0000B2E6 /* NSFileManager_SKNExtensions.h in Headers */,
+				CE4E365E2B221B2000A609FB /* SKNDefines.h in Headers */,
 				CEBA2BE20E0587EB0000B2E6 /* PDFDocument_SKNExtensions.h in Headers */,
 				CEBA2CD70E058CF00000B2E6 /* SkimNotes.h in Headers */,
 				CE37768C0E2FC26100261604 /* SKNUtilities.h in Headers */,
+				CE4E36622B221B2700A609FB /* SKNLocalizations.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -574,9 +586,11 @@
 				CE0C360729A9361D0056897C /* PDFAnnotation_SKNExtensions.h in Headers */,
 				CE0C360829A9361D0056897C /* SKNPDFAnnotationNote.h in Headers */,
 				CE0C360929A9361D0056897C /* NSFileManager_SKNExtensions.h in Headers */,
+				CE4E36602B221B2200A609FB /* SKNDefines.h in Headers */,
 				CE0C360A29A9361D0056897C /* PDFDocument_SKNExtensions.h in Headers */,
 				CE0C360B29A9361D0056897C /* SkimNotes.h in Headers */,
 				CE0C360C29A9361D0056897C /* SKNUtilities.h in Headers */,
+				CE4E36642B221B2900A609FB /* SKNLocalizations.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -586,7 +600,9 @@
 			files = (
 				CE0C362229A9362B0056897C /* SkimNotesBase.h in Headers */,
 				CE0C362329A9362B0056897C /* NSFileManager_SKNExtensions.h in Headers */,
+				CE4E36652B221B2A00A609FB /* SKNLocalizations.h in Headers */,
 				CE0C362429A9362B0056897C /* SKNExtendedAttributeManager.h in Headers */,
+				CE4E36612B221B2300A609FB /* SKNDefines.h in Headers */,
 				CE0C362529A9362B0056897C /* SKNUtilities.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -597,7 +613,9 @@
 			files = (
 				CEA5F54E0E2CEDFB00F65088 /* SkimNotesBase.h in Headers */,
 				CEA5F54F0E2CEDFE00F65088 /* NSFileManager_SKNExtensions.h in Headers */,
+				CE4E36632B221B2800A609FB /* SKNLocalizations.h in Headers */,
 				CEA5F5510E2CEE0200F65088 /* SKNExtendedAttributeManager.h in Headers */,
+				CE4E365F2B221B2100A609FB /* SKNDefines.h in Headers */,
 				CE3776970E2FC53000261604 /* SKNUtilities.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

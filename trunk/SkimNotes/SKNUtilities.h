@@ -38,20 +38,35 @@
 
 #import <Foundation/Foundation.h>
 
-#define SKIM_NOTES_KEY      @"net_sourceforge_skim-app_notes"
-#define SKIM_RTF_NOTES_KEY  @"net_sourceforge_skim-app_rtf_notes"
-#define SKIM_TEXT_NOTES_KEY @"net_sourceforge_skim-app_text_notes"
-
-#define PDF_EXTENSION   @"pdf"
-#define PDFD_EXTENSION  @"pdfd"
-#define SKIM_EXTENSION  @"skim"
-#define TXT_EXTENSION   @"txt"
-#define TEXT_EXTENSION  @"text"
-#define RTF_EXTENSION   @"rtf"
-#define FDF_EXTENSION   @"fdf"
-
-extern NSString * _Nullable SKNSkimTextNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable noteDicts);
-extern NSData * _Nullable SKNSkimRTFNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable noteDicts);
-
+/*!
+    @abstract   Returns an array of Skim notes from the data.
+    @discussion This is used to write a default Skim text notes representation when not provided for writing.
+    @param      data The data object to extract the notes from, either an archive or plist data.
+    @result     An array of dictionaries containing Skim notes properties.
+*/
 extern NSArray<NSDictionary<NSString *, id> *> * _Nullable SKNSkimNotesFromData(NSData * _Nullable data);
-extern NSData * _Nullable SKNDataFromSkimNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable noteDicts, BOOL asPlist);
+
+/*!
+    @abstract   Returns data for the Skim notes.
+    @discussion Can return the data as archived data, or as universal plist data.
+    @param      notes An array of dictionaries containing Skim note properties, as returned by the properties of a <code>PDFAnnotation</code>.
+    @param      asPlist Whether to create universal plist data rather than archived data.  Always returns plist data on iOS.
+    @result     A data representation of the notes.
+*/
+extern NSData * _Nullable SKNDataFromSkimNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable notes, BOOL asPlist);
+
+/*!
+    @abstract   Returns a string representation of Skim notes.
+    @discussion This is used to write a default Skim text notes representation when not provided for writing.
+    @param      noteDicts An array of dictionaries containing Skim note properties, as returned by the properties of a <code>PDFAnnotation</code>.
+    @result     A string representation of the notes.
+*/
+extern NSString * _Nullable SKNSkimTextNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable noteDicts);
+
+/*!
+    @abstract   Returns an RTF data representation of Skim notes.
+    @discussion This is used to write a default Skim RTF notes representation when not provided for writing.
+    @param      noteDicts An array of dictionaries containing Skim note properties, as returned by the properties of a <code>PDFAnnotation</code>.
+    @result     An RTF data representation of the notes.
+*/
+extern NSData * _Nullable SKNSkimRTFNotes(NSArray<NSDictionary<NSString *, id> *> * _Nullable noteDicts);
