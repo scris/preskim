@@ -290,10 +290,12 @@ NSArray *SKNSkimNotesFromData(NSData *data) {
 NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
     NSData *data = nil;
     if (noteDicts) {
-#if defined(PDFKIT_PLATFORM_IOS)
-        asPlist = YES;
+#if !defined(PDFKIT_PLATFORM_IOS)
+        if (asPlist == NO) {
+            data = [NSKeyedArchiver archivedDataWithRootObject:noteDicts];
+        } else
 #endif
-        if (asPlist) {
+        {
             NSMutableArray *array = [[NSMutableArray alloc] init];
             NSMapTable *colors = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
             for (NSDictionary *noteDict in noteDicts) {
@@ -354,8 +356,6 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
                 [array addObject:dict];
             }
             data = [NSPropertyListSerialization dataWithPropertyList:array format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
-        } else {
-            data = [NSKeyedArchiver archivedDataWithRootObject:noteDicts];
         }
     }
     return data;
