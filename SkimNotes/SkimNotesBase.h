@@ -39,3 +39,5 @@
 #import <SkimNotesBase/SKNExtendedAttributeManager.h>
 
 #import <SkimNotesBase/NSFileManager_SKNExtensions.h>
+
+#import <SkimNotes/SKNUtilities.h>

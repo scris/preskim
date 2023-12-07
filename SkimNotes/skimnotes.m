@@ -40,6 +40,7 @@
 #import "NSFileManager_SKNToolExtensions.h"
 #import "SKNAgentListener.h"
 #import "SKNUtilities.h"
+#import "SKNDefines.h"
 
 static char *usageStr = "Usage:\n"
                         " skimnotes get [-format skim|archive|plist|text|rtf] PDF_FILE [NOTES_FILE|-]\n"

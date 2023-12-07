@@ -40,6 +40,7 @@
 #import "SKNExtendedAttributeManager.h"
 #import "SKNUtilities.h"
 #import "SKNLocalizations.h"
+#import "SKNDefines.h"
 
 
 @implementation NSFileManager (SKNExtensions)
