@@ -288,75 +288,72 @@ NSArray *SKNSkimNotesFromData(NSData *data) {
 }
 
 NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
-    NSData *data = nil;
-    if (noteDicts) {
-#if !defined(PDFKIT_PLATFORM_IOS)
-        if (asPlist == NO) {
-            data = [NSKeyedArchiver archivedDataWithRootObject:noteDicts];
-        } else
-#endif
-        {
-            NSMutableArray *array = [[NSMutableArray alloc] init];
-            NSMapTable *colors = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
-            for (NSDictionary *noteDict in noteDicts) {
-                NSMutableDictionary *dict = [noteDict mutableCopy];
-                id value;
-                if ((value = [dict objectForKey:NOTE_COLOR_KEY])) {
-                    value = SKNArrayFromColor(value, colors);
-                    [dict setValue:value forKey:NOTE_COLOR_KEY];
-                }
-                if ((value = [dict objectForKey:NOTE_INTERIOR_COLOR_KEY])) {
-                    value = SKNArrayFromColor(value, colors);
-                    [dict setValue:value forKey:NOTE_INTERIOR_COLOR_KEY];
-                }
-                if ((value = [dict objectForKey:NOTE_FONT_COLOR_KEY])) {
-                    value = SKNArrayFromColor(value, colors);
-                    [dict setValue:value forKey:NOTE_FONT_COLOR_KEY];
-                }
-                if ((value = [dict objectForKey:NOTE_FONT_KEY])) {
-                    if ([value isKindOfClass:[SKNFont class]]) {
-                        [dict setObject:[value fontName] forKey:NOTE_FONT_NAME_KEY];
-                        [dict setObject:[NSNumber numberWithDouble:[value pointSize]] forKey:NOTE_FONT_SIZE_KEY];
-                    }
-                    [dict removeObjectForKey:NOTE_FONT_KEY];
-                }
-                if ((value = [dict objectForKey:NOTE_TEXT_KEY])) {
-                    if ([value isKindOfClass:[NSAttributedString class]]) {
-#if !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_11) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_11)
-                        if ([value containsAttachments]) {
-#else
-                        if ([value containsAttachmentsInRange:NSMakeRange(0, [value length])]) {
-#endif
-                            value = [value dataFromRange:NSMakeRange(0, [value length]) documentAttributes:[NSDictionary dictionaryWithObjectsAndKeys:NSRTFDTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
-                        } else {
-                            value = [value dataFromRange:NSMakeRange(0, [value length]) documentAttributes:[NSDictionary dictionaryWithObjectsAndKeys:NSRTFTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
-                        }
-                        [dict setObject:value forKey:NOTE_TEXT_KEY];
-                    } else if ([value isKindOfClass:[NSData class]] == NO) {
-                        [dict removeObjectForKey:NOTE_TEXT_KEY];
-                    }
-                }
-                if ((value = [dict objectForKey:NOTE_IMAGE_KEY])) {
-                    if ([value isKindOfClass:[SKNImage class]]) {
-#if defined(SKIMNOTES_PLATFORM_IOS)
-                        value = UIImagePNGRepresentation(value);
-#else
-                        id imageRep = [[value representations] count] == 1 ? [[value representations] objectAtIndex:0] : nil;
-                        if ([imageRep isKindOfClass:[NSPDFImageRep class]]) {
-                            value = [imageRep PDFRepresentation];
-                        } else {
-                            value = [value TIFFRepresentation];
-                        }
-#endif
-                        [dict setObject:value forKey:NOTE_IMAGE_KEY];
-                    } else if ([value isKindOfClass:[NSData class]] == NO) {
-                        [dict removeObjectForKey:NOTE_IMAGE_KEY];
-                    }
-                }
-                [array addObject:dict];
-            }
-            data = [NSPropertyListSerialization dataWithPropertyList:array format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
-        }
+    if (noteDicts == nil) {
+        return nil;
     }
-    return data;
+#if !defined(PDFKIT_PLATFORM_IOS)
+    if (asPlist == NO) {
+        return [NSKeyedArchiver archivedDataWithRootObject:noteDicts];
+    }
+#endif
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    NSMapTable *colors = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
+    for (NSDictionary *noteDict in noteDicts) {
+        NSMutableDictionary *dict = [noteDict mutableCopy];
+        id value;
+        if ((value = [dict objectForKey:NOTE_COLOR_KEY])) {
+            value = SKNArrayFromColor(value, colors);
+            [dict setValue:value forKey:NOTE_COLOR_KEY];
+        }
+        if ((value = [dict objectForKey:NOTE_INTERIOR_COLOR_KEY])) {
+            value = SKNArrayFromColor(value, colors);
+            [dict setValue:value forKey:NOTE_INTERIOR_COLOR_KEY];
+        }
+        if ((value = [dict objectForKey:NOTE_FONT_COLOR_KEY])) {
+            value = SKNArrayFromColor(value, colors);
+            [dict setValue:value forKey:NOTE_FONT_COLOR_KEY];
+        }
+        if ((value = [dict objectForKey:NOTE_FONT_KEY])) {
+            if ([value isKindOfClass:[SKNFont class]]) {
+                [dict setObject:[value fontName] forKey:NOTE_FONT_NAME_KEY];
+                [dict setObject:[NSNumber numberWithDouble:[value pointSize]] forKey:NOTE_FONT_SIZE_KEY];
+            }
+            [dict removeObjectForKey:NOTE_FONT_KEY];
+        }
+        if ((value = [dict objectForKey:NOTE_TEXT_KEY])) {
+            if ([value isKindOfClass:[NSAttributedString class]]) {
+#if !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_11) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_11)
+                if ([value containsAttachments]) {
+#else
+                if ([value containsAttachmentsInRange:NSMakeRange(0, [value length])]) {
+#endif
+                    value = [value dataFromRange:NSMakeRange(0, [value length]) documentAttributes:[NSDictionary dictionaryWithObjectsAndKeys:NSRTFDTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
+                } else {
+                    value = [value dataFromRange:NSMakeRange(0, [value length]) documentAttributes:[NSDictionary dictionaryWithObjectsAndKeys:NSRTFTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
+                }
+                [dict setObject:value forKey:NOTE_TEXT_KEY];
+            } else if ([value isKindOfClass:[NSData class]] == NO) {
+                [dict removeObjectForKey:NOTE_TEXT_KEY];
+            }
+        }
+        if ((value = [dict objectForKey:NOTE_IMAGE_KEY])) {
+            if ([value isKindOfClass:[SKNImage class]]) {
+#if defined(SKIMNOTES_PLATFORM_IOS)
+                value = UIImagePNGRepresentation(value);
+#else
+                id imageRep = [[value representations] count] == 1 ? [[value representations] objectAtIndex:0] : nil;
+                if ([imageRep isKindOfClass:[NSPDFImageRep class]]) {
+                    value = [imageRep PDFRepresentation];
+                } else {
+                    value = [value TIFFRepresentation];
+                }
+#endif
+                [dict setObject:value forKey:NOTE_IMAGE_KEY];
+            } else if ([value isKindOfClass:[NSData class]] == NO) {
+                [dict removeObjectForKey:NOTE_IMAGE_KEY];
+            }
+        }
+        [array addObject:dict];
+    }
+    return [NSPropertyListSerialization dataWithPropertyList:array format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
 }
