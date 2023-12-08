@@ -40,6 +40,7 @@
 #import "PDFAnnotation_SKNExtensions.h"
 #import "SKNPDFAnnotationNote.h"
 #import "NSFileManager_SKNExtensions.h"
+#import "SKNDefines.h"
 
 #if defined(PDFKIT_PLATFORM_IOS)
 
@@ -56,9 +57,6 @@
 
 #define SKNRectFromString(string)   NSRectFromString(string)
 #define SKNEqualRects(rect1, rect2) NSEqualRects(NSIntegralRect(rect1), NSIntegralRect(rect2))
-
-#define PDF_EXTENSION  @"pdf"
-#define PDFD_EXTENSION @"pdfd"
 
 #if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_12
 @interface PDFAnnotation (SKNSierraDeclarations)
