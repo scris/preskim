@@ -222,67 +222,67 @@ static SKNColor *SKNColorFromArray(NSArray *array) {
 }
 
 NSArray *SKNSkimNotesFromData(NSData *data) {
+    if ([data length] == 0) {
+        return data ? [NSArray array] : nil;
+    }
     NSArray *noteDicts = nil;
-    
-    if ([data length] > 0) {
-        unsigned char ch = 0;
-        if ([data length] > 8)
-            [data getBytes:&ch range:NSMakeRange(8, 1)];
-        ch >>= 4;
-        if (ch == 0xD) {
-            @try { noteDicts = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
-            @catch (id e) {}
+    unsigned char ch = 0;
+    if ([data length] > 8)
+        [data getBytes:&ch range:NSMakeRange(8, 1)];
+    ch >>= 4;
+    if (ch == 0xD) {
+        @try { noteDicts = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
+        @catch (id e) {}
+        if ([noteDicts isKindOfClass:[NSArray class]] == NO) {
+            noteDicts = nil;
+        }
+    } else {
+        noteDicts = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainers format:NULL error:NULL];
+        if ([noteDicts isKindOfClass:[NSArray class]] == NO) {
+            noteDicts = nil;
         } else {
-            noteDicts = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainers format:NULL error:NULL];
-            if ([noteDicts isKindOfClass:[NSArray class]]) {
-                for (NSMutableDictionary *dict in noteDicts) {
-                    id value;
-                    if ((value = [dict objectForKey:NOTE_COLOR_KEY])) {
-                        value = SKNColorFromArray(value);
-                        [dict setValue:value forKey:NOTE_COLOR_KEY];
+            for (NSMutableDictionary *dict in noteDicts) {
+                id value;
+                if ((value = [dict objectForKey:NOTE_COLOR_KEY])) {
+                    value = SKNColorFromArray(value);
+                    [dict setValue:value forKey:NOTE_COLOR_KEY];
+                }
+                if ((value = [dict objectForKey:NOTE_INTERIOR_COLOR_KEY])) {
+                    value = SKNColorFromArray(value);
+                    [dict setValue:value forKey:NOTE_INTERIOR_COLOR_KEY];
+                }
+                if ((value = [dict objectForKey:NOTE_FONT_COLOR_KEY])) {
+                    value = SKNColorFromArray(value);
+                    [dict setValue:value forKey:NOTE_FONT_COLOR_KEY];
+                }
+                if ((value = [dict objectForKey:NOTE_FONT_NAME_KEY])) {
+                    NSNumber *fontSize = [dict objectForKey:NOTE_FONT_SIZE_KEY];
+                    if ([value isKindOfClass:[NSString class]]) {
+                        CGFloat pointSize = [fontSize isKindOfClass:[NSNumber class]] ? [fontSize doubleValue] : 0.0;
+                        value = [SKNFont fontWithName:value size:pointSize] ?: [SKNFont fontWithName:@"Helvetica" size:pointSize];
+                        [dict setObject:value forKey:NOTE_FONT_KEY];
                     }
-                    if ((value = [dict objectForKey:NOTE_INTERIOR_COLOR_KEY])) {
-                        value = SKNColorFromArray(value);
-                        [dict setValue:value forKey:NOTE_INTERIOR_COLOR_KEY];
+                    [dict removeObjectForKey:NOTE_FONT_NAME_KEY];
+                    [dict removeObjectForKey:NOTE_FONT_SIZE_KEY];
+                }
+                if ((value = [dict objectForKey:NOTE_TEXT_KEY])) {
+                    if ([value isKindOfClass:[NSData class]]) {
+                        value = [[NSAttributedString alloc] initWithData:value options:[NSDictionary dictionary] documentAttributes:NULL error:NULL];
+                        [dict setValue:value forKey:NOTE_TEXT_KEY];
+                    } else if ([value isKindOfClass:[NSAttributedString class]] == NO) {
+                        [dict removeObjectForKey:NOTE_TEXT_KEY];
                     }
-                    if ((value = [dict objectForKey:NOTE_FONT_COLOR_KEY])) {
-                        value = SKNColorFromArray(value);
-                        [dict setValue:value forKey:NOTE_FONT_COLOR_KEY];
-                    }
-                    if ((value = [dict objectForKey:NOTE_FONT_NAME_KEY])) {
-                        NSNumber *fontSize = [dict objectForKey:NOTE_FONT_SIZE_KEY];
-                        if ([value isKindOfClass:[NSString class]]) {
-                            CGFloat pointSize = [fontSize isKindOfClass:[NSNumber class]] ? [fontSize doubleValue] : 0.0;
-                            value = [SKNFont fontWithName:value size:pointSize] ?: [SKNFont fontWithName:@"Helvetica" size:pointSize];
-                            [dict setObject:value forKey:NOTE_FONT_KEY];
-                        }
-                        [dict removeObjectForKey:NOTE_FONT_NAME_KEY];
-                        [dict removeObjectForKey:NOTE_FONT_SIZE_KEY];
-                    }
-                    if ((value = [dict objectForKey:NOTE_TEXT_KEY])) {
-                        if ([value isKindOfClass:[NSData class]]) {
-                            value = [[NSAttributedString alloc] initWithData:value options:[NSDictionary dictionary] documentAttributes:NULL error:NULL];
-                            [dict setValue:value forKey:NOTE_TEXT_KEY];
-                        } else if ([value isKindOfClass:[NSAttributedString class]] == NO) {
-                            [dict removeObjectForKey:NOTE_TEXT_KEY];
-                        }
-                    }
-                    if ((value = [dict objectForKey:NOTE_IMAGE_KEY])) {
-                        if ([value isKindOfClass:[NSData class]]) {
-                            value = [[SKNImage alloc] initWithData:value];
-                            [dict setValue:value forKey:NOTE_IMAGE_KEY];
-                        } else if ([value isKindOfClass:[SKNImage class]] == NO) {
-                            [dict removeObjectForKey:NOTE_IMAGE_KEY];
-                        }
+                }
+                if ((value = [dict objectForKey:NOTE_IMAGE_KEY])) {
+                    if ([value isKindOfClass:[NSData class]]) {
+                        value = [[SKNImage alloc] initWithData:value];
+                        [dict setValue:value forKey:NOTE_IMAGE_KEY];
+                    } else if ([value isKindOfClass:[SKNImage class]] == NO) {
+                        [dict removeObjectForKey:NOTE_IMAGE_KEY];
                     }
                 }
             }
         }
-        if ([noteDicts isKindOfClass:[NSArray class]] == NO) {
-            noteDicts = nil;
-        }
-    } else if (data) {
-        noteDicts = [NSArray array];
     }
     return noteDicts;
 }
