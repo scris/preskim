@@ -30,6 +30,20 @@
 			remoteGlobalIDString = CE14113F1229B64D00C9EBA0;
 			remoteInfo = "SkimPDF Tool";
 		};
+		CE8B0E642B2384C60034908B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEE23E450ECFA8D10013CDF7 /* SkimNotes.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CE0C361E29A9361D0056897C;
+			remoteInfo = "SkimNotes iOS";
+		};
+		CE8B0E662B2384C60034908B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEE23E450ECFA8D10013CDF7 /* SkimNotes.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CE0C363429A9362B0056897C;
+			remoteInfo = "SkimNotesBase iOS";
+		};
 		CEE23E510ECFA8D20013CDF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CEE23E450ECFA8D10013CDF7 /* SkimNotes.xcodeproj */;
@@ -219,6 +233,8 @@
 			children = (
 				CEE23E520ECFA8D20013CDF7 /* SkimNotes.framework */,
 				CEE23E540ECFA8D20013CDF7 /* SkimNotesBase.framework */,
+				CE8B0E652B2384C60034908B /* SkimNotes.framework */,
+				CE8B0E672B2384C60034908B /* SkimNotesBase.framework */,
 				CEE23E560ECFA8D20013CDF7 /* skimnotes */,
 				CE27EFBE124A1FA70069AE9F /* skimpdf */,
 				CEE23E580ECFA8D20013CDF7 /* SkimNotesTest.app */,
@@ -298,6 +314,20 @@
 			fileType = "compiled.mach-o.executable";
 			path = skimpdf;
 			remoteRef = CE27EFBD124A1FA70069AE9F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CE8B0E652B2384C60034908B /* SkimNotes.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SkimNotes.framework;
+			remoteRef = CE8B0E642B2384C60034908B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CE8B0E672B2384C60034908B /* SkimNotesBase.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SkimNotesBase.framework;
+			remoteRef = CE8B0E662B2384C60034908B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		CEE23E520ECFA8D20013CDF7 /* SkimNotes.framework */ = {
@@ -433,6 +463,7 @@
 		70138C850896BE9A00968C2F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../BuildProducts/Debug\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /Library/Spotlight;
@@ -446,6 +477,7 @@
 		70138C860896BE9A00968C2F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../BuildProducts/Debug\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /Library/Spotlight;
