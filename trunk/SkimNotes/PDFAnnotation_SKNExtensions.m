@@ -237,7 +237,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString]) {
         if ([self isMemberOfClass:[PDFAnnotation class]]) {
             // replace by our subclass
-            [self init];
+            self = [self init];
             self = [[SKNPDFAnnotationNote alloc] initSkimNoteWithBounds:bounds forType:type];
             return self;
         } else if ([self isKindOfClass:[SKNPDFAnnotationNote class]]) {
@@ -317,7 +317,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     
     if (([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString]) && [self isMemberOfClass:[PDFAnnotation class]]) {
         // replace by our subclass
-        [self init];
+        self = [self init];
         self = [[SKNPDFAnnotationNote alloc] initSkimNoteWithProperties:dict];
         return self;
     }

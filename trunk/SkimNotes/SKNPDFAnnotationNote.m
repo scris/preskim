@@ -86,8 +86,10 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 @synthesize string = _string;
 @synthesize text = _text;
 @dynamic image;
+#if !defined(PDFKIT_PLATFORM_IOS)
 @dynamic mutableText;
 @synthesize texts = _texts;
+#endif
 
 - (void)updateContents {
     NSMutableString *contents = [NSMutableString string];

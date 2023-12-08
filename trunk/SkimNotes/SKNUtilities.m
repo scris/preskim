@@ -322,7 +322,7 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
         }
         if ((value = [dict objectForKey:NOTE_TEXT_KEY])) {
             if ([value isKindOfClass:[NSAttributedString class]]) {
-#if !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_11) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_11)
+#if !defined(SKIMNOTES_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_11) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_11)
                 if ([value containsAttachments]) {
 #else
                 if ([value containsAttachmentsInRange:NSMakeRange(0, [value length])]) {
