@@ -63,19 +63,16 @@ static NSAttributedString *imageAttachmentForType(NSString *type, CFBundleRef bu
     NSFileWrapper *wrapper = [imageWrappers objectForKey:type];
     
     if (wrapper == nil) {
-        CFURLRef imgURL = CFBundleCopyResourceURL(bundle, (CFStringRef)type, CFSTR("png"), NULL);
+        NSURL *imgURL = (NSURL *)CFBridgingRelease(CFBundleCopyResourceURL(bundle, (CFStringRef)type, CFSTR("png"), NULL));
         if (imageWrappers == nil)
             imageWrappers = [[NSMutableDictionary alloc] init];
-        wrapper = [[NSFileWrapper alloc] initWithURL:(NSURL *)imgURL options:0 error:NULL];
+        wrapper = [[NSFileWrapper alloc] initWithURL:imgURL options:0 error:NULL];
         [wrapper setPreferredFilename:[type stringByAppendingPathExtension:@"png"]];
         [imageWrappers setObject:wrapper forKey:type];
-        [wrapper release];
-        if (imgURL) CFRelease(imgURL);
     }
     
     NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:wrapper];
     NSAttributedString *attrString = [NSAttributedString attributedStringWithAttachment:attachment];
-    [attachment release];
     
     return attrString;
 }
@@ -110,13 +107,10 @@ static NSString *HTMLEscapeString(NSString *htmlString)
 {
     unichar *ptr, *begin, *end;
     NSMutableString *result;
-    NSString *string;
     NSInteger length;
     
 #define APPEND_PREVIOUS() \
-    string = [[NSString alloc] initWithCharacters:begin length:(ptr - begin)]; \
-    [result appendString:string]; \
-    [string release]; \
+    [result appendString:[[NSString alloc] initWithCharacters:begin length:(ptr - begin)]]; \
     begin = ptr + 1;
     
     length = [htmlString length];
@@ -183,20 +177,20 @@ static NSString *HTMLEscapeString(NSString *htmlString)
 
 + (NSAttributedString *)attributedStringWithNotes:(NSArray *)notes bundle:(CFBundleRef)bundle;
 {
-    NSMutableAttributedString *attrString = [[[NSMutableAttributedString alloc] init] autorelease];
+    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] init];
     NSFont *font = [NSFont userFontOfSize:_fontSize];
     NSFont *noteFont = [NSFont fontWithName:_noteFontName size:_fontSize];
     NSFont *noteTextFont = [NSFont fontWithName:_noteFontName size:_smallFontSize];
     NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
     NSDictionary *noteAttrs = [NSDictionary dictionaryWithObjectsAndKeys:noteFont, NSFontAttributeName, [NSParagraphStyle defaultParagraphStyle], NSParagraphStyleAttributeName, nil];
     NSDictionary *noteTextAttrs = [NSDictionary dictionaryWithObjectsAndKeys:noteTextFont, NSFontAttributeName, [NSParagraphStyle defaultParagraphStyle], NSParagraphStyleAttributeName, nil];
-    NSMutableParagraphStyle *noteParStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+    NSMutableParagraphStyle *noteParStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     
     [noteParStyle setFirstLineHeadIndent:_noteIndent];
     [noteParStyle setHeadIndent:_noteIndent];
     
     if (notes) {
-        NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"pageIndex" ascending:YES] autorelease];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pageIndex" ascending:YES];
         NSEnumerator *noteEnum = [[notes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]] objectEnumerator];
         NSDictionary *note;
         while (note = [noteEnum nextObject]) {
@@ -208,20 +202,20 @@ static NSString *HTMLEscapeString(NSString *htmlString)
             NSInteger start;
             
             if ([text isKindOfClass:[NSData class]])
-                text = [[[NSAttributedString alloc] initWithData:(NSData *)text options:[NSDictionary dictionary] documentAttributes:NULL error:NULL] autorelease];
+                text = [[NSAttributedString alloc] initWithData:(NSData *)text options:[NSDictionary dictionary] documentAttributes:NULL error:NULL];
             if ([color isKindOfClass:[NSArray class]])
                 color = colorFromArray((NSArray *)color);
             
             [attrString appendAttributedString:imageAttachmentForType(type, bundle)];
             [attrString addAttribute:NSBackgroundColorAttributeName value:color range:NSMakeRange([attrString length] - 1, 1)];
-            [attrString appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (page %ld)\n", type, (long)(pageIndex+1)] attributes:attrs] autorelease]];
+            [attrString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (page %ld)\n", type, (long)(pageIndex+1)] attributes:attrs]];
             start = [attrString length];
-            [attrString appendAttributedString:[[[NSAttributedString alloc] initWithString:contents attributes:noteAttrs] autorelease]];
+            [attrString appendAttributedString:[[NSAttributedString alloc] initWithString:contents attributes:noteAttrs]];
             if (text) {
-                [attrString appendAttributedString:[[[NSAttributedString alloc] initWithString:@"\n"] autorelease]];
-                [attrString appendAttributedString:[[[NSAttributedString alloc] initWithString:[text string] attributes:noteTextAttrs] autorelease]];
+                [attrString appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+                [attrString appendAttributedString:[[NSAttributedString alloc] initWithString:[text string] attributes:noteTextAttrs]];
             }
-            [attrString appendAttributedString:[[[NSAttributedString alloc] initWithString:@"\n"] autorelease]];
+            [attrString appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
             [attrString addAttribute:NSParagraphStyleAttributeName value:noteParStyle range:NSMakeRange(start, [attrString length] - start)];
         }
         [attrString fixAttributesInRange:NSMakeRange(0, [attrString length])];
@@ -240,7 +234,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
     [htmlString appendString:@"</style></head><body><dl>"];
     
     if (notes) {
-        NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"pageIndex" ascending:YES] autorelease];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pageIndex" ascending:YES];
         NSEnumerator *noteEnum = [[notes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]] objectEnumerator];
         NSDictionary *note;
         while (note = [noteEnum nextObject]) {
@@ -251,7 +245,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
             NSUInteger pageIndex = [[note objectForKey:@"pageIndex"] unsignedIntegerValue];
             
             if ([text isKindOfClass:[NSData class]])
-                text = [[[NSAttributedString alloc] initWithData:(NSData *)text options:[NSDictionary dictionary] documentAttributes:NULL error:NULL] autorelease];
+                text = [[NSAttributedString alloc] initWithData:(NSData *)text options:[NSDictionary dictionary] documentAttributes:NULL error:NULL];
             if ([color isKindOfClass:[NSArray class]])
                 color = colorFromArray((NSArray *)color);
             

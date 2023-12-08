@@ -46,16 +46,14 @@ static NSDictionary *imageAttachments(NSSet *imageNames, QLPreviewRequestRef pre
     NSMutableDictionary *imgProps;
     
     for (NSString *imageName in imageNames) {
-        NSURL *imgURL = (NSURL *)CFBundleCopyResourceURL(bundle, (CFStringRef)imageName, CFSTR("png"), NULL);
+        NSURL *imgURL = (NSURL *)CFBridgingRelease(CFBundleCopyResourceURL(bundle, (__bridge CFStringRef)imageName, CFSTR("png"), NULL));
         if (imgURL) {
             NSData *imgData = [NSData dataWithContentsOfURL:imgURL];
             if (imgData) {
                 imgProps = [[NSMutableDictionary alloc] init];
                 [imgProps setObject:imgData forKey:(NSString *)kQLPreviewPropertyAttachmentDataKey];
                 [attachments setObject:imgProps forKey:[imageName stringByAppendingPathExtension:@"png"]];
-                [imgProps release];
             }
-            [imgURL release];
         }
     }
     return attachments;
@@ -69,62 +67,62 @@ static NSDictionary *imageAttachments(NSSet *imageNames, QLPreviewRequestRef pre
 
 OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options)
 {
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
     OSStatus err = 2;
     
-    if (UTTypeEqual(CFSTR("net.sourceforge.skim-app.pdfd"), contentTypeUTI)) {
+    @autoreleasepool{
         
-        NSString *pdfFile = SKQLPDFPathForPDFBundleURL((NSURL *)url);
-        if (pdfFile) {
-            NSData *data = [NSData dataWithContentsOfFile:pdfFile];
+        if (UTTypeEqual(CFSTR("net.sourceforge.skim-app.pdfd"), contentTypeUTI)) {
+            
+            NSString *pdfFile = SKQLPDFPathForPDFBundleURL((__bridge NSURL *)url);
+            if (pdfFile) {
+                NSData *data = [NSData dataWithContentsOfFile:pdfFile];
+                if (data) {
+                    QLPreviewRequestSetDataRepresentation(preview, (__bridge CFDataRef)data, kUTTypePDF, NULL);
+                    err = noErr;
+                }
+            }
+            
+        } else if (UTTypeEqual(CFSTR("com.adobe.postscript"), contentTypeUTI)) {
+            
+            if (floor(NSAppKitVersionNumber) <= 2299.0) {
+                bool converted = false;
+                CGPSConverterCallbacks converterCallbacks = { 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+                CGPSConverterRef converter = CGPSConverterCreate(NULL, &converterCallbacks, NULL);
+                CGDataProviderRef provider = CGDataProviderCreateWithURL(url);
+                CFMutableDataRef data = CFDataCreateMutable(NULL, 0);
+                CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData(data);
+                if (provider != NULL && consumer != NULL)
+                    converted = CGPSConverterConvert(converter, provider, consumer, NULL);
+                CGDataProviderRelease(provider);
+                CGDataConsumerRelease(consumer);
+                CFRelease(converter);
+                if (converted) {
+                    QLPreviewRequestSetDataRepresentation(preview, data, kUTTypePDF, NULL);
+                    err = noErr;
+                }
+                if (data) CFRelease(data);
+            }
+            
+        } else if (UTTypeEqual(CFSTR("net.sourceforge.skim-app.skimnotes"), contentTypeUTI)) {
+            
+            NSData *data = [[NSData alloc] initWithContentsOfURL:(__bridge NSURL *)url options:NSUncachedRead error:NULL];
             if (data) {
-                QLPreviewRequestSetDataRepresentation(preview, (CFDataRef)data, kUTTypePDF, NULL);
-                err = noErr;
+                NSArray *notes = [SKQLConverter notesWithData:data];
+                NSString *htmlString = [SKQLConverter htmlStringWithNotes:notes];
+                if ((data = [htmlString dataUsingEncoding:NSUTF8StringEncoding])) {
+                    NSSet *types = [NSSet setWithArray:[notes valueForKey:@"type"]];
+                    NSDictionary *props = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                @"UTF-8", (__bridge NSString *)kQLPreviewPropertyTextEncodingNameKey,
+                                                @"text/html", (__bridge NSString *)kQLPreviewPropertyMIMETypeKey,
+                                                imageAttachments(types, preview), (NSString *)kQLPreviewPropertyAttachmentsKey, nil];
+                    QLPreviewRequestSetDataRepresentation(preview, (__bridge CFDataRef)data, kUTTypeHTML, (__bridge CFDictionaryRef)props);
+                    err = noErr;
+                }
             }
-        }
-        
-    } else if (UTTypeEqual(CFSTR("com.adobe.postscript"), contentTypeUTI)) {
-        
-        if (floor(NSAppKitVersionNumber) <= 2299.0) {
-            bool converted = false;
-            CGPSConverterCallbacks converterCallbacks = { 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-            CGPSConverterRef converter = CGPSConverterCreate(NULL, &converterCallbacks, NULL);
-            CGDataProviderRef provider = CGDataProviderCreateWithURL(url);
-            CFMutableDataRef data = CFDataCreateMutable(NULL, 0);
-            CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData(data);
-            if (provider != NULL && consumer != NULL)
-                converted = CGPSConverterConvert(converter, provider, consumer, NULL);
-            CGDataProviderRelease(provider);
-            CGDataConsumerRelease(consumer);
-            CFRelease(converter);
-            if (converted) {
-                QLPreviewRequestSetDataRepresentation(preview, data, kUTTypePDF, NULL);
-                err = noErr;
-            }
-            if (data) CFRelease(data);
-        }
-        
-    } else if (UTTypeEqual(CFSTR("net.sourceforge.skim-app.skimnotes"), contentTypeUTI)) {
-        
-        NSData *data = [[NSData alloc] initWithContentsOfURL:(NSURL *)url options:NSUncachedRead error:NULL];
-        if (data) {
-            NSArray *notes = [SKQLConverter notesWithData:data];
-            NSString *htmlString = [SKQLConverter htmlStringWithNotes:notes];
-            [data release];
-            if ((data = [htmlString dataUsingEncoding:NSUTF8StringEncoding])) {
-                NSSet *types = [NSSet setWithArray:[notes valueForKey:@"type"]];
-                NSDictionary *props = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            @"UTF-8", (NSString *)kQLPreviewPropertyTextEncodingNameKey,
-                                            @"text/html", (NSString *)kQLPreviewPropertyMIMETypeKey,
-                                            imageAttachments(types, preview), (NSString *)kQLPreviewPropertyAttachmentsKey, nil];
-                QLPreviewRequestSetDataRepresentation(preview, (CFDataRef)data, kUTTypeHTML, (CFDictionaryRef)props);
-                err = noErr;
-            }
+            
         }
         
     }
-    
-    [pool release];
     
     return err;
 }
