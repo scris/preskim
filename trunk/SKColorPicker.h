@@ -43,12 +43,12 @@
 @interface SKColorPicker : NSViewController <NSScrubberDataSource, NSScrubberDelegate> {
     NSScrubber *scrubber;
     NSArray *colors;
-    id <SKColorPickerDelegate> delegate;
+    __weak id <SKColorPickerDelegate> delegate;
 }
 
 @property (nonatomic, readonly) NSArray *colors;
 
-@property (nonatomic, assign) id <SKColorPickerDelegate> delegate;
+@property (nonatomic, weak) id <SKColorPickerDelegate> delegate;
 
 @end
 

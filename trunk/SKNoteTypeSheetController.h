@@ -42,12 +42,12 @@
 
 @interface SKNoteTypeSheetController : NSWindowController {
     NSMenu *noteTypeMenu;
-    id <SKNoteTypeSheetControllerDelegate> delegate;
+    __weak id <SKNoteTypeSheetControllerDelegate> delegate;
 }
 
 - (instancetype)initIncludingWidgets:(BOOL)includeWidgets;
 
-@property (nonatomic, assign) id <SKNoteTypeSheetControllerDelegate> delegate;
+@property (nonatomic, weak) id <SKNoteTypeSheetControllerDelegate> delegate;
 @property (nonatomic, readonly) NSArray *noteTypes;
 @property (nonatomic, readonly) NSMenu *noteTypeMenu;
 

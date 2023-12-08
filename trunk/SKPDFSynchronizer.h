@@ -50,7 +50,7 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
 @protocol SKPDFSynchronizerDelegate;
 
 @interface SKPDFSynchronizer : NSObject {
-    id <SKPDFSynchronizerDelegate> delegate;
+    __weak id <SKPDFSynchronizerDelegate> delegate;
     
     dispatch_queue_t queue;
     dispatch_queue_t lockQueue;
@@ -71,7 +71,7 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
     _Atomic(BOOL) shouldKeepRunning;
 }
 
-@property (nonatomic, assign) id <SKPDFSynchronizerDelegate> delegate;
+@property (nonatomic, weak) id <SKPDFSynchronizerDelegate> delegate;
 @property (copy) NSString *fileName;
 @property (readonly) BOOL shouldKeepRunning;
 

@@ -40,11 +40,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 @interface SKShareMenuController : NSObject <NSMenuDelegate, NSCoding> {
-    NSDocument *document;
+    __weak NSDocument *document;
 }
 
 - (instancetype)initForDocument:(NSDocument *)aDocument;
 
-@property (nonatomic, assign) NSDocument *document;
+@property (nonatomic, weak) NSDocument *document;
 
 @end

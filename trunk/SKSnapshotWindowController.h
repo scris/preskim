@@ -54,7 +54,7 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
 @interface SKSnapshotWindowController : NSWindowController <NSWindowDelegate, NSFilePromiseProviderDelegate, SKSnapshotPDFViewDelegate> {
     SKSnapshotPDFView* pdfView;
     NSImage *thumbnail;
-    id <SKSnapshotWindowControllerDelegate> delegate;
+    __weak id <SKSnapshotWindowControllerDelegate> delegate;
     NSString *pageLabel;
     NSImage *windowImage;
     NSString *string;
@@ -64,7 +64,7 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
 }
 
 @property (nonatomic, retain) IBOutlet SKSnapshotPDFView *pdfView;
-@property (nonatomic, assign) id <SKSnapshotWindowControllerDelegate> delegate;
+@property (nonatomic, weak) id <SKSnapshotWindowControllerDelegate> delegate;
 @property (nonatomic, retain) NSImage *thumbnail;
 @property (nonatomic, readonly) NSRect bounds;
 @property (nonatomic, readonly) NSUInteger pageIndex;

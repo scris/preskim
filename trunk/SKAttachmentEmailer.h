@@ -42,7 +42,7 @@
 
 @interface SKAttachmentEmailer : NSObject {
     NSString *mailAppID;
-    id<SKAttachmentEmailerDelegate> delegate;
+    __weak id<SKAttachmentEmailerDelegate> delegate;
     NSString *subject;
 }
 
@@ -50,7 +50,7 @@
 
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSImage *image;
-@property (nonatomic, assign) id<SKAttachmentEmailerDelegate> delegate;
+@property (nonatomic, weak) id<SKAttachmentEmailerDelegate> delegate;
 
 @property (nonatomic, retain) NSString *subject;
 

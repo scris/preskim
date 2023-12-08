@@ -40,9 +40,9 @@
 
 
 @interface SKControlTableCellView : NSTableCellView {
-    NSControl *control;
+    __weak NSControl *control;
 }
 
-@property (nonatomic, assign) IBOutlet NSControl *control;
+@property (nonatomic, weak) IBOutlet NSControl *control;
 
 @end

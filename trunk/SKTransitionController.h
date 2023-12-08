@@ -44,14 +44,14 @@
 @interface SKTransitionController : NSObject {
     NSView <SKTransitionView> *transitionView;
     NSWindow *window;
-    NSView *view;
+    __weak NSView *view;
     BOOL animating;
     
     SKTransitionInfo *transition;
     NSArray *pageTransitions;
 }
 
-@property (nonatomic, assign) NSView *view;
+@property (nonatomic, weak) NSView *view;
 @property (nonatomic, retain) SKTransitionInfo *transition;
 @property (nonatomic, copy) NSArray *pageTransitions;
 @property (nonatomic) BOOL hasTransition;

@@ -179,12 +179,12 @@ enum {
 // to avoid overriding NSView's CALayerDelegate methods
 @interface SKLayerController : NSObject <CALayerDelegate> {
     CALayer *layer;
-    id<SKLayerDelegate> delegate;
+    __weak id<SKLayerDelegate> delegate;
     NSRect rect;
     NSInteger type;
 }
 @property (nonatomic, retain) CALayer *layer;
-@property (nonatomic, assign) id<SKLayerDelegate> delegate;
+@property (nonatomic, weak) id<SKLayerDelegate> delegate;
 @property (nonatomic) NSRect rect;
 @property (nonatomic) NSInteger type;
 @end

@@ -40,11 +40,11 @@
 
 
 @interface SKProgressTableCellView : NSTableCellView {
-    NSTextField *statusField;
-    NSProgressIndicator *progressIndicator;
+    __weak NSTextField *statusField;
+    __weak NSProgressIndicator *progressIndicator;
 }
 
-@property (nonatomic, assign) IBOutlet NSTextField *statusField;
-@property (nonatomic, assign) IBOutlet NSProgressIndicator *progressIndicator;
+@property (nonatomic, weak) IBOutlet NSTextField *statusField;
+@property (nonatomic, weak) IBOutlet NSProgressIndicator *progressIndicator;
 
 @end

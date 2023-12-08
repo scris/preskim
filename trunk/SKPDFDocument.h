@@ -44,10 +44,10 @@
 
 @interface SKPDFDocument : PDFDocument {
     SKLanguageDirectionAngles *languageDirectionAngles;
-    NSDocument *containingDocument;
+    __weak NSDocument *containingDocument;
     NSMutableArray *detectedWidgets;
 }
-@property (nonatomic, assign) NSDocument *containingDocument;
+@property (nonatomic, weak) NSDocument *containingDocument;
 @property (nonatomic, readonly) NSArray *detectedWidgets;
 - (id <SKPDFDocumentDelegate>)delegate;
 - (void)setDelegate:(id <SKPDFDocumentDelegate>)newDelegate;

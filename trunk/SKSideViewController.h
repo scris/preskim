@@ -46,11 +46,11 @@
     NSSegmentedControl *alternateButton;
     NSSearchField *searchField;
     NSView *currentView;
-    SKMainWindowController *mainController;
+    __weak SKMainWindowController *mainController;
     BOOL isAnimating;
 }
 
-@property (nonatomic, assign) IBOutlet SKMainWindowController *mainController;
+@property (nonatomic, weak) IBOutlet SKMainWindowController *mainController;
 @property (nonatomic, retain) IBOutlet SKTopBarView *topBar;
 @property (nonatomic, retain) IBOutlet NSSegmentedControl *button, *alternateButton;
 @property (nonatomic, retain) IBOutlet NSSearchField *searchField;
