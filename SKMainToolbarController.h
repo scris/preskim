@@ -41,7 +41,7 @@
 @class SKMainWindowController, SKPDFView, SKColorSwatch, SKShareMenuController;
 
 @interface SKMainToolbarController : NSViewController <NSToolbarDelegate> {
-    SKMainWindowController *mainController;
+    __weak SKMainWindowController *mainController;
     NSSegmentedControl *backForwardButton;
     NSTextField *pageNumberField;
     NSSegmentedControl *previousNextPageButton;
@@ -93,7 +93,7 @@
     NSMutableDictionary *toolbarItems;
 }
 
-@property (nonatomic, assign) IBOutlet SKMainWindowController *mainController;
+@property (nonatomic, weak) IBOutlet SKMainWindowController *mainController;
 @property (nonatomic, retain) IBOutlet NSSegmentedControl *backForwardButton, *previousNextPageButton, *previousPageButton, *nextPageButton, *previousNextFirstLastPageButton, *zoomInOutButton, *zoomInActualOutButton, *zoomActualButton, *zoomFitButton, *zoomSelectionButton, *autoScalesButton, *rotateLeftButton, *rotateRightButton, *rotateLeftRightButton, *cropButton, *fullScreenButton, *presentationButton, *leftPaneButton, *rightPaneButton, *splitPDFButton, *toolModeButton, *textNoteButton, *circleNoteButton, *markupNoteButton, *lineNoteButton, *singleTwoUpButton, *continuousButton, *displayModeButton, *displayDirectionButton, *displaysRTLButton, *bookModeButton, *pageBreaksButton, *displayBoxButton, *infoButton, *colorsButton, *fontsButton, *linesButton, *printButton, *customizeButton, *noteButton, *pacerButton, *shareButton;
 @property (nonatomic, retain) IBOutlet NSTextField *pageNumberField, *scaleField, *pacerSpeedField;
 @property (nonatomic, retain) IBOutlet SKColorSwatch *colorSwatch;

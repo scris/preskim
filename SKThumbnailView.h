@@ -52,7 +52,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     NSImageView *markView;
     NSVisualEffectView *imageHighlightView;
     NSVisualEffectView *labelHighlightView;
-    NSCollectionViewItem *controller;
+    __weak NSCollectionViewItem *controller;
 }
 
 @property (nonatomic, retain) SKThumbnail *thumbnail;
@@ -61,7 +61,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @property (nonatomic) NSBackgroundStyle backgroundStyle;
 @property (nonatomic) NSInteger highlightLevel;
 @property (nonatomic, getter=isMarked) BOOL marked;
-@property (nonatomic, assign) NSCollectionViewItem *controller;
+@property (nonatomic, weak) NSCollectionViewItem *controller;
 
 + (NSSize)sizeForImageSize:(NSSize)size;
 

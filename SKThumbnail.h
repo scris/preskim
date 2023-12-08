@@ -49,10 +49,10 @@
     NSUInteger pageIndex;
     BOOL dirty;
     BOOL notedDirty;
-    id <SKThumbnailDelegate> delegate;
+    __weak id <SKThumbnailDelegate> delegate;
 }
 
-@property (nonatomic, assign) id <SKThumbnailDelegate> delegate;
+@property (nonatomic, weak) id <SKThumbnailDelegate> delegate;
 @property (nonatomic, getter=isDirty) BOOL dirty;
 @property (nonatomic, retain) NSImage *image;
 @property (nonatomic, retain) NSString *label;

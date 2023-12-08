@@ -41,10 +41,10 @@
 @protocol SKDragImageViewDelegate;
 
 @interface SKDragImageView : NSImageView <NSDraggingSource> {
-	id <SKDragImageViewDelegate> delegate;
+	__weak id <SKDragImageViewDelegate> delegate;
 } 
 
-@property (nonatomic, assign) id <SKDragImageViewDelegate> delegate;
+@property (nonatomic, weak) id <SKDragImageViewDelegate> delegate;
 
 - (IBAction)show:(id)sender;
 - (IBAction)togglePreviewPanel:(id)sender;

@@ -49,7 +49,7 @@
     NSInteger currentLine;
     NSUInteger numberOfLines;
     NSRect currentBounds;
-    id <SKReadingBarDelegate> delegate;
+    __weak id <SKReadingBarDelegate> delegate;
 }
 
 @property (readonly, retain) PDFPage *page;
@@ -57,7 +57,7 @@
 @property (nonatomic) NSUInteger numberOfLines;
 @property (nonatomic) NSInteger maxLine;
 @property (readonly) NSRect currentBounds;
-@property (nonatomic, assign) id <SKReadingBarDelegate> delegate;
+@property (nonatomic, weak) id <SKReadingBarDelegate> delegate;
 
 - (instancetype)initWithPage:(PDFPage *)aPage line:(NSInteger)line delegate:(id <SKReadingBarDelegate>)aDelegate;
 

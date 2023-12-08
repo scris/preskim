@@ -42,7 +42,7 @@
 @class SKMainWindowController;
 
 @interface SKMainTouchBarController : NSObject <NSTouchBarDelegate, SKColorPickerDelegate> {
-    SKMainWindowController *mainController;
+    __weak SKMainWindowController *mainController;
     NSSegmentedControl *previousNextPageButton;
     NSSegmentedControl *previousNextFirstLastPageButton;
     NSSegmentedControl *zoomInActualOutButton;
@@ -55,7 +55,7 @@
     NSMutableDictionary *touchBarItems;
 }
 
-@property (nonatomic, assign) SKMainWindowController *mainController;
+@property (nonatomic, weak) SKMainWindowController *mainController;
 
 - (NSTouchBar *)makeTouchBar;
 

@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 };
 
 @interface SKBookmark : NSObject <NSCopying, QLPreviewItem> {
-    SKBookmark *parent;
+    __weak SKBookmark *parent;
 }
 
 + (instancetype)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
@@ -79,7 +79,7 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 @property (nonatomic, retain) NSNumber *pageNumber;
 @property (nonatomic, readonly) BOOL hasSetup;
 @property (nonatomic, readonly) NSString *tabs;
-@property (nonatomic, assign) SKBookmark *parent;
+@property (nonatomic, weak) SKBookmark *parent;
 @property (nonatomic, readonly) NSArray *containingBookmarks;
 
 - (NSArray *)children;

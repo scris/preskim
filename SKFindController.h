@@ -41,7 +41,7 @@
 @protocol SKFindControllerDelegate;
 
 @interface SKFindController : NSViewController {
-    id <SKFindControllerDelegate> delegate;
+    __weak id <SKFindControllerDelegate> delegate;
     NSSearchField *findField;
     NSTextField *messageField;
     NSButton *doneButton;
@@ -57,7 +57,7 @@
 @property (nonatomic, retain) IBOutlet NSButton *doneButton;
 @property (nonatomic, retain) IBOutlet NSSegmentedControl *navigationButton;
 @property (nonatomic, retain) IBOutlet NSObjectController *ownerController;
-@property (nonatomic, assign) id <SKFindControllerDelegate> delegate;
+@property (nonatomic, weak) id <SKFindControllerDelegate> delegate;
 @property (nonatomic, retain) NSString *findString;
 
 - (void)findForward:(BOOL)forward;
