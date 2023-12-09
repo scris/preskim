@@ -38,41 +38,14 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define SDK_BEFORE(_version) (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_VERSION_ ## _version)
-#define DEPLOYMENT_BEFORE(_version) (MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_VERSION_ ## _version)
+#define SDK_BEFORE_10_14 (MAC_OS_X_VERSION_MAX_ALLOWED < 101400)
+#define SDK_BEFORE_10_15 (MAC_OS_X_VERSION_MAX_ALLOWED < 101500)
+#define SDK_BEFORE_11_0  (MAC_OS_X_VERSION_MAX_ALLOWED < 110000)
+#define SDK_BEFORE_12_0  (MAC_OS_X_VERSION_MAX_ALLOWED < 120000)
+#define SDK_BEFORE_13_0  (MAC_OS_X_VERSION_MAX_ALLOWED < 130000)
+#define SDK_BEFORE_14_0  (MAC_OS_X_VERSION_MAX_ALLOWED < 140000)
 
-#ifdef MAC_OS_X_VERSION_10_14
-    #define MAC_OS_VERSION_10_14 MAC_OS_X_VERSION_10_14
-#else
-    #define MAC_OS_VERSION_10_14 101400
-#endif
-#ifdef MAC_OS_X_VERSION_10_15
-    #define MAC_OS_VERSION_10_15 MAC_OS_X_VERSION_10_15
-#else
-    #define MAC_OS_VERSION_10_15 101500
-#endif
-#ifdef MAC_OS_X_VERSION_10_16
-    #define MAC_OS_VERSION_10_16 MAC_OS_X_VERSION_10_16
-#else
-    #define MAC_OS_VERSION_10_16 101600
-#endif
-#ifndef MAC_OS_VERSION_11_0
-    #define MAC_OS_VERSION_11_0 110000
-#endif
-#ifndef MAC_OS_VERSION_11_1
-    #define MAC_OS_VERSION_11_1 110100
-#endif
-#ifndef MAC_OS_VERSION_12_0
-    #define MAC_OS_VERSION_12_0 120000
-#endif
-#ifndef MAC_OS_VERSION_13_0
-    #define MAC_OS_VERSION_13_0 130000
-#endif
-#ifndef MAC_OS_VERSION_14_0
-    #define MAC_OS_VERSION_14_0 140000
-#endif
-
-#if SDK_BEFORE(10_14)
+#if SDK_BEFORE_10_14
 
 enum {
     NSVisualEffectMaterialHeaderView = 10,
@@ -94,7 +67,7 @@ enum {
 
 #endif
 
-#if SDK_BEFORE(11_0)
+#if SDK_BEFORE_11_0
 
 typedef NS_ENUM(NSInteger, NSWindowToolbarStyle) {
     NSWindowToolbarStyleAutomatic,
@@ -105,8 +78,7 @@ typedef NS_ENUM(NSInteger, NSWindowToolbarStyle) {
 };
 
 @interface NSWindow (SKBigSurDeclarations)
-- (NSWindowToolbarStyle)toolbarStyle;
-- (void)setToolbarStyle:(NSWindowToolbarStyle)style;
+@property NSWindowToolbarStyle toolbarStyle;
 @end
 
 typedef NS_ENUM(NSInteger, NSTableViewStyle) {

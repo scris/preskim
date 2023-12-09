@@ -44,7 +44,7 @@
 #import "SKStringConstants.h"
 
 
-#if SDK_BEFORE(10_14)
+#if SDK_BEFORE_10_14
 
 @interface NSAppearance (SKMojaveExtensions)
 - (NSString *)bestMatchFromAppearancesWithNames:(NSArray *)names;
