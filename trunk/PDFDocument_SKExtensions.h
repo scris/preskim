@@ -55,15 +55,14 @@ typedef struct _SKLanguageDirectionAngles {
 } SKLanguageDirectionAngles;
 
 @interface PDFDocument (SKExtensions) <NSFastEnumeration>
-- (NSArray *)pageLabels;
-- (NSArray *)fileIDStrings;
-- (NSDictionary *)initialSettings;
-- (SKLanguageDirectionAngles)languageDirectionAngles;
-- (BOOL)allowsNotes;
-- (BOOL)realAllowsCommenting;
-- (NSDocument *)containingDocument;
-- (NSArray *)detectedWidgets;
-- (void)setContainingDocument:(NSDocument *)document;
+@property (nonatomic, readonly) NSArray *pageLabels;
+@property (nonatomic, readonly) NSArray *fileIDStrings;
+@property (nonatomic, readonly) NSDictionary *initialSettings;
+@property (nonatomic, readonly) SKLanguageDirectionAngles languageDirectionAngles;
+@property (nonatomic, readonly) BOOL allowsNotes;
+@property (nonatomic, readonly) BOOL realAllowsCommenting;
+@property (nonatomic, readonly) NSArray *detectedWidgets;
+@property (nonatomic, weak) NSDocument *containingDocument;
 - (void)addAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page;
 - (void)removeAnnotation:(PDFAnnotation *)annotation;
 - (void)moveAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page;

@@ -52,24 +52,23 @@ extern NSString *SKPDFPageActionRotate;
 
 @interface PDFPage (SKExtensions) <NSFilePromiseProviderDelegate>
 
-+ (BOOL)usesSequentialPageNumbering;
-+ (void)setUsesSequentialPageNumbering:(BOOL)flag;
+@property (class, nonatomic) BOOL usesSequentialPageNumbering;
 
-- (NSRect)foregroundRect;
-- (NSRect)autoCropBox;
-- (NSRect)boundingBox;
+@property (nonatomic, readonly) NSRect foregroundRect;
+@property (nonatomic, readonly) NSRect autoCropBox;
+@property (nonatomic, readonly) NSRect boundingBox;
 
 - (NSImage *)thumbnailWithSize:(CGFloat)size forBox:(PDFDisplayBox)box;
 - (NSImage *)thumbnailWithSize:(CGFloat)size forBox:(PDFDisplayBox)box readingBar:(SKReadingBar *)readingBar;
 - (NSImage *)thumbnailWithSize:(CGFloat)size forBox:(PDFDisplayBox)box shadowBlurRadius:(CGFloat)shadowBlurRadius highlights:(NSArray *)highlights;
 
 - (NSAttributedString *)thumbnailAttachmentWithSize:(CGFloat)size;
-- (NSAttributedString *)thumbnailAttachment;
-- (NSAttributedString *)thumbnail512Attachment;
-- (NSAttributedString *)thumbnail256Attachment;
-- (NSAttributedString *)thumbnail128Attachment;
-- (NSAttributedString *)thumbnail64Attachment;
-- (NSAttributedString *)thumbnail32Attachment;
+@property (nonatomic, readonly) NSAttributedString *thumbnailAttachment;
+@property (nonatomic, readonly) NSAttributedString *thumbnail512Attachment;
+@property (nonatomic, readonly) NSAttributedString *thumbnail256Attachment;
+@property (nonatomic, readonly) NSAttributedString *thumbnail128Attachment;
+@property (nonatomic, readonly) NSAttributedString *thumbnail64Attachment;
+@property (nonatomic, readonly) NSAttributedString *thumbnail32Attachment;
 
 - (NSData *)PDFDataForRect:(NSRect)rect;
 - (NSData *)TIFFDataForRect:(NSRect)rect;
@@ -77,40 +76,37 @@ extern NSString *SKPDFPageActionRotate;
 - (id<NSPasteboardWriting>)filePromiseForPageIndexes:(NSIndexSet *)pageIndexes;
 - (void)writeToClipboardForPageIndexes:(NSIndexSet *)pageIndexes;
 
-- (NSURL *)skimURL;
+@property (nonatomic, readonly) NSURL *skimURL;
 
-- (NSPointerArray *)lineRects;
+@property (nonatomic, readonly) NSPointerArray *lineRects;
 - (NSInteger)indexOfLineRectAtPoint:(NSPoint)point lower:(BOOL)lower;
 
-- (NSUInteger)pageIndex;
-- (NSString *)sequentialLabel;
-- (NSString *)displayLabel;
+@property (nonatomic, readonly) NSUInteger pageIndex;
+@property (nonatomic, readonly) NSString *sequentialLabel;
+@property (nonatomic, readonly) NSString *displayLabel;
 
-- (NSInteger)intrinsicRotation;
-- (NSInteger)characterDirectionAngle;
-- (NSInteger)lineDirectionAngle;
+@property (nonatomic, readonly) NSInteger intrinsicRotation;
+@property (nonatomic, readonly) NSInteger characterDirectionAngle;
+@property (nonatomic, readonly) NSInteger lineDirectionAngle;
 
-- (BOOL)isEditable;
+@property (nonatomic, readonly, getter=isEditable) BOOL editable;
 
 - (NSAffineTransform *)affineTransformForBox:(PDFDisplayBox)box;
 
 - (CGFloat)sortOrderForBounds:(NSRect)bounds;
 
-- (NSScriptObjectSpecifier *)objectSpecifier;
-- (NSDocument *)containingDocument;
-- (NSUInteger)index;
-- (NSInteger)rotationAngle;
-- (void)setRotationAngle:(NSInteger)angle;
-- (NSData *)boundsAsQDRect;
-- (void)setBoundsAsQDRect:(NSData *)inQDBoundsAsData;
-- (NSData *)mediaBoundsAsQDRect;
-- (void)setMediaBoundsAsQDRect:(NSData *)inQDBoundsAsData;
-- (NSData *)contentBoundsAsQDRect;
-- (NSArray *)lineBoundsAsQDRects;
+@property (nonatomic, readonly) NSScriptObjectSpecifier *objectSpecifier;
+@property (nonatomic, readonly) NSDocument *containingDocument;
+@property (nonatomic, readonly) NSUInteger index;
+@property (nonatomic) NSInteger rotationAngle;
+@property (nonatomic, copy) NSData *boundsAsQDRect;
+@property (nonatomic, copy) NSData *mediaBoundsAsQDRect;
+@property (nonatomic, readonly) NSData *contentBoundsAsQDRect;
+@property (nonatomic, readonly) NSArray *lineBoundsAsQDRects;
 - (NSUInteger)countOfLines;
 - (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex;
-- (NSTextStorage *)richText;
-- (NSArray *)notes;
+@property (nonatomic, readonly) NSTextStorage *richText;
+@property (nonatomic, readonly) NSArray *notes;
 - (id)valueInNotesWithUniqueID:(NSString *)aUniqueID;
 - (void)insertObject:(id)newNote inNotesAtIndex:(NSUInteger)index;
 - (void)removeObjectFromNotesAtIndex:(NSUInteger)index;

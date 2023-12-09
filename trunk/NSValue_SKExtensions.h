@@ -41,16 +41,16 @@
 
 @interface NSValue (SKExtensions)
 
-- (NSString *)rectString;
-- (NSString *)pointString;
-- (NSString *)originString;
-- (NSString *)sizeString;
-- (NSString *)midPointString;
-- (CGFloat)rectX;
-- (CGFloat)rectY;
-- (CGFloat)rectWidth;
-- (CGFloat)rectHeight;
-- (CGFloat)pointX;
-- (CGFloat)pointY;
+@property (nonatomic, readonly) NSString *rectString;
+@property (nonatomic, readonly) NSString *pointString;
+@property (nonatomic, readonly) NSString *originString;
+@property (nonatomic, readonly) NSString *sizeString;
+@property (nonatomic, readonly) NSString *midPointString;
+@property (nonatomic, readonly) CGFloat rectX;
+@property (nonatomic, readonly) CGFloat rectY;
+@property (nonatomic, readonly) CGFloat rectWidth;
+@property (nonatomic, readonly) CGFloat rectHeight;
+@property (nonatomic, readonly) CGFloat pointX;
+@property (nonatomic, readonly) CGFloat pointY;
 
 @end

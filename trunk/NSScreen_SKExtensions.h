@@ -45,8 +45,8 @@
 
 + (BOOL)screenForWindowHasMenuBar:(NSWindow *)window;
 
-+ (NSScreen *)primaryScreen;
+@property (class, nonatomic, readonly) NSScreen *primaryScreen;
 
-- (NSScreen *)primaryScreen;
+@property (nonatomic, readonly) NSScreen *primaryScreen;
 
 @end

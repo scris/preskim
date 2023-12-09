@@ -42,23 +42,22 @@
 
 @interface PDFOutline (SKExtensions)
 
-- (PDFPage *)page;
-- (NSString *)pageLabel;
+@property (nonatomic, readonly) PDFPage *page;
+@property (nonatomic, readonly) NSString *pageLabel;
 
-- (NSString *)cleanedLabel;
+@property (nonatomic, readonly) NSString *cleanedLabel;
 
-- (NSInteger)deepestLevel;
+@property (nonatomic, readonly) NSInteger deepestLevel;
 
 - (void)pageLabelDidUpdate;
 
-- (NSScriptObjectSpecifier *)objectSpecifier;
-- (PDFOutline *)scriptingParent;
-- (NSArray *)entireContents;
+@property (nonatomic, readonly) NSScriptObjectSpecifier *objectSpecifier;
+@property (nonatomic, readonly) PDFOutline *scriptingParent;
+@property (nonatomic, readonly) NSArray *entireContents;
 - (NSUInteger)countOfOutlines;
 - (PDFOutline *)objectInOutlinesAtIndex:(NSUInteger)idx;
-- (NSString *)scriptingURL;
-- (NSURL *)scriptingFile;
-- (BOOL)isExpanded;
-- (void)setExpanded:(BOOL)flag;
+@property (nonatomic, readonly) NSString *scriptingURL;
+@property (nonatomic, readonly) NSURL *scriptingFile;
+@property (nonatomic, getter=isExpanded) BOOL expanded;
 
 @end

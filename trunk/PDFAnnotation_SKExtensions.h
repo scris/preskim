@@ -68,43 +68,36 @@ extern NSString *SKPasteboardTypeSkimNote;
 
 + (NSDictionary *)textToNoteSkimNoteProperties:(NSDictionary *)properties;
 
-- (NSString *)fdfString;
+@property (nonatomic, readonly) NSString *fdfString;
 
-- (NSUInteger)pageIndex;
+@property (nonatomic, readonly) NSUInteger pageIndex;
 
-- (PDFBorderStyle)borderStyle;
-- (void)setBorderStyle:(PDFBorderStyle)style;
-- (CGFloat)lineWidth;
-- (void)setLineWidth:(CGFloat)width;
-- (NSArray *)dashPattern;
-- (void)setDashPattern:(NSArray *)pattern;
+@property (nonatomic) PDFBorderStyle borderStyle;
+@property (nonatomic) CGFloat lineWidth;
+@property (nonatomic, copy) NSArray *dashPattern;
 
-- (NSPoint)observedStartPoint;
-- (void)setObservedStartPoint:(NSPoint)point;
-- (NSPoint)observedEndPoint;
-- (void)setObservedEndPoint:(NSPoint)point;
+@property (nonatomic) NSPoint observedStartPoint;
+@property (nonatomic) NSPoint observedEndPoint;
 
-- (CGFloat)pathInset;
+@property (nonatomic, readonly) CGFloat pathInset;
 
-- (NSArray *)bezierPaths;
-- (void)setBezierPaths:(NSArray *)newPaths;
+@property (nonatomic, copy) NSArray *bezierPaths;
 
-- (NSArray *)pagePaths;
+@property (nonatomic, readonly) NSArray *pagePaths;
 
-- (NSImage *)image;
-- (NSAttributedString *)text;
+@property (nonatomic, readonly) NSImage *image;
+@property (nonatomic, readonly) NSAttributedString *text;
 
-- (BOOL)hasNoteText;
-- (SKNoteText *)noteText;
+@property (nonatomic, readonly) BOOL hasNoteText;
+@property (nonatomic, readonly) SKNoteText *noteText;
 
-- (PDFSelection *)selection;
+@property (nonatomic, readonly) PDFSelection *selection;
 
-- (id)objectValue;
-- (void)setObjectValue:(id)newObjectValue;
+@property (nonatomic, retain) id objectValue;
 
-- (SKNPDFWidgetType)widgetType;
+@property (nonatomic, readonly) SKNPDFWidgetType widgetType;
 
-- (NSString *)textString;
+@property (nonatomic, readonly) NSString *textString;
 
 - (BOOL)isMarkup;
 - (BOOL)isNote;
@@ -123,10 +116,10 @@ extern NSString *SKPasteboardTypeSkimNote;
 
 - (BOOL)hitTest:(NSPoint)point;
 
-- (CGFloat)boundsOrder;
+@property (nonatomic, readonly) CGFloat boundsOrder;
 
 - (NSRect)displayRectForBounds:(NSRect)bounds lineWidth:(CGFloat)lineWidth;
-- (NSRect)displayRect;
+@property (nonatomic, readonly) NSRect displayRect;
 
 - (SKRectEdges)resizeHandleForPoint:(NSPoint)point scaleFactor:(CGFloat)scaleFactor;
 
@@ -136,46 +129,41 @@ extern NSString *SKPasteboardTypeSkimNote;
 
 - (void)autoUpdateString;
 
-- (NSString *)uniqueID;
+@property (nonatomic, readonly) NSString *uniqueID;
 
 - (void)setColor:(NSColor *)color alternate:(BOOL)alternate updateDefaults:(BOOL)update;
 
-- (NSURL *)skimURL;
+@property (nonatomic, readonly) NSURL *skimURL;
 
-- (NSSet *)keysForValuesToObserveForUndo;
+@property (nonatomic, readonly) NSSet *keysForValuesToObserveForUndo;
 
-+ (NSSet *)customScriptingKeys;
-- (NSScriptObjectSpecifier *)objectSpecifier;
-- (NSColor *)scriptingColor;
-- (void)setScriptingColor:(NSColor *)newColor;
-- (PDFPage *)scriptingPage;
-- (NSDate *)scriptingModificationDate;
-- (void)setScriptingModificationDate:(NSDate *)date;
-- (NSString *)scriptingUserName;
-- (void)setScriptingUserName:(NSString *)name;
-- (PDFTextAnnotationIconType)scriptingIconType;
-- (id)textContents;
-- (void)setTextContents:(id)text;
-- (id)richText;
-- (void)setBoundsAsQDRect:(NSData *)inQDBoundsAsData;
-- (NSData *)boundsAsQDRect;
-- (NSInteger)scriptingAlignment;
-- (NSString *)fontName;
-- (CGFloat)fontSize;
-- (NSColor *)scriptingFontColor;
-- (NSColor *)scriptingInteriorColor;
-- (NSData *)startPointAsQDPoint;
-- (NSData *)endPointAsQDPoint;
-- (PDFLineStyle)scriptingStartLineStyle;
-- (PDFLineStyle)scriptingEndLineStyle;
-- (id)selectionSpecifier;
-- (NSArray *)scriptingPointLists;
+@property (class, nonatomic, readonly) NSSet *customScriptingKeys;
+@property (nonatomic, readonly) NSScriptObjectSpecifier *objectSpecifier;
+@property (nonatomic, copy) NSColor *scriptingColor;
+@property (nonatomic, readonly) PDFPage *scriptingPage;
+@property (nonatomic, copy) NSDate *scriptingModificationDate;
+@property (nonatomic, copy) NSString *scriptingUserName;
+@property (nonatomic, readonly) PDFTextAnnotationIconType scriptingIconType;
+@property (nonatomic, copy) id textContents;
+@property (nonatomic, readonly) id richText;
+@property (nonatomic, copy) NSData *boundsAsQDRect;
+@property (nonatomic, readonly) NSInteger scriptingAlignment;
+@property (nonatomic, readonly) NSString *fontName;
+@property (nonatomic, readonly) CGFloat fontSize;
+@property (nonatomic, readonly) NSColor *scriptingFontColor;
+@property (nonatomic, readonly) NSColor *scriptingInteriorColor;
+@property (nonatomic, readonly) NSData *startPointAsQDPoint;
+@property (nonatomic, readonly) NSData *endPointAsQDPoint;
+@property (nonatomic, readonly) PDFLineStyle scriptingStartLineStyle;
+@property (nonatomic, readonly) PDFLineStyle scriptingEndLineStyle;
+@property (nonatomic, readonly) id selectionSpecifier;
+@property (nonatomic, readonly) NSArray *scriptingPointLists;
 
 - (void)handleEditScriptCommand:(NSScriptCommand *)command;
 
 @end
 
 @interface PDFAnnotation (SKDefaultExtensions)
-- (NSColor *)interiorColor;
-- (NSString *)fieldName;
+@property (nonatomic, readonly) NSColor *interiorColor;
+@property (nonatomic, readonly) NSString *fieldName;
 @end

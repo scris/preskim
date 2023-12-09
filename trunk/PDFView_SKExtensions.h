@@ -69,8 +69,8 @@ extern const NSPoint SKUnspecifiedPoint;
 
 - (NSRect)layoutBoundsForPage:(PDFPage *)page;
 
-+ (NSColor *)defaultBackgroundColor;
-+ (NSColor *)defaultFullScreenBackgroundColor;
+@property (class, nonatomic, readonly) NSColor *defaultBackgroundColor;
+@property (class, nonatomic, readonly) NSColor *defaultFullScreenBackgroundColor;
 
 @end
 

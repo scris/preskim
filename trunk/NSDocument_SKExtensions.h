@@ -51,25 +51,25 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 
 + (BOOL)isPDFDocument;
 
-- (SKInteractionMode)systemInteractionMode;
+@property (nonatomic, readonly) SKInteractionMode systemInteractionMode;
 
-- (NSWindow *)mainWindow;
+@property (nonatomic, readonly) NSWindow *mainWindow;
 
 - (IBAction)copyURL:(id)sender;
 
-- (NSMenu *)notesMenu;
+@property (nonatomic, readonly) NSMenu *notesMenu;
 
 #pragma mark Document Setup
 
 - (void)saveRecentDocumentInfo;
 - (void)applySetup:(NSDictionary *)setup;
 - (void)applyOptions:(NSDictionary *)options;
-- (NSDictionary *)currentDocumentSetup;
+@property (nonatomic, readonly) NSDictionary *currentDocumentSetup;
 
 #pragma mark PDF Document
 
-- (PDFDocument *)pdfDocument;
-- (PDFDocument *)placeholderPdfDocument;
+@property (nonatomic, readonly) PDFDocument *pdfDocument;
+@property (nonatomic, readonly) PDFDocument *placeholderPdfDocument;
 
 #pragma mark Bookmark Actions
 
@@ -80,18 +80,18 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 
 - (BOOL)hasNotes;
 
-- (NSArray *)notes;
+@property (nonatomic, readonly) NSArray *notes;
 
-- (NSArray *)SkimNoteProperties;
+@property (nonatomic, readonly) NSArray *SkimNoteProperties;
 
-- (NSData *)notesData;
+@property (nonatomic, readonly) NSData *notesData;
 
 - (NSString *)notesStringForTemplateType:(NSString *)typeName;
 - (NSData *)notesDataForTemplateType:(NSString *)typeName;
 - (NSFileWrapper *)notesFileWrapperForTemplateType:(NSString *)typeName;
 
-- (NSString *)notesString;
-- (NSData *)notesRTFData;
+@property (nonatomic, readonly) NSString *notesString;
+@property (nonatomic, readonly) NSData *notesRTFData;
 
 - (NSData *)notesFDFDataForFile:(NSString *)filename fileIDStrings:(NSArray *)fileIDStrings;
 
@@ -109,25 +109,23 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 - (NSUInteger)countOfOutlines;
 - (PDFOutline *)objectInOutlinesAtIndex:(NSUInteger)idx;
 
-- (PDFPage *)currentPage;
-- (void)setCurrentPage:(PDFPage *)page;
-- (NSData *)currentQDPoint;
-- (PDFAnnotation *)activeNote;
-- (NSTextStorage *)richText;
-- (id)selectionSpecifier;
-- (NSData *)selectionQDRect;
-- (id)selectionPage;
-- (NSArray *)noteSelection;
-- (void)setNoteSelection:(NSArray *)newNoteSelection;
-- (NSDictionary *)pdfViewSettings;
-- (NSDictionary *)documentAttributes;
-- (BOOL)isPDFDocument;
-- (NSInteger)toolMode;
-- (NSInteger)scriptingInteractionMode;
-- (NSDocument *)presentationNotesDocument;
-- (NSInteger)presentationNotesOffset;
-- (id)readingBar;
-- (BOOL)hasReadingBar;
+@property (nonatomic, retain) PDFPage *currentPage;
+@property (nonatomic, readonly) NSData *currentQDPoint;
+@property (nonatomic, readonly) PDFAnnotation *activeNote;
+@property (nonatomic, readonly) NSTextStorage *richText;
+@property (nonatomic, readonly) id selectionSpecifier;
+@property (nonatomic, readonly) NSData *selectionQDRect;
+@property (nonatomic, readonly) id selectionPage;
+@property (nonatomic, retain) NSArray *noteSelection;
+@property (nonatomic, readonly) NSDictionary *pdfViewSettings;
+@property (nonatomic, readonly) NSDictionary *documentAttributes;
+@property (nonatomic, readonly) BOOL isPDFDocument;
+@property (nonatomic, readonly) NSInteger toolMode;
+@property (nonatomic, readonly) NSInteger scriptingInteractionMode;
+@property (nonatomic, readonly) NSDocument *presentationNotesDocument;
+@property (nonatomic, readonly) NSInteger presentationNotesOffset;
+@property (nonatomic, readonly) id readingBar;
+@property (nonatomic, readonly) BOOL hasReadingBar;
 
 - (void)handleRevertScriptCommand:(NSScriptCommand *)command;
 - (void)handleGoToScriptCommand:(NSScriptCommand *)command;

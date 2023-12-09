@@ -40,14 +40,13 @@
 
 @interface NSBezierPath (SKExtensions)
 
-- (NSArray *)dashPattern;
-- (void)setDashPattern:(NSArray *)newPattern;
+@property (nonatomic, copy) NSArray *dashPattern;
 
-- (NSRect)nonEmptyBounds;
+@property (nonatomic, readonly) NSRect nonEmptyBounds;
 
 - (NSPoint)associatedPointForElementAtIndex:(NSUInteger)anIndex;
 
-- (CGPathRef)CGPath;
+@property (nonatomic, readonly) CGPathRef CGPath;
 
 - (void)halfEllipseFromPoint:(NSPoint)halfwayPoint toPoint:(NSPoint)endPoint;
 

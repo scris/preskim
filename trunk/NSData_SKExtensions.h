@@ -53,23 +53,23 @@
 
 @interface NSData (SKExtensions)
 
-- (NSString *)md5String;
-- (NSString *)xmlString;
+@property (nonatomic, readonly) NSString *md5String;
+@property (nonatomic, readonly) NSString *xmlString;
 
 - (instancetype)initWithHexString:(NSString *)hexString;
-- (NSString *)hexString;
+@property (nonatomic, readonly) NSString *hexString;
 
 + (NSData *)dataWithPointAsQDPoint:(NSPoint)point;
 + (NSData *)dataWithRectAsQDRect:(NSRect)rect;
 
-- (NSPoint)pointValueAsQDPoint;
-- (NSRect)rectValueAsQDRect;
+@property (nonatomic, readonly) NSPoint pointValueAsQDPoint;
+@property (nonatomic, readonly) NSRect rectValueAsQDRect;
 
-+ (id)scriptingPdfWithDescriptor:(NSAppleEventDescriptor *)descriptor;
-- (id)scriptingPdfDescriptor;
-+ (id)scriptingTiffPictureWithDescriptor:(NSAppleEventDescriptor *)descriptor;
-- (id)scriptingTiffPictureDescriptor;
-+ (id)scriptingRtfWithDescriptor:(NSAppleEventDescriptor *)descriptor;
-- (id)scriptingRtfDescriptor;
++ (instancetype)scriptingPdfWithDescriptor:(NSAppleEventDescriptor *)descriptor;
+@property (nonatomic, readonly) NSAppleEventDescriptor *scriptingPdfDescriptor;
++ (instancetype)scriptingTiffPictureWithDescriptor:(NSAppleEventDescriptor *)descriptor;
+@property (nonatomic, readonly) NSAppleEventDescriptor *scriptingTiffPictureDescriptor;
++ (instancetype)scriptingRtfWithDescriptor:(NSAppleEventDescriptor *)descriptor;
+@property (nonatomic, readonly) NSAppleEventDescriptor *scriptingRtfDescriptor;
 
 @end

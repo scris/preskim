@@ -218,7 +218,7 @@ extern NSString *SKImageNameRemoteStateScroll;
 
 + (NSImage *)maskImageWithSize:(NSSize)size cornerRadius:(CGFloat)radius;
 
-+ (NSImage *)markImage;
+@property (class, nonatomic, readonly) NSImage *markImage;
 
 + (void)makeImages;
 

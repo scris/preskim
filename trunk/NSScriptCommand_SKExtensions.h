@@ -41,8 +41,8 @@
 
 @interface NSScriptCommand (SKExtensions)
 
-- (NSScriptObjectSpecifier *)subjectSpecifier;
-- (id)evaluatedSubjects;
+@property (nonatomic, readonly) NSScriptObjectSpecifier *subjectSpecifier;
+@property (nonatomic, readonly) id evaluatedSubjects;
 
 @end
 

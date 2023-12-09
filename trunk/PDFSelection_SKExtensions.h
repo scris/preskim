@@ -45,15 +45,15 @@
 + (PDFSelection *)selectionByAddingSelections:(NSArray *)selections;
 
 // the search table columns bind to these methods for display
-- (NSString *)cleanedString;
-- (NSAttributedString *)contextString;
+@property (nonatomic, readonly) NSString *cleanedString;
+@property (nonatomic, readonly) NSAttributedString *contextString;
 
-- (PDFDestination *)destination;
+@property (nonatomic, readonly) PDFDestination *destination;
 
 - (NSUInteger)safeIndexOfFirstCharacterOnPage:(PDFPage *)page;
 - (NSUInteger)safeIndexOfLastCharacterOnPage:(PDFPage *)page;
-- (PDFPage *)safeFirstPage;
-- (PDFPage *)safeLastPage;
+@property (nonatomic, readonly) PDFPage *safeFirstPage;
+@property (nonatomic, readonly) PDFPage *safeLastPage;
 
 - (BOOL)hasCharacters;
 
@@ -61,6 +61,6 @@
 
 + (instancetype)selectionWithSpecifier:(id)specifier;
 + (instancetype)selectionWithSpecifier:(id)specifier onPage:(PDFPage *)aPage;
-- (id)objectSpecifiers;
+@property (nonatomic, readonly)  id objectSpecifiers;
 
 @end

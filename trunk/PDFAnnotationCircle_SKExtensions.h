@@ -41,5 +41,5 @@
 
 
 @interface PDFAnnotationCircle (SKExtensions)
-- (void)setScriptingInteriorColor:(NSColor *)newColor;
+@property (nonatomic, copy) NSColor *scriptingInteriorColor;
 @end

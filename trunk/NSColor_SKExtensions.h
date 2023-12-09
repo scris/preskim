@@ -79,21 +79,21 @@ enum {
 + (NSColor *)selectionHighlightColor:(BOOL)active;
 + (NSColor *)selectionHighlightInteriorColor:(BOOL)active;
 
-+ (NSArray *)favoriteColors;
+@property (class, nonatomic, readonly) NSArray *favoriteColors;
 
 - (NSComparisonResult)colorCompare:(NSColor *)aColor;
 
-- (CGFloat)luminance;
+@property (nonatomic, readonly) CGFloat luminance;
 
 - (void)drawSwatchInRoundedRect:(NSRect)rect;
 
-- (NSColor *)opaqueColor;
+@property (nonatomic, readonly) NSColor *opaqueColor;
 
-+ (id)scriptingRgbaColorWithDescriptor:(NSAppleEventDescriptor *)descriptor;
-- (id)scriptingRgbaColorDescriptor;
++ (instancetype)scriptingRgbaColorWithDescriptor:(NSAppleEventDescriptor *)descriptor;
+@property (nonatomic, readonly) NSAppleEventDescriptor *scriptingRgbaColorDescriptor;
 
-- (NSString *)accessibilityValue;
+@property (nonatomic, readonly) NSString *accessibilityValue;
 
-- (NSString *)hexString;
+@property (nonatomic, readonly) NSString *hexString;
 
 @end

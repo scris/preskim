@@ -39,5 +39,5 @@
 #import <Cocoa/Cocoa.h>
 
 @interface NSScroller (SKExtensions)
-+ (CGFloat)effectiveScrollerWidth;
+@property (class, nonatomic, readonly) CGFloat effectiveScrollerWidth;
 @end

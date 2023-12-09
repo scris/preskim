@@ -41,7 +41,7 @@
 
 @interface NSMenu (SKExtensions)
 
-+ (NSMenu *)menu;
+@property (class, nonatomic, readonly) NSMenu *menu;
 
 - (NSMenuItem *)insertItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget atIndex:(NSInteger)anIndex;
 - (NSMenuItem *)addItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget;

@@ -40,6 +40,6 @@
 
 
 @interface NSParagraphStyle (SKExtensions)
-+ (NSParagraphStyle *)defaultClippingParagraphStyle;
-+ (NSParagraphStyle *)defaultTruncatingTailParagraphStyle;
+@property (class, nonatomic, readonly) NSParagraphStyle *defaultClippingParagraphStyle;
+@property (class, nonatomic, readonly) NSParagraphStyle *defaultTruncatingTailParagraphStyle;
 @end

@@ -41,15 +41,15 @@
 
 @interface NSArray (SKExtensions)
 
-- (NSArray *)arraySortedByPageIndex;
-- (NSArray *)arraySortedByBounds;
-- (NSArray *)arraySortedByPageIndexAndBounds;
-- (NSArray *)arraySortedByType;
-- (NSArray *)arraySortedByContents;
-- (NSArray *)arraySortedByTypeAndContents;
-- (NSArray *)arraySortedByTypeAndPageIndex;
-- (NSArray *)arraySortedByColor;
-- (NSArray *)arraySortedByColorAndPageIndex;
-- (NSArray *)arraySortedByModificationDate;
+@property (nonatomic, readonly) NSArray *arraySortedByPageIndex;
+@property (nonatomic, readonly) NSArray *arraySortedByBounds;
+@property (nonatomic, readonly) NSArray *arraySortedByPageIndexAndBounds;
+@property (nonatomic, readonly) NSArray *arraySortedByType;
+@property (nonatomic, readonly) NSArray *arraySortedByContents;
+@property (nonatomic, readonly) NSArray *arraySortedByTypeAndContents;
+@property (nonatomic, readonly) NSArray *arraySortedByTypeAndPageIndex;
+@property (nonatomic, readonly) NSArray *arraySortedByColor;
+@property (nonatomic, readonly) NSArray *arraySortedByColorAndPageIndex;
+@property (nonatomic, readonly) NSArray *arraySortedByModificationDate;
 
 @end
