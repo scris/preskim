@@ -109,14 +109,14 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 - (NSUInteger)countOfOutlines;
 - (PDFOutline *)objectInOutlinesAtIndex:(NSUInteger)idx;
 
-@property (nonatomic, retain) PDFPage *currentPage;
+@property (nonatomic, strong) PDFPage *currentPage;
 @property (nonatomic, readonly) NSData *currentQDPoint;
 @property (nonatomic, readonly) PDFAnnotation *activeNote;
 @property (nonatomic, readonly) NSTextStorage *richText;
 @property (nonatomic, readonly) id selectionSpecifier;
 @property (nonatomic, readonly) NSData *selectionQDRect;
 @property (nonatomic, readonly) id selectionPage;
-@property (nonatomic, retain) NSArray *noteSelection;
+@property (nonatomic, strong) NSArray *noteSelection;
 @property (nonatomic, readonly) NSDictionary *pdfViewSettings;
 @property (nonatomic, readonly) NSDictionary *documentAttributes;
 @property (nonatomic, readonly) BOOL isPDFDocument;

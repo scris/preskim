@@ -62,7 +62,7 @@ extern NSString *SKPageLabelsChangedNotification;
 - (IBAction)showReleaseNotes:(id)sender;
 - (IBAction)showDownloads:(id)sender;
 
-@property (nonatomic, retain) IBOutlet NSMenu *noteColumnsMenu, *noteTypeMenu;
+@property (nonatomic, strong) IBOutlet NSMenu *noteColumnsMenu, *noteTypeMenu;
 
 @property (nonatomic, readonly) NSColorList *colorList;
 

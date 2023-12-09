@@ -52,13 +52,13 @@
     BOOL didChange;
 }
 
-@property (nonatomic, retain) IBOutlet NSSearchField *findField;
-@property (nonatomic, retain) IBOutlet NSTextField *messageField;
-@property (nonatomic, retain) IBOutlet NSButton *doneButton;
-@property (nonatomic, retain) IBOutlet NSSegmentedControl *navigationButton;
-@property (nonatomic, retain) IBOutlet NSObjectController *ownerController;
+@property (nonatomic, strong) IBOutlet NSSearchField *findField;
+@property (nonatomic, strong) IBOutlet NSTextField *messageField;
+@property (nonatomic, strong) IBOutlet NSButton *doneButton;
+@property (nonatomic, strong) IBOutlet NSSegmentedControl *navigationButton;
+@property (nonatomic, strong) IBOutlet NSObjectController *ownerController;
 @property (nonatomic, weak) id <SKFindControllerDelegate> delegate;
-@property (nonatomic, retain) NSString *findString;
+@property (nonatomic, strong) NSString *findString;
 
 - (void)findForward:(BOOL)forward;
 - (void)updateFindPboard;

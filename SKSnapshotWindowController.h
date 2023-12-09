@@ -63,9 +63,9 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
     BOOL animating;
 }
 
-@property (nonatomic, retain) IBOutlet SKSnapshotPDFView *pdfView;
+@property (nonatomic, strong) IBOutlet SKSnapshotPDFView *pdfView;
 @property (nonatomic, weak) id <SKSnapshotWindowControllerDelegate> delegate;
-@property (nonatomic, retain) NSImage *thumbnail;
+@property (nonatomic, strong) NSImage *thumbnail;
 @property (nonatomic, readonly) NSRect bounds;
 @property (nonatomic, readonly) NSUInteger pageIndex;
 @property (nonatomic, readonly, copy) NSString *pageLabel;

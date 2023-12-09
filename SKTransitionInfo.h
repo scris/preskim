@@ -73,7 +73,7 @@ typedef NS_ENUM(NSUInteger, SKTransitionStyle) {
     SKThumbnail *toThumbnail;
 }
 
-@property (nonatomic, retain) SKThumbnail *thumbnail, *toThumbnail;
+@property (nonatomic, strong) SKThumbnail *thumbnail, *toThumbnail;
 
 @property (nonatomic, readonly) NSString *transitionName;
 

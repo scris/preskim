@@ -52,7 +52,7 @@
 @property (nonatomic, readonly) NSArray *selectedItems;
 @property (nonatomic, readonly) BOOL canDelete, canCopy, canPaste;
 @property (nonatomic) BOOL hasImageToolTips, supportsQuickLook;
-@property (nonatomic, retain) SKTypeSelectHelper *typeSelectHelper;
+@property (nonatomic, strong) SKTypeSelectHelper *typeSelectHelper;
 
 - (NSArray *)itemsAtRowIndexes:(NSIndexSet *)indexes;
 

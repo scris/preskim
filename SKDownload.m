@@ -50,8 +50,8 @@ NSString *SKDownloadStatusKey = @"status";
 
 @interface SKDownload ()
 @property (nonatomic) SKDownloadStatus status;
-@property (nonatomic, retain) NSURL *fileURL;
-@property (nonatomic, retain) NSImage *fileIcon;
+@property (nonatomic, strong) NSURL *fileURL;
+@property (nonatomic, strong) NSImage *fileIcon;
 @property (nonatomic) int64_t expectedContentLength, receivedContentLength;
 - (void)handleApplicationWillTerminateNotification:(NSNotification *)notification;
 @end

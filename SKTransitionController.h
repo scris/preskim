@@ -52,7 +52,7 @@
 }
 
 @property (nonatomic, weak) NSView *view;
-@property (nonatomic, retain) SKTransitionInfo *transition;
+@property (nonatomic, strong) SKTransitionInfo *transition;
 @property (nonatomic, copy) NSArray *pageTransitions;
 @property (nonatomic) BOOL hasTransition;
 

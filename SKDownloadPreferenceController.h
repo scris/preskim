@@ -44,8 +44,8 @@
     NSPopUpButton *downloadsFolderPopUp;
 }
 
-@property (nonatomic, retain) IBOutlet NSButton *doneButton;
-@property (nonatomic, retain) IBOutlet NSPopUpButton *downloadsFolderPopUp;
+@property (nonatomic, strong) IBOutlet NSButton *doneButton;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *downloadsFolderPopUp;
 
 - (IBAction)chooseDownloadsFolder:(id)sender;
 

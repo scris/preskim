@@ -45,10 +45,10 @@
     BOOL hasExportOptions, allowsEmbeddedOptions;
 }
 
-@property (nonatomic, retain) IBOutlet NSPopUpButton *formatPopUpButton;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *formatPopUpButton;
 
 @property (nonatomic) BOOL hasExportOptions, allowsEmbeddedOption;
 @property (nonatomic, readonly) NSString *selectedFileType;
-@property (nonatomic, retain) NSSavePanel *savePanel;
+@property (nonatomic, strong) NSSavePanel *savePanel;
 
 @end

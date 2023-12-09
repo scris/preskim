@@ -179,11 +179,11 @@ enum {
 @property (nonatomic) SKNoteType annotationMode;
 @property (nonatomic) SKTemporaryToolMode temporaryToolMode;
 @property (nonatomic) SKInteractionMode interactionMode;
-@property (nonatomic, retain) PDFAnnotation *currentAnnotation;
+@property (nonatomic, strong) PDFAnnotation *currentAnnotation;
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;
 @property (nonatomic, readonly, getter=isZooming) BOOL zooming;
 @property (nonatomic) NSRect currentSelectionRect;
-@property (nonatomic, retain) PDFPage *currentSelectionPage;
+@property (nonatomic, strong) PDFPage *currentSelectionPage;
 @property (nonatomic, readonly) CGFloat currentMagnification;
 @property (nonatomic) BOOL hideNotes;
 @property (nonatomic, readonly) BOOL canSelectNote;
@@ -192,7 +192,7 @@ enum {
 @property (nonatomic) CGFloat pacerSpeed;
 @property (nonatomic, readonly) BOOL hasPacer;
 @property (nonatomic, readonly) SKTransitionController *transitionController;
-@property (nonatomic, retain) SKTypeSelectHelper *typeSelectHelper;
+@property (nonatomic, strong) SKTypeSelectHelper *typeSelectHelper;
 @property (nonatomic, readonly) NSUndoManager *temporaryUndoManager;
 
 @property (nonatomic) BOOL needsRewind;

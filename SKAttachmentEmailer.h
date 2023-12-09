@@ -52,7 +52,7 @@
 @property (nonatomic, readonly) NSImage *image;
 @property (nonatomic, weak) id<SKAttachmentEmailerDelegate> delegate;
 
-@property (nonatomic, retain) NSString *subject;
+@property (nonatomic, strong) NSString *subject;
 
 - (BOOL)canPerformWithItems:(NSArray *)items;
 - (void)performWithItems:(NSArray *)items;

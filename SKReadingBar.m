@@ -51,7 +51,7 @@
 #define SKReadingBarNumberOfLinesKey @"SKReadingBarNumberOfLines"
 
 @interface SKReadingBar ()
-@property (retain) PDFPage *page;
+@property (strong) PDFPage *page;
 @property NSRect currentBounds;
 - (NSRect)currentBoundsFromLineRects:(NSPointerArray *)lineRects;
 @end

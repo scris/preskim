@@ -55,7 +55,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     __weak NSCollectionViewItem *controller;
 }
 
-@property (nonatomic, retain) SKThumbnail *thumbnail;
+@property (nonatomic, strong) SKThumbnail *thumbnail;
 @property (nonatomic, getter=isSelected) BOOL selected;
 @property (nonatomic, getter=isMenuHighlighted) BOOL menuHighlighted;
 @property (nonatomic) NSBackgroundStyle backgroundStyle;

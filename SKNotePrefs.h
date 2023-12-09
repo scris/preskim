@@ -46,19 +46,19 @@
 
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSString *type;
-@property (nonatomic, retain) NSColor *scriptingColor;
-@property (nonatomic, retain) NSColor *scriptingInteriorColor;
+@property (nonatomic, strong) NSColor *scriptingColor;
+@property (nonatomic, strong) NSColor *scriptingInteriorColor;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic) PDFBorderStyle borderStyle;
-@property (nonatomic, retain) NSArray *dashPattern;
+@property (nonatomic, strong) NSArray *dashPattern;
 @property (nonatomic) PDFLineStyle scriptingStartLineStyle, scriptingEndLineStyle;
-@property (nonatomic, retain) NSString *fontName;
+@property (nonatomic, strong) NSString *fontName;
 @property (nonatomic) CGFloat fontSize;
-@property (nonatomic, retain) NSColor *scriptingFontColor;
+@property (nonatomic, strong) NSColor *scriptingFontColor;
 @property (nonatomic) NSInteger scriptingAlignment;
 @property (nonatomic) PDFTextAnnotationIconType scriptingIconType;
-@property (nonatomic, retain) NSString *scriptingUserName;
-@property (nonatomic, retain) NSDictionary *scriptingProperties;
+@property (nonatomic, strong) NSString *scriptingUserName;
+@property (nonatomic, strong) NSDictionary *scriptingProperties;
 
 - (instancetype)initWithType:(NSString *)aType;
 

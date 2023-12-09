@@ -19,11 +19,11 @@
     NSNumber    *inputTime;
 }
 
-@property (nonatomic, retain) CIImage *inputImage;
-@property (nonatomic, retain) CIImage *inputTargetImage;
-@property (nonatomic, retain) CIVector *inputCenter;
-@property (nonatomic, retain) NSNumber *inputAngle;
-@property (nonatomic, retain) NSNumber *inputWidth;
-@property (nonatomic, retain) NSNumber *inputTime;
+@property (nonatomic, strong) CIImage *inputImage;
+@property (nonatomic, strong) CIImage *inputTargetImage;
+@property (nonatomic, strong) CIVector *inputCenter;
+@property (nonatomic, strong) NSNumber *inputAngle;
+@property (nonatomic, strong) NSNumber *inputWidth;
+@property (nonatomic, strong) NSNumber *inputTime;
 
 @end

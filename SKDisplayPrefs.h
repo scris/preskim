@@ -44,10 +44,10 @@
 }
 
 @property (nonatomic, readonly) NSString *name;
-@property (nonatomic, retain) NSDictionary *pdfViewSettings;
-@property (nonatomic, retain) NSColor *backgroundColor;
+@property (nonatomic, strong) NSDictionary *pdfViewSettings;
+@property (nonatomic, strong) NSColor *backgroundColor;
 @property (nonatomic) CGFloat sepiaTone;
-@property (nonatomic, retain) NSColor *whitePoint;
+@property (nonatomic, strong) NSColor *whitePoint;
 @property (nonatomic, getter=isInverted) BOOL inverted;
 
 - (instancetype)initForFullScreen:(BOOL)isFullScreen;

@@ -47,7 +47,7 @@ extern NSString *SKSyncTeXEditorArgumentsKey;
     BOOL customTeXEditor;
 }
 
-@property (nonatomic, retain) IBOutlet NSPopUpButton *texEditorPopUpButton;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *texEditorPopUpButton;
 @property (nonatomic, getter=isCustomTeXEditor) BOOL customTeXEditor;
 
 + (NSDictionary *)TeXEditorForPreset:(NSString *)name;

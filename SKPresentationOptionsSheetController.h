@@ -59,12 +59,12 @@
     NSMutableSet *changedTransitions;
 }
 
-@property (nonatomic, retain) IBOutlet NSPopUpButton *notesDocumentPopUpButton;
-@property (nonatomic, retain) IBOutlet SKTableView *tableView;
-@property (nonatomic, retain) IBOutlet NSPopUpButton *stylePopUpButton;
-@property (nonatomic, retain) IBOutlet NSButton *okButton, *cancelButton;
-@property (nonatomic, retain) IBOutlet NSLayoutConstraint *boxLeadingConstraint, *tableWidthConstraint;
-@property (nonatomic, retain) IBOutlet NSArrayController *arrayController;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *notesDocumentPopUpButton;
+@property (nonatomic, strong) IBOutlet SKTableView *tableView;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *stylePopUpButton;
+@property (nonatomic, strong) IBOutlet NSButton *okButton, *cancelButton;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *boxLeadingConstraint, *tableWidthConstraint;
+@property (nonatomic, strong) IBOutlet NSArrayController *arrayController;
 @property (nonatomic) BOOL separate;
 @property (nonatomic, readonly) SKTransitionInfo *transition;
 @property (nonatomic, copy) NSArray *transitions;

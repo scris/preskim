@@ -47,8 +47,8 @@
     NSColor *backgroundColor;
     NSColor *separatorColor;
 }
-@property (nonatomic, retain) NSColor *backgroundColor;
-@property (nonatomic, retain) NSColor *separatorColor;
+@property (nonatomic, strong) NSColor *backgroundColor;
+@property (nonatomic, strong) NSColor *separatorColor;
 @end
 
 #pragma mark -

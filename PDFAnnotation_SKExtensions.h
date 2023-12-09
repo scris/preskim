@@ -93,7 +93,7 @@ extern NSString *SKPasteboardTypeSkimNote;
 
 @property (nonatomic, readonly) PDFSelection *selection;
 
-@property (nonatomic, retain) id objectValue;
+@property (nonatomic, strong) id objectValue;
 
 @property (nonatomic, readonly) SKNPDFWidgetType widgetType;
 

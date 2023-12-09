@@ -70,11 +70,11 @@ typedef NS_ENUM(NSInteger, SKDownloadStatus) {
 
 @property (nonatomic, readonly) NSURL *URL;
 
-@property (nonatomic, retain) NSData *resumeData;
+@property (nonatomic, strong) NSData *resumeData;
 
 @property (nonatomic, readonly) NSString *fileName;
-@property (nonatomic, readonly, retain) NSURL *fileURL;
-@property (nonatomic, readonly, retain) NSImage *fileIcon;
+@property (nonatomic, readonly, strong) NSURL *fileURL;
+@property (nonatomic, readonly, strong) NSImage *fileIcon;
 @property (nonatomic, readonly) int64_t expectedContentLength, receivedContentLength;
 
 @property (nonatomic, readonly) NSString *statusDescription;

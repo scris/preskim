@@ -51,10 +51,10 @@
 }
 
 @property (nonatomic, weak) IBOutlet SKMainWindowController *mainController;
-@property (nonatomic, retain) IBOutlet SKTopBarView *topBar;
-@property (nonatomic, retain) IBOutlet NSSegmentedControl *button, *alternateButton;
-@property (nonatomic, retain) IBOutlet NSSearchField *searchField;
-@property (nonatomic, retain) IBOutlet NSView *currentView;
+@property (nonatomic, strong) IBOutlet SKTopBarView *topBar;
+@property (nonatomic, strong) IBOutlet NSSegmentedControl *button, *alternateButton;
+@property (nonatomic, strong) IBOutlet NSSearchField *searchField;
+@property (nonatomic, strong) IBOutlet NSView *currentView;
 
 @property (nonatomic) CGFloat topInset;
 @property (nonatomic, readonly) NSArray *tableViews;

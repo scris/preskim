@@ -55,7 +55,7 @@
     CGFloat startScale;
 }
 
-@property (nonatomic, retain) PDFView *synchronizedPDFView;
+@property (nonatomic, strong) PDFView *synchronizedPDFView;
 @property (nonatomic) BOOL synchronizeZoom;
 @property (nonatomic) BOOL selectsText;
 

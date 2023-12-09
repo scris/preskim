@@ -47,7 +47,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 @property (nonatomic) SEL singleClickAction, doubleClickAction;
-@property (nonatomic, retain) SKTypeSelectHelper *typeSelectHelper;
+@property (nonatomic, strong) SKTypeSelectHelper *typeSelectHelper;
 
 - (id)newViewWithIdentifier:(NSString *)identifier;
 - (void)cacheView:(id)view;

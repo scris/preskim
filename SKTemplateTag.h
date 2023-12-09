@@ -152,7 +152,7 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
 
 - (instancetype)initWithText:(NSString *)aText;
 
-@property (nonatomic, retain) NSString *text;
+@property (nonatomic, strong) NSString *text;
 
 - (void)appendText:(NSString *)newText;
 
@@ -167,7 +167,7 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
 
 - (instancetype)initWithAttributedText:(NSAttributedString *)anAttributedText;
 
-@property (nonatomic, retain) NSAttributedString *attributedText;
+@property (nonatomic, strong) NSAttributedString *attributedText;
 
 - (void)appendAttributedText:(NSAttributedString *)newAttributedText;
 

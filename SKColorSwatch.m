@@ -82,7 +82,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     BOOL selected;
     SKColorSwatchDropLocation dropLocation;
 }
-@property (nonatomic, retain) NSColor *color;
+@property (nonatomic, strong) NSColor *color;
 @property (nonatomic, getter=isHighlighted) BOOL highlighted;
 @property (nonatomic, getter=isSelected) BOOL selected;
 @property (nonatomic) SKColorSwatchDropLocation dropLocation;

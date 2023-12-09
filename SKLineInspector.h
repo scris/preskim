@@ -64,8 +64,8 @@ typedef NS_ENUM(NSUInteger, SKLineChangeAction) {
     SKLineChangeAction currentLineChangeAction;
 }
 
-@property (nonatomic, retain) IBOutlet NSSegmentedControl *startLineStyleButton, *endLineStyleButton;
-@property (nonatomic, retain) IBOutlet SKLineWell *lineWell;
+@property (nonatomic, strong) IBOutlet NSSegmentedControl *startLineStyleButton, *endLineStyleButton;
+@property (nonatomic, strong) IBOutlet SKLineWell *lineWell;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic) PDFBorderStyle style;
 @property (nonatomic, copy) NSArray *dashPattern;

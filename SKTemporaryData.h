@@ -47,7 +47,7 @@
     double openMetaRating;
 }
 
-@property (nonatomic, retain) PDFDocument *pdfDocument;
+@property (nonatomic, strong) PDFDocument *pdfDocument;
 @property (nonatomic, copy) NSArray *noteDicts;
 @property (nonatomic, copy) NSDictionary *presentationOptions;
 @property (nonatomic, copy) NSArray *openMetaTags;

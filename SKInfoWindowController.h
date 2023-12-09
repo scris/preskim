@@ -49,8 +49,8 @@
     NSDictionary *labels;
 }
 
-@property (nonatomic, retain) IBOutlet NSTableView *summaryTableView, *attributesTableView;
-@property (nonatomic, retain) IBOutlet NSTabView *tabView;
+@property (nonatomic, strong) IBOutlet NSTableView *summaryTableView, *attributesTableView;
+@property (nonatomic, strong) IBOutlet NSTabView *tabView;
 @property (nonatomic, copy) NSDictionary *info;
 @property (nonatomic, readonly) NSArray *keys;
 

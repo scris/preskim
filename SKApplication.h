@@ -49,7 +49,7 @@ extern NSString *SKApplicationStartsTerminatingNotification;
     SPUStandardUpdaterController *updaterController;
 }
 
-@property (nonatomic, retain) IBOutlet SPUStandardUpdaterController *updaterController;
+@property (nonatomic, strong) IBOutlet SPUStandardUpdaterController *updaterController;
 
 @property (nonatomic, getter=isUserAttentionDisabled) BOOL userAttentionDisabled;
 

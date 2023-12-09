@@ -52,7 +52,7 @@
     __weak id <SKReadingBarDelegate> delegate;
 }
 
-@property (readonly, retain) PDFPage *page;
+@property (readonly, strong) PDFPage *page;
 @property (nonatomic, readonly) NSInteger currentLine;
 @property (nonatomic) NSUInteger numberOfLines;
 @property (nonatomic) NSInteger maxLine;
