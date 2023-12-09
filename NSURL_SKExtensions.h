@@ -53,10 +53,10 @@
 
 @property (nonatomic, readonly, getter=isTrashedFileURL) BOOL trashedFileURL;
 
-@property (nonatomic, readonly) BOOL isSkimURL;
-@property (nonatomic, readonly) BOOL isSkimFileURL;
-@property (nonatomic, readonly) BOOL isSkimBookmarkURL;
-@property (nonatomic, readonly) NSURL *skimFileURL;
+@property (nonatomic, readonly, getter=isSkimURL) BOOL skimURL;
+@property (nonatomic, readonly, getter=isSkimFileURL) BOOL skimFileURL;
+@property (nonatomic, readonly, getter=isSkimBookmarkURL) BOOL skimBookmarkURL;
+@property (nonatomic, readonly) NSURL *associatedFileURL;
 
 @property (nonatomic, readonly) NSAttributedString *icon;
 @property (nonatomic, readonly) NSAttributedString *smallIcon;

@@ -41,7 +41,7 @@
 
 @implementation SKAlias
 
-@dynamic data, isBookmark, fileURL, fileURLNoUI;
+@dynamic data, bookmark, fileURL, fileURLNoUI;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"

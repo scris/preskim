@@ -119,7 +119,7 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 @property (nonatomic, strong) NSArray *noteSelection;
 @property (nonatomic, readonly) NSDictionary *pdfViewSettings;
 @property (nonatomic, readonly) NSDictionary *documentAttributes;
-@property (nonatomic, readonly) BOOL isPDFDocument;
+@property (nonatomic, readonly, getter=isPDFDocument) BOOL PDFDocument;
 @property (nonatomic, readonly) NSInteger toolMode;
 @property (nonatomic, readonly) NSInteger scriptingInteractionMode;
 @property (nonatomic, readonly) NSDocument *presentationNotesDocument;
