@@ -40,5 +40,5 @@
 
 
 @interface NSFont (SKExtensions)
-- (CGFloat)defaultViewLineHeight;
+@property (nonatomic, readonly) CGFloat defaultViewLineHeight;
 @end

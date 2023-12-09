@@ -47,6 +47,6 @@ extern NSString *SKPDFAnnotationSelectionSpecifierKey;
 
 - (instancetype)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type;
 
-- (PDFSelection *)selection;
+@property (nonatomic, readonly) PDFSelection *selection;
 
 @end

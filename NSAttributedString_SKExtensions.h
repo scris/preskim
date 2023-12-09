@@ -41,20 +41,20 @@
 
 @interface NSAttributedString (SKExtensions)
 
-- (NSAttributedString *)attributedStringByAddingTextColorAttribute;
-- (NSAttributedString *)attributedStringByRemovingTextColorAttribute;
-- (NSAttributedString *)attributedStringByAddingControlTextColorAttribute;
+@property (nonatomic, readonly) NSAttributedString *attributedStringByAddingTextColorAttribute;
+@property (nonatomic, readonly) NSAttributedString *attributedStringByRemovingTextColorAttribute;
+@property (nonatomic, readonly) NSAttributedString *attributedStringByAddingControlTextColorAttribute;
 
-- (NSAttributedString *)accessibilityAttributedString;
+@property (nonatomic, readonly) NSAttributedString *accessibilityAttributedString;
 
-- (NSString *)xmlString;
-- (NSData *)RTFRepresentation;
+@property (nonatomic, readonly) NSString *xmlString;
+@property (nonatomic, readonly) NSData *RTFRepresentation;
 
-- (NSString *)scriptingName;
-- (NSTextStorage *)scriptingRichText;
+@property (nonatomic, readonly) NSString *scriptingName;
+@property (nonatomic, readonly) NSTextStorage *scriptingRichText;
 
-- (NSScriptObjectSpecifier *)objectSpecifier;
-- (NSScriptObjectSpecifier *)richTextSpecifier;
+@property (nonatomic, readonly) NSScriptObjectSpecifier *objectSpecifier;
+@property (nonatomic, readonly) NSScriptObjectSpecifier *richTextSpecifier;
 
 @end
 
@@ -70,7 +70,6 @@
 
 @interface NSTextStorage (SKExtensions)
 
-- (id)scriptingRTF;
-- (void)setScriptingRTF:(id)data;
+@property (nonatomic, copy) id scriptingRTF;
 
 @end

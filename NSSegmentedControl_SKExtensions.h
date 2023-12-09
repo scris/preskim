@@ -41,7 +41,7 @@
 
 @interface NSSegmentedControl (SKExtensions)
 
-- (NSInteger)selectedTag;
+@property (nonatomic, readonly) NSInteger selectedTag;
 - (void)setEnabledForAllSegments:(BOOL)enabled;
 - (void)setHelp:(NSString *)toolTip forSegment:(NSInteger)segment;
 

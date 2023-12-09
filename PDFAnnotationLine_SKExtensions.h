@@ -50,10 +50,10 @@ extern NSString *SKPDFAnnotationScriptingEndLineStyleKey;
 
 @interface PDFAnnotationLine (SKExtensions)
 
-- (void)setStartPointAsQDPoint:(NSData *)inQDPointAsData;
-- (void)setEndPointAsQDPoint:(NSData *)inQDPointAsData;
-- (void)setScriptingStartLineStyle:(PDFLineStyle)style;
-- (void)setScriptingEndLineStyle:(PDFLineStyle)style;
-- (void)setScriptingInteriorColor:(NSColor *)newColor;
+@property (nonatomic, copy) NSData *startPointAsQDPoint;
+@property (nonatomic, copy) NSData *endPointAsQDPoint;
+@property (nonatomic) PDFLineStyle scriptingStartLineStyle;
+@property (nonatomic) PDFLineStyle scriptingEndLineStyle;
+@property (nonatomic, copy) NSColor *scriptingInteriorColor;
 
 @end

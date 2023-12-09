@@ -44,5 +44,5 @@ extern NSString *SKPDFAnnotationScriptingIconTypeKey;
 
 
 @interface PDFAnnotationText (SKExtensions)
-- (void)setScriptingIconType:(PDFTextAnnotationIconType)iconType;
+@property (nonatomic) PDFTextAnnotationIconType scriptingIconType;
 @end

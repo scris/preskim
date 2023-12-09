@@ -47,7 +47,7 @@
 - (void)deactivateWellSubcontrols;
 - (void)deactivateColorWellSubcontrols;
 
-- (SKFontWell *)activeFontWell;
+@property (nonatomic, readonly) SKFontWell *activeFontWell;
 
 - (NSRect)convertRectToScreen:(NSRect)rect;
 - (NSRect)convertRectFromScreen:(NSRect)rect;

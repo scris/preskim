@@ -41,11 +41,11 @@
 
 @interface NSNumber (SKExtensions)
 
-- (NSNumber *)numberByAddingOne;
-- (NSNumber *)numberBySubstractingOne;
+@property (nonatomic, readonly) NSNumber *numberByAddingOne;
+@property (nonatomic, readonly) NSNumber *numberBySubstractingOne;
 
-- (NSString *)romanNumeralValue;
-- (NSString *)alphaCounterValue;
-- (NSString *)greekCounterValue;
+@property (nonatomic, readonly) NSString *romanNumeralValue;
+@property (nonatomic, readonly) NSString *alphaCounterValue;
+@property (nonatomic, readonly) NSString *greekCounterValue;
 
 @end

@@ -45,16 +45,15 @@ enum {
 
 @interface NSEvent (SKExtensions)
 
-+ (NSUInteger)standardModifierFlags;
-- (NSUInteger)deviceIndependentModifierFlags;
-- (NSUInteger)standardModifierFlags;
+@property (class, nonatomic, readonly) NSUInteger standardModifierFlags;
+@property (nonatomic, readonly) NSUInteger deviceIndependentModifierFlags;
+@property (nonatomic, readonly) NSUInteger standardModifierFlags;
 
-+ (NSPointingDeviceType)currentPointingDeviceType;
-+ (void)setCurrentPointingDeviceType:(NSPointingDeviceType)newCurrentPointingDeviceType;
+@property (class, nonatomic) NSPointingDeviceType currentPointingDeviceType;
 
-- (unichar)firstCharacter;
+@property (nonatomic, readonly) unichar firstCharacter;
 
 - (NSPoint)locationInView:(NSView *)view;
-- (NSPoint)locationOnScreen;
+@property (nonatomic, readonly) NSPoint locationOnScreen;
 
 @end

@@ -49,20 +49,20 @@
 - (NSURL *)URLReplacingPathExtension:(NSString *)ext;
 - (NSString *)lastPathComponentReplacingPathExtension:(NSString *)ext;
 
-- (NSURL *)uniqueFileURL;
+@property (nonatomic, readonly) NSURL *uniqueFileURL;
 
-- (BOOL)isTrashedFileURL;
+@property (nonatomic, readonly, getter=isTrashedFileURL) BOOL trashedFileURL;
 
-- (BOOL)isSkimURL;
-- (BOOL)isSkimFileURL;
-- (BOOL)isSkimBookmarkURL;
-- (NSURL *)skimFileURL;
+@property (nonatomic, readonly) BOOL isSkimURL;
+@property (nonatomic, readonly) BOOL isSkimFileURL;
+@property (nonatomic, readonly) BOOL isSkimBookmarkURL;
+@property (nonatomic, readonly) NSURL *skimFileURL;
 
-- (NSAttributedString *)icon;
-- (NSAttributedString *)smallIcon;
-- (NSAttributedString *)linkedIcon;
-- (NSAttributedString *)linkedSmallIcon;
-- (NSAttributedString *)linkedText;
-- (NSAttributedString *)linkedFileName;
+@property (nonatomic, readonly) NSAttributedString *icon;
+@property (nonatomic, readonly) NSAttributedString *smallIcon;
+@property (nonatomic, readonly) NSAttributedString *linkedIcon;
+@property (nonatomic, readonly) NSAttributedString *linkedSmallIcon;
+@property (nonatomic, readonly) NSAttributedString *linkedText;
+@property (nonatomic, readonly) NSAttributedString *linkedFileName;
 
 @end

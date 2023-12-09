@@ -43,7 +43,7 @@
 
 - (void)setWindowFrameAutosaveNameOrCascade:(NSString *)name;
 
-- (BOOL)isNoteWindowController;
+@property (nonatomic, readonly, getter=isNoteWindowController) BOOL noteWindowController;
 
 - (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSInteger result))handler;
 

@@ -43,18 +43,18 @@
 
 - (NSComparisonResult)noteTypeCompare:(id)other;
 
-- (NSString *)stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines;
-- (NSString *)stringByRemovingAliens;
+@property (nonatomic, readonly) NSString *stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines;
+@property (nonatomic, readonly) NSString *stringByRemovingAliens;
 
-- (NSString *)stringByAppendingEllipsis;
+@property (nonatomic, readonly) NSString *stringByAppendingEllipsis;
 
 - (NSString *)stringByAppendingEmDashAndString:(NSString *)aString;
 - (NSString *)stringByAppendingDashAndString:(NSString *)aString;
 
 - (NSString *)stringByBackslashEscapingCharactersFromSet:(NSCharacterSet *)charSet;
-- (NSString *)stringByEscapingShellChars;
-- (NSString *)stringByEscapingDoubleQuotes;
-- (NSString *)stringByEscapingParenthesis;
+@property (nonatomic, readonly) NSString *stringByEscapingShellChars;
+@property (nonatomic, readonly) NSString *stringByEscapingDoubleQuotes;
+@property (nonatomic, readonly) NSString *stringByEscapingParenthesis;
 
 - (NSComparisonResult)localizedCaseInsensitiveNumericCompare:(NSString *)aStr;
 
@@ -62,38 +62,38 @@
 
 - (NSString *)lossyStringUsingEncoding:(NSStringEncoding)encoding;
 
-- (NSString *)typeName;
+@property (nonatomic, readonly) NSString *typeName;
 
-- (NSString *)rectString;
-- (NSString *)pointString;
-- (NSString *)originString;
-- (NSString *)sizeString;
-- (NSString *)midPointString;
-- (CGFloat)rectX;
-- (CGFloat)rectY;
-- (CGFloat)rectWidth;
-- (CGFloat)rectHeight;
-- (CGFloat)pointX;
-- (CGFloat)pointY;
+@property (nonatomic, readonly) NSString *rectString;
+@property (nonatomic, readonly) NSString *pointString;
+@property (nonatomic, readonly) NSString *originString;
+@property (nonatomic, readonly) NSString *sizeString;
+@property (nonatomic, readonly) NSString *midPointString;
+@property (nonatomic, readonly) CGFloat rectX;
+@property (nonatomic, readonly) CGFloat rectY;
+@property (nonatomic, readonly) CGFloat rectWidth;
+@property (nonatomic, readonly) CGFloat rectHeight;
+@property (nonatomic, readonly) CGFloat pointX;
+@property (nonatomic, readonly) CGFloat pointY;
 
-- (NSString *)stringBySurroundingWithSpacesIfNotEmpty;
-- (NSString *)stringByAppendingSpaceIfNotEmpty;
-- (NSString *)stringByAppendingDoubleSpaceIfNotEmpty;
-- (NSString *)stringByPrependingSpaceIfNotEmpty;
-- (NSString *)stringByAppendingCommaIfNotEmpty;
-- (NSString *)stringByAppendingFullStopIfNotEmpty;
-- (NSString *)stringByAppendingCommaAndSpaceIfNotEmpty;
-- (NSString *)stringByAppendingFullStopAndSpaceIfNotEmpty;
-- (NSString *)stringByPrependingCommaAndSpaceIfNotEmpty;
-- (NSString *)stringByPrependingFullStopAndSpaceIfNotEmpty;
-- (NSString *)parenthesizedStringIfNotEmpty;
+@property (nonatomic, readonly) NSString *stringBySurroundingWithSpacesIfNotEmpty;
+@property (nonatomic, readonly) NSString *stringByAppendingSpaceIfNotEmpty;
+@property (nonatomic, readonly) NSString *stringByAppendingDoubleSpaceIfNotEmpty;
+@property (nonatomic, readonly) NSString *stringByPrependingSpaceIfNotEmpty;
+@property (nonatomic, readonly) NSString *stringByAppendingCommaIfNotEmpty;
+@property (nonatomic, readonly) NSString *stringByAppendingFullStopIfNotEmpty;
+@property (nonatomic, readonly) NSString *stringByAppendingCommaAndSpaceIfNotEmpty;
+@property (nonatomic, readonly) NSString *stringByAppendingFullStopAndSpaceIfNotEmpty;
+@property (nonatomic, readonly) NSString *stringByPrependingCommaAndSpaceIfNotEmpty;
+@property (nonatomic, readonly) NSString *stringByPrependingFullStopAndSpaceIfNotEmpty;
+@property (nonatomic, readonly) NSString *parenthesizedStringIfNotEmpty;
 
-- (NSURL *)url;
-- (NSAttributedString *)icon;
-- (NSAttributedString *)smallIcon;
+@property (nonatomic, readonly) NSURL *url;
+@property (nonatomic, readonly) NSAttributedString *icon;
+@property (nonatomic, readonly) NSAttributedString *smallIcon;
 
-- (NSAttributedString *)typeIcon;
+@property (nonatomic, readonly) NSAttributedString *typeIcon;
 
-- (NSString *)xmlString;
+@property (nonatomic, readonly) NSString *xmlString;
 
 @end

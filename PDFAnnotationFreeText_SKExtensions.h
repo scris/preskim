@@ -46,9 +46,9 @@ extern NSString *SKPDFAnnotationScriptingAlignmentKey;
 
 @interface PDFAnnotationFreeText (SKExtensions)
 
-- (void)setFontName:(NSString *)fontName;
-- (void)setFontSize:(CGFloat)pointSize;
-- (void)setScriptingFontColor:(NSColor *)newScriptingFontColor;
-- (void)setScriptingAlignment:(NSInteger)alignment;
+@property (nonatomic, copy) NSFont *fontName;
+@property (nonatomic) CGFloat fontSize;
+@property (nonatomic, copy) NSColor *scriptingFontColor;
+@property (nonatomic) NSInteger scriptingAlignment;
 
 @end

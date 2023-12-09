@@ -177,7 +177,7 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 
 #pragma mark Scripting
 
-+ (id)scriptingRgbaColorWithDescriptor:(NSAppleEventDescriptor *)descriptor {
++ (instancetype)scriptingRgbaColorWithDescriptor:(NSAppleEventDescriptor *)descriptor {
     if ([descriptor descriptorType] == typeAEList) {
         CGFloat red = 0.0, green = 0.0, blue = 0.0, alpha = 0.0;
         if ([descriptor numberOfItems] > 0)
@@ -251,7 +251,7 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
     }
 }
 
-- (id)scriptingRgbaColorDescriptor;
+- (NSAppleEventDescriptor *)scriptingRgbaColorDescriptor;
 {
     if ([self isEqual:[NSColor underPageBackgroundColor]])
         return [NSAppleEventDescriptor descriptorWithEnumCode:SKScriptingColorUnderPageBackground];

@@ -41,8 +41,8 @@
 
 @interface NSFileManager (SKExtensions)
 
-- (NSArray *)applicationSupportDirectoryURLs;
+@property (nonatomic, readonly) NSArray *applicationSupportDirectoryURLs;
 
-- (NSURL *)uniqueChewableItemsDirectoryURL;
+@property (nonatomic, readonly) NSURL *uniqueChewableItemsDirectoryURL;
 
 @end

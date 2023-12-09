@@ -40,7 +40,7 @@
 
 @interface NSBitmapImageRep (SKExtensions)
 
-- (NSRect)foregroundRect;
+@property (nonatomic, readonly) NSRect foregroundRect;
 
 - (void)clear;
 

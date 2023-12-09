@@ -203,27 +203,27 @@ static unsigned char hexDecodeTable[256] =
     return rect;
 }
 
-+ (id)scriptingPdfWithDescriptor:(NSAppleEventDescriptor *)descriptor {
++ (instancetype)scriptingPdfWithDescriptor:(NSAppleEventDescriptor *)descriptor {
     return [descriptor data];
 }
 
-- (id)scriptingPdfDescriptor {
+- (NSAppleEventDescriptor *)scriptingPdfDescriptor {
     return [NSAppleEventDescriptor descriptorWithDescriptorType:'PDF ' data:self];
 } 
 
-+ (id)scriptingTiffPictureWithDescriptor:(NSAppleEventDescriptor *)descriptor {
++ (instancetype)scriptingTiffPictureWithDescriptor:(NSAppleEventDescriptor *)descriptor {
     return [descriptor data];
 }
 
-- (id)scriptingTiffPictureDescriptor {
+- (NSAppleEventDescriptor *)scriptingTiffPictureDescriptor {
     return [NSAppleEventDescriptor descriptorWithDescriptorType:'TIFF' data:self];
 }
 
-+ (id)scriptingRtfWithDescriptor:(NSAppleEventDescriptor *)descriptor {
++ (instancetype)scriptingRtfWithDescriptor:(NSAppleEventDescriptor *)descriptor {
     return [descriptor data];
 }
 
-- (id)scriptingRtfDescriptor {
+- (NSAppleEventDescriptor *)scriptingRtfDescriptor {
     return [NSAppleEventDescriptor descriptorWithDescriptorType:'RTF ' data:self];
 }
 
