@@ -549,7 +549,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
     
     if (document && idx != NSNotFound) {
         NSScriptObjectSpecifier *containerRef = [document objectSpecifier];
-        return [[[NSIndexSpecifier allocWithZone:[self zone]] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"pages" index:idx] autorelease];
+        return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"pages" index:idx] autorelease];
     } else {
         return nil;
     }

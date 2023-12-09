@@ -188,7 +188,7 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
     CFStringInitInlineBuffer(theString, &inlineBuffer, CFRangeMake(0, length));
     UniChar ch;
     
-#define DELETE_CHARACTERS(n) do{if((void*)self==theString){theString=(void*)[[self mutableCopyWithZone:[self zone]] autorelease];};CFStringDelete(theString, CFRangeMake(delIdx, n));} while(0)
+#define DELETE_CHARACTERS(n) do{if((void*)self==theString){theString=(void*)[[self mutableCopy] autorelease];};CFStringDelete(theString, CFRangeMake(delIdx, n));} while(0)
         
     // idx is current index into the inline buffer, and delIdx is current index in the mutable string
     CFIndex idx = 0, delIdx = 0;
