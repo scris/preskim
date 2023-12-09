@@ -47,7 +47,7 @@
 }
 
 - (NSMenuItem *)insertItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget atIndex:(NSInteger)anIndex {
-    NSMenuItem *item = [[NSMenuItem allocWithZone:[self zone]] initWithTitle:aString action:aSelector target:aTarget];
+    NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:aString action:aSelector target:aTarget];
     [self insertItem:item atIndex:anIndex];
     [item release];
     return item;
@@ -58,7 +58,7 @@
 }
 
 - (NSMenuItem *)insertItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag atIndex:(NSInteger)anIndex {
-    NSMenuItem *item = [[NSMenuItem allocWithZone:[self zone]] initWithTitle:aString action:aSelector target:aTarget tag:aTag];
+    NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:aString action:aSelector target:aTarget tag:aTag];
     [self insertItem:item atIndex:anIndex];
     [item release];
     return item;
@@ -69,7 +69,7 @@
 }
 
 - (NSMenuItem *)insertItemWithTitle:(NSString *)aString imageNamed:(NSString *)anImageName action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag atIndex:(NSInteger)anIndex {
-    NSMenuItem *item = [[NSMenuItem allocWithZone:[self zone]] initWithTitle:aString imageNamed:anImageName action:aSelector target:aTarget tag:aTag];
+    NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:aString imageNamed:anImageName action:aSelector target:aTarget tag:aTag];
     [self insertItem:item atIndex:anIndex];
     [item release];
     return item;
@@ -80,7 +80,7 @@
 }
 
 - (NSMenuItem *)insertItemWithSubmenuAndTitle:(NSString *)aString atIndex:(NSInteger)anIndex {
-    NSMenuItem *item = [[NSMenuItem allocWithZone:[self zone]] initWithSubmenuAndTitle:aString];
+    NSMenuItem *item = [[NSMenuItem alloc] initWithSubmenuAndTitle:aString];
     [self insertItem:item atIndex:anIndex];
     [item release];
     return item;

@@ -292,7 +292,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
         PDFBorder *oldBorder = [self border];
         PDFBorder *border = nil;
         if (oldBorder || style)
-            border = [[PDFBorder allocWithZone:[self zone]] init];
+            border = [[PDFBorder alloc] init];
         if (oldBorder) {
             [border setLineWidth:[oldBorder lineWidth]];
             [border setDashPattern:[oldBorder dashPattern]];
@@ -314,7 +314,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
         PDFBorder *border = nil;
         if (width > 0.0) {
             PDFBorder *oldBorder = [self border];
-            border = [[PDFBorder allocWithZone:[self zone]] init];
+            border = [[PDFBorder alloc] init];
             if (oldBorder && [oldBorder lineWidth] > 0.0) {
                 [border setDashPattern:[oldBorder dashPattern]];
                 [border setStyle:[oldBorder style]];
@@ -324,7 +324,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
         } else {
             [self setBorder:nil];
             if ([self border] != nil) {
-                border = [[PDFBorder allocWithZone:[self zone]] init];
+                border = [[PDFBorder alloc] init];
                 [border setLineWidth:0.0];
                 [self setBorder:border];
             }
@@ -342,7 +342,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
         PDFBorder *oldBorder = [self border];
         PDFBorder *border = nil;
         if (oldBorder || [pattern count])
-            border = [[PDFBorder allocWithZone:[self zone]] init];
+            border = [[PDFBorder alloc] init];
         if (oldBorder) {
             [border setLineWidth:[oldBorder lineWidth]];
             [border setStyle:[oldBorder style]];
@@ -573,7 +573,8 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 - (NSScriptObjectSpecifier *)objectSpecifier {
     NSScriptObjectSpecifier *containerRef = [[self page] objectSpecifier];
-    return [[[NSUniqueIDSpecifier allocWithZone:[self zone]] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"notes" uniqueID:[self uniqueID]] autorelease];
+    return [[[NSUniqueIDSpecifier alloc
+             ] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"notes" uniqueID:[self uniqueID]] autorelease];
 }
 
 - (NSString *)uniqueID {

@@ -252,7 +252,7 @@ static Class SKBookmarkClass = Nil;
         } else {
             containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
         }
-        return [[[NSIndexSpecifier allocWithZone:[self zone]] initWithContainerClassDescription:containerClassDescription containerSpecifier:containerRef key:@"bookmarks" index:idx] autorelease];
+        return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:containerRef key:@"bookmarks" index:idx] autorelease];
     } else {
         return nil;
     }

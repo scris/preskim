@@ -138,7 +138,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     if (scalePopUpButton == nil) {
         
         // create it
-        scalePopUpButton = [[NSPopUpButton allocWithZone:[self zone]] initWithFrame:NSMakeRect(0.0, 0.0, 1.0, 1.0) pullsDown:NO];
+        scalePopUpButton = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0.0, 0.0, 1.0, 1.0) pullsDown:NO];
         
         [[scalePopUpButton cell] setControlSize:NSControlSizeSmall];
 		[scalePopUpButton setBordered:NO];

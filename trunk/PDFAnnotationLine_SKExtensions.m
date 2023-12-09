@@ -87,7 +87,7 @@ static void (*original_setBounds)(id, SEL, NSRect) = NULL;
     [self setEndLineStyle:[[NSUserDefaults standardUserDefaults] integerForKey:SKLineNoteEndLineStyleKey]];
     [self setStartPoint:NSMakePoint(0.0, 0.0)];
     [self setEndPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))];
-    PDFBorder *border = [[PDFBorder allocWithZone:[self zone]] init];
+    PDFBorder *border = [[PDFBorder alloc] init];
     [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKLineNoteLineWidthKey]];
     [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKLineNoteDashPatternKey]];
     [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKLineNoteLineStyleKey]];

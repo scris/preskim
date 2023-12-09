@@ -97,7 +97,7 @@
 
 - (NSScriptObjectSpecifier *)objectSpecifier {
     NSScriptClassDescription *containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
-    return [[[NSNameSpecifier allocWithZone:[self zone]] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"richTextFormat" name:[self scriptingName]] autorelease];
+    return [[[NSNameSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"richTextFormat" name:[self scriptingName]] autorelease];
 }
 
 - (NSScriptObjectSpecifier *)richTextSpecifier {
