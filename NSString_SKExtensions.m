@@ -179,16 +179,17 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
 - (NSString *)stringByRemovingAliens {
 
     // make a mutable copy only if needed
-    CFMutableStringRef theString = (void *)self;
+    CFMutableStringRef theString = NULL;
+    CFStringRef cfSelf = (CFStringRef)self;
     
     CFStringInlineBuffer inlineBuffer;
-    CFIndex length = CFStringGetLength(theString);
+    CFIndex length = CFStringGetLength(cfSelf);
     
     // use the current mutable string with the inline buffer, but make a new mutable copy if needed
-    CFStringInitInlineBuffer(theString, &inlineBuffer, CFRangeMake(0, length));
+    CFStringInitInlineBuffer(cfSelf, &inlineBuffer, CFRangeMake(0, length));
     UniChar ch;
     
-#define DELETE_CHARACTERS(n) do{if((void*)self==theString){theString=(void*)[[self mutableCopy] autorelease];};CFStringDelete(theString, CFRangeMake(delIdx, n));} while(0)
+#define DELETE_CHARACTERS(n) do{if(NULL==theString){theString=CFStringCreateMutable(NULL, cfSelf);};CFStringDelete(theString, CFRangeMake(delIdx, n));} while(0)
         
     // idx is current index into the inline buffer, and delIdx is current index in the mutable string
     CFIndex idx = 0, delIdx = 0;
@@ -229,7 +230,7 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
         idx++;
     }
 
-    return (id)theString;
+    return [(NSString *)theString autorelease] ?: self;
 }
 
 - (NSString *)stringByAppendingEllipsis;
