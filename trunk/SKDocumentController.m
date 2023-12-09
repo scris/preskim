@@ -294,7 +294,7 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
     NSURL *theURL = [theURLs count] > 0 ? [theURLs objectAtIndex:0] : nil;
     
     if ([theURL isSkimFileURL])
-        theURL = [theURL skimFileURL];
+        theURL = [theURL associatedFileURL];
     
     if ([theURL isSkimBookmarkURL]) {
         SKBookmark *bookmark = showNotes ? nil : [[SKBookmarkController sharedBookmarkController] bookmarkForURL:theURL];

@@ -159,7 +159,7 @@ static id (*original_initWithString)(id, SEL, id) = NULL;
     return host == nil || [host caseInsensitiveCompare:@"bookmarks"] != NSOrderedSame;
 }
 
-- (NSURL *)skimFileURL {
+- (NSURL *)associatedFileURL {
     if ([self isFileURL])
         return self;
     if ([self isSkimFileURL] == NO)

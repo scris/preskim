@@ -451,7 +451,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
                     }];
                 }
             } else {
-                [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:[theURL skimFileURL] display:YES completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
+                [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:[theURL associatedFileURL] display:YES completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
                     if (document == nil && errorReporting && error && [error isUserCancelledError] == NO)
                         [NSApp presentError:error];
                 }];

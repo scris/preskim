@@ -45,7 +45,7 @@
 }
 
 @property (nonatomic, readonly) NSData *data;
-@property (nonatomic, readonly) BOOL isBookmark;
+@property (nonatomic, readonly, getter=isBookmark) BOOL bookmark;
 @property (nonatomic, readonly) NSURL *fileURL;
 @property (nonatomic, readonly) NSURL *fileURLNoUI;
 
