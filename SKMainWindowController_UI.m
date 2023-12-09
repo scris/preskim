@@ -1399,10 +1399,19 @@
         NSString *path = [url path];
         NSURL *docURL = [[self document] fileURL];
         NSString *docPath = [docURL path];
+        NSURL *replaceURL = nil;
         if ([docPath hasSuffix:@"/"] == NO)
             docPath = [docPath stringByAppendingString:@"/"];
-        if ([path hasPrefix:docPath])
-            url = [[docURL URLByDeletingLastPathComponent] URLByAppendingPathComponent:[path substringFromIndex:[docPath length]]];
+        if ([path hasPrefix:docPath]) {
+            replaceURL = [[docURL URLByDeletingLastPathComponent] URLByAppendingPathComponent:[path substringFromIndex:[docPath length]]];
+            if ([replaceURL checkResourceIsReachableAndReturnError:NULL]) {
+                url = replaceURL;
+            } else if ([[url pathExtension] isCaseInsensitiveEqual:@"pdf"]) {
+                replaceURL = [replaceURL URLReplacingPathExtension:@"pdfd"];
+                if ([replaceURL checkResourceIsReachableAndReturnError:NULL])
+                    url = replaceURL;
+            }
+        }
     }
     return url;
 }
