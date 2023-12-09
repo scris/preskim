@@ -39,7 +39,7 @@
 #import "SKAttachmentEmailer.h"
 #import "NSString_SKExtensions.h"
 
-#if !SDK_BEFORE(10_14)
+#if !SDK_BEFORE_10_14
 extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* target, AEEventClass theAEEventClass, AEEventID theAEEventID, Boolean askUserIfNeeded ) WEAK_IMPORT_ATTRIBUTE;
 #endif
 
@@ -78,7 +78,7 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
 }
 
 - (BOOL)permissionToComposeMessage {
-#if !SDK_BEFORE(10_14)
+#if !SDK_BEFORE_10_14
     if (@available(macOS 10.14, *)) {
         NSAppleEventDescriptor *targetDescriptor = [NSAppleEventDescriptor descriptorWithBundleIdentifier:mailAppID];
         return noErr == AEDeterminePermissionToAutomateTarget(targetDescriptor.aeDesc, typeWildCard, typeWildCard, true);

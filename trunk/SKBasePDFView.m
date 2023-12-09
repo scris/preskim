@@ -53,7 +53,7 @@ static char SKBasePDFViewDefaultsObservationContext;
 // don't use the constant, which is only defined on 10.13+
 #define kPDFDestinationUnspecifiedValue FLT_MAX
 
-#if SDK_BEFORE(10_14)
+#if SDK_BEFORE_10_14
 @interface PDFView (SKMojaveDeclarations)
 @property (nonatomic, setter=enablePageShadows:) BOOL pageShadowsEnabled;
 @end
