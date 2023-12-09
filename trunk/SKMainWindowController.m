@@ -338,7 +338,6 @@ static char SKMainWindowContentLayoutObservationContext;
     [[pdfView document] setDelegate:nil];
     [noteTypeSheetController setDelegate:nil];
     [[pdfView document] setContainingDocument:nil];
-    // Yosemite and El Capitan have a retain cycle when we leave the PDFView with a document
     // we may retain our own document here
     [self setPresentationNotesDocument:nil];
 }
