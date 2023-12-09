@@ -64,11 +64,11 @@
 
 @property (class, nonatomic, readonly) SKBookmarkController *sharedBookmarkController;
 
-@property (nonatomic, retain) IBOutlet SKOutlineView *outlineView;
-@property (nonatomic, retain) IBOutlet SKStatusBar *statusBar;
-@property (nonatomic, retain) IBOutlet NSSegmentedControl *folderSegmentedControl;
-@property (nonatomic, retain) IBOutlet NSSegmentedControl *separatorSegmentedControl;
-@property (nonatomic, retain) IBOutlet NSSegmentedControl *deleteSegmentedControl;
+@property (nonatomic, strong) IBOutlet SKOutlineView *outlineView;
+@property (nonatomic, strong) IBOutlet SKStatusBar *statusBar;
+@property (nonatomic, strong) IBOutlet NSSegmentedControl *folderSegmentedControl;
+@property (nonatomic, strong) IBOutlet NSSegmentedControl *separatorSegmentedControl;
+@property (nonatomic, strong) IBOutlet NSSegmentedControl *deleteSegmentedControl;
 @property (nonatomic, readonly) SKBookmark *bookmarkRoot;
 @property (nonatomic, readonly) SKBookmark *previousSession;
 

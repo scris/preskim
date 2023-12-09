@@ -42,7 +42,7 @@
     NSTextView *textView;
 }
 
-@property (nonatomic, retain) IBOutlet NSTextView *textView;
+@property (nonatomic, strong) IBOutlet NSTextView *textView;
 
 @property (class, nonatomic, readonly) SKReleaseNotesController *sharedReleaseNotesController;
 

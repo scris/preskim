@@ -51,9 +51,9 @@
     BOOL cancelled;
 }
 
-@property (nonatomic, retain) IBOutlet NSButton *cancelButton;
-@property (nonatomic, retain) IBOutlet NSProgressIndicator *progressBar;
-@property (nonatomic, retain) IBOutlet NSTextField *textField;
+@property (nonatomic, strong) IBOutlet NSButton *cancelButton;
+@property (nonatomic, strong) IBOutlet NSProgressIndicator *progressBar;
+@property (nonatomic, strong) IBOutlet NSTextField *textField;
 
 + (NSData *)newPDFDataFromURL:(NSURL *)aURL ofType:(NSString *)aFileType error:(NSError **)outError;
 + (NSData *)newPDFDataWithPostScriptData:(NSData *)psData error:(NSError **)outError;

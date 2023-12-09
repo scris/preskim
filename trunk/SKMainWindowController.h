@@ -202,22 +202,22 @@ enum {
     } mwcFlags;
 }
 
-@property (nonatomic, retain) IBOutlet NSWindow *mainWindow;
+@property (nonatomic, strong) IBOutlet NSWindow *mainWindow;
 
-@property (nonatomic, retain) IBOutlet SKSplitView *splitView;
+@property (nonatomic, strong) IBOutlet SKSplitView *splitView;
     
-@property (nonatomic, retain) IBOutlet NSView *centerContentView;
-@property (nonatomic, retain) IBOutlet SKSplitView *pdfSplitView;
-@property (nonatomic, retain) IBOutlet NSView *pdfContentView;
+@property (nonatomic, strong) IBOutlet NSView *centerContentView;
+@property (nonatomic, strong) IBOutlet SKSplitView *pdfSplitView;
+@property (nonatomic, strong) IBOutlet NSView *pdfContentView;
 
-@property (nonatomic, retain) IBOutlet SKStatusBar *statusBar;
+@property (nonatomic, strong) IBOutlet SKStatusBar *statusBar;
 
-@property (nonatomic, retain) IBOutlet SKLeftSideViewController *leftSideController;
-@property (nonatomic, retain) IBOutlet SKRightSideViewController *rightSideController;
+@property (nonatomic, strong) IBOutlet SKLeftSideViewController *leftSideController;
+@property (nonatomic, strong) IBOutlet SKRightSideViewController *rightSideController;
     
-@property (nonatomic, retain) IBOutlet SKMainToolbarController *toolbarController;
+@property (nonatomic, strong) IBOutlet SKMainToolbarController *toolbarController;
     
-@property (nonatomic, retain) IBOutlet NSView *leftSideContentView, *rightSideContentView;
+@property (nonatomic, strong) IBOutlet NSView *leftSideContentView, *rightSideContentView;
 
 @property (nonatomic, readonly) NSString *searchString;
 
@@ -271,7 +271,7 @@ enum {
 
 @property (nonatomic, copy) NSDictionary *presentationOptions;
 
-@property (nonatomic, retain) NSDocument *presentationNotesDocument;
+@property (nonatomic, strong) NSDocument *presentationNotesDocument;
 @property (nonatomic) NSInteger presentationNotesOffset;
 
 @property (nonatomic, readonly) NSUndoManager *presentationUndoManager;

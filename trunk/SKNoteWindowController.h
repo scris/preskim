@@ -65,15 +65,15 @@
     NSURL *previewURL;
 }
 
-@property (nonatomic, retain) IBOutlet SKNoteTextView *textView;
-@property (nonatomic, retain) IBOutlet NSView *topView;
-@property (nonatomic, retain) IBOutlet NSBox *edgeView;
-@property (nonatomic, retain) IBOutlet SKDragImageView *imageView;
-@property (nonatomic, retain) IBOutlet SKStatusBar *statusBar;
-@property (nonatomic, retain) IBOutlet NSPopUpButton *iconTypePopUpButton;
-@property (nonatomic, retain) IBOutlet NSTextField *iconLabelField;
-@property (nonatomic, retain) IBOutlet NSButton *checkButton;
-@property (nonatomic, retain) IBOutlet NSObjectController *noteController;
+@property (nonatomic, strong) IBOutlet SKNoteTextView *textView;
+@property (nonatomic, strong) IBOutlet NSView *topView;
+@property (nonatomic, strong) IBOutlet NSBox *edgeView;
+@property (nonatomic, strong) IBOutlet SKDragImageView *imageView;
+@property (nonatomic, strong) IBOutlet SKStatusBar *statusBar;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *iconTypePopUpButton;
+@property (nonatomic, strong) IBOutlet NSTextField *iconLabelField;
+@property (nonatomic, strong) IBOutlet NSButton *checkButton;
+@property (nonatomic, strong) IBOutlet NSObjectController *noteController;
 @property (nonatomic, readonly) PDFAnnotation *note;
 @property (nonatomic) BOOL keepOnTop, forceOnTop, isNoteType;
 

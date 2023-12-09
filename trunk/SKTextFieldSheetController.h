@@ -45,8 +45,8 @@
     NSButton *cancelButton;
 }
 
-@property (nonatomic, retain) IBOutlet NSTextField *textField;
-@property (nonatomic, retain) IBOutlet NSButton *okButton, *cancelButton;
-@property (nonatomic, retain) NSString *stringValue;
+@property (nonatomic, strong) IBOutlet NSTextField *textField;
+@property (nonatomic, strong) IBOutlet NSButton *okButton, *cancelButton;
+@property (nonatomic, strong) NSString *stringValue;
 
 @end

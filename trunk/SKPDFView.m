@@ -183,7 +183,7 @@ enum {
     NSRect rect;
     NSInteger type;
 }
-@property (nonatomic, retain) CALayer *layer;
+@property (nonatomic, strong) CALayer *layer;
 @property (nonatomic, weak) id<SKLayerDelegate> delegate;
 @property (nonatomic) NSRect rect;
 @property (nonatomic) NSInteger type;
@@ -192,8 +192,8 @@ enum {
 #pragma mark -
 
 @interface SKPDFView () <SKReadingBarDelegate, SKLayerDelegate>
-@property (retain) SKReadingBar *readingBar;
-@property (retain) SKSyncDot *syncDot;
+@property (strong) SKReadingBar *readingBar;
+@property (strong) SKSyncDot *syncDot;
 @end
 
 @interface SKPDFView (Private)

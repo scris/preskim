@@ -58,7 +58,7 @@ typedef NS_ENUM(NSInteger, SKTableImageToolTipLayout) {
 @property (nonatomic, readonly) BOOL canDelete, canCopy, canPaste;
 @property (nonatomic) BOOL supportsQuickLook;
 @property (nonatomic) SKTableImageToolTipLayout imageToolTipLayout;
-@property (nonatomic, retain) SKTypeSelectHelper *typeSelectHelper;
+@property (nonatomic, strong) SKTypeSelectHelper *typeSelectHelper;
 
 - (void)delete:(id)sender;
 - (void)copy:(id)sender;

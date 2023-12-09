@@ -49,10 +49,10 @@
     BOOL changingColors;
 }
 
-@property (nonatomic, retain) IBOutlet NSColorWell *normalColorWell;
-@property (nonatomic, retain) IBOutlet NSColorWell *fullScreenColorWell;
-@property (nonatomic, retain) IBOutlet SKColorSwatch *colorSwatch;
-@property (nonatomic, retain) IBOutlet NSSegmentedControl *addRemoveColorButton;
+@property (nonatomic, strong) IBOutlet NSColorWell *normalColorWell;
+@property (nonatomic, strong) IBOutlet NSColorWell *fullScreenColorWell;
+@property (nonatomic, strong) IBOutlet SKColorSwatch *colorSwatch;
+@property (nonatomic, strong) IBOutlet NSSegmentedControl *addRemoveColorButton;
 
 @property (nonatomic, readonly) BOOL allowsDarkMode;
 

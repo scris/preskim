@@ -51,7 +51,7 @@
     SKLineWell *inkLineWell;
 }
 
-@property (nonatomic, retain) IBOutlet SKFontWell *textFontWell, *anchoredFontWell;
-@property (nonatomic, retain) IBOutlet SKLineWell *textLineWell, *circleLineWell, *squareLineWell, *lineLineWell, *inkLineWell;
+@property (nonatomic, strong) IBOutlet SKFontWell *textFontWell, *anchoredFontWell;
+@property (nonatomic, strong) IBOutlet SKLineWell *textLineWell, *circleLineWell, *squareLineWell, *lineLineWell, *inkLineWell;
 
 @end

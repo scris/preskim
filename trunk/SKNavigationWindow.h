@@ -82,7 +82,7 @@
 @interface SKNavigationToolTipView : NSView {
     NSString *stringValue;
 }
-@property (nonatomic, retain) NSString *stringValue;
+@property (nonatomic, strong) NSString *stringValue;
 @property (nonatomic, readonly) NSAttributedString *attributedStringValue;
 @property (nonatomic, readonly) NSSize fitSize;
 @end
@@ -90,7 +90,7 @@
 
 @interface SKNavigationButton : NSButton
 
-@property (nonatomic, retain) NSBezierPath *path, *alternatePath;
+@property (nonatomic, strong) NSBezierPath *path, *alternatePath;
 @property (copy) NSString *toolTip;
 @property (copy) NSString *alternateToolTip;
 
@@ -104,8 +104,8 @@
     NSBezierPath *alternatePath;
 }
 
-@property (nonatomic, retain) NSBezierPath *path, *alternatePath;
-@property (nonatomic, retain) NSString *toolTip, *alternateToolTip;
+@property (nonatomic, strong) NSBezierPath *path, *alternatePath;
+@property (nonatomic, strong) NSString *toolTip, *alternateToolTip;
 
 @end
 

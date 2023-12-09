@@ -51,7 +51,7 @@
 @property (nonatomic) NSInteger pageIndex;
 @property (nonatomic) NSPoint point;
 @property (nonatomic, readonly) CGFloat x, y;
-@property (nonatomic, retain) NSString *file;
+@property (nonatomic, strong) NSString *file;
 @property (nonatomic) NSInteger line;
 
 - (instancetype)initWithRecordIndex:(NSInteger)aRecordIndex;

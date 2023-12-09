@@ -16,8 +16,8 @@
     NSNumber    *inputTime;
 }
 
-@property (nonatomic, retain) CIImage *inputImage;
-@property (nonatomic, retain) CIImage *inputTargetImage;
-@property (nonatomic, retain) NSNumber *inputTime;
+@property (nonatomic, strong) CIImage *inputImage;
+@property (nonatomic, strong) CIImage *inputTargetImage;
+@property (nonatomic, strong) NSNumber *inputTime;
 
 @end

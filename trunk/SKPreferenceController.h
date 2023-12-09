@@ -51,7 +51,7 @@
     NSUInteger historyIndex;
 }
 
-@property (nonatomic, retain) IBOutlet NSButton *resetButton, *resetAllButton;
+@property (nonatomic, strong) IBOutlet NSButton *resetButton, *resetAllButton;
 
 @property (class, nonatomic, readonly) SKPreferenceController *sharedPrefenceController;
 

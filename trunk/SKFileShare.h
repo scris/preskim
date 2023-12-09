@@ -45,8 +45,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     void (^completionHandler)(BOOL);
 }
 
-@property (nonatomic, retain) NSURL *fileURL;
-@property (nonatomic, retain) NSSharingService *sharingService;
+@property (nonatomic, strong) NSURL *fileURL;
+@property (nonatomic, strong) NSSharingService *sharingService;
 @property (nonatomic, copy) void (^completionHandler)(BOOL success);
 
 + (void)shareURL:(NSURL *)aFileURL preparedByTask:(NSTask *)task usingService:(NSSharingService *)aSharingService completionHandler:(void (^)(BOOL success))aCompletionHandler;

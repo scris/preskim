@@ -65,14 +65,14 @@
     } ndFlags;
 }
 
-@property (nonatomic, retain) IBOutlet SKNoteOutlineView *outlineView;
-@property (nonatomic, retain) IBOutlet SKStatusBar *statusBar;
-@property (nonatomic, retain) IBOutlet NSArrayController *arrayController;
-@property (nonatomic, retain) IBOutlet NSSearchField *searchField;
+@property (nonatomic, strong) IBOutlet SKNoteOutlineView *outlineView;
+@property (nonatomic, strong) IBOutlet SKStatusBar *statusBar;
+@property (nonatomic, strong) IBOutlet NSArrayController *arrayController;
+@property (nonatomic, strong) IBOutlet NSSearchField *searchField;
 @property (nonatomic, readonly) NSArray *notes;
 @property (nonatomic, readonly) PDFDocument *pdfDocument;
 @property (nonatomic, readonly) NSWindow *window;
-@property (nonatomic, retain) NSURL *sourceFileURL;
+@property (nonatomic, strong) NSURL *sourceFileURL;
 @property (nonatomic, readonly) SKInteractionMode interactionMode;
 
 - (IBAction)openPDF:(id)sender;

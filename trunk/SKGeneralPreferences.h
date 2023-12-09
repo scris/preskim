@@ -45,7 +45,7 @@
     NSInteger updateInterval;
 }
 
-@property (nonatomic, retain) IBOutlet NSPopUpButton *updateIntervalPopUpButton;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *updateIntervalPopUpButton;
 @property (nonatomic) NSInteger updateInterval;
 
 - (IBAction)changePDFViewSettings:(id)sender;

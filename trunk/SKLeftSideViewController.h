@@ -54,13 +54,13 @@
     SKTableView *groupedFindTableView;
 }
 
-@property (nonatomic, retain) IBOutlet NSArrayController *findArrayController;
-@property (nonatomic, retain) IBOutlet NSArrayController *groupedFindArrayController;
-@property (nonatomic, retain) IBOutlet NSArrayController *thumbnailArrayController;
-@property (nonatomic, retain) IBOutlet SKOutlineView *tocOutlineView;
-@property (nonatomic, retain) IBOutlet SKTableView *thumbnailTableView;
-@property (nonatomic, retain) IBOutlet SKTableView *findTableView;
-@property (nonatomic, retain) IBOutlet SKTableView *groupedFindTableView;
+@property (nonatomic, strong) IBOutlet NSArrayController *findArrayController;
+@property (nonatomic, strong) IBOutlet NSArrayController *groupedFindArrayController;
+@property (nonatomic, strong) IBOutlet NSArrayController *thumbnailArrayController;
+@property (nonatomic, strong) IBOutlet SKOutlineView *tocOutlineView;
+@property (nonatomic, strong) IBOutlet SKTableView *thumbnailTableView;
+@property (nonatomic, strong) IBOutlet SKTableView *findTableView;
+@property (nonatomic, strong) IBOutlet SKTableView *groupedFindTableView;
 
 - (void)applySearchTableHeader:(NSString *)message;
 

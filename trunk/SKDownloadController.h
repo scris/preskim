@@ -56,8 +56,8 @@
     NSMutableDictionary *touchBarItems;
 }
 
-@property (nonatomic, retain) IBOutlet SKTableView *tableView;
-@property (nonatomic, retain) IBOutlet NSButton *clearButton;
+@property (nonatomic, strong) IBOutlet SKTableView *tableView;
+@property (nonatomic, strong) IBOutlet NSButton *clearButton;
 
 @property (class, nonatomic, readonly) SKDownloadController *sharedDownloadController;
 

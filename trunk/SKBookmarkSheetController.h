@@ -45,7 +45,7 @@
     NSPopUpButton *folderPopUp;
 }
 
-@property (nonatomic, retain) IBOutlet NSPopUpButton *folderPopUp;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *folderPopUp;
 @property (nonatomic, readonly) SKBookmark *selectedFolder;
 
 @end

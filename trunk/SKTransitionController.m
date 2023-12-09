@@ -111,9 +111,9 @@ static OSStatus (*CGSReleaseTransition_func)(const CGSConnection cid, int transi
 #pragma mark -
 
 @protocol SKTransitionView <NSObject>
-@property (nonatomic, retain) CIImage *image;
+@property (nonatomic, strong) CIImage *image;
 @property (nonatomic) CGRect extent;
-@property (nonatomic, retain) CIFilter *filter;
+@property (nonatomic, strong) CIFilter *filter;
 @property (nonatomic) CGFloat progress;
 @end
 
