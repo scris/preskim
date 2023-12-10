@@ -471,7 +471,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
         const char *fileRep = synctex_scanner_get_synctex(scanner);
         [self setSyncFileName:[self sourceFileForFileName:[NSString stringWithUTF8String:fileRep] isTeX:NO removeQuotes:NO]];
         if (filenames) {
-            NSResetMapTable(filenames);
+            [filenames removeAllObjects];
         } else {
             NSPointerFunctions *keyPointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
             [keyPointerFunctions setIsEqualFunction:&caseInsensitiveStringEqual];
