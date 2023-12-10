@@ -42,6 +42,7 @@
 #import "NSScanner_SKExtensions.h"
 #import <CoreFoundation/CoreFoundation.h>
 #import "NSFileManager_SKExtensions.h"
+#import "NSPointerFunctions_SKExtensions.h"
 
 #define PDFSYNC_TO_PDF(coord) ((CGFloat)coord / 65536.0)
 
@@ -221,10 +222,10 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
     if (lines) {
         [lines removeAllObjects];
     } else {
-        NSPointerFunctions *keyPointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
+        NSPointerFunctions *keyPointerFunctions = [NSPointerFunctions strongPointerFunctions];
         [keyPointerFunctions setIsEqualFunction:&caseInsensitiveStringEqual];
         [keyPointerFunctions setHashFunction:&caseInsensitiveStringHash];
-        NSPointerFunctions *valuePointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
+        NSPointerFunctions *valuePointerFunctions = [NSPointerFunctions strongPointerFunctions];
         lines = [[NSMapTable alloc] initWithKeyPointerFunctions:keyPointerFunctions valuePointerFunctions:valuePointerFunctions capacity:0];
     }
     
@@ -473,7 +474,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
         if (filenames) {
             [filenames removeAllObjects];
         } else {
-            NSPointerFunctions *keyPointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
+            NSPointerFunctions *keyPointerFunctions = [NSPointerFunctions strongPointerFunctions];
             [keyPointerFunctions setIsEqualFunction:&caseInsensitiveStringEqual];
             [keyPointerFunctions setHashFunction:&caseInsensitiveStringHash];
             NSPointerFunctions *valuePointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsMallocMemory | NSPointerFunctionsCStringPersonality | NSPointerFunctionsCopyIn];

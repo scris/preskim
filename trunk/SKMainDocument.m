@@ -92,6 +92,7 @@
 #import "PDFView_SKExtensions.h"
 #import "SKLine.h"
 #import "NSPasteboard_SKExtensions.h"
+#import "NSPointerFunctions_SKExtensions.h"
 
 #define BUNDLE_DATA_FILENAME @"data"
 #define PRESENTATION_OPTIONS_KEY @"net_sourceforge_skim-app_presentation_options"
@@ -1155,13 +1156,8 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
         }
         
         if (NSEqualPoints(pageOrigin, NSZeroPoint) == NO) {
-            if (offsets == nil) {
-                NSPointerFunctions *keyPointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality];
-                NSPointerFunctions *valuePointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsMallocMemory | NSPointerFunctionsCopyIn | NSPointerFunctionsStructPersonality];
-                [valuePointerFunctions setSizeFunction:pointSizeFunction];
-                [valuePointerFunctions setDescriptionFunction:pointDescriptionFunction];
-                offsets = [[NSMapTable alloc] initWithKeyPointerFunctions:keyPointerFunctions valuePointerFunctions:valuePointerFunctions capacity:0];
-            }
+            if (offsets == nil)
+                offsets = [[NSMapTable alloc] initWithKeyPointerFunctions:[NSPointerFunctions integerPointerFunctions] valuePointerFunctions:[NSPointerFunctions pointPointerFunctions] capacity:0];
             NSMapInsert(offsets, (const void *)[page pageIndex], &pageOrigin);
         }
     }

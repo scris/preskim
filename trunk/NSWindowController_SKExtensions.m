@@ -39,22 +39,15 @@
 #import "NSWindowController_SKExtensions.h"
 #import "NSInvocation_SKExtensions.h"
 #import "NSPointerArray_SKExtensions.h"
+#import "NSPointerFunctions_SKExtensions.h"
 
 
 @implementation NSWindowController (SKExtensions)
 
-static NSUInteger pointSizeFunction(const void *item) { return sizeof(NSPoint); }
-static NSString *pointDescriptionFunction(const void *item) { return NSStringFromPoint(*(NSPointPointer)item); }
-
 - (void)setWindowFrameAutosaveNameOrCascade:(NSString *)name {
     static NSMapTable *nextWindowLocations = nil;
-    if (nextWindowLocations == nil) {
-        NSPointerFunctions *keyPointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
-        NSPointerFunctions *valuePointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsMallocMemory | NSPointerFunctionsCopyIn | NSPointerFunctionsStructPersonality];
-        [valuePointerFunctions setSizeFunction:pointSizeFunction];
-        [valuePointerFunctions setDescriptionFunction:pointDescriptionFunction];
-        nextWindowLocations = [[NSMapTable alloc] initWithKeyPointerFunctions:keyPointerFunctions valuePointerFunctions:valuePointerFunctions capacity:0];
-    }
+    if (nextWindowLocations == nil)
+        nextWindowLocations = [[NSMapTable alloc] initWithKeyPointerFunctions:[NSPointerFunctions strongPointerFunctions] valuePointerFunctions:[NSPointerFunctions pointPointerFunctions] capacity:0];
     
     NSPointPointer pointPtr = (NSPointPointer)NSMapGet(nextWindowLocations, name);
     NSPoint point;
