@@ -236,7 +236,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
     
     if ([pdfsyncString length]) {
         
-        NSMapTable *records = NSCreateMapTable(NSIntegerMapKeyCallBacks, NSObjectMapValueCallBacks, 0);
+        NSMapTable *records = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
         NSMutableArray *files = [[NSMutableArray alloc] init];
         NSString *file;
         NSInteger recordIndex, line, pageIndex;
@@ -339,7 +339,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
             }
         }
         
-        NSFreeMapTable(records);
+        [record release];
         [files release];
         [sc release];
     }

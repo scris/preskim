@@ -249,7 +249,8 @@ static char SKMainWindowContentLayoutObservationContext;
         dirtySnapshots = [[NSMutableArray alloc] init];
         pageLabels = [[NSMutableArray alloc] init];
         lastViewedPages = [[NSPointerArray alloc] initWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality];
-        rowHeights = NSCreateMapTable(NSObjectMapKeyCallBacks, NSIntegerMapValueCallBacks, 0);
+        rowHeights = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality capacity:0];
+
         savedNormalSetup = [[NSMutableDictionary alloc] init];
         mwcFlags.leftSidePaneState = SKSidePaneStateThumbnail;
         mwcFlags.rightSidePaneState = SKSidePaneStateNote;
