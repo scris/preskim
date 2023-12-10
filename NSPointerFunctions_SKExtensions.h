@@ -45,7 +45,7 @@
 @property (class, nonatomic, readonly) NSPointerFunctions *rectPointerFunctions;
 @property (class, nonatomic, readonly) NSPointerFunctions *rangePointerFunctions;
 @property (class, nonatomic, readonly) NSPointerFunctions *strongPointerFunctions;
-@property (class, nonatomic, readonly) NSPointerFunctions *weakPointerFunctions;
 @property (class, nonatomic, readonly) NSPointerFunctions *integerPointerFunctions;
+@property (class, nonatomic, readonly) NSPointerFunctions *caseInsensitiveStringPointerFunctions;
 
 @end

@@ -50,6 +50,36 @@ static NSString *rectDescriptionFunction(const void *item) { return NSStringFrom
 
 static NSString *rangeDescriptionFunction(const void *item) { return [NSString stringWithFormat:@"(%lu, %lu)", (unsigned long)(((NSRange *)item)->location), (unsigned long)(((NSRange *)item)->length)]; }
 
+static BOOL caseInsensitiveStringEqual(const void *item1, const void *item2, NSUInteger (*size)(const void *item)) {
+    return CFStringCompare(item1, item2, kCFCompareCaseInsensitive | kCFCompareNonliteral) == kCFCompareEqualTo;
+}
+
+#define STACK_BUFFER_SIZE 256
+
+static NSUInteger caseInsensitiveStringHash(const void *item, NSUInteger (*size)(const void *item)) {
+    if(item == NULL) return 0;
+    
+    NSUInteger hash = 0;
+    CFAllocatorRef allocator = CFGetAllocator(item);
+    CFIndex len = CFStringGetLength(item);
+    
+    // use a generous length, in case the lowercase changes the number of characters
+    UniChar *buffer, stackBuffer[STACK_BUFFER_SIZE];
+    if (len + 10 >= STACK_BUFFER_SIZE)
+        buffer = (UniChar *)CFAllocatorAllocate(allocator, (len + 10) * sizeof(UniChar), 0);
+    else
+        buffer = stackBuffer;
+    CFStringGetCharacters(item, CFRangeMake(0, len), buffer);
+    
+    // If we create the string with external characters, CFStringGetCharactersPtr is guaranteed to succeed; since we're going to call CFStringGetCharacters anyway in fastHash if CFStringGetCharactsPtr fails, let's do it now when we lowercase the string
+    CFMutableStringRef mutableString = CFStringCreateMutableWithExternalCharactersNoCopy(allocator, buffer, len, len + 10, (buffer != stackBuffer ? allocator : kCFAllocatorNull));
+    CFStringLowercase(mutableString, NULL);
+    hash = [(id)mutableString hash];
+    // if we used the allocator, this should free the buffer for us
+    CFRelease(mutableString);
+    return hash;
+}
+
 @implementation NSPointerFunctions (SKExtensions)
 
 + (NSPointerFunctions *)structPointerFunctionsWithSizeFunction:(NSUInteger (*)(const void *))sizeFunction descriptionFunction:(NSString *(*)(const void *))descriptionFunction {
@@ -71,16 +101,19 @@ static NSString *rangeDescriptionFunction(const void *item) { return [NSString s
     return [self structPointerFunctionsWithSizeFunction:rangeSizeFunction descriptionFunction:rangeDescriptionFunction];
 }
 
++ (NSPointerFunctions *)integerPointerFunctions {
+    return [self pointerFunctionsWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality];
+}
+
 + (NSPointerFunctions *)strongPointerFunctions {
     return [self pointerFunctionsWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
 }
 
-+ (NSPointerFunctions *)weakPointerFunctions {
-    return [self pointerFunctionsWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPersonality];
-}
-
-+ (NSPointerFunctions *)integerPointerFunctions {
-    return [self pointerFunctionsWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality];
++ (NSPointerFunctions *)caseInsensitiveStringPointerFunctions {
+    NSPointerFunctions *pointerFunctions = [self pointerFunctionsWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPersonality];;
+    [pointerFunctions setIsEqualFunction:&caseInsensitiveStringEqual];
+    [pointerFunctions setHashFunction:&caseInsensitiveStringHash];
+    return pointerFunctions;
 }
 
 @end
