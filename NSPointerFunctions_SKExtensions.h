@@ -1,10 +1,10 @@
 //
-//  NSPointerArray_SKExtensions.h
+//  NSPointerFunctions_SKExtensions.h
 //  Skim
 //
-//  Created by Christiaan Hofman on 9/23/09.
+//  Created by Christiaan Hofman on 10/12/2023.
 /*
- This software is Copyright (c) 2009-2023
+ This software is Copyright (c) 2023
  Christiaan Hofman. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -39,15 +39,13 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface NSPointerArray (SKExtensions)
+@interface NSPointerFunctions (SKExtensions)
 
-@property (class, nonatomic, readonly) NSPointerArray *rectPointerArray;
-@property (class, nonatomic, readonly) NSPointerArray *rangePointerArray;
-
-- (instancetype)initForRectPointers;
-- (instancetype)initForRangePointers;
-
-- (NSRect)rectAtIndex:(NSUInteger)anIndex;
-- (NSRange)rangeAtIndex:(NSUInteger)anIndex;
+@property (class, nonatomic, readonly) NSPointerFunctions *pointPointerFunctions;
+@property (class, nonatomic, readonly) NSPointerFunctions *rectPointerFunctions;
+@property (class, nonatomic, readonly) NSPointerFunctions *rangePointerFunctions;
+@property (class, nonatomic, readonly) NSPointerFunctions *strongPointerFunctions;
+@property (class, nonatomic, readonly) NSPointerFunctions *weakPointerFunctions;
+@property (class, nonatomic, readonly) NSPointerFunctions *integerPointerFunctions;
 
 @end
