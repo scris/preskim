@@ -108,7 +108,7 @@
     if (self) {
         notes = [[NSArray alloc] init];
         pdfDocument = nil;
-        rowHeights = NSCreateMapTable(NSObjectMapKeyCallBacks, NSIntegerMapValueCallBacks, 0);
+        rowHeights = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality capacity:0];
         windowRect = NSZeroRect;
         memset(&ndFlags, 0, sizeof(ndFlags));
         ndFlags.caseInsensitiveSearch = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveNoteSearchKey];

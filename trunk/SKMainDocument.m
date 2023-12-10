@@ -1153,7 +1153,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         
         if (NSEqualPoints(pageOrigin, NSZeroPoint) == NO) {
             if (offsets == nil)
-                offsets = NSCreateMapTable(NSIntegerMapKeyCallBacks, NSOwnedPointerMapValueCallBacks, 0);
+                offsets = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
             NSPointPointer offsetPtr = NSZoneMalloc(NSDefaultMallocZone(), sizeof(NSPoint));
             *offsetPtr = pageOrigin;
             NSMapInsert(offsets, (const void *)[page pageIndex], offsetPtr);

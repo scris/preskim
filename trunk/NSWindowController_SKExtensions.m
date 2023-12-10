@@ -43,10 +43,18 @@
 
 @implementation NSWindowController (SKExtensions)
 
+static NSUInteger pointSizeFunction(const void *item) { return sizeof(NSPoint); }
+static NSString *pointDescriptionFunction(const void *item) { return NSStringFromPoint(*(NSPointPointer)item); }
+
 - (void)setWindowFrameAutosaveNameOrCascade:(NSString *)name {
     static NSMapTable *nextWindowLocations = nil;
-    if (nextWindowLocations == nil)
-        nextWindowLocations = NSCreateMapTable(NSObjectMapKeyCallBacks, NSOwnedPointerMapValueCallBacks, 0);
+    if (nextWindowLocations == nil) {
+        NSPointerFunctions *keyPointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
+        NSPointerFunctions *valuePointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsMallocMemory | NSPointerFunctionsCopyIn | NSPointerFunctionsStructPersonality];
+        [valuePointerFunctions setSizeFunction:pointSizeFunction];
+        [valuePointerFunctions setDescriptionFunction:pointDescriptionFunction];
+        nextWindowLocations = [[NSMapTable alloc] initWithKeyPointerFunctions:keyPointerFunctions valuePointerFunctions:valuePointerFunctions capacity:0];
+    }
     
     NSPointPointer pointPtr = (NSPointPointer)NSMapGet(nextWindowLocations, name);
     NSPoint point;
@@ -59,9 +67,8 @@
     } else {
         point = *pointPtr;
     }
-    pointPtr = NSZoneMalloc(NSDefaultMallocZone(), sizeof(NSPoint));
-    *pointPtr = [[self window] cascadeTopLeftFromPoint:point];
-    NSMapInsert(nextWindowLocations, name, pointPtr);
+    point = [[self window] cascadeTopLeftFromPoint:point];
+    NSMapInsert(nextWindowLocations, name, &point);
 }
 
 - (BOOL)isNoteWindowController { return NO; }
