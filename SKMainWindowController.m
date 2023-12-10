@@ -1398,7 +1398,7 @@ static char SKMainWindowContentLayoutObservationContext;
         }
         [wcs release];
         
-        NSResetMapTable(rowHeights);
+        [rowHeights removeAllObjects];
         
         [self stopObservingNotes:notes];
 

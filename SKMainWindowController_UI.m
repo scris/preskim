@@ -809,7 +809,7 @@
 }
 
 - (void)resetNoteRowHeights {
-    NSResetMapTable(rowHeights);
+    [rowHeights removeAllObjects];
     [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:YES];
 }
 
@@ -2038,7 +2038,7 @@ static NSArray *allMainDocumentPDFViews() {
 
 - (void)handleNoteViewFrameDidChangeNotification:(NSNotification *)notification {
     if (mwcFlags.autoResizeNoteRows && [splitView isAnimating] == NO) {
-        NSResetMapTable(rowHeights);
+        [rowHeights removeAllObjects];
         [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
     }
 }

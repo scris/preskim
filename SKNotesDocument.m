@@ -199,7 +199,7 @@
 
 - (void)windowDidResize:(NSNotification *)notification {
     if (ndFlags.autoResizeRows) {
-        NSResetMapTable(rowHeights);
+        [rowHeights removeAllObjects];
         [outlineView noteHeightOfRowsChangedAnimating:NO];
     }
 }
@@ -367,7 +367,7 @@
         }
         [self didChangeValueForKey:PAGES_KEY];
         
-        NSResetMapTable(rowHeights);
+        [rowHeights removeAllObjects];
         
         [self willChangeValueForKey:NOTES_KEY];
         [notes autorelease];
@@ -577,7 +577,7 @@
 }
 
 - (void)resetRowHeights {
-    NSResetMapTable(rowHeights);
+    [rowHeights removeAllObjects];
     [outlineView noteHeightOfRowsChangedAnimating:YES];
 }
 
