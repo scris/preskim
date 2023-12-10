@@ -1127,6 +1127,9 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     }
 }
 
+static NSUInteger pointSizeFunction(const void *item) { return sizeof(NSPoint); }
+static NSString *pointDescriptionFunction(const void *item) { return NSStringFromPoint(*(NSPointPointer)item); }
+
 - (void)convertNotesUsingPDFDocument:(PDFDocument *)pdfDocWithoutNotes {
     [[self mainWindowController] beginProgressSheetWithMessage:[NSLocalizedString(@"Converting notes", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:0];
     
@@ -1152,11 +1155,14 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         }
         
         if (NSEqualPoints(pageOrigin, NSZeroPoint) == NO) {
-            if (offsets == nil)
-                offsets = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:0];
-            NSPointPointer offsetPtr = NSZoneMalloc(NSDefaultMallocZone(), sizeof(NSPoint));
-            *offsetPtr = pageOrigin;
-            NSMapInsert(offsets, (const void *)[page pageIndex], offsetPtr);
+            if (offsets == nil) {
+                NSPointerFunctions *keyPointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality];
+                NSPointerFunctions *valuePointerFunctions = [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsMallocMemory | NSPointerFunctionsCopyIn | NSPointerFunctionsStructPersonality];
+                [valuePointerFunctions setSizeFunction:pointSizeFunction];
+                [valuePointerFunctions setDescriptionFunction:pointDescriptionFunction];
+                offsets = [[NSMapTable alloc] initWithKeyPointerFunctions:keyPointerFunctions valuePointerFunctions:valuePointerFunctions capacity:0];
+            }
+            NSMapInsert(offsets, (const void *)[page pageIndex], &pageOrigin);
         }
     }
     
