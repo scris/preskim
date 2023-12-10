@@ -240,8 +240,8 @@
 
 - (void)document:(NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo {
     ndFlags.exportUsingPanel = NO;
-    NSInvocation *invocation = [(NSInvocation *)contextInfo autorelease];
-    if (invocation) {
+    if (contextInfo) {
+        NSInvocation *invocation = [(NSInvocation *)contextInfo autorelease];
         [invocation setArgument:&doc atIndex:2];
         [invocation setArgument:&didSave atIndex:3];
         [invocation invoke];

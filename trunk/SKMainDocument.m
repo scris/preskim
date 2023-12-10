@@ -389,8 +389,8 @@ enum {
     [exportAccessoryController setRepresentedObject:nil];
     SKDESTROY(exportAccessoryController);
     
-    NSInvocation *invocation = [(id)contextInfo autorelease];
-    if (invocation) {
+    if (contextInfo) {
+        NSInvocation *invocation = [(id)contextInfo autorelease];
         [invocation setArgument:&doc atIndex:2];
         [invocation setArgument:&didSave atIndex:3];
         [invocation invoke];
