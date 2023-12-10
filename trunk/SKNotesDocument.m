@@ -242,6 +242,7 @@
     ndFlags.exportUsingPanel = NO;
     NSInvocation *invocation = [(NSInvocation *)contextInfo autorelease];
     if (invocation) {
+        [invocation setArgument:&doc atIndex:2];
         [invocation setArgument:&didSave atIndex:3];
         [invocation invoke];
     }
@@ -251,7 +252,6 @@
     // Override so we can determine if this is a save, saveAs or export operation, so we can prepare the correct accessory view
     if (delegate && didSaveSelector) {
         NSInvocation *invocation = [NSInvocation invocationWithTarget:delegate selector:didSaveSelector];
-        [invocation setArgument:&self atIndex:2];
         [invocation setArgument:&contextInfo atIndex:4];
         contextInfo = [invocation retain];
     } else {
