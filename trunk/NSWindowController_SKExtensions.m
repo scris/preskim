@@ -49,7 +49,7 @@
     if (nextWindowLocations == nil)
         nextWindowLocations = [[NSMapTable alloc] initWithKeyPointerFunctions:[NSPointerFunctions strongPointerFunctions] valuePointerFunctions:[NSPointerFunctions pointPointerFunctions] capacity:0];
     
-    NSPointPointer pointPtr = (NSPointPointer)NSMapGet(nextWindowLocations, name);
+    NSPointPointer pointPtr = (NSPointPointer)NSMapGet(nextWindowLocations, (void *)name);
     NSPoint point;
     
     [[self window] setFrameUsingName:name];
@@ -61,7 +61,7 @@
         point = *pointPtr;
     }
     point = [[self window] cascadeTopLeftFromPoint:point];
-    NSMapInsert(nextWindowLocations, name, &point);
+    NSMapInsert(nextWindowLocations, (void *)name, &point);
 }
 
 - (BOOL)isNoteWindowController { return NO; }

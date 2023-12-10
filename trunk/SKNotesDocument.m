@@ -566,7 +566,7 @@
             height = [cell cellSizeForBounds:fullRect].height;
         else
             height = 0.0;
-        NSMapInsert(rowHeights, item, (NSInteger)round(fmax(height, rowHeight) + EXTRA_ROW_HEIGHT));
+        NSMapInsert(rowHeights, (void *)item, (void *)(NSInteger)round(fmax(height, rowHeight) + EXTRA_ROW_HEIGHT));
         if (rowIndexes) {
             row = [outlineView rowForItem:item];
             if (row != -1)
@@ -794,7 +794,7 @@
 }
 
 - (CGFloat)outlineView:(NSOutlineView *)ov heightOfRowByItem:(id)item {
-    CGFloat rowHeight = (NSInteger)NSMapGet(rowHeights, item);
+    CGFloat rowHeight = (NSInteger)NSMapGet(rowHeights, (void *)item);
     if (rowHeight <= 0.0) {
         if (ndFlags.autoResizeRows) {
             NSTableColumn *tableColumn = [ov outlineTableColumn];
@@ -808,7 +808,7 @@
             if (width > 0.0)
                 rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
             rowHeight = round(fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT);
-            NSMapInsert(rowHeights, item, (NSInteger)rowHeight);
+            NSMapInsert(rowHeights, (void *)item, (void *)(NSInteger)rowHeight);
         } else {
             rowHeight = [(PDFAnnotation *)item type] ? [ov rowHeight] + EXTRA_ROW_HEIGHT : DEFAULT_TEXT_ROW_HEIGHT;
         }
@@ -817,7 +817,7 @@
 }
 
 - (void)outlineView:(NSOutlineView *)ov setHeight:(CGFloat)newHeight ofRowByItem:(id)item {
-    NSMapInsert(rowHeights, item, (NSInteger)round(newHeight));
+    NSMapInsert(rowHeights, (void *)item, (void *)(NSInteger)round(newHeight));
 }
 
 - (NSArray *)outlineViewTypeSelectHelperSelectionStrings:(NSOutlineView *)ov {
