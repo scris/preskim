@@ -419,7 +419,7 @@ enum {
         NSMutableArray *mutableArray = [NSMutableArray array];
         for (NSDictionary *dict in array) {
             NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
-            NSPointPointer offsetPtr = NSMapGet(pageOffsets, (const void *)pageIndex);
+            NSPointPointer offsetPtr = (NSPointPointer)NSMapGet(pageOffsets, (const void *)pageIndex);
             if (offsetPtr != NULL) {
                 NSMutableDictionary *mutableDict = [dict mutableCopy];
                 NSRect bounds = NSRectFromString([dict objectForKey:SKNPDFAnnotationBoundsKey]);

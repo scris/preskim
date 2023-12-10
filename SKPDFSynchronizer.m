@@ -201,10 +201,10 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 #pragma mark PDFSync
 
 static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger recordIndex) {
-    SKPDFSyncRecord *record = NSMapGet(records, (const void *)recordIndex);
+    SKPDFSyncRecord *record = (SKPDFSyncRecord *)NSMapGet(records, (const void *)recordIndex);
     if (record == nil) {
         record = [[SKPDFSyncRecord alloc] initWithRecordIndex:recordIndex];
-        NSMapInsert(records, (const void *)recordIndex, record);
+        NSMapInsert(records, (void *)recordIndex, (void *)record);
         [record release];
     }
     return record;
@@ -474,7 +474,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
         synctex_node_p node = synctex_scanner_input(scanner);
         do {
             if ((fileRep = synctex_scanner_get_name(scanner, synctex_node_tag(node)))) {
-                NSMapInsert(filenames, [self sourceFileForFileName:[NSString stringWithUTF8String:fileRep] isTeX:YES removeQuotes:NO], fileRep);
+                NSMapInsert(filenames, (void *)[self sourceFileForFileName:[NSString stringWithUTF8String:fileRep] isTeX:YES removeQuotes:NO], (void *)fileRep);
             }
         } while ((node = synctex_node_next(node)));
         isPdfsync = NO;
@@ -503,11 +503,11 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
 
 - (BOOL)synctexFindPage:(NSUInteger *)pageIndexPtr location:(NSPoint *)pointPtr forLine:(NSInteger)line inFile:(NSString *)file {
     BOOL rv = NO;
-    char *filename = NSMapGet(filenames, file) ?: NSMapGet(filenames, [[file stringByResolvingSymlinksInPath] stringByStandardizingPath]);
+    char *filename = (char *)NSMapGet(filenames, (void *)file) ?: (char *)NSMapGet(filenames, (void *)[[file stringByResolvingSymlinksInPath] stringByStandardizingPath]);
     if (filename == NULL) {
         for (NSString *fn in filenames) {
             if ([[fn lastPathComponent] caseInsensitiveCompare:[file lastPathComponent]] == NSOrderedSame) {
-                filename = NSMapGet(filenames, file);
+                filename = NSMapGet(filenames, (void *)file);
                 break;
             }
         }
