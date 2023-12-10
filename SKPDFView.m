@@ -1787,6 +1787,11 @@ enum {
             [self nextLaserPointerColor:nil];
         } else if (pdfvFlags.useArrowCursorInPresentation == 0 && (eventChar == 'C') && ((modifiers & ~NSEventModifierFlagShift) == 0)) {
             [self previousLaserPointerColor:nil];
+        } else if (pdfvFlags.useArrowCursorInPresentation == 0 && (eventChar == ',') && (modifiers == 0)) {
+            if ([cursorWindow isVisible])
+                [self closeCursorStyleWindow:nil];
+            else
+                [self showCursorStyleWindow:nil];
         } else if ((eventChar == '?') && ((modifiers & ~NSEventModifierFlagShift) == 0)) {
             [self showHelpMenu];
         } else {
@@ -5143,6 +5148,8 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         item = [menu addItemWithTitle:NSLocalizedString(@"Laser Pointer", @"Menu item title") action:@selector(toggleLaserPointer:) keyEquivalent:@"l"];
         [item setKeyEquivalentModifierMask:0];
         item = [menu addItemWithTitle:NSLocalizedString(@"Laser Pointer Color", @"Menu item title") action:@selector(nextLaserPointerColor:) keyEquivalent:@"c"];
+        [item setKeyEquivalentModifierMask:0];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Cursors", @"Menu item title") action:@selector(showCursorStyleWindow:) keyEquivalent:@","];
         [item setKeyEquivalentModifierMask:0];
         item = [menu addItemWithTitle:NSLocalizedString(@"End", @"Menu item title") action:@selector(cancelOperation:) keyEquivalent:@"\e"];
         [item setKeyEquivalentModifierMask:0];
