@@ -75,7 +75,7 @@ static SKPreferenceController *sharedPrefenceController = nil;
 
 + (SKPreferenceController *)sharedPrefenceController {
     if (sharedPrefenceController == nil)
-        [[[self alloc] init] autorelease];
+        [[[self alloc] init] release];
     return sharedPrefenceController;
 }
 
