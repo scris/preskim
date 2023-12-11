@@ -100,13 +100,11 @@ static NSCharacterSet *nonWhitespaceCharacterSet = nil;
     nonWhitespaceCharacterSet = [[[NSCharacterSet whitespaceCharacterSet] invertedSet] copy];
 }
 
-static inline NSString *templateTagWithKeyPathAndDelims(NSMutableDictionary **dict, NSString *keyPath, NSString *openDelim, NSString *closeDelim) {
-    NSString *endTag = [*dict objectForKey:keyPath];
+static inline NSString *templateTagWithKeyPathAndDelims(NSMutableDictionary *dict, NSString *keyPath, NSString *openDelim, NSString *closeDelim) {
+    NSString *endTag = [dict objectForKey:keyPath];
     if (nil == endTag) {
-        if (*dict == nil)
-            *dict = [[NSMutableDictionary alloc] init];
         endTag = [[NSString alloc] initWithFormat:@"%@%@%@", openDelim, keyPath, closeDelim];
-        [*dict setObject:endTag forKey:keyPath];
+        [dict setObject:endTag forKey:keyPath];
         [endTag release];
     }
     return endTag;
@@ -114,22 +112,30 @@ static inline NSString *templateTagWithKeyPathAndDelims(NSMutableDictionary **di
 
 static inline NSString *endCollectionTagWithKeyPath(NSString *keyPath) {
     static NSMutableDictionary *endCollectionDict = nil;
-    return templateTagWithKeyPathAndDelims(&endCollectionDict, keyPath, END_TAG_OPEN_DELIM, COLLECTION_TAG_CLOSE_DELIM);
+    if (endCollectionDict == nil)
+        endCollectionDict = [[NSMutableDictionary alloc] init];
+    return templateTagWithKeyPathAndDelims(endCollectionDict, keyPath, END_TAG_OPEN_DELIM, COLLECTION_TAG_CLOSE_DELIM);
 }
 
 static inline NSString *sepCollectionTagWithKeyPath(NSString *keyPath) {
     static NSMutableDictionary *sepCollectionDict = nil;
-    return templateTagWithKeyPathAndDelims(&sepCollectionDict, keyPath, ALT_TAG_OPEN_DELIM, COLLECTION_TAG_CLOSE_DELIM);
+    if (sepCollectionDict == nil)
+        sepCollectionDict = [[NSMutableDictionary alloc] init];
+    return templateTagWithKeyPathAndDelims(sepCollectionDict, keyPath, ALT_TAG_OPEN_DELIM, COLLECTION_TAG_CLOSE_DELIM);
 }
 
 static inline NSString *endConditionTagWithKeyPath(NSString *keyPath) {
     static NSMutableDictionary *endConditionDict = nil;
-    return templateTagWithKeyPathAndDelims(&endConditionDict, keyPath, END_TAG_OPEN_DELIM, CONDITION_TAG_CLOSE_DELIM);
+    if (endConditionDict == nil)
+        endConditionDict = [[NSMutableDictionary alloc] init];
+    return templateTagWithKeyPathAndDelims(endConditionDict, keyPath, END_TAG_OPEN_DELIM, CONDITION_TAG_CLOSE_DELIM);
 }
 
 static inline NSString *altConditionTagWithKeyPath(NSString *keyPath) {
     static NSMutableDictionary *altConditionDict = nil;
-    return templateTagWithKeyPathAndDelims(&altConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_CLOSE_DELIM);
+    if (altConditionDict == nil)
+        altConditionDict = [[NSMutableDictionary alloc] init];
+    return templateTagWithKeyPathAndDelims(altConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_CLOSE_DELIM);
 }
 
 static inline NSString *compareConditionTagWithKeyPath(NSString *keyPath, SKTemplateTagMatchType matchType) {
@@ -143,21 +149,37 @@ static inline NSString *compareConditionTagWithKeyPath(NSString *keyPath, SKTemp
     static NSMutableDictionary *notContainConditionDict = nil;
     switch (matchType) {
         case SKTemplateTagMatchEqual:
-            return templateTagWithKeyPathAndDelims(&equalConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_EQUAL);
+            if (equalConditionDict == nil)
+                equalConditionDict = [[NSMutableDictionary alloc] init];
+            return templateTagWithKeyPathAndDelims(equalConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_EQUAL);
         case SKTemplateTagMatchContain:
-            return templateTagWithKeyPathAndDelims(&containConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_CONTAIN);
+            if (containConditionDict == nil)
+                containConditionDict = [[NSMutableDictionary alloc] init];
+            return templateTagWithKeyPathAndDelims(containConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_CONTAIN);
         case SKTemplateTagMatchSmaller:
-            return templateTagWithKeyPathAndDelims(&smallerConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_SMALLER);
+            if (smallerConditionDict == nil)
+                smallerConditionDict = [[NSMutableDictionary alloc] init];
+            return templateTagWithKeyPathAndDelims(smallerConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_SMALLER);
         case SKTemplateTagMatchSmallerOrEqual:
-            return templateTagWithKeyPathAndDelims(&smallerOrEqualConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_SMALLER_OR_EQUAL);
+            if (smallerOrEqualConditionDict == nil)
+                smallerOrEqualConditionDict = [[NSMutableDictionary alloc] init];
+            return templateTagWithKeyPathAndDelims(smallerOrEqualConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_SMALLER_OR_EQUAL);
         case SKTemplateTagMatchLarger:
-            return templateTagWithKeyPathAndDelims(&largerConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_LARGER);
+            if (largerConditionDict == nil)
+                largerConditionDict = [[NSMutableDictionary alloc] init];
+            return templateTagWithKeyPathAndDelims(largerConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_LARGER);
         case SKTemplateTagMatchLargerOrEqual:
-            return templateTagWithKeyPathAndDelims(&largerOrEqualConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_LARGER_OR_EQUAL);
+            if (largerOrEqualConditionDict == nil)
+                largerOrEqualConditionDict = [[NSMutableDictionary alloc] init];
+            return templateTagWithKeyPathAndDelims(largerOrEqualConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_LARGER_OR_EQUAL);
         case SKTemplateTagMatchNotEqual:
-            return templateTagWithKeyPathAndDelims(&notEqualConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_NOT_EQUAL);
+            if (notEqualConditionDict == nil)
+                notEqualConditionDict = [[NSMutableDictionary alloc] init];
+            return templateTagWithKeyPathAndDelims(notEqualConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_NOT_EQUAL);
         case SKTemplateTagMatchNotContain:
-            return templateTagWithKeyPathAndDelims(&notContainConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_NOT_CONTAIN);
+            if (notContainConditionDict == nil)
+                notContainConditionDict = [[NSMutableDictionary alloc] init];
+            return templateTagWithKeyPathAndDelims(notContainConditionDict, keyPath, ALT_TAG_OPEN_DELIM, CONDITION_TAG_NOT_CONTAIN);
         default:
             return nil;
     }
