@@ -206,10 +206,11 @@ static SKDownloadController *sharedDownloadController = nil;
                 [self presentError:error];
             
             if ([[NSUserDefaults standardUserDefaults] boolForKey:SKAutoRemoveFinishedDownloadsKey]) {
-                [[download retain] autorelease];
+                NSURL *fileURL = [[download fileURL] retain];
                 [self removeObjectFromDownloads:download];
                 // for the document to note that the file has been deleted
-                [document setFileURL:[download fileURL]];
+                [document setFileURL:fileURL];
+                [fileURL release];
                 if ([self countOfDownloads] == 0 && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoCloseDownloadsWindowKey])
                     [[self window] close];
             }
