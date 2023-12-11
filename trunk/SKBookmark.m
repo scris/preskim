@@ -100,7 +100,7 @@ static Class SKBookmarkClass = Nil;
 + (void)initialize {
     SKINITIALIZE;
     SKBookmarkClass = self;
-    defaultPlaceholderBookmark = (SKPlaceholderBookmark *)NSAllocateObject([SKPlaceholderBookmark class], 0, NSDefaultMallocZone());
+    defaultPlaceholderBookmark = [SKPlaceholderBookmark alloc];
 }
 
 + (instancetype)allocWithZone:(NSZone *)aZone {
