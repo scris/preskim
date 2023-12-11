@@ -2153,7 +2153,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [[self window] makeFirstResponder:[self pdfView]];
 }
 
-- (void)documentDidUnlock:(NSNotification *)notification {log_method();
+- (void)documentDidUnlock:(NSNotification *)notification {
     if (placeholderPdfDocument && [[self pdfDocument] allowsNotes]) {
         PDFDocument *pdfDoc = [self pdfDocument];
         NSMutableIndexSet *pageIndexes = [NSMutableIndexSet indexSet];
