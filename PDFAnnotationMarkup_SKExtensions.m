@@ -169,14 +169,11 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
             
             range.location = 4 * j;
             
-            NSValue *values[4];
-            [quadPoints getObjects:values range:range];
-            
             NSPoint point;
             NSUInteger i;
             CGFloat minX = CGFLOAT_MAX, maxX = -CGFLOAT_MAX, minY = CGFLOAT_MAX, maxY = -CGFLOAT_MAX;
             for (i = 0; i < 4; i++) {
-                point = [values[i] pointValue];
+                point = [[quadPoints objectAtIndex:4 * j + i] pointValue];
                 minX = fmin(minX, point.x);
                 maxX = fmax(maxX, point.x);
                 minY = fmin(minY, point.y);
