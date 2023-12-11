@@ -44,7 +44,7 @@
 
 + (NSString *)passwordForService:(NSString *)service account:(NSString *)account status:(SKPasswordStatus *)status {
     NSMutableDictionary *query = [NSMutableDictionary dictionary];
-    NSData *passwordData = nil;
+    CFTypeRef passwordData = nil;
     NSString *password = nil;
     
     [query setObject:(NSString *)kSecClassGenericPassword forKey:(NSString *)kSecClass];
@@ -55,12 +55,12 @@
         [query setObject:account forKey:(NSString *)kSecAttrAccount];
     [query setObject:@YES forKey:(NSString *)kSecReturnData];
     
-    OSStatus err = SecItemCopyMatching((CFDictionaryRef)query, (CFTypeRef *)&passwordData);
+    OSStatus err = SecItemCopyMatching((CFDictionaryRef)query, &passwordData);
     
     if (err == noErr) {
         if (passwordData) {
-            password = [[[NSString alloc] initWithData:passwordData encoding:NSUTF8StringEncoding] autorelease];
-            [passwordData release];
+            password = [[[NSString alloc] initWithData:(NSData *)passwordData encoding:NSUTF8StringEncoding] autorelease];
+            CFRelease(passwordData);
         }
         if (status) *status = SKPasswordStatusFound;
     } else if (err == errSecItemNotFound) {
