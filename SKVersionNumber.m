@@ -188,10 +188,7 @@
 
 - (instancetype)copyWithZone:(NSZone *)zone;
 {
-    if (NSShouldRetainWithZone(self, zone))
-        return [self retain];
-    else
-        return [[[self class] allocWithZone:zone] initWithVersionString:originalVersionString];
+    return [self retain];
 }
 
 #pragma mark Comparison
