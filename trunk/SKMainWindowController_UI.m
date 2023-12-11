@@ -1372,11 +1372,11 @@
     BOOL didCommit = [self commitEditingAndReturnError:NULL];
     if (delegate && didCommitSelector) {
         // - (void)editor:(id)editor didCommit:(BOOL)didCommit contextInfo:(void *)contextInfo
-        NSInvocation *invocation = [NSInvocation invocationWithTarget:delegate selector:didCommitSelector];
-        [invocation setArgument:&self atIndex:2];
-        [invocation setArgument:&didCommit atIndex:3];
-        [invocation setArgument:&contextInfo atIndex:4];
-        dispatch_async(dispatch_get_main_queue(), ^{ [invocation invoke]; });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            void (*didCommitImp)(id, SEL, id, BOOL, void *) = (void (*)(id, SEL, id, BOOL, void *))[delegate methodForSelector:didCommitSelector];
+            if (didCommitImp)
+                didCommitImp(delegate, didCommitSelector, self, didCommit, contextInfo);
+        });
     }
 }
 
