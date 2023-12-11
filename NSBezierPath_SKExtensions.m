@@ -118,7 +118,7 @@
     CGPathRef path = CGPathCreateCopy(mutablePath);
     CGPathRelease(mutablePath);
     
-    return (CGPathRef)[(id)path autorelease];
+    return (CGPathRef)CFAutorelease(path);
 }
 
 // distance ratio for control points to approximate a quarter ellipse by a cubic bezier curve
