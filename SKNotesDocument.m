@@ -588,7 +588,7 @@
     } else {
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
-            NSMapRemove(rowHeights, item);
+            NSMapRemove(rowHeights, (void *)item);
             NSInteger row = [outlineView rowForItem:item];
             if (row != -1)
                 [indexes addIndex:row];
