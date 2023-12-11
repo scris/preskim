@@ -1151,7 +1151,7 @@
         SKNoteOutlineView *ov = rightSideController.noteOutlineView;
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
-            NSMapRemove(rowHeights, item);
+            NSMapRemove(rowHeights, (void *)item);
             NSInteger row = [ov rowForItem:item];
             if (row != -1)
                 [indexes addIndex:row];

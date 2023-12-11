@@ -1380,8 +1380,8 @@ static char SKMainWindowContentLayoutObservationContext;
     [[self windowControllerForNote:note] close];
     
     if ([note hasNoteText])
-        NSMapRemove(rowHeights, [note noteText]);
-    NSMapRemove(rowHeights, note);
+        NSMapRemove(rowHeights, (void *)[note noteText]);
+    NSMapRemove(rowHeights, (void *)note);
     
     // Stop observing the removed notes
     [self stopObservingNotes:@[note]];
@@ -2820,9 +2820,9 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             
             if (mwcFlags.autoResizeNoteRows) {
                 if ([keyPath isEqualToString:SKNPDFAnnotationStringKey])
-                    NSMapRemove(rowHeights, note);
+                    NSMapRemove(rowHeights, (void *)note);
                 if ([keyPath isEqualToString:SKNPDFAnnotationTextKey])
-                    NSMapRemove(rowHeights, [note noteText]);
+                    NSMapRemove(rowHeights, (void *)[note noteText]);
             }
             if ([self notesNeedReloadForKey:keyPath]) {
                 [self performSelectorOnce:@selector(reloadNotesTable) afterDelay:0.0];

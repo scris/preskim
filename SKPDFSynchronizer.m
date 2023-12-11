@@ -507,7 +507,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
     if (filename == NULL) {
         for (NSString *fn in filenames) {
             if ([[fn lastPathComponent] caseInsensitiveCompare:[file lastPathComponent]] == NSOrderedSame) {
-                filename = NSMapGet(filenames, (void *)file);
+                filename = (char *)NSMapGet(filenames, (void *)file);
                 break;
             }
         }
