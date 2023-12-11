@@ -662,7 +662,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     
     CGRect bounds = {CGPointZero, [view drawableSize]};
     CIImage *img = image;
-    CGColorSpaceRef cs = [image colorSpace] ?: [(CIImage *)[filter valueForKey:kCIInputImageKey] colorSpace] ?: (CGColorSpaceRef)[(id)CGColorSpaceCreateDeviceRGB() autorelease];
+    CGColorSpaceRef cs = [image colorSpace] ?: [(CIImage *)[filter valueForKey:kCIInputImageKey] colorSpace] ?: (CGColorSpaceRef)CFAutorelease(CGColorSpaceCreateDeviceRGB());
     
     if (CGRectEqualToRect(extent, bounds) == NO) {
         CGAffineTransform t = CGAffineTransformMakeScale(CGRectGetWidth(bounds) / CGRectGetWidth(extent), CGRectGetHeight(bounds) / CGRectGetHeight(extent));
