@@ -78,6 +78,8 @@
 #import "SKMainTouchBarController.h"
 #import "SKThumbnailItem.h"
 #import "PDFSelection_SKExtensions.h"
+#import "SKOutlineView.h"
+#import "SKOverviewView.h"
 
 #define STATUSBAR_HEIGHT 22.0
 
