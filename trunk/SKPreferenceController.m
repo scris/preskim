@@ -71,35 +71,23 @@
 
 @synthesize resetButton, resetAllButton;
 
-static SKPreferenceController *sharedPrefenceController = nil;
-
 + (SKPreferenceController *)sharedPrefenceController {
+    static SKPreferenceController *sharedPrefenceController = nil;
     if (sharedPrefenceController == nil)
-        [[[self alloc] init] release];
+        sharedPrefenceController = [[self alloc] init];
     return sharedPrefenceController;
 }
 
-+ (instancetype)allocWithZone:(NSZone *)zone {
-    return [sharedPrefenceController retain] ?: [super allocWithZone:zone];
-}
-
 - (instancetype)init {
-    if (sharedPrefenceController == nil) {
-        self = [super initWithWindowNibName:@"PreferenceWindow"];
-        if (self) {
-            preferencePanes = [[NSArray alloc] initWithObjects:
+    self = [super initWithWindowNibName:@"PreferenceWindow"];
+    if (self) {
+        preferencePanes = [[NSArray alloc] initWithObjects:
                 [[[SKGeneralPreferences alloc] init] autorelease], 
                 [[[SKDisplayPreferences alloc] init] autorelease], 
                 [[[SKNotesPreferences alloc] init] autorelease], 
                 [[[SKSyncPreferences alloc] init] autorelease], nil];
-            history = [[NSMutableArray alloc] init];
-            historyIndex = 0;
-        }
-        sharedPrefenceController = [self retain];
-    } else if (self != sharedPrefenceController) {
-        NSLog(@"Attempt to allocate second instance of %@", [self class]);
-        [self release];
-        self = [sharedPrefenceController retain];
+        history = [[NSMutableArray alloc] init];
+        historyIndex = 0;
     }
     return self;
 }
