@@ -2469,7 +2469,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 
 - (void)snapshotControllerWillClose:(SKSnapshotWindowController *)controller {
     if (controller == presentationPreview) {
-        presentationPreview = nil;
+        SKDESTROY(presentationPreview);
     } else {
         [rightSideController.snapshotTableView beginUpdates];
         NSUInteger row = [[rightSideController.snapshotArrayController arrangedObjects] indexOfObject:controller];
