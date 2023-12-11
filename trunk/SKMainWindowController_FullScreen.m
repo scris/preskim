@@ -248,6 +248,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
                                 displayOnScreen:screen];
             
             [[self document] addWindowController:presentationPreview];
+            [presentationPreview release];
         } else {
             [[self presentationNotesDocument] setCurrentPage:[pdfDoc pageAtIndex:pageIndex]];
         }
@@ -541,7 +542,6 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
             if (presentationPreview) {
                 [[presentationPreview window] setAnimationBehavior:NSWindowAnimationBehaviorNone];
                 [presentationPreview close];
-                [presentationPreview autorelease];
             }
         }];
     

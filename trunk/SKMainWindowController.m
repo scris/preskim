@@ -2469,7 +2469,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 
 - (void)snapshotControllerWillClose:(SKSnapshotWindowController *)controller {
     if (controller == presentationPreview) {
-        [presentationPreview autorelease];
         presentationPreview = nil;
     } else {
         [rightSideController.snapshotTableView beginUpdates];
