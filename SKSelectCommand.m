@@ -43,6 +43,7 @@
 #import "SKMainDocument.h"
 #import "NSDocument_SKExtensions.h"
 #import "NSScriptCommand_SKExtensions.h"
+#import "SKPDFView.h"
 
 
 @implementation SKSelectCommand
