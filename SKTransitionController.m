@@ -609,7 +609,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         [self addSubview:metalView];
         commandQueue = [device newCommandQueue];
         context = [[CIContext contextWithMTLDevice:device] retain];
-        CFRelease(device);
+        [device release];
     }
     return self;
 }
