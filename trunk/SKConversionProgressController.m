@@ -117,8 +117,9 @@ CGPSConverterCallbacks SKPSConverterCallbacks = {
 }
 
 - (void)dealloc {
+    if (converter) CFRelease(converter);
+    converter = NULL;
     SKDESTROY(fileType);
-    SKCFDESTROY(converter);
     SKDESTROY(outputFileURL);
     SKDESTROY(outputData);
     SKDESTROY(task);

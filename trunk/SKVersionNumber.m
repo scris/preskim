@@ -164,9 +164,10 @@
 
 - (void)dealloc;
 {
+    if (components) NSZoneFree(NULL, components);
+    components = NULL;
     SKDESTROY(originalVersionString);
     SKDESTROY(cleanVersionString);
-    SKZONEDESTROY(components);
     [super dealloc];
 }
 

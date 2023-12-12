@@ -46,8 +46,9 @@
 @synthesize containingDocument, detectedWidgets;
 
 - (void)dealloc {
+    if (languageDirectionAngles) NSZoneFree(NULL, languageDirectionAngles);
+    languageDirectionAngles = NULL;
     containingDocument = nil;
-    SKZONEDESTROY(languageDirectionAngles);
     SKDESTROY(detectedWidgets);
     [super dealloc];
 }

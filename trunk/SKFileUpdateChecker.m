@@ -93,7 +93,8 @@ static BOOL canUpdateFromURL(NSURL *fileURL);
     // remove file monitor and invalidate timer; maybe we've changed filesystems
     if (source) {
         dispatch_source_cancel(source);
-        SKDISPATCHDESTROY(source);
+        dispatch_release(source);
+        source = NULL;
     }
     if (fileUpdateTimer) {
         [fileUpdateTimer invalidate];

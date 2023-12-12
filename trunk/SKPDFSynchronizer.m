@@ -90,8 +90,10 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 }
 
 - (void)dealloc {
-    SKDISPATCHDESTROY(queue);
-    SKDISPATCHDESTROY(lockQueue);
+    dispatch_release(queue);
+    queue = NULL;
+    dispatch_release(lockQueue);
+    lockQueue = NULL;
     SKDESTROY(fileManager);
     SKDESTROY(pages);
     SKDESTROY(lines);
