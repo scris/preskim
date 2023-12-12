@@ -136,7 +136,7 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
     NSInteger addBookmarkType = [sender tag];
     SKBookmarkSheetController *bookmarkSheetController = [[[SKBookmarkSheetController alloc] init] autorelease];
 	[bookmarkSheetController setStringValue:[self displayName]];
-    [bookmarkSheetController beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSInteger result) {
+    [bookmarkSheetController beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSModalResponse result) {
             if (result == NSModalResponseOK) {
                 NSString *label = [bookmarkSheetController stringValue];
                 SKBookmark *folder = [bookmarkSheetController selectedFolder] ?: [[SKBookmarkController sharedBookmarkController] bookmarkRoot];
@@ -174,7 +174,7 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
                         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"An item named \"%@\" already exists in this location. Do you want to replace it with this bookmark?", @"Informative text in alert dialog when getting duplicate bookmark label"), [bookmark label]]];
                         [alert addButtonWithTitle:NSLocalizedString(@"Replace", @"button title")];
                         [alert addButtonWithTitle:NSLocalizedString(@"Add", @"button title")];
-                        [alert beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSInteger returnCode){
+                        [alert beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSModalResponse returnCode){
                             if (returnCode == NSAlertFirstButtonReturn)
                                 [bookmarks replaceBookmarkAtIndex:i ofBookmark:folder withBookmark:bookmark animate:YES];
                             else

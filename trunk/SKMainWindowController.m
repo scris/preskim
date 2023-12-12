@@ -2210,7 +2210,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         [alert addButtonWithTitle:NSLocalizedString(@"No", @"Button title")];
         NSWindow *window = [self window];
         if ([window attachedSheet] == nil)
-            [alert beginSheetModalForWindow:window completionHandler:^(NSInteger returnCode){
+            [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode){
                 if (returnCode == NSAlertFirstButtonReturn)
                     [[self document] savePasswordInKeychain:password];
             }];

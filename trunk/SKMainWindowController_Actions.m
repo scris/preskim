@@ -366,7 +366,7 @@ static NSArray *allMainDocumentPDFViews() {
     [(NSComboBox *)[pageSheetController textField] addItemsWithObjectValues:pageLabels];
     [pageSheetController setStringValue:[self pageLabel]];
     
-    [pageSheetController beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
+    [pageSheetController beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse result) {
             if (result == NSModalResponseOK)
                 [self setPageLabel:[pageSheetController stringValue]];
         }];
@@ -918,7 +918,7 @@ static NSArray *allMainDocumentPDFViews() {
 - (IBAction)password:(id)sender {
     SKTextFieldSheetController *passwordSheetController = [[[SKTextFieldSheetController alloc] initWithWindowNibName:@"PasswordSheet"] autorelease];
     
-    [passwordSheetController beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
+    [passwordSheetController beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse result) {
             if (result == NSModalResponseOK) {
                 [[passwordSheetController window] orderOut:nil];
                 [[pdfView document] unlockWithPassword:[passwordSheetController stringValue]];
@@ -955,7 +955,7 @@ static NSArray *allMainDocumentPDFViews() {
 - (IBAction)chooseTransition:(id)sender {
     presentationSheetController = [[SKPresentationOptionsSheetController alloc] initForController:self];
     
-    [presentationSheetController beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
+    [presentationSheetController beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse result) {
             SKDESTROY(presentationSheetController);
         }];
 }

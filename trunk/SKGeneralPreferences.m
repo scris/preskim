@@ -105,7 +105,7 @@
     NSDictionary *defaultSettings = fullScreen ? [sud dictionaryForKey:SKDefaultPDFDisplaySettingsKey] : nil;
     SKViewSettingsController *viewSettings = [[[SKViewSettingsController alloc] initWithSettings:settings defaultSettings:defaultSettings] autorelease];
     
-    [viewSettings beginSheetModalForWindow:[[self view] window] completionHandler:^(NSInteger result){
+    [viewSettings beginSheetModalForWindow:[[self view] window] completionHandler:^(NSModalResponse result){
         if (result == NSModalResponseOK) {
             [sud setObject:[viewSettings settings] forKey:key];
             if (fullScreen == NO)

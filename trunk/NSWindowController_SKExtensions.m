@@ -66,7 +66,7 @@
 
 - (BOOL)isNoteWindowController { return NO; }
 
-- (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSInteger result))handler {
+- (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse result))handler {
 	[self retain]; // make sure we stay around long enough
     [window beginSheet:[self window] completionHandler:handler];
 }

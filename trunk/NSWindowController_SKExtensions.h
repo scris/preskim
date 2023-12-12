@@ -45,7 +45,7 @@
 
 @property (nonatomic, readonly, getter=isNoteWindowController) BOOL noteWindowController;
 
-- (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSInteger result))handler;
+- (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse result))handler;
 
 - (IBAction)dismissSheet:(id)sender;
 

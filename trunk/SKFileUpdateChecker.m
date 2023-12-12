@@ -236,7 +236,7 @@ enum { SKFileUpdateOptionYes=NSAlertFirstButtonReturn, SKFileUpdateOptionNo=NSAl
                 [alert addButtonWithTitle:NSLocalizedString(@"No", @"Button title")];
                 if (fucFlags.autoUpdate == NO)
                     [alert addButtonWithTitle:NSLocalizedString(@"Auto", @"Button title")];
-                [alert beginSheetModalForWindow:docWindow completionHandler:^(NSInteger returnCode){
+                [alert beginSheetModalForWindow:docWindow completionHandler:^(NSModalResponse returnCode){
                     [[alert window] orderOut:nil];
                     [self updateWithOption:returnCode];
                 }];
