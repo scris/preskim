@@ -67,16 +67,17 @@
 - (BOOL)isNoteWindowController { return NO; }
 
 - (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse result))handler {
-	[self retain]; // make sure we stay around long enough
-    [window beginSheet:[self window] completionHandler:handler];
+    __block id strongSelf = self;
+    [window beginSheet:[self window] completionHandler:^(NSModalResponse result){
+        if (handler)
+            handler(result);
+        SKDESTROY(strongSelf);
+    }];
 }
 
 - (IBAction)dismissSheet:(id)sender {
     NSWindow *window = [[self window] sheetParent];
-    if (window) {
-        [window endSheet:[self window] returnCode:[sender tag]];
-        [self autorelease];
-    }
+    [window endSheet:[self window] returnCode:[sender tag]];
 }
 
 @end
