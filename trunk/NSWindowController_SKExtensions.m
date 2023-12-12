@@ -67,7 +67,7 @@
 - (BOOL)isNoteWindowController { return NO; }
 
 - (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse result))handler {
-    __block id strongSelf = self;
+    __block id strongSelf = [self retain];
     [window beginSheet:[self window] completionHandler:^(NSModalResponse result){
         if (handler)
             handler(result);
