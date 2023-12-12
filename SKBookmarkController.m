@@ -496,7 +496,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [openPanel setAllowsMultipleSelection:YES];
     [openPanel setCanChooseDirectories:YES];
     [openPanel setAllowedFileTypes:types];
-    [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result){
+    [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse result){
             if (result == NSModalResponseOK) {
                 NSArray *newBookmarks = [SKBookmark bookmarksForURLs:[openPanel URLs]];
                 if ([newBookmarks count] > 0) {
@@ -576,7 +576,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [oPanel setAllowedFileTypes:@[SKPDFDocumentType, SKPDFBundleDocumentType, SKPostScriptDocumentType, SKEncapsulatedPostScriptDocumentType, SKDVIDocumentType, SKXDVDocumentType, SKNotesDocumentType]];
     if (oldURL)
         [oPanel setDirectoryURL:[oldURL URLByDeletingLastPathComponent]];
-    [oPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result){
+    [oPanel beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse result){
             if (result == NSModalResponseOK) {
                 NSURL *fileURL = [[oPanel URLs] firstObject];
                 if (fileURL)

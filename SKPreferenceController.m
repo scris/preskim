@@ -252,7 +252,7 @@
     [alert setInformativeText:NSLocalizedString(@"Choosing Reset will restore all settings to the state they were in when Skim was first installed.", @"Informative text in alert dialog when pressing Reset All button")];
     [alert addButtonWithTitle:NSLocalizedString(@"Reset", @"Button title")];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title")];
-    [alert beginSheetModalForWindow:[self window] completionHandler:^(NSInteger returnCode){
+    [alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode){
         if (returnCode == NSAlertFirstButtonReturn) {
             [[NSUserDefaultsController sharedUserDefaultsController] revertToInitialValues:nil];
             for (NSViewController<SKPreferencePane> *pane in preferencePanes) {
@@ -274,7 +274,7 @@
     [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Choosing Reset will restore all settings in this pane to the state they were in when Skim was first installed.", @"Informative text in alert dialog when pressing Reset All button"), label]];
     [alert addButtonWithTitle:NSLocalizedString(@"Reset", @"Button title")];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title")];
-    [alert beginSheetModalForWindow:[self window] completionHandler:^(NSInteger returnCode){
+    [alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode){
         if (returnCode == NSAlertFirstButtonReturn) {
             NSURL *initialUserDefaultsURL = [[NSBundle mainBundle] URLForResource:INITIALUSERDEFAULTS_KEY withExtension:@"plist"];
             NSArray *resettableKeys = [[[NSDictionary dictionaryWithContentsOfURL:initialUserDefaultsURL] objectForKey:RESETTABLEKEYS_KEY] objectForKey:[currentPane nibName]];

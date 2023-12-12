@@ -1097,7 +1097,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     [(NSNumberFormatter *)[[scaleSheetController textField] formatter] setMaximum:[NSNumber numberWithDouble:[mainController.pdfView maxScaleFactor]]];
     [[scaleSheetController textField] setDoubleValue:[mainController.pdfView scaleFactor]];
     
-    [scaleSheetController beginSheetModalForWindow:[mainController window] completionHandler:^(NSInteger result) {
+    [scaleSheetController beginSheetModalForWindow:[mainController window] completionHandler:^(NSModalResponse result) {
             if (result == NSModalResponseOK)
                 [mainController.pdfView setScaleFactor:[[scaleSheetController textField] doubleValue]];
         }];
@@ -1265,7 +1265,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     
     [[speedSheetController textField] setObjectValue:[NSNumber numberWithDouble:[mainController.pdfView pacerSpeed]]];
     
-    [speedSheetController beginSheetModalForWindow:[mainController window] completionHandler:^(NSInteger result) {
+    [speedSheetController beginSheetModalForWindow:[mainController window] completionHandler:^(NSModalResponse result) {
             if (result == NSModalResponseOK)
                 [mainController.pdfView setPacerSpeed:[[speedSheetController textField] doubleValue]];
         }];

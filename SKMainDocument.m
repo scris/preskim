@@ -1110,7 +1110,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     
     [oPanel setDirectoryURL:[fileURL URLByDeletingLastPathComponent]];
     [oPanel setAllowedFileTypes:@[SKNotesDocumentType]];
-    [oPanel beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSInteger result){
+    [oPanel beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSModalResponse result){
             if (result == NSModalResponseOK) {
                 NSURL *notesURL = [[oPanel URLs] objectAtIndex:0];
                 BOOL replace = (replaceNotesCheckButton && [replaceNotesCheckButton state] == NSOnState);
@@ -1217,7 +1217,7 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
 - (void)beginConvertNotesPasswordSheetForPDFDocument:(PDFDocument *)pdfDoc {
     SKTextFieldSheetController *passwordSheetController = [[[SKTextFieldSheetController alloc] initWithWindowNibName:@"PasswordSheet"] autorelease];
     
-    [passwordSheetController beginSheetModalForWindow:[[self mainWindowController] window] completionHandler:^(NSInteger result) {
+    [passwordSheetController beginSheetModalForWindow:[[self mainWindowController] window] completionHandler:^(NSModalResponse result) {
             if (result == NSModalResponseOK) {
                 [[passwordSheetController window] orderOut:nil];
                 
@@ -1271,7 +1271,7 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
     [alert setInformativeText:NSLocalizedString(@"This will convert PDF annotations to Skim notes. Do you want to proceed?", @"Informative text in alert dialog")];
     [alert addButtonWithTitle:NSLocalizedString(@"OK", @"Button title")];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title")];
-    [alert beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSInteger returnCode){
+    [alert beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSModalResponse returnCode){
         if (returnCode == NSAlertFirstButtonReturn) {
             // remove the sheet, to make place for either the password or progress sheet
             [[alert window] orderOut:nil];
@@ -1359,7 +1359,7 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
              [alert setInformativeText:NSLocalizedString(@"Your current changes will be lost.", @"Informative text in alert dialog")];
              [alert addButtonWithTitle:NSLocalizedString(@"Revert", @"Button title")];
              [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title")];
-             [alert beginSheetModalForWindow:[[self mainWindowController] window] completionHandler:^(NSInteger returnCode){
+             [alert beginSheetModalForWindow:[[self mainWindowController] window] completionHandler:^(NSModalResponse returnCode){
                  if (returnCode == NSAlertFirstButtonReturn) {
                      NSError *error = nil;
                      if (NO == [self revertToContentsOfURL:[self fileURL] ofType:[self fileType] error:&error] && [error isUserCancelledError] == NO) {
