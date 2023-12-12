@@ -43,19 +43,20 @@
 @implementation SKKeychain
 
 + (NSString *)passwordForService:(NSString *)service account:(NSString *)account status:(SKPasswordStatus *)status {
-    NSMutableDictionary *query = [NSMutableDictionary dictionary];
+    CFMutableDictionaryRef query = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     CFTypeRef passwordData = nil;
     NSString *password = nil;
     
-    [query setObject:(NSString *)kSecClassGenericPassword forKey:(NSString *)kSecClass];
-    [query setObject:(NSString *)kSecMatchLimitOne forKey:(NSString *)kSecMatchLimit];
+    CFDictionarySetValue(query, kSecClass, kSecClassGenericPassword);
+    CFDictionarySetValue(query, kSecMatchLimit, kSecMatchLimitOne);
     if (service)
-        [query setObject:service forKey:(NSString *)kSecAttrService];
+        CFDictionarySetValue(query, kSecAttrService, (CFStringRef)service);
     if (account)
-        [query setObject:account forKey:(NSString *)kSecAttrAccount];
-    [query setObject:@YES forKey:(NSString *)kSecReturnData];
+        CFDictionarySetValue(query, kSecAttrAccount, (CFStringRef)account);
+    CFDictionarySetValue(query, kSecReturnData, kCFBooleanTrue);
     
-    OSStatus err = SecItemCopyMatching((CFDictionaryRef)query, &passwordData);
+    OSStatus err = SecItemCopyMatching(query, &passwordData);
+    CFRelease(query);
     
     if (err == noErr) {
         if (passwordData) {
@@ -74,50 +75,55 @@
 }
 
 + (void)setPassword:(NSString *)password forService:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    CFMutableDictionaryRef attributes = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     OSStatus err;
     
     // password not on keychain, so add it
-    [attributes setObject:service forKey:(NSString *)kSecAttrService];
-    [attributes setObject:account forKey:(NSString *)kSecAttrAccount];
-    [attributes setObject:(NSString *)kSecClassGenericPassword forKey:(NSString *)kSecClass];
+    CFDictionarySetValue(attributes, kSecAttrService, (CFStringRef)service);
+    CFDictionarySetValue(attributes, kSecAttrAccount, (CFStringRef)account);
+    CFDictionarySetValue(attributes, kSecClass, kSecClassGenericPassword);
     if (label)
-        [attributes setObject:label forKey:(NSString *)kSecAttrLabel];
+        CFDictionarySetValue(attributes, kSecAttrLabel, (CFStringRef)label);
     if (comment)
-        [attributes setObject:comment forKey:(NSString *)kSecAttrComment];
+        CFDictionarySetValue(attributes, kSecAttrComment, (CFStringRef)comment);
     if (password)
-        [attributes setObject:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(NSString *)kSecValueData];
+        CFDictionarySetValue(attributes, kSecValueData, (CFDataRef)[password dataUsingEncoding:NSUTF8StringEncoding]);
     
-    err = SecItemAdd((CFDictionaryRef)attributes, NULL);
+    err = SecItemAdd(attributes, NULL);
+    CFRelease(attributes);
+    
     if (err != noErr && err != errSecUserCanceled)
         NSLog(@"Error %d occurred adding password: %@", (int)err, [(id)SecCopyErrorMessageString(err, NULL) autorelease]);
 }
 
 + (SKPasswordStatus)updatePassword:(NSString *)password service:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment forService:(NSString *)itemService account:(NSString *)itemAccount {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-    NSMutableDictionary *query = [NSMutableDictionary dictionary];
+    CFMutableDictionaryRef attributes = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CFMutableDictionaryRef query = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     OSStatus err;
     
-    [query setObject:(NSString *)kSecClassGenericPassword forKey:(NSString *)kSecClass];
-    [query setObject:(NSString *)kSecMatchLimitOne forKey:(NSString *)kSecMatchLimit];
+    CFDictionarySetValue(query, kSecClass, kSecClassGenericPassword);
+    CFDictionarySetValue(query, kSecMatchLimit, kSecMatchLimitOne);
     if (itemService)
-        [query setObject:itemService forKey:(NSString *)kSecAttrService];
+        CFDictionarySetValue(query, kSecAttrService, (CFStringRef)itemService);
     if (itemAccount)
-        [query setObject:itemAccount forKey:(NSString *)kSecAttrAccount];
+        CFDictionarySetValue(query, kSecAttrAccount, (CFStringRef)itemAccount);
     
     if (service && [service isEqualToString:itemService] == NO)
-        [attributes setObject:service forKey:(NSString *)kSecAttrService];
+        CFDictionarySetValue(attributes, kSecAttrService, (CFStringRef)service);
     if (account && [account isEqualToString:itemAccount] == NO)
-        [attributes setObject:account forKey:(NSString *)kSecAttrAccount];
+        CFDictionarySetValue(attributes, kSecAttrAccount, (CFStringRef)account);
     if (label)
-        [attributes setObject:label forKey:(NSString *)kSecAttrLabel];
+        CFDictionarySetValue(attributes, kSecAttrLabel, (CFStringRef)label);
     if (comment)
-        [attributes setObject:comment forKey:(NSString *)kSecAttrComment];
+        CFDictionarySetValue(attributes, kSecAttrComment, (CFStringRef)comment);
     if (password)
-        [attributes setObject:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(NSString *)kSecValueData];
+        CFDictionarySetValue(attributes, kSecValueData, (CFDataRef)[password dataUsingEncoding:NSUTF8StringEncoding]);
     
     // password was on keychain, so modify the keychain
-    err = SecItemUpdate((CFDictionaryRef)query, (CFDictionaryRef)attributes);
+    err = SecItemUpdate(query, attributes);
+    CFRelease(query);
+    CFRelease(attributes);
+    
     if (err == noErr) {
         return SKPasswordStatusFound;
     } else if (err == errSecItemNotFound) {
