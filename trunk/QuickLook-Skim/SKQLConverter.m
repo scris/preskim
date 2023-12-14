@@ -114,7 +114,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
     begin = ptr + 1;
     
     length = [htmlString length];
-    ptr = NSZoneMalloc(NULL, length * sizeof(unichar));
+    ptr = malloc(length * sizeof(unichar));
     if (!ptr)
         return nil;
     
@@ -153,7 +153,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
         ptr++;
     }
     APPEND_PREVIOUS();
-    NSZoneFree(NULL, originalPtr);
+    free(originalPtr);
     return result;
 }
 
