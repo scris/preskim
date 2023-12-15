@@ -49,7 +49,7 @@
     if (nextWindowLocations == nil)
         nextWindowLocations = [[NSMapTable alloc] initWithKeyPointerFunctions:[NSPointerFunctions strongPointerFunctions] valuePointerFunctions:[NSPointerFunctions pointPointerFunctions] capacity:0];
     
-    NSPointPointer pointPtr = (NSPointPointer)NSMapGet(nextWindowLocations, (void *)name);
+    NSPointPointer pointPtr = (NSPointPointer)NSMapGet(nextWindowLocations, (__bridge void *)name);
     NSPoint point;
     
     [[self window] setFrameUsingName:name];
@@ -61,17 +61,17 @@
         point = *pointPtr;
     }
     point = [[self window] cascadeTopLeftFromPoint:point];
-    NSMapInsert(nextWindowLocations, (void *)name, &point);
+    NSMapInsert(nextWindowLocations, (__bridge void *)name, &point);
 }
 
 - (BOOL)isNoteWindowController { return NO; }
 
 - (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse result))handler {
-    __block id strongSelf = [self retain];
+    __block id strongSelf = self;
     [window beginSheet:[self window] completionHandler:^(NSModalResponse result){
         if (handler)
             handler(result);
-        SKDESTROY(strongSelf);
+        strongSelf = nil;
     }];
 }
 

@@ -65,7 +65,7 @@ void SKRunWithAppearance(id object, void (^code)(void)) {
     if (@available(macOS 10.14, *)) {
         NSAppearance *appearance = nil;
         if ([object respondsToSelector:@selector(effectiveAppearance)]) {
-            appearance = [[[NSAppearance currentAppearance] retain] autorelease];
+            appearance = [NSAppearance currentAppearance];
             [NSAppearance setCurrentAppearance:[(id<NSAppearanceCustomization>)object effectiveAppearance]];
         }
         code();
@@ -173,7 +173,7 @@ extern NSArray *SKColorEffectFilters(void) {
     }
     NSColor *white = [[NSUserDefaults standardUserDefaults] colorForKey:SKWhitePointKey];
     if (white) {
-        if ((filter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [[[CIColor alloc] initWithColor:white] autorelease], nil]))
+        if ((filter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [[CIColor alloc] initWithColor:white], nil]))
             [filters addObject:filter];
     }
     if (SKHasDarkAppearance() && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {

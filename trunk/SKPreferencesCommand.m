@@ -45,11 +45,11 @@
 - (id)performDefaultImplementation {
     id type = [[self evaluatedArguments] objectForKey:@"Type"] ?: [self directParameter];
     if ([type isKindOfClass:[NSString class]]) {
-        return [[[SKNotePrefs alloc] initWithType:type] autorelease];
+        return [[SKNotePrefs alloc] initWithType:type];
     } else if ([type isKindOfClass:[NSNumber class]]) {
         NSInteger mode = [type integerValue];
         if (mode == 0 || mode == 1)
-            return [[[SKDisplayPrefs alloc] initForFullScreen:mode] autorelease];
+            return [[SKDisplayPrefs alloc] initForFullScreen:mode];
     }
     return nil;
 }

@@ -56,24 +56,19 @@ NSString *SKGroupedSearchResultCountKey = @"count";
 }
 
 + (instancetype)groupedSearchResultWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount {
-    return [[[self alloc] initWithPage:aPage maxCount:aMaxCount] autorelease];
+    return [[self alloc] initWithPage:aPage maxCount:aMaxCount];
 }
 
 - (instancetype)initWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount {
     self = [super init];
     if (self) {
-        page = [aPage retain];
+        page = aPage;
         maxCount = aMaxCount;
         matches = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(page);
-    SKDESTROY(matches);
-    [super dealloc];
-}
 
 - (NSUInteger)pageIndex {
     return [page pageIndex];

@@ -119,18 +119,6 @@
 - (void)dealloc {
     [outlineView setDelegate:nil];
     [outlineView setDataSource:nil];
-    SKDESTROY(notes);
-    SKDESTROY(unsupportedNotes);
-    SKDESTROY(pdfDocument);
-    SKDESTROY(sourceFileURL);
-	SKDESTROY(rowHeights);
-    SKDESTROY(toolbarItems);
-    SKDESTROY(statusBar);
-    SKDESTROY(noteTypeSheetController);
-    SKDESTROY(outlineView);
-    SKDESTROY(arrayController);
-    SKDESTROY(searchField);
-    [super dealloc];
 }
 
 - (NSString *)windowNibName {
@@ -176,8 +164,8 @@
     [outlineView setIndentationPerLevel:1.0];
     [outlineView setStronglyReferencesItems:YES];
 
-    NSSortDescriptor *indexSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES] autorelease];
-    NSSortDescriptor *stringSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] autorelease];
+    NSSortDescriptor *indexSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES];
+    NSSortDescriptor *stringSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)];
     [arrayController setSortDescriptors:@[indexSortDescriptor, stringSortDescriptor]];
     [outlineView reloadData];
     
@@ -207,7 +195,7 @@
 - (NSArray *)writableTypesForSaveOperation:(NSSaveOperationType)saveOperation {
     NSArray *writableTypes = [super writableTypesForSaveOperation:saveOperation];
     if (saveOperation == NSSaveToOperation) {
-        NSMutableArray *tmpArray = [[writableTypes mutableCopy] autorelease];
+        NSMutableArray *tmpArray = [writableTypes mutableCopy];
         [[SKTemplateManager sharedManager] resetCustomTemplateTypes];
         [tmpArray addObjectsFromArray:[[SKTemplateManager sharedManager] customTemplateTypes]];
         writableTypes = tmpArray;
@@ -241,8 +229,9 @@
 - (void)document:(NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo {
     ndFlags.exportUsingPanel = NO;
     if (contextInfo) {
-        NSInvocation *invocation = [(NSInvocation *)contextInfo autorelease];
-        [invocation setArgument:&doc atIndex:2];
+        NSInvocation *invocation = (NSInvocation *)CFBridgingRelease(contextInfo);
+        __unsafe_unretained NSDocument *theDoc = doc;
+        [invocation setArgument:&theDoc atIndex:2];
         [invocation setArgument:&didSave atIndex:3];
         [invocation invoke];
     }
@@ -250,15 +239,14 @@
 
 - (void)runModalSavePanelForSaveOperation:(NSSaveOperationType)saveOperation delegate:(id)delegate didSaveSelector:(SEL)didSaveSelector contextInfo:(void *)contextInfo {
     // Override so we can determine if this is a save, saveAs or export operation, so we can prepare the correct accessory view
+    void *newContextInfo = NULL;
     if (delegate && didSaveSelector) {
         NSInvocation *invocation = [NSInvocation invocationWithTarget:delegate selector:didSaveSelector];
         [invocation setArgument:&contextInfo atIndex:4];
-        contextInfo = [invocation retain];
-    } else {
-        contextInfo = NULL;
+        newContextInfo = (void *)CFBridgingRetain(invocation);
     }
     ndFlags.exportUsingPanel = (saveOperation == NSSaveToOperation);
-    [super runModalSavePanelForSaveOperation:saveOperation delegate:self didSaveSelector:@selector(document:didSave:contextInfo:) contextInfo:contextInfo];
+    [super runModalSavePanelForSaveOperation:saveOperation delegate:self didSaveSelector:@selector(document:didSave:contextInfo:) contextInfo:newContextInfo];
 }
 
 // This method is not used for autosave, but that does not matter because we don't need to do anything special there
@@ -329,7 +317,6 @@
         NSMutableArray *newUnsupportedNotes = [NSMutableArray arrayWithCapacity:[array count]];
 
         [self willChangeValueForKey:PAGES_KEY];
-        [pdfDocument autorelease];
         pdfDocument = [[SKPDFDocument alloc] init];
         
         [pdfDocument setContainingDocument:self];
@@ -356,11 +343,9 @@
                 while (pageIndex >= pageCount) {
                     page = [[SKNotesPage alloc] init];
                     [pdfDocument insertPage:page atIndex:pageCount++];
-                    [page release];
                 }
                 [[pdfDocument pageAtIndex:pageIndex] addAnnotation:note];
                 [newNotes addObject:note];
-                [note release];
             } else {
                 [newUnsupportedNotes addObject:dict];
             }
@@ -370,11 +355,9 @@
         [rowHeights removeAllObjects];
         
         [self willChangeValueForKey:NOTES_KEY];
-        [notes autorelease];
         notes = [newNotes copy];
         [self didChangeValueForKey:NOTES_KEY];
         
-        [unsupportedNotes release];
         unsupportedNotes = [newUnsupportedNotes count] ? [newUnsupportedNotes copy] : nil;
         
         [outlineView reloadData];
@@ -388,7 +371,7 @@
 }
 
 - (NSDictionary *)fileAttributesToWriteToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation originalContentsURL:(NSURL *)absoluteOriginalContentsURL error:(NSError **)outError {
-    NSMutableDictionary *dict = [[[super fileAttributesToWriteToURL:absoluteURL ofType:typeName forSaveOperation:saveOperation originalContentsURL:absoluteOriginalContentsURL error:outError] mutableCopy] autorelease];
+    NSMutableDictionary *dict = [[super fileAttributesToWriteToURL:absoluteURL ofType:typeName forSaveOperation:saveOperation originalContentsURL:absoluteOriginalContentsURL error:outError] mutableCopy];
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     
     // only set the creator code for our native types
@@ -489,9 +472,6 @@
     
     NSPrintOperation *printOperation = [NSPrintOperation printOperationWithView:printableView printInfo:printInfo];
     
-    [attrString release];
-    [printableView release];
-    [printInfo release];
     [[printOperation printPanel] setOptions:NSPrintPanelShowsCopies | NSPrintPanelShowsPageRange | NSPrintPanelShowsPaperSize | NSPrintPanelShowsOrientation | NSPrintPanelShowsScaling | NSPrintPanelShowsPreview];
     
     [printOperation setJobTitle:[self displayName]];
@@ -566,7 +546,7 @@
             height = [cell cellSizeForBounds:fullRect].height;
         else
             height = 0.0;
-        NSMapInsert(rowHeights, (void *)item, (void *)(NSInteger)round(fmax(height, rowHeight) + EXTRA_ROW_HEIGHT));
+        NSMapInsert(rowHeights, (__bridge void *)item, (void *)(NSInteger)round(fmax(height, rowHeight) + EXTRA_ROW_HEIGHT));
         if (rowIndexes) {
             row = [outlineView rowForItem:item];
             if (row != -1)
@@ -588,7 +568,7 @@
     } else {
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
-            NSMapRemove(rowHeights, (void *)item);
+            NSMapRemove(rowHeights, (__bridge void *)item);
             NSInteger row = [outlineView rowForItem:item];
             if (row != -1)
                 [indexes addIndex:row];
@@ -703,24 +683,24 @@
     NSMutableArray *sortDescriptors = nil;
     BOOL ascending = YES;
     if ([oldTableColumn isEqual:newTableColumn]) {
-        sortDescriptors = [[[arrayController sortDescriptors] mutableCopy] autorelease];
+        sortDescriptors = [[arrayController sortDescriptors] mutableCopy];
         [sortDescriptors replaceObjectAtIndex:0 withObject:[[sortDescriptors firstObject] reversedSortDescriptor]];
         ascending = [[sortDescriptors firstObject] ascending];
     } else {
         NSString *tcID = [newTableColumn identifier];
-        NSSortDescriptor *pageIndexSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:ascending] autorelease];
-        NSSortDescriptor *boundsSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:ascending selector:@selector(compare:)] autorelease];
+        NSSortDescriptor *pageIndexSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:ascending];
+        NSSortDescriptor *boundsSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:ascending selector:@selector(compare:)];
         sortDescriptors = [NSMutableArray arrayWithObjects:pageIndexSortDescriptor, boundsSortDescriptor, nil];
         if ([tcID isEqualToString:TYPE_COLUMNID]) {
-            [sortDescriptors insertObject:[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationTypeKey ascending:YES selector:@selector(noteTypeCompare:)] autorelease] atIndex:0];
+            [sortDescriptors insertObject:[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationTypeKey ascending:YES selector:@selector(noteTypeCompare:)] atIndex:0];
         } else if ([tcID isEqualToString:COLOR_COLUMNID]) {
-            [sortDescriptors insertObject:[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationColorKey ascending:YES selector:@selector(colorCompare:)] autorelease] atIndex:0];
+            [sortDescriptors insertObject:[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationColorKey ascending:YES selector:@selector(colorCompare:)] atIndex:0];
         } else if ([tcID isEqualToString:NOTE_COLUMNID]) {
-            [sortDescriptors insertObject:[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] autorelease] atIndex:0];
+            [sortDescriptors insertObject:[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] atIndex:0];
         } else if ([tcID isEqualToString:AUTHOR_COLUMNID]) {
-            [sortDescriptors insertObject:[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationUserNameKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] autorelease] atIndex:0];
+            [sortDescriptors insertObject:[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationUserNameKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] atIndex:0];
         } else if ([tcID isEqualToString:DATE_COLUMNID]) {
-            [sortDescriptors insertObject:[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationModificationDateKey ascending:YES] autorelease] atIndex:0];
+            [sortDescriptors insertObject:[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationModificationDateKey ascending:YES] atIndex:0];
         } else if ([tcID isEqualToString:PAGE_COLUMNID]) {
             if (oldTableColumn == nil)
                 ascending = NO;
@@ -758,7 +738,7 @@
 - (void)outlineView:(NSOutlineView *)ov copyItems:(NSArray *)items  {
     NSPasteboard *pboard = [NSPasteboard generalPasteboard];
     NSMutableArray *copiedItems = [NSMutableArray array];
-    NSMutableAttributedString *attrString = [[[NSMutableAttributedString alloc] init] autorelease];
+    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] init];
     BOOL isAttributed = NO;
     PDFAnnotation *item;
     
@@ -794,7 +774,7 @@
 }
 
 - (CGFloat)outlineView:(NSOutlineView *)ov heightOfRowByItem:(id)item {
-    CGFloat rowHeight = (NSInteger)NSMapGet(rowHeights, (void *)item);
+    CGFloat rowHeight = (NSInteger)NSMapGet(rowHeights, (__bridge void *)item);
     if (rowHeight <= 0.0) {
         if (ndFlags.autoResizeRows) {
             NSTableColumn *tableColumn = [ov outlineTableColumn];
@@ -808,7 +788,7 @@
             if (width > 0.0)
                 rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
             rowHeight = round(fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT);
-            NSMapInsert(rowHeights, (void *)item, (void *)(NSInteger)rowHeight);
+            NSMapInsert(rowHeights, (__bridge void *)item, (void *)(NSInteger)rowHeight);
         } else {
             rowHeight = [(PDFAnnotation *)item type] ? [ov rowHeight] + EXTRA_ROW_HEIGHT : DEFAULT_TEXT_ROW_HEIGHT;
         }
@@ -817,7 +797,7 @@
 }
 
 - (void)outlineView:(NSOutlineView *)ov setHeight:(CGFloat)newHeight ofRowByItem:(id)item {
-    NSMapInsert(rowHeights, (void *)item, (void *)(NSInteger)round(newHeight));
+    NSMapInsert(rowHeights, (__bridge void *)item, (void *)(NSInteger)round(newHeight));
 }
 
 - (NSArray *)outlineViewTypeSelectHelperSelectionStrings:(NSOutlineView *)ov {
@@ -890,7 +870,7 @@
 
 - (void)setupToolbarForWindow:(NSWindow *)aWindow {
     // Create a new toolbar instance, and attach it to our document window
-    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:SKNotesDocumentToolbarIdentifier] autorelease];
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:SKNotesDocumentToolbarIdentifier];
     SKToolbarItem *item;
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
     
@@ -915,7 +895,6 @@
         [item setMaxSize:size];
     }
     [dict setObject:item forKey:SKNotesDocumentSearchToolbarItemIdentifier];
-    [item release];
     
     item = [[SKToolbarItem alloc] initWithItemIdentifier:SKNotesDocumentOpenPDFToolbarItemIdentifier];
     [item setLabels:NSLocalizedString(@"Open PDF", @"Toolbar item label")];
@@ -924,7 +903,6 @@
     [item setTarget:self];
     [item setAction:@selector(openPDF:)];
     [dict setObject:item forKey:SKNotesDocumentOpenPDFToolbarItemIdentifier];
-    [item release];
     
     toolbarItems = [dict mutableCopy];
     
@@ -994,7 +972,6 @@
             if ([[file pathExtension] isCaseInsensitiveEqual:[tm fileNameExtensionForTemplateType:fileType]])
                 [arguments setObject:[file URLByDeletingPathExtension] forKey:@"File"];
             [command setArguments:arguments];
-            [arguments release];
         }
     }
     return [super handleSaveScriptCommand:command];

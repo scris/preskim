@@ -52,7 +52,7 @@
 @property (nonatomic, strong) IBOutlet NSTableView *summaryTableView, *attributesTableView;
 @property (nonatomic, strong) IBOutlet NSTabView *tabView;
 @property (nonatomic, copy) NSDictionary *info;
-@property (nonatomic, readonly) NSArray *keys;
+@property (weak, nonatomic, readonly) NSArray *keys;
 
 @property (class, nonatomic, readonly) SKInfoWindowController *sharedInstance;
 

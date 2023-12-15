@@ -41,12 +41,12 @@
 
 
 @interface SKNoteText : NSObject {
-    PDFAnnotation *note;
+    __weak PDFAnnotation *note;
 }
 
 - (instancetype)initWithNote:(PDFAnnotation *)aNote;
 
-@property (nonatomic, readonly) PDFAnnotation *note;
+@property (nonatomic, weak, readonly) PDFAnnotation *note;
 
 @property (nonatomic, readonly) BOOL hasNoteText;
 @property (nonatomic, readonly) SKNoteText *noteText;

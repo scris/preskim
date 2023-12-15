@@ -212,7 +212,7 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     
     NSRect dragFrame = SKRectFromCenterAndSize([theEvent locationInView:self], [dragImage size]);
     
-    NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:[[self currentSelection] attributedString]] autorelease];
+    NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:[[self currentSelection] attributedString]];
     [dragItem setDraggingFrame:dragFrame contents:dragImage];
     [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
 
@@ -256,7 +256,6 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     } else {
         PDFDestination *destination = [[PDFDestination alloc] initWithPage:page atPoint:point];
         [self goToDestination:destination];
-        [destination release];
     }
 }
 

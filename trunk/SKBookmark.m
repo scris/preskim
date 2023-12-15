@@ -108,23 +108,23 @@ static Class SKBookmarkClass = Nil;
 }
 
 + (instancetype)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
-    return [[[self alloc] initWithURL:aURL pageIndex:aPageIndex label:aLabel] autorelease];
+    return [[self alloc] initWithURL:aURL pageIndex:aPageIndex label:aLabel];
 }
 
 + (instancetype)bookmarkWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel {
-    return [[[self alloc] initWithSetup:aSetupDict label:aLabel] autorelease];
+    return [[self alloc] initWithSetup:aSetupDict label:aLabel];
 }
 
 + (instancetype)bookmarkFolderWithLabel:(NSString *)aLabel {
-    return [[[self alloc] initFolderWithLabel:aLabel] autorelease];
+    return [[self alloc] initFolderWithLabel:aLabel];
 }
 
 + (instancetype)bookmarkSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel {
-    return [[[self alloc] initSessionWithSetups:aSetupDicts label:aLabel] autorelease];
+    return [[self alloc] initSessionWithSetups:aSetupDicts label:aLabel];
 }
 
 + (instancetype)bookmarkSeparator {
-    return [[[self alloc] initSeparator] autorelease];
+    return [[self alloc] initSeparator];
 }
 
 + (NSArray *)bookmarksForURLs:(NSArray *)urls {
@@ -142,12 +142,10 @@ static Class SKBookmarkClass = Nil;
             NSArray *children = [self bookmarksForURLs:[fm contentsOfDirectoryAtURL:url includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL]];
             if ([children count] && (bookmark = [[self alloc] initFolderWithChildren:children label:label])) {
                 [array addObject:bookmark];
-                [bookmark release];
             }
         } else if ((docClass = [dc documentClassForType:fileType])) {
             if ((bookmark = [[self alloc] initWithURL:url pageIndex:([docClass isPDFDocument] ? 0 : NSNotFound) label:label])) {
                 [array addObject:bookmark];
-                [bookmark release];
             }
         }
     }
@@ -199,11 +197,6 @@ static Class SKBookmarkClass = Nil;
     return [[SKBookmark alloc] initWithProperties:[self properties]];
 }
 
-- (void)dealloc {
-    parent = nil;
-    [super dealloc];
-}
-
 - (NSDictionary *)properties { return nil; }
 
 - (SKBookmarkType)bookmarkType { return SKBookmarkTypeSeparator; }
@@ -252,7 +245,7 @@ static Class SKBookmarkClass = Nil;
         } else {
             containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
         }
-        return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:containerRef key:@"bookmarks" index:idx] autorelease];
+        return [[NSIndexSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:containerRef key:@"bookmarks" index:idx];
     } else {
         return nil;
     }
@@ -326,7 +319,6 @@ static Class SKBookmarkClass = Nil;
     [components setHost:@"bookmarks"];
     [components setPath:path];
     NSURL *url = [components URL];
-    [components release];
     return url;
 }
 
@@ -362,7 +354,6 @@ static Class SKBookmarkClass = Nil;
     for (NSDictionary *dict in childrenProperties) {
         if ((child = [[SKBookmark alloc] initWithProperties:dict])) {
             [aChildren addObject:child];
-            [child release];
         }
     }
     return (id)[[SKRootBookmark alloc] initFolderWithChildren:aChildren label:NSLocalizedString(@"Bookmarks Menu", @"Menu item title")];
@@ -374,7 +365,6 @@ static Class SKBookmarkClass = Nil;
     for (NSDictionary *setup in aSetupDicts) {
         if ((child = [[SKBookmark alloc] initWithSetup:setup label:@""])) {
             [aChildren addObject:child];
-            [child release];
         }
     }
     return (id)[[SKSessionBookmark alloc] initFolderWithChildren:aChildren label:aLabel];
@@ -395,7 +385,6 @@ static Class SKBookmarkClass = Nil;
         for (NSDictionary *dict in [dictionary objectForKey:CHILDREN_KEY]) {
             if ((child = [[SKBookmark alloc] initWithProperties:dict])) {
                 [newChildren addObject:child];
-                [child release];
             } else
                 NSLog(@"Failed to read child bookmark: %@", dict);
         }
@@ -404,14 +393,6 @@ static Class SKBookmarkClass = Nil;
         return (id)[[SKFileBookmark alloc] initWithSetup:dictionary label:[dictionary objectForKey:LABEL_KEY]];
     }
 }
-
-- (id)retain { return self; }
-
-- (id)autorelease { return self; }
-
-- (oneway void)release {}
-
-- (NSUInteger)retainCount { return NSUIntegerMax; }
 
 @end
 
@@ -483,7 +464,6 @@ static Class SKBookmarkClass = Nil;
             label = [aLabel copy];
             setup = nil;
         } else {
-            [self release];
             self = nil;
         }
     }
@@ -501,21 +481,13 @@ static Class SKBookmarkClass = Nil;
         if (alias) {
             NSNumber *pageIndexNumber = [aSetupDict objectForKey:PAGEINDEX_KEY];
             pageIndex = pageIndexNumber ? [pageIndexNumber unsignedIntegerValue] : NSNotFound;
-            label = [aLabel retain];
+            label = aLabel;
             setup = [aSetupDict objectForKey:SKDocumentSetupWindowFrameKey] ? [aSetupDict copy] : nil;
         } else {
-            [self release];
             self = nil;
         }
     }
     return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(alias);
-    SKDESTROY(label);
-    SKDESTROY(setup);
-    [super dealloc];
 }
 
 - (NSString *)description {
@@ -542,7 +514,6 @@ static Class SKBookmarkClass = Nil;
 - (void)setFileURL:(NSURL *)fileURL {
     SKAlias *newAlias = [[SKAlias alloc] initWithURL:fileURL];
     if (newAlias) {
-        [alias release];
         alias = newAlias;
     }
 }
@@ -596,8 +567,7 @@ static Class SKBookmarkClass = Nil;
 
 - (void)setLabel:(NSString *)newLabel {
     if (label != newLabel) {
-        [label release];
-        label = [newLabel retain];
+        label = newLabel;
     }
 }
 
@@ -636,12 +606,6 @@ static Class SKBookmarkClass = Nil;
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(label);
-    SKDESTROY(children);
-    [super dealloc];
-}
-
 - (NSString *)description {
     return [NSString stringWithFormat:@"<%@: label=%@, children=%@>", [self class], label, children];
 }
@@ -668,8 +632,7 @@ static Class SKBookmarkClass = Nil;
 
 - (void)setLabel:(NSString *)newLabel {
     if (label != newLabel) {
-        [label release];
-        label = [newLabel retain];
+        label = newLabel;
     }
 }
 
@@ -690,7 +653,7 @@ static Class SKBookmarkClass = Nil;
 }
 
 - (NSArray *)children {
-    return [[children copy] autorelease];
+    return [children copy];
 }
 
 - (NSUInteger)countOfChildren {
@@ -836,7 +799,7 @@ static Class SKBookmarkClass = Nil;
 - (NSImage *)icon {
     static NSImage *menuIcon = nil;
     if (menuIcon == nil) {
-        menuIcon = [[NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect){
+        menuIcon = [NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect){
             [[NSColor colorWithGenericGamma22White:0.0 alpha:0.2] set];
             [NSBezierPath fillRect:NSMakeRect(1.0, 1.0, 14.0, 13.0)];
             [NSGraphicsContext saveGraphicsState];
@@ -869,10 +832,10 @@ static Class SKBookmarkClass = Nil;
                     NSRectFill(NSMakeRect(6.0 + i, 4.0 + 3.0 * j, 1.0, 1.0));
                 }
             }
-            NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.1] endingColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.0]] autorelease];
+            NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.1] endingColor:[NSColor colorWithGenericGamma22White:0.0 alpha:0.0]];
             [gradient drawInRect:NSMakeRect(2.0, 2.0, 12.0,11.0) angle:90.0];
             return YES;
-        }] retain];
+        }];
     }
     return menuIcon;
 }

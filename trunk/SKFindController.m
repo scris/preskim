@@ -50,17 +50,6 @@
 
 @synthesize delegate, findField, messageField, doneButton, navigationButton, ownerController, findString;
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SKDESTROY(findString);
-    SKDESTROY(findField);
-    SKDESTROY(messageField);
-    SKDESTROY(ownerController);
-    SKDESTROY(doneButton);
-    SKDESTROY(navigationButton);
-    [super dealloc];
-}
-
 - (NSString *)nibName {
     return @"FindBar";
 }
@@ -121,8 +110,7 @@
 
 - (void)setFindString:(NSString *)newFindString {
     if (findString != newFindString) {
-        [findString release];
-        findString = [newFindString retain];
+        findString = newFindString;
         didChange = YES;
     }
 }

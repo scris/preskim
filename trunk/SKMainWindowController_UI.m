@@ -258,7 +258,7 @@
         // timers retain their target, so invalidate them now or they may keep firing after the PDF is gone
         if (snapshotTimer) {
             [snapshotTimer invalidate];
-            SKDESTROY(snapshotTimer);
+            snapshotTimer = nil;
         }
         if ([[pdfView document] isFinding])
             [[pdfView document] cancelFindString];
@@ -406,7 +406,7 @@
         }
     } else if ([tv isEqual:rightSideController.snapshotTableView]) {
         SKSnapshotWindowController *snapshot = [[rightSideController.snapshotArrayController arrangedObjects] objectAtIndex:row];
-        return [[[NSFilePromiseProvider alloc] initWithFileType:NSPasteboardTypeTIFF delegate:snapshot] autorelease];
+        return [[NSFilePromiseProvider alloc] initWithFileType:NSPasteboardTypeTIFF delegate:snapshot];
     }
     return nil;
 }
@@ -752,24 +752,24 @@
         NSMutableArray *sortDescriptors = nil;
         BOOL ascending = YES;
         if ([oldTableColumn isEqual:newTableColumn]) {
-            sortDescriptors = [[[rightSideController.noteArrayController sortDescriptors] mutableCopy] autorelease];
+            sortDescriptors = [[rightSideController.noteArrayController sortDescriptors] mutableCopy];
             [sortDescriptors replaceObjectAtIndex:0 withObject:[[sortDescriptors firstObject] reversedSortDescriptor]];
             ascending = [[sortDescriptors firstObject] ascending];
         } else {
             NSString *tcID = [newTableColumn identifier];
-            NSSortDescriptor *pageIndexSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:ascending] autorelease];
-            NSSortDescriptor *boundsSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:ascending selector:@selector(compare:)] autorelease];
+            NSSortDescriptor *pageIndexSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:ascending];
+            NSSortDescriptor *boundsSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:ascending selector:@selector(compare:)];
             sortDescriptors = [NSMutableArray arrayWithObjects:pageIndexSortDescriptor, boundsSortDescriptor, nil];
             if ([tcID isEqualToString:TYPE_COLUMNID]) {
-                [sortDescriptors insertObject:[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationTypeKey ascending:YES selector:@selector(noteTypeCompare:)] autorelease] atIndex:0];
+                [sortDescriptors insertObject:[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationTypeKey ascending:YES selector:@selector(noteTypeCompare:)] atIndex:0];
             } else if ([tcID isEqualToString:COLOR_COLUMNID]) {
-                [sortDescriptors insertObject:[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationColorKey ascending:YES selector:@selector(colorCompare:)] autorelease] atIndex:0];
+                [sortDescriptors insertObject:[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationColorKey ascending:YES selector:@selector(colorCompare:)] atIndex:0];
             } else if ([tcID isEqualToString:NOTE_COLUMNID]) {
-                [sortDescriptors insertObject:[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] autorelease] atIndex:0];
+                [sortDescriptors insertObject:[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] atIndex:0];
             } else if ([tcID isEqualToString:AUTHOR_COLUMNID]) {
-                [sortDescriptors insertObject:[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationUserNameKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] autorelease] atIndex:0];
+                [sortDescriptors insertObject:[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationUserNameKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] atIndex:0];
             } else if ([tcID isEqualToString:DATE_COLUMNID]) {
-                [sortDescriptors insertObject:[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationModificationDateKey ascending:YES] autorelease] atIndex:0];
+                [sortDescriptors insertObject:[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationModificationDateKey ascending:YES] atIndex:0];
             }
             if (oldTableColumn)
                 [ov setIndicatorImage:nil inTableColumn:oldTableColumn];
@@ -835,7 +835,7 @@
 
 - (CGFloat)outlineView:(NSOutlineView *)ov heightOfRowByItem:(id)item {
     if ([ov isEqual:rightSideController.noteOutlineView]) {
-        CGFloat rowHeight = (NSInteger)NSMapGet(rowHeights, (void *)item);
+        CGFloat rowHeight = (NSInteger)NSMapGet(rowHeights, (__bridge void *)item);
         if (rowHeight <= 0.0) {
             if (mwcFlags.autoResizeNoteRows) {
                 NSTableColumn *tableColumn = [ov outlineTableColumn];
@@ -850,7 +850,7 @@
                 if (width > 0.0)
                     rowHeight = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, width, CGFLOAT_MAX)].height;
                 rowHeight = round(fmax(rowHeight, [ov rowHeight]) + EXTRA_ROW_HEIGHT);
-                NSMapInsert(rowHeights, (void *)item, (void *)(NSInteger)rowHeight);
+                NSMapInsert(rowHeights, (__bridge void *)item, (void *)(NSInteger)rowHeight);
             } else {
                 rowHeight = [(PDFAnnotation *)item type] ? [ov rowHeight] + EXTRA_ROW_HEIGHT : ([[(SKNoteText *)item note] isNote] ? DEFAULT_TEXT_ROW_HEIGHT : DEFAULT_MARKUP_ROW_HEIGHT);
             }
@@ -861,18 +861,16 @@
 }
 
 - (void)outlineView:(NSOutlineView *)ov setHeight:(CGFloat)newHeight ofRowByItem:(id)item {
-    NSMapInsert(rowHeights, (void *)item, (void *)(NSInteger)round(newHeight));
+    NSMapInsert(rowHeights, (__bridge void *)item, (void *)(NSInteger)round(newHeight));
 }
 
 - (NSArray *)noteItems:(NSArray *)items {
     NSMutableArray *noteItems = [NSMutableArray array];
     
-    for (PDFAnnotation *item in items) {
-        if ([item type] == nil) {
-            item = [(SKNoteText *)item note];
-        }
-        if ([noteItems containsObject:item] == NO)
-            [noteItems addObject:item];
+    for (id item in items) {
+        PDFAnnotation *note = [(PDFAnnotation *)item type] == nil ? [item note] : item;
+        if ([noteItems containsObject:note] == NO)
+            [noteItems addObject:note];
     }
     return noteItems;
 }
@@ -896,7 +894,7 @@
     if ([ov isEqual:rightSideController.noteOutlineView] && [items count]) {
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         NSMutableArray *copiedItems = [NSMutableArray array];
-        NSMutableAttributedString *attrString = [[[NSMutableAttributedString alloc] init] autorelease];
+        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] init];
         BOOL isAttributed = NO;
         id item;
         
@@ -1084,7 +1082,6 @@
     if (lastNote == note)
         return;
     
-    [note retain];
     
     NSUInteger i = [[self notes] indexOfObject:note];
     NSUInteger j = [[self notes] indexOfObject:lastNote];
@@ -1096,7 +1093,6 @@
     [page removeAnnotation:note];
     [page addAnnotation:note];
     
-    [note release];
     
     [pdfView setNeedsDisplayForAnnotation:note];
 }
@@ -1133,7 +1129,7 @@
             height = [cell cellSizeForBounds:rect].height;
         else
             height = 0.0;
-        NSMapInsert(rowHeights, (void *)item, (void *)(NSInteger)round(fmax(height, rowHeight) + EXTRA_ROW_HEIGHT));
+        NSMapInsert(rowHeights, (__bridge void *)item, (void *)(NSInteger)round(fmax(height, rowHeight) + EXTRA_ROW_HEIGHT));
         if (rowIndexes) {
             row = [ov rowForItem:item];
             if (row != -1)
@@ -1151,7 +1147,7 @@
         SKNoteOutlineView *ov = rightSideController.noteOutlineView;
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
-            NSMapRemove(rowHeights, (void *)item);
+            NSMapRemove(rowHeights, (__bridge void *)item);
             NSInteger row = [ov rowForItem:item];
             if (row != -1)
                 [indexes addIndex:row];
@@ -1426,7 +1422,7 @@
                 NSUInteger pageIndex = [action pageIndex];
                 if (pageIndex < [[document pdfDocument] pageCount]) {
                     PDFPage *page = [[document pdfDocument] pageAtIndex:pageIndex];
-                    PDFDestination *dest = [[[PDFDestination alloc] initWithPage:page atPoint:[action point]] autorelease];
+                    PDFDestination *dest = [[PDFDestination alloc] initWithPage:page atPoint:[action point]];
                     [[(SKMainDocument *)document pdfView] goToDestination:dest];
                 }
             } else if (document == nil && error && [error isUserCancelledError] == NO) {
@@ -2049,7 +2045,7 @@ static NSArray *allMainDocumentPDFViews() {
 
 - (void)observeUndoManagerCheckpoint:(NSNotification *)notification {
     // Start the coalescing of note property changes over.
-    SKDESTROY(undoGroupOldPropertiesPerNote);
+    undoGroupOldPropertiesPerNote = nil;
 }
 
 - (void)handleOpenOrCloseUndoGroupNotification:(NSNotification *)notification {

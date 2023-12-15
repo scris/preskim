@@ -42,17 +42,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @synthesize fileURL, sharingService, completionHandler;
 
-- (void)dealloc {
-    SKDESTROY(fileURL);
-    SKDESTROY(sharingService);
-    SKDESTROY(completionHandler);
-    [super dealloc];
-}
-
 - (void)finishWithSuccess:(BOOL)success {
     if ([self completionHandler])
         [self completionHandler](success);
-    [self autorelease];
+    strongSelf = nil;
 }
 
 - (void)shareFileURL {
@@ -78,7 +71,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 - (void)launchTask:(NSTask *)task {
-    [self retain];
+    strongSelf = self;
     if (task) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskFinished:) name:NSTaskDidTerminateNotification object:task];
         @try {
@@ -104,7 +97,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 + (void)shareURL:(NSURL *)aFileURL preparedByTask:(NSTask *)task usingService:(NSSharingService *)aSharingService completionHandler:(void (^)(BOOL success))aCompletionHandler {
-    SKFileShare *sharer = [[[self alloc] init] autorelease];
+    SKFileShare *sharer = [[self alloc] init];
     [sharer setFileURL:aFileURL];
     [sharer setSharingService:aSharingService];
     [sharer setCompletionHandler:aCompletionHandler];

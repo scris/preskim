@@ -70,11 +70,10 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
     [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKInkNoteDashPatternKey]];
     [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKInkNoteLineStyleKey]];
     [self setBorder:[border lineWidth] > 0.0 ? border : nil];
-    [border release];
 }
 
 - (NSString *)fdfString {
-    NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
+    NSMutableString *fdfString = [[super fdfString] mutableCopy];
     NSPoint point;
     NSInteger i, iMax;
     NSRect bounds = [self bounds];
@@ -257,7 +256,6 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
         [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
         [image drawInRect:rect fromRect:imgRect operation:NSCompositingOperationSourceOver fraction:[[self color] alphaComponent]];
         [NSGraphicsContext restoreGraphicsState];
-        [image release];
     }
 }
 
@@ -279,7 +277,6 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
         NSMutableSet *mutableKeys = [[super keysForValuesToObserveForUndo] mutableCopy];
         [mutableKeys addObject:SKPDFAnnotationBezierPathsKey];
         inkKeys = [mutableKeys copy];
-        [mutableKeys release];
     }
     return inkKeys;
 }
@@ -292,7 +289,6 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
         NSMutableSet *customKeys = [[super customScriptingKeys] mutableCopy];
         [customKeys addObject:SKPDFAnnotationScriptingPointListsKey];
         customInkScriptingKeys = [customKeys copy];
-        [customKeys release];
     }
     return customInkScriptingKeys;
 }
@@ -311,7 +307,6 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
             [pointValues addObject:[NSData dataWithPointAsQDPoint:SKAddPoints(point, origin)]];
         }
         [pointLists addObject:pointValues];
-        [pointValues release];
     }
     return pointLists;
 }

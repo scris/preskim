@@ -266,7 +266,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
 @implementation NSImage (SKExtensions)
 
 + (NSImage *)bitmapImageWithSize:(NSSize)size scale:(CGFloat)scale drawingHandler:(void (^)(NSRect dstRect))drawingHandler {
-    NSImage *image = [[[NSImage alloc] initWithSize:size] autorelease];
+    NSImage *image = [[NSImage alloc] initWithSize:size];
     [image addRepresentation:[NSBitmapImageRep imageRepWithSize:size scale:scale drawingHandler:drawingHandler]];
     return image;
 }
@@ -285,8 +285,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     CGPDFContextEndPage(context);
     CGPDFContextClose(context);
     CGContextRelease(context);
-    self = [self initWithData:(NSData *)pdfData];
-    CFRelease(pdfData);
+    self = [self initWithData:CFBridgingRelease(pdfData)];
     return self;
 }
 
@@ -305,7 +304,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     CGShadingRef shading = CGShadingCreateRadial(colorspace, center, 0.0, center, 12.0, function, false, false);
     CGColorSpaceRelease(colorspace);
     CGFunctionRelease(function);
-    NSImage *image = [[[NSImage alloc] initWithSize:NSMakeSize(24.0, 24.0)] autorelease];;
+    NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(24.0, 24.0)];;
     NSSize size = NSMakeSize(24.0, 24.0);
     CGFloat scale;
     void (^drawingHandler)(NSRect) = ^(NSRect rect){
@@ -323,9 +322,9 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     if (stamp == nil) {
         stamp = [[self alloc] initPDFWithSize:NSMakeSize(256.0, 256.0) drawingHandler:^(NSRect rect){
             NSFont *font = [NSFont fontWithName:@"Times-Bold" size:120.0] ?: [NSFont boldSystemFontOfSize:120.0];
-            NSTextStorage *storage = [[[NSTextStorage alloc] initWithString:type attributes:@{NSFontAttributeName:font}] autorelease];
-            NSLayoutManager *manager = [[[NSLayoutManager alloc] init] autorelease];
-            NSTextContainer *container = [[[NSTextContainer alloc] init] autorelease];
+            NSTextStorage *storage = [[NSTextStorage alloc] initWithString:type attributes:@{NSFontAttributeName:font}];
+            NSLayoutManager *manager = [[NSLayoutManager alloc] init];
+            NSTextContainer *container = [[NSTextContainer alloc] init];
             
             [storage addLayoutManager:manager];
             [manager addTextContainer:container];
@@ -350,14 +349,13 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         if (stamps == nil)
             stamps = [[NSMutableDictionary alloc] init];
         [stamps setObject:stamp forKey:type];
-        [stamp release];
     }
     return stamp;
 }
 
 + (NSImage *)maskImageWithSize:(NSSize)size cornerRadius:(CGFloat)radius {
     NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:(NSRect){NSZeroPoint, size} xRadius:radius yRadius:radius];
-    NSImage *mask = [[[self alloc] initWithSize:size] autorelease];
+    NSImage *mask = [[self alloc] initWithSize:size];
     [mask lockFocus];
     [[NSColor blackColor] set];
     [path fill];
@@ -369,7 +367,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
 + (NSImage *)markImage {
     static NSImage *markImage = nil;
     if (markImage == nil) {
-        markImage = [[self imageWithSize:NSMakeSize(6.0, 10.0) flipped:NO drawingHandler:^(NSRect rect){
+        markImage = [self imageWithSize:NSMakeSize(6.0, 10.0) flipped:NO drawingHandler:^(NSRect rect){
                 [[NSColor colorWithSRGBRed:0.654 green:0.166 blue:0.392 alpha:1.0] setFill];
                 NSBezierPath *path = [NSBezierPath bezierPath];
                 [path moveToPoint:NSMakePoint(NSMinX(rect), NSMinY(rect))];
@@ -380,7 +378,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
                 [path closePath];
                 [path fill];
                 return YES;
-            }] retain];
+            }];
         [markImage setAccessibilityDescription:NSLocalizedString(@"marked page", @"Accessibility description")];
     }
     return markImage;
@@ -1374,7 +1372,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     
     MAKE_IMAGE(SKImageNameNotesPreferences, NO, 32.0, 32.0, 
         NSImage *clippingImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kClippingTextType)];
-        NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:[NSColor colorWithSRGBRed:1.0 green:0.939 blue:0.495 alpha:1.0] endingColor:[NSColor colorWithSRGBRed:1.0 green:0.976 blue:0.810 alpha:1.0]] autorelease];
+        NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithSRGBRed:1.0 green:0.939 blue:0.495 alpha:1.0] endingColor:[NSColor colorWithSRGBRed:1.0 green:0.976 blue:0.810 alpha:1.0]];
         [[NSColor blackColor] setFill];
         [NSBezierPath fillRect:NSMakeRect(2.0, 0.0, 28.0, 32.0)];
         [clippingImage drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
@@ -1858,7 +1856,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [arrow relativeLineToPoint:NSMakePoint(-2.0, 2.0)];
         [arrow closePath];
         
-        NSAffineTransform *transform = [[[NSAffineTransform alloc] init] autorelease];
+        NSAffineTransform *transform = [[NSAffineTransform alloc] init];
         [transform translateXBy:center.x yBy:center.y];
         [transform rotateByDegrees:90.0];
         [transform translateXBy:-center.x yBy:-center.y];
@@ -1902,7 +1900,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [arrow relativeLineToPoint:NSMakePoint(-14.0, 0.0)];
         [arrow closePath];
         
-        NSAffineTransform *transform = [[[NSAffineTransform alloc] init] autorelease];
+        NSAffineTransform *transform = [[NSAffineTransform alloc] init];
         [transform translateXBy:center.x yBy:center.y];
         [transform rotateByDegrees:90.0];
         [transform translateXBy:-center.x yBy:-center.y];

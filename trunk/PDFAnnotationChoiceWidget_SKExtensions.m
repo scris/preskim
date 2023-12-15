@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @implementation PDFAnnotationChoiceWidget (SKExtensions)
 
 - (NSString *)fdfString {
-    NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
+    NSMutableString *fdfString = [[super fdfString] mutableCopy];
     [fdfString appendFDFName:SKFDFAnnotationFieldTypeKey];
     [fdfString appendFDFName:SKFDFFieldTypeChoice];
     [fdfString appendFDFName:SKFDFAnnotationFieldNameKey];

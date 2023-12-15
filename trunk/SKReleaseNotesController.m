@@ -56,11 +56,6 @@ static SKReleaseNotesController *sharedReleaseNotesController = nil;
     return [super initWithWindowNibName:@"ReleaseNotes"];
 }
 
-- (void)dealloc {
-    SKDESTROY(textView);
-    [super dealloc];
-}
-
 - (void)windowDidLoad {
     [textView setString:@""];
     [textView replaceCharactersInRange:[textView selectedRange]

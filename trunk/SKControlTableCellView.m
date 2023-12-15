@@ -44,7 +44,6 @@
 
 - (void)dealloc {
     control = nil;
-    [super dealloc];
 }
 
 - (void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle {

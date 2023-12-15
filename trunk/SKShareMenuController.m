@@ -55,7 +55,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder {
-    [self release];
+    self = nil;
     return nil;
 }
 
@@ -68,7 +68,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     NSArray *services = nil;
     if (fileURL) {
         services = [NSSharingService sharingServicesForItems:@[fileURL]];
-        SKAttachmentEmailer *emailer = [[[SKAttachmentEmailer alloc] init] autorelease];
+        SKAttachmentEmailer *emailer = [[SKAttachmentEmailer alloc] init];
         if (emailer && [[services valueForKey:@"title"] containsObject:[emailer title]] == NO && [emailer permissionToComposeMessage])
             services = services ? [services arrayByAddingObject:emailer] : @[emailer];
     }

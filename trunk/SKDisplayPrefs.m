@@ -60,7 +60,7 @@
     else if ([name isEqualToString:@"FullScreen"] || [name isEqualToString:@"full screen mode"])
         self = [self initForFullScreen:YES];
     else
-        SKDESTROY(self);
+        self = nil;
     return self;
 }
 
@@ -70,7 +70,7 @@
 
 - (NSScriptObjectSpecifier *)objectSpecifier {
     NSScriptClassDescription *containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
-    return [[[NSNameSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"displayPreferences" name:[self name]] autorelease];
+    return [[NSNameSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"displayPreferences" name:[self name]];
 }
 
 - (NSDictionary *)pdfViewSettings {

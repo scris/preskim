@@ -54,7 +54,7 @@
     BOOL separate;
     SKTransitionInfo *transition;
     NSArray *transitions;
-    SKMainWindowController *controller;
+    __weak SKMainWindowController *controller;
     NSUndoManager *undoManager;
     NSMutableSet *changedTransitions;
 }

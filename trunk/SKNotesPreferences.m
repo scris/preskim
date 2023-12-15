@@ -52,17 +52,6 @@
 
 @synthesize textFontWell, anchoredFontWell, textLineWell, circleLineWell, squareLineWell, lineLineWell, inkLineWell;
 
-- (void)dealloc {
-    SKDESTROY(textFontWell);
-    SKDESTROY(anchoredFontWell);
-    SKDESTROY(textLineWell);
-    SKDESTROY(circleLineWell);
-    SKDESTROY(squareLineWell);
-    SKDESTROY(lineLineWell);
-    SKDESTROY(inkLineWell);
-    [super dealloc];
-}
-
 - (NSString *)nibName {
     return @"NotesPreferences";
 }

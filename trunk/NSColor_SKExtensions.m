@@ -58,7 +58,7 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
     NSColor *inactiveIn = nil;
     if (@available(macOS 10.14, *)) {
         NSColorSpace *colorSpace = [NSColorSpace sRGBColorSpace];
-        NSAppearance *appearance = [[[NSAppearance currentAppearance] retain] autorelease];
+        NSAppearance *appearance = [NSAppearance currentAppearance];
         [NSAppearance setCurrentAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         activeOut = [[NSColor alternateSelectedControlColor] colorUsingColorSpace:colorSpace];
         inactiveOut = [[NSColor grayColor] colorUsingColorSpace:colorSpace];
@@ -73,14 +73,10 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
         inactiveIn = [[[NSColor secondarySelectedControlColor] colorUsingColorSpace:colorSpace] colorWithAlphaComponent:0.8];
     }
     @synchronized (self) {
-        [activeSelectionHighlightColor release];
-        activeSelectionHighlightColor = [activeOut retain];
-        [inactiveSelectionHighlightColor release];
-        inactiveSelectionHighlightColor = [inactiveOut retain];
-        [activeSelectionHighlightInteriorColor release];
-        activeSelectionHighlightInteriorColor = [activeIn retain];
-        [inactiveSelectionHighlightInteriorColor release];
-        inactiveSelectionHighlightInteriorColor = [inactiveIn retain];
+        activeSelectionHighlightColor = activeOut;
+        inactiveSelectionHighlightColor = inactiveOut;
+        activeSelectionHighlightInteriorColor = activeIn;
+        inactiveSelectionHighlightInteriorColor = inactiveIn;
     }
 }
 
@@ -92,17 +88,17 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
 + (NSColor *)selectionHighlightColor:(BOOL)active {
     NSColor *color = nil;
     @synchronized (self) {
-        color = [active ? activeSelectionHighlightColor : inactiveSelectionHighlightColor retain];
+        color = active ? activeSelectionHighlightColor : inactiveSelectionHighlightColor;
     }
-    return [color autorelease];
+    return color;
 }
 
 + (NSColor *)selectionHighlightInteriorColor:(BOOL)active {
     NSColor *color = nil;
     @synchronized (self) {
-        color = [active ? activeSelectionHighlightInteriorColor : inactiveSelectionHighlightInteriorColor retain];
+        color = active ? activeSelectionHighlightInteriorColor : inactiveSelectionHighlightInteriorColor;
     }
-    return [color autorelease];
+    return color;
 }
 
 #pragma mark Favorite Colors

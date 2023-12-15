@@ -116,7 +116,7 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
         }
     }
     if (lines == nil) {
-        [[self init] release];
+        self = [self init];
         self = nil;
     } else {
         self = [self initSkimNoteWithBounds:bounds forType:type];
@@ -128,15 +128,13 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
                 addQuadPointsWithBounds(quadPoints, [lines rectAtIndex:i], bounds.origin, lineAngle);
             [self setQuadrilateralPoints:quadPoints];
             objc_setAssociatedObject(self, &SKLineRectsKey, lines, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-            [quadPoints release];
-            [lines release];
         }
     }
     return self;
 }
 
 - (NSString *)fdfString {
-    NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
+    NSMutableString *fdfString = [[super fdfString] mutableCopy];
     NSPoint point;
     NSRect bounds = [self bounds];
     [fdfString appendFDFName:SKFDFAnnotationQuadrilateralPointsKey];
@@ -185,7 +183,6 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
         }
         
         objc_setAssociatedObject(self, &SKLineRectsKey, lineRects, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [lineRects release];
     }
     return lineRects;
 }
@@ -270,7 +267,6 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
     if (noteText == nil) {
         noteText = [[SKNoteText alloc] initWithNote:self];
         objc_setAssociatedObject(self, &SKNoteTextKey, noteText, OBJC_ASSOCIATION_RETAIN);
-        [noteText release];
     }
     return noteText;
 }
@@ -310,7 +306,6 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
         NSMutableSet *mutableKeys = [[super keysForValuesToObserveForUndo] mutableCopy];
         [mutableKeys removeObject:SKNPDFAnnotationBorderKey];
         markupKeys = [mutableKeys copy];
-        [mutableKeys release];
     }
     return markupKeys;
 }
@@ -327,7 +322,6 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
         [customKeys removeObject:SKNPDFAnnotationBorderStyleKey];
         [customKeys removeObject:SKNPDFAnnotationDashPatternKey];
         customMarkupScriptingKeys = [customKeys copy];
-        [customKeys release];
     }
     return customMarkupScriptingKeys;
 }
@@ -350,7 +344,6 @@ static void addQuadPointsWithBounds(NSMutableArray *quadPoints, const NSRect bou
             [pointValues addObject:[NSData dataWithPointAsQDPoint:SKAddPoints(point, origin)]];
         }
         [pointLists addObject:pointValues];
-        [pointValues release];
     }
     return pointLists;
 }

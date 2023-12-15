@@ -47,7 +47,7 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
-        color = [[decoder decodeObjectForKey:@"color"] retain];
+        color = [decoder decodeObjectForKey:@"color"];
         shouldFill = [decoder decodeBoolForKey:@"shouldFill"];
     }
     return self;
@@ -61,21 +61,15 @@
 
 - (instancetype)copyWithZone:(NSZone *)zone {
     SKColorCell *copy = [super copyWithZone:zone];
-    copy->color = [color retain];
+    copy->color = color;
     copy->shouldFill = shouldFill;
     return copy;
-}
-
-- (void)dealloc {
-    SKDESTROY(color);
-    [super dealloc];
 }
 
 - (void)setObjectValue:(id)anObject {
     if ([anObject isKindOfClass:[NSColor class]] || anObject == nil) {
         if (color != anObject) {
-            [color release];
-            color = [anObject retain];
+            color = anObject;
         }
     } else {
         [super setObjectValue:anObject];

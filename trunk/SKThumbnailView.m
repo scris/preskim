@@ -106,27 +106,18 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (instancetype)initWithCoder:(NSCoder *)coder {
     self = [super initWithCoder:coder];
     if (self) {
-        [[[[self subviews] copy] autorelease] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [[[self subviews] copy] makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self commonInit];
     }
     return self;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     @try {
         [thumbnail removeObserver:self forKeyPath:IMAGE_KEY context:&SKThumbnailViewThumbnailObservationContext];
         [thumbnail removeObserver:self forKeyPath:LABEL_KEY context:&SKThumbnailViewThumbnailObservationContext];
     }
     @catch (id e) {}
-    controller = nil;
-    SKDESTROY(imageView);
-    SKDESTROY(labelView);
-    SKDESTROY(markView);
-    SKDESTROY(imageHighlightView);
-    SKDESTROY(labelHighlightView);
-    SKDESTROY(thumbnail);
-    [super dealloc];
 }
 
 + (NSSize)sizeForImageSize:(NSSize)size {
@@ -185,7 +176,6 @@ static char SKThumbnailViewThumbnailObservationContext;
         [mask unlockFocus];
     }
     [imageHighlightView setMaskImage:mask];
-    [mask release];
 }
 
 - (void)updateImageHighlight {
@@ -203,7 +193,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         } else if (imageHighlightView) {
             [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:imageHighlightView];
             [self removeView:imageHighlightView];
-            SKDESTROY(imageHighlightView);
+            imageHighlightView = nil;
         }
     } else {
         [self setNeedsDisplayInRect:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
@@ -222,7 +212,6 @@ static char SKThumbnailViewThumbnailObservationContext;
         [mask unlockFocus];
     }
     [labelHighlightView setMaskImage:mask];
-    [mask release];
 }
 
 - (void)updateLabelHighlight {
@@ -240,7 +229,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         } else if (labelHighlightView) {
             [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:labelHighlightView];
             [self removeView:labelHighlightView];
-            SKDESTROY(labelHighlightView);
+            labelHighlightView = nil;
         }
     } else {
         [self setNeedsDisplayInRect:[labelView frame]];
@@ -253,8 +242,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     if (thumbnail != newThumbnail) {
         [thumbnail removeObserver:self forKeyPath:IMAGE_KEY context:&SKThumbnailViewThumbnailObservationContext];
         [thumbnail removeObserver:self forKeyPath:LABEL_KEY context:&SKThumbnailViewThumbnailObservationContext];
-        [thumbnail release];
-        thumbnail = [newThumbnail retain];
+        thumbnail = newThumbnail;
         [labelView setObjectValue:[thumbnail label]];
         [thumbnail addObserver:self forKeyPath:IMAGE_KEY options:NSKeyValueObservingOptionInitial context:&SKThumbnailViewThumbnailObservationContext];
         [thumbnail addObserver:self forKeyPath:LABEL_KEY options:NSKeyValueObservingOptionInitial context:&SKThumbnailViewThumbnailObservationContext];
@@ -311,7 +299,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         }
     } else if (markView) {
         [self removeView:markView];
-        SKDESTROY(markView);
+        markView = nil;
     }
 }
 
@@ -442,10 +430,10 @@ static char SKThumbnailViewThumbnailObservationContext;
             
             NSRect rect = [imageView frame];
             NSBitmapImageRep *imageRep = [imageView bitmapImageRepCachingDisplayInRect:[imageView bounds]];
-            NSImage *dragImage = [[[NSImage alloc] initWithSize:rect.size] autorelease];
+            NSImage *dragImage = [[NSImage alloc] initWithSize:rect.size];
             [dragImage addRepresentation:imageRep];
             
-            NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:item] autorelease];
+            NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
             [dragItem setDraggingFrame:rect contents:dragImage];
             [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
         }
@@ -528,7 +516,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     PDFPage *page = [[self thumbnail] page];
     NSMenu *menu = nil;
     if (page && [[page document] isLocked] == NO) {
-        menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+        menu = [[NSMenu alloc] initWithTitle:@""];
         [menu addItemWithTitle:NSLocalizedString(@"Copy", @"Menu item title") action:@selector(copy:) target:self];
         [menu addItemWithTitle:NSLocalizedString(@"Copy URL", @"Menu item title") action:@selector(copyURL:) target:self];
     }

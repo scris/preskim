@@ -45,13 +45,6 @@
 @implementation SKDownloadPreferenceController
 
 @synthesize doneButton, downloadsFolderPopUp;
-
-- (void)dealloc {
-    SKDESTROY(doneButton);
-    SKDESTROY(downloadsFolderPopUp);
-    [super dealloc];
-}
-
 - (NSString *)windowNibName {
     return @"DownloadPreferenceSheet";
 }
@@ -92,7 +85,7 @@
 #pragma mark Touch Bar
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
+    NSTouchBar *touchBar = [[NSTouchBar alloc] init];
     [touchBar setDelegate:self];
     [touchBar setDefaultItemIdentifiers:@[NSTouchBarItemIdentifierFlexibleSpace, SKTouchBarItemIdentifierDone, NSTouchBarItemIdentifierFixedSpaceLarge]];
     return touchBar;
@@ -103,7 +96,7 @@
     if ([identifier isEqualToString:SKTouchBarItemIdentifierDone]) {
         NSButton *button = [NSButton buttonWithTitle:[doneButton title] target:[doneButton target] action:[doneButton action]];
         [doneButton setKeyEquivalent:@"\r"];
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [(NSCustomTouchBarItem *)item setView:button];
     }
     return item;

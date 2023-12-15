@@ -78,7 +78,7 @@
 }
 
 static void fsevents_callback(FSEventStreamRef streamRef, void *clientCallBackInfo, int numEvents, const char *const eventPaths[], const FSEventStreamEventFlags *eventMasks, const uint64_t *eventIDs) {
-    [(id)clientCallBackInfo setMenuNeedsUpdate:YES];
+    [[SKScriptMenuController sharedController] setMenuNeedsUpdate:YES];
 }
 
 - (instancetype)init {
@@ -90,11 +90,11 @@ static void fsevents_callback(FSEventStreamRef streamRef, void *clientCallBackIn
         NSMutableArray *folders = [NSMutableArray array];
         
         for (NSURL *folderURL in [fm applicationSupportDirectoryURLs]) {
+            NSURL *scriptsFolderURL = [folderURL URLByAppendingPathComponent:SCRIPTS_FOLDER_NAME isDirectory:YES];
             NSNumber *isDir = nil;
-            folderURL = [folderURL URLByAppendingPathComponent:SCRIPTS_FOLDER_NAME isDirectory:YES];
-            [folderURL getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:NULL];
+            [scriptsFolderURL getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:NULL];
             if ([isDir boolValue])
-                [folders addObject:folderURL];
+                [folders addObject:scriptsFolderURL];
         }
         
         if (itemIndex > 0 && [folders count]) {
@@ -104,18 +104,16 @@ static void fsevents_callback(FSEventStreamRef streamRef, void *clientCallBackIn
             [menuItem setImage:[NSImage imageNamed:@"ScriptMenu"]];
             [[NSApp mainMenu] insertItem:menuItem atIndex:itemIndex];
             
-            FSEventStreamContext context = {0, (void *)self, NULL, NULL, NULL};
+            scriptMenu = [menuItem submenu];
             
-            scriptMenu = [[menuItem submenu] retain];
-            
-            sortDescriptors = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey:FILENAME_KEY ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] autorelease], nil];
+            sortDescriptors = [[NSArray alloc] initWithObjects:[[NSSortDescriptor alloc] initWithKey:FILENAME_KEY ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)], nil];
             
             scriptFolders = [folders copy];
             
             streamRef = FSEventStreamCreate(kCFAllocatorDefault,
                                             (FSEventStreamCallback)&fsevents_callback, // callback
-                                            &context, // context
-                                            (CFArrayRef)[scriptFolders valueForKey:@"path"], // pathsToWatch
+                                            NULL, // context
+                                            (__bridge CFArrayRef)[scriptFolders valueForKey:@"path"], // pathsToWatch
                                             kFSEventStreamEventIdSinceNow, // sinceWhen
                                             1.0, // latency
                                             kFSEventStreamCreateFlagWatchRoot); // flags
@@ -243,7 +241,6 @@ static BOOL isFolderUTI(NSString *theUTI) {
         }
         if (dict) {
             [files addObject:dict];
-            [dict release];
         }
     }
     [files sortUsingDescriptors:sortDescriptors];
@@ -251,7 +248,7 @@ static BOOL isFolderUTI(NSString *theUTI) {
 }
 
 - (void)executeScript:(id)sender {
-    [[[[NSUserScriptTask alloc] initWithURL:[NSURL fileURLWithPath:[sender representedObject] isDirectory:NO] error:NULL] autorelease] executeWithCompletionHandler:nil];
+    [[[NSUserScriptTask alloc] initWithURL:[NSURL fileURLWithPath:[sender representedObject] isDirectory:NO] error:NULL] executeWithCompletionHandler:nil];
 }
 
 @end

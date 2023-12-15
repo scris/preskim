@@ -133,7 +133,6 @@ static BOOL usesSequentialPageNumbering = NO;
     } else {
         foregroundRect.origin = SKAddPoints(foregroundRect.origin, bounds.origin);
     }
-    [imageRep release];
     return foregroundRect;
 }
 
@@ -191,7 +190,7 @@ static BOOL usesSequentialPageNumbering = NO;
         pageRect.origin.y -= shadowOffset;
     }
     
-    image = [[[NSImage alloc] initWithSize:thumbnailSize] autorelease];
+    image = [[NSImage alloc] initWithSize:thumbnailSize];
     
     [image lockFocus];
     
@@ -236,9 +235,7 @@ static BOOL usesSequentialPageNumbering = NO;
     [wrapper setPreferredFilename:filename];
 
     NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:wrapper];
-    [wrapper release];
     NSAttributedString *attrString = [NSAttributedString attributedStringWithAttachment:attachment];
-    [attachment release];
     
     return attrString;
 }
@@ -270,7 +267,6 @@ static BOOL usesSequentialPageNumbering = NO;
     [page setBounds:NSZeroRect forBox:kPDFDisplayBoxTrimBox];
     [page setBounds:NSZeroRect forBox:kPDFDisplayBoxArtBox];
     data = [page dataRepresentation];
-    [page release];
     
     return data;
 }
@@ -290,7 +286,7 @@ static BOOL usesSequentialPageNumbering = NO;
     NSRect destRect = sourceRect;
     destRect.origin = NSZeroPoint;
     
-    NSImage *image = [[[NSImage alloc] initWithSize:destRect.size] autorelease];
+    NSImage *image = [[NSImage alloc] initWithSize:destRect.size];
     [image lockFocus];
     [pageImage drawInRect:destRect fromRect:sourceRect operation:NSCompositingOperationCopy fraction:1.0];
     [image unlockFocus];
@@ -305,10 +301,8 @@ static BOOL usesSequentialPageNumbering = NO;
         [pageIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
             PDFPage *aPage = [[[self document] pageAtIndex:i] copy];
             [pdfDoc insertPage:aPage atIndex:[pdfDoc pageCount]];
-            [aPage release];
         }];
         data = [pdfDoc dataRepresentation];
-        [pdfDoc release];
     } else {
         data = [self dataRepresentation];
     }
@@ -348,7 +342,7 @@ static BOOL usesSequentialPageNumbering = NO;
 - (id<NSPasteboardWriting>)filePromiseForPageIndexes:(NSIndexSet *)pageIndexes {
     if ([[self document] isLocked] == NO) {
         NSString *fileUTI = [[self document] allowsPrinting] ? (NSString *)kUTTypePDF : (NSString *)kUTTypeTIFF;
-        NSFilePromiseProvider *item = [[[NSFilePromiseProvider alloc] initWithFileType:fileUTI delegate:self] autorelease];
+        NSFilePromiseProvider *item = [[NSFilePromiseProvider alloc] initWithFileType:fileUTI delegate:self];
         if (pageIndexes)
             [item setUserInfo:pageIndexes];
         return item;
@@ -359,7 +353,7 @@ static BOOL usesSequentialPageNumbering = NO;
 - (void)writeToClipboardForPageIndexes:(NSIndexSet *)pageIndexes {
     if ([[self document] isLocked] == NO) {
         NSData *tiffData = [self TIFFDataForRect:[self boundsForBox:kPDFDisplayBoxCropBox]];
-        NSPasteboardItem *pboardItem = [[[NSPasteboardItem alloc] init] autorelease];
+        NSPasteboardItem *pboardItem = [[NSPasteboardItem alloc] init];
         if ([[self document] allowsPrinting])
             [pboardItem setData:[self dataRepresentationForPageIndexes:pageIndexes] forType:NSPasteboardTypePDF];
         [pboardItem setData:tiffData forType:NSPasteboardTypeTIFF];
@@ -377,7 +371,6 @@ static BOOL usesSequentialPageNumbering = NO;
     [components setScheme:@"skim"];
     [components setFragment:[NSString stringWithFormat:@"page=%lu", (unsigned long)([self pageIndex] + 1)]];
     NSURL *skimURL = [components URL];
-    [components release];
     return skimURL;
 }
 
@@ -549,7 +542,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
     
     if (document && idx != NSNotFound) {
         NSScriptObjectSpecifier *containerRef = [document objectSpecifier];
-        return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"pages" index:idx] autorelease];
+        return [[NSIndexSpecifier alloc] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"pages" index:idx];
     } else {
         return nil;
     }
@@ -648,12 +641,12 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
 }
 
 - (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex {
-    return [[[SKLine alloc] initWithPage:self index:anIndex] autorelease];
+    return [[SKLine alloc] initWithPage:self index:anIndex];
 }
 
 - (NSTextStorage *)richText {
     NSAttributedString *attrString = [self attributedString];
-    return attrString ? [[[NSTextStorage alloc] initWithAttributedString:attrString] autorelease] : [[[NSTextStorage alloc] init] autorelease];
+    return attrString ? [[NSTextStorage alloc] initWithAttributedString:attrString] : [[NSTextStorage alloc] init];
 }
 
 - (NSArray *)notes {
@@ -701,7 +694,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
     if ([key isEqualToString:@"notes"]) {
         
         PDFAnnotation *annotation = nil;
-        NSMutableDictionary *props = [[properties mutableCopy] autorelease];
+        NSMutableDictionary *props = [properties mutableCopy];
         NSString *type = [properties objectForKey:SKNPDFAnnotationTypeKey];
         [props removeObjectForKey:SKNPDFAnnotationTypeKey];
         if (type == nil && contentsValue)
@@ -722,7 +715,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
                     [props setValue:[selection cleanedString] forKey:SKPDFAnnotationScriptingTextContentsKey];
             }
         } else if ([type isEqualToString:SKNInkString]) {
-            NSArray *pointLists = [[[properties objectForKey:SKPDFAnnotationScriptingPointListsKey] retain] autorelease];
+            NSArray *pointLists = [properties objectForKey:SKPDFAnnotationScriptingPointListsKey];
             [props removeObjectForKey:SKPDFAnnotationScriptingPointListsKey];
             if ([pointLists isKindOfClass:[NSArray class]] == NO) {
                 [[NSScriptCommand currentCommand] setScriptErrorNumber:NSRequiredArgumentsMissingScriptError]; 
@@ -746,11 +739,9 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
                         }
                         if ([path elementCount] > 1)
                             [paths addObject:path];
-                        [path release];
                     }
                 }
                 annotation = [PDFAnnotation newSkimNoteWithPaths:paths];
-                [paths release];
             }
         } else {
             NSRect bounds = NSZeroRect;
@@ -788,13 +779,12 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
                 if ([properties count])
                     [copiedAnnotation setScriptingProperties:[copiedAnnotation coerceValue:properties forKey:@"scriptingProperties"]];
                 [copiedValue addObject:copiedAnnotation];
-                [copiedAnnotation release];
             } else {
                 // we don't want to duplicate markup
                 NSScriptCommand *cmd = [NSScriptCommand currentCommand];
                 [cmd setScriptErrorNumber:NSReceiversCantHandleCommandScriptError];
                 [cmd setScriptErrorString:@"Cannot duplicate markup note."];
-                SKDESTROY(copiedValue);
+                copiedValue = nil;
             }
         }
         return copiedValue;

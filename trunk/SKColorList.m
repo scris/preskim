@@ -67,7 +67,7 @@ static char SKDefaultsObservationContext;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &SKDefaultsObservationContext) {
         [self setEditable:YES];
-        for (NSString *key in [[[self allKeys] copy] autorelease])
+        for (NSString *key in [[self allKeys] copy])
             [self removeColorWithKey:key];
         NSInteger i = 0;
         for (NSColor *color in [NSColor favoriteColors]) {

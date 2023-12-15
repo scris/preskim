@@ -51,15 +51,10 @@
 - (instancetype)initWithPage:(PDFPage *)aPage index:(NSInteger)anIndex {
     self = [super init];
     if (self) {
-        page = [aPage retain];
+        page = aPage;
         index = anIndex;
     }
     return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(page);
-    [super dealloc];
 }
 
 - (NSString *)description {
@@ -85,7 +80,7 @@
 
 - (NSScriptObjectSpecifier *)objectSpecifier {
     NSScriptObjectSpecifier *containerRef = [page objectSpecifier];
-    return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"lines" index:index] autorelease];
+    return [[NSIndexSpecifier alloc] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"lines" index:index];
 }
 
 @end

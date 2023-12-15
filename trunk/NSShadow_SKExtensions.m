@@ -47,7 +47,6 @@
     [aShadow setShadowBlurRadius:blurRadius];
     [aShadow setShadowOffset:offset];
     [aShadow set];
-    [aShadow release];
 }
 
 + (void)setShadowWithWhite:(CGFloat)white alpha:(CGFloat)alpha blurRadius:(CGFloat)blurRadius yOffset:(CGFloat)yOffset {

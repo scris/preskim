@@ -126,7 +126,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
     // load the default values for the user defaults
     NSURL *initialUserDefaultsURL = [[NSBundle mainBundle] URLForResource:INITIAL_USER_DEFAULTS_FILENAME withExtension:@"plist"];
     NSDictionary *initialUserDefaultsDict = [NSDictionary dictionaryWithContentsOfURL:initialUserDefaultsURL];
-    NSMutableDictionary *initialValuesDict = [[[initialUserDefaultsDict objectForKey:REGISTERED_DEFAULTS_KEY] mutableCopy] autorelease];
+    NSMutableDictionary *initialValuesDict = [[initialUserDefaultsDict objectForKey:REGISTERED_DEFAULTS_KEY] mutableCopy];
     NSArray *resettableUserDefaultsKeys;
     
     [initialValuesDict setValue:NSFullUserName() forKey:SKUserNameKey];
@@ -183,7 +183,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
             NSUInteger numberOfDocs = [[previousSession children] count];
             
             if (numberOfDocs > REOPEN_WARNING_LIMIT) {
-                NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+                NSAlert *alert = [[NSAlert alloc] init];
                 [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Are you sure you want to open %lu documents?", @"Message in alert dialog"), (unsigned long)numberOfDocs]];
                 [alert setInformativeText:NSLocalizedString(@"Each document opens in a separate window.", @"Informative text in alert dialog")];
                 [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title")];
@@ -235,7 +235,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
     [nc addObserver:self selector:@selector(registerCurrentDocuments:) 
                              name:SKDocumentControllerDidRemoveDocumentNotification object:nil];
     
-    currentDocumentsTimer = [[NSTimer scheduledTimerWithTimeInterval:CURRENTDOCUMENTSETUP_INTERVAL target:self selector:@selector(registerCurrentDocuments:) userInfo:nil repeats:YES] retain];
+    currentDocumentsTimer = [NSTimer scheduledTimerWithTimeInterval:CURRENTDOCUMENTSETUP_INTERVAL target:self selector:@selector(registerCurrentDocuments:) userInfo:nil repeats:YES];
     
     // kHIDRemoteModeExclusiveAuto lets the HIDRemote handle activation when the app gets or loses focus
     if ([sud boolForKey:SKEnableAppleRemoteKey]) {
@@ -257,7 +257,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
 
 - (void)applicationStartsTerminating:(NSNotification *)aNotification {
     [currentDocumentsTimer invalidate];
-    SKDESTROY(currentDocumentsTimer);
+    currentDocumentsTimer = nil;
     [self registerCurrentDocuments:aNotification];
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc removeObserver:self name:SKDocumentDidShowNotification object:nil];
@@ -349,7 +349,6 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
             [contentView setState:NSVisualEffectStateActive];
             [remoteStateWindow setContentView:contentView];
             [contentView setMaskImage:[NSImage maskImageWithSize:contentRect.size cornerRadius:10.0]];
-            [contentView release];
          }
         [remoteStateWindow center];
         [remoteStateWindow setBackgroundImage:[NSImage imageNamed:remoteScrolling ? SKImageNameRemoteStateScroll : SKImageNameRemoteStateResize]];
@@ -387,16 +386,12 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
             for (NSMenuItem *item in [notesMenu itemArray]) {
                 if ([item isSeparatorItem])
                     break;
-                item = [item copy];
-                [menu addItem:item];
-                [item release];
+                [menu addItem:[item copy]];
             }
         } else if (menu == noteTypeMenu) {
             notesMenu = [[notesMenu itemAtIndex:[notesMenu numberOfItems] - 1] submenu];
             for (NSMenuItem *item in [notesMenu itemArray]) {
-                item = [item copy];
-                [menu addItem:item];
-                [item release];
+                [menu addItem:[item copy]];
             }
         }
     } else {
@@ -519,16 +514,16 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
 }
 
 - (SKNotePrefs *)valueInNotePreferencesWithName:(NSString *)name {
-    return [[[SKNotePrefs alloc] initWithType:name] autorelease];
+    return [[SKNotePrefs alloc] initWithType:name];
 }
 
 - (SKDisplayPrefs *)valueInDisplayPreferencesWithName:(NSString *)name {
-    return [[[SKDisplayPrefs alloc] initWithName:name] autorelease];
+    return [[SKDisplayPrefs alloc] initWithName:name];
 }
 
 - (NSAttributedString *)valueInRichTextFormatWithName:(NSString *)name {
-    NSData *data = [[[NSData alloc] initWithHexString:name] autorelease];
-    return data ? [[[NSAttributedString alloc] initWithData:data options:@{} documentAttributes:NULL error:NULL] autorelease] : nil;
+    NSData *data = [[NSData alloc] initWithHexString:name];
+    return data ? [[NSAttributedString alloc] initWithData:data options:@{} documentAttributes:NULL error:NULL] : nil;
 }
 
 - (NSArray *)favoriteColors {

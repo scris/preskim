@@ -92,11 +92,10 @@ static void (*original_setBounds)(id, SEL, NSRect) = NULL;
     [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKLineNoteDashPatternKey]];
     [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKLineNoteLineStyleKey]];
     [self setBorder:[border lineWidth] > 0.0 ? border : nil];
-    [border release];
 }
 
 - (NSString *)fdfString {
-    NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
+    NSMutableString *fdfString = [[super fdfString] mutableCopy];
     [fdfString appendFDFName:SKFDFAnnotationLineStylesKey];
     [fdfString appendString:@"["];
     [fdfString appendFDFName:SKFDFLineStyleFromPDFLineStyle([self startLineStyle])];
@@ -187,7 +186,6 @@ static void (*original_setBounds)(id, SEL, NSRect) = NULL;
         [mutableKeys addObject:SKPDFAnnotationObservedEndPointKey];
         [mutableKeys addObject:SKNPDFAnnotationInteriorColorKey];
         lineKeys = [mutableKeys copy];
-        [mutableKeys release];
     }
     return lineKeys;
 }
@@ -204,7 +202,6 @@ static void (*original_setBounds)(id, SEL, NSRect) = NULL;
         [customKeys addObject:SKPDFAnnotationScriptingEndLineStyleKey];
         [customKeys addObject:SKPDFAnnotationScriptingInteriorColorKey];
         customLineScriptingKeys = [customKeys copy];
-        [customKeys release];
     }
     return customLineScriptingKeys;
 }

@@ -151,7 +151,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         
         [self setLeftSidePaneState:mwcFlags.savedLeftSidePaneState];
         
-        SKDESTROY(sideWindow);
+        sideWindow = nil;
     }
 }
 
@@ -261,13 +261,13 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     // prevent sleep
     if (activity == nil)
-        activity = [[[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiated | NSActivityIdleDisplaySleepDisabled | NSActivityIdleSystemSleepDisabled  reason:@"Presentation"] retain];
+        activity = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiated | NSActivityIdleDisplaySleepDisabled | NSActivityIdleSystemSleepDisabled  reason:@"Presentation"];
 }
 
 - (void)exitPresentationMode {
     if (activity) {
         [[NSProcessInfo processInfo] endActivity:activity];
-        SKDESTROY(activity);
+        activity = nil;
     }
     
     [self removePresentationNotesNavigation];
@@ -305,11 +305,10 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
         [fullScreenWindow setLevel:NSNormalWindowLevel];
     [fullScreenWindow orderFront:nil];
     [NSApp addWindowsItem:fullScreenWindow title:[self windowTitleForDocumentDisplayName:[[self document] displayName]] filename:NO];
-    [fullScreenWindow release];
 }
 
 - (void)removePresentationWindow {
-    NSWindow *fullScreenWindow = [[[self window] retain] autorelease];
+    NSWindow *fullScreenWindow = [self window];
     
     [self setWindow:mainWindow];
     [mainWindow setAlphaValue:0.0];
@@ -365,7 +364,6 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     else
         [animationWindow setFrame:[window frame] display:NO];
     [(SKAnimatedBorderlessWindow *)animationWindow setBackgroundImage:image];
-    [image release];
     [animationWindow setHasShadow:[window hasShadow]];
     [animationWindow setLevel:[window level]];
     [animationWindow orderWindow:NSWindowAbove relativeTo:window];
@@ -450,7 +448,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
         }
         completionHandler:^{
             [animationWindow orderOut:nil];
-            SKDESTROY(animationWindow);
+            animationWindow = nil;
         }];
     
     [pdfView setInteractionMode:SKPresentationMode];
@@ -471,11 +469,11 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     if ([presentationNotes count]) {
         PDFDocument *pdfDoc = [self pdfDocument];
-        for (PDFAnnotation *annotation in [[presentationNotes copy] autorelease])
+        for (PDFAnnotation *annotation in [presentationNotes copy])
             [pdfDoc removeAnnotation:annotation];
     }
-    SKDESTROY(presentationNotes);
-    SKDESTROY(presentationUndoManager);
+    presentationNotes = nil;
+    presentationUndoManager = nil;
     
     // do this first, otherwise the navigation window may be covered by fadeWindow and then reveiled again, which looks odd
     [pdfView setInteractionMode:SKNormalMode];
@@ -537,7 +535,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
         }
         completionHandler:^{
             [animationWindow orderOut:nil];
-            SKDESTROY(animationWindow);
+            animationWindow = nil;
             if (presentationPreview) {
                 [[presentationPreview window] setAnimationBehavior:NSWindowAnimationBehaviorNone];
                 [presentationPreview close];
@@ -645,7 +643,7 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
             }
             completionHandler:^{
                 [animationWindow orderOut:nil];
-                SKDESTROY(animationWindow);
+                animationWindow = nil;
             }];
     } else {
         [(SKMainWindow *)window setDisableConstrainedFrame:YES];
@@ -690,7 +688,7 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
 - (void)windowDidFailToEnterFullScreen:(NSWindow *)window {
     if ([[pdfView document] isLocked] == NO || [savedNormalSetup count] == 1)
         [savedNormalSetup removeAllObjects];
-    SKDESTROY(animationWindow);
+    animationWindow = nil;
     interactionMode = SKNormalMode;
     mwcFlags.isSwitchingFullScreen = 0;
 }
@@ -740,7 +738,7 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
             }
             completionHandler:^{
                 [animationWindow orderOut:nil];
-                SKDESTROY(animationWindow);
+                animationWindow = nil;
             }];
     } else {
         NSRect startFrame = [window frame];
@@ -789,7 +787,7 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
         [self applyLeftSideWidth:0.0 rightSideWidth:0.0];
         [self forceSubwindowsOnTop:YES];
     }
-    SKDESTROY(animationWindow);
+    animationWindow = nil;
     mwcFlags.isSwitchingFullScreen = 0;
     mwcFlags.wantsPresentation = 0;
 }
@@ -828,11 +826,11 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
 - (void)removePresentationNotesNavigation {
     if (presentationNotesTrackingArea) {
         [[self presentationNotesView] removeTrackingArea:presentationNotesTrackingArea];
-        SKDESTROY(presentationNotesTrackingArea);
+        presentationNotesTrackingArea = nil;
     }
     if (presentationNotesButton) {
         [presentationNotesButton removeFromSuperview];
-        SKDESTROY(presentationNotesButton);
+        presentationNotesButton = nil;
     }
 }
 

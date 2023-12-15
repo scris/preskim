@@ -129,8 +129,6 @@ enum {
     
     SKProgressController                *progressController;
     
-    SKPresentationOptionsSheetController *presentationSheetController;
-    
     NSDocument                          *presentationNotesDocument;
     NSInteger                           presentationNotesOffset;
     SKSnapshotWindowController          *presentationPreview;

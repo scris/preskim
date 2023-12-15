@@ -77,7 +77,6 @@ static inline NSTextAlignment textAlignmentFromAlignment(NSInteger alignment) {
         // on 10.12 you can't set the border to nil, so set its lineWidth to 0
         [[self border] setLineWidth:0.0];
     }
-    [border release];
 }
 
 static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
@@ -90,7 +89,7 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
 }
 
 - (NSString *)fdfString {
-    NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
+    NSMutableString *fdfString = [[super fdfString] mutableCopy];
     CGFloat r = 0.0, g = 0.0, b = 0.0, a;
     [[[self fontColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
     [fdfString appendFDFName:SKFDFDefaultAppearanceKey];
@@ -127,7 +126,6 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
         [mutableKeys addObject:SKNPDFAnnotationFontColorKey];
         [mutableKeys addObject:SKNPDFAnnotationAlignmentKey];
         freeTextKeys = [mutableKeys copy];
-        [mutableKeys release];
     }
     return freeTextKeys;
 }
@@ -143,7 +141,6 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
         [customKeys addObject:SKPDFAnnotationScriptingFontColorKey];
         [customKeys addObject:SKPDFAnnotationScriptingAlignmentKey];
         customFreeTextScriptingKeys = [customKeys copy];
-        [customKeys release];
     }
     return customFreeTextScriptingKeys;
 }

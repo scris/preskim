@@ -79,12 +79,6 @@
     return [self initIncludingWidgets:NO];
 }
 
-- (void)dealloc {
-    delegate = nil;
-    SKDESTROY(noteTypeMenu);
-    [super dealloc];
-}
-
 - (NSButton *)switchForTag:(NSInteger)tag {
     for (NSView *view in [[[self window] contentView] subviews]) {
         if ([view isKindOfClass:[NSButton class]] && [(NSButton *)view action] == NULL && [(NSButton *)view tag] == tag)

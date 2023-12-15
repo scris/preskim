@@ -71,7 +71,7 @@
 - (NSUInteger)countOfLines;
 - (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex;
 
-@property (nonatomic, readonly) NSData *boundsAsQDRect;
+@property (weak, nonatomic, readonly) NSData *boundsAsQDRect;
 
 - (void)handleGoToScriptCommand:(NSScriptCommand *)command;
 

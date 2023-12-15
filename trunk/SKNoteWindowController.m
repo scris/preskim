@@ -100,7 +100,6 @@ static NSImage *noteIcons[7] = {nil, nil, nil, nil, nil, nil, nil};
     PDFPage *page = [[PDFPage alloc] init];
     [page setBounds:bounds forBox:kPDFDisplayBoxMediaBox];
     [page addAnnotation:annotation];
-    [annotation release];
     
     NSUInteger i;
     for (i = 0; i < 7; i++) {
@@ -111,7 +110,6 @@ static NSImage *noteIcons[7] = {nil, nil, nil, nil, nil, nil, nil};
         [noteIcons[i] unlockFocus];
         [noteIcons[i] setTemplate:YES];
     }
-    [page release];
 }
 
 + (NSArray *)fontKeysToObserve {
@@ -146,7 +144,7 @@ static NSURL *temporaryDirectoryURL = nil;
 - (instancetype)initWithNote:(PDFAnnotation *)aNote {
     self = [super initWithWindowNibName:@"NoteWindow"];
     if (self) {
-        note = [aNote retain];
+        note = aNote;
         
         keepOnTop = [[NSUserDefaults standardUserDefaults] boolForKey:SKKeepNoteWindowsOnTopKey];
         forceOnTop = NO;
@@ -159,23 +157,6 @@ static NSURL *temporaryDirectoryURL = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePageLabelsChangedNotification:) name:SKPageLabelsChangedNotification object:nil];
     }
     return self;
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SKDESTROY(textViewUndoManager);
-    SKDESTROY(note);
-    SKDESTROY(textView);
-    SKDESTROY(topView);
-    SKDESTROY(edgeView);
-    SKDESTROY(imageView);
-    SKDESTROY(statusBar);
-    SKDESTROY(iconTypePopUpButton);
-    SKDESTROY(iconLabelField);
-    SKDESTROY(checkButton);
-    SKDESTROY(noteController);
-    SKDESTROY(previewURL);
-    [super dealloc];
 }
 
 - (void)updateStatusMessage {
@@ -200,7 +181,7 @@ static NSURL *temporaryDirectoryURL = nil;
         
         NSDictionary *options = nil;
         if (@available(macOS 10.14, *))
-            options = @{NSValueTransformerBindingOption:[[[SKAddTextColorTransformer alloc] init] autorelease]};
+            options = @{NSValueTransformerBindingOption:[[SKAddTextColorTransformer alloc] init]};
         [textView bind:@"attributedString" toObject:noteController withKeyPath:@"selection.text" options:options];
         
         for (NSMenuItem *item in [iconTypePopUpButton itemArray])
@@ -268,7 +249,7 @@ static NSURL *temporaryDirectoryURL = nil;
 - (void)handleApplicationWillTerminate:(NSNotification *)notification {
     if ([temporaryDirectoryURL checkResourceIsReachableAndReturnError:NULL])
         [[NSFileManager defaultManager] removeItemAtURL:temporaryDirectoryURL error:NULL];
-    SKDESTROY(temporaryDirectoryURL);
+    temporaryDirectoryURL = nil;
 }
 
 - (void)handlePageLabelsChangedNotification:(NSNotification *)notification {
@@ -384,7 +365,7 @@ static NSURL *temporaryDirectoryURL = nil;
 - (id<NSPasteboardWriting>)draggedObjectForDragImageView {
     NSImage *image = [note image];
     if (image)
-        return [[[NSFilePromiseProvider alloc] initWithFileType:(NSString *)kUTTypeTIFF delegate:self] autorelease];
+        return [[NSFilePromiseProvider alloc] initWithFileType:(NSString *)kUTTypeTIFF delegate:self];
     else
         return nil;
 }
@@ -436,7 +417,7 @@ static NSURL *temporaryDirectoryURL = nil;
 
 - (void)beginPreviewPanelControl:(QLPreviewPanel *)panel {
     [self endPreviewPanelControl:nil];
-    previewURL = [[self writeImageToDestination:[[self class] temporaryDirectoryURL]] retain];
+    previewURL = [self writeImageToDestination:[[self class] temporaryDirectoryURL]];
     [panel setDelegate:self];
     [panel setDataSource:self];
 }
@@ -448,7 +429,7 @@ static NSURL *temporaryDirectoryURL = nil;
         [fm removeItemAtURL:previewURL error:NULL];
         if ([[fm contentsOfDirectoryAtURL:tmpDirURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:NULL] count] == 0)
             [fm removeItemAtURL:tmpDirURL error:NULL];
-        SKDESTROY(previewURL);
+        previewURL = nil;
     }
 }
 

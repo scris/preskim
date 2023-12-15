@@ -133,18 +133,6 @@ static SKInfoWindowController *sharedInstance = nil;
     return self;
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SKDESTROY(info);
-    SKDESTROY(summaryKeys);
-    SKDESTROY(attributesKeys);
-    SKDESTROY(labels);
-    SKDESTROY(summaryTableView);
-    SKDESTROY(attributesTableView);
-    SKDESTROY(tabView);
-    [super dealloc];
-}
-
 - (void)updateForDocument:(NSDocument *)doc {
     [self setInfo:[self infoForDocument:doc]];
     [summaryTableView reloadData];
@@ -241,7 +229,7 @@ static NSString *SKFileSizeStringForFileURL(NSURL *fileURL, unsigned long long *
         }
     }
     
-    NSNumberFormatter *formatter = [[[NSNumberFormatter alloc] init] autorelease];
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     
     [formatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
     [formatter setNumberStyle:NSNumberFormatterDecimalStyle];

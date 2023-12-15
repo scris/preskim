@@ -46,12 +46,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @synthesize singleClickAction, doubleClickAction, typeSelectHelper;
 
-- (void)dealloc {
-    SKDESTROY(typeSelectHelper);
-    SKDESTROY(cachedViews);
-    [super dealloc];
-}
-
 - (void)keyDown:(NSEvent *)theEvent {
     unichar eventChar = [theEvent firstCharacter];
     
@@ -116,7 +110,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (id)newViewWithIdentifier:(NSString *)identifier {
     for (id view in cachedViews) {
         if ([[view identifier] isEqualToString:identifier]) {
-            [view retain];
             [cachedViews removeObject:view];
             return view;
         }

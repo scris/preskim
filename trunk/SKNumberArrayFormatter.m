@@ -68,11 +68,6 @@
     copy->numberFormatter = [numberFormatter copyWithZone:zone];
     return copy;
 }
-
-- (void)dealloc {
-    SKDESTROY(numberFormatter);
-    [super dealloc];
-}
  
 - (NSString *)stringForObjectValue:(id)obj {
     if ([obj isKindOfClass:[NSString class]])
@@ -93,7 +88,7 @@
     return string;
 }
 
-- (BOOL)getObjectValue:(id *)obj forString:(NSString *)string errorDescription:(NSString **)error {
+- (BOOL)getObjectValue:(out id *)obj forString:(NSString *)string errorDescription:(out NSString * __autoreleasing *)error {
     NSNumber *number;
     NSMutableArray *array = [NSMutableArray array];
     BOOL success = YES;

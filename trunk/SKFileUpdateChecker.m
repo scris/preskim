@@ -78,8 +78,6 @@ static BOOL canUpdateFromURL(NSURL *fileURL);
 - (void)dealloc {
     @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKAutoCheckFileUpdateKey context:&SKFileUpdateCheckerObservationContext]; }
     @catch (id) {}
-    document = nil;
-    [super dealloc];
 }
 
 - (void)terminate {
@@ -93,12 +91,11 @@ static BOOL canUpdateFromURL(NSURL *fileURL);
     // remove file monitor and invalidate timer; maybe we've changed filesystems
     if (source) {
         dispatch_source_cancel(source);
-        dispatch_release(source);
         source = NULL;
     }
     if (fileUpdateTimer) {
         [fileUpdateTimer invalidate];
-        SKDESTROY(fileUpdateTimer);
+        fileUpdateTimer = nil;
     }
     fucFlags.fileWasMoved = NO;
 }
@@ -109,7 +106,6 @@ static BOOL canUpdateFromURL(NSURL *fileURL);
         lastModifiedDate = [currentFileModifiedDate copy];
     } else if ([lastModifiedDate compare:currentFileModifiedDate] == NSOrderedAscending) {
         // Always reset mod date to prevent repeating messages; note that the kqueue also notifies only once
-        [lastModifiedDate release];
         lastModifiedDate = [currentFileModifiedDate copy];
         [self noteFileUpdated];
     }
@@ -230,7 +226,7 @@ enum { SKFileUpdateOptionYes=NSAlertFirstButtonReturn, SKFileUpdateOptionNo=NSAl
                 else
                     message = NSLocalizedString(@"The PDF file has changed on disk. Do you want to reload this document now? Choosing Auto will reload this file automatically for future changes.", @"Informative text in alert dialog");
                 
-                NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+                NSAlert *alert = [[NSAlert alloc] init];
                 [alert setMessageText:NSLocalizedString(@"File Updated", @"Message in alert dialog")];
                 [alert setInformativeText:message];
                 [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"Button title")];
@@ -297,8 +293,7 @@ enum { SKFileUpdateOptionYes=NSAlertFirstButtonReturn, SKFileUpdateOptionNo=NSAl
 
 - (void)didUpdateFromURL:(NSURL *)fileURL {
     fucFlags.fileChangedOnDisk = NO;
-    [lastModifiedDate release];
-    lastModifiedDate = [[[[NSFileManager defaultManager] attributesOfItemAtPath:[[fileURL URLByResolvingSymlinksInPath] path] error:NULL] fileModificationDate] retain];
+    lastModifiedDate = [[[NSFileManager defaultManager] attributesOfItemAtPath:[[fileURL URLByResolvingSymlinksInPath] path] error:NULL] fileModificationDate];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {

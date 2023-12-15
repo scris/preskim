@@ -275,15 +275,6 @@ static NSDictionary *oldStyleNames = nil;
     return @"";
 }
 
-- (void)dealloc {
-    view = nil;
-    SKDESTROY(transitionView);
-    SKDESTROY(window);
-    SKDESTROY(transition);
-    SKDESTROY(pageTransitions);
-    [super dealloc];
-}
-
 - (BOOL)hasTransition {
     return [transition transitionStyle] != SKNoTransition || pageTransitions != nil;
 }
@@ -291,15 +282,13 @@ static NSDictionary *oldStyleNames = nil;
 - (void)setTransition:(SKTransitionInfo *)newTransition {
     if (transition != newTransition) {
         [[[view undoManager] prepareWithInvocationTarget:self] setTransition:transition];
-        [transition release];
-        transition = [newTransition retain];
+        transition = newTransition;
     }
 }
 
 - (void)setPageTransitions:(NSArray *)newPageTransitions {
     if (newPageTransitions != pageTransitions) {
         [[[view undoManager] prepareWithInvocationTarget:self] setPageTransitions:pageTransitions];
-        [pageTransitions release];
         pageTransitions = [newPageTransitions copy];
     }
 }
@@ -372,7 +361,6 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     CIImage *tmpImage = [[CIImage alloc] initWithBitmapImageRep:contentBitmap];
     CGFloat scale = CGRectGetWidth([tmpImage extent]) / NSWidth(bounds);
     CIImage *image = [tmpImage imageByCroppingToRect:CGRectIntegral(scaleRect(NSIntersectionRect(rect, bounds), scale))];
-    [tmpImage release];
     NSArray *colorFilters = SKColorEffectFilters();
     if ([colorFilters count] > 0) {
         for (CIFilter *filter in colorFilters) {
@@ -410,7 +398,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 - (void)showTransitionWindowForRect:(NSRect)rect image:(CIImage *)image extent:(CGRect)extent {
     SKTransitionView *tView = (SKTransitionView *)[window contentView];
     if (window == nil) {
-        tView = [[[SKTransitionView alloc] init] autorelease];
+        tView = [[SKTransitionView alloc] init];
         window = [[NSWindow alloc] initWithContentRect:NSZeroRect styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
         [window setReleasedWhenClosed:NO];
         [window setIgnoresMouseEvents:YES];
@@ -444,7 +432,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     SKTransitionInfo *currentTransition = transition;
     NSUInteger idx = MIN(fromIndex, toIndex);
     if (fromIndex != NSNotFound && toIndex != NSNotFound && idx < [pageTransitions count])
-        currentTransition = [[[SKTransitionInfo alloc] initWithProperties:[pageTransitions objectAtIndex:idx]] autorelease];
+        currentTransition = [[SKTransitionInfo alloc] initWithProperties:[pageTransitions objectAtIndex:idx]];
     
     if ([currentTransition transitionStyle] == SKNoTransition) {
         
@@ -559,12 +547,6 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 @synthesize image, extent, filter;
 @dynamic progress;
 
-- (void)dealloc {
-    SKDESTROY(image);
-    SKDESTROY(filter);
-    [super dealloc];
-}
-
 - (BOOL)isOpaque { return YES; }
 
 - (CGFloat)progress {
@@ -608,19 +590,9 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
         [metalView setDelegate:self];
         [self addSubview:metalView];
         commandQueue = [device newCommandQueue];
-        context = [[CIContext contextWithMTLDevice:device] retain];
-        [device release];
+        context = [CIContext contextWithMTLDevice:device];
     }
     return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(metalView);
-    SKDESTROY(image);
-    SKDESTROY(filter);
-    SKDESTROY(commandQueue);
-    SKDESTROY(context);
-    [super dealloc];
 }
 
 - (CGFloat)progress {
@@ -631,8 +603,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 - (void)setProgress:(CGFloat)newProgress {
     if (filter) {
         [filter setValue:[NSNumber numberWithDouble:newProgress] forKey:kCIInputTimeKey];
-        [image release];
-        image = [[filter outputImage] retain];
+        image = [filter outputImage];
         if ([metalView alphaValue] <= 0.0) {
             [self setNeedsDisplay:YES];
             [metalView setAlphaValue:1.0];
@@ -643,8 +614,7 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
 
 - (void)setImage:(CIImage *)newImage {
     if (newImage != image) {
-        [image release];
-        image = [newImage retain];
+        image = newImage;
         [metalView setAlphaValue:0.0];
         [metalView setNeedsDisplay:YES];
     }

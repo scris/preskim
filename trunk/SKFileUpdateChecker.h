@@ -40,7 +40,7 @@
 
 
 @interface SKFileUpdateChecker : NSObject {
-    NSDocument *document;
+    __weak NSDocument *document;
     
     struct _fucFlags {
         unsigned int enabled:1;

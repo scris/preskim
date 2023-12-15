@@ -236,10 +236,9 @@ SKFDFString SKFDFLineStyleFromPDFLineStyle(PDFLineStyle lineStyle) {
     }
     
     if (success && CGPDFDictionaryGetString(annot, SKFDFAnnotationContentsKey, &string)) {
-        NSString *contents = (NSString *)CGPDFStringCopyTextString(string);
+        NSString *contents = CFBridgingRelease(CGPDFStringCopyTextString(string));
         if (contents)
             [dictionary setObject:contents forKey:SKNPDFAnnotationContentsKey];
-        [contents release];
     }
     
     if (success && CGPDFDictionaryGetArray(annot, SKFDFAnnotationBoundsKey, &array)) {
@@ -326,17 +325,15 @@ SKFDFString SKFDFLineStyleFromPDFLineStyle(PDFLineStyle lineStyle) {
     }
     
     if (success && CGPDFDictionaryGetString(annot, SKFDFAnnotationModificationDateKey, &string)) {
-        NSDate *date = (NSDate *)CGPDFStringCopyDate(string);
+        NSDate *date = CFBridgingRelease(CGPDFStringCopyDate(string));
         if (date)
             [dictionary setObject:date forKey:SKNPDFAnnotationModificationDateKey];
-        [date release];
     }
     
     if (success && CGPDFDictionaryGetString(annot, SKFDFAnnotationUserNameKey, &string)) {
-        NSString *userName = (NSString *)CGPDFStringCopyTextString(string);
+        NSString *userName = CFBridgingRelease(CGPDFStringCopyTextString(string));
         if (userName)
             [dictionary setObject:userName forKey:SKNPDFAnnotationUserNameKey];
-        [userName release];
     }
     
     if (success && CGPDFDictionaryGetInteger(annot, SKFDFAnnotationPageIndexKey, &integer)) {
@@ -405,7 +402,7 @@ SKFDFString SKFDFLineStyleFromPDFLineStyle(PDFLineStyle lineStyle) {
     }
     
     if (success && CGPDFDictionaryGetString(annot, SKFDFDefaultAppearanceKey, &string)) {
-        NSString *da = (NSString *)CGPDFStringCopyTextString(string);
+        NSString *da = CFBridgingRelease(CGPDFStringCopyTextString(string));
         if (da) {
             NSScanner *scanner = [NSScanner scannerWithString:da];
             NSString *fontName;
@@ -429,7 +426,6 @@ SKFDFString SKFDFLineStyleFromPDFLineStyle(PDFLineStyle lineStyle) {
                    }
                }
            }
-           [da release];
        }
     }
     
@@ -475,7 +471,6 @@ SKFDFString SKFDFLineStyleFromPDFLineStyle(PDFLineStyle lineStyle) {
         }
         
         CGDataProviderRelease(provider);
-        [pdfData release];
     }
     
     return notes;

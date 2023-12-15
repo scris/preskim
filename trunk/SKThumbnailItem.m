@@ -102,7 +102,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         [view setHighlightLevel:[self highlightLevel]];
         [view setMarked:[self isMarked]];
         [self setView:view];
-        [view release];
     }
     viewLoaded = YES;
 }

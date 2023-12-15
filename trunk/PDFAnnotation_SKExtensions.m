@@ -108,7 +108,7 @@ NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimn
         [propertyList isKindOfClass:[NSData class]]) {
         self = [self initSkimNoteWithProperties:[NSKeyedUnarchiver unarchiveObjectWithData:propertyList]];
     } else {
-        [[self init] release];
+        self = [self init];
         self = nil;
     }
     return self;
@@ -170,7 +170,6 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 #pragma clang diagnostic pop
         if (annotation) {
             [annotations addObject:@[annotation, page]];
-            [annotation release];
         }
     }
     return [annotations count] > 0 ? annotations : nil;
@@ -197,7 +196,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 + (NSDictionary *)textToNoteSkimNoteProperties:(NSDictionary *)properties {
     if ([[properties objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNTextString]) {
-        NSMutableDictionary *mutableProperties = [[properties mutableCopy] autorelease];
+        NSMutableDictionary *mutableProperties = [properties mutableCopy];
         NSRect bounds = NSRectFromString([properties objectForKey:SKNPDFAnnotationBoundsKey]);
         NSString *contents = [properties objectForKey:SKNPDFAnnotationContentsKey];
         [mutableProperties setObject:SKNNoteString forKey:SKNPDFAnnotationTypeKey];
@@ -211,8 +210,8 @@ static inline Class SKAnnotationClassForType(NSString *type) {
                 r = r1;
             if (NSMaxRange(r) < [contents length]) {
                 NSFont *font = [[NSUserDefaults standardUserDefaults] fontForNameKey:SKAnchoredNoteFontNameKey sizeKey:SKAnchoredNoteFontSizeKey];
-                NSAttributedString *attrString = [[[NSAttributedString alloc] initWithString:[contents substringFromIndex:NSMaxRange(r)]
-                                                    attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]] autorelease];
+                NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:[contents substringFromIndex:NSMaxRange(r)]
+                                                    attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]];
                 [mutableProperties setObject:attrString forKey:SKNPDFAnnotationTextKey];
                 [mutableProperties setObject:[contents substringToIndex:r.location] forKey:SKNPDFAnnotationContentsKey];
             }
@@ -300,7 +299,6 @@ static inline Class SKAnnotationClassForType(NSString *type) {
         if (border)
             [border setStyle:style];
         [self setBorder:border];
-        [border release];
     }
 }
 
@@ -329,7 +327,6 @@ static inline Class SKAnnotationClassForType(NSString *type) {
                 [self setBorder:border];
             }
         }
-        [border release];
     }
 }
 
@@ -350,7 +347,6 @@ static inline Class SKAnnotationClassForType(NSString *type) {
         if (border)
             [border setDashPattern:pattern];
         [self setBorder:border];
-        [border release];
     }
 }
 
@@ -380,7 +376,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 // use a copy of the paths so to ensure different old and new values for undo
 - (NSArray *)bezierPaths {
-    return [[[self paths] copy] autorelease];
+    return [[self paths] copy];
 }
 
 - (void)setBezierPaths:(NSArray *)newPaths {
@@ -388,13 +384,12 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     NSBezierPath *path;
     for (path in paths)
         [self removeBezierPath:path];
-    [paths release];
     for (path in newPaths)
         [self addBezierPath:path];
 }
 
 - (NSArray *)pagePaths {
-    NSMutableArray *paths = [[[NSMutableArray alloc] initWithArray:[self paths] copyItems:YES] autorelease];
+    NSMutableArray *paths = [[NSMutableArray alloc] initWithArray:[self paths] copyItems:YES];
     NSRect bounds = [self bounds];
     NSAffineTransform *transform = [NSAffineTransform transform];
     [transform translateXBy:NSMinX(bounds) yBy:NSMinY(bounds)];
@@ -573,8 +568,8 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 - (NSScriptObjectSpecifier *)objectSpecifier {
     NSScriptObjectSpecifier *containerRef = [[self page] objectSpecifier];
-    return [[[NSUniqueIDSpecifier alloc
-             ] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"notes" uniqueID:[self uniqueID]] autorelease];
+    return [[NSUniqueIDSpecifier alloc
+             ] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"notes" uniqueID:[self uniqueID]];
 }
 
 - (NSString *)uniqueID {
@@ -606,11 +601,10 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 #pragma clang diagnostic pop
     }
     // remove all custom properties that are not valid for this class
-    NSMutableDictionary *properties = [[[super scriptingProperties] mutableCopy] autorelease];
+    NSMutableDictionary *properties = [[super scriptingProperties] mutableCopy];
     NSMutableSet *customKeys = [allCustomScriptingKeys mutableCopy];
     [customKeys minusSet:[[self class] customScriptingKeys]];
     [properties removeObjectsForKeys:[customKeys allObjects]];
-    [customKeys release];
     return properties;
 }
 
@@ -662,7 +656,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 - (id)textContents;
 {
-    return [[[NSTextStorage alloc] initWithString:[self string] ?: @""] autorelease];
+    return [[NSTextStorage alloc] initWithString:[self string] ?: @""];
 }
 
 - (void)setTextContents:(id)text;

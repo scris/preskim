@@ -125,14 +125,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     return self;
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SKDESTROY(scalePopUpButton);
-    SKDESTROY(controlView);
-    SKDESTROY(trackingArea);
-    [super dealloc];
-}
-
 - (void)makeScalePopUpButton {
     
     if (scalePopUpButton == nil) {
@@ -494,7 +486,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     if ([[self delegate] respondsToSelector:@selector(PDFView:goToExternalDestination:)]) {
         PDFPage *page = [self currentPage];
         NSPoint point = [self convertPoint:SKTopLeftPoint([self bounds]) toPage:page];
-        [[self delegate] PDFView:self goToExternalDestination:[[[PDFDestination alloc] initWithPage:page atPoint:point] autorelease]];
+        [[self delegate] PDFView:self goToExternalDestination:[[PDFDestination alloc] initWithPage:page atPoint:point]];
     }
 }
 
@@ -660,7 +652,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
         if ([[self delegate] respondsToSelector:@selector(PDFView:goToExternalDestination:)]) {
             NSPoint location = NSZeroPoint;
             PDFPage *page = [self pageAndPoint:&location forEvent:theEvent nearest:YES];
-            [[self delegate] PDFView:self goToExternalDestination:[[[PDFDestination alloc] initWithPage:page atPoint:location] autorelease]];
+            [[self delegate] PDFView:self goToExternalDestination:[[PDFDestination alloc] initWithPage:page atPoint:location]];
         }
         
     } else if ([theEvent standardModifierFlags] == (NSEventModifierFlagCommand | NSEventModifierFlagShift)) {

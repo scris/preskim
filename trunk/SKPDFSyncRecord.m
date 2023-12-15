@@ -57,11 +57,6 @@
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(file);
-    [super dealloc];
-}
-
 - (CGFloat)x {
     return point.x;
 }

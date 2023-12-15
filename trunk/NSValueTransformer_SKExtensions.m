@@ -79,13 +79,13 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 @implementation NSValueTransformer (SKExtensions)
 
 + (void)registerCustomTransformers {
-    [NSValueTransformer setValueTransformer:[[[SKUnarchiveColorTransformer alloc] init] autorelease] forName:SKUnarchiveColorTransformerName];
-    [NSValueTransformer setValueTransformer:[[[SKUnarchiveColorArrayTransformer alloc] init] autorelease] forName:SKUnarchiveColorArrayTransformerName];
-    [NSValueTransformer setValueTransformer:[[[SKTypeImageTransformer alloc] init] autorelease] forName:SKTypeImageTransformerName];
-    [NSValueTransformer setValueTransformer:[[[SKHasWindowImageTransformer alloc] init] autorelease] forName:SKHasWindowImageTransformerName];
-    [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:0] autorelease] forName:SKIsZeroTransformerName];
-    [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:1] autorelease] forName:SKIsOneTransformerName];
-    [NSValueTransformer setValueTransformer:[[[SKRadioTransformer alloc] initWithTargetValue:2] autorelease] forName:SKIsTwoTransformerName];
+    [NSValueTransformer setValueTransformer:[[SKUnarchiveColorTransformer alloc] init] forName:SKUnarchiveColorTransformerName];
+    [NSValueTransformer setValueTransformer:[[SKUnarchiveColorArrayTransformer alloc] init] forName:SKUnarchiveColorArrayTransformerName];
+    [NSValueTransformer setValueTransformer:[[SKTypeImageTransformer alloc] init] forName:SKTypeImageTransformerName];
+    [NSValueTransformer setValueTransformer:[[SKHasWindowImageTransformer alloc] init] forName:SKHasWindowImageTransformerName];
+    [NSValueTransformer setValueTransformer:[[SKRadioTransformer alloc] initWithTargetValue:0] forName:SKIsZeroTransformerName];
+    [NSValueTransformer setValueTransformer:[[SKRadioTransformer alloc] initWithTargetValue:1] forName:SKIsOneTransformerName];
+    [NSValueTransformer setValueTransformer:[[SKRadioTransformer alloc] initWithTargetValue:2] forName:SKIsTwoTransformerName];
 }
 
 @end
@@ -213,7 +213,7 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
     if ([hasWindow boolValue]) {
         static NSImage *windowImage = nil;
         if (windowImage == nil) {
-            windowImage = [[NSImage imageWithSize:NSMakeSize(12.0, 12.0) flipped:NO drawingHandler:^(NSRect dstRect){
+            windowImage = [NSImage imageWithSize:NSMakeSize(12.0, 12.0) flipped:NO drawingHandler:^(NSRect dstRect){
                 NSBezierPath *path = [NSBezierPath bezierPath];
                 [path moveToPoint:NSMakePoint(1.0, 2.0)];
                 [path appendBezierPathWithArcWithCenter:NSMakePoint(3.0, 10.0) radius:2.0 startAngle:180.0 endAngle:90.0 clockwise:YES];
@@ -225,7 +225,7 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
                 [[NSColor blackColor] setFill];
                 [path fill];
                 return YES;
-            }] retain];
+            }];
             [windowImage setTemplate:YES];
             [windowImage setAccessibilityDescription:NSLocalizedString(@"window", @"Accessibility description")];
         }

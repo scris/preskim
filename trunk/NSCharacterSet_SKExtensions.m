@@ -54,7 +54,6 @@
         NSMutableCharacterSet *tmpSet = [[self URLPathAllowedCharacterSet] mutableCopy];
         [tmpSet removeCharactersInString:@"/"];
         URLBookmarkNameAllowedCharacterSet = [tmpSet copy];
-        [tmpSet release];
     }
     return URLBookmarkNameAllowedCharacterSet;
 }
@@ -65,7 +64,6 @@
         NSMutableCharacterSet *tmpSet = [[self URLPathAllowedCharacterSet] mutableCopy];
         [tmpSet addCharactersInString:@":;?#%"];
         URLGenericAllowedCharacterSet = [tmpSet copy];
-        [tmpSet release];
     }
     return URLGenericAllowedCharacterSet;
 }

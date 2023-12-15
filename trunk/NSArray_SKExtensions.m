@@ -48,43 +48,43 @@
 #pragma mark Templating support
 
 - (NSArray *)arraySortedByPageIndex {
-    return [self sortedArrayUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES] autorelease]]];
+    return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES]]];
 }
 
 - (NSArray *)arraySortedByBounds {
-    return [self sortedArrayUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:YES selector:@selector(compare:)] autorelease]]];
+    return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:YES selector:@selector(compare:)]]];
 }
 
 - (NSArray *)arraySortedByPageIndexAndBounds {
-    return [self sortedArrayUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES] autorelease], [[[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:YES selector:@selector(compare:)] autorelease]]];
+    return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES], [[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:YES selector:@selector(compare:)]]];
 }
 
 - (NSArray *)arraySortedByType {
-    return [self sortedArrayUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationTypeKey ascending:YES selector:@selector(noteTypeCompare:)] autorelease]]];
+    return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationTypeKey ascending:YES selector:@selector(noteTypeCompare:)]]];
 }
 
 - (NSArray *)arraySortedByContents {
-    return [self sortedArrayUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)] autorelease]]];
+    return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)]]];
 }
 
 - (NSArray *)arraySortedByTypeAndContents {
-    return [self sortedArrayUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationTypeKey ascending:YES selector:@selector(noteTypeCompare:)] autorelease], [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease]]];
+    return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationTypeKey ascending:YES selector:@selector(noteTypeCompare:)], [[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(caseInsensitiveCompare:)]]];
 }
 
 - (NSArray *)arraySortedByTypeAndPageIndex {
-    return [self sortedArrayUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationTypeKey ascending:YES selector:@selector(noteTypeCompare:)] autorelease], [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES] autorelease]]];
+    return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationTypeKey ascending:YES selector:@selector(noteTypeCompare:)], [[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES]]];
 }
 
 - (NSArray *)arraySortedByColor {
-    return [self sortedArrayUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationColorKey ascending:YES selector:@selector(colorCompare:)] autorelease]]];
+    return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationColorKey ascending:YES selector:@selector(colorCompare:)]]];
 }
 
 - (NSArray *)arraySortedByColorAndPageIndex {
-    return [self sortedArrayUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationColorKey ascending:YES selector:@selector(colorCompare:)] autorelease], [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES] autorelease]]];
+    return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationColorKey ascending:YES selector:@selector(colorCompare:)], [[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES]]];
 }
 
 - (NSArray *)arraySortedByModificationDate {
-    return [self sortedArrayUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationModificationDateKey ascending:YES] autorelease]]];
+    return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationModificationDateKey ascending:YES]]];
 }
 
 @end

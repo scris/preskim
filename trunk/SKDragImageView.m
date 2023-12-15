@@ -81,7 +81,7 @@
         [menu addItemWithTitle:NSLocalizedString(@"Quick Look", @"Menu item title") action:@selector(togglePreviewPanel:) target:self];
         [self setMenu:menu];
     }
-    menu = [[menu copy] autorelease];
+    menu = [menu copy];
 	NSInteger i = [menu numberOfItems];
     
     while (i-- > 0) {
@@ -129,7 +129,7 @@
                             [[self cell] drawInteriorWithFrame:rect inView:self];
                         }];
                         
-                        NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:object] autorelease];
+                        NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:object];
                         [dragItem setDraggingFrame:bounds contents:dragImage];
                         [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
                     }

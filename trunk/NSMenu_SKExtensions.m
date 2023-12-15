@@ -43,13 +43,12 @@
 @implementation NSMenu (SKExtensions)
 
 + (NSMenu *)menu {
-    return [[[NSMenu alloc] initWithTitle:@""] autorelease];
+    return [[NSMenu alloc] initWithTitle:@""];
 }
 
 - (NSMenuItem *)insertItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget atIndex:(NSInteger)anIndex {
     NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:aString action:aSelector target:aTarget];
     [self insertItem:item atIndex:anIndex];
-    [item release];
     return item;
 }
 
@@ -60,7 +59,6 @@
 - (NSMenuItem *)insertItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag atIndex:(NSInteger)anIndex {
     NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:aString action:aSelector target:aTarget tag:aTag];
     [self insertItem:item atIndex:anIndex];
-    [item release];
     return item;
 }
 
@@ -71,7 +69,6 @@
 - (NSMenuItem *)insertItemWithTitle:(NSString *)aString imageNamed:(NSString *)anImageName action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag atIndex:(NSInteger)anIndex {
     NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:aString imageNamed:anImageName action:aSelector target:aTarget tag:aTag];
     [self insertItem:item atIndex:anIndex];
-    [item release];
     return item;
 }
 
@@ -82,7 +79,6 @@
 - (NSMenuItem *)insertItemWithSubmenuAndTitle:(NSString *)aString atIndex:(NSInteger)anIndex {
     NSMenuItem *item = [[NSMenuItem alloc] initWithSubmenuAndTitle:aString];
     [self insertItem:item atIndex:anIndex];
-    [item release];
     return item;
 }
 
@@ -96,15 +92,15 @@
 @implementation NSMenuItem (SKExtensions)
 
 + (NSMenuItem *)menuItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget {
-    return [[[NSMenuItem alloc] initWithTitle:aString action:aSelector target:aTarget] autorelease];
+    return [[NSMenuItem alloc] initWithTitle:aString action:aSelector target:aTarget];
 }
 
 + (NSMenuItem *)menuItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag {
-    return [[[NSMenuItem alloc] initWithTitle:aString action:aSelector target:aTarget tag:aTag] autorelease];
+    return [[NSMenuItem alloc] initWithTitle:aString action:aSelector target:aTarget tag:aTag];
 }
 
 + (NSMenuItem *)menuItemWithSubmenuAndTitle:(NSString *)aString {
-    return [[[NSMenuItem alloc] initWithSubmenuAndTitle:aString] autorelease];
+    return [[NSMenuItem alloc] initWithSubmenuAndTitle:aString];
 }
 
 - (instancetype)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget {
@@ -131,7 +127,6 @@
     if (self) {
         NSMenu *menu = [[NSMenu alloc] initWithTitle:aString];
         [self setSubmenu:menu];
-        [menu release];
     }
     return self;
 }
@@ -147,7 +142,6 @@
         [image drawInRect:(NSRect){NSZeroPoint, dstSize} fromRect:NSZeroRect operation:NSCompositingOperationCopy fraction:1.0];
         [newImage unlockFocus];
         [self setImage:newImage];
-        [newImage release];
     }
 }
         

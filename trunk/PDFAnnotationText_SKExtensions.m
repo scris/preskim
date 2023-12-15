@@ -47,7 +47,7 @@ NSString *SKPDFAnnotationScriptingIconTypeKey = @"scriptingIconType";
 @implementation PDFAnnotationText (SKExtensions)
 
 - (NSString *)fdfString {
-    NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
+    NSMutableString *fdfString = [[super fdfString] mutableCopy];
     [fdfString appendFDFName:SKFDFAnnotationIconTypeKey];
     [fdfString appendFDFName:SKFDFTextAnnotationIconTypeFromPDFTextAnnotationIconType([self iconType])];
     return fdfString;
@@ -68,7 +68,6 @@ NSString *SKPDFAnnotationScriptingIconTypeKey = @"scriptingIconType";
         [mutableKeys addObject:SKNPDFAnnotationIconTypeKey];
         [mutableKeys removeObject:SKNPDFAnnotationBorderKey];
         textKeys = [mutableKeys copy];
-        [mutableKeys release];
     }
     return textKeys;
 }
@@ -84,7 +83,6 @@ NSString *SKPDFAnnotationScriptingIconTypeKey = @"scriptingIconType";
         [customKeys removeObject:SKNPDFAnnotationBorderStyleKey];
         [customKeys removeObject:SKNPDFAnnotationDashPatternKey];
         customTextScriptingKeys = [customKeys copy];
-        [customKeys release];
     }
     return customTextScriptingKeys;
 }

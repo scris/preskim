@@ -81,7 +81,7 @@
     if (type == cText || type == typeRichText || type == typeRTF) {
         NSAttributedString *attrString = [selection attributedString];
         if (data)
-            attrString = [[[NSAttributedString alloc] initWithData:data options:@{} documentAttributes:NULL error:NULL] autorelease];
+            attrString = [[NSAttributedString alloc] initWithData:data options:@{} documentAttributes:NULL error:NULL];
         if (type == cText)
             desc = [NSAppleEventDescriptor descriptorWithString:[attrString string]];
         else if (type == typeRTF)

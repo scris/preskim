@@ -83,10 +83,10 @@ static NSSet *keysAffectedByStatus = nil;
 + (NSImage *)deleteImage {
     static NSImage *deleteImage = nil;
     if (deleteImage == nil) {
-        deleteImage = [[NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect){
+        deleteImage = [NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect){
             [[[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kToolbarDeleteIcon)] drawInRect:NSMakeRect(-2.0, -1.0, 20.0, 20.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
             return YES;
-        }] retain];
+        }];
         [deleteImage setAccessibilityDescription:NSLocalizedString(@"delete", @"Accessibility description")];
     }
     return deleteImage;
@@ -95,10 +95,10 @@ static NSSet *keysAffectedByStatus = nil;
 + (NSImage *)cancelImage {
     static NSImage *cancelImage = nil;
     if (cancelImage == nil) {
-        cancelImage = [[NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect){
+        cancelImage = [NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect){
             [[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate] drawInRect:NSInsetRect(rect, 1.0, 1.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
             return YES;
-        }] retain];
+        }];
         [cancelImage setTemplate:YES];
         [cancelImage setAccessibilityDescription:NSLocalizedString(@"cancel", @"Accessibility description")];
     }
@@ -108,10 +108,10 @@ static NSSet *keysAffectedByStatus = nil;
 + (NSImage *)resumeImage {
     static NSImage *resumeImage = nil;
     if (resumeImage == nil) {
-        resumeImage = [[NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect){
+        resumeImage = [NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect){
             [[NSImage imageNamed:NSImageNameRefreshFreestandingTemplate] drawInRect:NSInsetRect(rect, 1.0, 1.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
             return YES;
-        }] retain];
+        }];
         [resumeImage setTemplate:YES];
         [resumeImage setAccessibilityDescription:NSLocalizedString(@"resume", @"Accessibility description")];
     }
@@ -121,7 +121,7 @@ static NSSet *keysAffectedByStatus = nil;
 - (instancetype)initWithURL:(NSURL *)aURL {
     self = [super init];
     if (self) {
-        URL = [aURL retain];
+        URL = aURL;
         downloadTask = nil;
         fileURL = nil;
         fileIcon = nil;
@@ -144,13 +144,13 @@ static NSSet *keysAffectedByStatus = nil;
         downloadTask = nil;
         if (fileURLPath)
             fileURL = [[NSURL alloc] initFileURLWithPath:fileURLPath];
-        fileIcon = fileURL ? [[[NSWorkspace sharedWorkspace] iconForFileType:[fileURL pathExtension]] retain] : nil;
+        fileIcon = fileURL ? [[NSWorkspace sharedWorkspace] iconForFileType:[fileURL pathExtension]] : nil;
         expectedContentLength = [[properties objectForKey:@"expectedContentLength"] longLongValue];
         receivedContentLength = [[properties objectForKey:@"receivedContentLength"] longLongValue];
         status = [[properties objectForKey:@"status"] integerValue];
         resumeData = nil;
         if (fileURL == nil)
-            resumeData = [[properties objectForKey:@"resumeData"] retain];
+            resumeData = [properties objectForKey:@"resumeData"];
     }
     return self;
 }
@@ -160,15 +160,9 @@ static NSSet *keysAffectedByStatus = nil;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     if ([self canCancel])
         [downloadTask cancel];
-    SKDESTROY(URL);
-    SKDESTROY(downloadTask);
-    SKDESTROY(fileURL);
-    SKDESTROY(fileIcon);
-    SKDESTROY(resumeData);
-    [super dealloc];
+    downloadTask = nil;
 }
 
 - (void)handleApplicationWillTerminateNotification:(NSNotification *)notification {
@@ -206,11 +200,10 @@ static NSSet *keysAffectedByStatus = nil;
 
 - (void)setFileURL:(NSURL *)newFileURL {
     if (fileURL != newFileURL) {
-        [fileURL release];
-        fileURL = [newFileURL retain];
+        fileURL = newFileURL;
         
         if (fileIcon == nil && fileURL) {
-            fileIcon = [[[NSWorkspace sharedWorkspace] iconForFileType:[fileURL pathExtension]] retain];
+            fileIcon = [[NSWorkspace sharedWorkspace] iconForFileType:[fileURL pathExtension]];
         }
     }
 }
@@ -250,7 +243,7 @@ static NSSet *keysAffectedByStatus = nil;
     NSUInteger idx = [[[SKDownloadController sharedDownloadController] downloads] indexOfObjectIdenticalTo:self];
     if (idx != NSNotFound) {
         NSScriptClassDescription *containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
-        return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"downloads" index:idx] autorelease];
+        return [[NSIndexSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"downloads" index:idx];
     } else {
         return nil;
     }
@@ -293,7 +286,7 @@ static NSSet *keysAffectedByStatus = nil;
         
         [downloadTask cancelByProducingResumeData:^(NSData *data){ [self setResumeData:data]; }];
         [[SKDownloadController sharedDownloadController] removeDownloadTask:downloadTask];
-        SKDESTROY(downloadTask);
+        downloadTask = nil;
         [self setStatus:SKDownloadStatusCanceled];
     }
 }
@@ -304,9 +297,8 @@ static NSSet *keysAffectedByStatus = nil;
         if (resumeData) {
             
             receivedResponse = NO;
-            [downloadTask release];
             downloadTask = [[SKDownloadController sharedDownloadController] newDownloadTaskForDownload:self];
-            SKDESTROY(resumeData);
+            resumeData = nil;
             [self setStatus:SKDownloadStatusDownloading];
             
         } else {
@@ -317,7 +309,7 @@ static NSSet *keysAffectedByStatus = nil;
                 if ([downloadTask state] < NSURLSessionTaskStateCanceling)
                     [downloadTask cancel];
                 [[SKDownloadController sharedDownloadController] removeDownloadTask:downloadTask];
-                SKDESTROY(downloadTask);
+                downloadTask = nil;
             }
             [self start];
             
@@ -329,7 +321,7 @@ static NSSet *keysAffectedByStatus = nil;
     [self cancel];
     if (fileURL)
         [[NSFileManager defaultManager] removeItemAtURL:[fileURL URLByDeletingLastPathComponent] error:NULL];
-    SKDESTROY(resumeData);
+    resumeData = nil;
 }
 
 - (void)moveToTrash {
@@ -399,12 +391,11 @@ static NSSet *keysAffectedByStatus = nil;
     
     if ([downloadTask response] && receivedResponse == NO) {
         receivedResponse = YES;
-        CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (CFStringRef)[[downloadTask response] MIMEType], kUTTypeData);
+        CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)[[downloadTask response] MIMEType], kUTTypeData);
         if (UTI) {
-            NSString *type = [[NSWorkspace sharedWorkspace] preferredFilenameExtensionForType:(NSString *)UTI];
+            NSString *type = [[NSWorkspace sharedWorkspace] preferredFilenameExtensionForType:CFBridgingRelease(UTI)];
             if (type)
                 [self setFileIcon:[[NSWorkspace sharedWorkspace] iconForFileType:type]];
-            CFRelease(UTI);
         }
     }
     
@@ -430,12 +421,12 @@ static NSSet *keysAffectedByStatus = nil;
         [fm createDirectoryAtPath:[[destinationURL URLByDeletingLastPathComponent] path] withIntermediateDirectories:YES attributes:nil error:NULL];
     BOOL success = [fm moveItemAtURL:location toURL:destinationURL error:&error];
     [self setFileURL:success ? destinationURL : nil];
-    SKDESTROY(downloadTask);
+    downloadTask = nil;
     [self setStatus:success ? SKDownloadStatusFinished : SKDownloadStatusFailed];
 }
 
 - (void)downloadDidFailWithError:(NSError *)error {
-    SKDESTROY(downloadTask);
+    downloadTask = nil;
     [self setFileURL:nil];
     [self setStatus:SKDownloadStatusFailed];
 }

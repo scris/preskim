@@ -63,11 +63,6 @@
 @synthesize updateIntervalPopUpButton, updateInterval;
 @dynamic updater;
 
-- (void)dealloc {
-    SKDESTROY(updateIntervalPopUpButton);
-    [super dealloc];
-}
-
 - (NSString *)nibName {
     return @"GeneralPreferences";
 }
@@ -103,7 +98,7 @@
     NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
     NSDictionary *settings = [sud dictionaryForKey:key];
     NSDictionary *defaultSettings = fullScreen ? [sud dictionaryForKey:SKDefaultPDFDisplaySettingsKey] : nil;
-    SKViewSettingsController *viewSettings = [[[SKViewSettingsController alloc] initWithSettings:settings defaultSettings:defaultSettings] autorelease];
+    SKViewSettingsController *viewSettings = [[SKViewSettingsController alloc] initWithSettings:settings defaultSettings:defaultSettings];
     
     [viewSettings beginSheetModalForWindow:[[self view] window] completionHandler:^(NSModalResponse result){
         if (result == NSModalResponseOK) {

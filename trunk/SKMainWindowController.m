@@ -270,57 +270,13 @@ static char SKMainWindowContentLayoutObservationContext;
 - (void)dealloc {
     if ([self isWindowLoaded] && [[self window] delegate])
         SKENSURE_MAIN_THREAD( [self cleanup]; );
-    SKDESTROY(placeholderPdfDocument);
-    SKDESTROY(placeholderWidgetProperties);
-    SKDESTROY(undoGroupOldPropertiesPerNote);
-    SKDESTROY(dirtySnapshots);
-	SKDESTROY(searchResults);
-	SKDESTROY(groupedSearchResults);
-	SKDESTROY(thumbnails);
-    SKDESTROY(notes);
-    SKDESTROY(widgets);
-    SKDESTROY(widgetValues);
-	SKDESTROY(snapshots);
-	SKDESTROY(tags);
-    SKDESTROY(pageLabels);
-    SKDESTROY(pageLabel);
-	SKDESTROY(rowHeights);
-    SKDESTROY(lastViewedPages);
-	SKDESTROY(sideWindow);
-    SKDESTROY(mainWindow);
-    SKDESTROY(statusBar);
-    SKDESTROY(findController);
-    SKDESTROY(savedNormalSetup);
-    SKDESTROY(progressController);
-    SKDESTROY(colorAccessoryView);
-    SKDESTROY(textColorAccessoryView);
-    SKDESTROY(secondaryPdfView);
-    SKDESTROY(presentationPreview);
-    SKDESTROY(noteTypeSheetController);
-    SKDESTROY(splitView);
-    SKDESTROY(centerContentView);
-    SKDESTROY(pdfSplitView);
-    SKDESTROY(pdfContentView);
-    SKDESTROY(pdfView);
-    SKDESTROY(leftSideController);
-    SKDESTROY(rightSideController);
-    SKDESTROY(toolbarController);
-    SKDESTROY(leftSideContentView);
-    SKDESTROY(rightSideContentView);
-    SKDESTROY(overviewView);
-    SKDESTROY(overviewContentView);
-    SKDESTROY(fieldEditor);
-    SKDESTROY(presentationNotesDocument);
-    SKDESTROY(presentationNotes);
-    SKDESTROY(presentationUndoManager);
-    [super dealloc];
 }
 
 // this is called from windowWillClose:
 - (void)cleanup {
     if (activity) {
         [[NSProcessInfo processInfo] endActivity:activity];
-        SKDESTROY(activity);
+        activity = nil;
     }
     [overviewView removeObserver:self forKeyPath:@"selectionIndexPaths" context:&SKMainWindowThumbnailSelectionObservationContext];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -678,7 +634,6 @@ static char SKMainWindowContentLayoutObservationContext;
     [settings removeObjectForKey:@"search"];
     if ([settings count])
         [self applyPDFSettings:settings rewind:page == 0 && [[pdfView currentPage] pageIndex] > 0];
-    [settings release];
     if (page > 0) {
         page = MIN(page, (NSInteger)[[pdfView document] pageCount]);
         NSString *pointString = [options objectForKey:@"point"];
@@ -796,7 +751,6 @@ static char SKMainWindowContentLayoutObservationContext;
             for (i = 0; i < iMax; i++)
                 [array addObject:[self expansionStateForOutline:[anOutline childAtIndex:i]]];
             [dict setValue:array forKey:CHILDREN_KEY];
-            [array release];
         }
     }
     return dict;
@@ -818,7 +772,6 @@ static char SKMainWindowContentLayoutObservationContext;
             infoEnum = [childrenStates objectEnumerator];
         for (PDFOutline *child in children)
             [self expandOutline:child forExpansionState:[infoEnum nextObject] level:level];
-        [children release];
     }
 }
 
@@ -916,10 +869,8 @@ static char SKMainWindowContentLayoutObservationContext;
 }
 
 - (void)makeWidgets {
-    [widgets release];
     widgets = [[NSMutableArray alloc] init];
-    [widgetValues release];
-    widgetValues = [[NSMapTable strongToStrongObjectsMapTable] retain];
+    widgetValues = [NSMapTable strongToStrongObjectsMapTable];
     NSArray *array = [[self pdfDocument] detectedWidgets];
     if ([array count])
         [self registerWidgets:array];
@@ -933,19 +884,19 @@ static char SKMainWindowContentLayoutObservationContext;
 - (void)clearWidgets {
     if ([widgets count])
         [self stopObservingNotes:widgets];
-    SKDESTROY(widgets);
-    SKDESTROY(widgetValues);
-    SKDESTROY(placeholderWidgetProperties);
+    widgets = nil;
+    widgetValues = nil;
+    placeholderWidgetProperties = nil;
 }
 
 - (void)setWidgetValues:(NSMapTable *)newWidgetValues {
     if (widgetValues) {
-        [[[self document] undoManager] registerUndoWithTarget:self selector:@selector(setWidgetValues:) object:[[widgetValues copy] autorelease]];
+        [[[self document] undoManager] registerUndoWithTarget:self selector:@selector(setWidgetValues:) object:[widgetValues copy]];
         for (PDFAnnotation *widget in newWidgetValues) {
             [widgetValues setObject:[newWidgetValues objectForKey:widget] forKey:widget];
         }
     } else {
-        widgetValues = [newWidgetValues retain];
+        widgetValues = newWidgetValues;
     }
 }
 
@@ -996,27 +947,26 @@ static char SKMainWindowContentLayoutObservationContext;
     for (NSDictionary *dict in noteDicts) {
         if ([[dict objectForKey:SKNPDFAnnotationTypeKey] isEqualToString:SKNWidgetString])
             continue;
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        PDFAnnotation *annotation = [PDFAnnotation newSkimNoteWithProperties:dict];
-        if (annotation) {
-            // this is only to make sure markup annotations generate the lineRects, for thread safety
-            if ([annotation isMarkup])
-                [annotation boundsOrder];
-            NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
-            if (pageIndex == NSNotFound)
-                pageIndex = 0;
-            else if (pageIndex >= [pdfDoc pageCount])
-                pageIndex = [pdfDoc pageCount] - 1;
-            [pageIndexes addIndex:pageIndex];
-            [annotation setShouldDisplay:shouldDisplay];
-            [annotation setShouldPrint:shouldDisplay];
-            [pdfDoc addAnnotation:annotation toPage:[pdfDoc pageAtIndex:pageIndex]];
-            if (autoUpdate && [[annotation contents] length] == 0)
-                [annotation autoUpdateString];
-            [notesToAdd addObject:annotation];
-            [annotation release];
+        @autoreleasepool{
+            PDFAnnotation *annotation = [PDFAnnotation newSkimNoteWithProperties:dict];
+            if (annotation) {
+                // this is only to make sure markup annotations generate the lineRects, for thread safety
+                if ([annotation isMarkup])
+                    [annotation boundsOrder];
+                NSUInteger pageIndex = [[dict objectForKey:SKNPDFAnnotationPageIndexKey] unsignedIntegerValue];
+                if (pageIndex == NSNotFound)
+                    pageIndex = 0;
+                else if (pageIndex >= [pdfDoc pageCount])
+                    pageIndex = [pdfDoc pageCount] - 1;
+                [pageIndexes addIndex:pageIndex];
+                [annotation setShouldDisplay:shouldDisplay];
+                [annotation setShouldPrint:shouldDisplay];
+                [pdfDoc addAnnotation:annotation toPage:[pdfDoc pageAtIndex:pageIndex]];
+                if (autoUpdate && [[annotation contents] length] == 0)
+                    [annotation autoUpdateString];
+                [notesToAdd addObject:annotation];
+            }
         }
-        [pool release];
     }
     
     mwcFlags.addOrRemoveNotesInBulk = 0;
@@ -1039,7 +989,7 @@ static char SKMainWindowContentLayoutObservationContext;
         }
         PDFAnnotation *annotation;
         mwcFlags.addOrRemoveNotesInBulk = 1;
-        for (annotation in [[notesToRemove copy] autorelease]) {
+        for (annotation in [notesToRemove copy]) {
             [pageIndexes addIndex:[annotation pageIndex]];
             PDFAnnotation *popup = [annotation popup];
             if (popup)
@@ -1073,7 +1023,7 @@ static char SKMainWindowContentLayoutObservationContext;
     }
     
     // make sure we clear the undo handling
-    SKDESTROY(undoGroupOldPropertiesPerNote);
+    undoGroupOldPropertiesPerNote = nil;
     [rightSideController.noteOutlineView reloadData];
     [self updateThumbnailsAtPageIndexes:pageIndexes];
     [pdfView resetPDFToolTipRects];
@@ -1089,7 +1039,7 @@ static char SKMainWindowContentLayoutObservationContext;
     NSArray *snapshotDicts = nil;
     NSDictionary *openState = nil;
     
-    SKDESTROY(placeholderPdfDocument);
+    placeholderPdfDocument = nil;
     if ([pdfDoc allowsNotes] == NO && [noteDicts count] > 0) {
         // there should not be any notesToRemove at this point
         NSUInteger i, pageCount = MIN([pdfDoc pageCount], [[noteDicts valueForKeyPath:@"@max.pageIndex"] unsignedIntegerValue] + 1);
@@ -1098,7 +1048,6 @@ static char SKMainWindowContentLayoutObservationContext;
         for (i = 0; i < pageCount; i++) {
             PDFPage *page = [[SKPDFPage alloc] init];
             [placeholderPdfDocument insertPage:page atIndex:i];
-            [page release];
         }
     }
     
@@ -1214,7 +1163,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [self updateRightStatus];
     
     // make sure we clear the undo handling
-    SKDESTROY(undoGroupOldPropertiesPerNote);
+    undoGroupOldPropertiesPerNote = nil;
     [rightSideController.noteOutlineView reloadData];
     [pdfView resetPDFToolTipRects];
 }
@@ -1229,16 +1178,14 @@ static char SKMainWindowContentLayoutObservationContext;
     NSString *label = [[pdfView currentPage] displayLabel];
     if ([label isEqualToString:pageLabel] == NO) {
         [self willChangeValueForKey:PAGELABEL_KEY];
-        [pageLabel release];
-        pageLabel = [label retain];
+        pageLabel = label;
         [self didChangeValueForKey:PAGELABEL_KEY];
     }
 }
 
 - (void)setPageLabel:(NSString *)label {
     if (label != pageLabel) {
-        [pageLabel release];
-        pageLabel = [label retain];
+        pageLabel = label;
     }
     NSUInteger idx = [pageLabels indexOfObject:label];
     if (idx != NSNotFound && [[pdfView currentPage] pageIndex] != idx)
@@ -1380,8 +1327,8 @@ static char SKMainWindowContentLayoutObservationContext;
     [[self windowControllerForNote:note] close];
     
     if ([note hasNoteText])
-        NSMapRemove(rowHeights, (void *)[note noteText]);
-    NSMapRemove(rowHeights, (void *)note);
+        NSMapRemove(rowHeights, (__bridge void *)[note noteText]);
+    NSMapRemove(rowHeights, (__bridge void *)note);
     
     // Stop observing the removed notes
     [self stopObservingNotes:@[note]];
@@ -1396,7 +1343,6 @@ static char SKMainWindowContentLayoutObservationContext;
             if ([wc isNoteWindowController])
                 [wc close];
         }
-        [wcs release];
         
         [rowHeights removeAllObjects];
         
@@ -1532,7 +1478,7 @@ static char SKMainWindowContentLayoutObservationContext;
     NSArray *pageTransitions = [transitions pageTransitions];
     NSMutableDictionary *options = nil;
     if ([transition transitionStyle] != SKNoTransition || [pageTransitions count]) {
-        options = [NSMutableDictionary dictionaryWithDictionary:[(transition ?: [[[SKTransitionInfo alloc] init] autorelease]) properties]];
+        options = [NSMutableDictionary dictionaryWithDictionary:[(transition ?: [[SKTransitionInfo alloc] init]) properties]];
         [options setValue:pageTransitions forKey:PAGETRANSITIONS_KEY];
     }
     return options;
@@ -1540,15 +1486,14 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)setPresentationOptions:(NSDictionary *)dictionary {
     SKTransitionController *transitions = [pdfView transitionController];
-    [transitions setTransition:[[[SKTransitionInfo alloc] initWithProperties:dictionary] autorelease]];
+    [transitions setTransition:[[SKTransitionInfo alloc] initWithProperties:dictionary]];
     [transitions setPageTransitions:[dictionary objectForKey:PAGETRANSITIONS_KEY]];
 }
 
 - (void)setPresentationNotesDocument:(NSDocument *)newDocument {
     [self removePresentationNotesNavigation];
     if (presentationNotesDocument != newDocument) {
-        [presentationNotesDocument release];
-        presentationNotesDocument = [newDocument retain];
+        presentationNotesDocument = newDocument;
     }
 }
 
@@ -1658,8 +1603,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [overviewView setBackgroundColors:@[[NSColor clearColor]]];
         overviewContentView = scrollView;
         [overviewView setBackgroundView:bgView];
-        [bgView release];
-        NSCollectionViewFlowLayout *layout = [[[NSCollectionViewFlowLayout alloc] init] autorelease];
+        NSCollectionViewFlowLayout *layout = [[NSCollectionViewFlowLayout alloc] init];
         [layout setMinimumLineSpacing:8.0];
         [layout setMinimumInteritemSpacing:0.0];
         [overviewView setCollectionViewLayout:layout];
@@ -2010,7 +1954,6 @@ static char SKMainWindowContentLayoutObservationContext;
         NSArray *highlights = [[NSArray alloc] initWithArray:findResults copyItems:YES];
         [highlights setValue:[NSColor findHighlightColor] forKey:@"color"];
         [pdfView setHighlightedSelections:highlights];
-        [highlights release];
         
         if ([currentSel hasCharacters]) {
             [pdfView setCurrentSelection:currentSel animate:YES];
@@ -2027,7 +1970,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)didMatchString:(PDFSelection *)instance {
     if (mwcFlags.wholeWordSearch) {
-        PDFSelection *copy = [[instance copy] autorelease];
+        PDFSelection *copy = [instance copy];
         NSString *string = [instance string];
         NSUInteger l = [string length];
         [copy extendSelectionAtEnd:1];
@@ -2166,7 +2109,7 @@ static char SKMainWindowContentLayoutObservationContext;
                 [pageIndexes addIndex:pageIndex];
             }
         }
-        SKDESTROY(placeholderPdfDocument);
+        placeholderPdfDocument = nil;
         [pdfView requiresDisplay];
         [rightSideController.noteArrayController rearrangeObjects];
         if ([[savedNormalSetup objectForKey:LOCKED_KEY] boolValue] == NO) {
@@ -2181,7 +2124,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [[[self document] undoManager] disableUndoRegistration];
         [self changeWidgetsFromDictionaries:placeholderWidgetProperties];
         [[[self document] undoManager] enableUndoRegistration];
-        SKDESTROY(placeholderWidgetProperties);
+        placeholderWidgetProperties = nil;
     }
     
     if ([[savedNormalSetup objectForKey:LOCKED_KEY] boolValue]) {
@@ -2203,7 +2146,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     if (saveOption == SKOptionAlways) {
         [[self document] savePasswordInKeychain:password];
     } else if (saveOption == SKOptionAsk) {
-        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+        NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Remember Password?", @"Message in alert dialog"), nil]];
         [alert setInformativeText:NSLocalizedString(@"Do you want to save this password in your Keychain?", @"Informative text in alert dialog")];
         [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"Button title")];
@@ -2418,7 +2361,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     [swc setForceOnTop:[self interactionMode] != SKNormalMode];
     
     [[self document] addWindowController:swc];
-    [swc release];
 }
 
 - (void)showSnapshotsWithSetups:(NSArray *)setups {
@@ -2436,8 +2378,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         [swc setForceOnTop:[self interactionMode] != SKNormalMode];
         
         [[self document] addWindowController:swc];
-        
-        [swc release];
     }
 }
 
@@ -2469,7 +2409,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 
 - (void)snapshotControllerWillClose:(SKSnapshotWindowController *)controller {
     if (controller == presentationPreview) {
-        SKDESTROY(presentationPreview);
+        presentationPreview = nil;
     } else {
         [rightSideController.snapshotTableView beginUpdates];
         NSUInteger row = [[rightSideController.snapshotArrayController arrangedObjects] indexOfObject:controller];
@@ -2549,7 +2489,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         wc = [[SKNoteWindowController alloc] initWithNote:annotation];
         [(SKNoteWindowController *)wc setForceOnTop:[self interactionMode] != SKNormalMode];
         [[self document] addWindowController:wc];
-        [wc release];
     }
     [wc showWindow:self];
 }
@@ -2745,7 +2684,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             
             if (undoGroupOldPropertiesPerNote == nil) {
                 // We haven't recorded changes for any notes at all since the last undo manager checkpoint. Get ready to start collecting them. We don't want to copy the PDFAnnotations though.
-                undoGroupOldPropertiesPerNote = [[NSMapTable weakToStrongObjectsMapTable] retain];
+                undoGroupOldPropertiesPerNote = [NSMapTable weakToStrongObjectsMapTable];
                 // Register an undo operation for any note property changes that are going to be coalesced between now and the next invocation of -observeUndoManagerCheckpoint:.
                 [undoManager registerUndoWithTarget:self selector:@selector(setNoteProperties:) object:undoGroupOldPropertiesPerNote];
                 // Don't set the undo action name during undoing and redoing
@@ -2760,7 +2699,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                 oldNoteProperties = [[NSMutableDictionary alloc] init];
                 // -setValue:forKey: copies, even if the callback doesn't, so we need to use CF functions
                 [undoGroupOldPropertiesPerNote setObject:oldNoteProperties forKey:note];
-                [oldNoteProperties release];
                 // set the mod date here, need to do that only once for each note for a real user action
                 if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableModificationDateKey] == NO && isUndoOrRedo == NO && [keyPath isEqualToString:SKNPDFAnnotationModificationDateKey] == NO && [note isSkimNote])
                     [note setModificationDate:[NSDate date]];
@@ -2820,9 +2758,9 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             
             if (mwcFlags.autoResizeNoteRows) {
                 if ([keyPath isEqualToString:SKNPDFAnnotationStringKey])
-                    NSMapRemove(rowHeights, (void *)note);
+                    NSMapRemove(rowHeights, (__bridge void *)note);
                 if ([keyPath isEqualToString:SKNPDFAnnotationTextKey])
-                    NSMapRemove(rowHeights, (void *)[note noteText]);
+                    NSMapRemove(rowHeights, (__bridge void *)[note noteText]);
             }
             if ([self notesNeedReloadForKey:keyPath]) {
                 [self performSelectorOnce:@selector(reloadNotesTable) afterDelay:0.0];
@@ -2972,7 +2910,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     if ([pageLabels count] > 0) {
         BOOL isLocked = [[pdfView document] isLocked];
         PDFPage *firstPage = [[pdfView document] pageAtIndex:0];
-        PDFPage *emptyPage = [[[SKPDFPage alloc] init] autorelease];
+        PDFPage *emptyPage = [[SKPDFPage alloc] init];
         [emptyPage setBounds:[firstPage boundsForBox:kPDFDisplayBoxCropBox] forBox:kPDFDisplayBoxCropBox];
         [emptyPage setBounds:[firstPage boundsForBox:kPDFDisplayBoxMediaBox] forBox:kPDFDisplayBoxMediaBox];
         [emptyPage setRotation:[firstPage rotation]];
@@ -3004,7 +2942,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             SKThumbnail *thumbnail = [[SKThumbnail alloc] initWithImage:pageImage label:label pageIndex:i];
             [thumbnail setDirty:YES];
             [newThumbnails addObject:thumbnail];
-            [thumbnail release];
         }];
     }
     // reloadData resets the selection, so we have to ignore its notification and reset it
@@ -3109,7 +3046,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         
         if (snapshotTimer) {
             [snapshotTimer invalidate];
-            SKDESTROY(snapshotTimer);
+            snapshotTimer = nil;
         }
         
         if ([self countOfSnapshots])
@@ -3131,7 +3068,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 
 - (void)updateSnapshotsIfNeeded {
     if ([rightSideController.snapshotTableView window] != nil && [dirtySnapshots count] > 0 && snapshotTimer == nil)
-        snapshotTimer = [[NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(updateSnapshot:) userInfo:NULL repeats:YES] retain];
+        snapshotTimer = [NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(updateSnapshot:) userInfo:NULL repeats:YES];
 }
 
 - (void)updateSnapshot:(NSTimer *)timer {
@@ -3153,7 +3090,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     }
     if ([dirtySnapshots count] == 0) {
         [snapshotTimer invalidate];
-        SKDESTROY(snapshotTimer);
+        snapshotTimer = nil;
     }
 }
 
@@ -3195,7 +3132,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 
 - (void)dismissProgressSheet {
     [progressController dismissSheet:nil];
-    SKDESTROY(progressController);
+    progressController = nil;
 }
 
 #pragma mark Remote Control

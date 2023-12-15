@@ -175,7 +175,7 @@ static NSString *fileTypeOfURL(NSURL *url) {
     } else {
         type = [url pathExtension];
         if ([type length]) {
-            type = [(NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)type, NULL) autorelease];
+            type = CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)type, NULL));
         } else {
             NSString *scheme = [[url scheme] lowercaseString];
             if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"])
@@ -207,7 +207,6 @@ static NSFileWrapper *fileWrapperForFileType(NSString *type) {
         [wrapper setFilename:name];
         [wrapper setPreferredFilename:name];
         [typeIconWrappers setObject:wrapper forKey:type];
-        [wrapper release];
     }
     return wrapper;
 }
@@ -230,8 +229,6 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
         [wrapper setFilename:name];
         [wrapper setPreferredFilename:name];
         [typeIconWrappers setObject:wrapper forKey:type];
-        [wrapper release];
-        [image release];
     }
     return wrapper;
 }
@@ -241,9 +238,7 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
     NSFileWrapper *wrapper = fileWrapperForFileType(fileTypeOfURL(self));
     if (wrapper) {
         NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:wrapper];
-        [wrapper release];
         attrString = [NSAttributedString attributedStringWithAttachment:attachment];
-        [attachment release];
         
     }
     return attrString;
@@ -254,9 +249,7 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
     NSFileWrapper *wrapper = smallFileWrapperForFileType(fileTypeOfURL(self));
     if (wrapper) {
         NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:wrapper];
-        [wrapper release];
         attrString = [NSAttributedString attributedStringWithAttachment:attachment];
-        [attachment release];
         
     }
     return attrString;
@@ -267,12 +260,10 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
     NSFileWrapper *wrapper = fileWrapperForFileType(fileTypeOfURL(self));
     if (wrapper) {
         NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:wrapper];
-        [wrapper release];
         attrString = [[NSAttributedString attributedStringWithAttachment:attachment] mutableCopy];
-        [attachment release];
         [attrString addAttribute:NSLinkAttributeName value:self range:NSMakeRange(0, [attrString length])];
     }
-    return [attrString autorelease];
+    return attrString;
 }
 
 - (NSAttributedString *)linkedSmallIcon {
@@ -280,16 +271,14 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
     NSFileWrapper *wrapper = smallFileWrapperForFileType(fileTypeOfURL(self));
     if (wrapper) {
         NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:wrapper];
-        [wrapper release];
         attrString = [[NSAttributedString attributedStringWithAttachment:attachment] mutableCopy];
-        [attachment release];
         [attrString addAttribute:NSLinkAttributeName value:self range:NSMakeRange(0, [attrString length])];
     }
-    return [attrString autorelease];
+    return attrString;
 }
 
 - (NSAttributedString *)linkedText {
-    return [[[NSAttributedString alloc] initWithString:[self absoluteString] attributes:@{NSLinkAttributeName:self}] autorelease];
+    return [[NSAttributedString alloc] initWithString:[self absoluteString] attributes:@{NSLinkAttributeName:self}];
 }
 
 - (NSAttributedString *)linkedFileName {
@@ -303,7 +292,7 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
         else
             fileName = [[NSFileManager defaultManager] displayNameAtPath:fileName];
     }
-    return [[[NSAttributedString alloc] initWithString:([self isFileURL] ? [[NSFileManager defaultManager] displayNameAtPath:[self path]] : [self absoluteString]) attributes:@{NSLinkAttributeName:self}] autorelease];
+    return [[NSAttributedString alloc] initWithString:([self isFileURL] ? [[NSFileManager defaultManager] displayNameAtPath:[self path]] : [self absoluteString]) attributes:@{NSLinkAttributeName:self}];
 }
 
 @end
@@ -323,7 +312,6 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
 }
 
 - (instancetype)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type {
-    [self release];
     self = nil;
     if ([propertyList isKindOfClass:[NSString class]]) {
         NSString *string = propertyList;

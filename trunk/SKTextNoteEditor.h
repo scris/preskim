@@ -42,14 +42,14 @@
 
 @interface SKTextNoteEditor : NSView <NSTextViewDelegate> {
     NSTextView *textView;
-    PDFView *pdfView;
+    __weak PDFView *pdfView;
     PDFAnnotation *annotation;
     NSUndoManager *undoManager;
 }
 
 - (instancetype)initWithPDFView:(PDFView *)aPDFView annotation:(PDFAnnotation *)anAnnotation;
 
-@property (nonatomic, readonly) NSString *currentString;
+@property (weak, nonatomic, readonly) NSString *currentString;
 
 - (void)layoutWithEvent:(NSEvent *)event;
 

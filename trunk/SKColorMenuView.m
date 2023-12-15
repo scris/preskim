@@ -57,7 +57,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     self = [super initWithFrame:NSMakeRect(0.0, 0.0, ([favoriteColors count] - 1) * OFFSET + ITEM_SIZE + MARGIN, ITEM_SIZE)];
     if (self) {
         colors = [favoriteColors copy];
-        annotation = [anAnnotation retain];
+        annotation = anAnnotation;
         hoveredIndex = NSNotFound;
         
         NSUInteger i, iMax = [colors count];
@@ -65,17 +65,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         for (i = 0; i < iMax; i++) {
             NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp owner:self userInfo:nil];
             [self addTrackingArea:area];
-            [area release];
             rect.origin.x += OFFSET;
         }
     }
     return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(annotation);
-    SKDESTROY(colors);
-    [super dealloc];
 }
 
 - (NSRect)rectAtIndex:(NSUInteger)anIndex {

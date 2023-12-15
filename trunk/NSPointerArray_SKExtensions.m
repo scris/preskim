@@ -42,9 +42,9 @@
 
 @implementation NSPointerArray (SKExtensions)
 
-+ (instancetype)rectPointerArray { return [[[self alloc] initForRectPointers] autorelease]; }
++ (instancetype)rectPointerArray { return [[self alloc] initForRectPointers]; }
 
-+ (instancetype)rangePointerArray { return [[[self alloc] initForRangePointers] autorelease]; }
++ (instancetype)rangePointerArray { return [[self alloc] initForRangePointers]; }
 
 - (instancetype)initForRectPointers {
     return [self initWithPointerFunctions:[NSPointerFunctions rectPointerFunctions]];

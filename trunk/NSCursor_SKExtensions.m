@@ -72,7 +72,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)zoomInCursor {
     static NSCursor *zoomInCursor = nil;
     if (nil == zoomInCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameZoomInCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameZoomInCursor] copy];
         zoomInCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(7.0, 6.0)];
     }
     return zoomInCursor;
@@ -81,7 +81,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)zoomOutCursor {
     static NSCursor *zoomOutCursor = nil;
     if (nil == zoomOutCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameZoomOutCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameZoomOutCursor] copy];
         zoomOutCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(7.0, 6.0)];
     }
     return zoomOutCursor;
@@ -90,7 +90,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)resizeDiagonal45Cursor {
     static NSCursor *resizeDiagonal45Cursor = nil;
     if (nil == resizeDiagonal45Cursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameResizeDiagonal45Cursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameResizeDiagonal45Cursor] copy];
         resizeDiagonal45Cursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(8.0, 8.0)];
     }
     return resizeDiagonal45Cursor;
@@ -99,7 +99,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)resizeDiagonal135Cursor {
     static NSCursor *resizeDiagonal135Cursor = nil;
     if (nil == resizeDiagonal135Cursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameResizeDiagonal135Cursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameResizeDiagonal135Cursor] copy];
         resizeDiagonal135Cursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(8.0, 8.0)];
     }
     return resizeDiagonal135Cursor;
@@ -108,7 +108,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)cameraCursor {
     static NSCursor *cameraCursor = nil;
     if (nil == cameraCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameCameraCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameCameraCursor] copy];
         cameraCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(9.0, 8.0)];
     }
     return cameraCursor;
@@ -117,7 +117,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)openHandBarCursor {
     static NSCursor *openHandBarCursor = nil;
     if (nil == openHandBarCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameOpenHandBarCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameOpenHandBarCursor] copy];
         openHandBarCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self openHandCursor] hotSpot]];
     }
     return openHandBarCursor;
@@ -126,7 +126,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)closedHandBarCursor {
     static NSCursor *closedHandBarCursor = nil;
     if (nil == closedHandBarCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameClosedHandBarCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameClosedHandBarCursor] copy];
         closedHandBarCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self closedHandCursor] hotSpot]];
     }
     return closedHandBarCursor;
@@ -135,7 +135,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)textNoteCursor {
     static NSCursor *textNoteCursor = nil;
     if (nil == textNoteCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameTextNoteCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameTextNoteCursor] copy];
         textNoteCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self arrowCursor] hotSpot]];
     }
     return textNoteCursor;
@@ -144,7 +144,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)anchoredNoteCursor {
     static NSCursor *anchoredNoteCursor = nil;
     if (nil == anchoredNoteCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameAnchoredNoteCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameAnchoredNoteCursor] copy];
         anchoredNoteCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self arrowCursor] hotSpot]];
     }
     return anchoredNoteCursor;
@@ -153,7 +153,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)circleNoteCursor {
     static NSCursor *circleNoteCursor = nil;
     if (nil == circleNoteCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameCircleNoteCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameCircleNoteCursor] copy];
         circleNoteCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self arrowCursor] hotSpot]];
     }
     return circleNoteCursor;
@@ -162,7 +162,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)squareNoteCursor {
     static NSCursor *squareNoteCursor = nil;
     if (nil == squareNoteCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameSquareNoteCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameSquareNoteCursor] copy];
         squareNoteCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self arrowCursor] hotSpot]];
     }
     return squareNoteCursor;
@@ -171,7 +171,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)highlightNoteCursor {
     static NSCursor *highlightNoteCursor = nil;
     if (nil == highlightNoteCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameHighlightNoteCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameHighlightNoteCursor] copy];
         highlightNoteCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self arrowCursor] hotSpot]];
     }
     return highlightNoteCursor;
@@ -180,7 +180,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)underlineNoteCursor {
     static NSCursor *underlineNoteCursor = nil;
     if (nil == underlineNoteCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameUnderlineNoteCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameUnderlineNoteCursor] copy];
         underlineNoteCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self arrowCursor] hotSpot]];
     }
     return underlineNoteCursor;
@@ -189,7 +189,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)strikeOutNoteCursor {
     static NSCursor *strikeOutNoteCursor = nil;
     if (nil == strikeOutNoteCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameStrikeOutNoteCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameStrikeOutNoteCursor] copy];
         strikeOutNoteCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self arrowCursor] hotSpot]];
     }
     return strikeOutNoteCursor;
@@ -198,7 +198,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)lineNoteCursor {
     static NSCursor *lineNoteCursor = nil;
     if (nil == lineNoteCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameLineNoteCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameLineNoteCursor] copy];
         lineNoteCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self arrowCursor] hotSpot]];
     }
     return lineNoteCursor;
@@ -207,7 +207,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)inkNoteCursor {
     static NSCursor *inkNoteCursor = nil;
     if (nil == inkNoteCursor) {
-        NSImage *cursorImage = [[[NSImage imageNamed:SKImageNameInkNoteCursor] copy] autorelease];
+        NSImage *cursorImage = [[NSImage imageNamed:SKImageNameInkNoteCursor] copy];
         inkNoteCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:[[self arrowCursor] hotSpot]];
     }
     return inkNoteCursor;
@@ -216,7 +216,7 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)emptyCursor {
     static NSCursor *emptyCursor = nil;
     if (nil == emptyCursor) {
-        NSImage *cursorImage = [[[NSImage alloc] initWithSize:NSMakeSize(16.0, 16.0)] autorelease];
+        NSImage *cursorImage = [[NSImage alloc] initWithSize:NSMakeSize(16.0, 16.0)];
         emptyCursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(8.0, 8.0)];
     }
     return emptyCursor;
@@ -225,14 +225,14 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)laserPointerCursorWithColor:(NSInteger)color {
     static NSPointerArray *laserPointerCursors = nil;
     if (laserPointerCursors == nil) {
-        laserPointerCursors = [[NSPointerArray strongObjectsPointerArray] retain];
+        laserPointerCursors = [NSPointerArray strongObjectsPointerArray];
         [laserPointerCursors setCount:7];
     }
-    NSCursor *cursor = (id)[laserPointerCursors pointerAtIndex:color % 7];
+    NSCursor *cursor = (__bridge id)[laserPointerCursors pointerAtIndex:color % 7];
     if (nil == cursor) {
         NSImage *cursorImage = [NSImage laserPointerImageWithColor:color % 7];
-        cursor = [[[NSCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(0.5 * [cursorImage size].width, 0.5 * [cursorImage size].height)] autorelease];
-        [laserPointerCursors replacePointerAtIndex:color % 7 withPointer:cursor];
+        cursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(0.5 * [cursorImage size].width, 0.5 * [cursorImage size].height)];
+        [laserPointerCursors replacePointerAtIndex:color % 7 withPointer:(__bridge  void *)cursor];
     }
     return cursor;
 }
@@ -240,14 +240,14 @@ static void (*original_hide)(id, SEL) = NULL;
 + (NSCursor *)safeLaserPointerCursorWithColor:(NSInteger)color {
     static NSPointerArray *laserPointerCursors = nil;
     if (laserPointerCursors == nil) {
-        laserPointerCursors = [[NSPointerArray strongObjectsPointerArray] retain];
+        laserPointerCursors = [NSPointerArray strongObjectsPointerArray];
         [laserPointerCursors setCount:7];
     }
-    NSCursor *cursor = (id)[laserPointerCursors pointerAtIndex:color % 7];
+    NSCursor *cursor = (__bridge id)[laserPointerCursors pointerAtIndex:color % 7];
     if (nil == cursor) {
         NSImage *cursorImage = [NSImage laserPointerImageWithColor:color % 7];
-        cursor = [[[SKLaserPointerCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(0.5 * [cursorImage size].width, 0.5 * [cursorImage size].height)] autorelease];
-        [laserPointerCursors replacePointerAtIndex:color % 7 withPointer:cursor];
+        cursor = [[SKLaserPointerCursor alloc] initWithImage:cursorImage hotSpot:NSMakePoint(0.5 * [cursorImage size].width, 0.5 * [cursorImage size].height)];
+        [laserPointerCursors replacePointerAtIndex:color % 7 withPointer:(__bridge  void *)cursor];
     }
     return cursor;
 }
@@ -261,7 +261,7 @@ static NSWindow *laserPointerWindow = nil;
 static inline void hideLaserPointer(void) {
     if (laserPointerWindow) {
         [laserPointerWindow close];
-        SKDESTROY(laserPointerWindow);
+        laserPointerWindow = nil;
     }
 }
 

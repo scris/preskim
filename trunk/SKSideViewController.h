@@ -57,7 +57,7 @@
 @property (nonatomic, strong) IBOutlet NSView *currentView;
 
 @property (nonatomic) CGFloat topInset;
-@property (nonatomic, readonly) NSArray *tableViews;
+@property (weak, nonatomic, readonly) NSArray *tableViews;
 
 - (BOOL)requiresAlternateButtonForView:(NSView *)aView;
 

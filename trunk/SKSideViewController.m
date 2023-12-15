@@ -51,17 +51,6 @@
 @synthesize mainController, topBar, button, alternateButton, searchField, currentView;
 @dynamic topInset, tableViews;
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    mainController = nil;
-    SKDESTROY(topBar);
-    SKDESTROY(button);
-    SKDESTROY(alternateButton);
-    SKDESTROY(searchField);
-    SKDESTROY(currentView);
-    [super dealloc];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     [topBar setAccessibilityLabel:NSLocalizedString(@"search bar", @"Accessibility description")];
@@ -99,7 +88,7 @@
         [currentView window] == nil)
         animate = NO;
     
-    NSView *oldView = [[currentView retain] autorelease];
+    NSView *oldView = currentView;
     self.currentView = newView;
     
     BOOL wasAlternate = [self requiresAlternateButtonForView:oldView];

@@ -95,7 +95,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [contentView setState:NSVisualEffectStateActive];
         
         [self setContentView:contentView];
-        [contentView release];
         
         if (@available(macOS 10.14, *))
             [self setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]];
@@ -172,7 +171,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = SEP_WIDTH;
-        [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
+        [[self contentView] addSubview:[[SKNavigationSeparator alloc] initWithFrame:rect]];
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = BUTTON_WIDTH;
@@ -193,7 +192,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = SEP_WIDTH;
-        [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
+        [[self contentView] addSubview:[[SKNavigationSeparator alloc] initWithFrame:rect]];
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = BUTTON_WIDTH;
@@ -206,7 +205,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = SEP_WIDTH;
-        [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
+        [[self contentView] addSubview:[[SKNavigationSeparator alloc] initWithFrame:rect]];
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = BUTTON_WIDTH;
@@ -227,16 +226,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [(NSVisualEffectView *)[self contentView] setMaskImage:[NSImage maskImageWithSize:frame.size cornerRadius:CORNER_RADIUS]];
     }
     return self;
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SKDESTROY(previousButton);
-    SKDESTROY(nextButton);
-    SKDESTROY(zoomButton);
-    SKDESTROY(cursorButton);
-    SKDESTROY(closeButton);
-    [super dealloc];
 }
 
 - (void)orderOut:(id)sender {
@@ -315,7 +304,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = SMALL_SEP_WIDTH;
-        [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
+        [[self contentView] addSubview:[[SKNavigationSeparator alloc] initWithFrame:rect]];
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = NSHeight(rect);
@@ -334,13 +323,13 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         rect.size.width = NSWidth([drawButton frame]);
         [[self contentView] addSubview:drawButton];
         
-        NSMenu *menu = [[[NSMenu alloc] init] autorelease];
+        NSMenu *menu = [[NSMenu alloc] init];
         [menu setDelegate:self];
         [drawButton setMenu:menu forSegment:0];
 
         rect.origin.x = NSMaxX(rect);
         rect.size.width = SMALL_SEP_WIDTH;
-        [[self contentView] addSubview:[[[SKNavigationSeparator alloc] initWithFrame:rect] autorelease]];
+        [[self contentView] addSubview:[[SKNavigationSeparator alloc] initWithFrame:rect]];
         
         rect.origin.x = NSMaxX(rect);
         rect.size.width = NSHeight(rect);
@@ -369,14 +358,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(styleButton);
-    SKDESTROY(removeShadowButton);
-    SKDESTROY(drawButton);
-    SKDESTROY(closeButton);
-    [super dealloc];
-}
-
 - (void)selectCursorStyle:(NSInteger)style {
     [[styleButton cell] selectSegmentWithTag:style];
 }
@@ -396,7 +377,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (void)menuNeedsUpdate:(NSMenu *)menu {
     [menu removeAllItems];
     
-    NSMutableArray *colors = [[[NSColor favoriteColors] mutableCopy] autorelease];
+    NSMutableArray *colors = [[NSColor favoriteColors] mutableCopy];
     NSColor *inkColor = [[NSUserDefaults standardUserDefaults] colorForKey:SKInkNoteColorKey];
     NSColor *tmpColor = [[NSUserDefaults standardUserDefaults] colorForKey:SKPresentationInkNoteColorKey];
     if ([colors containsObject:inkColor] == NO)
@@ -445,7 +426,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [self setReleasedWhenClosed:NO];
         [self setHidesOnDeactivate:NO];
         
-        [self setContentView:[[[SKNavigationToolTipView alloc] init] autorelease]];
+        [self setContentView:[[SKNavigationToolTipView alloc] init]];
     }
     return self;
 }
@@ -455,8 +436,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (BOOL)canBecomeMainWindow { return NO; }
 
 - (void)showToolTip:(NSString *)toolTip forView:(NSView *)aView {
-    [view release];
-    view = [aView retain];
+    view = aView;
     [[self contentView] setStringValue:toolTip];
     NSRect newFrame = NSZeroRect;
     NSRect viewRect = [view convertRectToScreen:[view bounds]];
@@ -474,7 +454,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (void)orderOut:(id)sender {
     [[self parentWindow] removeChildWindow:self];
     [super orderOut:sender];
-    SKDESTROY(view);
+    view = nil;
 }
 
 @end
@@ -497,7 +477,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
-        stringValue = [[decoder decodeObjectForKey:@"stringValue"] retain];
+        stringValue = [decoder decodeObjectForKey:@"stringValue"];
     }
     return self;
 }
@@ -505,11 +485,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (void)encodeWithCoder:(NSCoder *)coder {
     [super encodeWithCoder:coder];
     [coder encodeObject:stringValue forKey:@"stringValue"];
-}
-
-- (void)dealloc {
-    SKDESTROY(stringValue);
-    [super dealloc];
 }
 
 - (NSAttributedString *)attributedStringValue {
@@ -523,8 +498,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
                             NSForegroundColorAttributeName:[NSColor whiteColor],
                             NSParagraphStyleAttributeName:[NSParagraphStyle defaultClippingParagraphStyle],
                             NSShadowAttributeName:aShadow};
-    [aShadow release];
-    return [[[NSAttributedString alloc] initWithString:stringValue attributes:attrs] autorelease];
+    return [[NSAttributedString alloc] initWithString:stringValue attributes:attrs];
 }
 
 - (NSSize)fitSize {
@@ -606,10 +580,10 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
-        toolTip = [[decoder decodeObjectForKey:@"toolTip"] retain];
-        alternateToolTip = [[decoder decodeObjectForKey:@"alternateToolTip"] retain];
-        path = [[decoder decodeObjectForKey:@"path"] retain];
-        alternatePath = [[decoder decodeObjectForKey:@"alternatePath"] retain];
+        toolTip = [decoder decodeObjectForKey:@"toolTip"];
+        alternateToolTip = [decoder decodeObjectForKey:@"alternateToolTip"];
+        path = [decoder decodeObjectForKey:@"path"];
+        alternatePath = [decoder decodeObjectForKey:@"alternatePath"];
     }
     return self;
 }
@@ -624,19 +598,11 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 - (instancetype)copyWithZone:(NSZone *)zone {
     SKNavigationButtonCell *copy = [super copyWithZone:zone];
-    copy->toolTip = [toolTip retain];
-    copy->alternateToolTip = [alternateToolTip retain];
-    copy->path = [path retain];
-    copy->alternatePath = [alternatePath retain];
+    copy->toolTip = toolTip;
+    copy->alternateToolTip = alternateToolTip;
+    copy->path = path;
+    copy->alternatePath = alternatePath;
     return copy;
-}
-
-- (void)dealloc {
-    SKDESTROY(toolTip);
-    SKDESTROY(alternateToolTip);
-    SKDESTROY(path);
-    SKDESTROY(alternatePath);
-    [super dealloc];
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
@@ -673,8 +639,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 - (void)setToolTip:(NSString *)aToolTip {
     if (aToolTip != toolTip) {
-        [toolTip release];
-        toolTip = [aToolTip retain];
+        toolTip = aToolTip;
         if ([self state] == NSOffState || alternateToolTip == nil)
             [self setAccessibilityLabel:toolTip];
     }
@@ -682,8 +647,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 - (void)setAlternateToolTip:(NSString *)aToolTip {
     if (aToolTip != alternateToolTip) {
-        [alternateToolTip release];
-        alternateToolTip = [aToolTip retain];
+        alternateToolTip = aToolTip;
         if ([self state] == NSOnState)
             [self setAccessibilityLabel:alternateToolTip];
     }
@@ -751,7 +715,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     NSString *label = [self labelForSegment:segment];
     NSImage *image = [self imageForSegment:segment];
     if ([label length]) {
-        NSMutableParagraphStyle *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
         NSColor *color = nil;
         if ([self isSelectedForSegment:segment])
             color = [NSColor colorWithGenericGamma22White:0.0 alpha:[self isEnabledForSegment:segment] ? 0.9 : 0.7];
@@ -839,7 +803,7 @@ static inline NSBezierPath *zoomButtonPath(NSSize size) {
     [arrow relativeLineToPoint:NSMakePoint(3.0, 0.0)];
     [arrow relativeLineToPoint:NSMakePoint(-5.0, 5.0)];
     
-    NSAffineTransform *transform = [[[NSAffineTransform alloc] init] autorelease];
+    NSAffineTransform *transform = [[NSAffineTransform alloc] init];
     [transform translateXBy:centerX yBy:centerY];
     [transform rotateByDegrees:45.0];
     [transform translateXBy:-centerX yBy:-centerY];
@@ -876,7 +840,7 @@ static inline NSBezierPath *alternateZoomButtonPath(NSSize size) {
     [arrow relativeLineToPoint:NSMakePoint(3.0, 0.0)];
     [arrow relativeLineToPoint:NSMakePoint(-5.0, -5.0)];
     
-    NSAffineTransform *transform = [[[NSAffineTransform alloc] init] autorelease];
+    NSAffineTransform *transform = [[NSAffineTransform alloc] init];
     [transform translateXBy:centerX yBy:centerY];
     [transform rotateByDegrees:45.0];
     [transform translateXBy:-centerX yBy:-centerY];
@@ -909,7 +873,7 @@ static inline NSBezierPath *cursorButtonPath(NSSize size) {
     [path lineToPoint:NSMakePoint(NSMidX(rect) - 2.0, NSMidY(rect) + 3.0)];
     [path closePath];
     
-    NSAffineTransform *transform = [[[NSAffineTransform alloc] init] autorelease];
+    NSAffineTransform *transform = [[NSAffineTransform alloc] init];
     CGFloat centerX = NSMidX(bounds), centerY = NSMidY(bounds);
     [transform translateXBy:centerX yBy:centerY];
     [transform rotateByDegrees:-20.0];
@@ -934,7 +898,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size) {
     [path appendBezierPathWithArcWithCenter:NSMakePoint(0.0, halfHeight) radius:radius startAngle:180.0 endAngle:0.0 clockwise:YES];
     [path closePath];
     
-    NSAffineTransform *transform = [[[NSAffineTransform alloc] init] autorelease];
+    NSAffineTransform *transform = [[NSAffineTransform alloc] init];
     [transform translateXBy:NSMidX(bounds) yBy:NSMidY(bounds)];
     [transform rotateByDegrees:45.0];
     [path transformUsingAffineTransform:transform];

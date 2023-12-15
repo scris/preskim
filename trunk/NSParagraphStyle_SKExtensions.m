@@ -47,7 +47,6 @@
         NSMutableParagraphStyle *tmpParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
         [tmpParagraphStyle setLineBreakMode:NSLineBreakByClipping];
         defaultClippingParagraphStyle = [tmpParagraphStyle copy];
-        [tmpParagraphStyle release];
     }
     return defaultClippingParagraphStyle;
 }
@@ -58,7 +57,6 @@
         NSMutableParagraphStyle *tmpParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
         [tmpParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
         defaultTruncatingTailParagraphStyle = [tmpParagraphStyle copy];
-        [tmpParagraphStyle release];
     }
     return defaultTruncatingTailParagraphStyle;
 }

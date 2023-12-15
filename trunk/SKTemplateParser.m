@@ -105,7 +105,6 @@ static inline NSString *templateTagWithKeyPathAndDelims(NSMutableDictionary *dic
     if (nil == endTag) {
         endTag = [[NSString alloc] initWithFormat:@"%@%@%@", openDelim, keyPath, closeDelim];
         [dict setObject:endTag forKey:keyPath];
-        [endTag release];
     }
     return endTag;
 }
@@ -371,7 +370,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
             } else {
                 currentTag = [[SKTextTemplateTag alloc] initWithText:beforeText];
                 [result addObject:currentTag];
-                [currentTag release];
             }
         }
         
@@ -388,7 +386,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                 // simple template currentTag
                 currentTag = [[SKValueTemplateTag alloc] initWithKeyPath:keyPath];
                 [result addObject:currentTag];
-                [currentTag release];
                 
             } else if ([scanner scanString:COLLECTION_TAG_CLOSE_DELIM intoString:NULL]) {
                 
@@ -408,7 +405,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                     
                     currentTag = [(SKCollectionTemplateTag *)[SKCollectionTemplateTag alloc] initWithKeyPath:keyPath itemTemplateString:itemTemplate separatorTemplateString:separatorTemplate];
                     [result addObject:currentTag];
-                    [currentTag release];
                 }
                 
             } else {
@@ -449,10 +445,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                         
                         currentTag = [[SKConditionTemplateTag alloc] initWithKeyPath:keyPath matchType:matchType matchStrings:matchStrings subtemplates:subTemplates];
                         [result addObject:currentTag];
-                        [currentTag release];
                         
-                        [subTemplates release];
-                        [matchStrings release];
                         
                     }
                     
@@ -464,7 +457,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                     } else {
                         currentTag = [[SKTextTemplateTag alloc] initWithText:START_TAG_OPEN_DELIM];
                         [result addObject:currentTag];
-                        [currentTag release];
                     }
                     [scanner setScanLocation:start];
                     
@@ -472,7 +464,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
             }
         } // scan START_TAG_OPEN_DELIM
     } // while
-    [scanner release];
     
     // remove whitespace before and after collection and condition tags up till newlines
     NSInteger i, count = [result count];
@@ -491,7 +482,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
             [(SKTextTemplateTag *)tag setText:[string substringWithRange:range]];
     }
     
-    return [result autorelease];    
+    return result;    
 }
 
 + (NSString *)stringFromTemplateArray:(NSArray *)template usingObject:(id)object atIndex:(NSInteger)anIndex {
@@ -570,7 +561,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
         }
     } // while
     
-    return [result autorelease];    
+    return result;    
 }
 
 #pragma mark Parsing attributed string templates
@@ -605,7 +596,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
             } else {
                 currentTag = [[SKRichTextTemplateTag alloc] initWithAttributedText:[template attributedSubstringFromRange:NSMakeRange(start, [beforeText length])]];
                 [result addObject:currentTag];
-                [currentTag release];
             }
         }
         
@@ -623,7 +613,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                 // simple template tag
                 currentTag = [[SKRichValueTemplateTag alloc] initWithKeyPath:keyPath attributes:attr];
                 [result addObject:currentTag];
-                [currentTag release];
                 
             } else if ([scanner scanString:COLLECTION_TAG_CLOSE_DELIM intoString:NULL]) {
                 
@@ -649,7 +638,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                     
                     currentTag = [(SKRichCollectionTemplateTag *)[SKRichCollectionTemplateTag alloc] initWithKeyPath:keyPath itemTemplateAttributedString:itemTemplate separatorTemplateAttributedString:separatorTemplate];
                     [result addObject:currentTag];
-                    [currentTag release];
                     
                 }
                 
@@ -694,10 +682,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                         
                         currentTag = [[SKRichConditionTemplateTag alloc] initWithKeyPath:keyPath matchType:matchType matchStrings:matchStrings subtemplates:subTemplates];
                         [result addObject:currentTag];
-                        [currentTag release];
                         
-                        [subTemplates release];
-                        [matchStrings release];
                         
                     }
                     
@@ -709,7 +694,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                     } else {
                         currentTag = [[SKRichTextTemplateTag alloc] initWithAttributedText:[template attributedSubstringFromRange:NSMakeRange(start - [START_TAG_OPEN_DELIM length], [START_TAG_OPEN_DELIM length])]];
                         [result addObject:currentTag];
-                        [currentTag release];
                     }
                     [scanner setScanLocation:start];
                     
@@ -718,7 +702,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
         } // scan START_TAG_OPEN_DELIM
     } // while
     
-    [scanner release];
     
     // remove whitespace before and after collection and condition tags up till newlines
     NSInteger i, count = [result count];
@@ -738,7 +721,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
             [(SKRichTextTemplateTag *)tag setAttributedText:[attrString attributedSubstringFromRange:range]];
     }
     
-    return [result autorelease];    
+    return result;    
 }
 
 + (id)attributeFromTemplate:(SKAttributeTemplate *)attributeTemplate usingObject:(id)object atIndex:(NSInteger)anIndex {
@@ -772,7 +755,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                         [tmpMutAttrStr removeAttribute:NSLinkAttributeName range:range];
                 }
                 [result appendAttributedString:tmpMutAttrStr];
-                [tmpMutAttrStr release];
             } else {
                 [result appendAttributedString:tmpAttrStr];
             }
@@ -793,7 +775,6 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                         id aLink = [self attributeFromTemplate:linkTemplate usingObject:object atIndex:anIndex];
                         [tmpAttrs setValue:aLink forKey:NSLinkAttributeName];
                         tmpAttrStr = [keyValue templateAttributedStringValueWithAttributes:tmpAttrs];
-                        [tmpAttrs release];
                     } else {
                         tmpAttrStr = [keyValue templateAttributedStringValueWithAttributes:attrs];
                     }
@@ -862,7 +843,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
     
     [result fixAttributesInRange:NSMakeRange(0, [result length])];
     
-    return [result autorelease];    
+    return result;    
 }
 
 @end
@@ -880,7 +861,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
 }
 
 + (NSAttributedString *)templateAttributedStringValueWithAttributes:(NSDictionary *)attributes {
-    return [[[NSAttributedString alloc] initWithString:[self templateStringValue] attributes:attributes] autorelease];
+    return [[NSAttributedString alloc] initWithString:[self templateStringValue] attributes:attributes];
 }
 
 - (BOOL)isNotEmpty {
@@ -900,7 +881,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
 }
 
 - (NSAttributedString *)templateAttributedStringValueWithAttributes:(NSDictionary *)attributes {
-    return [[[NSAttributedString alloc] initWithString:[self templateStringValue] attributes:attributes] autorelease];
+    return [[NSAttributedString alloc] initWithString:[self templateStringValue] attributes:attributes];
 }
 
 @end
@@ -916,7 +897,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
         [attributedString addAttributes:attrs range:r];
     }];
     [attributedString fixAttributesInRange:range];
-    return [attributedString autorelease];
+    return attributedString;
 }
 
 @end

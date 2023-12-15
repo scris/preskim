@@ -56,9 +56,9 @@
     self = [super init];
     if (self) {
         point = aPoint;
-        page = [aPage retain];
+        page = aPage;
         phase = 0;
-        timer = [[NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(animate:) userInfo:NULL repeats:YES] retain];
+        timer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(animate:) userInfo:NULL repeats:YES];
         handler = [aHandler copy];
     }
     return self;
@@ -66,34 +66,29 @@
 
 - (void)dealloc {
     [timer invalidate];
-    SKDESTROY(timer);
-    SKDESTROY(handler);
-    SKDESTROY(page);
-    [super dealloc];
 }
 
 - (void)finish:(NSTimer *)aTimer {
     [timer invalidate];
-    SKDESTROY(timer);
+    timer = nil;
     if (handler) {
         handler(YES);
-        SKDESTROY(handler);
+        handler = nil;
     }
 }
 
 - (void)animate:(NSTimer *)aTimer {
     if (atomic_fetch_add(&phase, 1) >= 9) {
         [timer invalidate];
-        [timer release];
-        timer = [[NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(finish:) userInfo:NULL repeats:NO] retain];
+        timer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(finish:) userInfo:NULL repeats:NO];
     }
     if (handler) handler(NO);
 }
 
 - (void)invalidate {
     [timer invalidate];
-    SKDESTROY(timer);
-    SKDESTROY(handler);
+    timer = nil;
+    handler = nil;
 }
 
 - (NSRect)bounds {

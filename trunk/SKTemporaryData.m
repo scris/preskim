@@ -55,12 +55,4 @@
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(pdfDocument);
-    SKDESTROY(noteDicts);
-    SKDESTROY(presentationOptions);
-    SKDESTROY(openMetaTags);
-    [super dealloc];
-}
-
 @end

@@ -47,20 +47,13 @@
 - (instancetype)initWithImage:(NSImage *)anImage label:(NSString *)aLabel pageIndex:(NSUInteger)anIndex {
     self = [super init];
     if (self) {
-        image = [anImage retain];
-        label = [aLabel retain];
+        image = anImage;
+        label = aLabel;
         pageIndex = anIndex;
         dirty = NO;
         notedDirty = NO;
     }
     return self;
-}
-
-- (void)dealloc {
-    delegate = nil;
-    SKDESTROY(image);
-    SKDESTROY(label);
-    [super dealloc];
 }
 
 - (NSImage *)image {

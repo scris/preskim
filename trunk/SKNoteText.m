@@ -61,11 +61,6 @@
     return self;
 }
 
-- (void)dealloc {
-    note = nil;
-    [super dealloc];
-}
-
 - (BOOL)hasNoteText { return NO; }
 
 - (SKNoteText *)noteText { return nil; }

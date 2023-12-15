@@ -71,7 +71,7 @@ static inline NSURL *fileURLFromAliasHandle(AliasHandle aliasHandle, NSUInteger 
     FSRef fileRef;
     Boolean wasChanged;
     if (noErr == FSResolveAliasWithMountFlags(NULL, aliasHandle, &fileRef, &wasChanged, mountFlags))
-        return [(NSURL *)CFURLCreateFromFSRef(kCFAllocatorDefault, &fileRef) autorelease];
+        return (NSURL *)CFBridgingRelease(CFURLCreateFromFSRef(kCFAllocatorDefault, &fileRef));
     return nil;
 }
 
@@ -82,16 +82,14 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
 
 - (instancetype)initWithAliasData:(NSData *)aliasData {
     if (aliasData == nil) {
-        [self release];
         self = nil;
     } else {
         self = [super init];
         if (self) {
-            data = (NSData *)CFURLCreateBookmarkDataFromAliasRecord(NULL, (CFDataRef)aliasData);
+            data = (NSData *)CFBridgingRelease(CFURLCreateBookmarkDataFromAliasRecord(NULL, (__bridge CFDataRef)aliasData));
             if (data == nil) {
                 aliasHandle = createAliasHandleFromData(aliasData);
                 if (aliasHandle == NULL) {
-                    [self release];
                     self = nil;
                 }
             }
@@ -102,12 +100,11 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
 
 - (instancetype)initWithBookmarkData:(NSData *)bookmarkData {
     if (bookmarkData == nil) {
-        [self release];
         self = nil;
     } else {
         self = [super init];
         if (self) {
-            data = [bookmarkData retain];
+            data = bookmarkData;
         }
     }
     return self;
@@ -120,8 +117,6 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
 - (void)dealloc {
     disposeAliasHandle(aliasHandle);
     aliasHandle = NULL;
-    SKDESTROY(data);
-    [super dealloc];
 }
 
 - (NSData *)data {
@@ -155,8 +150,7 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
         if (bmData) {
             if (aliasHandle)
                 disposeAliasHandle(aliasHandle);
-            [data release];
-            data = [bmData retain];
+            data = bmData;
         }
     }
     return fileURL;

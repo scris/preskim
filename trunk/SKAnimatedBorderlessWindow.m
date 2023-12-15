@@ -70,7 +70,6 @@
 
 - (void)dealloc {
     [self stopAnimation];
-    [super dealloc];
 }
 
 - (BOOL)canBecomeKeyWindow { return NO; }
@@ -175,7 +174,6 @@
             [imageView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [imageView setFrame:[[self contentView] bounds]];
             [[self contentView] addSubview:imageView positioned:NSWindowBelow relativeTo:nil];
-            [imageView release];
         } else {
             imageView = nil;
         }
