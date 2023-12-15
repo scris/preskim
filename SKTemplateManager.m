@@ -63,12 +63,6 @@
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(customTemplateTypes);
-    SKDESTROY(templateFileNames);
-    [super dealloc];
-}
-
 - (NSArray *)customTemplateTypes {
     if (customTemplateTypes == nil) {
         NSFileManager *fm = [NSFileManager defaultManager];
@@ -89,8 +83,8 @@
                         if (type == nil) {
                             if (@available(macOS 11.0, *)) {
                                 // create a unique but deterministic dynamic UTI that knows the extension
-                                CFStringRef baseType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassNSPboardType, (CFStringRef)file, NULL);
-                                type = [(NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)[file pathExtension], baseType) autorelease];
+                                CFStringRef baseType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassNSPboardType, (__bridge CFStringRef)file, NULL);
+                                type = CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[file pathExtension], baseType));
                                 CFRelease(baseType);
                             } else {
                                 // NSSavePanel on 10.15- cannot handle dynamic UTIs
@@ -111,7 +105,7 @@
 }
 
 - (void)resetCustomTemplateTypes {
-    SKDESTROY(customTemplateTypes);
+    customTemplateTypes = nil;
 }
 
 - (NSURL *)URLForTemplateType:(NSString *)typeName {

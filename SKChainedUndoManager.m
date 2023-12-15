@@ -44,14 +44,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (instancetype)initWithNextUndoManager:(NSUndoManager *)undoManager {
     self = [super init];
     if (self) {
-        nextUndoManager = [undoManager retain];
+        nextUndoManager = undoManager;
     }
     return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(nextUndoManager);
-    [super dealloc];
 }
 
 - (NSString *)redoMenuItemTitle {

@@ -90,20 +90,8 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 }
 
 - (void)dealloc {
-    dispatch_release(queue);
-    queue = NULL;
-    dispatch_release(lockQueue);
-    lockQueue = NULL;
-    SKDESTROY(fileManager);
-    SKDESTROY(pages);
-    SKDESTROY(lines);
-    SKDESTROY(filenames);
-    SKDESTROY(fileName);
-    SKDESTROY(syncFileName);
-    SKDESTROY(lastModDate);
     if (scanner) synctex_scanner_free(scanner);
     scanner = NULL;
-    [super dealloc];
 }
 
 - (void)terminate {
@@ -122,7 +110,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 - (NSString *)fileName {
     NSString __block *file = nil;
     dispatch_sync(lockQueue, ^{
-        file = [[fileName retain] autorelease];
+        file = fileName;
     });
     return file;
 }
@@ -133,11 +121,10 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
     dispatch_async(lockQueue, ^{
         if (fileName != newFileName) {
             if ([fileName isEqualToString:newFileName] == NO) {
-                SKDESTROY(syncFileName);
-                SKDESTROY(lastModDate);
+                syncFileName = nil;
+                lastModDate = nil;
             }
-            [fileName release];
-            fileName = [newFileName retain];
+            fileName = newFileName;
         }
     });
 }
@@ -145,7 +132,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 - (NSString *)syncFileName {
     NSString __block *file = nil;
     dispatch_sync(lockQueue, ^{
-        file = [[syncFileName retain] autorelease];
+        file = syncFileName;
     });
     return file;
 }
@@ -154,18 +141,16 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 - (void)setSyncFileName:(NSString *)newSyncFileName {
     dispatch_async(lockQueue, ^{
         if (syncFileName != newSyncFileName) {
-            [syncFileName release];
-            syncFileName = [newSyncFileName retain];
+            syncFileName = newSyncFileName;
         }
-        [lastModDate release];
-        lastModDate = [(syncFileName ? [[fileManager attributesOfItemAtPath:syncFileName error:NULL] fileModificationDate] : nil) retain];
+        lastModDate = (syncFileName ? [[fileManager attributesOfItemAtPath:syncFileName error:NULL] fileModificationDate] : nil);
     });
 }
 
 - (NSDate *)lastModDate {
     NSDate __block *date = nil;
     dispatch_sync(lockQueue, ^{
-        date = [[lastModDate retain] autorelease];
+        date = lastModDate;
     });
     return date;
 }
@@ -203,11 +188,10 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 #pragma mark PDFSync
 
 static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger recordIndex) {
-    SKPDFSyncRecord *record = (SKPDFSyncRecord *)NSMapGet(records, (const void *)recordIndex);
+    SKPDFSyncRecord *record = (__bridge SKPDFSyncRecord *)NSMapGet(records, (void *)recordIndex);
     if (record == nil) {
         record = [[SKPDFSyncRecord alloc] initWithRecordIndex:recordIndex];
-        NSMapInsert(records, (void *)recordIndex, (void *)record);
-        [record release];
+        NSMapInsert(records, (void *)recordIndex, (__bridge void *)record);
     }
     return record;
 }
@@ -253,7 +237,6 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
             
             array = [[NSMutableArray alloc] init];
             [lines setObject:array forKey:file];
-            [array release];
             
             // we ignore the version
             if ([sc scanString:@"version" intoString:NULL] && [sc scanInteger:NULL]) {
@@ -290,7 +273,6 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
                             while (pageIndex > (NSInteger)[pages count]) {
                                 array = [[NSMutableArray alloc] init];
                                 [pages addObject:array];
-                                [array release];
                             }
                             break;
                         case '(':
@@ -301,7 +283,6 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
                                 if ([lines objectForKey:file] == nil) {
                                     array = [[NSMutableArray alloc] init];
                                     [lines setObject:array forKey:file];
-                                    [array release];
                                 }
                             }
                             break;
@@ -321,9 +302,9 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
                     [sc scanCharactersFromSet:newlines intoString:NULL];
                 }
                 
-                NSSortDescriptor *lineSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"line" ascending:YES] autorelease];
-                NSSortDescriptor *xSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"x" ascending:YES] autorelease];
-                NSSortDescriptor *ySortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"y" ascending:NO] autorelease];
+                NSSortDescriptor *lineSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"line" ascending:YES];
+                NSSortDescriptor *xSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"x" ascending:YES];
+                NSSortDescriptor *ySortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"y" ascending:NO];
                 NSArray *lineSortDescriptors = @[lineSortDescriptor];
                 
                 for (array in [lines objectEnumerator])
@@ -334,16 +315,12 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
                 rv = [self shouldKeepRunning];
             }
         }
-        
-        [record release];
-        [files release];
-        [sc release];
     }
     
     return rv;
 }
 
-- (BOOL)pdfsyncFindFileLine:(NSInteger *)linePtr file:(NSString **)filePtr forLocation:(NSPoint)point inRect:(NSRect)rect pageBounds:(NSRect)bounds atPageIndex:(NSUInteger)pageIndex {
+- (BOOL)pdfsyncFindFileLine:(NSInteger *)linePtr file:(out NSString * __autoreleasing *)filePtr forLocation:(NSPoint)point inRect:(NSRect)rect pageBounds:(NSRect)bounds atPageIndex:(NSUInteger)pageIndex {
     BOOL rv = NO;
     if (pageIndex < [pages count]) {
         
@@ -476,7 +453,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
         synctex_node_p node = synctex_scanner_input(scanner);
         do {
             if ((fileRep = synctex_scanner_get_name(scanner, synctex_node_tag(node)))) {
-                NSMapInsert(filenames, (void *)[self sourceFileForFileName:[NSString stringWithUTF8String:fileRep] isTeX:YES removeQuotes:NO], (void *)fileRep);
+                NSMapInsert(filenames, (__bridge void *)[self sourceFileForFileName:[NSString stringWithUTF8String:fileRep] isTeX:YES removeQuotes:NO], (void *)fileRep);
             }
         } while ((node = synctex_node_next(node)));
         isPdfsync = NO;
@@ -485,7 +462,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
     return rv;
 }
 
-- (BOOL)synctexFindFileLine:(NSInteger *)linePtr file:(NSString **)filePtr forLocation:(NSPoint)point inRect:(NSRect)rect pageBounds:(NSRect)bounds atPageIndex:(NSUInteger)pageIndex {
+- (BOOL)synctexFindFileLine:(NSInteger *)linePtr file:(out NSString * __autoreleasing *)filePtr forLocation:(NSPoint)point inRect:(NSRect)rect pageBounds:(NSRect)bounds atPageIndex:(NSUInteger)pageIndex {
     BOOL rv = NO;
     if (synctex_edit_query(scanner, (int)pageIndex + 1, point.x, NSMaxY(bounds) - point.y) > 0) {
         synctex_node_p node;
@@ -505,11 +482,11 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
 
 - (BOOL)synctexFindPage:(NSUInteger *)pageIndexPtr location:(NSPoint *)pointPtr forLine:(NSInteger)line inFile:(NSString *)file {
     BOOL rv = NO;
-    char *filename = (char *)NSMapGet(filenames, (void *)file) ?: (char *)NSMapGet(filenames, (void *)[[file stringByResolvingSymlinksInPath] stringByStandardizingPath]);
+    char *filename = (char *)NSMapGet(filenames, (__bridge void *)file) ?: (char *)NSMapGet(filenames, (__bridge void *)[[file stringByResolvingSymlinksInPath] stringByStandardizingPath]);
     if (filename == NULL) {
         for (NSString *fn in filenames) {
             if ([[fn lastPathComponent] caseInsensitiveCompare:[file lastPathComponent]] == NSOrderedSame) {
-                filename = (char *)NSMapGet(filenames, (void *)file);
+                filename = (char *)NSMapGet(filenames, (__bridge void *)file);
                 break;
             }
         }

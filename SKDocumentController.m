@@ -196,15 +196,17 @@ static BOOL isEncapsulatedPostScriptData(NSData *data) {
 static NSData *convertTIFFDataToPDF(NSData *tiffData)
 {
     // this should accept any image data types we're likely to run across, but PICT returns a zero size image
-    CGImageSourceRef imsrc = CGImageSourceCreateWithData((CFDataRef)tiffData, (CFDictionaryRef)@{(id)kCGImageSourceTypeIdentifierHint:(id)kUTTypeTIFF});
-
+    CFDictionaryRef options = CFDictionaryCreate(NULL, (const void **)&kUTTypeTIFF, (const void **)&kCGImageSourceTypeIdentifierHint, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CGImageSourceRef imsrc = CGImageSourceCreateWithData((CFDataRef)tiffData, options);
+    CFRelease(options);
+    
     NSMutableData *pdfData = nil;
     
     if (imsrc && CGImageSourceGetCount(imsrc)) {
         CGImageRef cgImage = CGImageSourceCreateImageAtIndex(imsrc, 0, NULL);
 
         pdfData = [NSMutableData dataWithCapacity:[tiffData length]];
-        CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData((CFMutableDataRef)pdfData);
+        CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)pdfData);
         
         // create full size image, assuming pixel == point
         const CGRect rect = CGRectMake(0, 0, CGImageGetWidth(cgImage), CGImageGetHeight(cgImage));
@@ -393,15 +395,15 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
                 if (--countDown == 0) {
                     if (tabInfos && [windows count] > 1)
                         [NSWindow addTabs:tabInfos forWindows:windows];
-                    SKDESTROY(windows);
-                    SKDESTROY(tabInfos);
+                    windows = nil;
+                    tabInfos = nil;
                     if (completionHandler) {
                         if (errors)
                             completionHandler(nil, NO, [NSError combineErrors:errors maximum:WARNING_LIMIT]);
                         else
                             completionHandler(document, documentWasAlreadyOpen, error);
                     }
-                    SKDESTROY(errors);
+                    errors = nil;
                 }
             }];
         }
@@ -447,7 +449,7 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
 
 - (BOOL)shouldOpenNumberOfDocuments:(NSUInteger)count {
     if (count > WARNING_LIMIT) {
-        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+        NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Are you sure you want to open %lu documents?", @"Message in alert dialog"), (unsigned long)count]];
         [alert setInformativeText:NSLocalizedString(@"Each document opens in a separate window.", @"Informative text in alert dialog")];
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title")];
@@ -478,7 +480,7 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
                         else
                             completionHandler(document, documentWasAlreadyOpen, error);
                     }
-                    SKDESTROY(errors);
+                    errors = nil;
                 }
             }];
         }
@@ -612,7 +614,7 @@ static inline NSDictionary *optionsFromFragmentAndEvent(NSString *fragment) {
                             else
                                 completionHandler(document, documentWasAlreadyOpen, error);
                         }
-                        SKDESTROY(errors);
+                        errors = nil;
                     }
                 }];
             }
@@ -672,16 +674,16 @@ static inline NSDictionary *optionsFromFragmentAndEvent(NSString *fragment) {
 
 #pragma mark Services Support
 
-- (void)openDocumentFromURLOnPboard:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)errorString {
+- (void)openDocumentFromURLOnPboard:(NSPasteboard *)pboard userData:(NSString *)userData error:(out NSString * __autoreleasing *)errorString {
     [self openDocumentWithURLFromPasteboard:pboard showNotes:NO completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error){}];
 }
 
-- (void)openDocumentFromDataOnPboard:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)errorString {
+- (void)openDocumentFromDataOnPboard:(NSPasteboard *)pboard userData:(NSString *)userData error:(out NSString * __autoreleasing *)errorString {
     [self openDocumentWithImageFromPasteboard:pboard completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error){}];
     
 }
 
-- (void)openNotesDocumentFromURLOnPboard:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)errorString {
+- (void)openNotesDocumentFromURLOnPboard:(NSPasteboard *)pboard userData:(NSString *)userData error:(out NSString * __autoreleasing *)errorString {
     [self openDocumentWithURLFromPasteboard:pboard showNotes:YES completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error){}];
 }
 

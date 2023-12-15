@@ -61,11 +61,10 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         if (noErr == FSFindFolder(kUserDomain, kChewableItemsFolderType, TRUE, &chewableRef)) {
-            NSURL *chewableURL = (NSURL *)CFURLCreateFromFSRef(kCFAllocatorDefault, &chewableRef);
+            NSURL *chewableURL = CFBridgingRelease(CFURLCreateFromFSRef(kCFAllocatorDefault, &chewableRef));
 #pragma clang diagnostic pop
             NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
             chewableItemsDirectoryURL = [[chewableURL URLByAppendingPathComponent:appName isDirectory:YES] copy];
-            [chewableURL release];
         } else {
             char *template = strdup([[NSTemporaryDirectory() stringByAppendingPathComponent:@"Skim.XXXXXX"] fileSystemRepresentation]);
             const char *tempPath = mkdtemp(template);
@@ -81,7 +80,7 @@
     
     do {
         CFUUIDRef uuid = CFUUIDCreate(NULL);
-        uniqueURL = [chewableItemsDirectoryURL URLByAppendingPathComponent:[(NSString *)CFUUIDCreateString(NULL, uuid) autorelease] isDirectory:YES];
+        uniqueURL = [chewableItemsDirectoryURL URLByAppendingPathComponent:CFBridgingRelease(CFUUIDCreateString(NULL, uuid)) isDirectory:YES];
         CFRelease(uuid);
     } while ([uniqueURL checkResourceIsReachableAndReturnError:NULL]);
     

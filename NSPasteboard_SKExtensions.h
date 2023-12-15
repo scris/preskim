@@ -41,8 +41,6 @@
 
 @interface NSPasteboard (SKExtensions)
 
-@property (nonatomic, readonly) NSURL *pasteLocationURL;
-
 - (BOOL)writeURLs:(NSArray *)URLs names:(NSArray *)names;
 
 @end

@@ -71,14 +71,6 @@
     [groupedFindTableView setDataSource:nil];
     [tocOutlineView setDelegate:nil];
     [tocOutlineView setDataSource:nil];
-    SKDESTROY(thumbnailArrayController);
-    SKDESTROY(findArrayController);
-    SKDESTROY(groupedFindArrayController);
-    SKDESTROY(tocOutlineView);
-    SKDESTROY(thumbnailTableView);
-    SKDESTROY(findTableView);
-    SKDESTROY(groupedFindTableView);
-    [super dealloc];
 }
 
 - (NSString *)nibName {
@@ -143,7 +135,7 @@
     [[[groupedFindTableView tableColumnWithIdentifier:PAGE_COLUMNID] headerCell] setTitle:NSLocalizedString(@"Page", @"Table header title")];
     [[[groupedFindTableView tableColumnWithIdentifier:RELEVANCE_COLUMNID] dataCell] setEnabled:NO];
     
-    NSSortDescriptor *countDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKGroupedSearchResultCountKey ascending:NO] autorelease];
+    NSSortDescriptor *countDescriptor = [[NSSortDescriptor alloc] initWithKey:SKGroupedSearchResultCountKey ascending:NO];
     [groupedFindArrayController setSortDescriptors:@[countDescriptor]];
     
     [thumbnailTableView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:NO];

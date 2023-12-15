@@ -130,7 +130,7 @@ static unsigned char hexDecodeTable[256] =
 		outputBuffer[j++] = hexEncodeTable[(inputBuffer[i] & 0x0F)];
     }
     
-    NSString *result = [[[NSString alloc] initWithBytes:outputBuffer length:j encoding:NSASCIIStringEncoding] autorelease];
+    NSString *result = [[NSString alloc] initWithBytes:outputBuffer length:j encoding:NSASCIIStringEncoding];
     
     free(outputBuffer);
     
@@ -164,7 +164,7 @@ static unsigned char hexDecodeTable[256] =
     }
     hexSignature[j] = 0;
     
-    return [[[NSString alloc] initWithBytes:hexSignature length:j encoding:NSASCIIStringEncoding] autorelease];
+    return [[NSString alloc] initWithBytes:hexSignature length:j encoding:NSASCIIStringEncoding];
 }
 
 #pragma mark Templating support

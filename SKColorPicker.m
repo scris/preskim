@@ -57,12 +57,12 @@ static char SKColorPickerDefaultsObservationContext;
         scrubber = [[NSScrubber alloc] initWithFrame:NSMakeRect(0.0, 0.0, 180, 22.0)];
         [scrubber setDelegate:self];
         [scrubber setDataSource:self];
-        [scrubber setScrubberLayout:[[[NSScrubberProportionalLayout alloc] initWithNumberOfVisibleItems:[[self colors] count]] autorelease]];
+        [scrubber setScrubberLayout:[[NSScrubberProportionalLayout alloc] initWithNumberOfVisibleItems:[[self colors] count]]];
         [scrubber registerClass:[NSScrubberItemView class] forItemIdentifier:COLOR_IDENTIFIER];
         [scrubber setSelectionOverlayStyle:[NSScrubberSelectionStyle outlineOverlayStyle]];
         [scrubber reloadData];
         
-        NSView *view = [[[NSView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 180, 30.0)] autorelease];
+        NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 180, 30.0)];
         NSArray *constraints = @[
             [NSLayoutConstraint constraintWithItem:scrubber attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:scrubber attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
@@ -82,14 +82,11 @@ static char SKColorPickerDefaultsObservationContext;
 - (void)dealloc {
     @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKey:SKSwatchColorsKey context:&SKColorPickerDefaultsObservationContext]; }
     @catch (id e) {}
-    SKDESTROY(colors);
-    SKDESTROY(scrubber);
-    [super dealloc];
 }
 
 - (NSArray *)colors {
     if (colors == nil) {
-        colors = [[NSColor favoriteColors] retain];
+        colors = [NSColor favoriteColors];
     }
     return colors;
 }
@@ -104,11 +101,10 @@ static char SKColorPickerDefaultsObservationContext;
     NSScrubberItemView *itemView = [aScrubber makeItemWithIdentifier:COLOR_IDENTIFIER owner:nil];
     NSImageView *imageView = [[itemView subviews] firstObject];
     if (imageView  == nil || [imageView isKindOfClass:[NSImageView class]] == NO || [[imageView cell] isKindOfClass:[SKColorCell class]] == NO) {
-        imageView = [[[NSImageView alloc] initWithFrame:[itemView bounds]] autorelease];
+        imageView = [[NSImageView alloc] initWithFrame:[itemView bounds]];
         SKColorCell *colorCell = [[SKColorCell alloc] init];
         [colorCell setShouldFill:YES];
         [imageView setCell:colorCell];
-        [colorCell release];
         [imageView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         [itemView addSubview:imageView];
     }
@@ -126,7 +122,7 @@ static char SKColorPickerDefaultsObservationContext;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &SKColorPickerDefaultsObservationContext) {
-        SKDESTROY(colors);
+        colors = nil;
         [[scrubber scrubberLayout] setNumberOfVisibleItems:[[self colors] count]];
         [scrubber reloadData];
     } else {

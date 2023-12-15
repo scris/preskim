@@ -46,13 +46,6 @@
 @synthesize textField, okButton, cancelButton;
 @dynamic stringValue;
 
-- (void)dealloc {
-    SKDESTROY(textField);
-    SKDESTROY(okButton);
-    SKDESTROY(cancelButton);
-    [super dealloc];
-}
-
 - (NSTextField *)textField {
     [self window];
     return textField;
@@ -67,7 +60,7 @@
 }
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
+    NSTouchBar *touchBar = [[NSTouchBar alloc] init];
     [touchBar setDelegate:self];
     [touchBar setDefaultItemIdentifiers:@[NSTouchBarItemIdentifierFlexibleSpace, SKTouchBarItemIdentifierCancel, SKTouchBarItemIdentifierOK, NSTouchBarItemIdentifierFixedSpaceLarge]];
     return touchBar;
@@ -79,12 +72,12 @@
         NSButton *button = [NSButton buttonWithTitle:[okButton title] target:[okButton target] action:[okButton action]];
         [button setTag:NSModalResponseOK];
         [button setKeyEquivalent:@"\r"];
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [(NSCustomTouchBarItem *)item setView:button];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierCancel]) {
         NSButton *button = [NSButton buttonWithTitle:[cancelButton title] target:[cancelButton target] action:[cancelButton action]];
         [button setTag:NSModalResponseCancel];
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [(NSCustomTouchBarItem *)item setView:button];
     }
     return item;

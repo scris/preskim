@@ -80,12 +80,7 @@
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    pdfView = nil;
     [layer setDelegate:nil];
-    SKDESTROY(layer);
-    SKDESTROY(window);
-    [super dealloc];
 }
 
 - (void)makeWindow {
@@ -150,16 +145,13 @@
             NSVisualEffectView *view = [[NSVisualEffectView alloc] init];
             [view setMaterial:material];
             [view setState:NSVisualEffectStateActive];
-            [loupeView retain];
             [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [window setContentView:view];
             [view addSubview:loupeView];
             [view setContentFilters:SKColorEffectFilters()];
             [loupeView setContentFilters:@[]];
-            [loupeView release];
             if (NSIsEmptyRect([view bounds]) == NO)
                 [view setMaskImage:[NSImage maskImageWithSize:[view bounds].size cornerRadius:LOUPE_RADIUS]];
-            [view release];
             [layer setBackgroundColor:NULL];
         }
     } else {

@@ -46,11 +46,8 @@
 @synthesize containingDocument, detectedWidgets;
 
 - (void)dealloc {
-    if (languageDirectionAngles) NSZoneFree(NULL, languageDirectionAngles);
+    if (languageDirectionAngles) free(languageDirectionAngles);
     languageDirectionAngles = NULL;
-    containingDocument = nil;
-    SKDESTROY(detectedWidgets);
-    [super dealloc];
 }
 
 - (Class)pageClass {
@@ -59,7 +56,7 @@
 
 - (SKLanguageDirectionAngles)languageDirectionAngles {
     if (languageDirectionAngles == NULL) {
-        languageDirectionAngles = (SKLanguageDirectionAngles *)NSZoneMalloc(NULL, sizeof(SKLanguageDirectionAngles));
+        languageDirectionAngles = (SKLanguageDirectionAngles *)malloc(sizeof(SKLanguageDirectionAngles));
         *languageDirectionAngles = [super languageDirectionAngles];
     }
     return *languageDirectionAngles;

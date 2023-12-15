@@ -46,7 +46,7 @@ typedef NS_ENUM(NSInteger, SKVersionType) {
     SKAlphaVersionType = -4
 };
 
-@interface SKVersionNumber : NSObject <NSCopying>
+@interface SKVersionNumber : NSObject
 {
     NSString *originalVersionString;
     NSString *cleanVersionString;

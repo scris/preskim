@@ -79,14 +79,14 @@ enum {
 
 static void PSConverterBeginDocumentCallback(void *info)
 {
-    id delegate = (id)info;
+    id delegate = (__bridge id)info;
     if ([delegate respondsToSelector:@selector(conversionStarted)])
         [delegate performSelectorOnMainThread:@selector(conversionStarted) withObject:nil waitUntilDone:NO];
 }
 
 static void PSConverterEndDocumentCallback(void *info, bool success)
 {
-    id delegate = (id)info;
+    id delegate = (__bridge id)info;
     if ([delegate respondsToSelector:@selector(conversionCompleted)])
         [delegate performSelectorOnMainThread:@selector(conversionCompleted) withObject:nil waitUntilDone:NO];
 }
@@ -109,24 +109,16 @@ CGPSConverterCallbacks SKPSConverterCallbacks = {
 @synthesize cancelButton, progressBar, textField;
 
 + (NSData *)newPDFDataFromURL:(NSURL *)aURL ofType:(NSString *)aFileType error:(NSError **)outError {
-    return [[[[self alloc] init] autorelease] newPDFDataFromURL:aURL orData:nil ofType:aFileType error:outError];
+    return [[[self alloc] init] newPDFDataFromURL:aURL orData:nil ofType:aFileType error:outError];
 }
 
 + (NSData *)newPDFDataWithPostScriptData:(NSData *)psData error:(NSError **)outError {
-    return [[[[self alloc] init] autorelease] newPDFDataFromURL:nil orData:psData ofType:SKPostScriptDocumentType error:outError];
+    return [[[self alloc] init] newPDFDataFromURL:nil orData:psData ofType:SKPostScriptDocumentType error:outError];
 }
 
 - (void)dealloc {
     if (converter) CFRelease(converter);
     converter = NULL;
-    SKDESTROY(fileType);
-    SKDESTROY(outputFileURL);
-    SKDESTROY(outputData);
-    SKDESTROY(task);
-    SKDESTROY(cancelButton);
-    SKDESTROY(progressBar);
-    SKDESTROY(textField);
-    [super dealloc];
 }
 
 - (void)windowDidLoad {
@@ -192,7 +184,7 @@ CGPSConverterCallbacks SKPSConverterCallbacks = {
         Boolean success = CGPSConverterConvert(converter, provider, consumer, NULL);
         
         if (success)
-            outputData = [(NSData *)pdfData copy];
+            outputData = [(__bridge NSData *)pdfData copy];
         
         CGDataProviderRelease(provider);
         CGDataConsumerRelease(consumer);
@@ -257,7 +249,7 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
                    [outputFileURL checkResourceIsReachableAndReturnError:NULL] &&
                    cancelled == NO;
     
-    SKDESTROY(task);
+    task = nil;
     
     if (success && [[outputFileURL pathExtension] isCaseInsensitiveEqual:@"ps"]) {
         CGDataProviderRef provider = CGDataProviderCreateWithURL((CFURLRef)outputFileURL);
@@ -274,7 +266,7 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
 - (NSData *)newPDFDataFromURL:(NSURL *)aURL orData:(NSData *)aData ofType:(NSString *)aFileType error:(NSError **)outError {
     NSAssert(NULL == converter && nil == task, @"attempted to reenter SKConversionProgressController, but this is not supported");
     
-    fileType = [aFileType retain];
+    fileType = aFileType;
     cancelled = NO;
     
     CGDataProviderRef provider = NULL;
@@ -302,7 +294,7 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
             
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskFinished:) name:NSTaskDidTerminateNotification object:task];
             
-            outputFileURL = [outFileURL retain];
+            outputFileURL = outFileURL;
         }
         
     } else if (aURL) {
@@ -327,7 +319,7 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
             [self conversionStarted];
         }
         @catch(id exception) {
-            SKDESTROY(task);
+            task = nil;
             [NSApp stopModalWithCode:SKConversionFailed];
         }
     } else {
@@ -350,13 +342,13 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
     
     [self close];
     
-    return [outputData retain];
+    return outputData;
 }
 
 #pragma mark Touch Bar
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
+    NSTouchBar *touchBar = [[NSTouchBar alloc] init];
     [touchBar setDelegate:self];
     [touchBar setDefaultItemIdentifiers:@[NSTouchBarItemIdentifierFlexibleSpace, SKTouchBarItemIdentifierCancel, NSTouchBarItemIdentifierFixedSpaceLarge]];
     return touchBar;
@@ -366,7 +358,7 @@ static NSString *toolPathForCommand(NSString *defaultKey, NSArray *supportedTool
     NSCustomTouchBarItem *item = nil;
     if ([identifier isEqualToString:SKTouchBarItemIdentifierCancel]) {
         NSButton *button = [NSButton buttonWithTitle:[cancelButton title] target:[cancelButton target] action:[cancelButton action]];
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [(NSCustomTouchBarItem *)item setView:button];
     }
     return item;

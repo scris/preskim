@@ -65,7 +65,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     self = [super initWithFrame:[annotation bounds]];
     if (self) {
         pdfView = aPDFView;
-        annotation = [anAnnotation retain];
+        annotation = anAnnotation;
         
         for (NSString *key in [[self class] keysToObserve])
             [annotation addObserver:self forKeyPath:key options:0 context:&SKPDFAnnotationPropertiesObservationContext];
@@ -84,12 +84,6 @@ static char SKPDFAnnotationPropertiesObservationContext;
                 @catch(id e) {}
             }
         );
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    pdfView = nil;
-    SKDESTROY(annotation);
-    SKDESTROY(textView);
-    SKDESTROY(undoManager);
-    [super dealloc];
 }
 
 - (NSString *)currentString {
@@ -119,8 +113,6 @@ static char SKPDFAnnotationPropertiesObservationContext;
     [textView setTypingAttributes:typingAttrs];
     if (@available(macOS 10.14, *))
         [textView setTextContainerInset:NSMakeSize(0.0, 3.0 + round(descent) - descent)];
-    [parStyle release];
-    [typingAttrs release];
 }
 
 - (void)setUpTextView {
@@ -147,7 +139,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     if (@available(macOS 10.14, *))
         [textView setTextContainerInset:NSMakeSize(0.0, 3.0)];
     [textView setSelectedRange:NSMakeRange(0, 0)];
-    NSClipView *clipView = [[[NSClipView alloc] initWithFrame:[self bounds]] autorelease];
+    NSClipView *clipView = [[NSClipView alloc] initWithFrame:[self bounds]];
     [clipView setDrawsBackground:NO];
     [clipView setDocumentView:textView];
     [clipView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -171,7 +163,7 @@ static char SKPDFAnnotationPropertiesObservationContext;
     
     [annotation setShouldDisplay:[annotation shouldPrint]];
     
-    SKDESTROY(annotation);
+    annotation = nil;
     
     // avoid getting textDidEndDelegate: messages
     [textView setDelegate:nil];

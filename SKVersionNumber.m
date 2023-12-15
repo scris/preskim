@@ -63,8 +63,6 @@
     SKVersionNumber *versionNumber = [[self alloc] initWithVersionString:versionString];
     SKVersionNumber *otherVersionNumber = [[self alloc] initWithVersionString:otherVersionString];
     NSComparisonResult result = [versionNumber compare:otherVersionNumber];
-    [versionNumber release];
-    [otherVersionNumber release];
     return result;
 }
 
@@ -76,7 +74,7 @@
     if (self) {
         // Input might be from a NSBundle info dictionary that could be misconfigured, so check at runtime too
         if (versionString == nil || [versionString isKindOfClass:[NSString class]] == NO) {
-            [self release];
+            self = nil;
             return nil;
         }
         
@@ -101,7 +99,7 @@
                 [mutableVersionString appendFormat:@"%@%ld", sep, (long)component];
                 
                 componentCount++;
-                components = (NSInteger *)NSZoneRealloc(NSDefaultMallocZone(), components, sizeof(NSInteger) * componentCount);
+                components = (NSInteger *)realloc(components, sizeof(NSInteger) * componentCount);
                 components[componentCount - 1] = component;
             
                 if ([scanner isAtEnd] == NO) {
@@ -130,7 +128,7 @@
                         if (releaseType != SKReleaseVersionType) {
                             // we scanned an "a", "b", "d", "f", or "rc"
                             componentCount++;
-                            components = (NSInteger *)NSZoneRealloc(NSDefaultMallocZone(), components, sizeof(NSInteger) * componentCount);
+                            components = (NSInteger *)realloc(components, sizeof(NSInteger) * componentCount);
                             components[componentCount - 1] = releaseType;
                             
                             sep = EMPTY;
@@ -146,16 +144,13 @@
         }
         
         if ([mutableVersionString isEqualToString:originalVersionString])
-            cleanVersionString = [originalVersionString retain];
+            cleanVersionString = originalVersionString;
         else
             cleanVersionString = [mutableVersionString copy];
         
-        [mutableVersionString release];
-        [scanner release];
-        
         if (componentCount == 0) {
             // Failed to parse anything and we don't allow empty version strings.  For now, we'll not assert on this, since people might want to use this to detect if a string begins with a valid version number.
-            [self release];
+            self = nil;
             return nil;
         }
     }
@@ -164,11 +159,8 @@
 
 - (void)dealloc;
 {
-    if (components) NSZoneFree(NULL, components);
+    if (components) free(components);
     components = NULL;
-    SKDESTROY(originalVersionString);
-    SKDESTROY(cleanVersionString);
-    [super dealloc];
 }
 
 - (NSString *)description {
@@ -183,13 +175,6 @@
     if (componentIndex < componentCount)
         return components[componentIndex];
     return 0;
-}
-
-#pragma mark NSCopying
-
-- (instancetype)copyWithZone:(NSZone *)zone;
-{
-    return [self retain];
 }
 
 #pragma mark Comparison

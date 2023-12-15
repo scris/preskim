@@ -74,11 +74,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(defaultSettings);
-    [super dealloc];
-}
-
 - (NSString *)windowNibName {
     return @"ViewSettings";
 }

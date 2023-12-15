@@ -54,35 +54,35 @@
 @dynamic fullDateFormat, longDateFormat, mediumDateFormat, shortDateFormat, fullTimeFormat, longTimeFormat, mediumTimeFormat, shortTimeFormat, standardDescription, PDFDescription;
 
 - (NSDate *)fullDateFormat {
-    return [[[[SKFormattedDate alloc] initWithDate:self] autorelease] fullDateFormat];
+    return [[[SKFormattedDate alloc] initWithDate:self] fullDateFormat];
 }
 
 - (NSDate *)longDateFormat {
-    return [[[[SKFormattedDate alloc] initWithDate:self] autorelease] longDateFormat];
+    return [[[SKFormattedDate alloc] initWithDate:self] longDateFormat];
 }
 
 - (NSDate *)mediumDateFormat {
-    return [[[[SKFormattedDate alloc] initWithDate:self] autorelease] mediumDateFormat];
+    return [[[SKFormattedDate alloc] initWithDate:self] mediumDateFormat];
 }
 
 - (NSDate *)shortDateFormat {
-    return [[[[SKFormattedDate alloc] initWithDate:self] autorelease] shortDateFormat];
+    return [[[SKFormattedDate alloc] initWithDate:self] shortDateFormat];
 }
 
 - (NSDate *)fullTimeFormat {
-    return [[[[SKFormattedDate alloc] initWithDate:self] autorelease] fullTimeFormat];
+    return [[[SKFormattedDate alloc] initWithDate:self] fullTimeFormat];
 }
 
 - (NSDate *)longTimeFormat {
-    return [[[[SKFormattedDate alloc] initWithDate:self] autorelease] longTimeFormat];
+    return [[[SKFormattedDate alloc] initWithDate:self] longTimeFormat];
 }
 
 - (NSDate *)mediumTimeFormat {
-    return [[[[SKFormattedDate alloc] initWithDate:self] autorelease] mediumTimeFormat];
+    return [[[SKFormattedDate alloc] initWithDate:self] mediumTimeFormat];
 }
 
 - (NSDate *)shortTimeFormat {
-    return [[[[SKFormattedDate alloc] initWithDate:self] autorelease] shortTimeFormat];
+    return [[[SKFormattedDate alloc] initWithDate:self] shortTimeFormat];
 }
 
 - (NSString *)standardDescription {
@@ -125,12 +125,12 @@
 
 - (instancetype)initWithDate:(NSDate *)aDate {
     if (aDate == nil) {
-        [self release];
+        self = nil;
         return nil;
     }
     self = [super init];
     if (self) {
-        date = [aDate retain];
+        date = aDate;
         formatter = [[NSDateFormatter alloc] init];
         [formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
         [formatter setDateStyle:NSDateFormatterNoStyle];
@@ -140,14 +140,8 @@
 }
 
 - (instancetype)initWithTimeIntervalSinceReferenceDate:(NSTimeInterval)timeInterval {
-    return [self initWithDate:[[[NSDate alloc] initWithTimeIntervalSinceReferenceDate:timeInterval
-                ] autorelease]];
-}
-
-- (void)dealloc {
-    SKDESTROY(date);
-    SKDESTROY(formatter);
-    [super dealloc];
+    return [self initWithDate:[[NSDate alloc] initWithTimeIntervalSinceReferenceDate:timeInterval
+                ]];
 }
 
 - (NSString *)description {

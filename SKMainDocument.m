@@ -163,18 +163,11 @@ enum {
 + (BOOL)isPDFDocument { return YES; }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     // shouldn't need this here, but better be safe
-    if (fileUpdateChecker)
+    if (fileUpdateChecker) {
         SKENSURE_MAIN_THREAD( [fileUpdateChecker terminate]; );
-    SKDESTROY(fileUpdateChecker);
-    SKDESTROY(synchronizer);
-    SKDESTROY(mainWindowController);
-    SKDESTROY(pdfData);
-    SKDESTROY(originalData);
-    SKDESTROY(tmpData);
-    SKDESTROY(pageOffsets);
-    [super dealloc];
+        fileUpdateChecker = nil;
+    }
 }
 
 - (void)makeWindowControllers{
@@ -208,7 +201,7 @@ enum {
     
     [[self undoManager] enableUndoRegistration];
     
-    SKDESTROY(tmpData);
+    tmpData = nil;
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController{
@@ -239,7 +232,7 @@ enum {
             [mainWindowController setRecentInfoNeedsUpdate:YES];
             [self saveRecentDocumentInfo];
         }
-        SKDESTROY(mainWindowController);
+        mainWindowController = nil;
     }
     [super removeWindowController:windowController];
 }
@@ -277,7 +270,7 @@ enum {
 - (NSArray *)writableTypesForSaveOperation:(NSSaveOperationType)saveOperation {
     if (mdFlags.gettingFileType)
         return [super writableTypesForSaveOperation:saveOperation];
-    NSMutableArray *writableTypes = [[[super writableTypesForSaveOperation:saveOperation] mutableCopy] autorelease];
+    NSMutableArray *writableTypes = [[super writableTypesForSaveOperation:saveOperation] mutableCopy];
     NSString *type = [self fileType];
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     if ([ws type:type conformsToType:SKEncapsulatedPostScriptDocumentType] == NO)
@@ -387,11 +380,12 @@ enum {
     mdFlags.exportOption = SKExportOptionDefault;
     
     [exportAccessoryController setRepresentedObject:nil];
-    SKDESTROY(exportAccessoryController);
+    exportAccessoryController = nil;
     
     if (contextInfo) {
-        NSInvocation *invocation = [(id)contextInfo autorelease];
-        [invocation setArgument:&doc atIndex:2];
+        NSInvocation *invocation = (NSInvocation *)CFBridgingRelease(contextInfo);
+        __unsafe_unretained NSDocument *theDoc = doc;
+        [invocation setArgument:&theDoc atIndex:2];
         [invocation setArgument:&didSave atIndex:3];
         [invocation invoke];
     }
@@ -407,7 +401,7 @@ enum {
         invocation = [NSInvocation invocationWithTarget:delegate selector:didSaveSelector];
         [invocation setArgument:&contextInfo atIndex:4];
     }
-    [super runModalSavePanelForSaveOperation:saveOperation delegate:self didSaveSelector:@selector(document:didSaveUsingPanel:contextInfo:) contextInfo:[invocation retain]];
+    [super runModalSavePanelForSaveOperation:saveOperation delegate:self didSaveSelector:@selector(document:didSaveUsingPanel:contextInfo:) contextInfo:(void *)CFBridgingRetain(invocation)];
 }
 
 - (NSArray *)SkimNoteProperties {
@@ -427,7 +421,6 @@ enum {
                 bounds.origin.y -= offsetPtr->y;
                 [mutableDict setObject:NSStringFromRect(bounds) forKey:SKNPDFAnnotationBoundsKey];
                 [mutableArray addObject:mutableDict];
-                [mutableDict release];
             } else {
                 [mutableArray addObject:dict];
             }
@@ -482,7 +475,7 @@ enum {
     BOOL fileExists = [absoluteURL checkResourceIsReachableAndReturnError:NULL];
     
     if (fileExists && (saveOperation == NSSaveAsOperation || saveOperation == NSSaveToOperation)) {
-        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+        NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"\"%@\" already exists. Do you want to replace it?", @"Message in alert dialog"), [absoluteURL lastPathComponent]]];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"A file or folder with the same name already exists in %@. Replacing it will overwrite its current contents.", @"Informative text in alert dialog"), [[absoluteURL URLByDeletingLastPathComponent] lastPathComponent]]];
         [alert addButtonWithTitle:NSLocalizedString(@"Save", @"Button title")];
@@ -595,7 +588,7 @@ enum {
             if (NO == [self attachNotesAtURL:absoluteURL]) {
                 NSString *message = didWriteBackupNotes ? NSLocalizedString(@"The notes could not be saved with the PDF at \"%@\". However a companion .skim file was successfully updated.", @"Informative text in alert dialog") :
                 NSLocalizedString(@"The notes could not be saved with the PDF at \"%@\"", @"Informative text in alert dialog");
-                NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+                NSAlert *alert = [[NSAlert alloc] init];
                 [alert setMessageText:NSLocalizedString(@"Unable to save notes", @"Message in alert dialog")];
                 [alert setInformativeText:[NSString stringWithFormat:message, [absoluteURL lastPathComponent]]];
                 [alert runModal];
@@ -626,7 +619,7 @@ enum {
     NSDictionary *info = [[SKInfoWindowController sharedInstance] infoForDocument:self];
     NSDictionary *options = [[self mainWindowController] presentationOptions];
     if (options) {
-        info = [[info mutableCopy] autorelease];
+        info = [info mutableCopy];
         [(NSMutableDictionary *)info setObject:options forKey:SKPresentationOptionsKey];
     }
     [fileWrapper addRegularFileWithContents:pdfData preferredFilename:[name stringByAppendingPathExtension:@"pdf"]];
@@ -644,11 +637,11 @@ enum {
         if ((data = [self notesFDFDataForFile:[name stringByAppendingPathExtension:@"pdf"] fileIDStrings:[[self pdfDocument] fileIDStrings]]))
             [fileWrapper addRegularFileWithContents:data preferredFilename:[name stringByAppendingPathExtension:@"fdf"]];
     }
-    return [fileWrapper autorelease];
+    return fileWrapper;
 }
 
 - (NSTask *)taskForWritingArchiveAtURL:(NSURL *)targetURL fromURL:(NSURL *)sourceURL {
-    NSTask *task = [[[NSTask alloc] init] autorelease];
+    NSTask *task = [[NSTask alloc] init];
     [task setLaunchPath:@"/usr/bin/tar"];
     [task setArguments:@[@"-czf", [targetURL path], [sourceURL lastPathComponent]]];
     [task setCurrentDirectoryPath:[[sourceURL URLByDeletingLastPathComponent] path]];
@@ -753,7 +746,7 @@ enum {
 }
 
 - (NSDictionary *)fileAttributesToWriteToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation originalContentsURL:(NSURL *)absoluteOriginalContentsURL error:(NSError **)outError {
-    NSMutableDictionary *dict = [[[super fileAttributesToWriteToURL:absoluteURL ofType:typeName forSaveOperation:saveOperation originalContentsURL:absoluteOriginalContentsURL error:outError] mutableCopy] autorelease];
+    NSMutableDictionary *dict = [[super fileAttributesToWriteToURL:absoluteURL ofType:typeName forSaveOperation:saveOperation originalContentsURL:absoluteOriginalContentsURL error:outError] mutableCopy];
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     
     // only set the creator code for our native types
@@ -800,16 +793,14 @@ enum {
 
 - (void)setPDFData:(NSData *)data {
     if (pdfData != data) {
-        [pdfData release];
-        pdfData = [data retain];
+        pdfData = data;
     }
-    SKDESTROY(pageOffsets);
+    pageOffsets = nil;
 }
 
 - (void)setOriginalData:(NSData *)data {
     if (originalData != data) {
-        [originalData release];
-        originalData = [data retain];
+        originalData = data;
     }
 }
 
@@ -818,12 +809,11 @@ enum {
     PDFDocument *pdfDoc = nil;
     NSError *error = nil;
     
-    [tmpData release];
     tmpData = [[SKTemporaryData alloc] init];
     
     if ([[NSWorkspace sharedWorkspace] type:docType conformsToType:SKPostScriptDocumentType]) {
         inData = data;
-        data = [[SKConversionProgressController newPDFDataWithPostScriptData:data error:&error] autorelease];
+        data = [SKConversionProgressController newPDFDataWithPostScriptData:data error:&error];
     }
     
     if (data)
@@ -833,11 +823,10 @@ enum {
         [self setPDFData:data];
         [tmpData setPdfDocument:pdfDoc];
         [self setOriginalData:inData];
-        [pdfDoc release];
         [self updateChangeCount:NSChangeReadOtherContents];
         return YES;
     } else {
-        SKDESTROY(tmpData);
+        tmpData = nil;
         if (outError != NULL)
             *outError = error ?: [NSError readFileErrorWithLocalizedDescription:NSLocalizedString(@"Unable to load file", @"Error description")];
         return NO;
@@ -858,7 +847,6 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     NSError *error = nil;
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
     
-    [tmpData release];
     tmpData = [[SKTemporaryData alloc] init];
     
     if ([ws type:docType conformsToType:SKPDFBundleDocumentType]) {
@@ -868,14 +856,14 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                 (pdfDoc = [[SKPDFDocument alloc] initWithURL:pdfURL])) {
                 NSArray *array = [[NSFileManager defaultManager] readSkimNotesFromPDFBundleAtURL:absoluteURL error:&error];
                 if (array == nil) {
-                    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+                    NSAlert *alert = [[NSAlert alloc] init];
                     [alert setMessageText:NSLocalizedString(@"Unable to Read Notes", @"Message in alert dialog")];
                     [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Skim was not able to read the notes at %@. %@ Do you want to continue to open the PDF document anyway?", @"Informative text in alert dialog"), [[pdfURL path] stringByAbbreviatingWithTildeInPath], [error localizedDescription]]];
                     [alert addButtonWithTitle:NSLocalizedString(@"No", @"Button title")];
                     [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"Button title")];
                     if ([alert runModal] == NSAlertFirstButtonReturn) {
-                        SKDESTROY(data);
-                        SKDESTROY(pdfDoc);
+                        data = nil;
+                        pdfDoc = nil;
                         error = [NSError userCancelledErrorWithUnderlyingError:error];
                     }
                 } else if ([array count]) {
@@ -899,15 +887,15 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
             } else {
                 // we found no notes, see if we had an error finding notes. if EAs were not supported we ignore the error, as we may assume there won't be any notes
                 if (array == nil && isIgnorablePOSIXError(error) == NO) {
-                    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+                    NSAlert *alert = [[NSAlert alloc] init];
                     [alert setMessageText:NSLocalizedString(@"Unable to Read Notes", @"Message in alert dialog")];
                     [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Skim was not able to read the notes at %@. %@ Do you want to continue to open the PDF document anyway?", @"Informative text in alert dialog"), [[absoluteURL path] stringByAbbreviatingWithTildeInPath], [error localizedDescription]]];
                     [alert addButtonWithTitle:NSLocalizedString(@"No", @"Button title")];
                     [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"Button title")];
                     if ([alert runModal] == NSAlertFirstButtonReturn) {
-                        SKDESTROY(fileData);
-                        SKDESTROY(data);
-                        SKDESTROY(pdfDoc);
+                        fileData = nil;
+                        data = nil;
+                        pdfDoc = nil;
                         error = [NSError userCancelledErrorWithUnderlyingError:error];
                     }
                 }
@@ -917,7 +905,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                 NSURL *notesURL = [absoluteURL URLReplacingPathExtension:@"skim"];
                 if ([notesURL checkResourceIsReachableAndReturnError:NULL]) {
                     if (readOption == SKOptionAsk) {
-                        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+                        NSAlert *alert = [[NSAlert alloc] init];
                         [alert setMessageText:NSLocalizedString(@"Found Separate Notes", @"Message in alert dialog") ];
                         if (foundEANotes)
                             [alert setInformativeText:NSLocalizedString(@"A Skim notes file with the same name was found.  Do you want Skim to read the notes from this file?", @"Informative text in alert dialog")];
@@ -944,7 +932,6 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
             [self setPDFData:data];
             [tmpData setPdfDocument:pdfDoc];
             [self setOriginalData:fileData];
-            [pdfDoc release];
             [fileUpdateChecker didUpdateFromURL:absoluteURL];
             
             NSDictionary *dictionary = nil;
@@ -971,12 +958,10 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
             if ([number respondsToSelector:@selector(doubleValue)] && [number doubleValue] > 0.0)
                 [tmpData setOpenMetaRating:[number doubleValue]];
         }
-        [data release];
     }
-    [fileData release];
     
     if ([tmpData pdfDocument] == nil) {
-        SKDESTROY(tmpData);
+        tmpData = nil;
         if (outError)
             *outError = error ?: [NSError readFileErrorWithLocalizedDescription:NSLocalizedString(@"Unable to load file", @"Error description")];
         return NO;
@@ -1004,13 +989,12 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         [[self undoManager] removeAllActions];
         [fileUpdateChecker reset];
     } else {
-        SKDESTROY(tmpData);
+        tmpData = nil;
     }
     
     if (modalwindow) {
         [NSApp endModalSession:session];
         [modalwindow orderOut:nil];
-        [modalwindow release];
     }
     
     return success;
@@ -1019,7 +1003,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 #pragma mark Printing
 
 - (NSPrintOperation *)printOperationWithSettings:(NSDictionary *)printSettings error:(NSError **)outError {
-    NSPrintInfo *printInfo = [[[self printInfo] copy] autorelease];
+    NSPrintInfo *printInfo = [[self printInfo] copy];
     PDFDocument *pdfDoc = [self pdfDocument];
     
     [[printInfo dictionary] setValue:[NSNumber numberWithUnsignedInteger:[pdfDoc pageCount]] forKey:NSPrintLastPage];
@@ -1033,7 +1017,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     
     NSPrintPanel *printPanel = [printOperation printPanel];
     [printPanel setOptions:NSPrintPanelShowsCopies | NSPrintPanelShowsPageRange | NSPrintPanelShowsPaperSize | NSPrintPanelShowsOrientation | NSPrintPanelShowsScaling | NSPrintPanelShowsPreview];
-    [printPanel addAccessoryController:[[[SKPrintAccessoryController alloc] init] autorelease]];
+    [printPanel addAccessoryController:[[SKPrintAccessoryController alloc] init]];
     
     [printOperation setJobTitle:[self displayName]];
     
@@ -1055,7 +1039,6 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
             NSString *fragment = [components fragment];
             [components setFragment:[fragment length] ? [fragment stringByAppendingFormat:@"&search=%@", searchString] : [@"search=" stringByAppendingString:searchString]];
             skimURL = [components URL];
-            [components release];
         }
         NSPasteboard *pboard = [NSPasteboard generalPasteboard];
         [pboard clearContents];
@@ -1095,7 +1078,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     NSView *readNotesAccessoryView = nil;
     
     if ([self hasNotes]) {
-        replaceNotesCheckButton = [[[NSButton alloc] init] autorelease];
+        replaceNotesCheckButton = [[NSButton alloc] init];
         [replaceNotesCheckButton setButtonType:NSSwitchButton];
         [replaceNotesCheckButton setTitle:NSLocalizedString(@"Replace existing notes", @"Check button title")];
         [replaceNotesCheckButton sizeToFit];
@@ -1104,7 +1087,6 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
         [readNotesAccessoryView addSubview:replaceNotesCheckButton];
         [oPanel setAccessoryView:readNotesAccessoryView];
         [replaceNotesCheckButton setState:NSOnState];
-        [readNotesAccessoryView release];
         [oPanel setAccessoryViewDisclosed:YES];
     }
     
@@ -1123,8 +1105,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     [[[self undoManager] prepareWithInvocationTarget:self] setPDFData:pdfData pageOffsets:pageOffsets];
     [self setPDFData:data];
     if (newPageOffsets != pageOffsets) {
-        [pageOffsets release];
-        pageOffsets = [newPageOffsets retain];
+        pageOffsets = newPageOffsets;
     }
 }
 
@@ -1141,7 +1122,7 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
     for (PDFPage *page in [self pdfDocument]) {
         NSPoint pageOrigin = [page boundsForBox:kPDFDisplayBoxMediaBox].origin;
         
-        for (PDFAnnotation *annotation in [[[page annotations] copy] autorelease]) {
+        for (PDFAnnotation *annotation in [[page annotations] copy]) {
             if ([annotation isSkimNote] == NO && [annotation isConvertibleAnnotation]) {
                 if (annotations == nil)
                     annotations = [[NSMutableArray alloc] init];
@@ -1164,16 +1145,13 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
     
     if (annotations) {
         
-        // if pdfDocWithoutNotes was nil, the document was not encrypted, so no need to try to unlock
-        if (pdfDocWithoutNotes == nil)
-            pdfDocWithoutNotes = [[[PDFDocument alloc] initWithData:pdfData] autorelease];
-        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
-            for (PDFPage *page in pdfDocWithoutNotes) {
-                NSArray *notes = [[page annotations] copy];
-                
-                for (PDFAnnotation *annotation in notes) {
+            // if pdfDocWithoutNotes was nil, the document was not encrypted, so no need to try to unlock
+            PDFDocument *pdfDoc = pdfDocWithoutNotes ?: [[PDFDocument alloc] initWithData:pdfData];
+            
+            for (PDFPage *page in pdfDoc) {
+                for (PDFAnnotation *annotation in [[page annotations] copy]) {
                     if ([annotation isSkimNote] == NO && [annotation isConvertibleAnnotation]) {
                         PDFAnnotation *popup = [annotation popup];
                         if (popup)
@@ -1181,10 +1159,9 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
                         [page removeAnnotation:annotation];
                     }
                 }
-                [notes release];
             }
             
-            NSData *data = [pdfDocWithoutNotes dataRepresentation];
+            NSData *data = [pdfDoc dataRepresentation];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
@@ -1194,10 +1171,6 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
                 
                 [[self undoManager] setActionName:NSLocalizedString(@"Convert Notes", @"Undo action name")];
                 
-                [offsets release];
-                [noteDicts release];
-                [annotations release];
-
                 [[self mainWindowController] dismissProgressSheet];
                 
                 mdFlags.convertingNotes = 0;
@@ -1206,8 +1179,6 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
         
     } else {
         
-        [offsets release];
-
         [[self mainWindowController] dismissProgressSheet];
         
         mdFlags.convertingNotes = 0;
@@ -1215,7 +1186,7 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
 }
 
 - (void)beginConvertNotesPasswordSheetForPDFDocument:(PDFDocument *)pdfDoc {
-    SKTextFieldSheetController *passwordSheetController = [[[SKTextFieldSheetController alloc] initWithWindowNibName:@"PasswordSheet"] autorelease];
+    SKTextFieldSheetController *passwordSheetController = [[SKTextFieldSheetController alloc] initWithWindowNibName:@"PasswordSheet"];
     
     [passwordSheetController beginSheetModalForWindow:[[self mainWindowController] window] completionHandler:^(NSModalResponse result) {
             if (result == NSModalResponseOK) {
@@ -1239,7 +1210,7 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
     PDFDocument *pdfDocWithoutNotes = nil;
     
     if (mdFlags.needsPasswordToConvert) {
-        pdfDocWithoutNotes = [[[PDFDocument alloc] initWithData:pdfData] autorelease];
+        pdfDocWithoutNotes = [[PDFDocument alloc] initWithData:pdfData];
         [self tryToUnlockDocument:pdfDocWithoutNotes];
         if ([pdfDocWithoutNotes allowsNotes] == NO || [pdfDocWithoutNotes allowsPrinting] == NO) {
             [self beginConvertNotesPasswordSheetForPDFDocument:pdfDocWithoutNotes];
@@ -1266,7 +1237,7 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
         NSBeep();
         return;
     }
-    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:NSLocalizedString(@"Convert Notes", @"Alert text when trying to convert notes")];
     [alert setInformativeText:NSLocalizedString(@"This will convert PDF annotations to Skim notes. Do you want to proceed?", @"Informative text in alert dialog")];
     [alert addButtonWithTitle:NSLocalizedString(@"OK", @"Button title")];
@@ -1354,7 +1325,7 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
              [super revertDocumentToSaved:sender]; 	 
          } else if ([fileUpdateChecker fileChangedOnDisk] || 
                     NSOrderedAscending == [[self fileModificationDate] compare:[[[NSFileManager defaultManager] attributesOfItemAtPath:[[self fileURL] path] error:NULL] fileModificationDate]]) {
-             NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+             NSAlert *alert = [[NSAlert alloc] init];
              [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Do you want to revert to the version of the document \"%@\" on disk?", @"Message in alert dialog"), [[self fileURL] lastPathComponent]]];
              [alert setInformativeText:NSLocalizedString(@"Your current changes will be lost.", @"Informative text in alert dialog")];
              [alert addButtonWithTitle:NSLocalizedString(@"Revert", @"Button title")];
@@ -1425,7 +1396,7 @@ static NSString *pointDescriptionFunction(const void *item) { return NSStringFro
     // ignore when we're switching fullscreen/main windows
     if ([window isEqual:[[window windowController] window]]) {
         [fileUpdateChecker terminate];
-        SKDESTROY(fileUpdateChecker);
+        fileUpdateChecker = nil;
         [synchronizer terminate];
     }
 }
@@ -1480,7 +1451,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
         NSDictionary *editor = [SKSyncPreferences TeXEditorForPreset:editorPreset];
         NSString *editorCmd = [editor objectForKey:SKSyncTeXEditorCommandKey] ?: [sud stringForKey:SKTeXEditorCommandKey];
         NSString *editorArgs = [editor objectForKey:SKSyncTeXEditorArgumentsKey] ?: [sud stringForKey:SKTeXEditorArgumentsKey];
-        NSMutableString *cmdString = [[editorArgs mutableCopy] autorelease];
+        NSMutableString *cmdString = [editorArgs mutableCopy];
         
         if ([editorCmd isAbsolutePath] == NO) {
             NSMutableArray *searchPaths = [NSMutableArray arrayWithObjects:@"/usr/bin", @"/usr/local/bin", nil];
@@ -1539,7 +1510,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
         if ([ws type:theUTI conformsToType:@"com.apple.applescript.script"] || [ws type:theUTI conformsToType:@"com.apple.applescript.text"])
             [cmdString insertString:@"/usr/bin/osascript " atIndex:0];
         
-        NSTask *task = [[[NSTask alloc] init] autorelease];
+        NSTask *task = [[NSTask alloc] init];
         [task setLaunchPath:@"/bin/sh"];
         [task setCurrentDirectoryPath:[file stringByDeletingLastPathComponent]];
         [task setArguments:@[@"-c", cmdString]];
@@ -1587,7 +1558,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 }
 
 - (NSDictionary *)currentDocumentSetup {
-    NSMutableDictionary *setup = [[[super currentDocumentSetup] mutableCopy] autorelease];
+    NSMutableDictionary *setup = [[super currentDocumentSetup] mutableCopy];
     if ([setup count])
         [setup addEntriesFromDictionary:[[self mainWindowController] currentSetup]];
     return setup;
@@ -1745,7 +1716,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 - (NSTextStorage *)richText {
     PDFDocument *doc = [self pdfDocument];
     NSUInteger i, count = [doc pageCount];
-    NSTextStorage *textStorage = [[[NSTextStorage alloc] init] autorelease];
+    NSTextStorage *textStorage = [[NSTextStorage alloc] init];
     NSAttributedString *attrString;
     [textStorage beginEditing];
     for (i = 0; i < count; i++) {
@@ -1913,7 +1884,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
                 NSScriptCommand *cmd = [NSScriptCommand currentCommand];
                 [cmd setScriptErrorNumber:NSReceiversCantHandleCommandScriptError];
                 [cmd setScriptErrorString:@"Cannot duplicate markup note."];
-                SKDESTROY(copiedValue);
+                copiedValue = nil;
             }
         }
         return copiedValue;
@@ -1985,7 +1956,6 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
             if ([[file pathExtension] isCaseInsensitiveEqual:[tm fileNameExtensionForTemplateType:fileType]])
                 [arguments setObject:[file URLByDeletingPathExtension] forKey:@"File"];
             [command setArguments:arguments];
-            [arguments release];
         }
     }
     return [super handleSaveScriptCommand:command];
@@ -2011,7 +1981,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
         id pointData = [args objectForKey:@"At"];
         if ([pointData isKindOfClass:[NSData class]]) {
             NSPoint point = [(NSData *)pointData pointValueAsQDPoint];
-            [[self pdfView] goToDestination:[[[PDFDestination alloc] initWithPage:(PDFPage *)location atPoint:point] autorelease]];
+            [[self pdfView] goToDestination:[[PDFDestination alloc] initWithPage:(PDFPage *)location atPoint:point]];
         } else {
             [[self pdfView] goToCurrentPage:(PDFPage *)location];
         }

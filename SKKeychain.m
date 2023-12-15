@@ -43,7 +43,7 @@
 @implementation SKKeychain
 
 + (NSString *)passwordForService:(NSString *)service account:(NSString *)account status:(SKPasswordStatus *)status {
-    CFMutableDictionaryRef query = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CFMutableDictionaryRef query = CFDictionaryCreateMutable(NULL, 5, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     CFTypeRef passwordData = nil;
     NSString *password = nil;
     
@@ -59,23 +59,21 @@
     CFRelease(query);
     
     if (err == noErr) {
-        if (passwordData) {
-            password = [[[NSString alloc] initWithData:(NSData *)passwordData encoding:NSUTF8StringEncoding] autorelease];
-            CFRelease(passwordData);
-        }
+        if (passwordData)
+            password = [[NSString alloc] initWithData:CFBridgingRelease(passwordData) encoding:NSUTF8StringEncoding];
         if (status) *status = SKPasswordStatusFound;
     } else if (err == errSecItemNotFound) {
         if (status) *status = SKPasswordStatusNotFound;
     } else {
         if (err != errSecUserCanceled)
-            NSLog(@"Error %d occurred finding password: %@", (int)err, [(id)SecCopyErrorMessageString(err, NULL) autorelease]);
+            NSLog(@"Error %d occurred finding password: %@", (int)err, CFBridgingRelease(SecCopyErrorMessageString(err, NULL)));
         if (status) *status = SKPasswordStatusError;
     }
     return password;
 }
 
 + (void)setPassword:(NSString *)password forService:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment {
-    CFMutableDictionaryRef attributes = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CFMutableDictionaryRef attributes = CFDictionaryCreateMutable(NULL, 6, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     OSStatus err;
     
     // password not on keychain, so add it
@@ -93,12 +91,12 @@
     CFRelease(attributes);
     
     if (err != noErr && err != errSecUserCanceled)
-        NSLog(@"Error %d occurred adding password: %@", (int)err, [(id)SecCopyErrorMessageString(err, NULL) autorelease]);
+        NSLog(@"Error %d occurred adding password: %@", (int)err, CFBridgingRelease(SecCopyErrorMessageString(err, NULL)));
 }
 
 + (SKPasswordStatus)updatePassword:(NSString *)password service:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment forService:(NSString *)itemService account:(NSString *)itemAccount {
-    CFMutableDictionaryRef attributes = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-    CFMutableDictionaryRef query = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CFMutableDictionaryRef attributes = CFDictionaryCreateMutable(NULL, 5, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CFMutableDictionaryRef query = CFDictionaryCreateMutable(NULL, 4, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     OSStatus err;
     
     CFDictionarySetValue(query, kSecClass, kSecClassGenericPassword);
@@ -130,7 +128,7 @@
         return SKPasswordStatusNotFound;
     } else {
         if (err != errSecUserCanceled)
-            NSLog(@"Error %d occurred modifying password or attributes: %@", (int)err, [(id)SecCopyErrorMessageString(err, NULL) autorelease]);
+            NSLog(@"Error %d occurred modifying password or attributes: %@", (int)err, CFBridgingRelease(SecCopyErrorMessageString(err, NULL)));
         return SKPasswordStatusError;
     }
 }

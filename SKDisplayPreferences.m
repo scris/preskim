@@ -75,11 +75,6 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
         [colorSwatch removeObserver:self forKeyPath:@"colors" context:&SKDisplayPreferencesColorSwatchObservationContext];
     }
     @catch(id e) {}
-    SKDESTROY(normalColorWell);
-    SKDESTROY(fullScreenColorWell);
-    SKDESTROY(colorSwatch);
-    SKDESTROY(addRemoveColorButton);
-    [super dealloc];
 }
 
 - (NSString *)nibName {

@@ -56,7 +56,7 @@ NSString *SKPDFDocumentOldPageKey = @"oldPage";
 
 @implementation PDFDocument (SKExtensions)
 
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len {
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained *)stackbuf count:(NSUInteger)len {
     NSUInteger start = state->state;
     NSUInteger end = [self pageCount];
     if (start == 0)
@@ -104,7 +104,7 @@ NSString *SKPDFDocumentOldPageKey = @"oldPage";
                     if (false == CGPDFDictionaryGetName(labelDict, "S", &labelStyle))
                         labelStyle = NULL;
                     if (CGPDFDictionaryGetString(labelDict, "P", &labelPDFPrefix))
-                        labelPrefix = [(NSString *)CGPDFStringCopyTextString(labelPDFPrefix) autorelease];
+                        labelPrefix = CFBridgingRelease(CGPDFStringCopyTextString(labelPDFPrefix));
                     else
                         labelPrefix = nil;
                     if (false == CGPDFDictionaryGetInteger(labelDict, "St", &labelStart))
@@ -166,7 +166,6 @@ NSString *SKPDFDocumentOldPageKey = @"oldPage";
             
             NSString *fileID = [[NSString alloc] initWithBytes:outputBuffer length:k encoding:NSASCIIStringEncoding];
             [fileIDStrings addObject:fileID];
-            [fileID release];
         }
     }
     
@@ -243,10 +242,9 @@ static inline NSInteger angleForDirection(NSLocaleLanguageDirection direction, B
         CGPDFDictionaryRef viewerPrefs = NULL;
         const char *direction = NULL;
         if (CGPDFDictionaryGetString(catalog, "Lang", &lang)) {
-            NSString *language = (NSString *)CGPDFStringCopyTextString(lang);
+            NSString *language = CFBridgingRelease(CGPDFStringCopyTextString(lang));
             NSLocaleLanguageDirection characterDirection = [NSLocale characterDirectionForLanguage:language];
             NSLocaleLanguageDirection lineDirection = [NSLocale lineDirectionForLanguage:language];
-            [language release];
             if (lineDirection == NSLocaleLanguageDirectionUnknown) {
                 if (characterDirection < NSLocaleLanguageDirectionTopToBottom)
                     lineDirection = NSLocaleLanguageDirectionTopToBottom;

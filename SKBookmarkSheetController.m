@@ -48,11 +48,6 @@
 @synthesize folderPopUp;
 @dynamic selectedFolder;
 
-- (void)dealloc {
-    SKDESTROY(folderPopUp);
-    [super dealloc];
-}
-
 - (NSString *)windowNibName { return @"BookmarkSheet"; }
 
 - (void)addMenuItemsForBookmarks:(NSArray *)bookmarks level:(NSInteger)level toMenu:(NSMenu *)menu {

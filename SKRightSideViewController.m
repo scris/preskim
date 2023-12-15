@@ -61,11 +61,6 @@
     [snapshotTableView setDataSource:nil];
     [noteOutlineView setDelegate:nil];
     [noteOutlineView setDataSource:nil];
-    SKDESTROY(noteArrayController);
-    SKDESTROY(snapshotArrayController);
-    SKDESTROY(noteOutlineView);
-    SKDESTROY(snapshotTableView);
-    [super dealloc];
 }
 
 - (NSString *)nibName {
@@ -109,8 +104,8 @@
     
     [noteOutlineView setTypeSelectHelper:[SKTypeSelectHelper typeSelectHelperWithMatchOption:SKSubstringMatch]];
     
-    NSSortDescriptor *pageIndexSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES] autorelease];
-    NSSortDescriptor *boundsSortDescriptor = [[[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:YES selector:@selector(compare:)] autorelease];
+    NSSortDescriptor *pageIndexSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES];
+    NSSortDescriptor *boundsSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:YES selector:@selector(compare:)];
     [noteArrayController setSortDescriptors:@[pageIndexSortDescriptor, boundsSortDescriptor]];
     [snapshotArrayController setSortDescriptors:@[pageIndexSortDescriptor]];
     

@@ -53,11 +53,6 @@ static BOOL supportsHighlights = YES;
 
 @synthesize highlightLevel;
 
-- (void)dealloc {
-    SKDESTROY(highlightView);
-    [super dealloc];
-}
-
 - (void)updateHighlightMask {
     NSRect rect = [self bounds];
     if (NSIsEmptyRect(rect) == NO) {
@@ -69,7 +64,6 @@ static BOOL supportsHighlights = YES;
             [mask unlockFocus];
         }
         [highlightView setMaskImage:mask];
-        [mask release];
     }
 }
 
@@ -85,7 +79,7 @@ static BOOL supportsHighlights = YES;
         [self updateHighlightMask];
     } else if (highlightView) {
         [highlightView removeFromSuperview];
-        SKDESTROY(highlightView);
+        highlightView = nil;
     }
 }
 

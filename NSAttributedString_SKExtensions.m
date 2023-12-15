@@ -46,24 +46,21 @@
 - (NSAttributedString *)attributedStringByAddingTextColorAttribute {
     NSMutableAttributedString *attrString = [self mutableCopy];
     if ([attrString addTextColorAttribute])
-        return [attrString autorelease];
-    [attrString release];
+        return attrString;
     return self;
 }
 
 - (NSAttributedString *)attributedStringByRemovingTextColorAttribute {
     NSMutableAttributedString *attrString = [self mutableCopy];
     if ([attrString removeTextColorAttribute])
-        return [attrString autorelease];
-    [attrString release];
+        return attrString;
     return self;
 }
 
 - (NSAttributedString *)attributedStringByAddingControlTextColorAttribute {
     NSMutableAttributedString *attrString = [self mutableCopy];
     if ([attrString addControlTextColorAttribute])
-        return [attrString autorelease];
-    [attrString release];
+        return attrString;
     return self;
 }
 
@@ -92,17 +89,17 @@
 }
 
 - (NSTextStorage *)scriptingRichText {
-    return [[[NSTextStorage alloc] initWithAttributedString:self] autorelease];
+    return [[NSTextStorage alloc] initWithAttributedString:self];
 }
 
 - (NSScriptObjectSpecifier *)objectSpecifier {
     NSScriptClassDescription *containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
-    return [[[NSNameSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"richTextFormat" name:[self scriptingName]] autorelease];
+    return [[NSNameSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"richTextFormat" name:[self scriptingName]];
 }
 
 - (NSScriptObjectSpecifier *)richTextSpecifier {
     NSScriptObjectSpecifier *rtfSpecifier = [self objectSpecifier];
-    return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:[rtfSpecifier keyClassDescription] containerSpecifier:rtfSpecifier key:@"scriptingRichText"] autorelease];
+    return [[NSPropertySpecifier alloc] initWithContainerClassDescription:[rtfSpecifier keyClassDescription] containerSpecifier:rtfSpecifier key:@"scriptingRichText"];
 }
 
 @end
@@ -158,7 +155,6 @@
         NSAttributedString *attrString = [[NSAttributedString alloc] initWithData:data options:@{} documentAttributes:NULL error:NULL];
         if (attrString)
             [self setAttributedString:attrString];
-        [attrString release];
     }
 }
 

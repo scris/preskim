@@ -116,8 +116,6 @@ static inline NSArray *defaultKeysToObserve() {
 - (void)dealloc {
     @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:defaultKeysToObserve() context:&SKBasePDFViewDefaultsObservationContext]; }
     @catch (id e) {}
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super dealloc];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {

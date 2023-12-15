@@ -54,11 +54,6 @@
         return [super defaultAnimationForKey:key];
 }
 
-- (void)dealloc {
-    SKDESTROY(queue);
-    [super dealloc];
-}
-
 - (CGFloat)firstSplitPosition {
     NSView *view = [[self subviews] objectAtIndex:0];
     if ([self isSubviewCollapsed:view])
@@ -92,15 +87,14 @@
         queue = [[NSMutableArray alloc] init];
     void (^queuedBlock)(void);
     if (external) {
-        queuedBlock = Block_copy(^{
+        queuedBlock = [^{
             block();
             [self dequeNext];
-        });
+        } copy];
     } else {
-        queuedBlock = Block_copy(block);
+        queuedBlock = [block copy];
     }
     [queue addObject:queuedBlock];
-    Block_release(queuedBlock);
 }
 
 - (void)enqueueOperation:(void(^)(void))block {
@@ -109,10 +103,9 @@
 
 - (void)dequeNext {
     if ([queue count] > 0) {
-        void (^block)(void) = [[queue firstObject] retain];
+        void (^block)(void) = [queue firstObject];
         [queue removeObjectAtIndex:0];
         block();
-        Block_release(block);
     }
 }
 

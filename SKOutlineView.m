@@ -49,13 +49,6 @@
 @synthesize typeSelectHelper, hasImageToolTips, supportsQuickLook;
 @dynamic selectedItems, canDelete, canCopy, canPaste;
 
-- (void)dealloc {
-    [typeSelectHelper setDelegate:nil];
-    SKDESTROY(typeSelectHelper);
-    SKDESTROY(font);
-    [super dealloc];
-}
-
 - (NSArray *)itemsAtRowIndexes:(NSIndexSet *)indexes {
     NSMutableArray *items = [NSMutableArray array];
     [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
@@ -72,8 +65,7 @@
     if (typeSelectHelper != newTypeSelectHelper) {
         if ([typeSelectHelper delegate] == self)
             [typeSelectHelper setDelegate:nil];
-        [typeSelectHelper release];
-        typeSelectHelper = [newTypeSelectHelper retain];
+        typeSelectHelper = newTypeSelectHelper;
         [typeSelectHelper setDelegate:self];
     }
 }
@@ -235,8 +227,7 @@
 
 - (void)setFont:(NSFont *)newFont {
     if (font != newFont) {
-        [font release];
-        font = [newFont retain];
+        font = newFont;
         
         for (NSTableColumn *tc in [self tableColumns]) {
             NSCell *cell = [tc dataCell];
@@ -298,8 +289,6 @@
     NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:[NSValue valueWithNonretainedObject:rowView], SKImageToolTipRowViewKey, nil];
     NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:[rowView bounds] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect owner:self userInfo:userInfo];
     [rowView addTrackingArea:area];
-    [area release];
-    [userInfo release];
 }
 
 - (void)removeTrackingAreaForRowView:(NSTableRowView *)rowView {

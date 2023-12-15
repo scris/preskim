@@ -78,7 +78,6 @@ NSString *SKDocumentFileURLDidChangeNotification = @"SKDocumentFileURLDidChangeN
         NSURLComponents *components = [[NSURLComponents alloc] initWithURL:fileURL resolvingAgainstBaseURL:NO];
         [components setScheme:@"skim"];
         NSURL *skimURL = [components URL];
-        [components release];
         if (skimURL) {
             NSPasteboard *pboard = [NSPasteboard generalPasteboard];
             [pboard clearContents];
@@ -113,7 +112,6 @@ NSString *SKDocumentFileURLDidChangeNotification = @"SKDocumentFileURLDidChangeN
         NSData *data = [alias data];
         if (data)
             [setup setObject:data forKey:[alias isBookmark] ? SKDocumentSetupBookmarkKey : SKDocumentSetupAliasKey];
-        [alias release];
     }
     
     NSWindow *window = [self mainWindow];
@@ -134,7 +132,7 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
 
 - (IBAction)addBookmark:(id)sender {
     NSInteger addBookmarkType = [sender tag];
-    SKBookmarkSheetController *bookmarkSheetController = [[[SKBookmarkSheetController alloc] init] autorelease];
+    SKBookmarkSheetController *bookmarkSheetController = [[SKBookmarkSheetController alloc] init];
 	[bookmarkSheetController setStringValue:[self displayName]];
     [bookmarkSheetController beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSModalResponse result) {
             if (result == NSModalResponseOK) {
@@ -169,7 +167,7 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
                     NSUInteger i = [[[folder children] valueForKey:@"label"] indexOfObject:[bookmark label]];
                     if (i != NSNotFound) {
                         [[bookmarkSheetController window] orderOut:nil];
-                        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+                        NSAlert *alert = [[NSAlert alloc] init];
                         [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"\"%@\" already exists", @"Message text in alert dialog when getting duplicate bookmark label"), [bookmark label]]];
                         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"An item named \"%@\" already exists in this location. Do you want to replace it with this bookmark?", @"Informative text in alert dialog when getting duplicate bookmark label"), [bookmark label]]];
                         [alert addButtonWithTitle:NSLocalizedString(@"Replace", @"button title")];
@@ -227,7 +225,6 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
         NSError *error = nil;
         NSString *templateString = [[NSString alloc] initWithContentsOfURL:templateURL encoding:NSUTF8StringEncoding error:&error];
         string = [SKTemplateParser stringByParsingTemplateString:templateString usingObject:self];
-        [templateString release];
     }
     return string;
 }
@@ -241,12 +238,11 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
         NSAttributedString *templateAttrString = [[NSAttributedString alloc] initWithURL:templateURL options:@{} documentAttributes:&docAttributes error:NULL];
         NSAttributedString *attrString = [SKTemplateParser attributedStringByParsingTemplateAttributedString:templateAttrString usingObject:self];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableExportAttributesKey] == NO) {
-            NSMutableDictionary *mutableAttributes = [[docAttributes mutableCopy] autorelease];
+            NSMutableDictionary *mutableAttributes = [docAttributes mutableCopy];
             [mutableAttributes addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:NSFullUserName(), NSAuthorDocumentAttribute, [NSDate date], NSCreationTimeDocumentAttribute, [[[[self fileURL] path] lastPathComponent] stringByDeletingPathExtension], NSTitleDocumentAttribute, nil]];
             docAttributes = mutableAttributes;
         }
         data = [attrString dataFromRange:NSMakeRange(0, [attrString length]) documentAttributes:docAttributes error:&error];
-        [templateAttrString release];
     } else {
         data = [[self notesStringForTemplateType:typeName] dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
     }
@@ -261,12 +257,11 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
         NSAttributedString *templateAttrString = [[NSAttributedString alloc] initWithURL:templateURL options:@{} documentAttributes:&docAttributes error:NULL];
         NSAttributedString *attrString = [SKTemplateParser attributedStringByParsingTemplateAttributedString:templateAttrString usingObject:self];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableExportAttributesKey] == NO) {
-            NSMutableDictionary *mutableAttributes = [[docAttributes mutableCopy] autorelease];
+            NSMutableDictionary *mutableAttributes = [docAttributes mutableCopy];
             [mutableAttributes addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:NSFullUserName(), NSAuthorDocumentAttribute, [NSDate date], NSCreationTimeDocumentAttribute, [[[[self fileURL] path] lastPathComponent] stringByDeletingPathExtension], NSTitleDocumentAttribute, nil]];
             docAttributes = mutableAttributes;
         }
         fileWrapper = [attrString RTFDFileWrapperFromRange:NSMakeRange(0, [attrString length]) documentAttributes:docAttributes];
-        [templateAttrString release];
     }
     return fileWrapper;
 }

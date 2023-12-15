@@ -138,7 +138,7 @@ NSString *SKApplicationStartsTerminatingNotification = @"SKApplicationStartsTerm
     }
     
     if ([toSort count] > 1)
-        [toSort sortUsingDescriptors:@[[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease]]];
+        [toSort sortUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(caseInsensitiveCompare:)]]];
     
     for (item in auxItems)
         [windowsMenu addItem:item];

@@ -60,7 +60,7 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
 - (void)setDefaultSkimNoteProperties {
     [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKAnchoredNoteColorKey]];
     [self setIconType:[[NSUserDefaults standardUserDefaults] integerForKey:SKAnchoredNoteIconTypeKey]];
-    [self setTexts:@[[[[SKNoteText alloc] initWithNote:self] autorelease]]];
+    [self setTexts:@[[[SKNoteText alloc] initWithNote:self]]];
     [self setPopup:nil];
 }
 
@@ -92,7 +92,6 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
         [mutableKeys addObject:SKNPDFAnnotationTextKey];
         [mutableKeys addObject:SKNPDFAnnotationImageKey];
         noteKeys = [mutableKeys copy];
-        [mutableKeys release];
     }
     return noteKeys;
 }
@@ -108,7 +107,6 @@ NSString *SKPDFAnnotationRichTextKey = @"richText";
 #pragma clang diagnostic pop
         [customKeys addObject:SKPDFAnnotationRichTextKey];
         customNoteScriptingKeys = [customKeys copy];
-        [customKeys release];
     }
     return customNoteScriptingKeys;
 }

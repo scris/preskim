@@ -83,7 +83,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
             [self setAlphaValue:0.95];
         [self setAnimationBehavior:NSWindowAnimationBehaviorNone];
         
-        NSView *backgroundView = [[[SKSideWindowContentView alloc] init] autorelease];
+        NSView *backgroundView = [[SKSideWindowContentView alloc] init];
         
         if (@available(macOS 10.14, *)) {
             NSVisualEffectView *contentView = [[NSVisualEffectView alloc] init];
@@ -92,7 +92,6 @@ static CGFloat WINDOW_OFFSET = 8.0;
             [backgroundView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [backgroundView setFrame:[contentView bounds]];
             [contentView addSubview:backgroundView];
-            [contentView release];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentViewFrameChanged:) name:NSViewFrameDidChangeNotification object:contentView];
             [self contentViewFrameChanged:nil];
             [self setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
@@ -101,18 +100,13 @@ static CGFloat WINDOW_OFFSET = 8.0;
         }
         
         NSRect contentRect = SKShrinkRect(NSInsetRect([backgroundView bounds], 0.0, CONTENT_INSET), CONTENT_INSET, NSMaxXEdge);
-        mainContentView = [[[NSView alloc] initWithFrame:contentRect] autorelease];
+        mainContentView = [[NSView alloc] initWithFrame:contentRect];
         [mainContentView setAutoresizingMask:NSViewMinXMargin | NSViewHeightSizable];
         [backgroundView addSubview:mainContentView];
         [mainContentView addSubview:view];
         [view activateConstraintsToSuperview];
     }
     return self;
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super dealloc];
 }
 
 - (BOOL)canBecomeMainWindow { return NO; }

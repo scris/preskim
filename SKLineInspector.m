@@ -94,14 +94,6 @@ static SKLineInspector *sharedLineInspector = nil;
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(dashPattern);
-    SKDESTROY(startLineStyleButton);
-    SKDESTROY(endLineStyleButton);
-    SKDESTROY(lineWell);
-    [super dealloc];
-}
-
 - (void)windowDidLoad {
     [lineWell setCanActivate:NO];
     [lineWell bind:SKLineWellLineWidthKey toObject:self withKeyPath:LINEWIDTH_KEY options:nil];
@@ -274,7 +266,7 @@ static SKLineInspector *sharedLineInspector = nil;
     while (responder && [responder respondsToSelector:selector] == NO)
         responder = [responder nextResponder];
     
-    [responder performSelector:selector withObject:self];
+    [(id)responder changeLineAttribute:self];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SKLineInspectorLineAttributeDidChangeNotification object:self userInfo:@{ACTION_KEY:[NSNumber numberWithInteger:action]}];
     
@@ -299,7 +291,6 @@ static SKLineInspector *sharedLineInspector = nil;
 
 - (void)setDashPattern:(NSArray *)pattern {
     if ([pattern isEqualToArray:dashPattern] == NO && (pattern || dashPattern)) {
-        [dashPattern release];
         dashPattern = [pattern copy];
         [self notifyChangeAction:SKLineChangeActionDashPattern];
         [self setStyle:[dashPattern count] > 0 ? kPDFBorderStyleDashed : kPDFBorderStyleSolid];

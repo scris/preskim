@@ -120,17 +120,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     return self;
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SKDESTROY(synchronizedPDFView);
-    SKDESTROY(scalePopUpButton);
-    SKDESTROY(pagePopUpButton);
-    SKDESTROY(toolModeButton);
-    SKDESTROY(controlView);
-    SKDESTROY(trackingArea);
-    [super dealloc];
-}
-
 - (void)setDocument:(PDFDocument *)document {
     if ([self document])
         [[NSNotificationCenter defaultCenter] removeObserver:self name:PDFDocumentDidUnlockNotification object:[self document]];
@@ -373,8 +362,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     if (synchronizedPDFView != newSynchronizedPDFView) {
         if ([self synchronizeZoom])
             [self stopObservingSynchronizedPDFView];
-        [synchronizedPDFView release];
-        synchronizedPDFView = [newSynchronizedPDFView retain];
+        synchronizedPDFView = newSynchronizedPDFView;
         if ([self synchronizeZoom])
             [self startObservingSynchronizedPDFView];
     }
@@ -703,7 +691,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         
         NSPoint location = NSZeroPoint;
         PDFPage *page = [self pageAndPoint:&location forEvent:theEvent nearest:YES];
-        [synchronizedPDFView goToDestination:[[[PDFDestination alloc] initWithPage:page atPoint:location] autorelease]];
+        [synchronizedPDFView goToDestination:[[PDFDestination alloc] initWithPage:page atPoint:location]];
         
     } else if (modifiers == (NSEventModifierFlagCommand | NSEventModifierFlagShift)) {
         

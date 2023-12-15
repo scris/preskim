@@ -64,7 +64,7 @@ extern NSString *SKPageLabelsChangedNotification;
 
 @property (nonatomic, strong) IBOutlet NSMenu *noteColumnsMenu, *noteTypeMenu;
 
-@property (nonatomic, readonly) NSColorList *colorList;
+@property (weak, nonatomic, readonly) NSColorList *colorList;
 
 @property (nonatomic, copy) NSArray *favoriteColors;
 @property (nonatomic) PDFLineStyle defaultStartLineStyle, defaultEndLineStyle;

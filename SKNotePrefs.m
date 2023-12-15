@@ -86,25 +86,19 @@ static NSDictionary *propertyKeys = nil;
     if (aType && [propertyKeys objectForKey:aType] == nil)
         aType = [alternateTypeNames objectForKey:aType];
     if (aType == nil) {
-        [self release];
         self = nil;
     } else {
         self = [super init];
         if (self) {
-            type = [aType retain];
+            type = aType;
         }
     }
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(type);
-    [super dealloc];
-}
-
 - (NSScriptObjectSpecifier *)objectSpecifier {
     NSScriptClassDescription *containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
-    return [[[NSNameSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"notePreferences" name:[self type]] autorelease];
+    return [[NSNameSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"notePreferences" name:[self type]];
 }
 
 - (NSString *)name {

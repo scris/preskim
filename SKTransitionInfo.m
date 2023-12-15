@@ -91,7 +91,6 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
     if ([type isEqualToString:SKPasteboardTypeTransition]) {
         self = [self initWithProperties:propertyList];
     } else {
-        [self release];
         self = nil;
     }
     return self;
@@ -141,12 +140,6 @@ NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.tra
     else if ([key isEqualToString:@"label"])
         keyPaths = [keyPaths setByAddingObjectsFromSet:[NSSet setWithObjects:@"thumbnail.label", @"toThumbnail.label", nil]];
     return keyPaths;
-}
-
-- (void)dealloc {
-    SKDESTROY(thumbnail);
-    SKDESTROY(toThumbnail);
-    [super dealloc];
 }
 
 - (NSString *)label {

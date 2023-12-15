@@ -86,22 +86,22 @@
                 lowestOrder = order;
                 lowestIndex = [tabbedWindows count];
             }
-            [tabbedWindows addPointer:window];
+            [tabbedWindows addPointer:(__bridge void *)window];
         }
         
         if (frontWindow == nil && frontIndex != NSNotFound) {
             frontIndex = lowestIndex;
-            frontWindow = (id)[tabbedWindows pointerAtIndex:frontIndex];
+            frontWindow = (__bridge id)[tabbedWindows pointerAtIndex:frontIndex];
         }
         
         if (frontWindow) {
             NSUInteger i;
             for (i = 0; i < frontIndex; i++) {
-                if ((window = (id)[tabbedWindows pointerAtIndex:i]))
+                if ((window = (__bridge id)[tabbedWindows pointerAtIndex:i]))
                     [frontWindow addTabbedWindow:window ordered:NSWindowBelow];
             }
             for (i = [tabbedWindows count] - 1; i > frontIndex; i--) {
-                if ((window = (id)[tabbedWindows pointerAtIndex:i]))
+                if ((window = (__bridge id)[tabbedWindows pointerAtIndex:i]))
                     [frontWindow addTabbedWindow:window ordered:NSWindowAbove];
             }
             // make sure we select the frontWindow, addTabbedWindow:ordered: sometimes changes it

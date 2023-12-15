@@ -67,7 +67,7 @@
     PDFSelection *selection = nil;
     NSUInteger count = [selections count];
     if (count > 0) {
-        selection = [[[selections objectAtIndex:0] copy] autorelease];
+        selection = [[selections objectAtIndex:0] copy];
         if (count > 1)
             [selection addSelections:[selections subarrayWithRange:NSMakeRange(1, count - 1)]];
     }
@@ -161,9 +161,6 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
 	// Finally, create attributed string.
     attributedSample = [[NSMutableAttributedString alloc] initWithString:sample attributes:attributes];
     
-    // Clean.
-    [attributes release];
-	
 	// Find instances of search string and "bold" them.
     foundRange = [sample rangeOfString:searchString options:NSBackwardsSearch range:NSMakeRange(0, MIN([searchString length] + i - start, [sample length]))];
     if (foundRange.location == NSNotFound)
@@ -178,7 +175,7 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
     if (end < length)
         [attributedString appendString:ellipse];
     
-	return [attributedSample autorelease];
+	return attributedSample;
 }
 
 - (PDFDestination *)destination {
@@ -186,7 +183,7 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
     PDFPage *page = [self safeFirstPage];
     if (page) {
         NSRect bounds = [self boundsForPage:page];
-        destination = [[[PDFDestination alloc] initWithPage:page atPoint:NSMakePoint(NSMinX(bounds), NSMaxY(bounds))] autorelease];
+        destination = [[PDFDestination alloc] initWithPage:page atPoint:NSMakePoint(NSMinX(bounds), NSMaxY(bounds))];
     }
     return destination;
 }
@@ -304,7 +301,7 @@ static NSArray *characterRangesAndContainersForSpecifier(NSScriptObjectSpecifier
                 NSRange textRange = [textRanges rangeAtIndex:ri];
                 NSTextStorage *textStorage = nil;
                 if (NSEqualRanges(textRange, NSMakeRange(0, [containerText length])))
-                    textStorage = [containerText retain];
+                    textStorage = containerText;
                 else
                     textStorage = [[NSTextStorage alloc] initWithAttributedString:[containerText attributedSubstringFromRange:textRange]];
                 
@@ -437,16 +434,12 @@ static NSArray *characterRangesAndContainersForSpecifier(NSScriptObjectSpecifier
                         }
                     }
                 }
-                
-                [tmpRanges release];
-                [textStorage release];
             }
             
             if ([ranges count]) {
                 [dict setObject:ranges forKey:RANGES_KEY];
                 [rangeDicts addObject:dict];
             }
-            [ranges release];
         }
         
     } else {
@@ -477,8 +470,6 @@ static NSArray *characterRangesAndContainersForSpecifier(NSScriptObjectSpecifier
             [ranges addPointer:&range];
             NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:ranges, RANGES_KEY, containerText, TEXT_KEY, container, CONTAINER_KEY, nil];
             [rangeDicts addObject:dict];
-            [dict release];
-            [ranges release];
         }
         
     }
@@ -524,7 +515,7 @@ static NSArray *characterRangesAndContainersForSpecifier(NSScriptObjectSpecifier
                 
                 PDFDocument *document = [container pdfDocument];
                 NSUInteger aPageIndex = (aPage ? [aPage pageIndex] : NSNotFound), page, numPages = [document pageCount];
-                NSUInteger *pageLengths = NSZoneMalloc(NSDefaultMallocZone(), numPages * sizeof(NSUInteger));
+                NSUInteger *pageLengths = (NSUInteger *)malloc(numPages * sizeof(NSUInteger));
                 
                 for (page = 0; page < numPages; page++)
                     pageLengths[page] = NSNotFound;
@@ -558,7 +549,7 @@ static NSArray *characterRangesAndContainersForSpecifier(NSScriptObjectSpecifier
                     }
                 }
                 
-                NSZoneFree(NSDefaultMallocZone(), pageLengths);
+                free(pageLengths);
                 
             } else if ([container isKindOfClass:[PDFPage class]] && (aPage == nil || [aPage isEqual:container]) && (doc == nil || [doc isEqual:[container document]])) {
                 
@@ -599,12 +590,8 @@ static inline void addSpecifierWithCharacterRangeAndPage(NSMutableArray *ranges,
                        (rangeSpec = [[NSRangeSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:textSpec key:CHARACTERS_KEY startSpecifier:startSpec endSpecifier:endSpec])) {
                 // in theory we should set the containerSpecifier of startSpec and endSpec to nil, and set containerIsRangeContainerObject to YES, but then AppleScript raises an errAENoSuchObject error
                 [ranges addObject:rangeSpec];
-                [rangeSpec release];
             }
-            [startSpec release];
-            [endSpec release];
         }
-        [textSpec release];
     }
 }
 

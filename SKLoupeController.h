@@ -43,7 +43,7 @@
 @interface SKLoupeController : NSObject <CALayerDelegate> {
     NSWindow *window;
     CALayer *layer;
-    PDFView *pdfView;
+    __weak PDFView *pdfView;
     CGFloat magnification;
     NSInteger level;
 }

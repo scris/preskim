@@ -76,7 +76,6 @@ static inline NSArray *defaultKeysToObserve() {
 - (void)dealloc {
     @try { [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeys:defaultKeysToObserve() context:&SKThumbnailImageViewDefaultsObservationContext]; }
     @catch (id e) {}
-    [super dealloc];
 }
 
 - (void)viewDidChangeEffectiveAppearance {

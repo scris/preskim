@@ -81,7 +81,7 @@ static NSMutableDictionary *activeImages;
         NSString *sizeKey = NSStringFromSize(size);
         NSImage *image = [activeImages objectForKey:sizeKey];
         if (image == nil) {
-            image = [[[NSImage alloc] initWithSize:size] autorelease];
+            image = [[NSImage alloc] initWithSize:size];
             [image lockFocus];
             [[NSColor blackColor] setStroke];
             [NSBezierPath setDefaultLineWidth:1.0];
@@ -90,11 +90,10 @@ static NSMutableDictionary *activeImages;
             [image setTemplate:YES];
             [activeImages setObject:image forKey:sizeKey];
         }
-        id object = [[self objectValue] retain];
+        id object = [self objectValue];
         [self setObjectValue:image];
         [super drawWithFrame:cellFrame inView:controlView];
         [self setObjectValue:object];
-        [object release];
     }
 }
 

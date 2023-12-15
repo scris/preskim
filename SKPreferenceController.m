@@ -82,24 +82,14 @@
     self = [super initWithWindowNibName:@"PreferenceWindow"];
     if (self) {
         preferencePanes = [[NSArray alloc] initWithObjects:
-                [[[SKGeneralPreferences alloc] init] autorelease], 
-                [[[SKDisplayPreferences alloc] init] autorelease], 
-                [[[SKNotesPreferences alloc] init] autorelease], 
-                [[[SKSyncPreferences alloc] init] autorelease], nil];
+                [[SKGeneralPreferences alloc] init], 
+                [[SKDisplayPreferences alloc] init], 
+                [[SKNotesPreferences alloc] init], 
+                [[SKSyncPreferences alloc] init], nil];
         history = [[NSMutableArray alloc] init];
         historyIndex = 0;
     }
     return self;
-}
-
-- (void)dealloc {
-    currentPane = nil;
-    SKDESTROY(preferencePanes);
-    SKDESTROY(resetButton);
-    SKDESTROY(resetAllButton);
-    SKDESTROY(fieldEditor);
-    SKDESTROY(history);
-    [super dealloc];
 }
 
 - (NSViewController<SKPreferencePane> *)preferencePaneForItemIdentifier:(NSString *)itemIdent {
@@ -169,7 +159,7 @@
 - (void)windowDidLoad {
     NSWindow *window = [self window];
     NSView *contentView = [window contentView];
-    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:SKPreferencesToolbarIdentifier] autorelease];
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:SKPreferencesToolbarIdentifier];
     
     [toolbar setAllowsUserCustomization:NO];
     [toolbar setAutosavesConfiguration:NO];
@@ -247,7 +237,7 @@
 }
 
 - (IBAction)resetAll:(id)sender {
-    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:NSLocalizedString(@"Reset all preferences to their original values?", @"Message in alert dialog when pressing Reset All button")];
     [alert setInformativeText:NSLocalizedString(@"Choosing Reset will restore all settings to the state they were in when Skim was first installed.", @"Informative text in alert dialog when pressing Reset All button")];
     [alert addButtonWithTitle:NSLocalizedString(@"Reset", @"Button title")];
@@ -269,7 +259,7 @@
         return;
     }
     NSString *label = [currentPane title];
-    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Reset %@ preferences to their original values?", @"Message in alert dialog when pressing Reset All button"), label]];
     [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Choosing Reset will restore all settings in this pane to the state they were in when Skim was first installed.", @"Informative text in alert dialog when pressing Reset All button"), label]];
     [alert addButtonWithTitle:NSLocalizedString(@"Reset", @"Button title")];
@@ -343,7 +333,7 @@
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdent willBeInsertedIntoToolbar:(BOOL)willBeInserted {
     NSViewController<SKPreferencePane> *pane = [self preferencePaneForItemIdentifier:itemIdent];
-    NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
     [item setLabel:[pane title]];
     [item setImage:[NSImage imageNamed:[pane nibName]]];
     [item setTarget:self];
@@ -366,7 +356,7 @@
 #pragma mark Touch bar
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
+    NSTouchBar *touchBar = [[NSTouchBar alloc] init];
     [touchBar setDelegate:self];
     [touchBar setDefaultItemIdentifiers:@[SKTouchBarItemIdentifierPanes, NSTouchBarItemIdentifierFixedSpaceSmall, SKTouchBarItemIdentifierReset, SKTouchBarItemIdentifierResetAll]];
     return touchBar;
@@ -376,18 +366,18 @@
     NSCustomTouchBarItem *item = nil;
     if ([identifier isEqualToString:SKTouchBarItemIdentifierPanes]) {
         if (panesButton == nil) {
-            panesButton = [[NSSegmentedControl segmentedControlWithLabels:[preferencePanes valueForKey:@"title"] trackingMode:NSSegmentSwitchTrackingSelectOne target:self action:@selector(touchbarSelectPane:)] retain];
+            panesButton = [NSSegmentedControl segmentedControlWithLabels:[preferencePanes valueForKey:@"title"] trackingMode:NSSegmentSwitchTrackingSelectOne target:self action:@selector(touchbarSelectPane:)];
             [panesButton setSelectedSegment:[preferencePanes indexOfObject:currentPane]];
         }
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [(NSCustomTouchBarItem *)item setView:panesButton];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierReset]) {
         NSButton *button = [NSButton buttonWithTitle:[resetButton title] target:[resetButton target] action:[resetButton action]];
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [(NSCustomTouchBarItem *)item setView:button];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierResetAll]) {
         NSButton *button = [NSButton buttonWithTitle:[resetAllButton title] target:[resetAllButton target] action:[resetAllButton action]];
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [(NSCustomTouchBarItem *)item setView:button];
     }
     return item;

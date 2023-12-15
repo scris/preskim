@@ -43,6 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     NSURL *fileURL;
     NSSharingService *sharingService;
     void (^completionHandler)(BOOL);
+    id strongSelf;
 }
 
 @property (nonatomic, strong) NSURL *fileURL;

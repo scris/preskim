@@ -92,17 +92,6 @@ static char SKSnaphotWindowDefaultsObservationContext;
 @synthesize pdfView, delegate, thumbnail, pageLabel, string, hasWindow, forceOnTop;
 @dynamic bounds, pageIndex, currentSetup, thumbnailAttachment, thumbnail512Attachment, thumbnail256Attachment, thumbnail128Attachment, thumbnail64Attachment, thumbnail32Attachment;
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
-    delegate = nil;
-    SKDESTROY(thumbnail);
-    SKDESTROY(pageLabel);
-    SKDESTROY(pdfView);
-    SKDESTROY(windowImage);
-    SKDESTROY(string);
-    [super dealloc];
-}
-
 - (NSString *)windowNibName {
     return @"SnapshotWindow";
 }
@@ -376,8 +365,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
 
 - (void)setPageLabel:(NSString *)newPageLabel {
     if (pageLabel != newPageLabel) {
-        [pageLabel release];
-        pageLabel = [newPageLabel retain];
+        pageLabel = newPageLabel;
         [self synchronizeWindowTitleWithDocumentName];
     }
 }
@@ -494,7 +482,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
     if (NSEqualPoints(bounds.origin, NSZeroPoint) == NO)
         [transform translateXBy:-NSMinX(bounds) yBy:-NSMinY(bounds)];
     
-    image = [[[NSImage alloc] initWithSize:thumbnailSize] autorelease];
+    image = [[NSImage alloc] initWithSize:thumbnailSize];
     
     [image lockFocus];
     
@@ -527,9 +515,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
     [wrapper setPreferredFilename:filename];
 
     NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:wrapper];
-    [wrapper release];
     NSAttributedString *attrString = [NSAttributedString attributedStringWithAttachment:attachment];
-    [attachment release];
     
     return attrString;
 }
@@ -588,7 +574,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
 
 - (void)miniaturizeWindowFromRect:(NSRect)startRect toRect:(NSRect)endRect {
     if (windowImage == nil)
-        windowImage = [[(SKSnapshotWindow *)[self window] windowImage] retain];
+        windowImage = [(SKSnapshotWindow *)[self window] windowImage];
     
     SKAnimatedBorderlessWindow *miniaturizeWindow = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:startRect];
     [miniaturizeWindow setLevel:NSFloatingWindowLevel];
@@ -614,7 +600,6 @@ static char SKSnaphotWindowDefaultsObservationContext;
             animating = NO;
     }];
     
-    [miniaturizeWindow release];
 }
 
 - (void)miniaturize {
@@ -644,7 +629,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
         
         [self miniaturizeWindowFromRect:startRect toRect:endRect];
         
-        SKDESTROY(windowImage);
+        windowImage = nil;
     } else {
         [self showWindow:self];
     }

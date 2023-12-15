@@ -129,7 +129,6 @@ static char SKFontWellFontSizeObservationContext;
 			[newCell setTarget:[oldCell target]];
 			[newCell setAction:[oldCell action]];
 			[self setCell:newCell];
-			[newCell release];
 		}
         action = NSSelectorFromString([decoder decodeObjectForKey:ACTION_KEY]);
         target = [decoder decodeObjectForKey:TARGET_KEY];
@@ -149,9 +148,6 @@ static char SKFontWellFontSizeObservationContext;
         [self unbind:FONTNAME_KEY];
         [self unbind:FONTSIZE_KEY];
     );
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SKDESTROY(bindingInfo);
-    [super dealloc];
 }
 
 - (BOOL)isOpaque{ return NO; }
@@ -324,7 +320,7 @@ static char SKFontWellFontSizeObservationContext;
         if ([bindingInfo objectForKey:bindingName])
             [self unbind:bindingName];
 		
-        NSDictionary *bindingsData = [NSDictionary dictionaryWithObjectsAndKeys:observableController, NSObservedObjectKey, [[keyPath copy] autorelease], NSObservedKeyPathKey, [[options copy] autorelease], NSOptionsKey, nil];
+        NSDictionary *bindingsData = [NSDictionary dictionaryWithObjectsAndKeys:observableController, NSObservedObjectKey, [keyPath copy], NSObservedKeyPathKey, [options copy], NSOptionsKey, nil];
 		[bindingInfo setObject:bindingsData forKey:bindingName];
         
         void *context = NULL;
@@ -494,10 +490,6 @@ static char SKFontWellFontSizeObservationContext;
     return copy;
 }
 
-- (void)dealloc {
-    SKDESTROY(textColor);
-    [super dealloc];
-}
 
 - (void)drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView {
     SKDrawTextFieldBezel(frame, controlView);
@@ -527,12 +519,12 @@ static char SKFontWellFontSizeObservationContext;
 
 - (NSAttributedString *)attributedTitle {
     if ([self hasTextColor]) {
-        NSMutableAttributedString *attrString = [[[super attributedTitle] mutableCopy] autorelease];
+        NSMutableAttributedString *attrString = [[super attributedTitle] mutableCopy];
         [attrString addAttribute:NSForegroundColorAttributeName value:[self textColor] range:NSMakeRange(0, [attrString length])];
         CGFloat textLuminance = [[self textColor] luminance];
         CGFloat backgroundLuminance = [([self state] == NSOnState ? [NSColor selectedControlColor] : [self backgroundColor]) luminance];
         if ((fmax(textLuminance, backgroundLuminance) + 0.05) / (fmin(textLuminance, backgroundLuminance) + 0.05) < 4.5) {
-            NSShadow *shade = [[[NSShadow alloc] init] autorelease];
+            NSShadow *shade = [[NSShadow alloc] init];
             [shade setShadowColor:backgroundLuminance < 0.5 ? [NSColor whiteColor] : [NSColor blackColor]];
             [shade setShadowBlurRadius:1.0];
             [attrString addAttribute:NSShadowAttributeName value:shade range:NSMakeRange(0, [attrString length])];

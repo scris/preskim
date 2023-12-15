@@ -42,12 +42,6 @@
 
 @synthesize statusField, progressIndicator;
 
-- (void)dealloc {
-    statusField = nil;
-    progressIndicator = nil;
-    [super dealloc];
-}
-
 - (void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle {
     [super setBackgroundStyle:backgroundStyle];
     [[[self statusField] cell] setBackgroundStyle:backgroundStyle];

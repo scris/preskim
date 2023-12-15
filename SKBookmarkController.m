@@ -123,7 +123,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     if (maxRecentDocumentsCount == 0)
         maxRecentDocumentsCount = 50;
     
-    SKBookmarksIdentifier = [[[[NSBundle mainBundle] bundleIdentifier] stringByAppendingString:@".bookmarks"] retain];
+    SKBookmarksIdentifier = [[[NSBundle mainBundle] bundleIdentifier] stringByAppendingString:@".bookmarks"];
     
     static NSImage *separatorImage = nil;
     separatorImage = [[NSImage alloc] initWithSize:NSMakeSize(2.0, 2.0)];
@@ -137,12 +137,12 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 + (SKBookmarkController *)sharedBookmarkController {
     if (sharedBookmarkController == nil)
-        [[[self alloc] init] release];
+        (void)[[self alloc] init];
     return sharedBookmarkController;
 }
 
 + (instancetype)allocWithZone:(NSZone *)zone {
-    return [sharedBookmarkController retain] ?: [super allocWithZone:zone];
+    return sharedBookmarkController ?: [super allocWithZone:zone];
 }
 
 - (instancetype)init {
@@ -151,13 +151,12 @@ static NSUInteger maxRecentDocumentsCount = 0;
         if (self) {
             NSDictionary *bookmarkDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName:SKBookmarksIdentifier];
             
-            bookmarksCache = [[bookmarkDictionary objectForKey:BOOKMARKS_KEY] retain];
+            bookmarksCache = [bookmarkDictionary objectForKey:BOOKMARKS_KEY];
             
             recentDocuments = [[NSMutableArray alloc] init];
             for (NSDictionary *dict in [bookmarkDictionary objectForKey:RECENTDOCUMENTS_KEY]) {
                 SKRecentDocumentInfo *info = [[SKRecentDocumentInfo alloc] initWithProperties:dict];
                 [recentDocuments addObject:info];
-                [info release];
             }
             
             bookmarkRoot = [[SKBookmark alloc] initRootWithChildrenProperties:bookmarksCache];
@@ -172,33 +171,16 @@ static NSUInteger maxRecentDocumentsCount = 0;
             if ([lastOpenFiles count] > 0)
                 previousSession = [[SKBookmark alloc] initSessionWithSetups:lastOpenFiles label:NSLocalizedString(@"Restore Previous Session", @"Menu item title")];
         }
-        sharedBookmarkController = [self retain];
+        sharedBookmarkController = self;
     } else if (self != sharedBookmarkController) {
         NSLog(@"Attempt to allocate second instance of %@", [self class]);
-        [self release];
-        self = [sharedBookmarkController retain];
+        self = sharedBookmarkController;
     }
     return self;
 }
 
 - (void)dealloc {
     [self stopObservingBookmarks:@[bookmarkRoot]];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SKDESTROY(bookmarkRoot);
-    SKDESTROY(previousSession);
-    SKDESTROY(recentDocuments);
-    SKDESTROY(draggedBookmarks);
-    SKDESTROY(toolbarItems);
-    SKDESTROY(outlineView);
-    SKDESTROY(statusBar);
-    SKDESTROY(newFolderButton);
-    SKDESTROY(newSeparatorButton);
-    SKDESTROY(deleteButton);
-    SKDESTROY(folderSegmentedControl);
-    SKDESTROY(separatorSegmentedControl);
-    SKDESTROY(deleteSegmentedControl);
-    SKDESTROY(bookmarksCache);
-    [super dealloc];
 }
 
 - (void)windowDidLoad {
@@ -245,7 +227,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (void)saveBookmarksData {
     if (bookmarksCache == nil)
-        bookmarksCache = [[[bookmarkRoot children] valueForKey:@"properties"] retain];
+        bookmarksCache = [[bookmarkRoot children] valueForKey:@"properties"];
     NSDictionary *bookmarksDictionary = @{BOOKMARKS_KEY:bookmarksCache, RECENTDOCUMENTS_KEY:[recentDocuments valueForKey:@"properties"]};
     [[NSUserDefaults standardUserDefaults] setPersistentDomain:bookmarksDictionary forName:SKBookmarksIdentifier];
 }
@@ -271,7 +253,6 @@ static NSUInteger maxRecentDocumentsCount = 0;
         if (oldInfo)
             [recentDocuments removeObjectIdenticalTo:oldInfo];
         [recentDocuments insertObject:info atIndex:0];
-        [info release];
         if ([recentDocuments count] > maxRecentDocumentsCount)
             [recentDocuments removeLastObject];
     }
@@ -299,15 +280,15 @@ static NSUInteger maxRecentDocumentsCount = 0;
         for (NSString *component in components) {
             if ([component length] == 0)
                 continue;
-            component = [component stringByRemovingPercentEncoding];
+            NSString *cleanComponent = [component stringByRemovingPercentEncoding];
             NSArray *children = [bookmark children];
             bookmark = nil;
             for (SKBookmark *child in children) {
-                if ([[child label] isEqualToString:component]) {
+                if ([[child label] isEqualToString:cleanComponent]) {
                     bookmark = child;
                     break;
                 }
-                if (bookmark == nil && [[child label] caseInsensitiveCompare:component] == NSOrderedSame)
+                if (bookmark == nil && [[child label] caseInsensitiveCompare:cleanComponent] == NSOrderedSame)
                     bookmark = child;
             }
             if (bookmark == nil)
@@ -363,10 +344,9 @@ static NSUInteger maxRecentDocumentsCount = 0;
         [outlineView removeItemsAtIndexes:[NSIndexSet indexSetWithIndex:fromIndex] inParent:OV_ITEM(fromParent) withAnimation:NSTableViewAnimationEffectNone];
         [outlineView insertItemsAtIndexes:[NSIndexSet indexSetWithIndex:toIndex] inParent:OV_ITEM(toParent) withAnimation:NSTableViewAnimationEffectNone];
     }
-    SKBookmark *bookmark = [[fromParent objectInChildrenAtIndex:fromIndex] retain];
+    SKBookmark *bookmark = [fromParent objectInChildrenAtIndex:fromIndex];
     [fromParent removeObjectFromChildrenAtIndex:fromIndex];
     [toParent insertObject:bookmark inChildrenAtIndex:toIndex];
-    [bookmark release];
 }
 
 - (void)replaceBookmarksAtIndexes:(NSIndexSet *)indexes ofBookmark:(SKBookmark *)bookmark withBookmarks:(NSArray *)newBookmarks animate:(BOOL)animate {
@@ -417,7 +397,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
     }
 }
 
-- (void)getInsertionFolder:(SKBookmark **)bookmarkPtr childIndex:(NSUInteger *)indexPtr {
+- (SKBookmark *)insertionFolderAndChildIndex:(NSUInteger *)indexPtr {
     NSInteger rowIndex = [outlineView clickedRow];
     NSIndexSet *indexes = [outlineView selectedRowIndexes];
     if (rowIndex != -1 && [indexes containsIndex:rowIndex] == NO)
@@ -438,8 +418,9 @@ static NSUInteger maxRecentDocumentsCount = 0;
         }
     }
     
-    *bookmarkPtr = item;
     *indexPtr = idx;
+    
+    return item;
 }
 
 - (IBAction)openBookmark:(id)sender {
@@ -462,10 +443,9 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (IBAction)insertBookmarkFolder:(id)sender {
     SKBookmark *folder = [SKBookmark bookmarkFolderWithLabel:NSLocalizedString(@"Folder", @"default folder name")];
-    SKBookmark *item = nil;
     NSUInteger idx = 0;
+    SKBookmark *item = [self insertionFolderAndChildIndex:&idx];
     
-    [self getInsertionFolder:&item childIndex:&idx];
     [self insertBookmark:folder atIndex:idx ofBookmark:item animate:YES];
     
     CGFloat delay = [NSView shouldShowFadeAnimation] ? 0.25 : 0.0;
@@ -478,10 +458,9 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (IBAction)insertBookmarkSeparator:(id)sender {
     SKBookmark *separator = [SKBookmark bookmarkSeparator];
-    SKBookmark *item = nil;
     NSUInteger idx = 0;
+    SKBookmark *item = [self insertionFolderAndChildIndex:&idx];
     
-    [self getInsertionFolder:&item childIndex:&idx];
     [self insertBookmark:separator atIndex:idx ofBookmark:item animate:YES];
     
     NSInteger row = [outlineView rowForItem:separator];
@@ -500,9 +479,8 @@ static NSUInteger maxRecentDocumentsCount = 0;
             if (result == NSModalResponseOK) {
                 NSArray *newBookmarks = [SKBookmark bookmarksForURLs:[openPanel URLs]];
                 if ([newBookmarks count] > 0) {
-                    SKBookmark *item = nil;
                     NSUInteger anIndex = 0;
-                    [self getInsertionFolder:&item childIndex:&anIndex];
+                    SKBookmark *item = [self insertionFolderAndChildIndex:&anIndex];
                     NSMutableIndexSet *indexes = [NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(anIndex, [newBookmarks count])];
                     [outlineView beginUpdates];
                     [self insertBookmarks:newBookmarks atIndexes:indexes ofBookmark:item animate:YES];
@@ -777,7 +755,7 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
         id newValue = [change objectForKey:NSKeyValueChangeNewKey];
         id oldValue = [change objectForKey:NSKeyValueChangeOldKey];
         BOOL changed = NO;
-        NSIndexSet *indexes = [[[change objectForKey:NSKeyValueChangeIndexesKey] copy] autorelease];
+        NSIndexSet *indexes = [[change objectForKey:NSKeyValueChangeIndexesKey] copy];
         
         if ([newValue isEqual:[NSNull null]]) newValue = nil;
         if ([oldValue isEqual:[NSNull null]]) oldValue = nil;
@@ -793,7 +771,7 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
                     [new removeObjectsInArray:oldValue];
                     [self stopObservingBookmarks:old];
                     [self startObservingBookmarks:new];
-                    [[[self undoManager] prepareWithInvocationTarget:self] replaceBookmarksAtIndexes:nil ofBookmark:bookmark withBookmarks:[[oldValue copy] autorelease] animate:YES];
+                    [[[self undoManager] prepareWithInvocationTarget:self] replaceBookmarksAtIndexes:nil ofBookmark:bookmark withBookmarks:[oldValue copy] animate:YES];
                 } else if ([keyPath isEqualToString:LABEL_KEY]) {
                     [[[self undoManager] prepareWithInvocationTarget:bookmark] setLabel:oldValue];
                     [outlineView reloadTypeSelectStrings];
@@ -812,7 +790,7 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
                 if ([oldValue count] == 0) break;
                 if ([keyPath isEqualToString:CHILDREN_KEY]) {
                     [self stopObservingBookmarks:oldValue];
-                    [[[self undoManager] prepareWithInvocationTarget:self] insertBookmarks:[[oldValue copy] autorelease] atIndexes:indexes ofBookmark:bookmark animate:YES];
+                    [[[self undoManager] prepareWithInvocationTarget:self] insertBookmarks:[oldValue copy] atIndexes:indexes ofBookmark:bookmark animate:YES];
                 }
                 break;
             case NSKeyValueChangeReplacement:
@@ -820,11 +798,11 @@ static inline BOOL containsFolders(SKBookmark *bookmark) {
                 if ([keyPath isEqualToString:CHILDREN_KEY]) {
                     [self stopObservingBookmarks:oldValue];
                     [self startObservingBookmarks:newValue];
-                    [[[self undoManager] prepareWithInvocationTarget:self] replaceBookmarksAtIndexes:indexes ofBookmark:bookmark withBookmarks:[[oldValue copy] autorelease] animate:YES];
+                    [[[self undoManager] prepareWithInvocationTarget:self] replaceBookmarksAtIndexes:indexes ofBookmark:bookmark withBookmarks:[oldValue copy] animate:YES];
                 }
                 break;
         }
-        SKDESTROY(bookmarksCache);
+        bookmarksCache = nil;
         [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(saveBookmarksData) object:nil];
         [self performSelector:@selector(saveBookmarksData) withObject:nil afterDelay:SAVE_DELAY];
     } else {
@@ -877,20 +855,19 @@ static NSArray *minimumCoverForBookmarks(NSArray *items) {
 }
 
 - (id<NSPasteboardWriting>)outlineView:(NSOutlineView *)ov pasteboardWriterForItem:(id)item {
-    NSPasteboardItem *pbItem = [[[NSPasteboardItem alloc] init] autorelease];
+    NSPasteboardItem *pbItem = [[NSPasteboardItem alloc] init];
     [pbItem setData:[NSData data] forType:SKPasteboardTypeBookmarkRow];
     return pbItem;
 }
 
 - (void)outlineView:(NSOutlineView *)ov draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forItems:(NSArray *)draggedItems {
-    SKDESTROY(draggedBookmarks);
-    draggedBookmarks = [minimumCoverForBookmarks(draggedItems) retain];
+    draggedBookmarks = minimumCoverForBookmarks(draggedItems);
 }
 
 - (void)outlineView:(NSOutlineView *)ov draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation {
     if (operation == NSDragOperationDelete && [draggedBookmarks count])
         [self outlineView:ov deleteItems:draggedBookmarks];
-    SKDESTROY(draggedBookmarks);
+    draggedBookmarks = nil;
 }
 
 - (void)outlineView:(NSOutlineView *)ov updateDraggingItemsForDrag:(id<NSDraggingInfo>)draggingInfo {
@@ -1095,9 +1072,8 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     if ([urls count] > 0) {
         NSArray *newBookmarks = [SKBookmark bookmarksForURLs:urls];
         if ([newBookmarks count] > 0) {
-            SKBookmark *item = nil;
             NSUInteger anIndex = 0;
-            [self getInsertionFolder:&item childIndex:&anIndex];
+            SKBookmark *item = [self insertionFolderAndChildIndex:&anIndex];
             NSMutableIndexSet *indexes = [NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(anIndex, [newBookmarks count])];
             [ov beginUpdates];
             [self insertBookmarks:newBookmarks atIndexes:indexes ofBookmark:item animate:YES];
@@ -1140,7 +1116,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
 
 - (void)setupToolbar {
     // Create a new toolbar instance, and attach it to our document window
-    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:SKBookmarksToolbarIdentifier] autorelease];
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:SKBookmarksToolbarIdentifier];
     SKToolbarItem *item;
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:3];
     
@@ -1161,7 +1137,6 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     if (@available(macOS 11.0, *)) {} else
         [folderSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksNewFolderToolbarItemIdentifier];
-    [item release];
     
     item = [[SKToolbarItem alloc] initWithItemIdentifier:SKBookmarksNewSeparatorToolbarItemIdentifier];
     [item setLabels:NSLocalizedString(@"New Separator", @"Toolbar item label")];
@@ -1171,7 +1146,6 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     if (@available(macOS 11.0, *)) {} else
         [separatorSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksNewSeparatorToolbarItemIdentifier];
-    [item release];
     
     item = [[SKToolbarItem alloc] initWithItemIdentifier:SKBookmarksDeleteToolbarItemIdentifier];
     [item setLabels:NSLocalizedString(@"Delete", @"Toolbar item label")];
@@ -1182,7 +1156,6 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     if (@available(macOS 11.0, *)) {} else
         [deleteSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksDeleteToolbarItemIdentifier];
-    [item release];
     
     toolbarItems = [dict mutableCopy];
     
@@ -1229,7 +1202,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
 #pragma mark Touch bar
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
+    NSTouchBar *touchBar = [[NSTouchBar alloc] init];
     [touchBar setCustomizationIdentifier:SKBookmarksTouchBarIdentifier];
     [touchBar setDelegate:self];
     [touchBar setCustomizationAllowedItemIdentifiers:@[SKTouchBarItemIdentifierNewFolder, SKTouchBarItemIdentifierNewSeparator, SKTouchBarItemIdentifierDelete, SKTouchBarItemIdentifierPreview, NSTouchBarItemIdentifierFlexibleSpace]];
@@ -1241,32 +1214,32 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     NSCustomTouchBarItem *item = nil;
     if ([identifier isEqualToString:SKTouchBarItemIdentifierNewFolder]) {
         if (newFolderButton == nil) {
-            newFolderButton = [[NSButton buttonWithImage:[NSImage imageNamed:NSImageNameTouchBarNewFolderTemplate] target:self action:@selector(insertBookmarkFolder:)] retain];
+            newFolderButton = [NSButton buttonWithImage:[NSImage imageNamed:NSImageNameTouchBarNewFolderTemplate] target:self action:@selector(insertBookmarkFolder:)];
         }
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [item setView:newFolderButton];
         [item setCustomizationLabel:NSLocalizedString(@"New Folder", @"Toolbar item label")];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierNewSeparator]) {
         if (newSeparatorButton == nil) {
-            newSeparatorButton = [[NSButton buttonWithImage:[NSImage imageNamed:SKImageNameTouchBarNewSeparator] target:self action:@selector(insertBookmarkSeparator:)] retain];
+            newSeparatorButton = [NSButton buttonWithImage:[NSImage imageNamed:SKImageNameTouchBarNewSeparator] target:self action:@selector(insertBookmarkSeparator:)];
         }
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [item setView:newSeparatorButton];
         [item setCustomizationLabel:NSLocalizedString(@"New Separator", @"Toolbar item label")];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierDelete]) {
         if (deleteButton == nil) {
-            deleteButton = [[NSButton buttonWithImage:[NSImage imageNamed:NSImageNameTouchBarDeleteTemplate] target:self action:@selector(deleteBookmark:)] retain];
+            deleteButton = [NSButton buttonWithImage:[NSImage imageNamed:NSImageNameTouchBarDeleteTemplate] target:self action:@selector(deleteBookmark:)];
             [deleteButton setEnabled:[outlineView canDelete]];
         }
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [item setView:deleteButton];
         [item setCustomizationLabel:NSLocalizedString(@"Delete", @"Toolbar item label")];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierPreview]) {
         if (previewButton == nil) {
-            previewButton = [[NSButton buttonWithImage:[NSImage imageNamed:NSImageNameTouchBarQuickLookTemplate] target:self action:@selector(previewBookmarks:)] retain];
+            previewButton = [NSButton buttonWithImage:[NSImage imageNamed:NSImageNameTouchBarQuickLookTemplate] target:self action:@selector(previewBookmarks:)];
             [previewButton setEnabled:[outlineView selectedRow] != -1];
         }
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [item setView:previewButton];
         [item setCustomizationLabel:NSLocalizedString(@"Quick Look", @"Toolbar item label")];
     }
@@ -1348,7 +1321,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
         if ([allBookmarks containsObject:[NSNull null]]) {
             NSMutableArray *bms = [allBookmarks mutableCopy];
             [bms removeObject:[NSNull null]];
-            allBookmarks = [bms autorelease];
+            allBookmarks = bms;
         }
         if ([allBookmarks count] > 0) {
             [pboard clearContents];

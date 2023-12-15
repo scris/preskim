@@ -111,21 +111,10 @@ static char *SKTransitionPropertiesObservationContext;
         [tableView setDelegate:nil];
         [tableView setDataSource:nil];
     );
-    SKDESTROY(transition);
-    SKDESTROY(transitions);
-    SKDESTROY(changedTransitions);
-    SKDESTROY(undoManager);
-    SKDESTROY(notesDocumentPopUpButton);
-    SKDESTROY(tableView);
-    SKDESTROY(stylePopUpButton);
-    SKDESTROY(okButton);
-    SKDESTROY(cancelButton);
-    SKDESTROY(arrayController);
-    [super dealloc];
 }
 
 - (void)handleDocumentsDidChangeNotification:(NSNotification *)note {
-    id currentDoc = [[[notesDocumentPopUpButton selectedItem] representedObject] retain];
+    id currentDoc = [[notesDocumentPopUpButton selectedItem] representedObject];
     
     while ([notesDocumentPopUpButton numberOfItems] > 3)
         [notesDocumentPopUpButton removeItemAtIndex:[notesDocumentPopUpButton numberOfItems] - 1];
@@ -138,7 +127,7 @@ static char *SKTransitionPropertiesObservationContext;
         if ([doc isPDFDocument] && doc != document && [[doc pdfDocument] pageCount] == pageCount)
             [documents addObject:doc];
     }
-    NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES] autorelease];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
     [documents sortUsingDescriptors:@[sortDescriptor]];
     
     for (doc in documents) {
@@ -148,7 +137,6 @@ static char *SKTransitionPropertiesObservationContext;
     
     NSInteger docIndex = [notesDocumentPopUpButton indexOfItemWithRepresentedObject:currentDoc];
     [notesDocumentPopUpButton selectItemAtIndex:docIndex == -1 ? 0 : docIndex];
-    [currentDoc release];
 }
 
 - (void)windowDidLoad {
@@ -232,7 +220,6 @@ static char *SKTransitionPropertiesObservationContext;
             [array addObject:info];
             [cell setStringValue:[info label] ?: @""];
             labelWidth = fmax(labelWidth, [cell cellSize].width);
-            [info release];
         }
         tn = next;
     }
@@ -241,8 +228,6 @@ static char *SKTransitionPropertiesObservationContext;
     [tableColumn setMinWidth:labelWidth];
     [tableColumn setMaxWidth:labelWidth];
     [tableColumn setWidth:labelWidth];
-    
-    [cell release];
     
     if (@available(macOS 11.0, *))
         [tableView setStyle:NSTableViewStylePlain];
@@ -329,7 +314,6 @@ static char *SKTransitionPropertiesObservationContext;
     if (transitions != newTransitions) {
         [[[self undoManager] prepareWithInvocationTarget:self] setTransitions:transitions];
         [self stopObservingTransitions:transitions];
-        [transitions release];
         transitions = [newTransitions copy];
         [self startObservingTransitions:transitions];
     }
@@ -363,7 +347,7 @@ static char *SKTransitionPropertiesObservationContext;
 #pragma mark Undo
 
 - (void)observeUndoManagerCheckpoint:(NSNotification *)notification {
-    SKDESTROY(changedTransitions);
+    changedTransitions = nil;
 }
 
 - (NSUndoManager *)undoManager {
@@ -527,7 +511,7 @@ static char *SKTransitionPropertiesObservationContext;
 
 - (void)tableView:(NSTableView *)tv deleteRowsWithIndexes:(NSIndexSet *)rowIndexes {
     NSArray *selTransitions = [transitions objectsAtIndexes:rowIndexes];
-    NSDictionary *empty = [[[[SKTransitionInfo alloc] init] autorelease] properties];
+    NSDictionary *empty = [[[SKTransitionInfo alloc] init] properties];
     [selTransitions setValue:empty forKey:PROPERTIES_KEY];
 }
 
@@ -538,7 +522,7 @@ static char *SKTransitionPropertiesObservationContext;
 #pragma mark Touch Bar
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
+    NSTouchBar *touchBar = [[NSTouchBar alloc] init];
     [touchBar setDelegate:self];
     [touchBar setDefaultItemIdentifiers:@[NSTouchBarItemIdentifierFlexibleSpace, SKTouchBarItemIdentifierCancel, SKTouchBarItemIdentifierOK, NSTouchBarItemIdentifierFixedSpaceLarge]];
     return touchBar;
@@ -550,12 +534,12 @@ static char *SKTransitionPropertiesObservationContext;
         NSButton *button = [NSButton buttonWithTitle:[okButton title] target:[okButton target] action:[okButton action]];
         [button setTag:NSModalResponseOK];
         [button setKeyEquivalent:@"\r"];
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [(NSCustomTouchBarItem *)item setView:button];
     } else if ([identifier isEqualToString:SKTouchBarItemIdentifierCancel]) {
         NSButton *button = [NSButton buttonWithTitle:[cancelButton title] target:[cancelButton target] action:[cancelButton action]];
         [button setTag:NSModalResponseCancel];
-        item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         [(NSCustomTouchBarItem *)item setView:button];
     }
     return item;

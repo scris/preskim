@@ -71,10 +71,10 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
 @property (nonatomic, readonly, copy) NSString *pageLabel;
 @property (nonatomic, copy) NSString *string;
 @property (nonatomic, readonly) BOOL hasWindow;
-@property (nonatomic, readonly) NSDictionary *currentSetup;
+@property (weak, nonatomic, readonly) NSDictionary *currentSetup;
 @property (nonatomic) BOOL forceOnTop;
 
-@property (nonatomic, readonly) NSAttributedString *thumbnailAttachment, *thumbnail512Attachment, *thumbnail256Attachment, *thumbnail128Attachment, *thumbnail64Attachment, *thumbnail32Attachment;
+@property (weak, nonatomic, readonly) NSAttributedString *thumbnailAttachment, *thumbnail512Attachment, *thumbnail256Attachment, *thumbnail128Attachment, *thumbnail64Attachment, *thumbnail32Attachment;
 
 - (void)setPdfDocument:(PDFDocument *)pdfDocument goToPageNumber:(NSInteger)pageNum rect:(NSRect)rect scaleFactor:(CGFloat)factor autoFits:(BOOL)autoFits;
 - (void)setPdfDocument:(PDFDocument *)pdfDocument setup:(NSDictionary *)setup;

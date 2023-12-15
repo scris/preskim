@@ -113,7 +113,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     if (self) {
         lineWidth = [decoder decodeDoubleForKey:SKLineWellLineWidthKey];
         style = [decoder decodeIntegerForKey:SKLineWellStyleKey];
-        dashPattern = [[decoder decodeObjectForKey:SKLineWellDashPatternKey] retain];
+        dashPattern = [decoder decodeObjectForKey:SKLineWellDashPatternKey];
         startLineStyle = [decoder decodeIntegerForKey:SKLineWellStartLineStyleKey];
         endLineStyle = [decoder decodeIntegerForKey:SKLineWellEndLineStyleKey];
         lwFlags.displayStyle = [decoder decodeIntegerForKey:DISPLAYSTYLE_KEY];
@@ -146,9 +146,6 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
         [self unbind:SKLineWellStartLineStyleKey];
         [self unbind:SKLineWellEndLineStyleKey];
     );
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SKDESTROY(dashPattern);
-    [super dealloc];
 }
 
 - (BOOL)isOpaque{ return NO; }
@@ -310,7 +307,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
     });
     [NSGraphicsContext restoreGraphicsState];
     
-    NSImage *image = [[[NSImage alloc] initWithSize:bounds.size] autorelease];
+    NSImage *image = [[NSImage alloc] initWithSize:bounds.size];
     [image addRepresentation:imageRep];
     
     return image;
@@ -345,10 +342,10 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
                 [dict setObject:[NSNumber numberWithInteger:endLineStyle] forKey:SKLineWellEndLineStyleKey];
             }
             
-            NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
+            NSPasteboardItem *item = [[NSPasteboardItem alloc] init];
             [item setPropertyList:dict forType:SKPasteboardTypeLineStyle];
             
-            NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:item] autorelease];
+            NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
             [dragItem setDraggingFrame:[self bounds] contents:[self dragImage]];
             [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
         } else if ([self isActive]) {
@@ -500,7 +497,6 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
 - (void)setDashPattern:(NSArray *)pattern {
     if (NSIsControllerMarker(pattern)) pattern = nil;
     if ([pattern isEqualToArray:dashPattern] == NO && (pattern || dashPattern)) {
-        [dashPattern release];
         dashPattern = [pattern copy];
         [self changedValueForKey:SKLineWellDashPatternKey];
     }

@@ -59,7 +59,7 @@
 }
 
 - (NSString *)fdfString {
-    NSMutableString *fdfString = [[[super fdfString] mutableCopy] autorelease];
+    NSMutableString *fdfString = [[super fdfString] mutableCopy];
     CGFloat r, g, b, a = 0.0;
     [[[self interiorColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
     if (a > 0.0) {
@@ -114,7 +114,6 @@
         NSMutableSet *mutableKeys = [[super keysForValuesToObserveForUndo] mutableCopy];
         [mutableKeys addObject:SKNPDFAnnotationInteriorColorKey];
         squareKeys = [mutableKeys copy];
-        [mutableKeys release];
     }
     return squareKeys;
 }
@@ -127,7 +126,6 @@
         NSMutableSet *customKeys = [[super customScriptingKeys] mutableCopy];
         [customKeys addObject:SKPDFAnnotationScriptingInteriorColorKey];
         customSquareScriptingKeys = [customKeys copy];
-        [customKeys release];
     }
     return customSquareScriptingKeys;
 }

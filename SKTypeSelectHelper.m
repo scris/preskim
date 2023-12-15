@@ -80,11 +80,11 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
 }
 
 + (instancetype)typeSelectHelper {
-    return [[[self alloc] init] autorelease];
+    return [[self alloc] init];
 }
 
 + (instancetype)typeSelectHelperWithMatchOption:(SKTypeSelectMatchOption)aMatchOption {
-    return [[[self alloc] initWithMatchOption:aMatchOption] autorelease];
+    return [[self alloc] initWithMatchOption:aMatchOption];
 }
 
 - (instancetype)initWithMatchOption:(SKTypeSelectMatchOption)aMatchOption {
@@ -106,12 +106,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self stopTimer];
-    delegate = nil;
-    SKDESTROY(searchString);
-    SKDESTROY(searchCache);
-    [super dealloc];
 }
 
 #pragma mark Accessors
@@ -128,7 +123,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
     @synchronized(self) {
         if (delegate != newDelegate) {
             delegate = newDelegate;
-            SKDESTROY(searchCache);
+            searchCache = nil;
         }
     }
 }
@@ -140,7 +135,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
 #pragma mark API
 
 - (void)rebuildTypeSelectSearchCache {    
-    SKDESTROY(searchCache);
+    searchCache = nil;
 }
 
 - (BOOL)handleEvent:(NSEvent *)keyEvent {
@@ -207,8 +202,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
     
     // Append the new character to the search string
     [editor interpretKeyEvents:@[keyEvent]];
-    [searchString release];
-    searchString = [[editor string] retain];
+    searchString = [editor string];
     
     [self updateSearchString:searchString];
     
@@ -263,15 +257,14 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
     NSArray *cache = nil;
     @synchronized(self) {
         if (searchCache == nil)
-            searchCache = [[delegate typeSelectHelperSelectionStrings] retain];
-        cache = [[searchCache retain] autorelease];
+            searchCache = [delegate typeSelectHelperSelectionStrings];
+        cache = searchCache;
     }
     return cache;
 }
 
 - (void)stopTimer {
     [timer invalidate];
-    [timer release];
     timer = nil;
 }
 

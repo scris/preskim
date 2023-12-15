@@ -74,14 +74,6 @@
     return self;
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SKDESTROY(contentView);
-    SKDESTROY(blurView);
-    SKDESTROY(backgroundView);
-	[super dealloc];
-}
-
 - (void)resizeSubviewsWithOldSize:(NSSize)size {
     [super resizeSubviewsWithOldSize:size];
     NSRect rect = [self bounds];
@@ -171,12 +163,6 @@
 @implementation SKBackgroundView
 
 @synthesize backgroundColor, separatorColor;
-
-- (void)dealloc {
-    SKDESTROY(backgroundColor);
-    SKDESTROY(separatorColor);
-    [super dealloc];
-}
 
 - (void)drawRect:(NSRect)aRect {
     NSRect rect = [self bounds];

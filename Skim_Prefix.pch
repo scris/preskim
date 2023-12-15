@@ -10,7 +10,7 @@
     #import <tgmath.h>
 
     #define __SKFILENAMEASNSSTRING \
-      [[(id)CFStringCreateWithFileSystemRepresentation(NULL, __FILE__) autorelease] lastPathComponent]
+      [(NSString *)CFBridgingRelease(CFStringCreateWithFileSystemRepresentation(NULL, __FILE__)) lastPathComponent]
 
     #if defined (DEBUG)
 
@@ -46,8 +46,6 @@
             } \
         } while (0)
 
-    #define SKDESTROY(variable) do { [variable release]; variable = nil; } while (0)
-    
     #define DISPATCH_MAIN_AFTER_SEC(time, block) dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_main_queue(), block)
 
 

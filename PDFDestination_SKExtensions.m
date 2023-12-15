@@ -152,7 +152,7 @@
                 point.x = rotation < 180 ? NSMinX(bounds) : NSMaxX(bounds);
             if (point.y >= kPDFDestinationUnspecifiedValue)
                 point.y = (rotation + 90) % 360 < 180 ? NSMaxY(bounds) : NSMinY(bounds);
-            PDFDestination *destination = [[[PDFDestination alloc] initWithPage:page atPoint:point] autorelease];
+            PDFDestination *destination = [[PDFDestination alloc] initWithPage:page atPoint:point];
             if (zoomX < kPDFDestinationUnspecifiedValue)
                 [destination setZoom:fmin(zoomX, zoomY)];
             return destination;

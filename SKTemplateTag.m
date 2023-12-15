@@ -58,11 +58,10 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
         SKAttributeTemplate *linkTemplate = copyTemplateForLink(aLink, range);
         if (linkTemplate) {
             [templates addObject:linkTemplate];
-            [linkTemplate release];
         }
     }];
     if ([templates count] == 0)
-        SKDESTROY(templates);
+        templates = nil;
     return templates;
 }
 
@@ -88,11 +87,6 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(keyPath);
-    [super dealloc];
-}
-
 - (SKTemplateTagType)type { return SKTemplateTagValue; }
 
 @end
@@ -109,12 +103,6 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
         attributes = [anAttributes copy];
     }
     return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(attributes);
-    SKDESTROY(linkTemplate);
-    [super dealloc];
 }
 
 - (SKAttributeTemplate *)linkTemplate {
@@ -134,33 +122,25 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 - (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateString:(NSString *)anItemTemplateString separatorTemplateString:(NSString *)aSeparatorTemplateString {
     self = [super initWithKeyPath:aKeyPath];
     if (self) {
-        itemTemplateString = [anItemTemplateString retain];
-        separatorTemplateString = [aSeparatorTemplateString retain];
+        itemTemplateString = anItemTemplateString;
+        separatorTemplateString = aSeparatorTemplateString;
         itemTemplate = nil;
         separatorTemplate = nil;
     }
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(itemTemplateString);
-    SKDESTROY(separatorTemplateString);
-    SKDESTROY(itemTemplate);
-    SKDESTROY(separatorTemplate);
-    [super dealloc];
-}
-
 - (SKTemplateTagType)type { return SKTemplateTagCollection; }
 
 - (NSArray *)itemTemplate {
     if (itemTemplate == nil && itemTemplateString)
-        itemTemplate = [[SKTemplateParser arrayByParsingTemplateString:itemTemplateString isSubtemplate:YES] retain];
+        itemTemplate = [SKTemplateParser arrayByParsingTemplateString:itemTemplateString isSubtemplate:YES];
     return itemTemplate;
 }
 
 - (NSArray *)separatorTemplate {
     if (separatorTemplate == nil && separatorTemplateString)
-        separatorTemplate = [[SKTemplateParser arrayByParsingTemplateString:separatorTemplateString isSubtemplate:YES] retain];
+        separatorTemplate = [SKTemplateParser arrayByParsingTemplateString:separatorTemplateString isSubtemplate:YES];
     return separatorTemplate;
 }
 
@@ -175,33 +155,25 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 - (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateAttributedString:(NSAttributedString *)anItemTemplateAttributedString separatorTemplateAttributedString:(NSAttributedString *)aSeparatorTemplateAttributedString {
     self = [super initWithKeyPath:aKeyPath];
     if (self) {
-        itemTemplateAttributedString = [anItemTemplateAttributedString retain];
-        separatorTemplateAttributedString = [aSeparatorTemplateAttributedString retain];
+        itemTemplateAttributedString = anItemTemplateAttributedString;
+        separatorTemplateAttributedString = aSeparatorTemplateAttributedString;
         itemTemplate = nil;
         separatorTemplate = nil;
     }
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(itemTemplateAttributedString);
-    SKDESTROY(separatorTemplateAttributedString);
-    SKDESTROY(itemTemplate);
-    SKDESTROY(separatorTemplate);
-    [super dealloc];
-}
-
 - (SKTemplateTagType)type { return SKTemplateTagCollection; }
 
 - (NSArray *)itemTemplate {
     if (itemTemplate == nil && itemTemplateAttributedString)
-        itemTemplate = [[SKTemplateParser arrayByParsingTemplateAttributedString:itemTemplateAttributedString isSubtemplate:YES] retain];
+        itemTemplate = [SKTemplateParser arrayByParsingTemplateAttributedString:itemTemplateAttributedString isSubtemplate:YES];
     return itemTemplate;
 }
 
 - (NSArray *)separatorTemplate {
     if (separatorTemplate == nil && separatorTemplateAttributedString)
-        separatorTemplate = [[SKTemplateParser arrayByParsingTemplateAttributedString:separatorTemplateAttributedString isSubtemplate:YES] retain];
+        separatorTemplate = [SKTemplateParser arrayByParsingTemplateAttributedString:separatorTemplateAttributedString isSubtemplate:YES];
     return separatorTemplate;
 }
 
@@ -221,12 +193,6 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
         subtemplates = [aSubtemplates mutableCopy];
     }
     return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(subtemplates);
-    SKDESTROY(matchStrings);
-    [super dealloc];
 }
 
 - (SKTemplateTagType)type { return SKTemplateTagCondition; }
@@ -270,14 +236,9 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 - (instancetype)initWithText:(NSString *)aText {
     self = [super init];
     if (self) {
-        text = [aText retain];
+        text = aText;
     }
     return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(text);
-    [super dealloc];
 }
 
 - (SKTemplateTagType)type { return SKTemplateTagText; }
@@ -298,15 +259,9 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 - (instancetype)initWithAttributedText:(NSAttributedString *)anAttributedText {
     self = [super init];
     if (self) {
-        attributedText = [anAttributedText retain];
+        attributedText = anAttributedText;
     }
     return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(attributedText);
-    SKDESTROY(linkTemplates);
-    [super dealloc];
 }
 
 - (SKTemplateTagType)type { return SKTemplateTagText; }
@@ -322,7 +277,6 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
     [newAttrText appendAttributedString:newAttributedText];
     [newAttrText fixAttributesInRange:NSMakeRange(0, [newAttrText length])];
     [self setAttributedText:newAttrText];
-    [newAttrText release];
 }
 
 @end
@@ -345,11 +299,6 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 
 - (instancetype)init {
     return [self initWithTemplate:nil range:NSMakeRange(0, 0) attributeClass:NULL];
-}
-
-- (void)dealloc {
-    SKDESTROY(template);
-    [super dealloc];
 }
 
 @end

@@ -121,7 +121,7 @@ inline static NSString *romanNumeralForDigit(NSUInteger digit, NSString *i, NSSt
 
 - (NSAppleEventDescriptor *)scriptingTexLineDescriptor {
     NSScriptClassDescription *containerClassDescription = [NSScriptClassDescription classDescriptionForClass:[NSApp class]];
-    return [[[[NSIndexSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"texLines" index:[self integerValue]] autorelease] descriptor];
+    return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:containerClassDescription containerSpecifier:nil key:@"texLines" index:[self integerValue]] descriptor];
 }
 
 @end

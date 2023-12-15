@@ -101,21 +101,13 @@
     return self;
 }
 
-- (void)dealloc {
-    SKDESTROY(leftField);
-    SKDESTROY(rightField);
-    SKDESTROY(iconView);
-    SKDESTROY(progressIndicator);
-	[super dealloc];
-}
-
 - (instancetype)initWithCoder:(NSCoder *)decoder {
 	self = [super initWithCoder:decoder];
     if (self) {
-        leftField = [[decoder decodeObjectForKey:@"leftField"] retain];
-        rightField = [[decoder decodeObjectForKey:@"rightField"] retain];
-        iconView = [[decoder decodeObjectForKey:@"iconView"] retain];
-        progressIndicator = [[decoder decodeObjectForKey:@"progressIndicator"] retain];
+        leftField = [decoder decodeObjectForKey:@"leftField"];
+        rightField = [decoder decodeObjectForKey:@"rightField"];
+        iconView = [decoder decodeObjectForKey:@"iconView"];
+        progressIndicator = [decoder decodeObjectForKey:@"progressIndicator"];
         animating = NO;
 	}
 	return self;
@@ -291,7 +283,7 @@
         [iconView setImage:icon];
     } else if (iconView) {
         [iconView removeFromSuperview];
-        SKDESTROY(iconView);
+        iconView = nil;
         [[NSLayoutConstraint constraintWithItem:leftField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:LEFT_MARGIN] setActive:YES];
     }
 }
@@ -310,7 +302,7 @@
 		if (progressIndicator == nil)
 			return;
 		[progressIndicator removeFromSuperview];
-		SKDESTROY(progressIndicator);
+		progressIndicator = nil;
         [[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:rightField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:RIGHT_MARGIN] setActive:YES];
 	} else {
 		if (progressIndicator && (NSInteger)[progressIndicator style] == style)
@@ -352,7 +344,6 @@
     if (self) {
         NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:[self bounds] options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect owner:self userInfo:nil];
         [self addTrackingArea:area];
-        [area release];
     }
     return self;
 }
@@ -412,14 +403,12 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
     if ([self isUnderlined]) {
-        id objectValue = [[self objectValue] retain];
+        id objectValue = [self objectValue];
         NSMutableAttributedString *mutAttrString = [[self attributedStringValue] mutableCopy];
         [mutAttrString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:NSMakeRange(0, [mutAttrString length])];
         [self setObjectValue:mutAttrString];
-        [mutAttrString release];
         [super drawInteriorWithFrame:cellFrame inView:controlView];
         [self setObjectValue:objectValue];
-        [objectValue release];
     } else {
         [super drawInteriorWithFrame:cellFrame inView:controlView];
     }

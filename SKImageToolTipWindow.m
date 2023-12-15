@@ -83,7 +83,7 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orderOut:) 
                                                      name:NSApplicationWillResignActiveNotification object:NSApp];
         if (@available(macOS 10.14, *)) {
-            NSVisualEffectView *backgroundView = [[[NSVisualEffectView alloc] init] autorelease];
+            NSVisualEffectView *backgroundView = [[NSVisualEffectView alloc] init];
             [backgroundView setMaterial:NSVisualEffectMaterialToolTip];
             [backgroundView setState:NSVisualEffectStateActive];
             [backgroundView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -97,13 +97,13 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
 }
 
 - (void)orderOut:(id)sender {
-    SKDESTROY(context);
+    context = nil;
     point = NSZeroPoint;
     [super orderOut:sender];
 }
 
 - (void)fadeOut {
-    SKDESTROY(context);
+    context = nil;
     point = NSZeroPoint;
     [super fadeOut];
 }
@@ -152,8 +152,7 @@ static SKImageToolTipWindow *sharedToolTipWindow = nil;
     if ([aContext isEqual:context] == NO) {
         [self stopAnimation];
         
-        [context release];
-        context = [aContext retain];
+        context = aContext;
         
         [self performSelector:@selector(showDelayed) withObject:nil afterDelay:[self isVisible] ? ALT_SHOW_DELAY : DEFAULT_SHOW_DELAY];
     }

@@ -72,17 +72,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             pageIndex = aPageIndex;
             snapshots = [aSnapshots count] ? [aSnapshots copy] : nil;
         } else {
-            [self release];
             self = nil;
         }
     }
     return self;
-}
-
-- (void)dealloc {
-    SKDESTROY(alias);
-    SKDESTROY(snapshots);
-    [super dealloc];
 }
 
 - (NSURL *)fileURL {

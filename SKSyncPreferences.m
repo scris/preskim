@@ -74,11 +74,6 @@ static NSArray *TeXEditors = nil;
     TeXEditors = [editors copy];
 }
 
-- (void)dealloc {
-    SKDESTROY(texEditorPopUpButton);
-    [super dealloc];
-}
-
 - (NSString *)nibName {
     return @"SyncPreferences";
 }

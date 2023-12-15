@@ -135,60 +135,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 @synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, autoScalesButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, splitPDFButton, toolModeButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton;
 
-- (void)dealloc {
-    mainController = nil;
-    SKDESTROY(toolbarItems);
-    SKDESTROY(backForwardButton);
-    SKDESTROY(previousNextPageButton);
-    SKDESTROY(previousPageButton);
-    SKDESTROY(nextPageButton);
-    SKDESTROY(previousNextFirstLastPageButton);
-    SKDESTROY(zoomInOutButton);
-    SKDESTROY(zoomInActualOutButton);
-    SKDESTROY(zoomActualButton);
-    SKDESTROY(zoomFitButton);
-    SKDESTROY(zoomSelectionButton);
-    SKDESTROY(autoScalesButton);
-    SKDESTROY(rotateLeftButton);
-    SKDESTROY(rotateRightButton);
-    SKDESTROY(rotateLeftRightButton);
-    SKDESTROY(cropButton);
-    SKDESTROY(fullScreenButton);
-    SKDESTROY(presentationButton);
-    SKDESTROY(leftPaneButton);
-    SKDESTROY(rightPaneButton);
-    SKDESTROY(splitPDFButton);
-    SKDESTROY(toolModeButton);
-    SKDESTROY(textNoteButton);
-    SKDESTROY(circleNoteButton);
-    SKDESTROY(markupNoteButton);
-    SKDESTROY(lineNoteButton);
-    SKDESTROY(singleTwoUpButton);
-    SKDESTROY(continuousButton);
-    SKDESTROY(displayModeButton);
-    SKDESTROY(displayDirectionButton);
-    SKDESTROY(displaysRTLButton);
-    SKDESTROY(bookModeButton);
-    SKDESTROY(pageBreaksButton);
-    SKDESTROY(displayBoxButton);
-    SKDESTROY(infoButton);
-    SKDESTROY(colorsButton);
-    SKDESTROY(fontsButton);
-    SKDESTROY(linesButton);
-    SKDESTROY(printButton);
-    SKDESTROY(customizeButton);
-    SKDESTROY(noteButton);
-    SKDESTROY(pageNumberField);
-    SKDESTROY(scaleField);
-    SKDESTROY(colorSwatch);
-    SKDESTROY(pacerButton);
-    SKDESTROY(pacerSpeedField);
-    SKDESTROY(pacerSpeedStepper);
-    SKDESTROY(shareButton);
-    SKDESTROY(shareMenuController);
-    [super dealloc];
-}
-
 - (NSString *)nibName {
     return @"MainToolbar";
 }
@@ -206,7 +152,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     [self view];
     
     // Create a new toolbar instance, and attach it to our document window
-    NSToolbar *toolbar = [[[SKToolbar alloc] initWithIdentifier:SKDocumentToolbarIdentifier] autorelease];
+    NSToolbar *toolbar = [[SKToolbar alloc] initWithIdentifier:SKDocumentToolbarIdentifier];
     
     // Set up toolbar properties: Allow customization, give a default display mode, and remember state in user defaults
     [toolbar setAllowsUserCustomization:YES];
@@ -232,7 +178,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         if (toolbarItems == nil)
             toolbarItems = [[NSMutableDictionary alloc] init];
 
-        item = [[[SKToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+        item = [[SKToolbarItem alloc] initWithItemIdentifier:identifier];
         [toolbarItems setObject:item forKey:identifier];
     
         if ([identifier isEqualToString:SKDocumentToolbarPreviousNextItemIdentifier]) {
@@ -747,7 +693,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             menu = [menuItem submenu];
             [menu setDelegate:shareMenuController];
             
-            menu = [[[NSMenu alloc] init] autorelease];
+            menu = [[NSMenu alloc] init];
             [menu setDelegate:shareMenuController];
             [shareButton setMenu:menu forSegment:0];
             
@@ -758,7 +704,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             
         } else if ([identifier isEqualToString:SKDocumentToolbarPacerItemIdentifier]) {
             
-            NSToolbarItemGroup *group = [[[NSToolbarItemGroup alloc] initWithItemIdentifier:identifier] autorelease];
+            NSToolbarItemGroup *group = [[NSToolbarItemGroup alloc] initWithItemIdentifier:identifier];
             [toolbarItems setObject:group forKey:identifier];
             item = (id)group;
             
@@ -791,11 +737,11 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [pacerSpeedStepper setToolTip:NSLocalizedString(@"Pacer Speed", @"Tool tip message")];
             [item setMenuFormRepresentation:menuItem];
             
-            SKToolbarItem *item1 = [[[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerButtonItemIdentifier] autorelease];
+            SKToolbarItem *item1 = [[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerButtonItemIdentifier];
             [item1 setViewWithSizes:pacerButton];
-            SKToolbarItem *item2 = [[[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedFieldItemIdentifier] autorelease];
+            SKToolbarItem *item2 = [[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedFieldItemIdentifier];
             [item2 setViewWithSizes:pacerSpeedField];
-            SKToolbarItem *item3 = [[[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedStepperItemIdentifier] autorelease];
+            SKToolbarItem *item3 = [[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedStepperItemIdentifier];
             [item3 setViewWithSizes:pacerSpeedStepper];
             [group setSubitems:@[item1, item2, item3]];
             
@@ -894,7 +840,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     if (willBeInserted == NO) {
         if ([itemIdent isEqualToString:SKDocumentToolbarShareItemIdentifier])
              [[shareButton menuForSegment:0] removeAllItems];
-        item = [[item copy] autorelease];
+        item = [item copy];
         [item setEnabled:YES];
         if ([[item view] respondsToSelector:@selector(setEnabled:)])
             [(NSControl *)[item view] setEnabled:YES];
@@ -1091,7 +1037,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (IBAction)chooseScale:(id)sender {
-    SKTextFieldSheetController *scaleSheetController = [[[SKTextFieldSheetController alloc] initWithWindowNibName:@"ScaleSheet"] autorelease];
+    SKTextFieldSheetController *scaleSheetController = [[SKTextFieldSheetController alloc] initWithWindowNibName:@"ScaleSheet"];
     
     [(NSNumberFormatter *)[[scaleSheetController textField] formatter] setMinimum:[NSNumber numberWithDouble:[mainController.pdfView minScaleFactor]]];
     [(NSNumberFormatter *)[[scaleSheetController textField] formatter] setMaximum:[NSNumber numberWithDouble:[mainController.pdfView maxScaleFactor]]];
@@ -1261,7 +1207,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (IBAction)choosePacerSpeed:(id)sender {
-    SKTextFieldSheetController *speedSheetController = [[[SKTextFieldSheetController alloc] initWithWindowNibName:@"SpeedSheet"] autorelease];
+    SKTextFieldSheetController *speedSheetController = [[SKTextFieldSheetController alloc] initWithWindowNibName:@"SpeedSheet"];
     
     [[speedSheetController textField] setObjectValue:[NSNumber numberWithDouble:[mainController.pdfView pacerSpeed]]];
     

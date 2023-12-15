@@ -60,7 +60,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     static NSDictionary *attributes = nil;
     if (attributes == nil)
         attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont toolTipsFontOfSize:11.0], NSFontAttributeName, [NSParagraphStyle defaultClippingParagraphStyle], NSParagraphStyleAttributeName, nil];
-    return [[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease];
+    return [[NSAttributedString alloc] initWithString:string attributes:attributes];
 }
 
 
@@ -77,7 +77,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     textRect.size.height = fmin(NSHeight(textRect), height);
     size = NSInsetRect(NSIntegralRect(textRect), -TEXT_MARGIN_X, -TEXT_MARGIN_Y).size;
     
-    NSImage *image = [[[NSImage alloc] initWithSize:size] autorelease];
+    NSImage *image = [[NSImage alloc] initWithSize:size];
     [image lockFocus];
     SKRunWithAppearance(NSApp, ^{
         [attrString drawWithRect:textRect options:NSStringDrawingUsesLineFragmentOrigin];
@@ -103,7 +103,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     if (labelAttributes == nil)
         labelAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont boldSystemFontOfSize:11.0], NSFontAttributeName, [NSColor whiteColor], NSForegroundColorAttributeName, [NSParagraphStyle defaultClippingParagraphStyle], NSParagraphStyleAttributeName, nil];
     if (labelColor == nil)
-        labelColor = [[NSColor colorWithGenericGamma22White:0.55 alpha:0.8] retain];
+        labelColor = [NSColor colorWithGenericGamma22White:0.55 alpha:0.8];
     
     BOOL isScaled = fabs(scale - 1.0) > 0.01;
     PDFPage *page = [self page];
@@ -154,7 +154,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     labelRect.origin.y = TEXT_MARGIN_Y;
     labelRect = NSIntegralRect(labelRect);
     
-    NSImage *image = [[[NSImage alloc] initWithSize:sourceRect.size] autorelease];
+    NSImage *image = [[NSImage alloc] initWithSize:sourceRect.size];
     
     [image lockFocus];
     
@@ -175,8 +175,6 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     
     [image unlockFocus];
     
-    [labelString release];
-    
     [[[image representations] firstObject] setOpaque:YES];
     
     return image;
@@ -195,7 +193,6 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
     PDFSelection *sel = [self copy];
     [sel setColor:[NSColor findHighlightColor]];
     NSArray *selections = @[sel];
-    [sel release];
     return [[self destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections label:nil];
 }
 
@@ -205,7 +202,7 @@ static NSAttributedString *toolTipAttributedString(NSString *string) {
 @implementation SKGroupedSearchResult (SKImageToolTipContext)
 
 - (NSImage *)toolTipImageWithScale:(CGFloat)scale {
-    NSArray *selections = [[[NSArray alloc] initWithArray:[self matches] copyItems:YES] autorelease];
+    NSArray *selections = [[NSArray alloc] initWithArray:[self matches] copyItems:YES];
     [selections setValue:[NSColor findHighlightColor] forKey:@"color"];
     return [[[selections firstObject] destination] toolTipImageWithOffset:NSMakePoint(-50.0, 20.0) scale:scale selections:selections label:[self label]];
 }

@@ -97,7 +97,7 @@ static NSString *SKDownloadsIdentifier = nil;
 + (void)initialize {
     SKINITIALIZE;
     
-    SKDownloadsIdentifier = [[[[NSBundle mainBundle] bundleIdentifier] stringByAppendingString:@".downloads"] retain];
+    SKDownloadsIdentifier = [[[NSBundle mainBundle] bundleIdentifier] stringByAppendingString:@".downloads"];
 }
 
 static SKDownloadController *sharedDownloadController = nil;
@@ -118,7 +118,6 @@ static SKDownloadController *sharedDownloadController = nil;
         for (NSDictionary *properties in [downloadsDictionary objectForKey:DOWNLOADS_KEY]) {
             SKDownload *download = [[SKDownload alloc] initWithProperties:properties];
             [downloads addObject:download];
-            [download release];
         }
         
         [self startObservingDownloads:downloads];
@@ -133,10 +132,6 @@ static SKDownloadController *sharedDownloadController = nil;
 
 - (void)dealloc {
     [self endObservingDownloads:downloads];
-    SKDESTROY(downloads);
-    SKDESTROY(tableView);
-    SKDESTROY(clearButton);
-    [super dealloc];
 }
 
 - (void)windowDidLoad {
@@ -167,7 +162,7 @@ static SKDownloadController *sharedDownloadController = nil;
 - (SKDownload *)addDownloadForURL:(NSURL *)aURL showWindow:(BOOL)flag {
     SKDownload *download = nil;
     if (aURL) {
-        download = [[[SKDownload alloc] initWithURL:aURL] autorelease];
+        download = [[SKDownload alloc] initWithURL:aURL];
         NSInteger row = [self countOfDownloads];
         [self addObjectToDownloads:download];
         if (flag)
@@ -206,11 +201,10 @@ static SKDownloadController *sharedDownloadController = nil;
                 [self presentError:error];
             
             if ([[NSUserDefaults standardUserDefaults] boolForKey:SKAutoRemoveFinishedDownloadsKey]) {
-                NSURL *fileURL = [[download fileURL] retain];
+                NSURL *fileURL = [download fileURL];
                 [self removeObjectFromDownloads:download];
                 // for the document to note that the file has been deleted
                 [document setFileURL:fileURL];
-                [fileURL release];
                 if ([self countOfDownloads] == 0 && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoCloseDownloadsWindowKey])
                     [[self window] close];
             }
@@ -221,7 +215,7 @@ static SKDownloadController *sharedDownloadController = nil;
 #pragma mark Accessors
 
 - (NSArray *)downloads {
-    return [[downloads copy] autorelease];
+    return [downloads copy];
 }
 
 - (NSUInteger)countOfDownloads {
@@ -279,7 +273,7 @@ static SKDownloadController *sharedDownloadController = nil;
 #pragma mark Actions
 
 - (IBAction)showDownloadPreferences:(id)sender {
-    SKDownloadPreferenceController *prefController = [[[SKDownloadPreferenceController alloc] init] autorelease];
+    SKDownloadPreferenceController *prefController = [[SKDownloadPreferenceController alloc] init];
     [prefController beginSheetModalForWindow:[self window] completionHandler:NULL];
 }
 
@@ -424,7 +418,7 @@ static SKDownloadController *sharedDownloadController = nil;
     __block NSInteger validCount = 0;
     [draggingInfo enumerateDraggingItemsWithOptions:NSDraggingItemEnumerationClearNonenumeratedImages forView:tv classes:@[[NSURL class]] searchOptions:@{} usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop){
         if ([[draggingItem item] isKindOfClass:[NSURL class]]) {
-            SKDownload *download = [[[SKDownload alloc] initWithURL:[draggingItem item]] autorelease];
+            SKDownload *download = [[SKDownload alloc] initWithURL:[draggingItem item]];
             [draggingItem setImageComponentsProvider:^{
                 [view setObjectValue:download];
                 return [view draggingImageComponents];
@@ -568,7 +562,7 @@ static SKDownloadController *sharedDownloadController = nil;
 
 - (void)setupToolbar {
     // Create a new toolbar instance, and attach it to our window
-    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:SKDownloadsToolbarIdentifier] autorelease];
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:SKDownloadsToolbarIdentifier];
     
     [toolbar setAllowsUserCustomization:NO];
     [toolbar setAutosavesConfiguration:NO];
@@ -585,13 +579,13 @@ static SKDownloadController *sharedDownloadController = nil;
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdent willBeInsertedIntoToolbar:(BOOL)willBeInserted {
     NSToolbarItem *item = nil;
     if ([itemIdent isEqualToString:SKDownloadsToolbarPreferencesItemIdentifier]) {
-        item = [[[NSToolbarItem alloc] initWithItemIdentifier:SKDownloadsToolbarPreferencesItemIdentifier] autorelease];
+        item = [[NSToolbarItem alloc] initWithItemIdentifier:SKDownloadsToolbarPreferencesItemIdentifier];
         [item setToolTip:NSLocalizedString(@"Download preferences", @"Tool tip message")];
         [item setImage:[NSImage imageNamed:NSImageNamePreferencesGeneral]];
         [item setTarget:self];
         [item setAction:@selector(showDownloadPreferences:)];
     } else if ([itemIdent isEqualToString:SKDownloadsToolbarClearItemIdentifier]) {
-        item = [[[NSToolbarItem alloc] initWithItemIdentifier:SKDownloadsToolbarClearItemIdentifier] autorelease];
+        item = [[NSToolbarItem alloc] initWithItemIdentifier:SKDownloadsToolbarClearItemIdentifier];
         [item setView:clearButton];
         if (@available(macOS 11.0, *)) {} else {
             [item setMinSize:[clearButton bounds].size];
@@ -676,10 +670,10 @@ static SKDownloadController *sharedDownloadController = nil;
 
 - (NSURLSession *)session {
     if (session == nil) {
-        session = [[NSURLSession
+        session = [NSURLSession
                     sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
                     delegate:self
-                    delegateQueue:[NSOperationQueue mainQueue]] retain];
+                    delegateQueue:[NSOperationQueue mainQueue]];
     }
     return session;
 }
@@ -689,13 +683,13 @@ static SKDownloadController *sharedDownloadController = nil;
     NSURL *url = [download URL];
     NSURLSessionDownloadTask *task = nil;
     if (resumeData)
-        task = [[[self session] downloadTaskWithResumeData:resumeData] retain];
+        task = [[self session] downloadTaskWithResumeData:resumeData];
     else if (url)
-        task = [[[self session] downloadTaskWithURL:url] retain];
+        task = [[self session] downloadTaskWithURL:url];
     else
         return nil;
     if (downloadsForTasks == nil)
-        downloadsForTasks = [[NSMapTable strongToStrongObjectsMapTable] retain];
+        downloadsForTasks = [NSMapTable strongToStrongObjectsMapTable];
     [downloadsForTasks setObject:download forKey:task];
     [task resume];
     return task;
@@ -733,7 +727,7 @@ static SKDownloadController *sharedDownloadController = nil;
 #pragma mark Touch Bar
 
 - (NSTouchBar *)makeTouchBar {
-    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
+    NSTouchBar *touchBar = [[NSTouchBar alloc] init];
     [touchBar setDelegate:self];
     NSInteger selectedRow = [tableView selectedRow];
     SKDownload *download = selectedRow != -1 ? [self objectInDownloadsAtIndex:selectedRow] : nil;
@@ -755,28 +749,28 @@ static SKDownloadController *sharedDownloadController = nil;
             touchBarItems = [[NSMutableDictionary alloc] init];
         if ([identifier isEqualToString:SKTouchBarItemIdentifierClear]) {
             if (tbClearButton == nil) {
-                tbClearButton = [[NSButton buttonWithTitle:[clearButton title] target:[clearButton target] action:[clearButton action]] retain];
+                tbClearButton = [NSButton buttonWithTitle:[clearButton title] target:[clearButton target] action:[clearButton action]];
                 [self updateClearButton];
             }
-            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+            item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
             [(NSCustomTouchBarItem *)item setView:tbClearButton];
         } else if ([identifier isEqualToString:SKTouchBarItemIdentifierResume]) {
             if (resumeButton == nil) {
                 resumeButton = [NSButton buttonWithImage:[NSImage imageNamed:SKImageNameTouchBarRefresh] target:self action:@selector(resumeDownload:)];
             }
-            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+            item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
             [(NSCustomTouchBarItem *)item setView:resumeButton];
         } else if ([identifier isEqualToString:SKTouchBarItemIdentifierCancel]) {
             if (cancelButton == nil) {
                 cancelButton = [NSButton buttonWithImage:[NSImage imageNamed:SKImageNameTouchBarStopProgress] target:self action:@selector(cancelDownload:)];
             }
-            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+            item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
             [(NSCustomTouchBarItem *)item setView:cancelButton];
         } else if ([identifier isEqualToString:SKTouchBarItemIdentifierRemove]) {
             if (removeButton == nil) {
                 removeButton = [NSButton buttonWithImage:[NSImage imageNamed:NSImageNameTouchBarDeleteTemplate] target:self action:@selector(removeDownload:)];
             }
-            item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+            item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
             [(NSCustomTouchBarItem *)item setView:removeButton];
         }
         if (item)

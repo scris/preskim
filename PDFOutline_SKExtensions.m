@@ -95,7 +95,7 @@
             containerRef = [parent objectSpecifier];
         else
             containerRef = [[[self document] containingDocument] objectSpecifier];
-        return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"outlines" index:idx] autorelease];
+        return [[NSIndexSpecifier alloc] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"outlines" index:idx];
     } else {
         return nil;
     }

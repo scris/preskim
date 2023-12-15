@@ -148,14 +148,12 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         [view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         [view setWidth:[self fitWidth]];
         [self addSubview:view];
-        backgroundView = [view retain];
-        [view release];
+        backgroundView = view;
         
         SKColorSwatchItemView *itemView = [[SKColorSwatchItemView alloc] initWithFrame:[self frameForItemViewAtIndex:0 collapsedIndex:-1]];
         [itemView setColor:[NSColor whiteColor]];
         [self addSubview:itemView];
         itemViews = [[NSMutableArray alloc] initWithObjects:itemView, nil];
-        [itemView release];
     }
     return self;
 }
@@ -175,7 +173,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         
         for (NSView *view in [self subviews]) {
             if ([view isKindOfClass:[SKColorSwatchBackgroundView class]])
-                backgroundView = [(SKColorSwatchBackgroundView *)view retain];
+                backgroundView = (SKColorSwatchBackgroundView *)view;
             else if ([view isKindOfClass:[SKColorSwatchItemView class]])
                 [itemViews addObject:view];
         }
@@ -193,13 +191,8 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     if ([self infoForBinding:COLORS_KEY])
         SKENSURE_MAIN_THREAD( [self unbind:COLORS_KEY]; );
-    SKDESTROY(colors);
-    SKDESTROY(itemViews);
-    SKDESTROY(backgroundView);
-    [super dealloc];
 }
 
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent { return YES; }
@@ -391,7 +384,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
                     
                     NSRect rect = SKRectFromCenterAndSquareSize([theEvent locationInView:self], 12.0);
                     
-                    NSDraggingItem *dragItem = [[[NSDraggingItem alloc] initWithPasteboardWriter:color] autorelease];
+                    NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:color];
                     [dragItem setDraggingFrame:rect contents:image];
                     [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
                     
@@ -467,7 +460,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 - (void)setTarget:(id)newTarget { target = newTarget; }
 
 - (NSArray *)colors {
-    return [[colors copy] autorelease];
+    return [colors copy];
 }
 
 - (void)setColors:(NSArray *)newColors {
@@ -482,7 +475,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         if (i < [itemViews count]) {
             itemView = [itemViews objectAtIndex:i];
         } else {
-            itemView = [[[SKColorSwatchItemView alloc] init] autorelease];
+            itemView = [[SKColorSwatchItemView alloc] init];
             [self addSubview:itemView];
             [itemViews addObject:itemView];
         }
@@ -564,7 +557,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
     id observedObject = [info objectForKey:NSObservedObjectKey];
     NSString *observedKeyPath = [info objectForKey:NSObservedKeyPathKey];
     if (observedObject && observedKeyPath) {
-        id value = [[colors copy] autorelease];
+        id value = [colors copy];
         NSValueTransformer *valueTransformer = [[info objectForKey:NSOptionsKey] objectForKey:NSValueTransformerBindingOption];
         if (valueTransformer == nil || [valueTransformer isEqual:[NSNull null]]) {
             NSString *transformerName = [[info objectForKey:NSOptionsKey] objectForKey:NSValueTransformerNameBindingOption];
@@ -624,7 +617,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
         else
             [self addSubview:itemView positioned:NSWindowAbove relativeTo:nil];
         [itemViews insertObject:itemView atIndex:i];
-        [itemView release];
         NSSize size = [self sizeForNumberOfColors:[colors count]];
         [self noteFocusRingMaskChanged];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
@@ -663,18 +655,16 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 
 - (void)moveColorAtIndex:(NSInteger)from toIndex:(NSInteger)to {
     if (from >= 0 && to >= 0 && from != to) {
-        NSColor *color = [[colors objectAtIndex:from] retain];
+        NSColor *color = [colors objectAtIndex:from];
         [self deactivate];
         [self willChangeColors];
         [colors removeObjectAtIndex:from];
         [colors insertObject:color atIndex:to];
-        SKColorSwatchItemView *itemView = [[itemViews objectAtIndex:from] retain];
+        SKColorSwatchItemView *itemView = [itemViews objectAtIndex:from];
         [itemViews removeObjectAtIndex:from];
         [itemViews insertObject:itemView atIndex:to];
         if (to > from)
             [self addSubview:itemView positioned:NSWindowAbove relativeTo:[itemViews objectAtIndex:to - 1]];
-        [itemView release];
-        [color release];
         [self noteFocusRingMaskChanged];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [self animateItemViewsCollapsing:-1 frameSize:NSZeroSize];
@@ -886,7 +876,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 - (instancetype)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if (self) {
-        NSSegmentedCell *cell = [[[NSSegmentedCell alloc] init] autorelease];
+        NSSegmentedCell *cell = [[NSSegmentedCell alloc] init];
         [cell setSegmentCount:1];
         [cell setSegmentStyle:NSSegmentStyleTexturedSquare];
         [cell setWidth:fmax(0.0, NSWidth(frameRect) - BACKGROUND_WIDTH_OFFSET) forSegment:0];
@@ -932,7 +922,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
 - (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
-        color = [[decoder decodeObjectForKey:COLOR_KEY] retain];
+        color = [decoder decodeObjectForKey:COLOR_KEY];
     }
     return self;
 }
@@ -942,15 +932,9 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     [coder encodeObject:color forKey:COLOR_KEY];
 }
 
-- (void)dealloc {
-    SKDESTROY(color);
-    [super dealloc];
-}
-
 - (void)setColor:(NSColor *)newColor {
     if (color != newColor) {
-        [color release];
-        color = [newColor retain];
+        color = newColor;
         [self setNeedsDisplay:YES];
     }
 }

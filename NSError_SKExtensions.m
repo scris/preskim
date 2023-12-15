@@ -85,7 +85,6 @@ NSString *SKDocumentErrorDomain = @"SKDocumentErrorDomain";
             description = [descriptions componentsJoinedByString:@"\n"];
         [userInfo setObject:description forKey:NSLocalizedDescriptionKey];
         error = [NSError errorWithDomain:[error domain] code:[error code] userInfo:userInfo];
-        [userInfo release];
     }
     return error;
 }

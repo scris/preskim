@@ -68,7 +68,7 @@
         delegate = aDelegate;
         NSPointerArray *lines = [aPage lineRects];
         if ([lines count]) {
-            page = [aPage retain];
+            page = aPage;
             lineCount = [lines count];
             currentLine = MAX(0, MIN([self maxLine], line));
             currentBounds = [self currentBoundsFromLineRects:lines];
@@ -79,7 +79,7 @@
                 PDFPage *nextPage = [doc pageAtIndex:i];
                 lines = [nextPage lineRects];
                 if ([lines count]) {
-                    page = [nextPage retain];
+                    page = nextPage;
                     lineCount = [lines count];
                     currentLine = 0;
                     currentBounds = [self currentBoundsFromLineRects:lines];
@@ -92,7 +92,7 @@
                     PDFPage *nextPage = [doc pageAtIndex:i];
                     lines = [nextPage lineRects];
                     if ([lines count]) {
-                        page = [nextPage retain];
+                        page = nextPage;
                         lineCount = [lines count];
                         currentLine = [self maxLine];
                         currentBounds = [self currentBoundsFromLineRects:lines];
@@ -102,7 +102,7 @@
             }
         }
         if (page == nil) {
-            page = [aPage retain];
+            page = aPage;
             currentLine = -1;
             currentBounds = NSZeroRect;
         }
@@ -112,12 +112,6 @@
 
 - (instancetype)init {
     return [self initWithPage:nil line:-1 delegate:nil];
-}
-
-- (void)dealloc {
-    delegate = nil;
-    SKDESTROY(page);
-    [super dealloc];
 }
 
 - (NSRect)currentBoundsFromLineRects:(NSPointerArray *)lineRects {
@@ -271,7 +265,7 @@
 
 - (NSScriptObjectSpecifier *)objectSpecifier {
     NSScriptObjectSpecifier *containerRef = [[page containingDocument] objectSpecifier];
-    return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"readingBar"] autorelease];
+    return [[NSPropertySpecifier alloc] initWithContainerClassDescription:[containerRef keyClassDescription] containerSpecifier:containerRef key:@"readingBar"];
 }
 
 - (NSUInteger)countOfLines {
@@ -279,7 +273,7 @@
 }
 
 - (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex {
-    return [[[SKLine alloc] initWithPage:page index:currentLine + anIndex] autorelease];
+    return [[SKLine alloc] initWithPage:page index:currentLine + anIndex];
 }
 
 - (NSData *)boundsAsQDRect {

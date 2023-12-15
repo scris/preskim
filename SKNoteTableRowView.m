@@ -45,11 +45,6 @@
 
 @implementation SKNoteTableRowView
 
-- (void)dealloc {
-    SKDESTROY(resizeIndicatorCell);
-    [super dealloc];
-}
-
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
@@ -65,7 +60,6 @@
         resizeIndicatorCell = [[NSImageCell alloc] initImageCell:image];
         [resizeIndicatorCell setImageScaling:NSImageScaleNone];
         [resizeIndicatorCell setImageAlignment:NSImageAlignBottom];
-        [image release];
     }
     
     [resizeIndicatorCell setBackgroundStyle:[self interiorBackgroundStyle]];

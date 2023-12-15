@@ -52,67 +52,6 @@
 
 #define EM_DASH_CHARACTER (unichar)0x2014
 
-static inline
-CFStringRef __SKStringCreateByCollapsingAndTrimmingWhitespaceAndNewlines(CFAllocatorRef allocator, CFStringRef aString)
-{
-    
-    CFIndex length = CFStringGetLength(aString);
-    
-    if(length == 0)
-        return CFRetain(CFSTR(""));
-    
-    // set up the buffer to fetch the characters
-    CFIndex cnt = 0;
-    CFStringInlineBuffer inlineBuffer;
-    CFStringInitInlineBuffer(aString, &inlineBuffer, CFRangeMake(0, length));
-    UniChar ch;
-    UniChar *buffer, stackBuffer[STACK_BUFFER_SIZE];
-    CFStringRef retStr;
-
-    allocator = (allocator == NULL) ? CFGetAllocator(aString) : allocator;
-
-    if(length >= STACK_BUFFER_SIZE) {
-        buffer = (UniChar *)CFAllocatorAllocate(allocator, length * sizeof(UniChar), 0);
-    } else {
-        bzero(stackBuffer, length * sizeof(UniChar));
-        buffer = stackBuffer;
-    }
-    
-    NSCAssert1(buffer != NULL, @"failed to allocate memory for string of length %ld", (long)length);
-    
-    CFCharacterSetRef wsnlCharSet = CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline);
-    BOOL isFirst = NO, found = NO;
-    CFIndex bufCnt = 0;
-    for(cnt = 0; cnt < length; cnt++) {
-        ch = CFStringGetCharacterFromInlineBuffer(&inlineBuffer, cnt);
-        if(NO == CFCharacterSetIsCharacterMember(wsnlCharSet, ch)) {
-            isFirst = YES;
-            buffer[bufCnt++] = ch; // not whitespace, so we want to keep it
-        } else {
-            if (isFirst){
-                buffer[bufCnt++] = ' '; // if it's the first whitespace, we add a single space
-                isFirst = NO;
-            }
-            found = YES;
-        }
-    }
-    
-    if (found){
-        if (buffer[(bufCnt-1)] == ' ') // we've collapsed any trailing whitespace, so disregard it
-            bufCnt--;
-        
-        retStr = CFStringCreateWithCharacters(allocator, buffer, bufCnt);
-    } else {
-        retStr = CFRetain(aString);
-    }
-    
-    if(buffer != stackBuffer) CFAllocatorDeallocate(allocator, buffer);
-
-    return retStr;
-}
-
-CFStringRef SKStringCreateByCollapsingAndTrimmingWhitespaceAndNewlines(CFAllocatorRef allocator, CFStringRef string){ return __SKStringCreateByCollapsingAndTrimmingWhitespaceAndNewlines(allocator, string); }
-
 #pragma mark NSString category
 
 @implementation NSString (SKExtensions)
@@ -148,7 +87,57 @@ CFStringRef SKStringCreateByCollapsingAndTrimmingWhitespaceAndNewlines(CFAllocat
 
 - (NSString *)stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines;
 {
-    return [(id)SKStringCreateByCollapsingAndTrimmingWhitespaceAndNewlines(CFAllocatorGetDefault(), (CFStringRef)self) autorelease];
+    CFIndex length = [self length];
+    
+    if(length == 0)
+        return @"";
+    
+    // set up the buffer to fetch the characters
+    CFIndex cnt = 0;
+    CFStringInlineBuffer inlineBuffer;
+    CFStringInitInlineBuffer((__bridge CFStringRef)self, &inlineBuffer, CFRangeMake(0, length));
+    UniChar ch;
+    UniChar *buffer, stackBuffer[STACK_BUFFER_SIZE];
+    NSString *retStr;
+
+    if(length >= STACK_BUFFER_SIZE) {
+        buffer = (UniChar *)CFAllocatorAllocate(NULL, length * sizeof(UniChar), 0);
+    } else {
+        bzero(stackBuffer, length * sizeof(UniChar));
+        buffer = stackBuffer;
+    }
+    
+    NSCAssert1(buffer != NULL, @"failed to allocate memory for string of length %ld", (long)length);
+    
+    CFCharacterSetRef wsnlCharSet = CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline);
+    BOOL isFirst = NO, found = NO;
+    CFIndex bufCnt = 0;
+    for(cnt = 0; cnt < length; cnt++) {
+        ch = CFStringGetCharacterFromInlineBuffer(&inlineBuffer, cnt);
+        if(NO == CFCharacterSetIsCharacterMember(wsnlCharSet, ch)) {
+            isFirst = YES;
+            buffer[bufCnt++] = ch; // not whitespace, so we want to keep it
+        } else {
+            if (isFirst){
+                buffer[bufCnt++] = ' '; // if it's the first whitespace, we add a single space
+                isFirst = NO;
+            }
+            found = YES;
+        }
+    }
+    
+    if (found){
+        if (buffer[(bufCnt-1)] == ' ') // we've collapsed any trailing whitespace, so disregard it
+            bufCnt--;
+        
+        retStr = [NSString stringWithCharacters:buffer length:bufCnt];
+    } else {
+        retStr = self;
+    }
+    
+    if(buffer != stackBuffer) CFAllocatorDeallocate(NULL, buffer);
+
+    return retStr;
 }
 
 // NS and CF character sets won't find these, due to the way CFString handles surrogate pairs.  The surrogate pair inlines were borrowed from CFCharacterSetPriv.h in CF-lite-476.13.
@@ -180,16 +169,14 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
 
     // make a mutable copy only if needed
     CFMutableStringRef theString = NULL;
-    CFStringRef cfSelf = (CFStringRef)self;
-    
     CFStringInlineBuffer inlineBuffer;
-    CFIndex length = CFStringGetLength(cfSelf);
+    CFIndex length = [self length];
     
     // use the current mutable string with the inline buffer, but make a new mutable copy if needed
-    CFStringInitInlineBuffer(cfSelf, &inlineBuffer, CFRangeMake(0, length));
+    CFStringInitInlineBuffer((__bridge CFStringRef)self, &inlineBuffer, CFRangeMake(0, length));
     UniChar ch;
     
-#define DELETE_CHARACTERS(n) do{if(NULL==theString){theString=CFStringCreateMutable(NULL, cfSelf);};CFStringDelete(theString, CFRangeMake(delIdx, n));} while(0)
+#define DELETE_CHARACTERS(n) do{if(NULL==theString){theString=CFStringCreateMutable(NULL, (__bridge CFStringRef)self);};CFStringDelete(theString, CFRangeMake(delIdx, n));} while(0)
         
     // idx is current index into the inline buffer, and delIdx is current index in the mutable string
     CFIndex idx = 0, delIdx = 0;
@@ -230,7 +217,7 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
         idx++;
     }
 
-    return [(NSString *)theString autorelease] ?: self;
+    return CFBridgingRelease(theString) ?: self;
 }
 
 - (NSString *)stringByAppendingEllipsis;
@@ -259,14 +246,14 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
         range = NSMakeRange(location + 2, [string length] - location - 2);
         location = [string rangeOfCharacterFromSet:charSet options:0 range:range].location;
     }
-    return [string autorelease];
+    return string;
 }
 
 // Escape those characters that are special, to the shell, inside a "quoted" string
 - (NSString *)stringByEscapingShellChars {
     static NSCharacterSet *shellSpecialChars = nil;
     if (shellSpecialChars == nil)
-        shellSpecialChars = [[NSCharacterSet characterSetWithCharactersInString:@"$\"`\\"] retain];
+        shellSpecialChars = [NSCharacterSet characterSetWithCharactersInString:@"$\"`\\"];
     return [self stringByBackslashEscapingCharactersFromSet:shellSpecialChars];
 }
 
@@ -274,14 +261,14 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
 - (NSString *)stringByEscapingDoubleQuotes {
     static NSCharacterSet *doubleQuoteChars = nil;
     if (doubleQuoteChars == nil)
-        doubleQuoteChars = [[NSCharacterSet characterSetWithCharactersInString:@"$\"\\"] retain];
+        doubleQuoteChars = [NSCharacterSet characterSetWithCharactersInString:@"$\"\\"];
     return [self stringByBackslashEscapingCharactersFromSet:doubleQuoteChars];
 }
 
 - (NSString *)stringByEscapingParenthesis {
     static NSCharacterSet *parenAndBackslashCharSet = nil;
     if (parenAndBackslashCharSet == nil)
-        parenAndBackslashCharSet = [[NSCharacterSet characterSetWithCharactersInString:@"()\\"] retain];
+        parenAndBackslashCharSet = [NSCharacterSet characterSetWithCharactersInString:@"()\\"];
     return [self stringByBackslashEscapingCharactersFromSet:parenAndBackslashCharSet];
 }
 
@@ -297,7 +284,7 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
 }
 
 - (NSString *)lossyStringUsingEncoding:(NSStringEncoding)encoding {
-    return [[[NSString alloc] initWithData:[self dataUsingEncoding:encoding allowLossyConversion:YES] encoding:encoding] autorelease];
+    return [[NSString alloc] initWithData:[self dataUsingEncoding:encoding allowLossyConversion:YES] encoding:encoding];
 }
 
 #pragma mark Templating support
@@ -450,7 +437,6 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
             [wrapper setFilename:name];
             [wrapper setPreferredFilename:name];
             [typeIconWrappers setObject:wrapper forKey:self];
-            [wrapper release];
         }
     
     }
@@ -458,7 +444,6 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
     if (wrapper) {
         NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:wrapper];
         attrString = [NSAttributedString attributedStringWithAttachment:attachment];
-        [attachment release];
     }
     
     return attrString;
@@ -466,7 +451,7 @@ static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)
 
 - (NSString *)xmlString {
     NSData *data = [NSPropertyListSerialization dataWithPropertyList:self format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
-    NSMutableString *string = [[[NSMutableString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    NSMutableString *string = [[NSMutableString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSInteger loc = NSMaxRange([string rangeOfString:@"<string>"]);
     if (loc == NSNotFound)
         return self;

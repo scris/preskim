@@ -53,9 +53,9 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
     if (self) {
         NSURL *appURL = [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL:[NSURL URLWithString:@"mailto://"]];
         if (appURL)
-            mailAppID = [[[NSBundle bundleWithURL:appURL] bundleIdentifier] retain];
+            mailAppID = [[NSBundle bundleWithURL:appURL] bundleIdentifier];
         else
-            mailAppID = [@"com.apple.Mail" retain];
+            mailAppID = @"com.apple.Mail";
         if ([@"com.microsoft.entourage" isCaseInsensitiveEqual:mailAppID] == NO &&
             [@"com.microsoft.outlook" isCaseInsensitiveEqual:mailAppID] == NO &&
             [@"com.barebones.mailsmith" isCaseInsensitiveEqual:mailAppID] == NO &&
@@ -63,18 +63,10 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
             [@"com.postbox-inc.postboxexpress" isCaseInsensitiveEqual:mailAppID] == NO &&
             [@"com.postbox-inc.postbox" isCaseInsensitiveEqual:mailAppID] == NO &&
             [@"com.apple.Mail" isCaseInsensitiveEqual:mailAppID] == NO) {
-            [mailAppID release];
-            mailAppID = [@"com.apple.Mail" retain];
+            mailAppID = @"com.apple.Mail";
         }
     }
     return self;
-}
-
-- (void)dealloc {
-    delegate = nil;
-    SKDESTROY(mailAppID);
-    SKDESTROY(subject);
-    [super dealloc];
 }
 
 - (BOOL)permissionToComposeMessage {
@@ -95,7 +87,7 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
 - (NSImage *)image {
     NSString *appPath = [[[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:mailAppID] path];
     NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
-    NSImage *image = [[[NSImage alloc] initWithSize:NSMakeSize(16.0, 16.0)] autorelease];
+    NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(16.0, 16.0)];
     [image lockFocus];
     [icon drawInRect:NSMakeRect(0.0, 0.0, 16.0, 16.0)];
     [image unlockFocus];
@@ -162,7 +154,7 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
     }
     
     NSString *scriptString = [NSString stringWithFormat:scriptFormat, [[self subject] stringByEscapingDoubleQuotes], [[items firstObject] path]];
-    NSAppleScript *script = [[[NSAppleScript alloc] initWithSource:scriptString] autorelease];
+    NSAppleScript *script = [[NSAppleScript alloc] initWithSource:scriptString];
     static dispatch_queue_t queue = NULL;
     if (queue == NULL)
         queue = dispatch_queue_create("net.sourceforge.skim-app.queue.NSAppleScript", NULL);

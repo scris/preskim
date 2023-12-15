@@ -42,24 +42,6 @@
 
 @implementation NSPasteboard (SKExtensions)
 
-- (NSURL *)pasteLocationURL; {
-    NSURL *pasteLocationURL = nil;
-    NSString *pasteLocation = [self stringForType:@"com.apple.pastelocation"];
-    if (pasteLocation) {
-        pasteLocationURL = [NSURL URLWithString:pasteLocation];
-    } else {
-        PasteboardRef pboardRef = NULL;
-        if (noErr == PasteboardCreate((CFStringRef)[self name], &pboardRef)) {
-            PasteboardSynchronize(pboardRef);
-            CFURLRef urlRef = NULL;
-            if (noErr == PasteboardCopyPasteLocation(pboardRef, &urlRef))
-                pasteLocationURL = [(NSURL *)urlRef autorelease];
-            CFRelease(pboardRef);
-        }
-    }
-    return pasteLocationURL;
-}
-
 - (BOOL)writeURLs:(NSArray *)URLs names:(NSArray *)names {
     NSMutableArray *items = [NSMutableArray array];
     NSUInteger i, urlCount = [URLs count], namesCount = [names count];
@@ -67,7 +49,7 @@
     for (i = 0; i < urlCount; i++) {
         
         NSURL *theURL = [URLs objectAtIndex:i];
-        NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
+        NSPasteboardItem *item = [[NSPasteboardItem alloc] init];
         
         [item setString:[theURL absoluteString] forType:(NSString *)([theURL isFileURL] ? kUTTypeFileURL : kUTTypeURL)];
         [item setString:[theURL absoluteString] forType:NSPasteboardTypeString];

@@ -48,12 +48,6 @@
 @synthesize formatPopUpButton, savePanel, hasExportOptions, allowsEmbeddedOption;
 @dynamic selectedFileType;
 
-- (void)dealloc {
-    SKDESTROY(formatPopUpButton);
-    SKDESTROY(savePanel);
-    [super dealloc];
-}
-
 - (NSString *)nibName {
     return @"ExportAccessoryView";
 }
