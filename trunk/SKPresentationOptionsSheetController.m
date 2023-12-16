@@ -47,7 +47,6 @@
 #import "SKMainWindowController.h"
 #import "SKPDFView.h"
 #import "SKImageToolTipWindow.h"
-#import "SKScroller.h"
 #import "NSWindowController_SKExtensions.h"
 #import "NSDocument_SKExtensions.h"
 #import "NSGraphics_SKExtensions.h"
@@ -82,7 +81,7 @@ static char *SKTransitionPropertiesObservationContext;
 @implementation SKPresentationOptionsSheetController
 
 @synthesize notesDocumentPopUpButton, tableView, stylePopUpButton, okButton, cancelButton, tableWidthConstraint, boxLeadingConstraint, arrayController, separate, transition, transitions, undoManager;
-@dynamic currentTransitions, pageTransitions, notesDocument, notesDocumentOffset, verticalScroller;
+@dynamic currentTransitions, pageTransitions, notesDocument, notesDocumentOffset;
 
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
     NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
@@ -338,10 +337,6 @@ static char *SKTransitionPropertiesObservationContext;
 - (NSInteger)notesDocumentOffset {
     [self window];
     return [[notesDocumentPopUpButton selectedItem] tag];
-}
-
-- (SKScroller *)verticalScroller {
-    return (SKScroller *)[[tableView enclosingScrollView] verticalScroller];
 }
 
 #pragma mark Undo

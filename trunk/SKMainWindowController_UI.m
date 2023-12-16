@@ -79,7 +79,6 @@
 #import "NSURL_SKExtensions.h"
 #import "PDFDocument_SKExtensions.h"
 #import "NSArray_SKExtensions.h"
-#import "SKScroller.h"
 #import "SKNoteTableRowView.h"
 #import "SKHighlightingTableRowView.h"
 #import "SKSecondaryPDFView.h"

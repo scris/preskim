@@ -68,7 +68,8 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
     self = [super init];
     if (self) {
         queue = NULL;
-        lockQueue = dispatch_queue_create("net.sourceforge.skim-app.lockQueue.SKPDFSynchronizer", NULL);
+        
+        lock = [[NSLock alloc] init];
         
         fileName = nil;
         syncFileName = nil;
@@ -108,50 +109,47 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 }
 
 - (NSString *)fileName {
-    NSString __block *file = nil;
-    dispatch_sync(lockQueue, ^{
-        file = fileName;
-    });
+    [lock lock];
+    NSString *file = fileName;
+    [lock unlock];
     return file;
 }
 
 - (void)setFileName:(NSString *)newFileName {
     // we compare filenames in canonical form throughout, so we need to make sure fileName also is in canonical form
     newFileName = [[newFileName stringByResolvingSymlinksInPath] stringByStandardizingPath];
-    dispatch_sync(lockQueue, ^{
-        if (fileName != newFileName) {
-            if ([fileName isEqualToString:newFileName] == NO) {
-                syncFileName = nil;
-                lastModDate = nil;
-            }
-            fileName = newFileName;
+    [lock lock];
+    if (fileName != newFileName) {
+        if ([fileName isEqualToString:newFileName] == NO) {
+            syncFileName = nil;
+            lastModDate = nil;
         }
-    });
+        fileName = newFileName;
+    }
+    [lock unlock];
 }
 
 - (NSString *)syncFileName {
-    NSString __block *file = nil;
-    dispatch_sync(lockQueue, ^{
-        file = syncFileName;
-    });
+    [lock lock];
+    NSString *file = syncFileName;
+    [lock unlock];
     return file;
 }
 
 // this should only be used from the server thread
 - (void)setSyncFileName:(NSString *)newSyncFileName {
-    dispatch_sync(lockQueue, ^{
-        if (syncFileName != newSyncFileName) {
-            syncFileName = newSyncFileName;
-        }
-        lastModDate = (syncFileName ? [[fileManager attributesOfItemAtPath:syncFileName error:NULL] fileModificationDate] : nil);
-    });
+    [lock lock];
+    if (syncFileName != newSyncFileName) {
+        syncFileName = newSyncFileName;
+    }
+    lastModDate = (syncFileName ? [[fileManager attributesOfItemAtPath:syncFileName error:NULL] fileModificationDate] : nil);
+    [lock unlock];
 }
 
 - (NSDate *)lastModDate {
-    NSDate __block *date = nil;
-    dispatch_sync(lockQueue, ^{
-        date = lastModDate;
-    });
+    [lock lock];
+    NSDate *date = lastModDate;
+    [lock unlock];
     return date;
 }
 
