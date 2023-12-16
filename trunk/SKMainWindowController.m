@@ -2874,9 +2874,8 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     PDFPage *page = [self pageForThumbnail:thumbnail];
     SKReadingBar *readingBar = [[[pdfView readingBar] page] isEqual:page] ? [pdfView readingBar] : nil;
     PDFDisplayBox box = [pdfView displayBox];
-    dispatch_queue_t queue = dispatch_get_main_queue();
     
-    dispatch_async(queue, ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSImage *image = [page thumbnailWithSize:thumbnailCacheSize forBox:box readingBar:readingBar];
         [image setAccessibilityDescription:[NSString stringWithFormat:NSLocalizedString(@"Page %@", @""), [page displayLabel]]];
         
