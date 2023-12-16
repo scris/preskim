@@ -118,7 +118,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 - (void)setFileName:(NSString *)newFileName {
     // we compare filenames in canonical form throughout, so we need to make sure fileName also is in canonical form
     newFileName = [[newFileName stringByResolvingSymlinksInPath] stringByStandardizingPath];
-    dispatch_async(lockQueue, ^{
+    dispatch_sync(lockQueue, ^{
         if (fileName != newFileName) {
             if ([fileName isEqualToString:newFileName] == NO) {
                 syncFileName = nil;
@@ -139,7 +139,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 
 // this should only be used from the server thread
 - (void)setSyncFileName:(NSString *)newSyncFileName {
-    dispatch_async(lockQueue, ^{
+    dispatch_sync(lockQueue, ^{
         if (syncFileName != newSyncFileName) {
             syncFileName = newSyncFileName;
         }
