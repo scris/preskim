@@ -97,7 +97,6 @@
 #import "NSScreen_SKExtensions.h"
 #import "PDFView_SKExtensions.h"
 #import "NSScanner_SKExtensions.h"
-#import "SKScroller.h"
 #import "SKMainWindow.h"
 #import "PDFOutline_SKExtensions.h"
 #import "NSWindow_SKExtensions.h"

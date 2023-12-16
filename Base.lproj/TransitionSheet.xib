@@ -388,7 +388,7 @@ Gw
                             <rect key="frame" x="-100" y="-100" width="128" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="447" userLabel="Vertical Scroller" customClass="SKScroller">
+                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="447" userLabel="Vertical Scroller">
                             <rect key="frame" x="116" y="1" width="14" height="232"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>

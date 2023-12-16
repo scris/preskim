@@ -53,7 +53,8 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
     __weak id <SKPDFSynchronizerDelegate> delegate;
     
     dispatch_queue_t queue;
-    dispatch_queue_t lockQueue;
+    
+    NSLock *lock;
     
     NSString *fileName;
     NSString *syncFileName;
