@@ -416,6 +416,16 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 #pragma mark Event handling
 
+- (NSDraggingImageComponent *)draggingImageComponent {
+    NSDraggingImageComponent *component = [[NSDraggingImageComponent alloc] initWithKey:NSDraggingImageComponentIconKey];
+    NSRect rect = [imageView frame];
+    NSImage *dragImage = [[NSImage alloc] initWithSize:rect.size];
+    [dragImage addRepresentation:[imageView bitmapImageRepCachingDisplayInRect:[imageView bounds]]];
+    [component setContents:dragImage];
+    [component setFrame:rect];
+    return component;
+}
+
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([NSApp willDragMouse]) {
         
@@ -428,13 +438,27 @@ static char SKThumbnailViewThumbnailObservationContext;
         
         if (item) {
             
-            NSRect rect = [imageView frame];
-            NSBitmapImageRep *imageRep = [imageView bitmapImageRepCachingDisplayInRect:[imageView bounds]];
-            NSImage *dragImage = [[NSImage alloc] initWithSize:rect.size];
-            [dragImage addRepresentation:imageRep];
-            
             NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
-            [dragItem setDraggingFrame:rect contents:dragImage];
+            
+            [dragItem setDraggingFrame:[self bounds]];
+            if (selectionIndexes == nil) {
+                [dragItem setImageComponentsProvider:^{
+                    return @[[self draggingImageComponent]];
+                }];
+            } else {
+                [dragItem setImageComponentsProvider:^{
+                    NSMutableArray *components = [NSMutableArray array];
+                    NSCollectionView *collectionView = [[self controller] collectionView];
+                    [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
+                        SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
+                        NSDraggingImageComponent *component = [view draggingImageComponent];
+                        [component setFrame:[self convertRect:[component frame] fromView:view]];
+                        [components addObject:component];
+                    }];
+                    return components;
+                }];
+            }
+            
             [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
         }
         
