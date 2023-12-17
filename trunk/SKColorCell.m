@@ -61,8 +61,9 @@
 
 - (instancetype)copyWithZone:(NSZone *)zone {
     SKColorCell *copy = [super copyWithZone:zone];
-    copy->color = color;
-    copy->shouldFill = shouldFill;
+    // super sets objectValue on the copy, which resets the color ivar
+    if (color)
+        [copy setObjectValue:color];
     return copy;
 }
 

@@ -596,15 +596,6 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
     [coder encodeObject:alternatePath forKey:@"alternatePath"];
 }
 
-- (instancetype)copyWithZone:(NSZone *)zone {
-    SKNavigationButtonCell *copy = [super copyWithZone:zone];
-    copy->toolTip = toolTip;
-    copy->alternateToolTip = alternateToolTip;
-    copy->path = path;
-    copy->alternatePath = alternatePath;
-    return copy;
-}
-
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
     [[NSColor colorWithDeviceWhite:1.0 alpha:[self isEnabled] == NO ? 0.3 : [self isHighlighted] ? 0.9 : 0.6] setFill];
     [([self state] == NSOnState && [self alternatePath] ? [self alternatePath] : [self path]) fill];

@@ -62,12 +62,6 @@
         [self commonInit];
     return self;
 }
-
-- (instancetype)copyWithZone:(NSZone *)zone {
-    SKNumberArrayFormatter *copy = [super copyWithZone:zone];
-    copy->numberFormatter = [numberFormatter copyWithZone:zone];
-    return copy;
-}
  
 - (NSString *)stringForObjectValue:(id)obj {
     if ([obj isKindOfClass:[NSString class]])

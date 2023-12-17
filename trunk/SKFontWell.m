@@ -483,14 +483,6 @@ static char SKFontWellFontSizeObservationContext;
     [coder encodeObject:textColor forKey:HASTEXTCOLOR_KEY];
 }
 
-- (instancetype)copyWithZone:(NSZone *)zone {
-    SKFontWellCell *copy = [super copyWithZone:zone];
-    copy->textColor = [textColor copyWithZone:zone];
-    copy->hasTextColor = hasTextColor;
-    return copy;
-}
-
-
 - (void)drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView {
     SKDrawTextFieldBezel(frame, controlView);
     

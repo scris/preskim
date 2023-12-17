@@ -53,12 +53,6 @@ static NSMutableDictionary *activeImages;
     activeImages = [[NSMutableDictionary alloc] init];
 }
 
-- (instancetype)copyWithZone:(NSZone *)aZone {
-    SKAnnotationTypeImageCell *copy = [super copyWithZone:aZone];
-    copy->hasOutline = hasOutline;
-    return copy;
-}
-
 - (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [super initWithCoder:decoder];
     if (self) {
