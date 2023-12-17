@@ -55,20 +55,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 - (void)setRepresentedObject:(id)representedObject {
     [super setRepresentedObject:representedObject];
-    if (viewLoaded)
+    if ([self isViewLoaded])
         [(SKThumbnailView *)[self view] setThumbnail:[representedObject isKindOfClass:[SKThumbnail class]] ? representedObject : nil];
 }
 
 - (void)setSelected:(BOOL)selected {
     [super setSelected:selected];
-    if (viewLoaded)
+    if ([self isViewLoaded])
         [(SKThumbnailView *)[self view] setSelected:selected];
 }
 
 - (void)setBackgroundStyle:(NSBackgroundStyle)newBackgroundStyle {
     if (backgroundStyle != newBackgroundStyle) {
         backgroundStyle = newBackgroundStyle;
-        if (viewLoaded)
+        if ([self isViewLoaded])
             [(SKThumbnailView *)[self view] setBackgroundStyle:newBackgroundStyle];
     }
 }
@@ -76,7 +76,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (void)setHighlightLevel:(NSInteger)newHighlightLevel {
     if (highlightLevel != newHighlightLevel) {
         highlightLevel = newHighlightLevel;
-        if (viewLoaded)
+        if ([self isViewLoaded])
             [(SKThumbnailView *)[self view] setHighlightLevel:newHighlightLevel];
     }
 }
@@ -84,31 +84,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (void)setMarked:(BOOL)newMarked {
     if (marked != newMarked) {
         marked = newMarked;
-        if (viewLoaded)
+        if ([self isViewLoaded])
             [(SKThumbnailView *)[self view] setMarked:newMarked];
     }
 }
 
 - (void)loadView {
-    if (viewLoaded == NO) {
-        NSRect rect = NSZeroRect;
-        rect.size = [SKThumbnailView sizeForImageSize:NSMakeSize(32.0, 32.0)];
-        SKThumbnailView *view = [[SKThumbnailView alloc] initWithFrame:rect];
-        [view setController:self];
-        if ([[self representedObject] isKindOfClass:[SKThumbnail class]])
-            [view setThumbnail:[self representedObject]];
-        [view setSelected:[self isSelected]];
-        [view setBackgroundStyle:[self backgroundStyle]];
-        [view setHighlightLevel:[self highlightLevel]];
-        [view setMarked:[self isMarked]];
-        [self setView:view];
-    }
-    viewLoaded = YES;
+    NSRect rect = NSZeroRect;
+    rect.size = [SKThumbnailView sizeForImageSize:NSMakeSize(32.0, 32.0)];
+    SKThumbnailView *view = [[SKThumbnailView alloc] initWithFrame:rect];
+    [view setController:self];
+    if ([[self representedObject] isKindOfClass:[SKThumbnail class]])
+        [view setThumbnail:[self representedObject]];
+    [view setSelected:[self isSelected]];
+    [view setBackgroundStyle:[self backgroundStyle]];
+    [view setHighlightLevel:[self highlightLevel]];
+    [view setMarked:[self isMarked]];
+    [self setView:view];
 }
 
 - (void)prepareForReuse {
-    if ([[SKThumbnailItem superclass] instancesRespondToSelector:_cmd])
-        [super prepareForReuse];
+    [super prepareForReuse];
     [self setSelected:NO];
     [self setBackgroundStyle:NSBackgroundStyleLight];
     [self setHighlightLevel:0];
