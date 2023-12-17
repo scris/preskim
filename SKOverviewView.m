@@ -110,8 +110,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (id)newViewWithIdentifier:(NSString *)identifier {
     for (id view in cachedViews) {
         if ([[view identifier] isEqualToString:identifier]) {
+            id newView = view;
             [cachedViews removeObject:view];
-            return view;
+            return newView;
         }
     }
     return nil;
