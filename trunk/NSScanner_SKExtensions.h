@@ -38,10 +38,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSScanner (SKExtensions)
 
-- (BOOL)scanCharacter:(unichar *)ch;
-- (BOOL)peekCharacter:(unichar *)ch;
+- (BOOL)scanCharacter:(unichar * _Nullable)ch;
+- (BOOL)peekCharacter:(unichar * _Nullable)ch;
 
 @end
+
+NS_ASSUME_NONNULL_END

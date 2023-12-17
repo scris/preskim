@@ -40,6 +40,8 @@
 #import "SKApplication.h"
 #import "HIDRemote.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKPageLabelsChangedNotification;
 
 @class SKBookmark, SKDownload;
@@ -53,18 +55,16 @@ extern NSString *SKPageLabelsChangedNotification;
     id activity;
 }
 
-- (IBAction)orderFrontLineInspector:(id)sender;
-- (IBAction)orderFrontNotesPanel:(id)sender;
+- (IBAction)orderFrontLineInspector:(nullable id)sender;
+- (IBAction)orderFrontNotesPanel:(nullable id)sender;
 
-- (IBAction)visitWebSite:(id)sender;
-- (IBAction)visitWiki:(id)sender;
-- (IBAction)showPreferencePanel:(id)sender;
-- (IBAction)showReleaseNotes:(id)sender;
-- (IBAction)showDownloads:(id)sender;
+- (IBAction)visitWebSite:(nullable id)sender;
+- (IBAction)visitWiki:(nullable id)sender;
+- (IBAction)showPreferencePanel:(nullable id)sender;
+- (IBAction)showReleaseNotes:(nullable id)sender;
+- (IBAction)showDownloads:(nullable id)sender;
 
-@property (nonatomic, strong) IBOutlet NSMenu *noteColumnsMenu, *noteTypeMenu;
-
-@property (weak, nonatomic, readonly) NSColorList *colorList;
+@property (nonatomic, nullable, strong) IBOutlet NSMenu *noteColumnsMenu, *noteTypeMenu;
 
 @property (nonatomic, copy) NSArray *favoriteColors;
 @property (nonatomic) PDFLineStyle defaultStartLineStyle, defaultEndLineStyle;
@@ -80,3 +80,5 @@ extern NSString *SKPageLabelsChangedNotification;
 - (void)removeObjectFromDownloadsAtIndex:(NSUInteger)anIndex;
 
 @end
+
+NS_ASSUME_NONNULL_END

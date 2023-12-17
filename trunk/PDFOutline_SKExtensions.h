@@ -39,25 +39,28 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface PDFOutline (SKExtensions)
 
-@property (nonatomic, readonly) PDFPage *page;
-@property (nonatomic, readonly) NSString *pageLabel;
+@property (nonatomic, nullable, readonly) PDFPage *page;
+@property (nonatomic, nullable, readonly) NSString *pageLabel;
 
-@property (nonatomic, readonly) NSString *cleanedLabel;
+@property (nonatomic, nullable, readonly) NSString *cleanedLabel;
 
 @property (nonatomic, readonly) NSInteger deepestLevel;
 
 - (void)pageLabelDidUpdate;
 
-@property (nonatomic, readonly) NSScriptObjectSpecifier *objectSpecifier;
-@property (nonatomic, readonly) PDFOutline *scriptingParent;
+@property (nonatomic, nullable, readonly) NSScriptObjectSpecifier *objectSpecifier;
+@property (nonatomic, nullable, readonly) PDFOutline *scriptingParent;
 @property (nonatomic, readonly) NSArray *entireContents;
 - (NSUInteger)countOfOutlines;
 - (PDFOutline *)objectInOutlinesAtIndex:(NSUInteger)idx;
-@property (nonatomic, readonly) NSString *scriptingURL;
-@property (nonatomic, readonly) NSURL *scriptingFile;
+@property (nonatomic, nullable, readonly) NSString *scriptingURL;
+@property (nonatomic, nullable, readonly) NSURL *scriptingFile;
 @property (nonatomic, getter=isExpanded) BOOL expanded;
 
 @end
+
+NS_ASSUME_NONNULL_END

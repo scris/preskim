@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import "SKMainWindow.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKFullScreenWindow : SKMainWindow <NSAnimationDelegate>
 
@@ -50,3 +51,5 @@
 @interface NSWindowController (SKMainFullScreenWindow)
 - (BOOL)handleRightMouseDown:(NSEvent *)theEvent;
 @end
+
+NS_ASSUME_NONNULL_END

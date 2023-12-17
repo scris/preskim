@@ -38,13 +38,16 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKProgressTableCellView : NSTableCellView {
     __weak NSTextField *statusField;
     __weak NSProgressIndicator *progressIndicator;
 }
 
-@property (nonatomic, weak) IBOutlet NSTextField *statusField;
-@property (nonatomic, weak) IBOutlet NSProgressIndicator *progressIndicator;
+@property (nonatomic, nullable, weak) IBOutlet NSTextField *statusField;
+@property (nonatomic, nullable, weak) IBOutlet NSProgressIndicator *progressIndicator;
 
 @end
+
+NS_ASSUME_NONNULL_END

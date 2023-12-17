@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSPointerFunctions (SKExtensions)
 
@@ -49,3 +50,5 @@
 @property (class, nonatomic, readonly) NSPointerFunctions *caseInsensitiveStringPointerFunctions;
 
 @end
+
+NS_ASSUME_NONNULL_END

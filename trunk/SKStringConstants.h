@@ -36,6 +36,7 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *SKAutoCheckFileUpdateKey;
 extern NSString *SKAutoReloadFileUpdateKey;
@@ -146,3 +147,5 @@ extern NSString *SKInvertColorsInDarkModeKey;
 extern NSString *SKSepiaToneKey;
 extern NSString *SKWhitePointKey;
 extern NSString *SKPresentationInkNoteColorKey;
+
+NS_ASSUME_NONNULL_END

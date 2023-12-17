@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "SKGroupView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, SKTopBarStyle) {
     SKTopBarStyleDefault,
     SKTopBarStylePDFControlBackground,
@@ -60,3 +62,5 @@ typedef NS_ENUM(NSInteger, SKTopBarStyle) {
 @property (nonatomic) SKTopBarStyle style;
 
 @end
+
+NS_ASSUME_NONNULL_END

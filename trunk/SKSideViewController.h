@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKMainWindowController, SKTopBarView;
 
 @interface SKSideViewController : NSViewController {
@@ -50,17 +52,19 @@
     BOOL isAnimating;
 }
 
-@property (nonatomic, weak) IBOutlet SKMainWindowController *mainController;
-@property (nonatomic, strong) IBOutlet SKTopBarView *topBar;
-@property (nonatomic, strong) IBOutlet NSSegmentedControl *button, *alternateButton;
-@property (nonatomic, strong) IBOutlet NSSearchField *searchField;
-@property (nonatomic, strong) IBOutlet NSView *currentView;
+@property (nonatomic, nullable, weak) IBOutlet SKMainWindowController *mainController;
+@property (nonatomic, nullable, strong) IBOutlet SKTopBarView *topBar;
+@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *button, *alternateButton;
+@property (nonatomic, nullable, strong) IBOutlet NSSearchField *searchField;
+@property (nonatomic, nullable, strong) IBOutlet NSView *currentView;
 
 @property (nonatomic) CGFloat topInset;
-@property (weak, nonatomic, readonly) NSArray *tableViews;
+@property (weak, nonatomic, nullable, readonly) NSArray *tableViews;
 
 - (BOOL)requiresAlternateButtonForView:(NSView *)aView;
 
 - (void)replaceSideView:(NSView *)newView animate:(BOOL)animate;
 
 @end
+
+NS_ASSUME_NONNULL_END

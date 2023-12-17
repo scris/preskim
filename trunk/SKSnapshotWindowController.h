@@ -40,6 +40,8 @@
 #import <Quartz/Quartz.h>
 #import "SKSnapshotPDFView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKSnapshotCurrentSetupKey;
 
 @class PDFDocument, PDFPage;
@@ -63,13 +65,13 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
     BOOL animating;
 }
 
-@property (nonatomic, strong) IBOutlet SKSnapshotPDFView *pdfView;
-@property (nonatomic, weak) id <SKSnapshotWindowControllerDelegate> delegate;
-@property (nonatomic, strong) NSImage *thumbnail;
+@property (nonatomic, nullable, strong) IBOutlet SKSnapshotPDFView *pdfView;
+@property (nonatomic, nullable, weak) id <SKSnapshotWindowControllerDelegate> delegate;
+@property (nonatomic, nullable, strong) NSImage *thumbnail;
 @property (nonatomic, readonly) NSRect bounds;
 @property (nonatomic, readonly) NSUInteger pageIndex;
-@property (nonatomic, readonly, copy) NSString *pageLabel;
-@property (nonatomic, copy) NSString *string;
+@property (nonatomic, nullable, readonly, copy) NSString *pageLabel;
+@property (nonatomic, nullable, copy) NSString *string;
 @property (nonatomic, readonly) BOOL hasWindow;
 @property (weak, nonatomic, readonly) NSDictionary *currentSetup;
 @property (nonatomic) BOOL forceOnTop;
@@ -78,7 +80,7 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
 
 - (void)setPdfDocument:(PDFDocument *)pdfDocument goToPageNumber:(NSInteger)pageNum rect:(NSRect)rect scaleFactor:(CGFloat)factor autoFits:(BOOL)autoFits;
 - (void)setPdfDocument:(PDFDocument *)pdfDocument setup:(NSDictionary *)setup;
-- (void)setPdfDocument:(PDFDocument *)pdfDocument previewPageNumber:(NSInteger)pageNum displayOnScreen:(NSScreen *)screen;
+- (void)setPdfDocument:(PDFDocument *)pdfDocument previewPageNumber:(NSInteger)pageNum displayOnScreen:(nullable NSScreen *)screen;
 
 - (BOOL)isPageVisible:(PDFPage *)page;
 
@@ -102,7 +104,7 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
 - (void)handleDidMoveAnnotationNotification:(NSNotification *)notification;
 
 - (void)setNeedsDisplayInRect:(NSRect)rect ofPage:(PDFPage *)page;
-- (void)setNeedsDisplayForAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page;
+- (void)setNeedsDisplayForAnnotation:(PDFAnnotation *)annotation onPage:(nullable PDFPage *)page;
 
 @end
 
@@ -118,3 +120,5 @@ typedef NS_ENUM(NSInteger, SKSnapshotOpenType) {
 - (void)snapshotController:(SKSnapshotWindowController *)controller goToDestination:(PDFDestination *)destination;
 
 @end
+
+NS_ASSUME_NONNULL_END

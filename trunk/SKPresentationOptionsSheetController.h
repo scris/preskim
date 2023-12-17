@@ -40,6 +40,8 @@
 #import "SKTransitionController.h"
 #import "SKTableView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKMainWindowController, SKThumbnail, SKTransitionInfo;
 
 @interface SKPresentationOptionsSheetController : NSWindowController <NSWindowDelegate, SKTableViewDelegate, NSTableViewDataSource, NSTouchBarDelegate> {
@@ -59,18 +61,18 @@
     NSMutableSet *changedTransitions;
 }
 
-@property (nonatomic, strong) IBOutlet NSPopUpButton *notesDocumentPopUpButton;
-@property (nonatomic, strong) IBOutlet SKTableView *tableView;
-@property (nonatomic, strong) IBOutlet NSPopUpButton *stylePopUpButton;
-@property (nonatomic, strong) IBOutlet NSButton *okButton, *cancelButton;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *boxLeadingConstraint, *tableWidthConstraint;
-@property (nonatomic, strong) IBOutlet NSArrayController *arrayController;
+@property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *notesDocumentPopUpButton;
+@property (nonatomic, nullable, strong) IBOutlet SKTableView *tableView;
+@property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *stylePopUpButton;
+@property (nonatomic, nullable, strong) IBOutlet NSButton *okButton, *cancelButton;
+@property (nonatomic, nullable, strong) IBOutlet NSLayoutConstraint *boxLeadingConstraint, *tableWidthConstraint;
+@property (nonatomic, nullable, strong) IBOutlet NSArrayController *arrayController;
 @property (nonatomic) BOOL separate;
 @property (nonatomic, readonly) SKTransitionInfo *transition;
-@property (nonatomic, copy) NSArray *transitions;
-@property (nonatomic, readonly) NSArray *currentTransitions;
-@property (nonatomic, readonly) NSArray *pageTransitions;
-@property (nonatomic, readonly) NSDocument *notesDocument;
+@property (nonatomic, nullable, copy) NSArray *transitions;
+@property (nonatomic, nullable, readonly) NSArray *currentTransitions;
+@property (nonatomic, nullable, readonly) NSArray *pageTransitions;
+@property (nonatomic, nullable, readonly) NSDocument *notesDocument;
 @property (nonatomic, readonly) NSInteger notesDocumentOffset;
 @property (nonatomic, readonly) NSUndoManager *undoManager;
 
@@ -80,3 +82,5 @@
 - (void)stopObservingTransitions:(NSArray *)infos;
 
 @end
+
+NS_ASSUME_NONNULL_END

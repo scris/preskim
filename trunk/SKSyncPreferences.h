@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "SKPreferenceController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKSyncTeXEditorCommandKey;
 extern NSString *SKSyncTeXEditorArgumentsKey;
 
@@ -47,11 +49,13 @@ extern NSString *SKSyncTeXEditorArgumentsKey;
     BOOL customTeXEditor;
 }
 
-@property (nonatomic, strong) IBOutlet NSPopUpButton *texEditorPopUpButton;
+@property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *texEditorPopUpButton;
 @property (nonatomic, getter=isCustomTeXEditor) BOOL customTeXEditor;
 
-+ (NSDictionary *)TeXEditorForPreset:(NSString *)name;
++ (nullable NSDictionary *)TeXEditorForPreset:(NSString *)name;
 
-- (IBAction)changeTeXEditorPreset:(id)sender;
+- (IBAction)changeTeXEditorPreset:(nullable id)sender;
 
 @end
+
+NS_ASSUME_NONNULL_END

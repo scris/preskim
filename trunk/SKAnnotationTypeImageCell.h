@@ -38,8 +38,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SKAnnotationTypeImageCell : NSImageCell {
     BOOL hasOutline;
 }
 @property (nonatomic) BOOL hasOutline;
 @end
+
+NS_ASSUME_NONNULL_END

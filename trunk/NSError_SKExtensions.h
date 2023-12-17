@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKDocumentErrorDomain;
 
 enum {
@@ -50,15 +52,17 @@ enum {
 
 @interface NSError (SKExtensions)
 
-+ (instancetype)writeFileErrorWithLocalizedDescription:(NSString *)description;
-+ (instancetype)readFileErrorWithLocalizedDescription:(NSString *)description;
-+ (instancetype)readPasteboardErrorWithLocalizedDescription:(NSString *)description;
-+ (instancetype)userCancelledErrorWithUnderlyingError:(NSError *)error;
-+ (instancetype)printDocumentErrorWithLocalizedDescription:(NSString *)description;
-+ (instancetype)failedToCommitErrorWithLocalizedDescription:(NSString *)description;
++ (instancetype)writeFileErrorWithLocalizedDescription:(nullable NSString *)description;
++ (instancetype)readFileErrorWithLocalizedDescription:(nullable NSString *)description;
++ (instancetype)readPasteboardErrorWithLocalizedDescription:(nullable NSString *)description;
++ (instancetype)userCancelledErrorWithUnderlyingError:(nullable NSError *)error;
++ (instancetype)printDocumentErrorWithLocalizedDescription:(nullable NSString *)description;
++ (instancetype)failedToCommitErrorWithLocalizedDescription:(nullable NSString *)description;
 
-+ (NSError *)combineErrors:(NSArray *)errors maximum:(NSUInteger)max;
++ (nullable NSError *)combineErrors:(NSArray *)errors maximum:(NSUInteger)max;
 
 - (BOOL)isUserCancelledError;
 
 @end
+
+NS_ASSUME_NONNULL_END

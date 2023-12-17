@@ -39,6 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import <Cocoa/Cocoa.h>
 #import "SKGroupView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class PDFAnnotation;
 
 @interface SKColorMenuView : SKGroupView {
@@ -50,3 +52,5 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (instancetype)initWithAnnotation:(PDFAnnotation *)anAnnotation;
 
 @end
+
+NS_ASSUME_NONNULL_END

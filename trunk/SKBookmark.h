@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, SKBookmarkType) {
     SKBookmarkTypeBookmark,
     SKBookmarkTypeFolder,
@@ -50,36 +52,36 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
     __weak SKBookmark *parent;
 }
 
-+ (instancetype)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
-+ (instancetype)bookmarkWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
-+ (instancetype)bookmarkFolderWithLabel:(NSString *)aLabel;
-+ (instancetype)bookmarkSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
++ (nullable instancetype)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
++ (nullable instancetype)bookmarkWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
++ (nullable instancetype)bookmarkFolderWithLabel:(NSString *)aLabel;
++ (nullable instancetype)bookmarkSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
 + (instancetype)bookmarkSeparator;
 
 + (NSArray *)bookmarksForURLs:(NSArray *)urls;
 
-- (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
-- (instancetype)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
-- (instancetype)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel;
-- (instancetype)initFolderWithLabel:(NSString *)aLabel;
-- (instancetype)initRootWithChildrenProperties:(NSArray *)childrenProperties;
-- (instancetype)initSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
-- (instancetype)initSeparator;
-- (instancetype)initWithProperties:(NSDictionary *)dictionary;
+- (nullable instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
+- (nullable instancetype)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
+- (nullable instancetype)initFolderWithChildren:(nullable NSArray *)aChildren label:(NSString *)aLabel;
+- (nullable instancetype)initFolderWithLabel:(NSString *)aLabel;
+- (nullable instancetype)initRootWithChildrenProperties:(nullable NSArray *)childrenProperties;
+- (nullable instancetype)initSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
+- (nullable instancetype)initSeparator;
+- (nullable instancetype)initWithProperties:(NSDictionary *)dictionary;
 
 @property (nonatomic, readonly) NSDictionary *properties;
 @property (nonatomic, readonly) SKBookmarkType bookmarkType;
-@property (nonatomic, strong) NSString *label;
-@property (nonatomic, readonly) NSImage *icon, *alternateIcon;
-@property (nonatomic, copy) NSURL *fileURL;
-@property (nonatomic, readonly) NSURL *fileURLToOpen;
-@property (nonatomic, readonly) NSString *fileDescription;
-@property (nonatomic, readonly) NSString *toolTip;
+@property (nonatomic, nullable, strong) NSString *label;
+@property (nonatomic, nullable, readonly) NSImage *icon, *alternateIcon;
+@property (nonatomic, nullable, copy) NSURL *fileURL;
+@property (nonatomic, nullable, readonly) NSURL *fileURLToOpen;
+@property (nonatomic, nullable, readonly) NSString *fileDescription;
+@property (nonatomic, nullable, readonly) NSString *toolTip;
 @property (nonatomic) NSUInteger pageIndex;
-@property (nonatomic, strong) NSNumber *pageNumber;
+@property (nonatomic, nullable, strong) NSNumber *pageNumber;
 @property (nonatomic, readonly) BOOL hasSetup;
-@property (nonatomic, readonly) NSString *tabs;
-@property (nonatomic, weak) SKBookmark *parent;
+@property (nonatomic, nullable, readonly) NSString *tabs;
+@property (nonatomic, nullable, weak) SKBookmark *parent;
 @property (nonatomic, readonly) NSArray *containingBookmarks;
 
 - (NSArray *)children;
@@ -91,8 +93,8 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 - (void)removeObjectFromChildrenAtIndex:(NSUInteger)anIndex;
 - (void)removeChildrenAtIndexes:(NSIndexSet *)indexes;
 
-@property (nonatomic, readonly) SKBookmark *scriptingParent;
-@property (nonatomic, readonly) NSArray *entireContents;
+@property (nonatomic, nullable, readonly) SKBookmark *scriptingParent;
+@property (nonatomic, nullable, readonly) NSArray *entireContents;
 
 - (NSArray *)bookmarks;
 - (void)insertObject:(SKBookmark *)bookmark inBookmarksAtIndex:(NSUInteger)anIndex;
@@ -103,6 +105,8 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 - (BOOL)isDescendantOf:(SKBookmark *)bookmark;
 - (BOOL)isDescendantOfArray:(NSArray *)bookmarks;
 
-@property (nonatomic, readonly) NSURL * skimURL;
+@property (nonatomic, nullable, readonly) NSURL * skimURL;
 
 @end
+
+NS_ASSUME_NONNULL_END

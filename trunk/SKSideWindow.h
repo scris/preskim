@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import "SKMainWindow.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKSideWindow : SKMainWindow {
     NSView *mainContentView;
@@ -55,3 +56,5 @@
 
 @interface SKSideWindowContentView : NSView
 @end
+
+NS_ASSUME_NONNULL_END

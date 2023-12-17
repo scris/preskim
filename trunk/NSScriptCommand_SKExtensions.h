@@ -38,12 +38,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSScriptCommand (SKExtensions)
 
-@property (nonatomic, readonly) NSScriptObjectSpecifier *subjectSpecifier;
-@property (nonatomic, readonly) id evaluatedSubjects;
+@property (nonatomic, nullable, readonly) NSScriptObjectSpecifier *subjectSpecifier;
+@property (nonatomic, nullable, readonly) id evaluatedSubjects;
 
 @end
 
-
+NS_ASSUME_NONNULL_END

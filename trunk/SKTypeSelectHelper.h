@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, SKTypeSelectMatchOption) {
     SKPrefixMatch,
@@ -57,7 +58,7 @@ typedef NS_ENUM(NSInteger, SKTypeSelectMatchOption) {
     NSWindow *observedWindow;
 }
 
-@property (weak) id <SKTypeSelectDelegate> delegate;
+@property (nullable, weak) id <SKTypeSelectDelegate> delegate;
 @property SKTypeSelectMatchOption matchOption;
 
 + (instancetype)typeSelectHelper;
@@ -84,3 +85,5 @@ typedef NS_ENUM(NSInteger, SKTypeSelectMatchOption) {
 - (void)typeSelectHelperUpdateSearchString:(NSString *)searchString; // optional
 
 @end
+
+NS_ASSUME_NONNULL_END

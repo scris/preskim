@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKPasteboardTypeLineStyle;
 // these keys are used in the userInfo dictionary of this pboard type
 extern NSString *SKLineWellLineWidthKey;
@@ -78,7 +80,7 @@ typedef NS_ENUM(NSInteger, SKLineWellDisplayStyle) {
 @property (nonatomic) SKLineWellDisplayStyle displayStyle;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic) PDFBorderStyle style;
-@property (nonatomic, copy) NSArray *dashPattern;
+@property (nonatomic, nullable, copy) NSArray *dashPattern;
 @property (nonatomic) PDFLineStyle startLineStyle, endLineStyle;
 
 - (void)activate:(BOOL)exclusive;
@@ -87,3 +89,5 @@ typedef NS_ENUM(NSInteger, SKLineWellDisplayStyle) {
 - (void)lineInspectorLineAttributeChanged:(NSNotification *)notification;
 
 @end
+
+NS_ASSUME_NONNULL_END

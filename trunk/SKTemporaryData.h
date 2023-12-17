@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKTemporaryData : NSObject {
     PDFDocument *pdfDocument;
@@ -47,10 +48,12 @@
     double openMetaRating;
 }
 
-@property (nonatomic, strong) PDFDocument *pdfDocument;
-@property (nonatomic, copy) NSArray *noteDicts;
-@property (nonatomic, copy) NSDictionary *presentationOptions;
-@property (nonatomic, copy) NSArray *openMetaTags;
+@property (nonatomic, nullable, strong) PDFDocument *pdfDocument;
+@property (nonatomic, nullable, copy) NSArray *noteDicts;
+@property (nonatomic, nullable, copy) NSDictionary *presentationOptions;
+@property (nonatomic, nullable, copy) NSArray *openMetaTags;
 @property (nonatomic) double openMetaRating;
 
 @end
+
+NS_ASSUME_NONNULL_END

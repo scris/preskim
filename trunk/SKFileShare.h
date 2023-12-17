@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKFileShare : NSObject <NSSharingServiceDelegate> {
     NSURL *fileURL;
@@ -46,10 +47,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     id strongSelf;
 }
 
-@property (nonatomic, strong) NSURL *fileURL;
-@property (nonatomic, strong) NSSharingService *sharingService;
-@property (nonatomic, copy) void (^completionHandler)(BOOL success);
+@property (nonatomic, nullable, strong) NSURL *fileURL;
+@property (nonatomic, nullable, strong) NSSharingService *sharingService;
+@property (nonatomic, nullable, copy) void (^completionHandler)(BOOL success);
 
-+ (void)shareURL:(NSURL *)aFileURL preparedByTask:(NSTask *)task usingService:(NSSharingService *)aSharingService completionHandler:(void (^)(BOOL success))aCompletionHandler;
++ (void)shareURL:(NSURL *)aFileURL preparedByTask:(NSTask *)task usingService:(NSSharingService *)aSharingService completionHandler:(nullable void (^)(BOOL success))aCompletionHandler;
 
 @end
+
+NS_ASSUME_NONNULL_END

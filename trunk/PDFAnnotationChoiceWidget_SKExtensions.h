@@ -39,7 +39,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface PDFAnnotationChoiceWidget (SKExtensions)
-
 @end
+
+NS_ASSUME_NONNULL_END

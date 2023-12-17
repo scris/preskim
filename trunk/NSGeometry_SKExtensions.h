@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_OPTIONS(NSUInteger, SKRectEdges) {
 	SKNoEdgeMask = 0,
 	SKMinXEdgeMask = 1 << NSMinXEdge,
@@ -203,3 +205,5 @@ NSPoint SKNSPointFromQDPoint(Point qdPoint) {
     nsPoint.y = (CGFloat)qdPoint.v;
     return nsPoint;
 }
+
+NS_ASSUME_NONNULL_END

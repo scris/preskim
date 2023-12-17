@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKAlias : NSObject {
     NSData *data;
@@ -46,11 +47,13 @@
 
 @property (nonatomic, readonly) NSData *data;
 @property (nonatomic, readonly, getter=isBookmark) BOOL bookmark;
-@property (nonatomic, readonly) NSURL *fileURL;
-@property (nonatomic, readonly) NSURL *fileURLNoUI;
+@property (nonatomic, nullable, readonly) NSURL *fileURL;
+@property (nonatomic, nullable, readonly) NSURL *fileURLNoUI;
 
-- (instancetype)initWithAliasData:(NSData *)data;
-- (instancetype)initWithBookmarkData:(NSData *)data;
-- (instancetype)initWithURL:(NSURL *)fileURL;
+- (nullable instancetype)initWithAliasData:(NSData *)data;
+- (nullable instancetype)initWithBookmarkData:(NSData *)data;
+- (nullable instancetype)initWithURL:(NSURL *)fileURL;
 
 @end
+
+NS_ASSUME_NONNULL_END

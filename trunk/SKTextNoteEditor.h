@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKTextNoteEditor : NSView <NSTextViewDelegate> {
     NSTextView *textView;
@@ -49,9 +50,9 @@
 
 - (instancetype)initWithPDFView:(PDFView *)aPDFView annotation:(PDFAnnotation *)anAnnotation;
 
-@property (weak, nonatomic, readonly) NSString *currentString;
+@property (nonatomic, nullable, weak, readonly) NSString *currentString;
 
-- (void)layoutWithEvent:(NSEvent *)event;
+- (void)layoutWithEvent:(nullable NSEvent *)event;
 
 - (void)discardEditing;
 - (BOOL)commitEditing;
@@ -62,3 +63,5 @@
 - (void)textNoteEditorDidBeginEditing:(SKTextNoteEditor *)textNoteEditor;
 - (void)textNoteEditorDidEndEditing:(SKTextNoteEditor *)textNoteEditor;
 @end
+
+NS_ASSUME_NONNULL_END

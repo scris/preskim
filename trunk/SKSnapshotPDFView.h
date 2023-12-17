@@ -40,6 +40,8 @@
 #import <Quartz/Quartz.h>
 #import "SKBasePDFView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKSnapshotPDFViewDelegate;
 
 @interface SKSnapshotPDFView : SKBasePDFView {
@@ -61,8 +63,8 @@
 
 - (void)resetHistory;
 
-- (id <SKSnapshotPDFViewDelegate>)delegate;
-- (void)setDelegate:(id <SKSnapshotPDFViewDelegate>)newDelegate;
+- (nullable id <SKSnapshotPDFViewDelegate>)delegate;
+- (void)setDelegate:(nullable id <SKSnapshotPDFViewDelegate>)newDelegate;
 
 @end
 
@@ -71,3 +73,4 @@
 - (void)PDFView:(PDFView *)sender goToExternalDestination:(PDFDestination *)destination;
 @end
 
+NS_ASSUME_NONNULL_END

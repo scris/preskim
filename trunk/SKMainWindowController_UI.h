@@ -44,13 +44,16 @@
 #import "SKNoteTypeSheetController.h"
 #import "SKMainWindow.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKMainWindowController (UI) <SKMainWindowDelegate, SKTableViewDelegate, NSTableViewDataSource, SKOutlineViewDelegate, SKNoteOutlineViewDelegate, NSOutlineViewDataSource, NSTextFieldDelegate, SKNoteTypeSheetControllerDelegate, NSMenuDelegate>
 
 - (void)registerForNotifications;
 
-- (void)handlePageChangedNotification:(NSNotification *)notification;
+- (void)handlePageChangedNotification:(nullable NSNotification *)notification;
 
 - (NSInteger)thumbnailHighlightLevelForRow:(NSInteger)row;
 
 @end
+
+NS_ASSUME_NONNULL_END

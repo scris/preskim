@@ -38,9 +38,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKAnnotationTypeImageView : NSImageView
 
 @property (nonatomic) BOOL hasOutline;
 
 @end
+
+NS_ASSUME_NONNULL_END

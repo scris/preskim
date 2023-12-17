@@ -40,9 +40,12 @@
 #import <Quartz/Quartz.h>
 #import <SkimNotes/SkimNotes.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *SKPDFAnnotationRichTextKey;
 
 @interface SKNPDFAnnotationNote (SKExtensions)
-@property (nonatomic, readonly) id richText;
+@property (nonatomic, nullable, readonly) id richText;
 @end
+
+NS_ASSUME_NONNULL_END

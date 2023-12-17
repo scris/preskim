@@ -39,12 +39,13 @@
 #import <Cocoa/Cocoa.h>
 #import "SKGroupView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, SKProgressIndicatorStyle) {
    SKProgressIndicatorStyleNone,
    SKProgressIndicatorStyleIndeterminate,
    SKProgressIndicatorStyleDeterminate
 };
-
 
 @interface SKStatusBar : SKGroupView {
     NSTextField *leftField;
@@ -56,11 +57,13 @@ typedef NS_ENUM(NSInteger, SKProgressIndicatorStyle) {
 
 @property (nonatomic, readonly, getter=isVisible) BOOL visible;
 @property (nonatomic, readonly, getter=isAnimating) BOOL animating;
-@property (nonatomic, readonly) NSTextField *leftField, *rightField;
-@property (nonatomic, readonly) NSProgressIndicator *progressIndicator;
-@property (nonatomic, strong) NSImage *icon;
+@property (nonatomic, nullable, readonly) NSTextField *leftField, *rightField;
+@property (nonatomic, nullable, readonly) NSProgressIndicator *progressIndicator;
+@property (nonatomic, nullable, strong) NSImage *icon;
 @property (nonatomic) SKProgressIndicatorStyle progressIndicatorStyle;
 
-- (void)toggleBelowView:(NSView *)view animate:(BOOL)animate;
+- (void)toggleBelowView:(nullable NSView *)view animate:(BOOL)animate;
 
 @end
+
+NS_ASSUME_NONNULL_END

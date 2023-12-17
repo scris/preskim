@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKThumbnailItem : NSCollectionViewItem {
     BOOL viewLoaded;
@@ -51,3 +52,5 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @property (nonatomic, getter=isMarked) BOOL marked;
 
 @end
+
+NS_ASSUME_NONNULL_END

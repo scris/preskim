@@ -38,6 +38,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSScroller (SKExtensions)
 @property (class, nonatomic, readonly) CGFloat effectiveScrollerWidth;
 @end
+
+NS_ASSUME_NONNULL_END

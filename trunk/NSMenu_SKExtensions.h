@@ -38,19 +38,20 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSMenu (SKExtensions)
 
 @property (class, nonatomic, readonly) NSMenu *menu;
 
-- (NSMenuItem *)insertItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget atIndex:(NSInteger)anIndex;
-- (NSMenuItem *)addItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget;
+- (NSMenuItem *)insertItemWithTitle:(NSString *)aString action:(SEL _Nullable)aSelector target:(nullable id)aTarget atIndex:(NSInteger)anIndex;
+- (NSMenuItem *)addItemWithTitle:(NSString *)aString action:(SEL _Nullable)aSelector target:(nullable id)aTarget;
 
-- (NSMenuItem *)insertItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag atIndex:(NSInteger)anIndex;
-- (NSMenuItem *)addItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag;
+- (NSMenuItem *)insertItemWithTitle:(NSString *)aString action:(SEL _Nullable)aSelector target:(nullable id)aTarget tag:(NSInteger)aTag atIndex:(NSInteger)anIndex;
+- (NSMenuItem *)addItemWithTitle:(NSString *)aString action:(SEL _Nullable)aSelector target:(nullable id)aTarget tag:(NSInteger)aTag;
 
-- (NSMenuItem *)insertItemWithTitle:(NSString *)aString imageNamed:(NSString *)anImageName action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag atIndex:(NSInteger)anIndex;
-- (NSMenuItem *)addItemWithTitle:(NSString *)aString imageNamed:(NSString *)anImageName action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag;
+- (NSMenuItem *)insertItemWithTitle:(NSString *)aString imageNamed:(nullable NSString *)anImageName action:(SEL _Nullable)aSelector target:(nullable id)aTarget tag:(NSInteger)aTag atIndex:(NSInteger)anIndex;
+- (NSMenuItem *)addItemWithTitle:(NSString *)aString imageNamed:(nullable NSString *)anImageName action:(SEL _Nullable)aSelector target:(nullable id)aTarget tag:(NSInteger)aTag;
 
 - (NSMenuItem *)insertItemWithSubmenuAndTitle:(NSString *)aString atIndex:(NSInteger)anIndex;
 - (NSMenuItem *)addItemWithSubmenuAndTitle:(NSString *)aString;
@@ -60,15 +61,17 @@
 
 @interface NSMenuItem (SKExtensions)
 
-+ (NSMenuItem *)menuItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget;
-+ (NSMenuItem *)menuItemWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag;
++ (NSMenuItem *)menuItemWithTitle:(NSString *)aString action:(SEL _Nullable)aSelector target:(nullable id)aTarget;
++ (NSMenuItem *)menuItemWithTitle:(NSString *)aString action:(SEL _Nullable)aSelector target:(nullable id)aTarget tag:(NSInteger)aTag;
 + (NSMenuItem *)menuItemWithSubmenuAndTitle:(NSString *)aString;
 
-- (instancetype)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget;
-- (instancetype)initWithTitle:(NSString *)aString action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag;
-- (instancetype)initWithTitle:(NSString *)aString imageNamed:(NSString *)anImageName action:(SEL)aSelector target:(id)aTarget tag:(NSInteger)aTag;
+- (instancetype)initWithTitle:(NSString *)aString action:(SEL _Nullable)aSelector target:(nullable id)aTarget;
+- (instancetype)initWithTitle:(NSString *)aString action:(SEL _Nullable)aSelector target:(nullable id)aTarget tag:(NSInteger)aTag;
+- (instancetype)initWithTitle:(NSString *)aString imageNamed:(nullable NSString *)anImageName action:(SEL _Nullable)aSelector target:(nullable id)aTarget tag:(NSInteger)aTag;
 - (instancetype)initWithSubmenuAndTitle:(NSString *)aString;
 
 - (void)setImageAndSize:(NSImage *)image;
 
 @end
+
+NS_ASSUME_NONNULL_END

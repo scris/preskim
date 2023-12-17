@@ -38,12 +38,15 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSWindow (SKExtensions)
 
 + (void)addTabs:(NSArray *)tabInfos forWindows:(NSArray *)windows;
-- (NSString *)tabIndexesInWindows:(NSArray *)windows;
+- (nullable NSString *)tabIndexesInWindows:(NSArray *)windows;
 
 - (void)handleRevertScriptCommand:(NSScriptCommand *)command;
 
 @end
+
+NS_ASSUME_NONNULL_END

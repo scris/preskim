@@ -38,13 +38,16 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKSnapshotWindow : NSWindow {
     BOOL disableConstrainToScreen;
     BOOL windowControllerMiniaturizesWindow;
 }
 
-@property (nonatomic, readonly) NSImage *windowImage;
+@property (nonatomic, nullable, readonly) NSImage *windowImage;
 @property (nonatomic) BOOL windowControllerMiniaturizesWindow;
 
 @end
+
+NS_ASSUME_NONNULL_END

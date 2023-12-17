@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "SKPDFSynchronizer.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKSkimFileDidSaveNotification;
 
 @class PDFDocument, SKMainWindowController, SKPDFView, SKLine, SKProgressController, SKTemporaryData, SKFileUpdateChecker, SKExportAccessoryController;
@@ -75,38 +77,40 @@ extern NSString *SKSkimFileDidSaveNotification;
 - (IBAction)convertNotes:(id)sender;
 - (IBAction)moveToTrash:(id)sender;
 
-@property (nonatomic, readonly) SKMainWindowController *mainWindowController;
-@property (nonatomic, readonly) PDFDocument *pdfDocument;
+@property (nonatomic, nullable, readonly) SKMainWindowController *mainWindowController;
+@property (nonatomic, nullable, readonly) PDFDocument *pdfDocument;
 
-@property (nonatomic, readonly) SKPDFView *pdfView;
+@property (nonatomic, nullable, readonly) SKPDFView *pdfView;
 
 - (void)savePasswordInKeychain:(NSString *)password;
 
 @property (nonatomic, readonly) SKPDFSynchronizer *synchronizer;
 
-@property (nonatomic, readonly) NSArray *snapshots;
+@property (nonatomic, nullable, readonly) NSArray *snapshots;
 
-@property (nonatomic, readonly) NSArray *tags;
+@property (nonatomic, nullable, readonly) NSArray *tags;
 @property (nonatomic, readonly) double rating;
 
-- (NSArray *)notes;
+- (nullable NSArray *)notes;
 - (id)valueInNotesWithUniqueID:(NSString *)aUniqueID;
 - (void)insertObject:(PDFAnnotation *)newNote inNotesAtIndex:(NSUInteger)anIndex;
 - (void)removeObjectFromNotesAtIndex:(NSUInteger)anIndex;
 
-@property (nonatomic, strong) PDFPage *currentPage;
-@property (nonatomic, strong) PDFAnnotation *activeNote;
+@property (nonatomic, nullable, strong) PDFPage *currentPage;
+@property (nonatomic, nullable, strong) PDFAnnotation *activeNote;
 @property (nonatomic, readonly) NSTextStorage *richText;
-@property (nonatomic, copy) id selectionSpecifier;
+@property (nonatomic, nullable, copy) id selectionSpecifier;
 @property (nonatomic, copy) NSData *selectionQDRect;
-@property (nonatomic, strong) PDFPage *selectionPage;
-@property (nonatomic, copy) NSDictionary *pdfViewSettings;
+@property (nonatomic, nullable, strong) PDFPage *selectionPage;
+@property (nonatomic, nullable, copy) NSDictionary *pdfViewSettings;
 
 - (void)handleRevertScriptCommand:(NSScriptCommand *)command;
 - (void)handleGoToScriptCommand:(NSScriptCommand *)command;
-- (id)handleFindScriptCommand:(NSScriptCommand *)command;
+- (nullable id)handleFindScriptCommand:(NSScriptCommand *)command;
 - (void)handleEditScriptCommand:(NSScriptCommand *)command;
 - (void)handleConvertNotesScriptCommand:(NSScriptCommand *)command;
 - (void)handleReadNotesScriptCommand:(NSScriptCommand *)command;
 
 @end
+
+NS_ASSUME_NONNULL_END

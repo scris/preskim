@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSPointerArray (SKExtensions)
 
@@ -51,3 +52,5 @@
 - (NSRange)rangeAtIndex:(NSUInteger)anIndex;
 
 @end
+
+NS_ASSUME_NONNULL_END

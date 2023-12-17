@@ -39,16 +39,18 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *SKPDFAnnotationScriptingFontColorKey;
 extern NSString *SKPDFAnnotationScriptingAlignmentKey;
 
-
 @interface PDFAnnotationFreeText (SKExtensions)
 
-@property (nonatomic, copy) NSFont *fontName;
+@property (nonatomic, nullable, copy) NSFont *fontName;
 @property (nonatomic) CGFloat fontSize;
-@property (nonatomic, copy) NSColor *scriptingFontColor;
+@property (nonatomic, nullable, copy) NSColor *scriptingFontColor;
 @property (nonatomic) NSInteger scriptingAlignment;
 
 @end
+
+NS_ASSUME_NONNULL_END

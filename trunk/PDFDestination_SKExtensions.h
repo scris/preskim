@@ -39,8 +39,12 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface PDFDestination (SKExtensions)
 
-- (PDFDestination *)effectiveDestinationForView:(PDFView *)pdfView;
+- (PDFDestination *)effectiveDestinationForView:(nullable PDFView *)pdfView;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKBasePDFView : PDFView
 
@@ -47,3 +48,5 @@
 - (void)drawPagesInRect:(NSRect)rect toContext:(CGContextRef)context;
 
 @end
+
+NS_ASSUME_NONNULL_END

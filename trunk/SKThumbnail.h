@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol SKThumbnailDelegate;
 
@@ -52,13 +53,13 @@
     __weak id <SKThumbnailDelegate> delegate;
 }
 
-@property (nonatomic, weak) id <SKThumbnailDelegate> delegate;
+@property (nonatomic, nullable, weak) id <SKThumbnailDelegate> delegate;
 @property (nonatomic, getter=isDirty) BOOL dirty;
 @property (nonatomic, strong) NSImage *image;
 @property (nonatomic, strong) NSString *label;
 @property (nonatomic, readonly) NSUInteger pageIndex;
 @property (nonatomic, readonly) NSSize size;
-@property (nonatomic, readonly) PDFPage *page;
+@property (nonatomic, nullable, readonly) PDFPage *page;
 
 - (instancetype)initWithImage:(NSImage *)anImage label:(NSString *)aLabel pageIndex:(NSUInteger)anIndex;
 
@@ -71,3 +72,5 @@
 - (BOOL)generateImageForThumbnail:(SKThumbnail *)thumbnail;
 - (PDFPage *)pageForThumbnail:(SKThumbnail *)thumbnail;
 @end
+
+NS_ASSUME_NONNULL_END

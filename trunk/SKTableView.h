@@ -40,6 +40,8 @@
 #import "SKTypeSelectHelper.h"
 #import "SKImageToolTipContext.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKTableViewDelegate;
 
 typedef NS_ENUM(NSInteger, SKTableImageToolTipLayout) {
@@ -58,25 +60,25 @@ typedef NS_ENUM(NSInteger, SKTableImageToolTipLayout) {
 @property (nonatomic, readonly) BOOL canDelete, canCopy, canPaste;
 @property (nonatomic) BOOL supportsQuickLook;
 @property (nonatomic) SKTableImageToolTipLayout imageToolTipLayout;
-@property (nonatomic, strong) SKTypeSelectHelper *typeSelectHelper;
+@property (nonatomic, nullable, strong) SKTypeSelectHelper *typeSelectHelper;
 
-- (void)delete:(id)sender;
-- (void)copy:(id)sender;
-- (void)paste:(id)sender;
+- (void)delete:(nullable id)sender;
+- (void)copy:(nullable id)sender;
+- (void)paste:(nullable id)sender;
 
-- (void)scrollToBeginningOfDocument:(id)sender;
-- (void)scrollToEndOfDocument:(id)sender;
+- (void)scrollToBeginningOfDocument:(nullable id)sender;
+- (void)scrollToEndOfDocument:(nullable id)sender;
 
-- (void)moveLeft:(id)sender;
-- (void)moveRight:(id)sender;
+- (void)moveLeft:(nullable id)sender;
+- (void)moveRight:(nullable id)sender;
 
 - (void)reloadTypeSelectStrings;
 
 - (void)noteHeightOfRowsChangedAnimating:(BOOL)animate;
 - (void)noteHeightOfRowChanged:(NSInteger)row animating:(BOOL)animate;
 
-- (id <SKTableViewDelegate>)delegate;
-- (void)setDelegate:(id <SKTableViewDelegate>)newDelegate;
+- (nullable id <SKTableViewDelegate>)delegate;
+- (void)setDelegate:(nullable id <SKTableViewDelegate>)newDelegate;
 
 @end
 
@@ -98,10 +100,12 @@ typedef NS_ENUM(NSInteger, SKTableImageToolTipLayout) {
 
 - (BOOL)tableView:(NSTableView *)tableView commandSelectRow:(NSInteger)rowIndex;
 
-- (id <SKImageToolTipContext>)tableView:(NSTableView *)aTableView imageContextForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex  scale:(CGFloat *)scale;
+- (nullable id <SKImageToolTipContext>)tableView:(NSTableView *)aTableView imageContextForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)rowIndex  scale:(CGFloat *)scale;
 
-- (NSArray *)tableViewTypeSelectHelperSelectionStrings:(NSTableView *)aTableView;
+- (nullable NSArray *)tableViewTypeSelectHelperSelectionStrings:(NSTableView *)aTableView;
 - (void)tableView:(NSTableView *)aTableView typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString;
 - (void)tableView:(NSTableView *)aTableView typeSelectHelperUpdateSearchString:(NSString *)searchString;
 
 @end
+
+NS_ASSUME_NONNULL_END

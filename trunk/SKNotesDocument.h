@@ -42,6 +42,8 @@
 #import "SKNoteTypeSheetController.h"
 #import "NSDocument_SKExtensions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKNoteOutlineView, SKStatusBar;
 
 @interface SKNotesDocument : NSDocument <NSWindowDelegate, NSToolbarDelegate, SKNoteOutlineViewDelegate, NSOutlineViewDataSource, SKNoteTypeSheetControllerDelegate> {
@@ -65,22 +67,24 @@
     } ndFlags;
 }
 
-@property (nonatomic, strong) IBOutlet SKNoteOutlineView *outlineView;
-@property (nonatomic, strong) IBOutlet SKStatusBar *statusBar;
-@property (nonatomic, strong) IBOutlet NSArrayController *arrayController;
-@property (nonatomic, strong) IBOutlet NSSearchField *searchField;
-@property (nonatomic, readonly) NSArray *notes;
-@property (nonatomic, readonly) PDFDocument *pdfDocument;
-@property (nonatomic, readonly) NSWindow *window;
-@property (nonatomic, strong) NSURL *sourceFileURL;
+@property (nonatomic, nullable, strong) IBOutlet SKNoteOutlineView *outlineView;
+@property (nonatomic, nullable, strong) IBOutlet SKStatusBar *statusBar;
+@property (nonatomic, nullable, strong) IBOutlet NSArrayController *arrayController;
+@property (nonatomic, nullable, strong) IBOutlet NSSearchField *searchField;
+@property (nonatomic, readonly,) NSArray *notes;
+@property (nonatomic, nullable, readonly) PDFDocument *pdfDocument;
+@property (nonatomic, nullable, readonly) NSWindow *window;
+@property (nonatomic, nullable, strong) NSURL *sourceFileURL;
 @property (nonatomic, readonly) SKInteractionMode interactionMode;
 
-- (IBAction)openPDF:(id)sender;
-- (IBAction)searchNotes:(id)sender;
-- (IBAction)toggleStatusBar:(id)sender;
-- (IBAction)toggleCaseInsensitiveSearch:(id)sender;
-- (IBAction)toggleFullscreen:(id)sender;
+- (IBAction)openPDF:(nullable id)sender;
+- (IBAction)searchNotes:(nullable id)sender;
+- (IBAction)toggleStatusBar:(nullable id)sender;
+- (IBAction)toggleCaseInsensitiveSearch:(nullable id)sender;
+- (IBAction)toggleFullscreen:(nullable id)sender;
 
 - (void)setupToolbarForWindow:(NSWindow *)aWindow;
 
 @end
+
+NS_ASSUME_NONNULL_END

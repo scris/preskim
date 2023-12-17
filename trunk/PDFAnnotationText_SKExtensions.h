@@ -39,10 +39,12 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *SKPDFAnnotationScriptingIconTypeKey;
-
 
 @interface PDFAnnotationText (SKExtensions)
 @property (nonatomic) PDFTextAnnotationIconType scriptingIconType;
 @end
+
+NS_ASSUME_NONNULL_END

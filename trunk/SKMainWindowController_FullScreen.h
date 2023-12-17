@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import "SKMainWindowController.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKMainWindowController (FullScreen)
 
@@ -59,3 +60,5 @@
 - (void)removePresentationNotesNavigation;
 
 @end
+
+NS_ASSUME_NONNULL_END

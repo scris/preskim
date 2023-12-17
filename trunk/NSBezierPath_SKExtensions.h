@@ -37,10 +37,11 @@
  */
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSBezierPath (SKExtensions)
 
-@property (nonatomic, copy) NSArray *dashPattern;
+@property (nonatomic, nullable, copy) NSArray *dashPattern;
 
 @property (nonatomic, readonly) NSRect nonEmptyBounds;
 
@@ -51,3 +52,5 @@
 - (void)halfEllipseFromPoint:(NSPoint)halfwayPoint toPoint:(NSPoint)endPoint;
 
 @end
+
+NS_ASSUME_NONNULL_END

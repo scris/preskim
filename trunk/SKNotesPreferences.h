@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "SKPreferenceController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKFontWell, SKLineWell;
 
 @interface SKNotesPreferences : NSViewController <SKPreferencePane> {
@@ -51,7 +53,9 @@
     SKLineWell *inkLineWell;
 }
 
-@property (nonatomic, strong) IBOutlet SKFontWell *textFontWell, *anchoredFontWell;
-@property (nonatomic, strong) IBOutlet SKLineWell *textLineWell, *circleLineWell, *squareLineWell, *lineLineWell, *inkLineWell;
+@property (nonatomic, nullable, strong) IBOutlet SKFontWell *textFontWell, *anchoredFontWell;
+@property (nonatomic, nullable, strong) IBOutlet SKLineWell *textLineWell, *circleLineWell, *squareLineWell, *lineLineWell, *inkLineWell;
 
 @end
+
+NS_ASSUME_NONNULL_END

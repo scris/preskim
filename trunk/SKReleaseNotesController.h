@@ -38,12 +38,16 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SKReleaseNotesController : NSWindowController {
     NSTextView *textView;
 }
 
-@property (nonatomic, strong) IBOutlet NSTextView *textView;
+@property (nonatomic, nullable, strong) IBOutlet NSTextView *textView;
 
 @property (class, nonatomic, readonly) SKReleaseNotesController *sharedReleaseNotesController;
 
 @end
+
+NS_ASSUME_NONNULL_END

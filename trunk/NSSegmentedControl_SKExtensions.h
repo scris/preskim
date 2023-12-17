@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSSegmentedControl (SKExtensions)
 
@@ -46,3 +47,5 @@
 - (void)setHelp:(NSString *)toolTip forSegment:(NSInteger)segment;
 
 @end
+
+NS_ASSUME_NONNULL_END

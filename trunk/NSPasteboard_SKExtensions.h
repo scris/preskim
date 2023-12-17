@@ -38,9 +38,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSPasteboard (SKExtensions)
 
-- (BOOL)writeURLs:(NSArray *)URLs names:(NSArray *)names;
+- (BOOL)writeURLs:(NSArray *)URLs names:(nullable NSArray *)names;
 
 @end
+
+NS_ASSUME_NONNULL_END

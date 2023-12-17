@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "SKColorPicker.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKMainWindowController;
 
 @interface SKMainTouchBarController : NSObject <NSTouchBarDelegate, SKColorPickerDelegate> {
@@ -55,12 +57,14 @@
     NSMutableDictionary *touchBarItems;
 }
 
-@property (nonatomic, weak) SKMainWindowController *mainController;
+@property (nonatomic, nullable, weak) SKMainWindowController *mainController;
 
 - (NSTouchBar *)makeTouchBar;
 
-- (void)handleToolModeChangedNotification:(NSNotification *)notification;
+- (void)handleToolModeChangedNotification:(nullable NSNotification *)notification;
 - (void)interactionModeChanged;
 - (void)overviewChanged;
 
 @end
+
+NS_ASSUME_NONNULL_END

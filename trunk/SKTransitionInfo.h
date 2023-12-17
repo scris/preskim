@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKPasteboardTypeTransition;
 
 // further values are defined at runtime by SKTransitionController
@@ -59,7 +61,7 @@ typedef NS_ENUM(NSUInteger, SKTransitionStyle) {
 @property (nonatomic) CGFloat duration;
 @property (nonatomic) BOOL shouldRestrict;
 
-@property (nonatomic, readonly) NSString *label;
+@property (nonatomic, nullable, readonly) NSString *label;
 @property (nonatomic, readonly) NSString *title;
 
 @end
@@ -73,8 +75,10 @@ typedef NS_ENUM(NSUInteger, SKTransitionStyle) {
     SKThumbnail *toThumbnail;
 }
 
-@property (nonatomic, strong) SKThumbnail *thumbnail, *toThumbnail;
+@property (nonatomic, nullable, strong) SKThumbnail *thumbnail, *toThumbnail;
 
 @property (nonatomic, readonly) NSString *transitionName;
 
 @end
+
+NS_ASSUME_NONNULL_END

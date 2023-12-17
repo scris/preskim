@@ -39,9 +39,12 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKPDFAnnotationBezierPathsKey;
 extern NSString *SKPDFAnnotationScriptingPointListsKey;
 
 @interface PDFAnnotationInk (SKExtensions)
-
 @end
+
+NS_ASSUME_NONNULL_END

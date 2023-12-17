@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSObject (SKExtensions)
 
@@ -47,6 +48,8 @@
 - (NSUInteger)countOfTexLines;
 - (id)objectInTexLinesAtIndex:(NSUInteger)idx;
 
-- (id)handleFormatScriptCommand:(NSScriptCommand *)command;
+- (nullable id)handleFormatScriptCommand:(NSScriptCommand *)command;
 
 @end
+
+NS_ASSUME_NONNULL_END

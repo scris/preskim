@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKAttachmentEmailerDelegate;
 
 @interface SKAttachmentEmailer : NSObject {
@@ -50,9 +52,9 @@
 
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSImage *image;
-@property (nonatomic, weak) id<SKAttachmentEmailerDelegate> delegate;
+@property (nonatomic, nullable, weak) id<SKAttachmentEmailerDelegate> delegate;
 
-@property (nonatomic, strong) NSString *subject;
+@property (nonatomic, nullable, strong) NSString *subject;
 
 - (BOOL)canPerformWithItems:(NSArray *)items;
 - (void)performWithItems:(NSArray *)items;
@@ -69,3 +71,5 @@
 - (void)sharingService:(id)sharingService didFailToShareItems:(NSArray *)items error:(NSError *)error;
 
 @end
+
+NS_ASSUME_NONNULL_END

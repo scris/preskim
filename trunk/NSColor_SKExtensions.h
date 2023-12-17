@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 enum {
     SKScriptingColorRed = 'Red ',
     SKScriptingColorGreen = 'Gren',
@@ -89,11 +91,13 @@ enum {
 
 @property (nonatomic, readonly) NSColor *opaqueColor;
 
-+ (instancetype)scriptingRgbaColorWithDescriptor:(NSAppleEventDescriptor *)descriptor;
++ (nullable instancetype)scriptingRgbaColorWithDescriptor:(NSAppleEventDescriptor *)descriptor;
 @property (nonatomic, readonly) NSAppleEventDescriptor *scriptingRgbaColorDescriptor;
 
-@property (nonatomic, readonly) NSString *accessibilityValue;
+@property (nonatomic, nullable, readonly) NSString *accessibilityValue;
 
-@property (nonatomic, readonly) NSString *hexString;
+@property (nonatomic, nullable, readonly) NSString *hexString;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKNotePrefs : NSObject {
     NSString *type;
@@ -46,20 +47,22 @@
 
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSString *type;
-@property (nonatomic, strong) NSColor *scriptingColor;
-@property (nonatomic, strong) NSColor *scriptingInteriorColor;
+@property (nonatomic, nullable, strong) NSColor *scriptingColor;
+@property (nonatomic, nullable, strong) NSColor *scriptingInteriorColor;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic) PDFBorderStyle borderStyle;
-@property (nonatomic, strong) NSArray *dashPattern;
+@property (nonatomic, nullable, strong) NSArray *dashPattern;
 @property (nonatomic) PDFLineStyle scriptingStartLineStyle, scriptingEndLineStyle;
-@property (nonatomic, strong) NSString *fontName;
+@property (nonatomic, nullable, strong) NSString *fontName;
 @property (nonatomic) CGFloat fontSize;
-@property (nonatomic, strong) NSColor *scriptingFontColor;
+@property (nonatomic, nullable, strong) NSColor *scriptingFontColor;
 @property (nonatomic) NSInteger scriptingAlignment;
 @property (nonatomic) PDFTextAnnotationIconType scriptingIconType;
-@property (nonatomic, strong) NSString *scriptingUserName;
+@property (nonatomic, nullable, strong) NSString *scriptingUserName;
 @property (nonatomic, strong) NSDictionary *scriptingProperties;
 
-- (instancetype)initWithType:(NSString *)aType;
+- (nullable instancetype)initWithType:(NSString *)aType;
 
 @end
+
+NS_ASSUME_NONNULL_END

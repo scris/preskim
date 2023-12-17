@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKPDFDocumentDidAddAnnotationNotification;
 extern NSString *SKPDFDocumentWillRemoveAnnotationNotification;
 extern NSString *SKPDFDocumentDidRemoveAnnotationNotification;
@@ -55,15 +57,17 @@ typedef struct _SKLanguageDirectionAngles {
 } SKLanguageDirectionAngles;
 
 @interface PDFDocument (SKExtensions) <NSFastEnumeration>
-@property (nonatomic, readonly) NSArray *pageLabels;
-@property (nonatomic, readonly) NSArray *fileIDStrings;
-@property (nonatomic, readonly) NSDictionary *initialSettings;
+@property (nonatomic, nullable, readonly) NSArray *pageLabels;
+@property (nonatomic, nullable, readonly) NSArray *fileIDStrings;
+@property (nonatomic, nullable, readonly) NSDictionary *initialSettings;
 @property (nonatomic, readonly) SKLanguageDirectionAngles languageDirectionAngles;
 @property (nonatomic, readonly) BOOL allowsNotes;
 @property (nonatomic, readonly) BOOL realAllowsCommenting;
-@property (nonatomic, readonly) NSArray *detectedWidgets;
-@property (nonatomic, weak) NSDocument *containingDocument;
+@property (nonatomic, nullable, readonly) NSArray *detectedWidgets;
+@property (nonatomic, nullable, weak) NSDocument *containingDocument;
 - (void)addAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page;
 - (void)removeAnnotation:(PDFAnnotation *)annotation;
 - (void)moveAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page;
 @end
+
+NS_ASSUME_NONNULL_END

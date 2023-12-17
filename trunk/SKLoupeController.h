@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class PDFView;
 
 @interface SKLoupeController : NSObject <CALayerDelegate> {
@@ -62,3 +64,5 @@
 - (BOOL)hide;
 
 @end
+
+NS_ASSUME_NONNULL_END

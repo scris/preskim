@@ -40,9 +40,10 @@
 #import <Quartz/Quartz.h>
 #import "SKGroupedSearchResult.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol SKImageToolTipContext <NSObject>
-- (NSImage *)toolTipImageWithScale:(CGFloat)scale;
+- (nullable NSImage *)toolTipImageWithScale:(CGFloat)scale;
 @end
 
 
@@ -63,3 +64,5 @@
 
 @interface PDFPage (SKImageToolTipContext) <SKImageToolTipContext>
 @end
+
+NS_ASSUME_NONNULL_END

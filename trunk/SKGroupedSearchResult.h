@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKGroupedSearchResultCountKey;
 
 @interface SKGroupedSearchResult : NSObject {
@@ -60,3 +62,5 @@ extern NSString *SKGroupedSearchResultCountKey;
 - (void)addMatch:(PDFSelection *)match;
 
 @end
+
+NS_ASSUME_NONNULL_END

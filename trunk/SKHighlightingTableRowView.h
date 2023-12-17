@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKHighlightingTableRowView : NSTableRowView {
     NSInteger highlightLevel;
@@ -45,3 +46,5 @@
 }
 @property (nonatomic) NSInteger highlightLevel;
 @end
+
+NS_ASSUME_NONNULL_END

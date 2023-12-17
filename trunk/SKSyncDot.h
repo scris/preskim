@@ -40,6 +40,7 @@
 #import <Quartz/Quartz.h>
 #import <stdatomic.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^SKSyncDotUpdateBlock)(BOOL finished);
 
@@ -64,3 +65,5 @@ typedef void (^SKSyncDotUpdateBlock)(BOOL finished);
 - (void)drawInContext:(CGContextRef)context;
 
 @end
+
+NS_ASSUME_NONNULL_END

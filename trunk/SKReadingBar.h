@@ -41,6 +41,8 @@
 
 @protocol SKReadingBarDelegate;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKLine;
 
 @interface SKReadingBar : NSObject {
@@ -52,14 +54,14 @@
     __weak id <SKReadingBarDelegate> delegate;
 }
 
-@property (readonly, strong) PDFPage *page;
+@property (readonly, nullable, strong) PDFPage *page;
 @property (nonatomic, readonly) NSInteger currentLine;
 @property (nonatomic) NSUInteger numberOfLines;
 @property (nonatomic) NSInteger maxLine;
 @property (readonly) NSRect currentBounds;
-@property (nonatomic, weak) id <SKReadingBarDelegate> delegate;
+@property (nonatomic, nullable, weak) id <SKReadingBarDelegate> delegate;
 
-- (instancetype)initWithPage:(PDFPage *)aPage line:(NSInteger)line delegate:(id <SKReadingBarDelegate>)aDelegate;
+- (instancetype)initWithPage:(nullable PDFPage *)aPage line:(NSInteger)line delegate:(nullable id <SKReadingBarDelegate>)aDelegate;
 
 - (BOOL)goToNextLine;
 - (BOOL)goToPreviousLine;
@@ -88,3 +90,5 @@
 - (void)readingBarDidChangeBounds:(NSRect)oldBounds onPage:(PDFPage *)oldPage toBounds:(NSRect)newBounds onPage:(PDFPage *)newPage scroll:(BOOL)shouldScroll;
 
 @end
+
+NS_ASSUME_NONNULL_END

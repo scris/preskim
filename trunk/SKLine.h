@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class PDFPage;
 
 @interface SKLine : NSObject {
@@ -56,3 +58,5 @@
 @property (nonatomic, readonly) id selectionSpecifier;
 
 @end
+
+NS_ASSUME_NONNULL_END

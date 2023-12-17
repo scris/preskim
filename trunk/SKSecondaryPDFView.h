@@ -40,6 +40,7 @@
 #import <Quartz/Quartz.h>
 #import "SKBasePDFView.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKSecondaryPDFView : SKBasePDFView {
     NSPopUpButton *scalePopUpButton;
@@ -55,8 +56,10 @@
     CGFloat startScale;
 }
 
-@property (nonatomic, strong) PDFView *synchronizedPDFView;
+@property (nonatomic, nullable, strong) PDFView *synchronizedPDFView;
 @property (nonatomic) BOOL synchronizeZoom;
 @property (nonatomic) BOOL selectsText;
 
 @end
+
+NS_ASSUME_NONNULL_END

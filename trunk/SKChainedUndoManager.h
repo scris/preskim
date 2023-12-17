@@ -38,9 +38,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKChainedUndoManager : NSUndoManager {
     NSUndoManager *nextUndoManager;
 }
 - (instancetype)initWithNextUndoManager:(NSUndoManager *)undoManager;
 @end
+
+NS_ASSUME_NONNULL_END

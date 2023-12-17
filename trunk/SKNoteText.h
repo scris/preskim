@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKNoteText : NSObject {
     __weak PDFAnnotation *note;
@@ -49,13 +50,15 @@
 @property (nonatomic, weak, readonly) PDFAnnotation *note;
 
 @property (nonatomic, readonly) BOOL hasNoteText;
-@property (nonatomic, readonly) SKNoteText *noteText;
+@property (nonatomic, nullable, readonly) SKNoteText *noteText;
 
-@property (nonatomic, readonly) NSString *type;
-@property (nonatomic, readonly) PDFPage *page;
+@property (nonatomic, nullable, readonly) NSString *type;
+@property (nonatomic, nullable, readonly) PDFPage *page;
 @property (nonatomic, readonly) NSUInteger pageIndex;
 @property (nonatomic, readonly) NSString *string;
-@property (nonatomic, readonly) NSAttributedString *text;
-@property (nonatomic, readonly) id objectValue;
+@property (nonatomic, nullable, readonly) NSAttributedString *text;
+@property (nonatomic, nullable, readonly) id objectValue;
 
 @end
+
+NS_ASSUME_NONNULL_END

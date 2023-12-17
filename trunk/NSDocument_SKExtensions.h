@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKDocumentFileURLDidChangeNotification;
 
 typedef NS_ENUM(NSInteger, SKInteractionMode) {
@@ -53,47 +55,47 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 
 @property (nonatomic, readonly) SKInteractionMode systemInteractionMode;
 
-@property (nonatomic, readonly) NSWindow *mainWindow;
+@property (nonatomic, nullable, readonly) NSWindow *mainWindow;
 
-- (IBAction)copyURL:(id)sender;
+- (IBAction)copyURL:(nullable id)sender;
 
-@property (nonatomic, readonly) NSMenu *notesMenu;
+@property (nonatomic, nullable, readonly) NSMenu *notesMenu;
 
 #pragma mark Document Setup
 
 - (void)saveRecentDocumentInfo;
 - (void)applySetup:(NSDictionary *)setup;
 - (void)applyOptions:(NSDictionary *)options;
-@property (nonatomic, readonly) NSDictionary *currentDocumentSetup;
+@property (nonatomic, nullable, readonly) NSDictionary *currentDocumentSetup;
 
 #pragma mark PDF Document
 
-@property (nonatomic, readonly) PDFDocument *pdfDocument;
-@property (nonatomic, readonly) PDFDocument *placeholderPdfDocument;
+@property (nonatomic, nullable, readonly) PDFDocument *pdfDocument;
+@property (nonatomic, nullable, readonly) PDFDocument *placeholderPdfDocument;
 
 #pragma mark Bookmark Actions
 
-- (IBAction)addBookmark:(id)sender;
-- (IBAction)share:(id)sender;
+- (IBAction)addBookmark:(nullable id)sender;
+- (IBAction)share:(nullable id)sender;
 
 #pragma mark Notes
 
 - (BOOL)hasNotes;
 
-@property (nonatomic, readonly) NSArray *notes;
+@property (nonatomic, nullable, readonly) NSArray *notes;
 
-@property (nonatomic, readonly) NSArray *SkimNoteProperties;
+@property (nonatomic, nullable, readonly) NSArray *SkimNoteProperties;
 
-@property (nonatomic, readonly) NSData *notesData;
+@property (nonatomic, nullable, readonly) NSData *notesData;
 
-- (NSString *)notesStringForTemplateType:(NSString *)typeName;
-- (NSData *)notesDataForTemplateType:(NSString *)typeName;
-- (NSFileWrapper *)notesFileWrapperForTemplateType:(NSString *)typeName;
+- (nullable NSString *)notesStringForTemplateType:(NSString *)typeName;
+- (nullable NSData *)notesDataForTemplateType:(NSString *)typeName;
+- (nullable NSFileWrapper *)notesFileWrapperForTemplateType:(NSString *)typeName;
 
 @property (nonatomic, readonly) NSString *notesString;
 @property (nonatomic, readonly) NSData *notesRTFData;
 
-- (NSData *)notesFDFDataForFile:(NSString *)filename fileIDStrings:(NSArray *)fileIDStrings;
+- (nullable NSData *)notesFDFDataForFile:(NSString *)filename fileIDStrings:(nullable NSArray *)fileIDStrings;
 
 #pragma mark Outlines
 
@@ -102,36 +104,38 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 
 #pragma mark Scripting
 
-- (NSArray *)pages;
+- (nullable NSArray *)pages;
 - (NSUInteger)countOfPages;
 - (PDFPage *)objectInPagesAtIndex:(NSUInteger)theIndex;
 
 - (NSUInteger)countOfOutlines;
 - (PDFOutline *)objectInOutlinesAtIndex:(NSUInteger)idx;
 
-@property (nonatomic, strong) PDFPage *currentPage;
-@property (nonatomic, readonly) NSData *currentQDPoint;
-@property (nonatomic, readonly) PDFAnnotation *activeNote;
-@property (nonatomic, readonly) NSTextStorage *richText;
-@property (nonatomic, readonly) id selectionSpecifier;
-@property (nonatomic, readonly) NSData *selectionQDRect;
-@property (nonatomic, readonly) id selectionPage;
-@property (nonatomic, strong) NSArray *noteSelection;
-@property (nonatomic, readonly) NSDictionary *pdfViewSettings;
-@property (nonatomic, readonly) NSDictionary *documentAttributes;
+@property (nonatomic, nullable, strong) PDFPage *currentPage;
+@property (nonatomic, nullable, readonly) NSData *currentQDPoint;
+@property (nonatomic, nullable, readonly) PDFAnnotation *activeNote;
+@property (nonatomic, nullable, readonly) NSTextStorage *richText;
+@property (nonatomic, nullable, readonly) id selectionSpecifier;
+@property (nonatomic, nullable, readonly) NSData *selectionQDRect;
+@property (nonatomic, nullable, readonly) id selectionPage;
+@property (nonatomic, nullable, strong) NSArray *noteSelection;
+@property (nonatomic, nullable, readonly) NSDictionary *pdfViewSettings;
+@property (nonatomic, nullable, readonly) NSDictionary *documentAttributes;
 @property (nonatomic, readonly, getter=isPDFDocument) BOOL PDFDocument;
 @property (nonatomic, readonly) NSInteger toolMode;
 @property (nonatomic, readonly) NSInteger scriptingInteractionMode;
-@property (nonatomic, readonly) NSDocument *presentationNotesDocument;
+@property (nonatomic, nullable, readonly) NSDocument *presentationNotesDocument;
 @property (nonatomic, readonly) NSInteger presentationNotesOffset;
-@property (nonatomic, readonly) id readingBar;
+@property (nonatomic, nullable, readonly) id readingBar;
 @property (nonatomic, readonly) BOOL hasReadingBar;
 
 - (void)handleRevertScriptCommand:(NSScriptCommand *)command;
 - (void)handleGoToScriptCommand:(NSScriptCommand *)command;
-- (id)handleFindScriptCommand:(NSScriptCommand *)command;
+- (nullable id)handleFindScriptCommand:(NSScriptCommand *)command;
 - (void)handleShowTeXScriptCommand:(NSScriptCommand *)command;
 - (void)handleConvertNotesScriptCommand:(NSScriptCommand *)command;
 - (void)handleReadNotesScriptCommand:(NSScriptCommand *)command;
 
 @end
+
+NS_ASSUME_NONNULL_END

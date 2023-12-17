@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKViewSettingsController : NSWindowController {
     BOOL custom;
@@ -53,7 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     NSDictionary *defaultSettings;
 }
 
-- (instancetype)initWithSettings:(NSDictionary *)settings defaultSettings:(NSDictionary *)aDefaultSettings;
+- (instancetype)initWithSettings:(nullable NSDictionary *)settings defaultSettings:(nullable NSDictionary *)aDefaultSettings;
 
 @property (nonatomic, getter=isCustom) BOOL custom;
 
@@ -68,3 +69,5 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @property (nonatomic, copy) NSDictionary *settings;
 
 @end
+
+NS_ASSUME_NONNULL_END

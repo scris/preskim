@@ -38,8 +38,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSParagraphStyle (SKExtensions)
 @property (class, nonatomic, readonly) NSParagraphStyle *defaultClippingParagraphStyle;
 @property (class, nonatomic, readonly) NSParagraphStyle *defaultTruncatingTailParagraphStyle;
 @end
+
+NS_ASSUME_NONNULL_END

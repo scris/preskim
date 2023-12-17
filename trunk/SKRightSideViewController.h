@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "SKSideViewController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKNoteOutlineView, SKTableView;
 
 @interface SKRightSideViewController : SKSideViewController {
@@ -49,8 +51,10 @@
     SKTableView *snapshotTableView;
 }
 
-@property (nonatomic, strong) IBOutlet NSArrayController *noteArrayController, *snapshotArrayController;
-@property (nonatomic, strong) IBOutlet SKNoteOutlineView *noteOutlineView;
-@property (nonatomic, strong) IBOutlet SKTableView *snapshotTableView;
+@property (nonatomic, nullable, strong) IBOutlet NSArrayController *noteArrayController, *snapshotArrayController;
+@property (nonatomic, nullable, strong) IBOutlet SKNoteOutlineView *noteOutlineView;
+@property (nonatomic, nullable, strong) IBOutlet SKTableView *snapshotTableView;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -38,11 +38,14 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKControlTableCellView : NSTableCellView {
     __weak NSControl *control;
 }
 
-@property (nonatomic, weak) IBOutlet NSControl *control;
+@property (nonatomic, nullable, weak) IBOutlet NSControl *control;
 
 @end
+
+NS_ASSUME_NONNULL_END

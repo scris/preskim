@@ -38,7 +38,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSApplication (SKScriptMenu)
 @property (nonatomic, readonly) NSMenu *scriptMenu;
 @end
+
+NS_ASSUME_NONNULL_END

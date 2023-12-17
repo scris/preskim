@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSScreen (SKExtensions)
 
@@ -50,3 +51,5 @@
 @property (nonatomic, readonly) NSScreen *primaryScreen;
 
 @end
+
+NS_ASSUME_NONNULL_END

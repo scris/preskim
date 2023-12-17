@@ -38,6 +38,7 @@ Christiaan Hofman. All rights reserved.
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, SKPasswordStatus) {
     SKPasswordStatusFound,
@@ -47,8 +48,10 @@ typedef NS_ENUM(NSInteger, SKPasswordStatus) {
 
 @interface SKKeychain : NSObject
 
-+ (NSString *)passwordForService:(NSString *)service account:(NSString *)account status:(SKPasswordStatus *)status;
-+ (void)setPassword:(NSString *)password forService:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment;
-+ (SKPasswordStatus)updatePassword:(NSString *)password service:(NSString *)service account:(NSString *)account label:(NSString *)label comment:(NSString *)comment forService:(NSString *)oldService account:(NSString *)oldAccount;
++ (nullable NSString *)passwordForService:(nullable NSString *)service account:(nullable NSString *)account status:(SKPasswordStatus *)status;
++ (void)setPassword:(nullable NSString *)password forService:(NSString *)service account:(NSString *)account label:(nullable NSString *)label comment:(nullable NSString *)comment;
++ (SKPasswordStatus)updatePassword:(nullable NSString *)password service:(nullable NSString *)service account:(nullable NSString *)account label:(nullable NSString *)label comment:(nullable NSString *)comment forService:(nullable NSString *)oldService account:(nullable NSString *)oldAccount;
 
 @end
+
+NS_ASSUME_NONNULL_END

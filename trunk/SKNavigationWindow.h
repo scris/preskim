@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "SKAnimatedBorderlessWindow.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKPDFView, SKNavigationToolTipView, SKNavigationButton;
 
 @interface SKHUDWindow : SKAnimatedBorderlessWindow
@@ -76,23 +78,23 @@
 }
 @property (class, nonatomic, readonly) SKNavigationToolTipWindow *sharedToolTipWindow;
 - (void)showToolTip:(NSString *)toolTip forView:(NSView *)aView;
-@property (nonatomic, readonly) NSView *view;
+@property (nonatomic, nullable, readonly) NSView *view;
 @end
 
 @interface SKNavigationToolTipView : NSView {
     NSString *stringValue;
 }
-@property (nonatomic, strong) NSString *stringValue;
-@property (nonatomic, readonly) NSAttributedString *attributedStringValue;
+@property (nonatomic, nullable, strong) NSString *stringValue;
+@property (nonatomic, nullable, readonly) NSAttributedString *attributedStringValue;
 @property (nonatomic, readonly) NSSize fitSize;
 @end
 
 
 @interface SKNavigationButton : NSButton
 
-@property (nonatomic, strong) NSBezierPath *path, *alternatePath;
-@property (copy) NSString *toolTip;
-@property (copy) NSString *alternateToolTip;
+@property (nonatomic, nullable, strong) NSBezierPath *path, *alternatePath;
+@property (nullable, copy) NSString *toolTip;
+@property (nullable, copy) NSString *alternateToolTip;
 
 @end
 
@@ -104,8 +106,8 @@
     NSBezierPath *alternatePath;
 }
 
-@property (nonatomic, strong) NSBezierPath *path, *alternatePath;
-@property (nonatomic, strong) NSString *toolTip, *alternateToolTip;
+@property (nonatomic, nullable, strong) NSBezierPath *path, *alternatePath;
+@property (nonatomic, nullable, strong) NSString *toolTip, *alternateToolTip;
 
 @end
 
@@ -120,3 +122,5 @@
 
 @interface SKHUDSegmentedCell : NSSegmentedCell
 @end
+
+NS_ASSUME_NONNULL_END

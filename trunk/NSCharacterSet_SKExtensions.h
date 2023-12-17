@@ -38,9 +38,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSCharacterSet (SKExtensions)
 @property (class, nonatomic, readonly) NSCharacterSet *nonWhitespaceAndNewlineCharacterSet;
 @property (class, nonatomic, readonly) NSCharacterSet *URLBookmarkNameAllowedCharacterSet;
 @property (class, nonatomic, readonly) NSCharacterSet *URLGenericAllowedCharacterSet;
 @end
+
+NS_ASSUME_NONNULL_END

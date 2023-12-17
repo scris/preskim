@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKMainWindowController, SKPDFView, SKColorSwatch, SKShareMenuController;
 
 @interface SKMainToolbarController : NSViewController <NSToolbarDelegate> {
@@ -93,52 +95,54 @@
     NSMutableDictionary *toolbarItems;
 }
 
-@property (nonatomic, weak) IBOutlet SKMainWindowController *mainController;
-@property (nonatomic, strong) IBOutlet NSSegmentedControl *backForwardButton, *previousNextPageButton, *previousPageButton, *nextPageButton, *previousNextFirstLastPageButton, *zoomInOutButton, *zoomInActualOutButton, *zoomActualButton, *zoomFitButton, *zoomSelectionButton, *autoScalesButton, *rotateLeftButton, *rotateRightButton, *rotateLeftRightButton, *cropButton, *fullScreenButton, *presentationButton, *leftPaneButton, *rightPaneButton, *splitPDFButton, *toolModeButton, *textNoteButton, *circleNoteButton, *markupNoteButton, *lineNoteButton, *singleTwoUpButton, *continuousButton, *displayModeButton, *displayDirectionButton, *displaysRTLButton, *bookModeButton, *pageBreaksButton, *displayBoxButton, *infoButton, *colorsButton, *fontsButton, *linesButton, *printButton, *customizeButton, *noteButton, *pacerButton, *shareButton;
-@property (nonatomic, strong) IBOutlet NSTextField *pageNumberField, *scaleField, *pacerSpeedField;
-@property (nonatomic, strong) IBOutlet SKColorSwatch *colorSwatch;
-@property (nonatomic, strong) IBOutlet NSStepper *pacerSpeedStepper;
+@property (nonatomic, nullable, weak) IBOutlet SKMainWindowController *mainController;
+@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *backForwardButton, *previousNextPageButton, *previousPageButton, *nextPageButton, *previousNextFirstLastPageButton, *zoomInOutButton, *zoomInActualOutButton, *zoomActualButton, *zoomFitButton, *zoomSelectionButton, *autoScalesButton, *rotateLeftButton, *rotateRightButton, *rotateLeftRightButton, *cropButton, *fullScreenButton, *presentationButton, *leftPaneButton, *rightPaneButton, *splitPDFButton, *toolModeButton, *textNoteButton, *circleNoteButton, *markupNoteButton, *lineNoteButton, *singleTwoUpButton, *continuousButton, *displayModeButton, *displayDirectionButton, *displaysRTLButton, *bookModeButton, *pageBreaksButton, *displayBoxButton, *infoButton, *colorsButton, *fontsButton, *linesButton, *printButton, *customizeButton, *noteButton, *pacerButton, *shareButton;
+@property (nonatomic, nullable, strong) IBOutlet NSTextField *pageNumberField, *scaleField, *pacerSpeedField;
+@property (nonatomic, nullable, strong) IBOutlet SKColorSwatch *colorSwatch;
+@property (nonatomic, nullable, strong) IBOutlet NSStepper *pacerSpeedStepper;
 
 - (void)setupToolbar;
 
 - (void)registerForNotifications;
-- (void)handleChangedHistoryNotification:(NSNotification *)notification;
-- (void)handlePageChangedNotification:(NSNotification *)notification;
+- (void)handleChangedHistoryNotification:(nullable NSNotification *)notification;
+- (void)handlePageChangedNotification:(nullable NSNotification *)notification;
 
 #pragma mark Actions
 
-- (IBAction)goToPreviousNextFirstLastPage:(id)sender;
-- (IBAction)goBackOrForward:(id)sender;
-- (IBAction)changeScaleFactor:(id)sender;
-- (void)chooseScale:(id)sender;
-- (void)zoomActualPhysical:(id)sender;
-- (IBAction)zoomInActualOut:(id)sender;
-- (IBAction)zoomToFit:(id)sender;
-- (IBAction)zoomToSelection:(id)sender;
-- (IBAction)changeAutoScales:(id)sender;
-- (IBAction)rotateAllLeftRight:(id)sender;
-- (IBAction)cropAll:(id)sender;
-- (IBAction)toggleFullscreen:(id)sender;
-- (IBAction)togglePresentation:(id)sender;
-- (IBAction)toggleLeftSidePane:(id)sender;
-- (IBAction)toggleRightSidePane:(id)sender;
-- (IBAction)toggleSplitPDF:(id)sender;
-- (IBAction)changeDisplayBox:(id)sender;
-- (IBAction)changeDisplaySinglePages:(id)sender;
-- (IBAction)changeDisplayContinuous:(id)sender;
-- (IBAction)changeDisplayMode:(id)sender;
-- (IBAction)changeDisplayDirection:(id)sender;
-- (IBAction)changeDisplaysRTL:(id)sender;
-- (IBAction)changeBookMode:(id)sender;
-- (IBAction)changePageBreaks:(id)sender;
-- (void)createNewTextNote:(id)sender;
-- (void)createNewCircleNote:(id)sender;
-- (void)createNewMarkupNote:(id)sender;
-- (void)createNewLineNote:(id)sender;
-- (IBAction)createNewNote:(id)sender;
-- (IBAction)changeToolMode:(id)sender;
-- (IBAction)selectColor:(id)sender;
-- (IBAction)togglePacer:(id)sender;
-- (IBAction)choosePacerSpeed:(id)sender;
+- (IBAction)goToPreviousNextFirstLastPage:(nullable id)sender;
+- (IBAction)goBackOrForward:(nullable id)sender;
+- (IBAction)changeScaleFactor:(nullable id)sender;
+- (void)chooseScale:(nullable id)sender;
+- (void)zoomActualPhysical:(nullable id)sender;
+- (IBAction)zoomInActualOut:(nullable id)sender;
+- (IBAction)zoomToFit:(nullable id)sender;
+- (IBAction)zoomToSelection:(nullable id)sender;
+- (IBAction)changeAutoScales:(nullable id)sender;
+- (IBAction)rotateAllLeftRight:(nullable id)sender;
+- (IBAction)cropAll:(nullable id)sender;
+- (IBAction)toggleFullscreen:(nullable id)sender;
+- (IBAction)togglePresentation:(nullable id)sender;
+- (IBAction)toggleLeftSidePane:(nullable id)sender;
+- (IBAction)toggleRightSidePane:(nullable id)sender;
+- (IBAction)toggleSplitPDF:(nullable id)sender;
+- (IBAction)changeDisplayBox:(nullable id)sender;
+- (IBAction)changeDisplaySinglePages:(nullable id)sender;
+- (IBAction)changeDisplayContinuous:(nullable id)sender;
+- (IBAction)changeDisplayMode:(nullable id)sender;
+- (IBAction)changeDisplayDirection:(nullable id)sender;
+- (IBAction)changeDisplaysRTL:(nullable id)sender;
+- (IBAction)changeBookMode:(nullable id)sender;
+- (IBAction)changePageBreaks:(nullable id)sender;
+- (void)createNewTextNote:(nullable id)sender;
+- (void)createNewCircleNote:(nullable id)sender;
+- (void)createNewMarkupNote:(nullable id)sender;
+- (void)createNewLineNote:(nullable id)sender;
+- (IBAction)createNewNote:(nullable id)sender;
+- (IBAction)changeToolMode:(nullable id)sender;
+- (IBAction)selectColor:(nullable id)sender;
+- (IBAction)togglePacer:(nullable id)sender;
+- (IBAction)choosePacerSpeed:(nullable id)sender;
 
 @end
+
+NS_ASSUME_NONNULL_END
