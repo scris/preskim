@@ -102,7 +102,7 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
     NSArray *separatorTemplate;
 }
 
-- (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateString:(nullable NSString *)anItemTemplateString separatorTemplateString:(nullable NSString *)aSeparatorTemplateString;
+- (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateString:(NSString *)anItemTemplateString separatorTemplateString:(nullable NSString *)aSeparatorTemplateString;
 
 @property (nonatomic, nullable, readonly) NSArray *itemTemplate, *separatorTemplate;
 
@@ -117,7 +117,7 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
     NSArray *separatorTemplate;
 }
 
-- (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateAttributedString:(nullable NSAttributedString *)anItemTemplateAttributedString separatorTemplateAttributedString:(nullable NSAttributedString *)aSeparatorTemplateAttributedString;
+- (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateAttributedString:(NSAttributedString *)anItemTemplateAttributedString separatorTemplateAttributedString:(nullable NSAttributedString *)aSeparatorTemplateAttributedString;
 
 @property (nonatomic, nullable, readonly) NSArray *itemTemplate, *separatorTemplate;
 
