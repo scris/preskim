@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKUnarchiveColorTransformerName;
 extern NSString *SKUnarchiveColorArrayTransformerName;
 extern NSString *SKTypeImageTransformerName;
@@ -49,3 +51,5 @@ extern NSString *SKIsTwoTransformerName;
 @interface NSValueTransformer (SKExtensions)
 + (void)registerCustomTransformers;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKPDFDocumentType;
 extern NSString *SKPDFBundleDocumentType;
 extern NSString *SKNotesDocumentType;
@@ -71,17 +73,19 @@ extern NSString *SKDocumentControllerDocumentKey;
     Class openDocumentClass;
 }
 
-- (IBAction)newDocumentFromClipboard:(id)sender;
+- (IBAction)newDocumentFromClipboard:(nullable id)sender;
 
-- (void)openDocumentWithImageFromPasteboard:(NSPasteboard *)pboard completionHandler:(void (^)(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error))completionHandler;
+- (void)openDocumentWithImageFromPasteboard:(NSPasteboard *)pboard completionHandler:(void (^)(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error))completionHandler;
 // this method may return an SKDownload instance
-- (void)openDocumentWithURLFromPasteboard:(NSPasteboard *)pboard showNotes:(BOOL)showNotes completionHandler:(void (^)(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error))completionHandler;
+- (void)openDocumentWithURLFromPasteboard:(NSPasteboard *)pboard showNotes:(BOOL)showNotes completionHandler:(void (^)(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error))completionHandler;
 
-- (void)openDocumentWithBookmark:(SKBookmark *)bookmark completionHandler:(void (^)(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error))completionHandler;
-- (void)openDocumentWithBookmarks:(NSArray *)bookmarks completionHandler:(void (^)(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error))completionHandler;
+- (void)openDocumentWithBookmark:(SKBookmark *)bookmark completionHandler:(void (^)(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error))completionHandler;
+- (void)openDocumentWithBookmarks:(NSArray *)bookmarks completionHandler:(void (^)(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error))completionHandler;
 
-- (Class)documentClassForContentsOfURL:(NSURL *)inAbsoluteURL;
+- (nullable Class)documentClassForContentsOfURL:(NSURL *)inAbsoluteURL;
 
 @property (nonatomic, readonly) BOOL openedFile;
 
 @end
+
+NS_ASSUME_NONNULL_END

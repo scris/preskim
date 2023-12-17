@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKApplicationStartsTerminatingNotification;
 
 @protocol SKApplicationDelegate;
@@ -49,7 +51,7 @@ extern NSString *SKApplicationStartsTerminatingNotification;
     SPUStandardUpdaterController *updaterController;
 }
 
-@property (nonatomic, strong) IBOutlet SPUStandardUpdaterController *updaterController;
+@property (nonatomic, nullable, strong) IBOutlet SPUStandardUpdaterController *updaterController;
 
 @property (nonatomic, getter=isUserAttentionDisabled) BOOL userAttentionDisabled;
 
@@ -57,8 +59,8 @@ extern NSString *SKApplicationStartsTerminatingNotification;
 
 - (BOOL)willDragMouse;
 
-- (id <SKApplicationDelegate>)delegate;
-- (void)setDelegate:(id <SKApplicationDelegate>)newDelegate;
+- (nullable id <SKApplicationDelegate>)delegate;
+- (void)setDelegate:(nullable id <SKApplicationDelegate>)newDelegate;
 
 @end
 
@@ -72,3 +74,5 @@ extern NSString *SKApplicationStartsTerminatingNotification;
 enum {
     SKRemoteButtonEvent = 1
 };
+
+NS_ASSUME_NONNULL_END

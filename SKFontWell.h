@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SKFontWell : NSButton {
     id target;
     SEL action;
@@ -48,14 +50,14 @@
 @property (nonatomic, getter=isActive) BOOL active;
 @property (nonatomic, copy) NSString *fontName;
 @property (nonatomic) CGFloat fontSize;
-@property (nonatomic, copy) NSColor *textColor;
+@property (nonatomic, nullable, copy) NSColor *textColor;
 @property (nonatomic) BOOL hasTextColor;
 
 - (void)activate;
 - (void)deactivate;
 
-- (void)changeFontFromFontManager:(id)sender;
-- (void)changeAttributesFromFontManager:(id)sender;
+- (void)changeFontFromFontManager:(nullable id)sender;
+- (void)changeAttributesFromFontManager:(nullable id)sender;
 
 @end
 
@@ -65,7 +67,9 @@
     BOOL hasTextColor;
 }
 
-@property (nonatomic, copy) NSColor *textColor;
+@property (nonatomic, nullable, copy) NSColor *textColor;
 @property (nonatomic) BOOL hasTextColor;
 
 @end
+
+NS_ASSUME_NONNULL_END

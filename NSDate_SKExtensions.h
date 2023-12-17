@@ -38,9 +38,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSDate (SKExtensions)
 
 @property (nonatomic, readonly) NSDate *fullDateFormat, *longDateFormat, *mediumDateFormat, *shortDateFormat, *fullTimeFormat, *longTimeFormat, *mediumTimeFormat, *shortTimeFormat;
 @property (nonatomic, readonly) NSString *standardDescription, *PDFDescription;
 
 @end
+
+NS_ASSUME_NONNULL_END

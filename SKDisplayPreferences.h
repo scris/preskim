@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "SKPreferenceController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKColorSwatch;
 
 @interface SKDisplayPreferences : NSViewController <SKPreferencePane> {
@@ -49,19 +51,21 @@
     BOOL changingColors;
 }
 
-@property (nonatomic, strong) IBOutlet NSColorWell *normalColorWell;
-@property (nonatomic, strong) IBOutlet NSColorWell *fullScreenColorWell;
-@property (nonatomic, strong) IBOutlet SKColorSwatch *colorSwatch;
-@property (nonatomic, strong) IBOutlet NSSegmentedControl *addRemoveColorButton;
+@property (nonatomic, nullable, strong) IBOutlet NSColorWell *normalColorWell;
+@property (nonatomic, nullable, strong) IBOutlet NSColorWell *fullScreenColorWell;
+@property (nonatomic, nullable, strong) IBOutlet SKColorSwatch *colorSwatch;
+@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *addRemoveColorButton;
 
 @property (nonatomic, readonly) BOOL allowsDarkMode;
 
 - (NSUInteger)countOfSizes;
 - (NSNumber *)objectInSizesAtIndex:(NSUInteger)anIndex;
 
-- (IBAction)changeBackgroundColor:(id)sender;
-- (IBAction)changeFullScreenBackgroundColor:(id)sender;
+- (IBAction)changeBackgroundColor:(nullable id)sender;
+- (IBAction)changeFullScreenBackgroundColor:(nullable id)sender;
 
-- (IBAction)addRemoveColor:(id)sender;
+- (IBAction)addRemoveColor:(nullable id)sender;
 
 @end
+
+NS_ASSUME_NONNULL_END

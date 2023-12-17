@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, SKTemplateTagType) {
     SKTemplateTagValue,
     SKTemplateTagCollection,
@@ -87,7 +89,7 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
 - (instancetype)initWithKeyPath:(NSString *)aKeyPath attributes:(NSDictionary *)anAttributes;
 
 @property (nonatomic, readonly) NSDictionary *attributes;
-@property (nonatomic, readonly) SKAttributeTemplate *linkTemplate;
+@property (nonatomic, nullable, readonly) SKAttributeTemplate *linkTemplate;
 
 @end
 
@@ -100,9 +102,9 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
     NSArray *separatorTemplate;
 }
 
-- (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateString:(NSString *)anItemTemplateString separatorTemplateString:(NSString *)aSeparatorTemplateString;
+- (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateString:(nullable NSString *)anItemTemplateString separatorTemplateString:(nullable NSString *)aSeparatorTemplateString;
 
-@property (nonatomic, readonly) NSArray *itemTemplate, *separatorTemplate;
+@property (nonatomic, nullable, readonly) NSArray *itemTemplate, *separatorTemplate;
 
 @end
 
@@ -115,9 +117,9 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
     NSArray *separatorTemplate;
 }
 
-- (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateAttributedString:(NSAttributedString *)anItemTemplateAttributedString separatorTemplateAttributedString:(NSAttributedString *)aSeparatorTemplateAttributedString;
+- (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateAttributedString:(nullable NSAttributedString *)anItemTemplateAttributedString separatorTemplateAttributedString:(nullable NSAttributedString *)aSeparatorTemplateAttributedString;
 
-@property (nonatomic, readonly) NSArray *itemTemplate, *separatorTemplate;
+@property (nonatomic, nullable, readonly) NSArray *itemTemplate, *separatorTemplate;
 
 @end
 
@@ -171,7 +173,7 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
 
 - (void)appendAttributedText:(NSAttributedString *)newAttributedText;
 
-@property (nonatomic, readonly) NSArray *linkTemplates;
+@property (nonatomic, nullable, readonly) NSArray *linkTemplates;
 
 @end
 
@@ -183,10 +185,12 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
     Class attributeClass;
 }
 
-- (instancetype)initWithTemplate:(NSArray *)aTemplate range:(NSRange)aRange attributeClass:(Class)aClass;
+- (instancetype)initWithTemplate:(nullable NSArray *)aTemplate range:(NSRange)aRange attributeClass:(nullable Class)aClass;
 
-@property (nonatomic, readonly) NSArray *template;
+@property (nonatomic, nullable, readonly) NSArray *template;
 @property (nonatomic, readonly) NSRange range;
-@property (nonatomic, readonly) Class attributeClass;
+@property (nonatomic, nullable, readonly) Class attributeClass;
 
 @end
+
+NS_ASSUME_NONNULL_END

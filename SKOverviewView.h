@@ -38,6 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKTypeSelectHelper;
 
 @interface SKOverviewView : NSCollectionView {
@@ -47,9 +49,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 @property (nonatomic) SEL singleClickAction, doubleClickAction;
-@property (nonatomic, strong) SKTypeSelectHelper *typeSelectHelper;
+@property (nonatomic, nullable, strong) SKTypeSelectHelper *typeSelectHelper;
 
 - (id)newViewWithIdentifier:(NSString *)identifier;
 - (void)cacheView:(id)view;
 
 @end
+
+NS_ASSUME_NONNULL_END

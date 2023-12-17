@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKExportAccessoryController : NSViewController {
     NSPopUpButton *formatPopUpButton;
@@ -45,10 +46,12 @@
     BOOL hasExportOptions, allowsEmbeddedOptions;
 }
 
-@property (nonatomic, strong) IBOutlet NSPopUpButton *formatPopUpButton;
+@property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *formatPopUpButton;
 
 @property (nonatomic) BOOL hasExportOptions, allowsEmbeddedOption;
-@property (nonatomic, readonly) NSString *selectedFileType;
-@property (nonatomic, strong) NSSavePanel *savePanel;
+@property (nonatomic, nullable, readonly) NSString *selectedFileType;
+@property (nonatomic, nullable, strong) NSSavePanel *savePanel;
 
 @end
+
+NS_ASSUME_NONNULL_END

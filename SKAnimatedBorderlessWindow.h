@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKAnimatedBorderlessWindow : NSPanel {
     CGFloat defaultAlphaValue;
@@ -49,17 +50,19 @@
 @property (nonatomic) CGFloat defaultAlphaValue;
 @property (nonatomic) NSTimeInterval autoHideTimeInterval;
 @property (nonatomic, readonly) NSTimeInterval fadeInDuration, fadeOutDuration;
-@property (nonatomic, strong) NSImage *backgroundImage;
+@property (nonatomic, nullable, strong) NSImage *backgroundImage;
 
 - (void)fadeIn;
 - (void)fadeOut;
 
 - (void)remove;
 
-- (void)orderOut:(id)sender;
-- (void)orderFront:(id)sender;
+- (void)orderOut:(nullable id)sender;
+- (void)orderFront:(nullable id)sender;
 - (void)orderFrontRegardless;
 
 - (void)stopAnimation;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -41,6 +41,7 @@
 #import <SkimNotes/SkimNotes.h>
 #import "NSGeometry_SKExtensions.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *SKPDFAnnotationScriptingColorKey;
 extern NSString *SKPDFAnnotationScriptingModificationDateKey;
@@ -56,48 +57,48 @@ extern NSString *SKPasteboardTypeSkimNote;
 
 @interface PDFAnnotation (SKExtensions) <NSPasteboardReading, NSPasteboardWriting>
 
-+ (PDFAnnotation *)newSkimNoteWithBounds:(NSRect)bounds forType:(NSString *)type;
++ (nullable PDFAnnotation *)newSkimNoteWithBounds:(NSRect)bounds forType:(NSString *)type;
 
-+ (PDFAnnotation *)newSkimNoteWithProperties:(NSDictionary *)dict;
++ (nullable PDFAnnotation *)newSkimNoteWithProperties:(NSDictionary *)dict;
 
-+ (PDFAnnotation *)newSkimNoteWithPaths:(NSArray *)paths;
++ (nullable PDFAnnotation *)newSkimNoteWithPaths:(NSArray *)paths;
 
-+ (PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forType:(NSString *)type;
++ (nullable PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forType:(NSString *)type;
 
-+ (NSArray *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection forType:(NSString *)type;
++ (nullable NSArray *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection forType:(NSString *)type;
 
 + (NSDictionary *)textToNoteSkimNoteProperties:(NSDictionary *)properties;
 
-@property (nonatomic, readonly) NSString *fdfString;
+@property (nonatomic, nullable, readonly) NSString *fdfString;
 
 @property (nonatomic, readonly) NSUInteger pageIndex;
 
 @property (nonatomic) PDFBorderStyle borderStyle;
 @property (nonatomic) CGFloat lineWidth;
-@property (nonatomic, copy) NSArray *dashPattern;
+@property (nonatomic, nullable, copy) NSArray *dashPattern;
 
 @property (nonatomic) NSPoint observedStartPoint;
 @property (nonatomic) NSPoint observedEndPoint;
 
 @property (nonatomic, readonly) CGFloat pathInset;
 
-@property (nonatomic, copy) NSArray *bezierPaths;
+@property (nonatomic, nullable, copy) NSArray *bezierPaths;
 
-@property (nonatomic, readonly) NSArray *pagePaths;
+@property (nonatomic, nullable, readonly) NSArray *pagePaths;
 
-@property (nonatomic, readonly) NSImage *image;
-@property (nonatomic, readonly) NSAttributedString *text;
+@property (nonatomic, nullable, readonly) NSImage *image;
+@property (nonatomic, nullable, readonly) NSAttributedString *text;
 
 @property (nonatomic, readonly) BOOL hasNoteText;
-@property (nonatomic, readonly) SKNoteText *noteText;
+@property (nonatomic, nullable, readonly) SKNoteText *noteText;
 
-@property (nonatomic, readonly) PDFSelection *selection;
+@property (nonatomic, nullable, readonly) PDFSelection *selection;
 
-@property (nonatomic, strong) id objectValue;
+@property (nonatomic, nullable, strong) id objectValue;
 
 @property (nonatomic, readonly) SKNPDFWidgetType widgetType;
 
-@property (nonatomic, readonly) NSString *textString;
+@property (nonatomic, nullable, readonly) NSString *textString;
 
 - (BOOL)isMarkup;
 - (BOOL)isNote;
@@ -133,37 +134,39 @@ extern NSString *SKPasteboardTypeSkimNote;
 
 - (void)setColor:(NSColor *)color alternate:(BOOL)alternate updateDefaults:(BOOL)update;
 
-@property (nonatomic, readonly) NSURL *skimURL;
+@property (nonatomic, nullable, readonly) NSURL *skimURL;
 
 @property (nonatomic, readonly) NSSet *keysForValuesToObserveForUndo;
 
 @property (class, nonatomic, readonly) NSSet *customScriptingKeys;
 @property (nonatomic, readonly) NSScriptObjectSpecifier *objectSpecifier;
-@property (nonatomic, copy) NSColor *scriptingColor;
-@property (nonatomic, readonly) PDFPage *scriptingPage;
-@property (nonatomic, copy) NSDate *scriptingModificationDate;
-@property (nonatomic, copy) NSString *scriptingUserName;
+@property (nonatomic, nullable, copy) NSColor *scriptingColor;
+@property (nonatomic, nullable, readonly) PDFPage *scriptingPage;
+@property (nonatomic, nullable, copy) NSDate *scriptingModificationDate;
+@property (nonatomic, nullable, copy) NSString *scriptingUserName;
 @property (nonatomic, readonly) PDFTextAnnotationIconType scriptingIconType;
-@property (nonatomic, copy) id textContents;
-@property (nonatomic, readonly) id richText;
+@property (nonatomic, nullable, copy) id textContents;
+@property (nonatomic, nullable, readonly) id richText;
 @property (nonatomic, copy) NSData *boundsAsQDRect;
 @property (nonatomic, readonly) NSInteger scriptingAlignment;
-@property (nonatomic, readonly) NSString *fontName;
+@property (nonatomic, nullable, readonly) NSString *fontName;
 @property (nonatomic, readonly) CGFloat fontSize;
-@property (nonatomic, readonly) NSColor *scriptingFontColor;
-@property (nonatomic, readonly) NSColor *scriptingInteriorColor;
-@property (nonatomic, readonly) NSData *startPointAsQDPoint;
-@property (nonatomic, readonly) NSData *endPointAsQDPoint;
+@property (nonatomic, nullable, readonly) NSColor *scriptingFontColor;
+@property (nonatomic, nullable, readonly) NSColor *scriptingInteriorColor;
+@property (nonatomic, nullable, readonly) NSData *startPointAsQDPoint;
+@property (nonatomic, nullable, readonly) NSData *endPointAsQDPoint;
 @property (nonatomic, readonly) PDFLineStyle scriptingStartLineStyle;
 @property (nonatomic, readonly) PDFLineStyle scriptingEndLineStyle;
-@property (nonatomic, readonly) id selectionSpecifier;
-@property (nonatomic, readonly) NSArray *scriptingPointLists;
+@property (nonatomic, nullable, readonly) id selectionSpecifier;
+@property (nonatomic, nullable, readonly) NSArray *scriptingPointLists;
 
 - (void)handleEditScriptCommand:(NSScriptCommand *)command;
 
 @end
 
 @interface PDFAnnotation (SKDefaultExtensions)
-@property (nonatomic, readonly) NSColor *interiorColor;
-@property (nonatomic, readonly) NSString *fieldName;
+@property (nonatomic, nullable, readonly) NSColor *interiorColor;
+@property (nonatomic, nullable, readonly) NSString *fieldName;
 @end
+
+NS_ASSUME_NONNULL_END

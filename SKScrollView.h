@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKScrollView : NSScrollView {
     BOOL resizingSubviews;
@@ -46,3 +47,5 @@
 @property (nonatomic, getter=isResizingSubviews) BOOL resizingSubviews;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -38,13 +38,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKShareMenuController : NSObject <NSMenuDelegate, NSCoding> {
     __weak NSDocument *document;
 }
 
-- (instancetype)initForDocument:(NSDocument *)aDocument;
+- (instancetype)initForDocument:(nullable NSDocument *)aDocument;
 
-@property (nonatomic, weak) NSDocument *document;
+@property (nonatomic, nullable, weak) NSDocument *document;
 
 @end
+
+NS_ASSUME_NONNULL_END

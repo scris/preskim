@@ -40,6 +40,7 @@
 #import "SKAnimatedBorderlessWindow.h"
 #import "SKImageToolTipContext.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKImageToolTipWindow : SKAnimatedBorderlessWindow {
     id <SKImageToolTipContext> context;
@@ -52,6 +53,8 @@
 // aContext can be a PDFAnnotation, PDFDestination, or PDFPage
 - (void)showForImageContext:(id <SKImageToolTipContext>)aContext scale:(CGFloat)aScale atPoint:(NSPoint)aPoint;
 
-@property (nonatomic, readonly) id <SKImageToolTipContext> currentImageContext;
+@property (nonatomic, nullable, readonly) id <SKImageToolTipContext> currentImageContext;
 
 @end
+
+NS_ASSUME_NONNULL_END

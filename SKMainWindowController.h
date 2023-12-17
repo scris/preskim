@@ -44,6 +44,8 @@
 #import "SKPDFView.h"
 #import "SKPDFDocument.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, SKLeftSidePaneState) {
     SKSidePaneStateThumbnail,
     SKSidePaneStateOutline
@@ -200,38 +202,38 @@ enum {
     } mwcFlags;
 }
 
-@property (nonatomic, strong) IBOutlet NSWindow *mainWindow;
+@property (nonatomic, nullable, strong) IBOutlet NSWindow *mainWindow;
 
-@property (nonatomic, strong) IBOutlet SKSplitView *splitView;
+@property (nonatomic, nullable, strong) IBOutlet SKSplitView *splitView;
     
-@property (nonatomic, strong) IBOutlet NSView *centerContentView;
-@property (nonatomic, strong) IBOutlet SKSplitView *pdfSplitView;
-@property (nonatomic, strong) IBOutlet NSView *pdfContentView;
+@property (nonatomic, nullable, strong) IBOutlet NSView *centerContentView;
+@property (nonatomic, nullable, strong) IBOutlet SKSplitView *pdfSplitView;
+@property (nonatomic, nullable, strong) IBOutlet NSView *pdfContentView;
 
-@property (nonatomic, strong) IBOutlet SKStatusBar *statusBar;
+@property (nonatomic, nullable, strong) IBOutlet SKStatusBar *statusBar;
 
-@property (nonatomic, strong) IBOutlet SKLeftSideViewController *leftSideController;
-@property (nonatomic, strong) IBOutlet SKRightSideViewController *rightSideController;
+@property (nonatomic, nullable, strong) IBOutlet SKLeftSideViewController *leftSideController;
+@property (nonatomic, nullable, strong) IBOutlet SKRightSideViewController *rightSideController;
     
-@property (nonatomic, strong) IBOutlet SKMainToolbarController *toolbarController;
+@property (nonatomic, nullable, strong) IBOutlet SKMainToolbarController *toolbarController;
     
-@property (nonatomic, strong) IBOutlet NSView *leftSideContentView, *rightSideContentView;
+@property (nonatomic, nullable, strong) IBOutlet NSView *leftSideContentView, *rightSideContentView;
 
-@property (nonatomic, readonly) NSString *searchString;
+@property (nonatomic, nullable, readonly) NSString *searchString;
 
 - (void)showSnapshotAtPageNumber:(NSInteger)pageNum forRect:(NSRect)rect scaleFactor:(CGFloat)scaleFactor autoFits:(BOOL)autoFits;
 - (void)showSnapshotsWithSetups:(NSArray *)setups;
 - (void)showNote:(PDFAnnotation *)annotation;
 
-- (NSWindowController *)windowControllerForNote:(PDFAnnotation *)annotation;
+- (nullable NSWindowController *)windowControllerForNote:(PDFAnnotation *)annotation;
 
-@property (nonatomic, readonly) SKPDFView *pdfView;
-@property (nonatomic, readonly) PDFDocument *pdfDocument;
-@property (nonatomic, readonly) PDFView *secondaryPdfView;
+@property (nonatomic, nullable, readonly) SKPDFView *pdfView;
+@property (nonatomic, nullable, readonly) PDFDocument *pdfDocument;
+@property (nonatomic, nullable, readonly) PDFView *secondaryPdfView;
 
-@property (nonatomic, readonly) PDFDocument *placeholderPdfDocument;
+@property (nonatomic, nullable, readonly) PDFDocument *placeholderPdfDocument;
 
-@property (nonatomic, readonly) NSArray *widgetProperties;
+@property (nonatomic, nullable, readonly) NSArray *widgetProperties;
 
 @property (nonatomic, readonly) BOOL hasNotes;
 
@@ -244,7 +246,7 @@ enum {
 - (void)removeAllObjectsFromNotes;
 
 - (NSArray *)thumbnails;
-- (void)setThumbnails:(NSArray *)newThumbnails;
+- (void)setThumbnails:(nullable NSArray *)newThumbnails;
 
 - (NSArray *)snapshots;
 - (NSUInteger)countOfSnapshots;
@@ -254,32 +256,32 @@ enum {
 - (void)removeAllObjectsFromSnapshots;
 
 - (NSArray *)searchResults;
-- (void)setSearchResults:(NSArray *)newSearchResults;
+- (void)setSearchResults:(nullable NSArray *)newSearchResults;
 - (NSUInteger)countOfSearchResults;
 - (PDFSelection *)objectInSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)insertObject:(PDFSelection *)searchResult inSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)removeObjectFromSearchResultsAtIndex:(NSUInteger)theIndex;
 
 - (NSArray *)groupedSearchResults;
-- (void)setGroupedSearchResults:(NSArray *)newGroupedSearchResults;
+- (void)setGroupedSearchResults:(nullable NSArray *)newGroupedSearchResults;
 - (NSUInteger)countOfGroupedSearchResults;
 - (SKGroupedSearchResult *)objectInGroupedSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)insertObject:(SKGroupedSearchResult *)groupedSearchResult inGroupedSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)removeObjectFromGroupedSearchResultsAtIndex:(NSUInteger)theIndex;
 
-@property (nonatomic, copy) NSDictionary *presentationOptions;
+@property (nonatomic, nullable, copy) NSDictionary *presentationOptions;
 
-@property (nonatomic, strong) NSDocument *presentationNotesDocument;
+@property (nonatomic, nullable, strong) NSDocument *presentationNotesDocument;
 @property (nonatomic) NSInteger presentationNotesOffset;
 
-@property (nonatomic, readonly) NSUndoManager *presentationUndoManager;
+@property (nonatomic, nullable, readonly) NSUndoManager *presentationUndoManager;
 
 @property (nonatomic, copy) NSArray *tags;
 @property (nonatomic) double rating;
 
-@property (nonatomic, copy) NSArray *selectedNotes;
+@property (nonatomic, nullable, copy) NSArray *selectedNotes;
 
-@property (nonatomic, copy) NSString *pageLabel;
+@property (nonatomic, nullable, copy) NSString *pageLabel;
 
 @property (nonatomic, readonly) SKInteractionMode interactionMode;
 
@@ -294,13 +296,13 @@ enum {
 
 @property (nonatomic) BOOL recentInfoNeedsUpdate;
 
-@property (nonatomic, readonly) NSMenu *notesMenu;
+@property (nonatomic, nullable, readonly) NSMenu *notesMenu;
 
 @property (nonatomic) BOOL hasOverview;
 
 - (void)showOverviewAnimating:(BOOL)animate;
 - (void)hideOverviewAnimating:(BOOL)animate;
-- (void)hideOverviewAnimating:(BOOL)animate completionHandler:(void (^)(void))handler;
+- (void)hideOverviewAnimating:(BOOL)animate completionHandler:(nullable void (^)(void))handler;
 
 - (void)displayTocViewAnimating:(BOOL)animate;
 - (void)displayThumbnailViewAnimating:(BOOL)animate;
@@ -333,8 +335,8 @@ enum {
 - (void)updateSnapshotsIfNeeded;
 - (void)updateSnapshot:(NSTimer *)timer;
 
-- (void)setPdfDocument:(PDFDocument *)pdfDocument addAnnotationsFromDictionaries:(NSArray *)noteDicts;
-- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(NSArray *)notesToRemove;
+- (void)setPdfDocument:(nullable PDFDocument *)pdfDocument addAnnotationsFromDictionaries:(nullable NSArray *)noteDicts;
+- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(nullable NSArray *)notesToRemove;
 
 - (void)applySetup:(NSDictionary *)setup;
 - (NSDictionary *)currentSetup;
@@ -350,3 +352,5 @@ enum {
 - (void)dismissProgressSheet;
 
 @end
+
+NS_ASSUME_NONNULL_END

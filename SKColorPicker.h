@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKColorPickerDelegate;
 
 @interface SKColorPicker : NSViewController <NSScrubberDataSource, NSScrubberDelegate> {
@@ -48,7 +50,7 @@
 
 @property (nonatomic, readonly) NSArray *colors;
 
-@property (nonatomic, weak) id <SKColorPickerDelegate> delegate;
+@property (nonatomic, nullable, weak) id <SKColorPickerDelegate> delegate;
 
 @end
 
@@ -56,3 +58,5 @@
 @protocol SKColorPickerDelegate <NSObject>
 - (void)colorPickerDidSelectColor:(NSColor *)color;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKDisplayPrefs : NSObject {
     BOOL fullScreen;
@@ -45,12 +46,14 @@
 
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, strong) NSDictionary *pdfViewSettings;
-@property (nonatomic, strong) NSColor *backgroundColor;
+@property (nonatomic, nullable, strong) NSColor *backgroundColor;
 @property (nonatomic) CGFloat sepiaTone;
-@property (nonatomic, strong) NSColor *whitePoint;
+@property (nonatomic, nullable, strong) NSColor *whitePoint;
 @property (nonatomic, getter=isInverted) BOOL inverted;
 
 - (instancetype)initForFullScreen:(BOOL)isFullScreen;
 - (instancetype)initWithName:(NSString *)name;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -39,6 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import <Cocoa/Cocoa.h>
 #import "SKGroupView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKThumbnail;
 
 @interface SKThumbnailView : SKGroupView <NSDraggingSource> {
@@ -55,14 +57,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     __weak NSCollectionViewItem *controller;
 }
 
-@property (nonatomic, strong) SKThumbnail *thumbnail;
+@property (nonatomic, nullable, strong) SKThumbnail *thumbnail;
 @property (nonatomic, getter=isSelected) BOOL selected;
 @property (nonatomic, getter=isMenuHighlighted) BOOL menuHighlighted;
 @property (nonatomic) NSBackgroundStyle backgroundStyle;
 @property (nonatomic) NSInteger highlightLevel;
 @property (nonatomic, getter=isMarked) BOOL marked;
-@property (nonatomic, weak) NSCollectionViewItem *controller;
+@property (nonatomic, nullable, weak) NSCollectionViewItem *controller;
 
 + (NSSize)sizeForImageSize:(NSSize)size;
 
 @end
+
+NS_ASSUME_NONNULL_END

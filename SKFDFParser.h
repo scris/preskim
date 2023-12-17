@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef const char *SKFDFString;
 
 extern SKFDFString SKFDFFDFKey;
@@ -115,10 +117,12 @@ extern SKFDFString SKFDFLineStyleFromPDFLineStyle(PDFLineStyle lineStyle);
 
 
 @interface SKFDFParser : NSObject
-+ (NSArray *)noteDictionariesFromFDFData:(NSData *)data;
++ (nullable NSArray *)noteDictionariesFromFDFData:(NSData *)data;
 @end
 
 
 @interface NSMutableString (SKFDFExtensions)
 - (void)appendFDFName:(SKFDFString)name;
 @end
+
+NS_ASSUME_NONNULL_END

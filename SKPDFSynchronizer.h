@@ -40,6 +40,8 @@
 #import "synctex_parser.h"
 #import <stdatomic.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
     SKPDFSynchronizerDefaultOptions = 0,
     SKPDFSynchronizerSelectMask = 1 << 0,
@@ -72,8 +74,8 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
     _Atomic(BOOL) shouldKeepRunning;
 }
 
-@property (nonatomic, weak) id <SKPDFSynchronizerDelegate> delegate;
-@property (copy) NSString *fileName;
+@property (nonatomic, nullable, weak) id <SKPDFSynchronizerDelegate> delegate;
+@property (nullable, copy) NSString *fileName;
 @property (readonly) BOOL shouldKeepRunning;
 
 - (void)findFileAndLineForLocation:(NSPoint)point inRect:(NSRect)rect pageBounds:(NSRect)bounds atPageIndex:(NSUInteger)pageIndex;
@@ -91,3 +93,5 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
 - (void)synchronizerFoundLocation:(NSPoint)point atPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOption)options;
 
 @end
+
+NS_ASSUME_NONNULL_END

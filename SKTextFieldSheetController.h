@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKTextFieldSheetController : NSWindowController <NSTouchBarDelegate> {
     NSTextField *textField;
@@ -45,8 +46,10 @@
     NSButton *cancelButton;
 }
 
-@property (nonatomic, strong) IBOutlet NSTextField *textField;
-@property (nonatomic, strong) IBOutlet NSButton *okButton, *cancelButton;
+@property (nonatomic, nullable, strong) IBOutlet NSTextField *textField;
+@property (nonatomic, nullable, strong) IBOutlet NSButton *okButton, *cancelButton;
 @property (nonatomic, strong) NSString *stringValue;
 
 @end
+
+NS_ASSUME_NONNULL_END

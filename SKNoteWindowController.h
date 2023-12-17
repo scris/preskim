@@ -40,6 +40,7 @@
 #import <Quartz/Quartz.h>
 #import "SKDragImageView.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @class PDFAnnotation, SKStatusBar, SKNoteTextView;
 
@@ -65,20 +66,22 @@
     NSURL *previewURL;
 }
 
-@property (nonatomic, strong) IBOutlet SKNoteTextView *textView;
-@property (nonatomic, strong) IBOutlet NSView *topView;
-@property (nonatomic, strong) IBOutlet NSBox *edgeView;
-@property (nonatomic, strong) IBOutlet SKDragImageView *imageView;
-@property (nonatomic, strong) IBOutlet SKStatusBar *statusBar;
-@property (nonatomic, strong) IBOutlet NSPopUpButton *iconTypePopUpButton;
-@property (nonatomic, strong) IBOutlet NSTextField *iconLabelField;
-@property (nonatomic, strong) IBOutlet NSButton *checkButton;
-@property (nonatomic, strong) IBOutlet NSObjectController *noteController;
+@property (nonatomic, nullable, strong) IBOutlet SKNoteTextView *textView;
+@property (nonatomic, nullable, strong) IBOutlet NSView *topView;
+@property (nonatomic, nullable, strong) IBOutlet NSBox *edgeView;
+@property (nonatomic, nullable, strong) IBOutlet SKDragImageView *imageView;
+@property (nonatomic, nullable, strong) IBOutlet SKStatusBar *statusBar;
+@property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *iconTypePopUpButton;
+@property (nonatomic, nullable, strong) IBOutlet NSTextField *iconLabelField;
+@property (nonatomic, nullable, strong) IBOutlet NSButton *checkButton;
+@property (nonatomic, nullable, strong) IBOutlet NSObjectController *noteController;
 @property (nonatomic, readonly) PDFAnnotation *note;
 @property (nonatomic) BOOL keepOnTop, forceOnTop, isNoteType;
 
-- (instancetype)initWithNote:(PDFAnnotation *)aNote;
+- (instancetype)initWithNote:(nullable PDFAnnotation *)aNote;
 
-- (void)statusBarClicked:(id)sender;
+- (void)statusBarClicked:(nullable id)sender;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -39,5 +39,9 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern void SKSwizzlePDFDocumentViewMethods();
 extern void SKSwizzlePDFAccessibilityNodeAnnotationMethods();
+
+NS_ASSUME_NONNULL_END

@@ -38,6 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKAlias;
 
 @interface SKRecentDocumentInfo : NSObject {
@@ -49,9 +51,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (instancetype)initWithProperties:(NSDictionary *)properties;
 - (instancetype)initWithURL:(NSURL *)fileURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray *)aSnapshots;
 
-@property (nonatomic, readonly) NSURL *fileURL;
+@property (nonatomic, nullable, readonly) NSURL *fileURL;
 @property (nonatomic, readonly) NSUInteger pageIndex;
-@property (nonatomic, readonly) NSArray *snapshots;
+@property (nonatomic, nullable, readonly) NSArray *snapshots;
 @property (nonatomic, readonly) NSDictionary *properties;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKFindControllerDelegate;
 
 @interface SKFindController : NSViewController {
@@ -52,20 +54,20 @@
     BOOL didChange;
 }
 
-@property (nonatomic, strong) IBOutlet NSSearchField *findField;
-@property (nonatomic, strong) IBOutlet NSTextField *messageField;
-@property (nonatomic, strong) IBOutlet NSButton *doneButton;
-@property (nonatomic, strong) IBOutlet NSSegmentedControl *navigationButton;
-@property (nonatomic, strong) IBOutlet NSObjectController *ownerController;
-@property (nonatomic, weak) id <SKFindControllerDelegate> delegate;
-@property (nonatomic, strong) NSString *findString;
+@property (nonatomic, nullable, strong) IBOutlet NSSearchField *findField;
+@property (nonatomic, nullable, strong) IBOutlet NSTextField *messageField;
+@property (nonatomic, nullable, strong) IBOutlet NSButton *doneButton;
+@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *navigationButton;
+@property (nonatomic, nullable, strong) IBOutlet NSObjectController *ownerController;
+@property (nonatomic, nullable, weak) id <SKFindControllerDelegate> delegate;
+@property (nonatomic, nullable, strong) NSString *findString;
 
 - (void)findForward:(BOOL)forward;
 - (void)updateFindPboard;
 
-- (IBAction)find:(id)sender;
-- (IBAction)remove:(id)sender;
-- (IBAction)toggleCaseInsensitiveFind:(id)sender;
+- (IBAction)find:(nullable id)sender;
+- (IBAction)remove:(nullable id)sender;
+- (IBAction)toggleCaseInsensitiveFind:(nullable id)sender;
 
 - (void)didAddFindBar;
 
@@ -76,3 +78,5 @@
 - (BOOL)findString:(NSString *)string forward:(BOOL)forward;
 - (void)removeFindController;
 @end
+
+NS_ASSUME_NONNULL_END

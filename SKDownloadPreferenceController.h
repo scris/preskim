@@ -38,15 +38,18 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKDownloadPreferenceController : NSWindowController <NSTouchBarDelegate> {
     NSButton *doneButton;
     NSPopUpButton *downloadsFolderPopUp;
 }
 
-@property (nonatomic, strong) IBOutlet NSButton *doneButton;
-@property (nonatomic, strong) IBOutlet NSPopUpButton *downloadsFolderPopUp;
+@property (nonatomic, nullable, strong) IBOutlet NSButton *doneButton;
+@property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *downloadsFolderPopUp;
 
-- (IBAction)chooseDownloadsFolder:(id)sender;
+- (IBAction)chooseDownloadsFolder:(nullable id)sender;
 
 @end
+
+NS_ASSUME_NONNULL_END

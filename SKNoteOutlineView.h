@@ -39,14 +39,16 @@
 #import <Cocoa/Cocoa.h>
 #import "SKOutlineView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKNoteOutlineViewDelegate;
 
 @interface SKNoteOutlineView : SKOutlineView
 
-- (void)toggleTableColumn:(id)sender;
+- (void)toggleTableColumn:(nullable id)sender;
 
-- (id <SKNoteOutlineViewDelegate>)delegate;
-- (void)setDelegate:(id <SKNoteOutlineViewDelegate>)newDelegate;
+- (nullable id <SKNoteOutlineViewDelegate>)delegate;
+- (void)setDelegate:(nullable id <SKNoteOutlineViewDelegate>)newDelegate;
 
 @property (nonatomic, readonly) CGFloat fullWidthCellWidth;
 @property (nonatomic, readonly) CGFloat outlineIndentation;
@@ -61,3 +63,5 @@
 - (void)outlineView:(NSOutlineView *)anOutlineView didChangeHiddenOfTableColumn:(NSTableColumn *)aTableColumn;
 
 @end
+
+NS_ASSUME_NONNULL_END

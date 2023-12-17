@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "SKTransitionInfo.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKTransitionView;
 
 @interface SKTransitionController : NSObject {
@@ -51,9 +53,9 @@
     NSArray *pageTransitions;
 }
 
-@property (nonatomic, weak) NSView *view;
-@property (nonatomic, strong) SKTransitionInfo *transition;
-@property (nonatomic, copy) NSArray *pageTransitions;
+@property (nonatomic, nullable, weak) NSView *view;
+@property (nonatomic, nullable, strong) SKTransitionInfo *transition;
+@property (nonatomic, nullable, copy) NSArray *pageTransitions;
 @property (nonatomic) BOOL hasTransition;
 
 @property (class, nonatomic, readonly) NSArray *transitionNames;
@@ -66,3 +68,5 @@
 - (void)animateForRect:(NSRect)rect from:(NSUInteger)fromIndex to:(NSUInteger)toIndex change:(NSRect (^)(void))change;
 
 @end
+
+NS_ASSUME_NONNULL_END

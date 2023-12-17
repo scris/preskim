@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKTemplateManager : NSObject {
     NSArray *customTemplateTypes;
@@ -50,13 +51,15 @@
 
 - (void)resetCustomTemplateTypes;
 
-- (NSURL *)URLForTemplateType:(NSString *)typeName;
+- (nullable NSURL *)URLForTemplateType:(NSString *)typeName;
 
-- (NSString *)fileNameExtensionForTemplateType:(NSString *)typeName;
-- (NSString *)displayNameForTemplateType:(NSString *)typeName;
-- (NSString *)templateTypeForDisplayName:(NSString *)name;
+- (nullable NSString *)fileNameExtensionForTemplateType:(NSString *)typeName;
+- (nullable NSString *)displayNameForTemplateType:(NSString *)typeName;
+- (nullable NSString *)templateTypeForDisplayName:(NSString *)name;
 
 - (BOOL)isRichTextTemplateType:(NSString *)typeName;
 - (BOOL)isRichTextBundleTemplateType:(NSString *)typeName;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -38,13 +38,16 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKNotesPanelController : NSWindowController <NSWindowDelegate>
 @property (class, nonatomic, readonly) SKNotesPanelController *sharedController;
 @property (class, nonatomic, readonly) BOOL sharedControllerExists;
-- (IBAction)addNote:(id)sender;
+- (IBAction)addNote:(nullable id)sender;
 @end
 
 @interface NSObject (SKNotesPanelControllerTarget)
-- (void)addNoteFromPanel:(id)sender;
+- (void)addNoteFromPanel:(nullable id)sender;
 @end
+
+NS_ASSUME_NONNULL_END

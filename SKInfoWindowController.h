@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKInfoWindowController : NSWindowController {
     NSTableView *summaryTableView;
@@ -49,9 +50,9 @@
     NSDictionary *labels;
 }
 
-@property (nonatomic, strong) IBOutlet NSTableView *summaryTableView, *attributesTableView;
-@property (nonatomic, strong) IBOutlet NSTabView *tabView;
-@property (nonatomic, copy) NSDictionary *info;
+@property (nonatomic, nullable, strong) IBOutlet NSTableView *summaryTableView, *attributesTableView;
+@property (nonatomic, nullable, strong) IBOutlet NSTabView *tabView;
+@property (nonatomic, nullable, copy) NSDictionary *info;
 @property (weak, nonatomic, readonly) NSArray *keys;
 
 @property (class, nonatomic, readonly) SKInfoWindowController *sharedInstance;
@@ -59,3 +60,5 @@
 - (NSDictionary *)infoForDocument:(NSDocument *)doc;
 
 @end
+
+NS_ASSUME_NONNULL_END

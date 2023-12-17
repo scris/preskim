@@ -40,6 +40,8 @@
 #import <Quartz/Quartz.h>
 #import "PDFDocument_SKExtensions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKPDFDocumentDelegate;
 
 @interface SKPDFDocument : PDFDocument {
@@ -47,10 +49,10 @@
     __weak NSDocument *containingDocument;
     NSMutableArray *detectedWidgets;
 }
-@property (nonatomic, weak) NSDocument *containingDocument;
-@property (nonatomic, readonly) NSArray *detectedWidgets;
-- (id <SKPDFDocumentDelegate>)delegate;
-- (void)setDelegate:(id <SKPDFDocumentDelegate>)newDelegate;
+@property (nonatomic, nullable, weak) NSDocument *containingDocument;
+@property (nonatomic, nullable, readonly) NSArray *detectedWidgets;
+- (nullable id <SKPDFDocumentDelegate>)delegate;
+- (void)setDelegate:(nullable id <SKPDFDocumentDelegate>)newDelegate;
 - (void)detectedWidgets:(NSArray *)newWidgets onPage:(PDFPage *)page;
 @end
 
@@ -61,3 +63,5 @@
 - (void)document:(PDFDocument *)document didUnlockWithPassword:(NSString *)password;
 - (void)document:(PDFDocument *)document didDetectWidgets:(NSArray *)widgets onPage:(PDFPage *)page;
 @end
+
+NS_ASSUME_NONNULL_END

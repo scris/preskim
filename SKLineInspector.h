@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKLineInspectorLineAttributeDidChangeNotification;
 
 typedef NS_ENUM(NSUInteger, SKLineChangeAction) {
@@ -64,11 +66,11 @@ typedef NS_ENUM(NSUInteger, SKLineChangeAction) {
     SKLineChangeAction currentLineChangeAction;
 }
 
-@property (nonatomic, strong) IBOutlet NSSegmentedControl *startLineStyleButton, *endLineStyleButton;
-@property (nonatomic, strong) IBOutlet SKLineWell *lineWell;
+@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *startLineStyleButton, *endLineStyleButton;
+@property (nonatomic, nullable, strong) IBOutlet SKLineWell *lineWell;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic) PDFBorderStyle style;
-@property (nonatomic, copy) NSArray *dashPattern;
+@property (nonatomic, nullable, copy) NSArray *dashPattern;
 @property (nonatomic) PDFLineStyle startLineStyle, endLineStyle;
 @property (nonatomic, readonly) SKLineChangeAction currentLineChangeAction;
 
@@ -81,5 +83,7 @@ typedef NS_ENUM(NSUInteger, SKLineChangeAction) {
 
 
 @interface NSObject (SKLineInspectorDelegate)
-- (void)changeLineAttribute:(id)sender;
+- (void)changeLineAttribute:(nullable id)sender;
 @end
+
+NS_ASSUME_NONNULL_END

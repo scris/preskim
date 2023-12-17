@@ -39,14 +39,16 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *SKPDFAnnotationSelectionSpecifierKey;
 
-
 @interface PDFAnnotationMarkup (SKExtensions)
 
-- (instancetype)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type;
+- (nullable instancetype)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(nullable PDFPage *)page forType:(NSString *)type;
 
-@property (nonatomic, readonly) PDFSelection *selection;
+@property (nonatomic, nullable, readonly) PDFSelection *selection;
 
 @end
+
+NS_ASSUME_NONNULL_END

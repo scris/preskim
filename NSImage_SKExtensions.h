@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKImageNameTextNote;
 extern NSString *SKImageNameAnchoredNote;
 extern NSString *SKImageNameCircleNote;
@@ -223,3 +225,5 @@ extern NSString *SKImageNameRemoteStateScroll;
 + (void)makeImages;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -40,6 +40,8 @@
 #import <Quartz/Quartz.h>
 #import "SKOutlineView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKBookmark, SKStatusBar;
 
 @interface SKBookmarkController : NSWindowController <NSWindowDelegate, NSToolbarDelegate, NSMenuDelegate, SKOutlineViewDelegate, NSOutlineViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSTouchBarDelegate> {
@@ -64,32 +66,32 @@
 
 @property (class, nonatomic, readonly) SKBookmarkController *sharedBookmarkController;
 
-@property (nonatomic, strong) IBOutlet SKOutlineView *outlineView;
-@property (nonatomic, strong) IBOutlet SKStatusBar *statusBar;
-@property (nonatomic, strong) IBOutlet NSSegmentedControl *folderSegmentedControl;
-@property (nonatomic, strong) IBOutlet NSSegmentedControl *separatorSegmentedControl;
-@property (nonatomic, strong) IBOutlet NSSegmentedControl *deleteSegmentedControl;
+@property (nonatomic, nullable, strong) IBOutlet SKOutlineView *outlineView;
+@property (nonatomic, nullable, strong) IBOutlet SKStatusBar *statusBar;
+@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *folderSegmentedControl;
+@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *separatorSegmentedControl;
+@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *deleteSegmentedControl;
 @property (nonatomic, readonly) SKBookmark *bookmarkRoot;
-@property (nonatomic, readonly) SKBookmark *previousSession;
+@property (nonatomic, nullable, readonly) SKBookmark *previousSession;
 
 - (IBAction)openBookmark:(id)sender;
 
-- (IBAction)doubleClickBookmark:(id)sender;
-- (IBAction)insertBookmarkFolder:(id)sender;
-- (IBAction)insertBookmarkSeparator:(id)sender;
-- (IBAction)addBookmark:(id)sender;
-- (IBAction)deleteBookmark:(id)sender;
-- (IBAction)toggleStatusBar:(id)sender;
+- (IBAction)doubleClickBookmark:(nullable id)sender;
+- (IBAction)insertBookmarkFolder:(nullable id)sender;
+- (IBAction)insertBookmarkSeparator:(nullable id)sender;
+- (IBAction)addBookmark:(nullable id)sender;
+- (IBAction)deleteBookmark:(nullable id)sender;
+- (IBAction)toggleStatusBar:(nullable id)sender;
 
-- (IBAction)copyURL:(id)sender;
+- (IBAction)copyURL:(nullable id)sender;
 
-- (SKBookmark *)bookmarkForURL:(NSURL *)bookmarkURL;
+- (nullable SKBookmark *)bookmarkForURL:(NSURL *)bookmarkURL;
 
 - (void)insertBookmark:(SKBookmark *)bookmark atIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent animate:(BOOL)animate;
 - (void)removeBookmarkAtIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent animate:(BOOL)animate;
 - (void)replaceBookmarkAtIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent withBookmark:(SKBookmark *)bookmark animate:(BOOL)animate;
 
-- (void)addRecentDocumentForURL:(NSURL *)fileURL pageIndex:(NSUInteger)pageIndex snapshots:(NSArray *)setups;
+- (void)addRecentDocumentForURL:(NSURL *)fileURL pageIndex:(NSUInteger)pageIndex snapshots:(nullable NSArray *)setups;
 - (NSUInteger)pageIndexForRecentDocumentAtURL:(NSURL *)fileURL;
 - (NSArray *)snapshotsForRecentDocumentAtURL:(NSURL *)fileURL;
 
@@ -97,3 +99,5 @@
 - (void)setExpanded:(BOOL)flag forBookmark:(SKBookmark *)bookmark;
 
 @end
+
+NS_ASSUME_NONNULL_END

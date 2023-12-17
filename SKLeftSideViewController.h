@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "SKSideViewController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKOutlineView, SKTableView;
 
 @interface SKLeftSideViewController : SKSideViewController {
@@ -54,14 +56,16 @@
     SKTableView *groupedFindTableView;
 }
 
-@property (nonatomic, strong) IBOutlet NSArrayController *findArrayController;
-@property (nonatomic, strong) IBOutlet NSArrayController *groupedFindArrayController;
-@property (nonatomic, strong) IBOutlet NSArrayController *thumbnailArrayController;
-@property (nonatomic, strong) IBOutlet SKOutlineView *tocOutlineView;
-@property (nonatomic, strong) IBOutlet SKTableView *thumbnailTableView;
-@property (nonatomic, strong) IBOutlet SKTableView *findTableView;
-@property (nonatomic, strong) IBOutlet SKTableView *groupedFindTableView;
+@property (nonatomic, nullable, strong) IBOutlet NSArrayController *findArrayController;
+@property (nonatomic, nullable, strong) IBOutlet NSArrayController *groupedFindArrayController;
+@property (nonatomic, nullable, strong) IBOutlet NSArrayController *thumbnailArrayController;
+@property (nonatomic, nullable, strong) IBOutlet SKOutlineView *tocOutlineView;
+@property (nonatomic, nullable, strong) IBOutlet SKTableView *thumbnailTableView;
+@property (nonatomic, nullable, strong) IBOutlet SKTableView *findTableView;
+@property (nonatomic, nullable, strong) IBOutlet SKTableView *groupedFindTableView;
 
 - (void)applySearchTableHeader:(NSString *)message;
 
 @end
+
+NS_ASSUME_NONNULL_END

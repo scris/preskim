@@ -40,6 +40,8 @@
 #import <Quartz/Quartz.h>
 #import "NSValue_SKExtensions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKPDFPageBoundsDidChangeNotification;
 
 extern NSString *SKPDFPagePageKey;
@@ -59,8 +61,8 @@ extern NSString *SKPDFPageActionRotate;
 @property (nonatomic, readonly) NSRect boundingBox;
 
 - (NSImage *)thumbnailWithSize:(CGFloat)size forBox:(PDFDisplayBox)box;
-- (NSImage *)thumbnailWithSize:(CGFloat)size forBox:(PDFDisplayBox)box readingBar:(SKReadingBar *)readingBar;
-- (NSImage *)thumbnailWithSize:(CGFloat)size forBox:(PDFDisplayBox)box shadowBlurRadius:(CGFloat)shadowBlurRadius highlights:(NSArray *)highlights;
+- (NSImage *)thumbnailWithSize:(CGFloat)size forBox:(PDFDisplayBox)box readingBar:(nullable SKReadingBar *)readingBar;
+- (NSImage *)thumbnailWithSize:(CGFloat)size forBox:(PDFDisplayBox)box shadowBlurRadius:(CGFloat)shadowBlurRadius highlights:(nullable NSArray *)highlights;
 
 - (NSAttributedString *)thumbnailAttachmentWithSize:(CGFloat)size;
 @property (nonatomic, readonly) NSAttributedString *thumbnailAttachment;
@@ -70,15 +72,15 @@ extern NSString *SKPDFPageActionRotate;
 @property (nonatomic, readonly) NSAttributedString *thumbnail64Attachment;
 @property (nonatomic, readonly) NSAttributedString *thumbnail32Attachment;
 
-- (NSData *)PDFDataForRect:(NSRect)rect;
-- (NSData *)TIFFDataForRect:(NSRect)rect;
+- (nullable NSData *)PDFDataForRect:(NSRect)rect;
+- (nullable NSData *)TIFFDataForRect:(NSRect)rect;
 
-- (id<NSPasteboardWriting>)filePromiseForPageIndexes:(NSIndexSet *)pageIndexes;
-- (void)writeToClipboardForPageIndexes:(NSIndexSet *)pageIndexes;
+- (nullable id<NSPasteboardWriting>)filePromiseForPageIndexes:(nullable NSIndexSet *)pageIndexes;
+- (void)writeToClipboardForPageIndexes:(nullable NSIndexSet *)pageIndexes;
 
-@property (nonatomic, readonly) NSURL *skimURL;
+@property (nonatomic, nullable, readonly) NSURL *skimURL;
 
-@property (nonatomic, readonly) NSPointerArray *lineRects;
+@property (nonatomic, nullable, readonly) NSPointerArray *lineRects;
 - (NSInteger)indexOfLineRectAtPoint:(NSPoint)point lower:(BOOL)lower;
 
 @property (nonatomic, readonly) NSUInteger pageIndex;
@@ -95,22 +97,24 @@ extern NSString *SKPDFPageActionRotate;
 
 - (CGFloat)sortOrderForBounds:(NSRect)bounds;
 
-@property (nonatomic, readonly) NSScriptObjectSpecifier *objectSpecifier;
-@property (nonatomic, readonly) NSDocument *containingDocument;
+@property (nonatomic, nullable, readonly) NSScriptObjectSpecifier *objectSpecifier;
+@property (nonatomic, nullable, readonly) NSDocument *containingDocument;
 @property (nonatomic, readonly) NSUInteger index;
 @property (nonatomic) NSInteger rotationAngle;
-@property (nonatomic, copy) NSData *boundsAsQDRect;
-@property (nonatomic, copy) NSData *mediaBoundsAsQDRect;
-@property (nonatomic, readonly) NSData *contentBoundsAsQDRect;
-@property (nonatomic, readonly) NSArray *lineBoundsAsQDRects;
+@property (nonatomic, nullable, copy) NSData *boundsAsQDRect;
+@property (nonatomic, nullable, copy) NSData *mediaBoundsAsQDRect;
+@property (nonatomic, nullable, readonly) NSData *contentBoundsAsQDRect;
+@property (nonatomic, nullable, readonly) NSArray *lineBoundsAsQDRects;
 - (NSUInteger)countOfLines;
 - (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex;
-@property (nonatomic, readonly) NSTextStorage *richText;
-@property (nonatomic, readonly) NSArray *notes;
-- (id)valueInNotesWithUniqueID:(NSString *)aUniqueID;
+@property (nonatomic, nullable, readonly) NSTextStorage *richText;
+@property (nonatomic, nullable, readonly) NSArray *notes;
+- (nullable id)valueInNotesWithUniqueID:(NSString *)aUniqueID;
 - (void)insertObject:(id)newNote inNotesAtIndex:(NSUInteger)index;
 - (void)removeObjectFromNotesAtIndex:(NSUInteger)index;
 
-- (id)handleGrabScriptCommand:(NSScriptCommand *)command;
+- (nullable id)handleGrabScriptCommand:(NSScriptCommand *)command;
 
 @end
+
+NS_ASSUME_NONNULL_END

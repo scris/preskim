@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKPreferencePane;
 
 @interface SKPreferenceController : NSWindowController <NSWindowDelegate, NSTabViewDelegate, NSToolbarDelegate, NSTouchBarDelegate> {
@@ -51,22 +53,22 @@
     NSUInteger historyIndex;
 }
 
-@property (nonatomic, strong) IBOutlet NSButton *resetButton, *resetAllButton;
+@property (nonatomic, nullable, strong) IBOutlet NSButton *resetButton, *resetAllButton;
 
 @property (class, nonatomic, readonly) SKPreferenceController *sharedPrefenceController;
 
-- (IBAction)resetAll:(id)sender;
-- (IBAction)resetCurrent:(id)sender;
+- (IBAction)resetAll:(nullable id)sender;
+- (IBAction)resetCurrent:(nullable id)sender;
 
-- (IBAction)doGoToNextPage:(id)sender;
-- (IBAction)doGoToPreviousPage:(id)sender;
-- (IBAction)doGoToFirstPage:(id)sender;
-- (IBAction)doGoToLastPage:(id)sender;
-- (IBAction)doGoBack:(id)sender;
-- (IBAction)doGoForward:(id)sender;
+- (IBAction)doGoToNextPage:(nullable id)sender;
+- (IBAction)doGoToPreviousPage:(nullable id)sender;
+- (IBAction)doGoToFirstPage:(nullable id)sender;
+- (IBAction)doGoToLastPage:(nullable id)sender;
+- (IBAction)doGoBack:(nullable id)sender;
+- (IBAction)doGoForward:(nullable id)sender;
 
-- (IBAction)changeFont:(id)sender;
-- (IBAction)changeAttributes:(id)sender;
+- (IBAction)changeFont:(nullable id)sender;
+- (IBAction)changeAttributes:(nullable id)sender;
 
 @end
 
@@ -76,3 +78,4 @@
 - (void)defaultsDidRevert;
 @end
 
+NS_ASSUME_NONNULL_END

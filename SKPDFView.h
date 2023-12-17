@@ -42,6 +42,8 @@
 #import "NSDocument_SKExtensions.h"
 #import <stdatomic.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKPDFViewDisplaysAsBookChangedNotification;
 extern NSString *SKPDFViewDisplaysPageBreaksChangedNotification;
 extern NSString *SKPDFViewDisplaysHorizontallyChangedNotification;
@@ -179,21 +181,20 @@ enum {
 @property (nonatomic) SKNoteType annotationMode;
 @property (nonatomic) SKTemporaryToolMode temporaryToolMode;
 @property (nonatomic) SKInteractionMode interactionMode;
-@property (nonatomic, strong) PDFAnnotation *currentAnnotation;
+@property (nonatomic, nullable, strong) PDFAnnotation *currentAnnotation;
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;
 @property (nonatomic, readonly, getter=isZooming) BOOL zooming;
 @property (nonatomic) NSRect currentSelectionRect;
-@property (nonatomic, strong) PDFPage *currentSelectionPage;
+@property (nonatomic, nullable, strong) PDFPage *currentSelectionPage;
 @property (nonatomic, readonly) CGFloat currentMagnification;
 @property (nonatomic) BOOL hideNotes;
 @property (nonatomic, readonly) BOOL canSelectNote;
 @property (nonatomic, readonly) BOOL hasReadingBar;
-@property (readonly) SKReadingBar *readingBar;
+@property (nullable, readonly) SKReadingBar *readingBar;
 @property (nonatomic) CGFloat pacerSpeed;
 @property (nonatomic, readonly) BOOL hasPacer;
-@property (nonatomic, readonly) SKTransitionController *transitionController;
-@property (nonatomic, strong) SKTypeSelectHelper *typeSelectHelper;
-@property (nonatomic, readonly) NSUndoManager *temporaryUndoManager;
+@property (nonatomic, nullable, readonly) SKTransitionController *transitionController;
+@property (nonatomic, nullable, strong) SKTypeSelectHelper *typeSelectHelper;
 
 @property (nonatomic) BOOL needsRewind;
 
@@ -201,16 +202,16 @@ enum {
 
 - (void)togglePacer;
 
-- (IBAction)delete:(id)sender;
-- (IBAction)paste:(id)sender;
-- (IBAction)alternatePaste:(id)sender;
-- (IBAction)pasteAsPlainText:(id)sender;
-- (IBAction)copy:(id)sender;
-- (IBAction)cut:(id)sender;
-- (IBAction)deselectAll:(id)sender;
-- (IBAction)autoSelectContent:(id)sender;
-- (IBAction)changeToolMode:(id)sender;
-- (IBAction)changeAnnotationMode:(id)sender;
+- (IBAction)delete:(nullable id)sender;
+- (IBAction)paste:(nullable id)sender;
+- (IBAction)alternatePaste:(nullable id)sender;
+- (IBAction)pasteAsPlainText:(nullable id)sender;
+- (IBAction)copy:(nullable id)sender;
+- (IBAction)cut:(nullable id)sender;
+- (IBAction)deselectAll:(nullable id)sender;
+- (IBAction)autoSelectContent:(nullable id)sender;
+- (IBAction)changeToolMode:(nullable id)sender;
+- (IBAction)changeAnnotationMode:(nullable id)sender;
 
 - (void)setDisplayModeAndRewind:(PDFDisplayMode)mode;
 - (void)setExtendedDisplayModeAndRewind:(PDFDisplayMode)mode;
@@ -219,48 +220,48 @@ enum {
 - (void)setDisplayBoxAndRewind:(PDFDisplayBox)box;
 - (void)setDisplaysAsBookAndRewind:(BOOL)asBook;
 
-- (void)zoomLog:(id)sender;
-- (void)toggleAutoActualSize:(id)sender;
-- (void)exitPresentation:(id)sender;
+- (void)zoomLog:(nullable id)sender;
+- (void)toggleAutoActualSize:(nullable id)sender;
+- (void)exitPresentation:(nullable id)sender;
 
-- (void)showCursorStyleWindow:(id)sender;
-- (void)closeCursorStyleWindow:(id)sender;
+- (void)showCursorStyleWindow:(nullable id)sender;
+- (void)closeCursorStyleWindow:(nullable id)sender;
 - (NSInteger)cursorStyle;
-- (void)changeCursorStyle:(id)sender;
+- (void)changeCursorStyle:(nullable id)sender;
 - (BOOL)removeCursorShadow;
-- (void)toggleRemoveCursorShadow:(id)sender;
+- (void)toggleRemoveCursorShadow:(nullable id)sender;
 - (BOOL)drawInPresentation;
-- (void)toggleDrawInPresentation:(id)sender;
+- (void)toggleDrawInPresentation:(nullable id)sender;
 
-- (void)addAnnotationForContext:(id)sender;
+- (void)addAnnotationForContext:(nullable id)sender;
 - (void)addAnnotationWithType:(SKNoteType)annotationType;
-- (void)removeCurrentAnnotation:(id)sender;
-- (void)removeThisAnnotation:(id)sender;
+- (void)removeCurrentAnnotation:(nullable id)sender;
+- (void)removeThisAnnotation:(nullable id)sender;
 
-- (void)editCurrentAnnotation:(id)sender;
-- (void)editThisAnnotation:(id)sender;
+- (void)editCurrentAnnotation:(nullable id)sender;
+- (void)editThisAnnotation:(nullable id)sender;
 - (void)editAnnotation:(PDFAnnotation *)annotation;
 
 - (void)autoSizeCurrentAnnotation:(PDFAnnotation *)annotation;
 
-- (void)selectNextCurrentAnnotation:(id)sender;
-- (void)selectPreviousCurrentAnnotation:(id)sender;
+- (void)selectNextCurrentAnnotation:(nullable id)sender;
+- (void)selectPreviousCurrentAnnotation:(nullable id)sender;
 
 - (void)scrollAnnotationToVisible:(PDFAnnotation *)annotation;
 - (void)displayLineAtPoint:(NSPoint)point inPageAtIndex:(NSUInteger)pageIndex select:(BOOL)select showReadingBar:(BOOL)showBar;
 - (void)zoomToRect:(NSRect)rect onPage:(PDFPage *)page;
 
-- (void)takeSnapshot:(id)sender;
+- (void)takeSnapshot:(nullable id)sender;
 
 - (void)resetPDFToolTipRects;
 - (void)removePDFToolTipRects;
 
 - (void)resetHistory;
 
-- (id <SKPDFViewDelegate>)delegate;
-- (void)setDelegate:(id <SKPDFViewDelegate>)newDelegate;
+- (nullable id <SKPDFViewDelegate>)delegate;
+- (void)setDelegate:(nullable id <SKPDFViewDelegate>)newDelegate;
 
-- (NSString *)currentColorDefaultKeyForAlternate:(BOOL)isAlt;
+- (nullable NSString *)currentColorDefaultKeyForAlternate:(BOOL)isAlt;
 
 - (void)undoManagerDidOpenOrCloseUndoGroup;
 
@@ -280,5 +281,7 @@ enum {
 - (void)PDFViewPerformHideFind:(PDFView *)sender;
 - (BOOL)PDFViewIsFindVisible:(PDFView *)sender;
 - (void)PDFView:(PDFView *)sender rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation;
-- (NSUndoManager *)undoManagerForPDFView:(PDFView *)sender;
+- (nullable NSUndoManager *)undoManagerForPDFView:(PDFView *)sender;
 @end
+
+NS_ASSUME_NONNULL_END

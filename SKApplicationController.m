@@ -117,7 +117,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
 
 @implementation SKApplicationController
 
-@synthesize noteColumnsMenu, noteTypeMenu, colorList;
+@synthesize noteColumnsMenu, noteTypeMenu;
 @dynamic favoriteColors;
 
 + (void)initialize{

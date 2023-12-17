@@ -40,6 +40,8 @@
 #import "SKTypeSelectHelper.h"
 #import "SKImageToolTipContext.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKOutlineViewDelegate;
 
 @interface SKOutlineView : NSOutlineView <SKTypeSelectDelegate> {
@@ -52,7 +54,7 @@
 @property (nonatomic, readonly) NSArray *selectedItems;
 @property (nonatomic, readonly) BOOL canDelete, canCopy, canPaste;
 @property (nonatomic) BOOL hasImageToolTips, supportsQuickLook;
-@property (nonatomic, strong) SKTypeSelectHelper *typeSelectHelper;
+@property (nonatomic, nullable, strong) SKTypeSelectHelper *typeSelectHelper;
 
 - (NSArray *)itemsAtRowIndexes:(NSIndexSet *)indexes;
 
@@ -60,16 +62,16 @@
 - (void)copy:(id)sender;
 - (void)paste:(id)sender;
 
-- (void)scrollToBeginningOfDocument:(id)sender;
-- (void)scrollToEndOfDocument:(id)sender;
+- (void)scrollToBeginningOfDocument:(nullable id)sender;
+- (void)scrollToEndOfDocument:(nullable id)sender;
 
 - (void)reloadTypeSelectStrings;
 
 - (void)noteHeightOfRowsChangedAnimating:(BOOL)animate;
 - (void)noteHeightOfRowChanged:(NSInteger)row animating:(BOOL)animate;
 
-- (id <SKOutlineViewDelegate>)delegate;
-- (void)setDelegate:(id <SKOutlineViewDelegate>)newDelegate;
+- (nullable id <SKOutlineViewDelegate>)delegate;
+- (void)setDelegate:(nullable id <SKOutlineViewDelegate>)newDelegate;
 
 @end
 
@@ -86,10 +88,12 @@
 - (void)outlineView:(NSOutlineView *)anOutlineView pasteFromPasteboard:(NSPasteboard *)pboard;
 - (BOOL)outlineView:(NSOutlineView *)anOutlineView canPasteFromPasteboard:(NSPasteboard *)pboard;
 
-- (id <SKImageToolTipContext>)outlineView:(NSOutlineView *)anOutlineView imageContextForItem:(id)item scale:(CGFloat *)scale;
+- (nullable id <SKImageToolTipContext>)outlineView:(NSOutlineView *)anOutlineView imageContextForItem:(id)item scale:(CGFloat *)scale;
 
-- (NSArray *)outlineViewTypeSelectHelperSelectionStrings:(NSOutlineView *)anOutlineView;
+- (nullable NSArray *)outlineViewTypeSelectHelperSelectionStrings:(NSOutlineView *)anOutlineView;
 - (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString;
 - (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelperUpdateSearchString:(NSString *)searchString;
 
 @end
+
+NS_ASSUME_NONNULL_END

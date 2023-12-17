@@ -38,13 +38,14 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSURL (SKExtensions)
 
 + (BOOL)canReadURLFromPasteboard:(NSPasteboard *)pboard;
-+ (NSArray *)readURLsFromPasteboard:(NSPasteboard *)pboard;
++ (nullable NSArray *)readURLsFromPasteboard:(NSPasteboard *)pboard;
 + (BOOL)canReadFileURLFromPasteboard:(NSPasteboard *)pboard;
-+ (NSArray *)readFileURLsFromPasteboard:(NSPasteboard *)pboard;
++ (nullable NSArray *)readFileURLsFromPasteboard:(NSPasteboard *)pboard;
 
 - (NSURL *)URLReplacingPathExtension:(NSString *)ext;
 - (NSString *)lastPathComponentReplacingPathExtension:(NSString *)ext;
@@ -56,13 +57,15 @@
 @property (nonatomic, readonly, getter=isSkimURL) BOOL skimURL;
 @property (nonatomic, readonly, getter=isSkimFileURL) BOOL skimFileURL;
 @property (nonatomic, readonly, getter=isSkimBookmarkURL) BOOL skimBookmarkURL;
-@property (nonatomic, readonly) NSURL *associatedFileURL;
+@property (nonatomic, nullable, readonly) NSURL *associatedFileURL;
 
-@property (nonatomic, readonly) NSAttributedString *icon;
-@property (nonatomic, readonly) NSAttributedString *smallIcon;
-@property (nonatomic, readonly) NSAttributedString *linkedIcon;
-@property (nonatomic, readonly) NSAttributedString *linkedSmallIcon;
-@property (nonatomic, readonly) NSAttributedString *linkedText;
-@property (nonatomic, readonly) NSAttributedString *linkedFileName;
+@property (nonatomic, nullable, readonly) NSAttributedString *icon;
+@property (nonatomic, nullable, readonly) NSAttributedString *smallIcon;
+@property (nonatomic, nullable, readonly) NSAttributedString *linkedIcon;
+@property (nonatomic, nullable, readonly) NSAttributedString *linkedSmallIcon;
+@property (nonatomic, nullable, readonly) NSAttributedString *linkedText;
+@property (nonatomic, nullable, readonly) NSAttributedString *linkedFileName;
 
 @end
+
+NS_ASSUME_NONNULL_END

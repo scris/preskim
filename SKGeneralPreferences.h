@@ -39,15 +39,18 @@
 #import <Cocoa/Cocoa.h>
 #import "SKPreferenceController.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKGeneralPreferences : NSViewController <SKPreferencePane> {
     NSPopUpButton *updateIntervalPopUpButton;
     NSInteger updateInterval;
 }
 
-@property (nonatomic, strong) IBOutlet NSPopUpButton *updateIntervalPopUpButton;
+@property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *updateIntervalPopUpButton;
 @property (nonatomic) NSInteger updateInterval;
 
-- (IBAction)changePDFViewSettings:(id)sender;
+- (IBAction)changePDFViewSettings:(nullable id)sender;
 
 @end
+
+NS_ASSUME_NONNULL_END

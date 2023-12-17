@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKConversionProgressController : NSWindowController <NSTouchBarDelegate> {
     NSButton *cancelButton;
@@ -51,16 +52,18 @@
     BOOL cancelled;
 }
 
-@property (nonatomic, strong) IBOutlet NSButton *cancelButton;
-@property (nonatomic, strong) IBOutlet NSProgressIndicator *progressBar;
-@property (nonatomic, strong) IBOutlet NSTextField *textField;
+@property (nonatomic, nullable, strong) IBOutlet NSButton *cancelButton;
+@property (nonatomic, nullable, strong) IBOutlet NSProgressIndicator *progressBar;
+@property (nonatomic, nullable, strong) IBOutlet NSTextField *textField;
 
-+ (NSData *)newPDFDataFromURL:(NSURL *)aURL ofType:(NSString *)aFileType error:(NSError **)outError;
-+ (NSData *)newPDFDataWithPostScriptData:(NSData *)psData error:(NSError **)outError;
++ (nullable NSData *)newPDFDataFromURL:(NSURL *)aURL ofType:(NSString *)aFileType error:(NSError **)outError;
++ (nullable NSData *)newPDFDataWithPostScriptData:(NSData *)psData error:(NSError **)outError;
 
-+ (NSString *)toolPathForType:(NSString *)aFileType;
++ (nullable NSString *)toolPathForType:(NSString *)aFileType;
 
-- (IBAction)cancel:(id)sender;
-- (IBAction)close:(id)sender;
+- (IBAction)cancel:(nullable id)sender;
+- (IBAction)close:(nullable id)sender;
 
 @end
+
+NS_ASSUME_NONNULL_END

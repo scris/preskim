@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // these are the keys used for the info
 extern NSString *SKDownloadFileNameKey;
 extern NSString *SKDownloadFileURLKey;
@@ -68,13 +70,13 @@ typedef NS_ENUM(NSInteger, SKDownloadStatus) {
 
 @property (nonatomic, readonly) SKDownloadStatus status;
 
-@property (nonatomic, readonly) NSURL *URL;
+@property (nonatomic, nullable, readonly) NSURL *URL;
 
-@property (nonatomic, strong) NSData *resumeData;
+@property (nonatomic, nullable, strong) NSData *resumeData;
 
-@property (nonatomic, readonly) NSString *fileName;
-@property (nonatomic, readonly, strong) NSURL *fileURL;
-@property (nonatomic, readonly, strong) NSImage *fileIcon;
+@property (nonatomic, nullable, readonly) NSString *fileName;
+@property (nonatomic, nullable, readonly, strong) NSURL *fileURL;
+@property (nonatomic, nullable, readonly, strong) NSImage *fileIcon;
 @property (nonatomic, readonly) int64_t expectedContentLength, receivedContentLength;
 
 @property (nonatomic, readonly) NSString *statusDescription;
@@ -87,17 +89,17 @@ typedef NS_ENUM(NSInteger, SKDownloadStatus) {
 @property (nonatomic, readonly) NSImage *cancelImage;
 @property (nonatomic, readonly) NSImage *resumeImage;
 
-@property (nonatomic, readonly) NSString *cancelToolTip;
-@property (nonatomic, readonly) NSString *resumeToolTip;
+@property (nonatomic, nullable, readonly) NSString *cancelToolTip;
+@property (nonatomic, nullable, readonly) NSString *resumeToolTip;
 
-@property (nonatomic, readonly) NSString *scriptingURL;
+@property (nonatomic, nullable, readonly) NSString *scriptingURL;
 @property (nonatomic) SKDownloadStatus scriptingStatus;
 
 @property (class, nonatomic, readonly) NSImage *deleteImage;
 @property (class, nonatomic, readonly) NSImage *cancelImage;
 @property (class, nonatomic, readonly) NSImage *resumeImage;
 
-- (instancetype)initWithURL:(NSURL *)aURL;
+- (instancetype)initWithURL:(nullable NSURL *)aURL;
 - (instancetype)initWithProperties:(NSDictionary *)properties;
 
 - (void)start;
@@ -114,3 +116,5 @@ typedef NS_ENUM(NSInteger, SKDownloadStatus) {
 - (void)downloadDidFailWithError:(NSError *)error;
 
 @end
+
+NS_ASSUME_NONNULL_END

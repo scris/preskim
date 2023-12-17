@@ -39,7 +39,10 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface PDFAnnotationSquare (SKExtensions)
-@property (nonatomic, copy) NSColor *scriptingInteriorColor;
+@property (nonatomic, nullable, copy) NSColor *scriptingInteriorColor;
 @end
+
+NS_ASSUME_NONNULL_END

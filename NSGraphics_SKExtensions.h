@@ -38,9 +38,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern BOOL SKHasDarkAppearance(void);
 
-extern void SKRunWithAppearance(id object, void (^code)(void));
+extern void SKRunWithAppearance(id _Nullable object, void (^ _Nullable code)(void));
 
 #pragma mark -
 
@@ -54,3 +56,5 @@ extern void SKDrawTextFieldBezel(NSRect rect, NSView *controlView);
 #pragma mark -
 
 extern NSArray *SKColorEffectFilters(void);
+
+NS_ASSUME_NONNULL_END

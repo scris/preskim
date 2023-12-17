@@ -156,21 +156,25 @@ static char SKSnaphotWindowDefaultsObservationContext;
     [self setPageLabel:[[pdfView currentPage] displayLabel]];
 }
 
-- (void)handlePageChangedNotification:(NSNotification *)notification {
-    [self setPageLabel:[[pdfView currentPage] displayLabel]];
-    [self handlePDFViewFrameChangedNotification:nil];
-}
-
-- (void)handleDocumentDidUnlockNotification:(NSNotification *)notification {
-    [self setPageLabel:[[pdfView currentPage] displayLabel]];
-    [self handlePDFViewFrameChangedNotification:nil];
-}
-
-- (void)handlePDFViewFrameChangedNotification:(NSNotification *)notification {
+- (void)handlePDFViewChanged {
     if ([[self delegate] respondsToSelector:@selector(snapshotControllerDidChange:)]) {
         NSNotification *note = [NSNotification notificationWithName:SKSnapshotViewChangedNotification object:self];
         [[NSNotificationQueue defaultQueue] enqueueNotification:note postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName forModes:nil];
     }
+}
+
+- (void)handlePageChangedNotification:(NSNotification *)notification {
+    [self setPageLabel:[[pdfView currentPage] displayLabel]];
+    [self handlePDFViewChanged];
+}
+
+- (void)handleDocumentDidUnlockNotification:(NSNotification *)notification {
+    [self setPageLabel:[[pdfView currentPage] displayLabel]];
+    [self handlePDFViewChanged];
+}
+
+- (void)handlePDFViewFrameChangedNotification:(NSNotification *)notification {
+    [self handlePDFViewChanged];
 }
 
 - (void)handleViewChangedNotification:(NSNotification *)notification {
@@ -229,7 +233,8 @@ static char SKSnaphotWindowDefaultsObservationContext;
     
     [[self window] makeFirstResponder:pdfView];
 	
-    [self handlePageChangedNotification:nil];
+    [self setPageLabel:[[pdfView currentPage] displayLabel]];
+    [self handlePDFViewChanged];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePageChangedNotification:) 
                                                  name:PDFViewPageChangedNotification object:pdfView];

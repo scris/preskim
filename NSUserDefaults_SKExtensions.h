@@ -38,12 +38,14 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSUserDefaults (SKExtensions)
 
-- (NSColor *)colorForKey:(NSString *)key;
+- (nullable NSColor *)colorForKey:(NSString *)key;
 - (void)setColor:(NSColor *)color forKey:(NSString *)key;
 
-- (NSFont *)fontForNameKey:(NSString *)nameKey sizeKey:(NSString *)sizeKey;
+- (nullable NSFont *)fontForNameKey:(NSString *)nameKey sizeKey:(NSString *)sizeKey;
 
 @end
+NS_ASSUME_NONNULL_END

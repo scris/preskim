@@ -38,6 +38,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, SKVersionType) {
     SKReleaseVersionType = 0,
     SKReleaseCandidateVersionType = -1,
@@ -62,10 +64,12 @@ typedef NS_ENUM(NSInteger, SKVersionType) {
 
 + (NSComparisonResult)compareVersionString:(NSString *)versionString toVersionString:(NSString *)otherVersionString;
 
-- (instancetype)initWithVersionString:(NSString *)versionString;
+- (nullable instancetype)initWithVersionString:(NSString *)versionString;
 
 - (NSInteger)componentAtIndex:(NSUInteger)componentIndex;
 
 - (NSComparisonResult)compare:(SKVersionNumber *)otherVersion;
 
 @end
+
+NS_ASSUME_NONNULL_END

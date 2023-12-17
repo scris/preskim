@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 enum {
     SKSpaceCharacter = 0x0020,
     SKEscapeCharacter = 0x001b
@@ -57,3 +59,5 @@ enum {
 @property (nonatomic, readonly) NSPoint locationOnScreen;
 
 @end
+
+NS_ASSUME_NONNULL_END

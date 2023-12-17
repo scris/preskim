@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSShadow (SKExtensions)
 
@@ -45,3 +46,5 @@
 + (void)setShadowWithWhite:(CGFloat)white alpha:(CGFloat)alpha blurRadius:(CGFloat)blurRadius yOffset:(CGFloat)yOffset;
 
 @end
+
+NS_ASSUME_NONNULL_END

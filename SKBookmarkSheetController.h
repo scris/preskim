@@ -39,13 +39,17 @@
 #import <Cocoa/Cocoa.h>
 #import "SKTextFieldSheetController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKBookmark;
 
 @interface SKBookmarkSheetController : SKTextFieldSheetController {
     NSPopUpButton *folderPopUp;
 }
 
-@property (nonatomic, strong) IBOutlet NSPopUpButton *folderPopUp;
+@property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *folderPopUp;
 @property (nonatomic, readonly) SKBookmark *selectedFolder;
 
 @end
+
+NS_ASSUME_NONNULL_END

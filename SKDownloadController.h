@@ -40,6 +40,7 @@
 #import <Quartz/Quartz.h>
 #import "SKTableView.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @class SKDownload;
 
@@ -56,19 +57,19 @@
     NSMutableDictionary *touchBarItems;
 }
 
-@property (nonatomic, strong) IBOutlet SKTableView *tableView;
-@property (nonatomic, strong) IBOutlet NSButton *clearButton;
+@property (nonatomic, nullable, strong) IBOutlet SKTableView *tableView;
+@property (nonatomic, nullable, strong) IBOutlet NSButton *clearButton;
 
 @property (class, nonatomic, readonly) SKDownloadController *sharedDownloadController;
 
-- (SKDownload *)addDownloadForURL:(NSURL *)aURL;
+- (nullable SKDownload *)addDownloadForURL:(nullable NSURL *)aURL;
 
 - (void)removeObjectFromDownloads:(SKDownload *)download;
 
-- (IBAction)showDownloadPreferences:(id)sender;
-- (IBAction)clearDownloads:(id)sender;
+- (IBAction)showDownloadPreferences:(nullable id)sender;
+- (IBAction)clearDownloads:(nullable id)sender;
 
-- (IBAction)moveToTrash:(id)sender;
+- (IBAction)moveToTrash:(nullable id)sender;
 
 - (NSArray *)downloads;
 - (NSUInteger)countOfDownloads;
@@ -83,7 +84,9 @@
 
 - (void)setupToolbar;
 
-- (NSURLSessionDownloadTask *)newDownloadTaskForDownload:(SKDownload *)download;
+- (nullable NSURLSessionDownloadTask *)newDownloadTaskForDownload:(SKDownload *)download;
 - (void)removeDownloadTask:(NSURLSessionDownloadTask *)task;
 
 @end
+
+NS_ASSUME_NONNULL_END

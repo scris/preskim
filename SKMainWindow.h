@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol SKMainWindowDelegate <NSWindowDelegate>
 @optional
@@ -51,7 +52,9 @@
 @property (nonatomic) BOOL disableConstrainedFrame;
 @property (nonatomic) NSRect windowFrame;
 
-- (id<SKMainWindowDelegate>)delegate;
-- (void)setDelegate:(id<SKMainWindowDelegate>)newDelegate;
+- (nullable id<SKMainWindowDelegate>)delegate;
+- (void)setDelegate:(nullable id<SKMainWindowDelegate>)newDelegate;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SKFontWell;
 
 @interface NSView (SKExtensions)
@@ -47,7 +49,7 @@
 - (void)deactivateWellSubcontrols;
 - (void)deactivateColorWellSubcontrols;
 
-@property (nonatomic, readonly) SKFontWell *activeFontWell;
+@property (nonatomic, nullable, readonly) SKFontWell *activeFontWell;
 
 - (NSRect)convertRectToScreen:(NSRect)rect;
 - (NSRect)convertRectFromScreen:(NSRect)rect;
@@ -58,10 +60,12 @@
 
 - (void)activateConstraintsToSuperview;
 
-- (NSLayoutConstraint *)constraintWithFirstItem:(id)item firstAttribute:(NSLayoutAttribute)attribute;
-- (NSLayoutConstraint *)constraintWithSecondItem:(id)item secondAttribute:(NSLayoutAttribute)attribute;
+- (nullable NSLayoutConstraint *)constraintWithFirstItem:(id)item firstAttribute:(NSLayoutAttribute)attribute;
+- (nullable NSLayoutConstraint *)constraintWithSecondItem:(id)item secondAttribute:(NSLayoutAttribute)attribute;
 
 @property (class, nonatomic, readonly) BOOL shouldShowSlideAnimation;
 @property (class, nonatomic, readonly) BOOL shouldShowFadeAnimation;
 
 @end
+
+NS_ASSUME_NONNULL_END

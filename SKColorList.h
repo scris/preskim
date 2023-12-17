@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKColorList : NSColorList {
     BOOL editable;
@@ -48,3 +49,5 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @property (class, nonatomic, readonly) NSColorList *favoriteColorList;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKNoteTypeSheetControllerDelegate;
 
 @interface SKNoteTypeSheetController : NSWindowController {
@@ -47,11 +49,11 @@
 
 - (instancetype)initIncludingWidgets:(BOOL)includeWidgets;
 
-@property (nonatomic, weak) id <SKNoteTypeSheetControllerDelegate> delegate;
+@property (nonatomic, nullable, weak) id <SKNoteTypeSheetControllerDelegate> delegate;
 @property (nonatomic, readonly) NSArray *noteTypes;
 @property (nonatomic, readonly) NSMenu *noteTypeMenu;
 
-- (NSPredicate *)filterPredicateForSearchString:(NSString *)searchString caseInsensitive:(BOOL)caseInsensitive;
+- (nullable NSPredicate *)filterPredicateForSearchString:(NSString *)searchString caseInsensitive:(BOOL)caseInsensitive;
 
 @end
 
@@ -60,3 +62,5 @@
 - (void)noteTypeSheetControllerNoteTypesDidChange;
 - (NSWindow *)windowForNoteTypeSheetController;
 @end
+
+NS_ASSUME_NONNULL_END

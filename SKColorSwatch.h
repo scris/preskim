@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKColorSwatchColorsChangedNotification;
 
 @class SKColorSwatchBackgroundView;
@@ -64,7 +66,7 @@ extern NSString *SKColorSwatchColorsChangedNotification;
 @property (nonatomic, copy) NSArray *colors;
 @property (nonatomic, readonly) NSInteger clickedColorIndex;
 @property (nonatomic, readonly) NSInteger selectedColorIndex;
-@property (nonatomic, readonly) NSColor *color;
+@property (nonatomic, nullable, readonly) NSColor *color;
 @property (nonatomic) BOOL autoResizes;
 @property (nonatomic) BOOL selects;
 @property (nonatomic, getter=isAlternate) BOOL alternate;
@@ -79,3 +81,5 @@ extern NSString *SKColorSwatchColorsChangedNotification;
 - (void)moveColorAtIndex:(NSInteger)fromIdx toIndex:(NSInteger)toIdx;
 
 @end
+
+NS_ASSUME_NONNULL_END

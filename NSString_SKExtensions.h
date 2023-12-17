@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString (SKExtensions)
 
@@ -88,12 +89,14 @@
 @property (nonatomic, readonly) NSString *stringByPrependingFullStopAndSpaceIfNotEmpty;
 @property (nonatomic, readonly) NSString *parenthesizedStringIfNotEmpty;
 
-@property (nonatomic, readonly) NSURL *url;
-@property (nonatomic, readonly) NSAttributedString *icon;
-@property (nonatomic, readonly) NSAttributedString *smallIcon;
+@property (nonatomic, nullable, readonly) NSURL *url;
+@property (nonatomic, nullable, readonly) NSAttributedString *icon;
+@property (nonatomic, nullable, readonly) NSAttributedString *smallIcon;
 
-@property (nonatomic, readonly) NSAttributedString *typeIcon;
+@property (nonatomic, nullable, readonly) NSAttributedString *typeIcon;
 
 @property (nonatomic, readonly) NSString *xmlString;
 
 @end
+
+NS_ASSUME_NONNULL_END

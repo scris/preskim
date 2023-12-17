@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSWindowController (SKExtensions)
 
@@ -45,8 +46,10 @@
 
 @property (nonatomic, readonly, getter=isNoteWindowController) BOOL noteWindowController;
 
-- (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse result))handler;
+- (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^ _Nullable)(NSModalResponse result))handler;
 
-- (IBAction)dismissSheet:(id)sender;
+- (IBAction)dismissSheet:(nullable id)sender;
 
 @end
+
+NS_ASSUME_NONNULL_END

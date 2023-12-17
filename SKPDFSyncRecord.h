@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SKPDFSyncRecord : NSObject {
     NSInteger recordIndex;
@@ -51,9 +52,11 @@
 @property (nonatomic) NSInteger pageIndex;
 @property (nonatomic) NSPoint point;
 @property (nonatomic, readonly) CGFloat x, y;
-@property (nonatomic, strong) NSString *file;
+@property (nonatomic, nullable, strong) NSString *file;
 @property (nonatomic) NSInteger line;
 
 - (instancetype)initWithRecordIndex:(NSInteger)aRecordIndex;
 
 @end
+
+NS_ASSUME_NONNULL_END

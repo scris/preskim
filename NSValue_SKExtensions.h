@@ -38,14 +38,15 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSValue (SKExtensions)
 
-@property (nonatomic, readonly) NSString *rectString;
-@property (nonatomic, readonly) NSString *pointString;
-@property (nonatomic, readonly) NSString *originString;
-@property (nonatomic, readonly) NSString *sizeString;
-@property (nonatomic, readonly) NSString *midPointString;
+@property (nonatomic, nullable, readonly) NSString *rectString;
+@property (nonatomic, nullable, readonly) NSString *pointString;
+@property (nonatomic, nullable, readonly) NSString *originString;
+@property (nonatomic, nullable, readonly) NSString *sizeString;
+@property (nonatomic, nullable, readonly) NSString *midPointString;
 @property (nonatomic, readonly) CGFloat rectX;
 @property (nonatomic, readonly) CGFloat rectY;
 @property (nonatomic, readonly) CGFloat rectWidth;
@@ -54,3 +55,5 @@
 @property (nonatomic, readonly) CGFloat pointY;
 
 @end
+
+NS_ASSUME_NONNULL_END

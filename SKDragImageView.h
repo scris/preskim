@@ -38,16 +38,18 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol SKDragImageViewDelegate;
 
 @interface SKDragImageView : NSImageView <NSDraggingSource> {
 	__weak id <SKDragImageViewDelegate> delegate;
 } 
 
-@property (nonatomic, weak) id <SKDragImageViewDelegate> delegate;
+@property (nonatomic, nullable, weak) id <SKDragImageViewDelegate> delegate;
 
-- (IBAction)show:(id)sender;
-- (IBAction)togglePreviewPanel:(id)sender;
+- (IBAction)show:(nullable id)sender;
+- (IBAction)togglePreviewPanel:(nullable id)sender;
 
 @end
 
@@ -55,7 +57,9 @@
 @protocol SKDragImageViewDelegate <NSObject>
 @optional
 
-- (id<NSPasteboardWriting>)draggedObjectForDragImageView;
+- (nullable id<NSPasteboardWriting>)draggedObjectForDragImageView;
 - (void)showImageForDragImageView;
 
 @end
+
+NS_ASSUME_NONNULL_END

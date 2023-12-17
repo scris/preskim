@@ -39,28 +39,31 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface PDFSelection (SKExtensions)
 
 + (PDFSelection *)selectionByAddingSelections:(NSArray *)selections;
 
 // the search table columns bind to these methods for display
-@property (nonatomic, readonly) NSString *cleanedString;
-@property (nonatomic, readonly) NSAttributedString *contextString;
+@property (nonatomic, nullable, readonly) NSString *cleanedString;
+@property (nonatomic, nullable, readonly) NSAttributedString *contextString;
 
-@property (nonatomic, readonly) PDFDestination *destination;
+@property (nonatomic, nullable, readonly) PDFDestination *destination;
 
 - (NSUInteger)safeIndexOfFirstCharacterOnPage:(PDFPage *)page;
 - (NSUInteger)safeIndexOfLastCharacterOnPage:(PDFPage *)page;
-@property (nonatomic, readonly) PDFPage *safeFirstPage;
-@property (nonatomic, readonly) PDFPage *safeLastPage;
+@property (nonatomic, nullable, readonly) PDFPage *safeFirstPage;
+@property (nonatomic, nullable, readonly) PDFPage *safeLastPage;
 
 - (BOOL)hasCharacters;
 
 - (CGFloat)boundsOrderForPage:(PDFPage *)page;
 
-+ (instancetype)selectionWithSpecifier:(id)specifier;
-+ (instancetype)selectionWithSpecifier:(id)specifier onPage:(PDFPage *)aPage;
-@property (nonatomic, readonly)  id objectSpecifiers;
++ (nullable instancetype)selectionWithSpecifier:(nullable id)specifier;
++ (nullable instancetype)selectionWithSpecifier:(nullable id)specifier onPage:(nullable PDFPage *)aPage;
+@property (nonatomic, nullable, readonly) id objectSpecifiers;
 
 @end
+
+NS_ASSUME_NONNULL_END

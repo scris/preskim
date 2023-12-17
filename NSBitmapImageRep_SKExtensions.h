@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSBitmapImageRep (SKExtensions)
 
 @property (nonatomic, readonly) NSRect foregroundRect;
@@ -47,3 +49,5 @@
 + (instancetype)imageRepWithSize:(NSSize)size scale:(CGFloat)scale drawingHandler:(void (^)(NSRect dstRect))drawingHandler;
 
 @end
+
+NS_ASSUME_NONNULL_END

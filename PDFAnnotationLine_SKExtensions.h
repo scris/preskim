@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *SKPDFAnnotationObservedStartPointKey;
 extern NSString *SKPDFAnnotationObservedEndPointKey;
 
@@ -47,13 +49,14 @@ extern NSString *SKPDFAnnotationEndPointAsQDPointKey;
 extern NSString *SKPDFAnnotationScriptingStartLineStyleKey;
 extern NSString *SKPDFAnnotationScriptingEndLineStyleKey;
 
-
 @interface PDFAnnotationLine (SKExtensions)
 
-@property (nonatomic, copy) NSData *startPointAsQDPoint;
-@property (nonatomic, copy) NSData *endPointAsQDPoint;
+@property (nonatomic, nullable, copy) NSData *startPointAsQDPoint;
+@property (nonatomic, nullable, copy) NSData *endPointAsQDPoint;
 @property (nonatomic) PDFLineStyle scriptingStartLineStyle;
 @property (nonatomic) PDFLineStyle scriptingEndLineStyle;
-@property (nonatomic, copy) NSColor *scriptingInteriorColor;
+@property (nonatomic, nullable, copy) NSColor *scriptingInteriorColor;
 
 @end
+
+NS_ASSUME_NONNULL_END
