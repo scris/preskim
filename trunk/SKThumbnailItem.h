@@ -41,7 +41,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SKThumbnailItem : NSCollectionViewItem {
-    BOOL viewLoaded;
     NSBackgroundStyle backgroundStyle;
     NSInteger highlightLevel;
     BOOL marked;
