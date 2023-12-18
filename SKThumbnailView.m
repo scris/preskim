@@ -137,8 +137,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (NSVisualEffectView *)newHighlightView {
-    SKOverviewView *overviewView = [self collectionView];
-    NSVisualEffectView *highlightView = [overviewView newViewWithIdentifier:HIGHLIGHT_ID];
+    NSVisualEffectView *highlightView = [[self collectionView] newViewWithIdentifier:HIGHLIGHT_ID];
     if (highlightView == nil) {
         highlightView = [[NSVisualEffectView alloc] init];
         [highlightView setIdentifier:HIGHLIGHT_ID];
