@@ -137,7 +137,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (NSVisualEffectView *)newHighlightView {
-    SKOverviewView *overviewView = (SKOverviewView *)[[self controller] collectionView];
+    SKOverviewView *overviewView = [self collectionView];
     NSVisualEffectView *highlightView = [overviewView newViewWithIdentifier:HIGHLIGHT_ID];
     if (highlightView == nil) {
         highlightView = [[NSVisualEffectView alloc] init];
@@ -148,7 +148,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (NSImageView *)newMarkView {
-    NSImageView *view = [(SKOverviewView *)[[self controller] collectionView] newViewWithIdentifier:MARK_ID];
+    NSImageView *view = [[self collectionView] newViewWithIdentifier:MARK_ID];
     if (view == nil) {
         NSImage *markImage = [NSImage markImage];
         NSRect rect = NSZeroRect;
@@ -163,7 +163,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)removeView:(id)view {
     [view removeFromSuperview];
-    [(SKOverviewView *)[[self controller] collectionView] cacheView:view];
+    [[self collectionView] cacheView:view];
 }
 
 - (void)updateImageHighlightMask:(NSNotification *)note {
@@ -303,6 +303,10 @@ static char SKThumbnailViewThumbnailObservationContext;
     }
 }
 
+- (SKOverviewView *)collectionView {
+    return (SKOverviewView *)[[self controller] collectionView];
+}
+
 #pragma mark Drawing
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -433,7 +437,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     if ([NSApp willDragMouse]) {
         
         NSUInteger pageIndex = [[self thumbnail] pageIndex];
-        NSIndexSet *selectionIndexes = [[[self controller] collectionView] selectionIndexes];
+        NSIndexSet *selectionIndexes = [[self collectionView] selectionIndexes];
         if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:pageIndex] == NO)
             selectionIndexes = nil;
         
@@ -449,7 +453,7 @@ static char SKThumbnailViewThumbnailObservationContext;
                     return @[[self draggingImageComponent]];
                 }];
             } else {
-                NSCollectionView *collectionView = [[self controller] collectionView];
+                NSCollectionView *collectionView = [self collectionView];
                 [dragItem setImageComponentsProvider:^{
                     NSMutableArray *components = [NSMutableArray array];
                     __block NSInteger offset = -(NSInteger)[selectionIndexes countOfIndexesInRange:NSMakeRange(0, pageIndex)];
@@ -480,7 +484,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)copy:(id)sender {
     PDFPage *page = [[self thumbnail] page];
-    NSIndexSet *selectionIndexes = [[[self controller] collectionView] selectionIndexes];
+    NSIndexSet *selectionIndexes = [[self collectionView] selectionIndexes];
     if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:[page pageIndex]] == NO)
         selectionIndexes = nil;
     [[[self thumbnail] page] writeToClipboardForPageIndexes:selectionIndexes];
@@ -488,7 +492,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (void)copyURL:(id)sender {
     PDFPage *page = [[self thumbnail] page];
-    NSIndexSet *selectionIndexes = [[[self controller] collectionView] selectionIndexes];
+    NSIndexSet *selectionIndexes = [[self collectionView] selectionIndexes];
     if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:[page pageIndex]] == NO)
         selectionIndexes = nil;
     NSMutableArray *urls = [NSMutableArray array];
@@ -518,7 +522,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (void)applyMenuHighlighted:(BOOL)flag {
-    NSCollectionView *collectionView = [[self controller] collectionView];
+    NSCollectionView *collectionView = [self collectionView];
     NSIndexSet *selectionIndexes = [collectionView selectionIndexes];
     if ([selectionIndexes count] > 1 && [selectionIndexes containsIndex:[[[self thumbnail] page] pageIndex]]) {
         [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
@@ -579,7 +583,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (BOOL)accessibilityPerformPress {
-    [[controller collectionView] setSelectionIndexes:[NSIndexSet indexSetWithIndex:[thumbnail pageIndex]]];
+    [[self collectionView] setSelectionIndexes:[NSIndexSet indexSetWithIndex:[thumbnail pageIndex]]];
     return YES;
 }
 
