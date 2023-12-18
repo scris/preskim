@@ -418,42 +418,51 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 - (NSDraggingImageComponent *)draggingImageComponent {
     NSDraggingImageComponent *component = [[NSDraggingImageComponent alloc] initWithKey:NSDraggingImageComponentIconKey];
-    NSRect rect = [imageView frame];
+    NSRect rect = [imageView bounds];
     NSImage *dragImage = [[NSImage alloc] initWithSize:rect.size];
-    [dragImage addRepresentation:[imageView bitmapImageRepCachingDisplayInRect:[imageView bounds]]];
+    [dragImage addRepresentation:[imageView bitmapImageRepCachingDisplayInRect:rect]];
     [component setContents:dragImage];
     [component setFrame:rect];
     return component;
 }
 
+#define COMPONENT_OFFSET_X 10.0
+#define COMPONENT_OFFSET_Y 10.0
+
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([NSApp willDragMouse]) {
         
-        PDFPage *page = [[self thumbnail] page];
+        NSUInteger pageIndex = [[self thumbnail] pageIndex];
         NSIndexSet *selectionIndexes = [[[self controller] collectionView] selectionIndexes];
-        if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:[page pageIndex]] == NO)
+        if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:pageIndex] == NO)
             selectionIndexes = nil;
         
-        id<NSPasteboardWriting> item = [page filePromiseForPageIndexes:selectionIndexes];
+        id<NSPasteboardWriting> item = [[[self thumbnail] page] filePromiseForPageIndexes:selectionIndexes];
         
         if (item) {
             
             NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
             
-            [dragItem setDraggingFrame:[self bounds]];
+            [dragItem setDraggingFrame:[imageView frame]];
             if (selectionIndexes == nil) {
                 [dragItem setImageComponentsProvider:^{
                     return @[[self draggingImageComponent]];
                 }];
             } else {
+                NSCollectionView *collectionView = [[self controller] collectionView];
                 [dragItem setImageComponentsProvider:^{
                     NSMutableArray *components = [NSMutableArray array];
-                    NSCollectionView *collectionView = [[self controller] collectionView];
+                    NSInteger frontCount = [selectionIndexes countOfIndexesInRange:NSMakeRange(0, pageIndex)];
+                    __block NSPoint offset = NSMakePoint(-frontCount * COMPONENT_OFFSET_X, -frontCount * COMPONENT_OFFSET_Y);
                     [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
-                        SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
-                        NSDraggingImageComponent *component = [view draggingImageComponent];
-                        [component setFrame:[self convertRect:[component frame] fromView:view]];
-                        [components addObject:component];
+                        NSDraggingImageComponent *component = [(SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view] draggingImageComponent];
+                        NSRect rect = [component frame];
+                        rect.origin.x += offset.x;
+                        rect.origin.y += offset.y;
+                        [component setFrame:rect];
+                        [components insertObject:component atIndex:0];
+                        offset.x += COMPONENT_OFFSET_X;
+                        offset.y += COMPONENT_OFFSET_Y;
                     }];
                     return components;
                 }];
