@@ -419,14 +419,11 @@ static char SKThumbnailViewThumbnailObservationContext;
 
 #pragma mark Event handling
 
-- (NSDraggingImageComponent *)draggingImageComponent {
-    NSDraggingImageComponent *component = [[NSDraggingImageComponent alloc] initWithKey:NSDraggingImageComponentIconKey];
+- (NSImage *)draggingImage {
     NSRect rect = [imageView bounds];
     NSImage *dragImage = [[NSImage alloc] initWithSize:rect.size];
     [dragImage addRepresentation:[imageView bitmapImageRepCachingDisplayInRect:rect]];
-    [component setContents:dragImage];
-    [component setFrame:rect];
-    return component;
+    return dragImage;
 }
 
 #define COMPONENT_OFFSET_X 10.0
@@ -445,35 +442,31 @@ static char SKThumbnailViewThumbnailObservationContext;
         
         if (item) {
             
+            NSMutableArray *dragItems = [NSMutableArray array];
             NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
             
-            [dragItem setDraggingFrame:[imageView frame]];
+            [dragItem setDraggingFrame:[imageView frame] contents:[self draggingImage]];
             if (selectionIndexes == nil) {
-                [dragItem setImageComponentsProvider:^{
-                    return @[[self draggingImageComponent]];
-                }];
+                [dragItems addObject:dragItem];
             } else {
-                [dragItem setImageComponentsProvider:^{
-                    NSMutableArray *components = [NSMutableArray array];
-                    __block NSInteger offset = -(NSInteger)[selectionIndexes countOfIndexesInRange:NSMakeRange(0, pageIndex)];
-                    [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
-                        NSDraggingImageComponent *component = [(SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view] draggingImageComponent];
-                        if (component) {
-                            NSRect rect = [component frame];
-                            rect.origin.x += offset * COMPONENT_OFFSET_X;
-                            rect.origin.y += offset * COMPONENT_OFFSET_Y;
-                            [component setFrame:rect];
-                            if (offset)
-                                [component setKey:[NSString stringWithFormat:@"%@%ld", [component key], offset]];
-                            [components insertObject:component atIndex:0];
+                [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
+                    if (idx == pageIndex) {
+                        [dragItems addObject:dragItem];
+                    } else {
+                        SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
+                        if (view) {
+                            NSPasteboardItem *dummyItem = [[NSPasteboardItem alloc] initWithPasteboardPropertyList:[NSData data] ofType:@"net.sourceforge.skim-app.pasteboard.dummy"];
+                            NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
+                            NSRect rect = [self convertRect:[view->imageView frame] fromView:view];
+                            [dummyDragItem setDraggingFrame:rect contents:[view draggingImage]];
+                            [dragItems addObject:dummyDragItem];
                         }
-                        ++offset;
-                    }];
-                    return components;
+                    }
                 }];
             }
             
-            [self beginDraggingSessionWithItems:@[dragItem] event:theEvent source:self];
+            NSDraggingSession *session = [self beginDraggingSessionWithItems:dragItems event:theEvent source:self];
+            [session setDraggingFormation:NSDraggingFormationPile];
         }
         
     } else {
