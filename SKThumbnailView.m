@@ -459,6 +459,8 @@ static char SKThumbnailViewThumbnailObservationContext;
                         rect.origin.x += offset * COMPONENT_OFFSET_X;
                         rect.origin.y += offset * COMPONENT_OFFSET_Y;
                         [component setFrame:rect];
+                        if (offset)
+                            [component setKey:[NSString stringWithFormat:@"%@%ld", [component key], offset]];
                         [components insertObject:component atIndex:0];
                         ++offset;
                     }];
