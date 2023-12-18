@@ -426,9 +426,6 @@ static char SKThumbnailViewThumbnailObservationContext;
     return dragImage;
 }
 
-#define COMPONENT_OFFSET_X 10.0
-#define COMPONENT_OFFSET_Y 10.0
-
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([NSApp willDragMouse]) {
         
