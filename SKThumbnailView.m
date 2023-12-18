@@ -458,13 +458,15 @@ static char SKThumbnailViewThumbnailObservationContext;
                     __block NSInteger offset = -(NSInteger)[selectionIndexes countOfIndexesInRange:NSMakeRange(0, pageIndex)];
                     [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
                         NSDraggingImageComponent *component = [(SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view] draggingImageComponent];
-                        NSRect rect = [component frame];
-                        rect.origin.x += offset * COMPONENT_OFFSET_X;
-                        rect.origin.y += offset * COMPONENT_OFFSET_Y;
-                        [component setFrame:rect];
-                        if (offset)
-                            [component setKey:[NSString stringWithFormat:@"%@%ld", [component key], offset]];
-                        [components insertObject:component atIndex:0];
+                        if (component) {
+                            NSRect rect = [component frame];
+                            rect.origin.x += offset * COMPONENT_OFFSET_X;
+                            rect.origin.y += offset * COMPONENT_OFFSET_Y;
+                            [component setFrame:rect];
+                            if (offset)
+                                [component setKey:[NSString stringWithFormat:@"%@%ld", [component key], offset]];
+                            [components insertObject:component atIndex:0];
+                        }
                         ++offset;
                     }];
                     return components;
