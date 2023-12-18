@@ -430,6 +430,7 @@ static SKDownloadController *sharedDownloadController = nil;
         }
     }];
     [draggingInfo setNumberOfValidItemsForDrop:validCount];
+    [draggingInfo setDraggingFormation:NSDraggingFormationList];
 }
 
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)op {
