@@ -436,7 +436,8 @@ static char SKThumbnailViewThumbnailObservationContext;
     if ([NSApp willDragMouse]) {
         
         NSUInteger pageIndex = [[self thumbnail] pageIndex];
-        NSIndexSet *selectionIndexes = [[self collectionView] selectionIndexes];
+        NSCollectionView *collectionView = [self collectionView];
+        NSIndexSet *selectionIndexes = [collectionView selectionIndexes];
         if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:pageIndex] == NO)
             selectionIndexes = nil;
         
@@ -452,7 +453,6 @@ static char SKThumbnailViewThumbnailObservationContext;
                     return @[[self draggingImageComponent]];
                 }];
             } else {
-                NSCollectionView *collectionView = [self collectionView];
                 [dragItem setImageComponentsProvider:^{
                     NSMutableArray *components = [NSMutableArray array];
                     __block NSInteger offset = -(NSInteger)[selectionIndexes countOfIndexesInRange:NSMakeRange(0, pageIndex)];
