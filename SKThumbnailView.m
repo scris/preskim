@@ -452,17 +452,15 @@ static char SKThumbnailViewThumbnailObservationContext;
                 NSCollectionView *collectionView = [[self controller] collectionView];
                 [dragItem setImageComponentsProvider:^{
                     NSMutableArray *components = [NSMutableArray array];
-                    NSInteger frontCount = [selectionIndexes countOfIndexesInRange:NSMakeRange(0, pageIndex)];
-                    __block NSPoint offset = NSMakePoint(-frontCount * COMPONENT_OFFSET_X, -frontCount * COMPONENT_OFFSET_Y);
+                    __block NSInteger offset = -(NSInteger)[selectionIndexes countOfIndexesInRange:NSMakeRange(0, pageIndex)];
                     [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
                         NSDraggingImageComponent *component = [(SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view] draggingImageComponent];
                         NSRect rect = [component frame];
-                        rect.origin.x += offset.x;
-                        rect.origin.y += offset.y;
+                        rect.origin.x += offset * COMPONENT_OFFSET_X;
+                        rect.origin.y += offset * COMPONENT_OFFSET_Y;
                         [component setFrame:rect];
                         [components insertObject:component atIndex:0];
-                        offset.x += COMPONENT_OFFSET_X;
-                        offset.y += COMPONENT_OFFSET_Y;
+                        ++offset;
                     }];
                     return components;
                 }];
