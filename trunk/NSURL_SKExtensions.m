@@ -302,11 +302,11 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
 @implementation SKURL
 
 + (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
-    return @[(NSString *)kUTTypeURL, (NSString *)kUTTypeFileURL, NSPasteboardTypeString];
+    return @[(__bridge NSString *)kUTTypeURL, (__bridge NSString *)kUTTypeFileURL, NSPasteboardTypeString];
 }
 
 + (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
-    if ([type isEqualToString:(NSString *)kUTTypeURL] || [type isEqualToString:(NSString *)kUTTypeFileURL] || [type isEqualToString:NSPasteboardTypeString])
+    if ([type isEqualToString:(__bridge NSString *)kUTTypeURL] || [type isEqualToString:(__bridge NSString *)kUTTypeFileURL] || [type isEqualToString:NSPasteboardTypeString])
         return NSPasteboardReadingAsString;
     return NSPasteboardReadingAsData;
 }
@@ -315,7 +315,7 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
     self = nil;
     if ([propertyList isKindOfClass:[NSString class]]) {
         NSString *string = propertyList;
-        if ([type isEqualToString:(NSString *)kUTTypeURL] || [type isEqualToString:(NSString *)kUTTypeFileURL]) {
+        if ([type isEqualToString:(__bridge NSString *)kUTTypeURL] || [type isEqualToString:(__bridge NSString *)kUTTypeFileURL]) {
             self = (id)[[NSURL alloc] initWithString:string];
         } else if ([type isEqualToString:NSPasteboardTypeString]) {
             if ([string rangeOfString:@"://"].length) {

@@ -187,7 +187,7 @@ static BOOL isAppleScriptUTI(NSString *theUTI) {
 static BOOL isApplicationUTI(NSString *theUTI) {
     if (theUTI == NULL)
         return NO;
-    return [[NSWorkspace sharedWorkspace] type:theUTI conformsToType:(id)kUTTypeApplication];
+    return [[NSWorkspace sharedWorkspace] type:theUTI conformsToType:(__bridge NSString *)kUTTypeApplication];
 }
 
 static BOOL isAutomatorWorkflowUTI(NSString *theUTI) {
@@ -199,7 +199,7 @@ static BOOL isAutomatorWorkflowUTI(NSString *theUTI) {
 static BOOL isFolderUTI(NSString *theUTI) {
     if (theUTI == NULL)
         return NO;
-    return [[NSWorkspace sharedWorkspace] type:theUTI conformsToType:(id)kUTTypeFolder];
+    return [[NSWorkspace sharedWorkspace] type:theUTI conformsToType:(__bridge NSString *)kUTTypeFolder];
 }
 
 - (NSArray *)directoryContentsAtURL:(NSURL *)url recursionDepth:(NSInteger)depth {

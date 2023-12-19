@@ -339,7 +339,7 @@ static BOOL usesSequentialPageNumbering = NO;
 
 - (id<NSPasteboardWriting>)filePromiseForPageIndexes:(NSIndexSet *)pageIndexes {
     if ([[self document] isLocked] == NO) {
-        NSString *fileUTI = [[self document] allowsPrinting] ? (NSString *)kUTTypePDF : (NSString *)kUTTypeTIFF;
+        NSString *fileUTI = [[self document] allowsPrinting] ? (__bridge NSString *)kUTTypePDF : (__bridge NSString *)kUTTypeTIFF;
         NSFilePromiseProvider *item = [[NSFilePromiseProvider alloc] initWithFileType:fileUTI delegate:self];
         if (pageIndexes)
             [item setUserInfo:pageIndexes];
