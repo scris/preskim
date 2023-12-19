@@ -448,31 +448,28 @@ static char SKThumbnailViewThumbnailObservationContext;
             
             NSMutableArray *dragItems = [NSMutableArray array];
             NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
+            NSImage *dragImage = [self draggingImage];
             
-            [dragItem setDraggingFrame:[self draggingFrame] contents:[self draggingImage]];
-            if (selectionIndexes == nil) {
-                [dragItems addObject:dragItem];
-            } else {
+            [dragItem setDraggingFrame:[self draggingFrame] contents:dragImage];
+            [dragItems addObject:dragItem];
+            if (selectionIndexes) {
                 [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
-                    if (idx == pageIndex) {
-                        [dragItems addObject:dragItem];
+                    if (idx == pageIndex) return;
+                    NSPasteboardItem *dummyItem = [[NSPasteboardItem alloc] init];
+                    [dummyItem setData:[NSData data] forType:SKPasteboardTypeDummy];
+                    NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
+                    NSRect rect;
+                    SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
+                    if (view) {
+                        rect = [self convertRect:[view draggingFrame] fromView:view];
                     } else {
-                        NSPasteboardItem *dummyItem = [[NSPasteboardItem alloc] init];
-                        [dummyItem setData:[NSData data] forType:SKPasteboardTypeDummy];
-                        NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
-                        NSRect rect;
-                        SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
-                        if (view) {
-                            rect = [self convertRect:[view draggingFrame] fromView:view];
-                        } else {
-                            NSPoint point = [self convertRect:[collectionView frameForItemAtIndex:idx] fromView:collectionView].origin;
-                            rect = [self draggingFrame];
-                            rect.origin.x += point.x;
-                            rect.origin.y += point.y;
-                        }
-                        [dummyDragItem setDraggingFrame:rect contents:[view ?: self draggingImage]];
-                            [dragItems addObject:dummyDragItem];
+                        NSPoint point = [self convertRect:[collectionView frameForItemAtIndex:idx] fromView:collectionView].origin;
+                        rect = [self draggingFrame];
+                        rect.origin.x += point.x;
+                        rect.origin.y += point.y;
                     }
+                    [dummyDragItem setDraggingFrame:rect contents:[view draggingImage] ?: dragImage];
+                        [dragItems addObject:dummyDragItem];
                 }];
             }
             
