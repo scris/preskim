@@ -463,10 +463,10 @@ static char SKThumbnailViewThumbnailObservationContext;
                     if (view) {
                         rect = [self convertRect:[view draggingFrame] fromView:view];
                     } else {
-                        NSPoint point = [self convertRect:[collectionView frameForItemAtIndex:idx] fromView:collectionView].origin;
+                        NSPoint offset = [self convertRect:[collectionView frameForItemAtIndex:idx] fromView:collectionView].origin;
                         rect = [self draggingFrame];
-                        rect.origin.x += point.x;
-                        rect.origin.y += point.y;
+                        rect.origin.x += offset.x;
+                        rect.origin.y += offset.y;
                     }
                     [dummyDragItem setDraggingFrame:rect contents:[view draggingImage] ?: dragImage];
                         [dragItems addObject:dummyDragItem];
