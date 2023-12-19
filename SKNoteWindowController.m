@@ -365,7 +365,7 @@ static NSURL *temporaryDirectoryURL = nil;
 - (id<NSPasteboardWriting>)draggedObjectForDragImageView {
     NSImage *image = [note image];
     if (image)
-        return [[NSFilePromiseProvider alloc] initWithFileType:(NSString *)kUTTypeTIFF delegate:self];
+        return [[NSFilePromiseProvider alloc] initWithFileType:(__bridge NSString *)kUTTypeTIFF delegate:self];
     else
         return nil;
 }

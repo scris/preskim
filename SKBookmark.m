@@ -708,7 +708,7 @@ static Class SKBookmarkClass = Nil;
             type = [aType integerValue];
         else if (aURL == nil)
             type = SKBookmarkTypeSession;
-        else if ([[NSWorkspace sharedWorkspace] type:[[NSWorkspace sharedWorkspace] typeOfFile:[aURL path] error:NULL] conformsToType:(NSString *)kUTTypeFolder])
+        else if ([[NSWorkspace sharedWorkspace] type:[[NSWorkspace sharedWorkspace] typeOfFile:[aURL path] error:NULL] conformsToType:(__bridge NSString *)kUTTypeFolder])
             type = SKBookmarkTypeFolder;
         else
             type = SKBookmarkTypeBookmark;
