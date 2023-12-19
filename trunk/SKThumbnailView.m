@@ -477,7 +477,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             }
             
             NSDraggingSession *session = [self beginDraggingSessionWithItems:dragItems event:theEvent source:self];
-            [session setDraggingFormation:NSDraggingFormationPile];
+            [session setDraggingFormation:NSDraggingFormationStack];
         }
         
     } else {
