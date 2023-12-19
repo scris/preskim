@@ -61,7 +61,7 @@
 
 @implementation SKNoteOutlineView
 
-@dynamic fullWidthCellWidth, outlineIndentation;
+@dynamic fullWidthCellWidth, outlineIndentation, delegate;
 
 static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     if ([identifier isEqualToString:NOTE_COLUMNID])

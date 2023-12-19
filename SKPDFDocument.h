@@ -42,7 +42,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SKPDFDocumentDelegate;
+@protocol SKPDFDocumentDelegate <PDFDocumentDelegate>
+@optional
+- (void)document:(PDFDocument *)document didUnlockWithPassword:(NSString *)password;
+- (void)document:(PDFDocument *)document didDetectWidgets:(NSArray *)widgets onPage:(PDFPage *)page;
+@end
 
 @interface SKPDFDocument : PDFDocument {
     SKLanguageDirectionAngles *languageDirectionAngles;
@@ -51,17 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 @property (nonatomic, nullable, weak) NSDocument *containingDocument;
 @property (nonatomic, nullable, readonly) NSArray *detectedWidgets;
-- (nullable id <SKPDFDocumentDelegate>)delegate;
-- (void)setDelegate:(nullable id <SKPDFDocumentDelegate>)newDelegate;
+@property (nonatomic, nullable, weak) id<SKPDFDocumentDelegate> delegate;
 - (void)detectedWidgets:(NSArray *)newWidgets onPage:(PDFPage *)page;
-@end
-
-#pragma mark -
-
-@protocol SKPDFDocumentDelegate <PDFDocumentDelegate>
-@optional
-- (void)document:(PDFDocument *)document didUnlockWithPassword:(NSString *)password;
-- (void)document:(PDFDocument *)document didDetectWidgets:(NSArray *)widgets onPage:(PDFPage *)page;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -112,7 +112,20 @@ enum {
      kPDFDisplayHorizontalContinuous = 4
 };
 
-@protocol SKPDFViewDelegate;
+@protocol SKPDFViewDelegate <PDFViewDelegate>
+@optional
+- (void)PDFViewDidBeginEditing:(PDFView *)sender;
+- (void)PDFViewDidEndEditing:(PDFView *)sender;
+- (void)PDFView:(PDFView *)sender editAnnotation:(PDFAnnotation *)annotation;
+- (void)PDFView:(PDFView *)sender showSnapshotAtPageNumber:(NSInteger)pageNum forRect:(NSRect)rect scaleFactor:(CGFloat)scaleFactor autoFits:(BOOL)autoFits;
+- (void)PDFViewExitPresentation:(PDFView *)sender;
+- (void)PDFViewTogglePages:(PDFView *)sender;
+- (void)PDFViewToggleContents:(PDFView *)sender;
+- (void)PDFViewPerformHideFind:(PDFView *)sender;
+- (BOOL)PDFViewIsFindVisible:(PDFView *)sender;
+- (void)PDFView:(PDFView *)sender rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation;
+- (nullable NSUndoManager *)undoManagerForPDFView:(PDFView *)sender;
+@end
 
 @class SKReadingBar, SKTransitionController, SKTypeSelectHelper, SKNavigationWindow, SKCursorStyleWindow, SKTextNoteEditor, SKSyncDot, SKLoupeController, SKLayerController;
 
@@ -258,30 +271,12 @@ enum {
 
 - (void)resetHistory;
 
-- (nullable id <SKPDFViewDelegate>)delegate;
-- (void)setDelegate:(nullable id <SKPDFViewDelegate>)newDelegate;
+@property (nonatomic, nullable, weak) id<SKPDFViewDelegate> delegate;
 
 - (nullable NSString *)currentColorDefaultKeyForAlternate:(BOOL)isAlt;
 
 - (void)undoManagerDidOpenOrCloseUndoGroup;
 
-@end
-
-#pragma mark -
-
-@protocol SKPDFViewDelegate <PDFViewDelegate>
-@optional
-- (void)PDFViewDidBeginEditing:(PDFView *)sender;
-- (void)PDFViewDidEndEditing:(PDFView *)sender;
-- (void)PDFView:(PDFView *)sender editAnnotation:(PDFAnnotation *)annotation;
-- (void)PDFView:(PDFView *)sender showSnapshotAtPageNumber:(NSInteger)pageNum forRect:(NSRect)rect scaleFactor:(CGFloat)scaleFactor autoFits:(BOOL)autoFits;
-- (void)PDFViewExitPresentation:(PDFView *)sender;
-- (void)PDFViewTogglePages:(PDFView *)sender;
-- (void)PDFViewToggleContents:(PDFView *)sender;
-- (void)PDFViewPerformHideFind:(PDFView *)sender;
-- (BOOL)PDFViewIsFindVisible:(PDFView *)sender;
-- (void)PDFView:(PDFView *)sender rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation;
-- (nullable NSUndoManager *)undoManagerForPDFView:(PDFView *)sender;
 @end
 
 NS_ASSUME_NONNULL_END

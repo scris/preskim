@@ -42,7 +42,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SKSnapshotPDFViewDelegate;
+@protocol SKSnapshotPDFViewDelegate <PDFViewDelegate>
+@optional
+- (void)PDFView:(PDFView *)sender goToExternalDestination:(PDFDestination *)destination;
+@end
 
 @interface SKSnapshotPDFView : SKBasePDFView {
     NSPopUpButton *scalePopUpButton;
@@ -63,14 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)resetHistory;
 
-- (nullable id <SKSnapshotPDFViewDelegate>)delegate;
-- (void)setDelegate:(nullable id <SKSnapshotPDFViewDelegate>)newDelegate;
+@property (nonatomic, nullable, weak) id<SKSnapshotPDFViewDelegate> delegate;
 
-@end
-
-@protocol SKSnapshotPDFViewDelegate <PDFViewDelegate>
-@optional
-- (void)PDFView:(PDFView *)sender goToExternalDestination:(PDFDestination *)destination;
 @end
 
 NS_ASSUME_NONNULL_END

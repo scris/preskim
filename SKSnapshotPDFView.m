@@ -73,6 +73,7 @@
 @implementation SKSnapshotPDFView
 
 @synthesize autoFits, shouldAutoFit;
+@dynamic delegate;
 
 #define SKPDFContentViewChangedNotification @"SKPDFContentViewChangedNotification"
 

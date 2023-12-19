@@ -44,6 +44,7 @@
 @implementation SKPDFDocument
 
 @synthesize containingDocument, detectedWidgets;
+@dynamic delegate;
 
 - (void)dealloc {
     if (languageDirectionAngles) free(languageDirectionAngles);
