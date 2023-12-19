@@ -448,9 +448,8 @@ static char SKThumbnailViewThumbnailObservationContext;
             
             NSMutableArray *dragItems = [NSMutableArray array];
             NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
-            NSImage *dragImage = [self draggingImage];
             
-            [dragItem setDraggingFrame:[self draggingFrame] contents:dragImage];
+            [dragItem setDraggingFrame:[self draggingFrame] contents:[self draggingImage]];
             [dragItems addObject:dragItem];
             if (selectionIndexes) {
                 [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
@@ -460,15 +459,11 @@ static char SKThumbnailViewThumbnailObservationContext;
                     NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
                     NSRect rect;
                     SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
-                    if (view) {
+                    if (view)
                         rect = [self convertRect:[view draggingFrame] fromView:view];
-                    } else {
-                        NSPoint offset = [self convertRect:[collectionView frameForItemAtIndex:idx] fromView:collectionView].origin;
+                    else
                         rect = [self draggingFrame];
-                        rect.origin.x += offset.x;
-                        rect.origin.y += offset.y;
-                    }
-                    [dummyDragItem setDraggingFrame:rect contents:[view draggingImage] ?: dragImage];
+                    [dummyDragItem setDraggingFrame:rect contents:[view draggingImage]];
                         [dragItems addObject:dummyDragItem];
                 }];
             }
