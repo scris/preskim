@@ -50,7 +50,7 @@ static char SKDefaultsObservationContext;
 + (NSColorList *)favoriteColorList {
     static SKColorList *colorList = nil;
     if (colorList == nil) {
-        NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+        NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleNameKey];
         colorList = [[SKColorList alloc] initWithName:appName];
         [(SKColorList *)colorList setEditable:YES];
         NSInteger i = 0;

@@ -418,7 +418,7 @@ static HIDRemote *sHIDRemote = nil;
 												       object:kHIDRemoteDNHIDRemoteRetryGlobalObject
 												     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 														[NSNumber numberWithUnsignedInt:(unsigned int)getpid()], kHIDRemoteDNStatusPIDKey,
-														[[NSBundle mainBundle] bundleIdentifier],		 (NSString *)kCFBundleIdentifierKey,
+														[[NSBundle mainBundle] bundleIdentifier],		 (__bridge NSString *)kCFBundleIdentifierKey,
 													       nil]
 											   deliverImmediately:YES];
 				}
@@ -648,7 +648,7 @@ static HIDRemote *sHIDRemote = nil;
 												[NSNumber numberWithUnsignedInt:(unsigned int)[self activeRemoteControlCount]], kHIDRemoteDNStatusRemoteControlCountKey,
 												((_unusedButtonCodes!=nil) ? _unusedButtonCodes : [NSArray array]),		kHIDRemoteDNStatusUnusedButtonCodesKey,
 												action,										kHIDRemoteDNStatusActionKey,
-												[[NSBundle mainBundle] bundleIdentifier],					(NSString *)kCFBundleIdentifierKey,
+												[[NSBundle mainBundle] bundleIdentifier],					(__bridge NSString *)kCFBundleIdentifierKey,
 												_returnToPID,									kHIDRemoteDNStatusReturnToPIDKey,
 										      nil]
 								   deliverImmediately:YES
@@ -822,7 +822,7 @@ static HIDRemote *sHIDRemote = nil;
 																	       object:[NSString stringWithFormat:@"%d", [_waitForReturnByPID intValue]]
 																	     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 																				[NSNumber numberWithUnsignedInt:(unsigned int)getpid()], kHIDRemoteDNStatusPIDKey,
-																				[[NSBundle mainBundle] bundleIdentifier],		 (NSString *)kCFBundleIdentifierKey,
+																				[[NSBundle mainBundle] bundleIdentifier],		 (__bridge NSString *)kCFBundleIdentifierKey,
 																		      nil]
 																   deliverImmediately:YES];
 									}
