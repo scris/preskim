@@ -64,6 +64,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define HIGHLIGHT_ID @"highlight"
 #define MARK_ID @"mark"
 
+#define SKPasteboardTypeDummy @"net.sourceforge.skim-app.pasteboard.dummy"
+
 static char SKThumbnailViewThumbnailObservationContext;
 
 @implementation SKThumbnailView
@@ -426,6 +428,10 @@ static char SKThumbnailViewThumbnailObservationContext;
     return dragImage;
 }
 
+- (NSRect)draggingFrame {
+    return [imageView frame];
+}
+
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([NSApp willDragMouse]) {
         
@@ -442,7 +448,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             NSMutableArray *dragItems = [NSMutableArray array];
             NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
             
-            [dragItem setDraggingFrame:[imageView frame] contents:[self draggingImage]];
+            [dragItem setDraggingFrame:[self draggingFrame] contents:[self draggingImage]];
             if (selectionIndexes == nil) {
                 [dragItems addObject:dragItem];
             } else {
@@ -453,9 +459,9 @@ static char SKThumbnailViewThumbnailObservationContext;
                         SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
                         if (view) {
                             NSPasteboardItem *dummyItem = [[NSPasteboardItem alloc] init];
-                            [dummyItem setData:[NSData data] forType:@"net.sourceforge.skim-app.pasteboard.dummy"];
+                            [dummyItem setData:[NSData data] forType:SKPasteboardTypeDummy];
                             NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
-                            NSRect rect = [self convertRect:[view->imageView frame] fromView:view];
+                            NSRect rect = [self convertRect:[view draggingFrame] fromView:view];
                             [dummyDragItem setDraggingFrame:rect contents:[view draggingImage]];
                             [dragItems addObject:dummyDragItem];
                         }
