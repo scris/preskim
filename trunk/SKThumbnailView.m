@@ -452,7 +452,8 @@ static char SKThumbnailViewThumbnailObservationContext;
                     } else {
                         SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
                         if (view) {
-                            NSPasteboardItem *dummyItem = [[NSPasteboardItem alloc] initWithPasteboardPropertyList:[NSData data] ofType:@"net.sourceforge.skim-app.pasteboard.dummy"];
+                            NSPasteboardItem *dummyItem = [[NSPasteboardItem alloc] init];
+                            [dummyItem setData:[NSData data] forType:@"net.sourceforge.skim-app.pasteboard.dummy"];
                             NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
                             NSRect rect = [self convertRect:[view->imageView frame] fromView:view];
                             [dummyDragItem setDraggingFrame:rect contents:[view draggingImage]];
