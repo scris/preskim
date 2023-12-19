@@ -222,7 +222,7 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
     
     [NSApp setServicesProvider:[NSDocumentController sharedDocumentController]];
     
-    NSString *versionString = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey];
+    NSString *versionString = [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleVersionKey];
     NSString *lastVersionString = [sud stringForKey:SKLastVersionLaunchedKey];
     if (lastVersionString == nil || [SKVersionNumber compareVersionString:lastVersionString toVersionString:versionString] == NSOrderedAscending) {
         [self showReleaseNotes:nil];

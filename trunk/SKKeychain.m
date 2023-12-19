@@ -50,9 +50,9 @@
     CFDictionarySetValue(query, kSecClass, kSecClassGenericPassword);
     CFDictionarySetValue(query, kSecMatchLimit, kSecMatchLimitOne);
     if (service)
-        CFDictionarySetValue(query, kSecAttrService, (CFStringRef)service);
+        CFDictionarySetValue(query, kSecAttrService, (__bridge CFStringRef)service);
     if (account)
-        CFDictionarySetValue(query, kSecAttrAccount, (CFStringRef)account);
+        CFDictionarySetValue(query, kSecAttrAccount, (__bridge CFStringRef)account);
     CFDictionarySetValue(query, kSecReturnData, kCFBooleanTrue);
     
     OSStatus err = SecItemCopyMatching(query, &passwordData);
@@ -77,15 +77,15 @@
     OSStatus err;
     
     // password not on keychain, so add it
-    CFDictionarySetValue(attributes, kSecAttrService, (CFStringRef)service);
-    CFDictionarySetValue(attributes, kSecAttrAccount, (CFStringRef)account);
+    CFDictionarySetValue(attributes, kSecAttrService, (__bridge CFStringRef)service);
+    CFDictionarySetValue(attributes, kSecAttrAccount, (__bridge CFStringRef)account);
     CFDictionarySetValue(attributes, kSecClass, kSecClassGenericPassword);
     if (label)
-        CFDictionarySetValue(attributes, kSecAttrLabel, (CFStringRef)label);
+        CFDictionarySetValue(attributes, kSecAttrLabel, (__bridge CFStringRef)label);
     if (comment)
-        CFDictionarySetValue(attributes, kSecAttrComment, (CFStringRef)comment);
+        CFDictionarySetValue(attributes, kSecAttrComment, (__bridge CFStringRef)comment);
     if (password)
-        CFDictionarySetValue(attributes, kSecValueData, (CFDataRef)[password dataUsingEncoding:NSUTF8StringEncoding]);
+        CFDictionarySetValue(attributes, kSecValueData, (__bridge CFDataRef)[password dataUsingEncoding:NSUTF8StringEncoding]);
     
     err = SecItemAdd(attributes, NULL);
     CFRelease(attributes);
@@ -102,20 +102,20 @@
     CFDictionarySetValue(query, kSecClass, kSecClassGenericPassword);
     CFDictionarySetValue(query, kSecMatchLimit, kSecMatchLimitOne);
     if (itemService)
-        CFDictionarySetValue(query, kSecAttrService, (CFStringRef)itemService);
+        CFDictionarySetValue(query, kSecAttrService, (__bridge CFStringRef)itemService);
     if (itemAccount)
-        CFDictionarySetValue(query, kSecAttrAccount, (CFStringRef)itemAccount);
+        CFDictionarySetValue(query, kSecAttrAccount, (__bridge CFStringRef)itemAccount);
     
     if (service && [service isEqualToString:itemService] == NO)
-        CFDictionarySetValue(attributes, kSecAttrService, (CFStringRef)service);
+        CFDictionarySetValue(attributes, kSecAttrService, (__bridge CFStringRef)service);
     if (account && [account isEqualToString:itemAccount] == NO)
-        CFDictionarySetValue(attributes, kSecAttrAccount, (CFStringRef)account);
+        CFDictionarySetValue(attributes, kSecAttrAccount, (__bridge CFStringRef)account);
     if (label)
-        CFDictionarySetValue(attributes, kSecAttrLabel, (CFStringRef)label);
+        CFDictionarySetValue(attributes, kSecAttrLabel, (__bridge CFStringRef)label);
     if (comment)
-        CFDictionarySetValue(attributes, kSecAttrComment, (CFStringRef)comment);
+        CFDictionarySetValue(attributes, kSecAttrComment, (__bridge CFStringRef)comment);
     if (password)
-        CFDictionarySetValue(attributes, kSecValueData, (CFDataRef)[password dataUsingEncoding:NSUTF8StringEncoding]);
+        CFDictionarySetValue(attributes, kSecValueData, (__bridge CFDataRef)[password dataUsingEncoding:NSUTF8StringEncoding]);
     
     // password was on keychain, so modify the keychain
     err = SecItemUpdate(query, attributes);

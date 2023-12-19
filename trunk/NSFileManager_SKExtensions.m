@@ -45,7 +45,7 @@
     static NSArray *applicationSupportDirectoryURLs = nil;
     if (applicationSupportDirectoryURLs == nil) {
         NSMutableArray *urlArray = [NSMutableArray array];
-        NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+        NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleNameKey];
         for (NSURL *url in [self URLsForDirectory:NSApplicationSupportDirectory inDomains:NSAllDomainsMask])
             [urlArray addObject:[url URLByAppendingPathComponent:appName isDirectory:YES]];
         applicationSupportDirectoryURLs = [urlArray copy];
@@ -63,7 +63,7 @@
         if (noErr == FSFindFolder(kUserDomain, kChewableItemsFolderType, TRUE, &chewableRef)) {
             NSURL *chewableURL = CFBridgingRelease(CFURLCreateFromFSRef(kCFAllocatorDefault, &chewableRef));
 #pragma clang diagnostic pop
-            NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+            NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleNameKey];
             chewableItemsDirectoryURL = [[chewableURL URLByAppendingPathComponent:appName isDirectory:YES] copy];
         } else {
             char *template = strdup([[NSTemporaryDirectory() stringByAppendingPathComponent:@"Skim.XXXXXX"] fileSystemRepresentation]);
