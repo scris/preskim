@@ -49,6 +49,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #import "NSColor_SKExtensions.h"
 #import "SKThumbnailImageView.h"
 #import "NSPasteboard_SKExtensions.h"
+#import "NSGeometry_SKExtensions.h"
 
 #define MARGIN 8.0
 #define TEXT_MARGIN 4.0
@@ -456,15 +457,21 @@ static char SKThumbnailViewThumbnailObservationContext;
                     if (idx == pageIndex) {
                         [dragItems addObject:dragItem];
                     } else {
+                        NSPasteboardItem *dummyItem = [[NSPasteboardItem alloc] init];
+                        [dummyItem setData:[NSData data] forType:SKPasteboardTypeDummy];
+                        NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
+                        NSRect rect;
                         SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
                         if (view) {
-                            NSPasteboardItem *dummyItem = [[NSPasteboardItem alloc] init];
-                            [dummyItem setData:[NSData data] forType:SKPasteboardTypeDummy];
-                            NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
-                            NSRect rect = [self convertRect:[view draggingFrame] fromView:view];
-                            [dummyDragItem setDraggingFrame:rect contents:[view draggingImage]];
-                            [dragItems addObject:dummyDragItem];
+                            rect = [self convertRect:[view draggingFrame] fromView:view];
+                        } else {
+                            NSPoint point = [self convertRect:[collectionView frameForItemAtIndex:idx] fromView:collectionView].origin;
+                            rect = [self draggingFrame];
+                            rect.origin.x += point.x;
+                            rect.origin.y += point.y;
                         }
+                        [dummyDragItem setDraggingFrame:rect contents:[view ?: self draggingImage]];
+                            [dragItems addObject:dummyDragItem];
                     }
                 }];
             }
