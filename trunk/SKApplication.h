@@ -42,7 +42,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *SKApplicationStartsTerminatingNotification;
 
-@protocol SKApplicationDelegate;
+@protocol SKApplicationDelegate <NSApplicationDelegate>
+@optional
+- (void)applicationStartsTerminating:(NSNotification *)aNotification;
+@end
 
 @class SPUStandardUpdaterController;
 
@@ -59,15 +62,8 @@ extern NSString *SKApplicationStartsTerminatingNotification;
 
 - (BOOL)willDragMouse;
 
-- (nullable id <SKApplicationDelegate>)delegate;
-- (void)setDelegate:(nullable id <SKApplicationDelegate>)newDelegate;
+@property (nullable, weak) id<SKApplicationDelegate> delegate;
 
-@end
-
-
-@protocol SKApplicationDelegate <NSApplicationDelegate>
-@optional
-- (void)applicationStartsTerminating:(NSNotification *)aNotification;
 @end
 
 

@@ -48,7 +48,7 @@
 @implementation SKTableView
 
 @synthesize typeSelectHelper, supportsQuickLook, imageToolTipLayout;
-@dynamic canDelete, canCopy, canPaste;
+@dynamic canDelete, canCopy, canPaste, delegate;
 
 - (void)dealloc {
     [typeSelectHelper setDelegate:nil];

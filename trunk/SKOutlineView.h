@@ -42,7 +42,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SKOutlineViewDelegate;
+@protocol SKOutlineViewDelegate <NSOutlineViewDelegate>
+@optional
+
+- (void)outlineView:(NSOutlineView *)anOutlineView deleteItems:(NSArray *)items;
+- (BOOL)outlineView:(NSOutlineView *)anOutlineView canDeleteItems:(NSArray *)items;
+
+- (void)outlineView:(NSOutlineView *)anOutlineView copyItems:(NSArray *)items;
+- (BOOL)outlineView:(NSOutlineView *)anOutlineView canCopyItems:(NSArray *)items;
+
+- (void)outlineView:(NSOutlineView *)anOutlineView pasteFromPasteboard:(NSPasteboard *)pboard;
+- (BOOL)outlineView:(NSOutlineView *)anOutlineView canPasteFromPasteboard:(NSPasteboard *)pboard;
+
+- (nullable id <SKImageToolTipContext>)outlineView:(NSOutlineView *)anOutlineView imageContextForItem:(id)item scale:(CGFloat *)scale;
+
+- (nullable NSArray *)outlineViewTypeSelectHelperSelectionStrings:(NSOutlineView *)anOutlineView;
+- (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString;
+- (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelperUpdateSearchString:(NSString *)searchString;
+
+@end
 
 @interface SKOutlineView : NSOutlineView <SKTypeSelectDelegate> {
     SKTypeSelectHelper *typeSelectHelper;
@@ -70,29 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)noteHeightOfRowsChangedAnimating:(BOOL)animate;
 - (void)noteHeightOfRowChanged:(NSInteger)row animating:(BOOL)animate;
 
-- (nullable id <SKOutlineViewDelegate>)delegate;
-- (void)setDelegate:(nullable id <SKOutlineViewDelegate>)newDelegate;
-
-@end
-
-
-@protocol SKOutlineViewDelegate <NSOutlineViewDelegate>
-@optional
-
-- (void)outlineView:(NSOutlineView *)anOutlineView deleteItems:(NSArray *)items;
-- (BOOL)outlineView:(NSOutlineView *)anOutlineView canDeleteItems:(NSArray *)items;
-
-- (void)outlineView:(NSOutlineView *)anOutlineView copyItems:(NSArray *)items;
-- (BOOL)outlineView:(NSOutlineView *)anOutlineView canCopyItems:(NSArray *)items;
-
-- (void)outlineView:(NSOutlineView *)anOutlineView pasteFromPasteboard:(NSPasteboard *)pboard;
-- (BOOL)outlineView:(NSOutlineView *)anOutlineView canPasteFromPasteboard:(NSPasteboard *)pboard;
-
-- (nullable id <SKImageToolTipContext>)outlineView:(NSOutlineView *)anOutlineView imageContextForItem:(id)item scale:(CGFloat *)scale;
-
-- (nullable NSArray *)outlineViewTypeSelectHelperSelectionStrings:(NSOutlineView *)anOutlineView;
-- (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString;
-- (void)outlineView:(NSOutlineView *)anOutlineView typeSelectHelperUpdateSearchString:(NSString *)searchString;
+@property (nullable, weak) id<SKOutlineViewDelegate> delegate;
 
 @end
 

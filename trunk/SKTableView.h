@@ -42,7 +42,30 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SKTableViewDelegate;
+@protocol SKTableViewDelegate <NSTableViewDelegate>
+@optional
+
+- (void)tableView:(NSTableView *)aTableView deleteRowsWithIndexes:(NSIndexSet *)rowIndexes;
+- (BOOL)tableView:(NSTableView *)aTableView canDeleteRowsWithIndexes:(NSIndexSet *)rowIndexes;
+
+- (void)tableView:(NSTableView *)aTableView copyRowsWithIndexes:(NSIndexSet *)rowIndexes;
+- (BOOL)tableView:(NSTableView *)aTableView canCopyRowsWithIndexes:(NSIndexSet *)rowIndexes;
+
+- (void)tableView:(NSTableView *)aTableView pasteFromPasteboard:(NSPasteboard *)pboard;
+- (BOOL)tableView:(NSTableView *)aTableView canPasteFromPasteboard:(NSPasteboard *)pboard;
+
+- (void)tableViewMoveLeft:(NSTableView *)aTableView;
+- (void)tableViewMoveRight:(NSTableView *)aTableView;
+
+- (BOOL)tableView:(NSTableView *)tableView commandSelectRow:(NSInteger)rowIndex;
+
+- (nullable id <SKImageToolTipContext>)tableView:(NSTableView *)aTableView imageContextForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)rowIndex  scale:(CGFloat *)scale;
+
+- (nullable NSArray *)tableViewTypeSelectHelperSelectionStrings:(NSTableView *)aTableView;
+- (void)tableView:(NSTableView *)aTableView typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString;
+- (void)tableView:(NSTableView *)aTableView typeSelectHelperUpdateSearchString:(NSString *)searchString;
+
+@end
 
 typedef NS_ENUM(NSInteger, SKTableImageToolTipLayout) {
     SKTableImageToolTipNone,
@@ -77,34 +100,7 @@ typedef NS_ENUM(NSInteger, SKTableImageToolTipLayout) {
 - (void)noteHeightOfRowsChangedAnimating:(BOOL)animate;
 - (void)noteHeightOfRowChanged:(NSInteger)row animating:(BOOL)animate;
 
-- (nullable id <SKTableViewDelegate>)delegate;
-- (void)setDelegate:(nullable id <SKTableViewDelegate>)newDelegate;
-
-@end
-
-
-@protocol SKTableViewDelegate <NSTableViewDelegate>
-@optional
-
-- (void)tableView:(NSTableView *)aTableView deleteRowsWithIndexes:(NSIndexSet *)rowIndexes;
-- (BOOL)tableView:(NSTableView *)aTableView canDeleteRowsWithIndexes:(NSIndexSet *)rowIndexes;
-
-- (void)tableView:(NSTableView *)aTableView copyRowsWithIndexes:(NSIndexSet *)rowIndexes;
-- (BOOL)tableView:(NSTableView *)aTableView canCopyRowsWithIndexes:(NSIndexSet *)rowIndexes;
-
-- (void)tableView:(NSTableView *)aTableView pasteFromPasteboard:(NSPasteboard *)pboard;
-- (BOOL)tableView:(NSTableView *)aTableView canPasteFromPasteboard:(NSPasteboard *)pboard;
-
-- (void)tableViewMoveLeft:(NSTableView *)aTableView;
-- (void)tableViewMoveRight:(NSTableView *)aTableView;
-
-- (BOOL)tableView:(NSTableView *)tableView commandSelectRow:(NSInteger)rowIndex;
-
-- (nullable id <SKImageToolTipContext>)tableView:(NSTableView *)aTableView imageContextForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)rowIndex  scale:(CGFloat *)scale;
-
-- (nullable NSArray *)tableViewTypeSelectHelperSelectionStrings:(NSTableView *)aTableView;
-- (void)tableView:(NSTableView *)aTableView typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString;
-- (void)tableView:(NSTableView *)aTableView typeSelectHelperUpdateSearchString:(NSString *)searchString;
+@property (nullable, weak) id<SKTableViewDelegate> delegate;
 
 @end
 

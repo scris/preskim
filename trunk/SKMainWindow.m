@@ -45,7 +45,7 @@
 @implementation SKMainWindow
 
 @synthesize disableConstrainedFrame;
-@dynamic windowFrame;
+@dynamic windowFrame, delegate;
 
 + (id)defaultAnimationForKey:(NSString *)key {
     if ([key isEqualToString:@"windowFrame"]) {

@@ -52,8 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL disableConstrainedFrame;
 @property (nonatomic) NSRect windowFrame;
 
-- (nullable id<SKMainWindowDelegate>)delegate;
-- (void)setDelegate:(nullable id<SKMainWindowDelegate>)newDelegate;
+@property (nullable, weak) id<SKMainWindowDelegate> delegate;
 
 @end
 

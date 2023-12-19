@@ -41,26 +41,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SKNoteOutlineViewDelegate;
-
-@interface SKNoteOutlineView : SKOutlineView
-
-- (void)toggleTableColumn:(nullable id)sender;
-
-- (nullable id <SKNoteOutlineViewDelegate>)delegate;
-- (void)setDelegate:(nullable id <SKNoteOutlineViewDelegate>)newDelegate;
-
-@property (nonatomic, readonly) CGFloat fullWidthCellWidth;
-@property (nonatomic, readonly) CGFloat outlineIndentation;
-
-@end
-
-
 @protocol SKNoteOutlineViewDelegate <SKOutlineViewDelegate>
 @optional
 
 - (void)outlineView:(NSOutlineView *)anOutlineView setHeight:(CGFloat)newHeight ofRowByItem:(id)item;
 - (void)outlineView:(NSOutlineView *)anOutlineView didChangeHiddenOfTableColumn:(NSTableColumn *)aTableColumn;
+
+@end
+
+@interface SKNoteOutlineView : SKOutlineView
+
+- (void)toggleTableColumn:(nullable id)sender;
+
+@property (nullable, weak) id<SKNoteOutlineViewDelegate> delegate;
+
+@property (nonatomic, readonly) CGFloat fullWidthCellWidth;
+@property (nonatomic, readonly) CGFloat outlineIndentation;
 
 @end
 

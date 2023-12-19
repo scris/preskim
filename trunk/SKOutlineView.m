@@ -47,7 +47,7 @@
 @implementation SKOutlineView
 
 @synthesize typeSelectHelper, hasImageToolTips, supportsQuickLook;
-@dynamic selectedItems, canDelete, canCopy, canPaste;
+@dynamic selectedItems, canDelete, canCopy, canPaste, delegate;
 
 - (NSArray *)itemsAtRowIndexes:(NSIndexSet *)indexes {
     NSMutableArray *items = [NSMutableArray array];
