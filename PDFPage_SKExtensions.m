@@ -74,8 +74,6 @@ NSString *SKPDFPageActionRotate = @"rotate";
 #define SKAutoCropBoxMarginWidthKey @"SKAutoCropBoxMarginWidth"
 #define SKAutoCropBoxMarginHeightKey @"SKAutoCropBoxMarginHeight"
 
-#define SKPasteboardTypePageIndexes @"net.sourceforge.skim-app.pasteboard.page-indexes"
-
 @implementation PDFPage (SKExtensions) 
 
 static BOOL usesSequentialPageNumbering = NO;
