@@ -423,6 +423,8 @@ static char SKThumbnailViewThumbnailObservationContext;
 #pragma mark Event handling
 
 - (NSImage *)draggingImage {
+    if ([imageView image] == nil)
+        return nil;
     NSRect rect = [imageView bounds];
     NSImage *dragImage = [[NSImage alloc] initWithSize:rect.size];
     [dragImage addRepresentation:[imageView bitmapImageRepCachingDisplayInRect:rect]];
@@ -448,13 +450,17 @@ static char SKThumbnailViewThumbnailObservationContext;
             
             NSMutableArray *dragItems = [NSMutableArray array];
             NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
-            __block BOOL selectLeaderIndex = NO;
+            NSImage *dragImage = [self draggingImage];
             
-            [dragItem setDraggingFrame:[self draggingFrame] contents:[self draggingImage]];
+            if (dragImage == nil) {
+                [imageView setImage:[thumbnail image]];
+                dragImage = [self draggingImage];
+            }
+            
+            [dragItem setDraggingFrame:[self draggingFrame] contents:dragImage];
             if (selectionIndexes == nil) {
                 [dragItems addObject:dragItem];
             } else {
-                NSUInteger firstIndex = [selectionIndexes firstIndex];
                 [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
                     if (idx == pageIndex) {
                         [dragItems addObject:dragItem];
@@ -464,22 +470,18 @@ static char SKThumbnailViewThumbnailObservationContext;
                         NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
                         NSRect rect;
                         SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
-                        if (view) {
+                        if (view)
                             rect = [self convertRect:[view draggingFrame] fromView:view];
-                            if (idx == firstIndex)
-                                selectLeaderIndex = YES;
-                        } else {
+                        else
                             rect = [self draggingFrame];
-                        }
                         [dummyDragItem setDraggingFrame:rect contents:[view draggingImage]];
                         [dragItems addObject:dummyDragItem];
                     }
                 }];
             }
-            
             NSDraggingSession *session = [self beginDraggingSessionWithItems:dragItems event:theEvent source:self];
             [session setDraggingFormation:NSDraggingFormationStack];
-            if (selectLeaderIndex)
+            if (selectionIndexes && [[[[dragItems firstObject] imageComponents] firstObject] contents])
                 [session setDraggingLeaderIndex:0];
         }
         
