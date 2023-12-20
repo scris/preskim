@@ -67,7 +67,7 @@ from stat import ST_SIZE
 from time import gmtime, strftime, localtime, sleep
 import plistlib
 import tempfile
-import urllib.request
+from urllib.request import urlopen
 from getpass import getuser
 
 # determine the path based on the path of this program
@@ -395,19 +395,19 @@ def signature_and_size(archive_path):
     if dsaKey != "":
         # write to a temporary file that's readably only by owner; minor security issue here since
         # we have to use a named temp file, but it's better than storing unencrypted key
-        keyFile = tempfile.NamedTemporaryFile()
-        keyFile.write(dsaKey.encode("ascii"))
-        keyFile.flush()
-        
-        # now run the signature for Sparkle...
-        sha_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-binary"], stdin=open(archive_path, "rb"), stdout=PIPE)
-        dss_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-sign", keyFile.name], stdin=sha_task.stdout, stdout=PIPE)
-        b64_task = Popen(["/usr/bin/openssl", "enc", "-base64"], stdin=dss_task.stdout, stdout=PIPE)
-        
-        # now compute the variables we need for writing the new appcast
-        dsaSignature = b64_task.communicate()[0].decode("ascii").strip()
-        if dsaSignature != "":
-            signatureAndSize = "\" sparkle:dsaSignature=\"" + dsaSignature + "\" " + signatureAndSize
+        with tempfile.NamedTemporaryFile() as keyFile:
+            keyFile.write(dsaKey.encode("ascii"))
+            keyFile.flush()
+            
+            # now run the signature for Sparkle...
+            sha_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-binary"], stdin=open(archive_path, "rb"), stdout=PIPE)
+            dss_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-sign", keyFile.name], stdin=sha_task.stdout, stdout=PIPE)
+            b64_task = Popen(["/usr/bin/openssl", "enc", "-base64"], stdin=dss_task.stdout, stdout=PIPE)
+            
+            # now compute the variables we need for writing the new appcast
+            dsaSignature = b64_task.communicate()[0].decode("ascii").strip()
+            if dsaSignature != "":
+                signatureAndSize = "\" sparkle:dsaSignature=\"" + dsaSignature + "\" " + signatureAndSize
     
     return signatureAndSize
     
@@ -455,7 +455,8 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
 """
     
     # read from the source directory
-    appcastString = urllib.request.urlopen(APPCAST_URL).read().decode("utf-8")
+    with urlopen(APPCAST_URL) as appcast:
+        appcastString = appcast.read().decode("utf-8")
     
     # find insertion point for the new item
     insert = -1
