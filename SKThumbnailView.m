@@ -435,16 +435,20 @@ static char SKThumbnailViewThumbnailObservationContext;
     return [imageView frame];
 }
 
+- (NSIndexSet *)copiedIndexes {
+    NSIndexSet *selectionIndexes = [[self collectionView] selectionIndexes];
+    if ([selectionIndexes count] > 1 && [selectionIndexes containsIndex:[[self thumbnail] pageIndex]])
+        return selectionIndexes;
+    return nil;
+}
+
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([NSApp willDragMouse]) {
         
         NSUInteger pageIndex = [[self thumbnail] pageIndex];
-        NSCollectionView *collectionView = [self collectionView];
-        NSIndexSet *selectionIndexes = [collectionView selectionIndexes];
-        if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:pageIndex] == NO)
-            selectionIndexes = nil;
+        NSIndexSet *draggedIndexes = [self copiedIndexes];
         
-        id<NSPasteboardWriting> item = [[[self thumbnail] page] filePromiseForPageIndexes:selectionIndexes];
+        id<NSPasteboardWriting> item = [[[self thumbnail] page] filePromiseForPageIndexes:draggedIndexes];
         
         if (item) {
             
@@ -458,10 +462,10 @@ static char SKThumbnailViewThumbnailObservationContext;
             }
             
             [dragItem setDraggingFrame:[self draggingFrame] contents:dragImage];
-            if (selectionIndexes == nil) {
+            if (draggedIndexes == nil) {
                 [dragItems addObject:dragItem];
             } else {
-                [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
+                [draggedIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
                     if (idx == pageIndex) {
                         [dragItems addObject:dragItem];
                     } else {
@@ -469,7 +473,7 @@ static char SKThumbnailViewThumbnailObservationContext;
                         [dummyItem setData:[NSData data] forType:SKPasteboardTypeDummy];
                         NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
                         NSRect rect;
-                        SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
+                        SKThumbnailView *view = (SKThumbnailView *)[[[self collectionView] itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
                         if (view)
                             rect = [self convertRect:[view draggingFrame] fromView:view];
                         else
@@ -481,7 +485,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             }
             NSDraggingSession *session = [self beginDraggingSessionWithItems:dragItems event:theEvent source:self];
             [session setDraggingFormation:NSDraggingFormationStack];
-            if (selectionIndexes && [[[[dragItems firstObject] imageComponents] firstObject] contents])
+            if (draggedIndexes && [[[[dragItems firstObject] imageComponents] firstObject] contents])
                 [session setDraggingLeaderIndex:0];
         }
         
@@ -493,23 +497,17 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (void)copy:(id)sender {
-    PDFPage *page = [[self thumbnail] page];
-    NSIndexSet *selectionIndexes = [[self collectionView] selectionIndexes];
-    if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:[page pageIndex]] == NO)
-        selectionIndexes = nil;
-    [[[self thumbnail] page] writeToClipboardForPageIndexes:selectionIndexes];
+    [[[self thumbnail] page] writeToClipboardForPageIndexes:[self copiedIndexes]];
 }
 
 - (void)copyURL:(id)sender {
     PDFPage *page = [[self thumbnail] page];
-    NSIndexSet *selectionIndexes = [[self collectionView] selectionIndexes];
-    if ([selectionIndexes count] < 2 || [selectionIndexes containsIndex:[page pageIndex]] == NO)
-        selectionIndexes = nil;
+    NSIndexSet *copiedIndexes = [self copiedIndexes];
     NSMutableArray *urls = [NSMutableArray array];
     NSMutableArray *names = [NSMutableArray array];
     NSString *name = [[[[self window] windowController] document] displayName];
-    if (selectionIndexes) {
-        [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
+    if (copiedIndexes) {
+        [copiedIndexes enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop){
             PDFPage *aPage = [[page document] pageAtIndex:i];
             NSURL *url = [aPage skimURL];
             if (url) {
