@@ -67,7 +67,7 @@ from stat import ST_SIZE
 from time import gmtime, strftime, localtime, sleep
 import plistlib
 import tempfile
-import urllib
+import urllib.request
 from getpass import getuser
 
 # determine the path based on the path of this program
@@ -387,7 +387,7 @@ def signature_and_size(archive_path):
     
     signatureAndSize = ed_task.communicate()[0].decode("ascii").strip()
     
-    if not signatureAndSize.startsWith("sparkle:edSignature="):
+    if not signatureAndSize.startswith("sparkle:edSignature="):
         signatureAndSize = "length=\"" + str(os.stat(archive_path)[ST_SIZE])
         
     dsaKey = keyFromSecureNote()
@@ -396,7 +396,7 @@ def signature_and_size(archive_path):
         # write to a temporary file that's readably only by owner; minor security issue here since
         # we have to use a named temp file, but it's better than storing unencrypted key
         keyFile = tempfile.NamedTemporaryFile()
-        keyFile.write(dsaKey)
+        keyFile.write(dsaKey.encode("ascii"))
         keyFile.flush()
         
         # now run the signature for Sparkle...
@@ -455,7 +455,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
 """
     
     # read from the source directory
-    appcastString = urllib.urlopen(APPCAST_URL).read().decode("utf-8")
+    appcastString = urllib.request.urlopen(APPCAST_URL).read().decode("utf-8")
     
     # find insertion point for the new item
     insert = -1
@@ -473,7 +473,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
         appcastName = "skim-" + newVersionString + ".xml"
     
     appcastPath = os.path.join(outputPath , appcastName)
-    with open(appcastPath, "w", "utf-8") as appcastFile:
+    with open(appcastPath, "w", encoding="utf-8") as appcastFile:
         appcastFile.write(appcastString)
     
     # construct the ReadMe file
@@ -491,7 +491,7 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     
     # write the ReadMe file
     readMePath = os.path.join(outputPath , "ReadMe-" + newVersionString + ".txt")
-    with open(readMePath, "w", "utf-8") as readMeFile:
+    with open(readMePath, "w", encoding="utf-8") as readMeFile:
         readMeFile.write(readMe)
 
 def get_options():
