@@ -448,11 +448,13 @@ static char SKThumbnailViewThumbnailObservationContext;
             
             NSMutableArray *dragItems = [NSMutableArray array];
             NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
+            __block BOOL hasFirstItem = YES;
             
             [dragItem setDraggingFrame:[self draggingFrame] contents:[self draggingImage]];
             if (selectionIndexes == nil) {
                 [dragItems addObject:dragItem];
             } else {
+                NSUInteger firstIndex = [selectionIndexes firstIndex];
                 [selectionIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
                     if (idx == pageIndex) {
                         [dragItems addObject:dragItem];
@@ -462,10 +464,13 @@ static char SKThumbnailViewThumbnailObservationContext;
                         NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
                         NSRect rect;
                         SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
-                        if (view)
+                        if (view) {
                             rect = [self convertRect:[view draggingFrame] fromView:view];
-                        else
+                        } else {
                             rect = [self draggingFrame];
+                            if (idx == firstIndex)
+                                hasFirstItem = NO;
+                        }
                         [dummyDragItem setDraggingFrame:rect contents:[view draggingImage]];
                         [dragItems addObject:dummyDragItem];
                     }
@@ -474,7 +479,8 @@ static char SKThumbnailViewThumbnailObservationContext;
             
             NSDraggingSession *session = [self beginDraggingSessionWithItems:dragItems event:theEvent source:self];
             [session setDraggingFormation:NSDraggingFormationStack];
-            [session setDraggingLeaderIndex:0];
+            if (hasFirstItem)
+                [session setDraggingLeaderIndex:0];
         }
         
     } else {
