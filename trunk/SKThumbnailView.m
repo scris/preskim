@@ -448,7 +448,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             
             NSMutableArray *dragItems = [NSMutableArray array];
             NSDraggingItem *dragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:item];
-            __block BOOL hasFirstItem = YES;
+            __block BOOL selectLeaderIndex = NO;
             
             [dragItem setDraggingFrame:[self draggingFrame] contents:[self draggingImage]];
             if (selectionIndexes == nil) {
@@ -466,10 +466,10 @@ static char SKThumbnailViewThumbnailObservationContext;
                         SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
                         if (view) {
                             rect = [self convertRect:[view draggingFrame] fromView:view];
+                            if (idx == firstIndex)
+                                selectLeaderIndex = YES;
                         } else {
                             rect = [self draggingFrame];
-                            if (idx == firstIndex)
-                                hasFirstItem = NO;
                         }
                         [dummyDragItem setDraggingFrame:rect contents:[view draggingImage]];
                         [dragItems addObject:dummyDragItem];
@@ -479,7 +479,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             
             NSDraggingSession *session = [self beginDraggingSessionWithItems:dragItems event:theEvent source:self];
             [session setDraggingFormation:NSDraggingFormationStack];
-            if (hasFirstItem)
+            if (selectLeaderIndex)
                 [session setDraggingLeaderIndex:0];
         }
         
