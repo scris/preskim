@@ -464,6 +464,7 @@ static char SKThumbnailViewThumbnailObservationContext;
                 [dragItems addObject:dragItem];
             } else {
                 NSUInteger pageIndex = [[self thumbnail] pageIndex];
+                NSCollectionView *collectionView = [self collectionView];
                 [draggedIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
                     if (idx == pageIndex) {
                         [dragItems addObject:dragItem];
@@ -472,7 +473,7 @@ static char SKThumbnailViewThumbnailObservationContext;
                         [dummyItem setData:[NSData data] forType:SKPasteboardTypeDummy];
                         NSDraggingItem *dummyDragItem = [[NSDraggingItem alloc] initWithPasteboardWriter:dummyItem];
                         NSRect rect;
-                        SKThumbnailView *view = (SKThumbnailView *)[[[self collectionView] itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
+                        SKThumbnailView *view = (SKThumbnailView *)[[collectionView itemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]] view];
                         if (view)
                             rect = [self convertRect:[view draggingFrame] fromView:view];
                         else
