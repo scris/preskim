@@ -445,9 +445,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([NSApp willDragMouse]) {
         
-        NSUInteger pageIndex = [[self thumbnail] pageIndex];
         NSIndexSet *draggedIndexes = [self copiedIndexes];
-        
         id<NSPasteboardWriting> item = [[[self thumbnail] page] filePromiseForPageIndexes:draggedIndexes];
         
         if (item) {
@@ -465,6 +463,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             if (draggedIndexes == nil) {
                 [dragItems addObject:dragItem];
             } else {
+                NSUInteger pageIndex = [[self thumbnail] pageIndex];
                 [draggedIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
                     if (idx == pageIndex) {
                         [dragItems addObject:dragItem];
