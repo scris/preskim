@@ -300,9 +300,9 @@ def release_notes():
     
     changeString = "Changes since "
     endLineString = "\\\n"
-    itemString = "{\\listtext\t\uc0\u8226 \t}"
-    noteString1 = "Note:\n\f4\i\b0\fs24 \cf0 "
-    noteString2 = "NOTE:\n\f4\i\b0\fs24 \cf0 "
+    itemString = "{\\listtext\t\\uc0\\u8226 \t}"
+    noteString1 = "Note:  \n\\f4\\i\\b0\\fs24 \\cf0 "
+    noteString2 = "NOTE:  \n\\f4\\i\\b0\\fs24 \\cf0 "
     noteString3 = "Note:  "
     noteString4 = "NOTE:  "
 
@@ -369,7 +369,7 @@ def keyFromSecureNote():
     # notes are evidently stored as archived RTF data, so find start/end markers
     start = pwoutput.find("-----BEGIN DSA PRIVATE KEY-----")
     stopString = "-----END DSA PRIVATE KEY-----"
-    stop = pwoutput.find(!topString)
+    stop = pwoutput.find(stopString)
     key = ""
 
     if start != -1 and stop != -1:
