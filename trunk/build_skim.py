@@ -66,7 +66,7 @@ from subprocess import Popen, PIPE, DEVNULL
 from stat import ST_SIZE
 from time import gmtime, strftime, localtime, sleep
 import plistlib
-import tempfile
+from tempfile import NamedTemporaryFile
 from urllib.request import urlopen
 from getpass import getuser
 
@@ -395,7 +395,7 @@ def signature_and_size(archive_path):
     if dsaKey != "":
         # write to a temporary file that's readably only by owner; minor security issue here since
         # we have to use a named temp file, but it's better than storing unencrypted key
-        with tempfile.NamedTemporaryFile() as keyFile:
+        with NamedTemporaryFile() as keyFile:
             keyFile.write(dsaKey.encode("ascii"))
             keyFile.flush()
             
