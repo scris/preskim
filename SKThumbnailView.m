@@ -446,7 +446,7 @@ static char SKThumbnailViewThumbnailObservationContext;
     if ([NSApp willDragMouse]) {
         
         PDFPage *page = [[self thumbnail] page];
-        NSIndexSet *draggedIndexes = [[page document] allowsPrinting] ? [self copiedIndexes] : nil;
+        NSIndexSet *draggedIndexes = [self copiedIndexes];
         id<NSPasteboardWriting> item = [page filePromiseForPageIndexes:draggedIndexes];
         
         if (item) {
