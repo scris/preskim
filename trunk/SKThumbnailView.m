@@ -445,8 +445,9 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([NSApp willDragMouse]) {
         
-        NSIndexSet *draggedIndexes = [self copiedIndexes];
-        id<NSPasteboardWriting> item = [[[self thumbnail] page] filePromiseForPageIndexes:draggedIndexes];
+        PDFPage *page = [[self thumbnail] page];
+        NSIndexSet *draggedIndexes = [[page document] allowsPrinting] ? [self copiedIndexes] : nil;
+        id<NSPasteboardWriting> item = [page filePromiseForPageIndexes:draggedIndexes];
         
         if (item) {
             
