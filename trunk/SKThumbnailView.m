@@ -247,8 +247,6 @@ static char SKThumbnailViewThumbnailObservationContext;
         thumbnail = newThumbnail;
         [thumbnail addObserver:self forKeyPath:IMAGE_KEY options:NSKeyValueObservingOptionInitial context:&SKThumbnailViewThumbnailObservationContext];
         [thumbnail addObserver:self forKeyPath:LABEL_KEY options:NSKeyValueObservingOptionInitial context:&SKThumbnailViewThumbnailObservationContext];
-        if ([self isSelected] || [self highlightLevel] > 0)
-            [self updateLabelHighlight];
     }
 }
 
