@@ -1629,7 +1629,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [overviewContentView setFrame:[oldView frame]];
     [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
     [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
-    [overviewView setAllowsMultipleSelection:isPresentation == NO];
+    [overviewView setAllowsMultipleSelection:isPresentation == NO && [[self pdfDocument] allowsPrinting]];
     
     if (@available(macOS 10.14, *)) {
         if (isPresentation) {
