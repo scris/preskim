@@ -245,7 +245,6 @@ static char SKThumbnailViewThumbnailObservationContext;
         [thumbnail removeObserver:self forKeyPath:IMAGE_KEY context:&SKThumbnailViewThumbnailObservationContext];
         [thumbnail removeObserver:self forKeyPath:LABEL_KEY context:&SKThumbnailViewThumbnailObservationContext];
         thumbnail = newThumbnail;
-        [labelView setObjectValue:[thumbnail label]];
         [thumbnail addObserver:self forKeyPath:IMAGE_KEY options:NSKeyValueObservingOptionInitial context:&SKThumbnailViewThumbnailObservationContext];
         [thumbnail addObserver:self forKeyPath:LABEL_KEY options:NSKeyValueObservingOptionInitial context:&SKThumbnailViewThumbnailObservationContext];
         if ([self isSelected] || [self highlightLevel] > 0)
@@ -541,11 +540,6 @@ static char SKThumbnailViewThumbnailObservationContext;
     } else {
         [self setMenuHighlighted:flag];
     }
-}
-
-- (void)handleMenuDidEndTracking:(NSNotification *)notification {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSMenuDidEndTrackingNotification object:[notification object]];
-    [self applyMenuHighlighted:NO];
 }
 
 - (void)willOpenMenu:(NSMenu *)menu
