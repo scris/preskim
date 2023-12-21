@@ -41,12 +41,13 @@
 
 static inline SKAttributeTemplate *copyTemplateForLink(id aLink, NSRange range) {
     SKAttributeTemplate *linkTemplate = nil;
+    Class aClass = [aLink class];
     if ([aLink isKindOfClass:[NSURL class]])
         aLink = [[aLink absoluteString] stringByRemovingPercentEncoding];
     if ([aLink isKindOfClass:[NSString class]]) {
         NSArray *template = [SKTemplateParser arrayByParsingTemplateString:aLink];
         if ([template count] > 1 || ([template count] == 1 && [(SKTemplateTag *)[template lastObject] type] != SKTemplateTagText))
-            linkTemplate = [[SKAttributeTemplate alloc] initWithTemplate:template range:range attributeClass:[aLink class]];
+            linkTemplate = [[SKAttributeTemplate alloc] initWithTemplate:template range:range attributeClass:aClass];
     }
     return linkTemplate;
 }
