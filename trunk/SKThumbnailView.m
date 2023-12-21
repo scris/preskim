@@ -69,10 +69,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 static char SKThumbnailViewThumbnailObservationContext;
 
+@interface SKThumbnailView ()
+@property (nonatomic, readonly) SKOverviewView *collectionView;
+@end
+
 @implementation SKThumbnailView
 
 @synthesize selected, menuHighlighted, thumbnail, backgroundStyle, highlightLevel, controller;
-@dynamic marked;
+@dynamic marked, collectionView;
 
 - (void)commonInit {
     NSRect bounds = [self bounds];
