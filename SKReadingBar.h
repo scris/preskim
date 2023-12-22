@@ -87,7 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol SKReadingBarDelegate <NSObject>
 
-- (void)readingBarDidChangeBounds:(NSRect)oldBounds onPage:(PDFPage *)oldPage toBounds:(NSRect)newBounds onPage:(PDFPage *)newPage scroll:(BOOL)shouldScroll;
+- (void)readingBarDidChangeBounds:(NSRect)oldBounds onPage:(nullable PDFPage *)oldPage toBounds:(NSRect)newBounds onPage:(nullable PDFPage *)newPage scroll:(BOOL)shouldScroll;
 
 @end
 
