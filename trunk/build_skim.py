@@ -333,7 +333,7 @@ def release_notes():
             bugsFixed.append(relNotes[start:end])
     
     endNote = endNew
-    start = relNotes.find("New Features")
+    start = relNotes.find("New Features", 0, endNew)
     if start != -1:
         endNote = start
         while True:
