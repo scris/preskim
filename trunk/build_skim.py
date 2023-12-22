@@ -364,7 +364,7 @@ def release_notes():
         end = relNotes.find("\n", start, endNote)
         if end > start:
             note = relNotes[start:end].strip()
-
+    
     return newFeatures, bugsFixed, note
 
 def keyFromSecureNote():
