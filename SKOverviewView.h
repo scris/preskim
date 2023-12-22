@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) SEL singleClickAction, doubleClickAction;
 @property (nonatomic, nullable, strong) SKTypeSelectHelper *typeSelectHelper;
 
-- (id)newViewWithIdentifier:(NSString *)identifier;
+- (nullable id)newViewWithIdentifier:(NSString *)identifier;
 - (void)cacheView:(id)view;
 
 @end
