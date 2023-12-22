@@ -346,16 +346,24 @@ def release_notes():
     
     note = ""
     start = relNotes.find(noteString1, 0, endNote)
-    if start == -1:
-        start = relNotes.find(noteString2, 0, endNote)
-        if start == -1:
-            start = relNotes.find(noteString3, 0, endNote)
-            if start == -1:
-                start = relNotes.find(noteString4, 0, endNote)
     if start != -1:
-        end = relNotes.find(relNotes, start, endNote)
+        start += len(noteString1)
+    else:
+        start = relNotes.find(noteString2, 0, endNote)
+        if start != -1:
+            start += len(noteString2)
+        else:
+            start = relNotes.find(noteString3, 0, endNote)
+            if start != -1:
+                start += len(noteString3)
+            else:
+                start = relNotes.find(noteString4, 0, endNote)
+                if start != -1:
+                    start += len(noteString4)
+    if start != -1:
+        end = relNotes.find("\n", start, endNote)
         if end > start:
-            note = strip(relNotes[start:end])
+            note = relNotes[start:end].strip()
 
     return newFeatures, bugsFixed, note
 
@@ -427,17 +435,17 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     
     relNotes = "\n<h1>Version " + newVersionString + "</h1>\n"
     if len(note) > 0:
-        "\n<p>\n<em><b>NOTE:</b> " + note + "</em>\n</p>\n"
+        relNotes += "\n<p>\n<em><b>NOTE:</b> " + note + "</em>\n</p>\n"
     if len(newFeatures) > 0:
-        relNotes = relNotes + "\n<h2>New Features</h2>\n<ul>\n"
+        relNotes += "\n<h2>New Features</h2>\n<ul>\n"
         for item in newFeatures:
-            relNotes = relNotes + "<li>" + item + "</li>\n"
+            relNotes += "<li>" + item + "</li>\n"
         relNotes = relNotes + "</ul>\n"
     if len(bugsFixed) > 0:
-        relNotes = relNotes + "\n<h2>Bugs Fixed</h2>\n<ul>\n"
+        relNotes += "\n<h2>Bugs Fixed</h2>\n<ul>\n"
         for item in bugsFixed:
-            relNotes = relNotes + "<li>" + item + "</li>\n"
-        relNotes = relNotes + "</ul>\n"
+            relNotes += "<li>" + item + "</li>\n"
+        relNotes += "</ul>\n"
     
     # the new item string for the appcast
     newItemString = """<?xml version="1.0" encoding="utf-8"?>
@@ -480,15 +488,15 @@ def write_appcast_and_release_notes(newVersion, newVersionString, minimumSystemV
     # construct the ReadMe file
     readMe = "Release notes for Skim version " + newVersionString + "\n"
     if len(note) > 0:
-        readMe = readMe + "\nNOTE: " + note + "\n"
+        readMe += "\nNOTE: " + note + "\n"
     if len(newFeatures) > 0:
-        readMe = readMe + "\nNew Features\n"
+        readMe += "\nNew Features\n"
         for item in newFeatures:
-            readMe = readMe + "  *  " + item + "\n"
+            readMe += "  *  " + item + "\n"
     if len(bugsFixed) > 0:
-        readMe = readMe + "\nBugs Fixed\n"
+        readMe += "\nBugs Fixed\n"
         for item in bugsFixed:
-            readMe = readMe + "  *  " + item + "\n"
+            readMe += "  *  " + item + "\n"
     
     # write the ReadMe file
     readMePath = os.path.join(outputPath , "ReadMe-" + newVersionString + ".txt")
