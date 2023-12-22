@@ -299,7 +299,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 }
 
 - (instancetype)init {
-    return [self initWithTemplate:nil range:NSMakeRange(0, 0) attributeClass:NULL];
+    return [self initWithTemplate:nil range:NSMakeRange(0, 0) attributeClass:[NSString class]];
 }
 
 @end

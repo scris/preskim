@@ -185,11 +185,11 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
     Class attributeClass;
 }
 
-- (instancetype)initWithTemplate:(nullable NSArray *)aTemplate range:(NSRange)aRange attributeClass:(nullable Class)aClass;
+- (instancetype)initWithTemplate:(nullable NSArray *)aTemplate range:(NSRange)aRange attributeClass:(Class)aClass;
 
 @property (nonatomic, nullable, readonly) NSArray *template;
 @property (nonatomic, readonly) NSRange range;
-@property (nonatomic, nullable, readonly) Class attributeClass;
+@property (nonatomic, readonly) Class attributeClass;
 
 @end
 
