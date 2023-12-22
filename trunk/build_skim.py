@@ -381,7 +381,8 @@ def keyFromSecureNote():
     key = ""
 
     if start != -1 and stop != -1:
-        key = pwoutput[start:stop] + stopString
+        stop += len(stopString)
+        key = pwoutput[start:stop]
         
         # replace RTF end-of-lines
         key = key.replace("\\134\\012", "\n")
