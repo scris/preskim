@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 @property (nonatomic, nullable, readonly) SKBookmark *scriptingParent;
 @property (nonatomic, nullable, readonly) NSArray<SKBookmark *> *entireContents;
 
-- (NSArray *)bookmarks;
+- (NSArray<SKBookmark *> *)bookmarks;
 - (void)insertObject:(SKBookmark *)bookmark inBookmarksAtIndex:(NSUInteger)anIndex;
 - (void)removeObjectFromBookmarksAtIndex:(NSUInteger)anIndex;
 
