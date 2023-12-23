@@ -71,11 +71,11 @@ extern NSString *SKPageLabelsChangedNotification;
 @property (nonatomic) NSTextAlignment defaultAlignment;
 @property (nonatomic) PDFTextAnnotationIconType defaultIconType;
 
-- (NSArray<SKBookmark *> *)bookmarks;
+@property (nonatomic, readonly) NSArray<SKBookmark *> *bookmarks;
 - (void)insertObject:(SKBookmark *)bookmark inBookmarksAtIndex:(NSUInteger)anIndex;
 - (void)removeObjectFromBookmarksAtIndex:(NSUInteger)anIndex;
 
-- (NSArray<SKDownload *> *)downloads;
+@property (nonatomic, readonly) NSArray<SKDownload *> *downloads;
 - (void)insertObject:(SKDownload *)download inDownloadsAtIndex:(NSUInteger)anIndex;
 - (void)removeObjectFromDownloadsAtIndex:(NSUInteger)anIndex;
 

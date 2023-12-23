@@ -71,8 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (IBAction)moveToTrash:(nullable id)sender;
 
-- (NSArray<SKDownload *> *)downloads;
-- (NSUInteger)countOfDownloads;
+@property (nonatomic, readonly) NSArray<SKDownload *> *downloads;
+@property (nonatomic, readonly) NSUInteger countOfDownloads;
 - (SKDownload *)objectInDownloadsAtIndex:(NSUInteger)anIndex;
 - (void)insertObject:(SKDownload *)download inDownloadsAtIndex:(NSUInteger)anIndex;
 - (void)removeObjectFromDownloadsAtIndex:(NSUInteger)anIndex;

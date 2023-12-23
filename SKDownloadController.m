@@ -93,6 +93,7 @@ static NSString *SKDownloadsIdentifier = nil;
 @implementation SKDownloadController
 
 @synthesize tableView, clearButton;
+@dynamic downloads, countOfDownloads;
 
 + (void)initialize {
     SKINITIALIZE;
