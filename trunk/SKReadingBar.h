@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)goToLine:(NSInteger)line onPage:(PDFPage *)page;
 
-- (NSUInteger)countOfLines;
+@property (nonatomic, readonly) NSUInteger countOfLines;
 - (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex;
 
 @property (weak, nonatomic, readonly) NSData *boundsAsQDRect;

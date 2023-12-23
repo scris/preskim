@@ -91,7 +91,7 @@ extern NSString *SKSkimFileDidSaveNotification;
 @property (nonatomic, nullable, readonly) NSArray<NSString *> *tags;
 @property (nonatomic, readonly) double rating;
 
-- (nullable NSArray<PDFAnnotation *> *)notes;
+@property (nonatomic, nullable, readonly) NSArray<PDFAnnotation *> *notes;
 - (PDFAnnotation *)valueInNotesWithUniqueID:(NSString *)aUniqueID;
 - (void)insertObject:(PDFAnnotation *)newNote inNotesAtIndex:(NSUInteger)anIndex;
 - (void)removeObjectFromNotesAtIndex:(NSUInteger)anIndex;

@@ -60,7 +60,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
 @implementation SKDisplayPreferences
 
 @synthesize normalColorWell, fullScreenColorWell, colorSwatch, addRemoveColorButton;
-@dynamic allowsDarkMode;
+@dynamic allowsDarkMode, countOfSizes;
 
 - (void)dealloc {
     if (@available(macOS 10.14, *)) {

@@ -84,8 +84,8 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 @property (nonatomic, nullable, weak) SKBookmark *parent;
 @property (nonatomic, readonly) NSArray *containingBookmarks;
 
-- (NSArray<SKBookmark *> *)children;
-- (NSUInteger)countOfChildren;
+@property (nonatomic, readonly) NSArray<SKBookmark *> *children;
+@property (nonatomic, readonly) NSUInteger countOfChildren;
 - (SKBookmark *)objectInChildrenAtIndex:(NSUInteger)anIndex;
 - (NSArray<SKBookmark *> *)childrenAtIndexes:(NSIndexSet *)indexes;
 - (void)insertObject:(SKBookmark *)child inChildrenAtIndex:(NSUInteger)anIndex;
@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 @property (nonatomic, nullable, readonly) SKBookmark *scriptingParent;
 @property (nonatomic, nullable, readonly) NSArray<SKBookmark *> *entireContents;
 
-- (NSArray<SKBookmark *> *)bookmarks;
+@property (nonatomic, readonly) NSArray<SKBookmark *> *bookmarks;
 - (void)insertObject:(SKBookmark *)bookmark inBookmarksAtIndex:(NSUInteger)anIndex;
 - (void)removeObjectFromBookmarksAtIndex:(NSUInteger)anIndex;
 

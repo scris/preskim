@@ -158,7 +158,7 @@ enum {
 @implementation SKMainDocument
 
 @synthesize mainWindowController;
-@dynamic pdfDocument, pdfView, synchronizer, snapshots, tags, rating, currentPage, activeNote, richText, selectionSpecifier, selectionQDRect,selectionPage, pdfViewSettings;
+@dynamic pdfDocument, pdfView, synchronizer, snapshots, tags, rating, notes, currentPage, activeNote, richText, selectionSpecifier, selectionQDRect, selectionPage, pdfViewSettings;
 
 + (BOOL)isPDFDocument { return YES; }
 

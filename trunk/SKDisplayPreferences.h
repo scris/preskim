@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) BOOL allowsDarkMode;
 
-- (NSUInteger)countOfSizes;
+@property (nonatomic, readonly) NSUInteger countOfSizes;
 - (NSNumber *)objectInSizesAtIndex:(NSUInteger)anIndex;
 
 - (IBAction)changeBackgroundColor:(nullable id)sender;

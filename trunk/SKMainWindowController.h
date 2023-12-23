@@ -237,34 +237,31 @@ enum {
 
 @property (nonatomic, readonly) BOOL hasNotes;
 
-- (NSArray<PDFAnnotation *> *)notes;
-- (NSUInteger)countOfNotes;
+@property (nonatomic, readonly) NSArray<PDFAnnotation *> *notes;
+@property (nonatomic, readonly) NSUInteger countOfNotes;
 - (PDFAnnotation *)objectInNotesAtIndex:(NSUInteger)theIndex;
 - (void)insertObject:(PDFAnnotation *)note inNotesAtIndex:(NSUInteger)theIndex;
 - (void)insertNotes:(NSArray *)newNotes atIndexes:(NSIndexSet *)theIndexes;
 - (void)removeObjectFromNotesAtIndex:(NSUInteger)theIndex;
 - (void)removeAllObjectsFromNotes;
 
-- (NSArray<SKThumbnail *> *)thumbnails;
-- (void)setThumbnails:(nullable NSArray<SKThumbnail *> *)newThumbnails;
+@property (nonatomic, nullable, copy) NSArray<SKThumbnail *> *thumbnails;
 
-- (NSArray<SKSnapshotWindowController *> *)snapshots;
-- (NSUInteger)countOfSnapshots;
+@property (nonatomic, readonly) NSArray<SKSnapshotWindowController *> *snapshots;
+@property (nonatomic, readonly) NSUInteger countOfSnapshots;
 - (SKSnapshotWindowController *)objectInSnapshotsAtIndex:(NSUInteger)theIndex;
 - (void)insertObject:(SKSnapshotWindowController *)snapshot inSnapshotsAtIndex:(NSUInteger)theIndex;
 - (void)removeObjectFromSnapshotsAtIndex:(NSUInteger)theIndex;
 - (void)removeAllObjectsFromSnapshots;
 
-- (NSArray<PDFSelection *> *)searchResults;
-- (void)setSearchResults:(nullable NSArray *)newSearchResults;
-- (NSUInteger)countOfSearchResults;
+@property (nonatomic, nullable, copy) NSArray<PDFSelection *> *searchResults;
+@property (nonatomic, readonly) NSUInteger countOfSearchResults;
 - (PDFSelection *)objectInSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)insertObject:(PDFSelection *)searchResult inSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)removeObjectFromSearchResultsAtIndex:(NSUInteger)theIndex;
 
-- (NSArray<SKGroupedSearchResult *> *)groupedSearchResults;
-- (void)setGroupedSearchResults:(nullable NSArray *)newGroupedSearchResults;
-- (NSUInteger)countOfGroupedSearchResults;
+@property (nonatomic, nullable, copy) NSArray<SKGroupedSearchResult *> *groupedSearchResults;
+@property (nonatomic, readonly) NSUInteger countOfGroupedSearchResults;
 - (SKGroupedSearchResult *)objectInGroupedSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)insertObject:(SKGroupedSearchResult *)groupedSearchResult inGroupedSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)removeObjectFromGroupedSearchResultsAtIndex:(NSUInteger)theIndex;
