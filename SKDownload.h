@@ -66,7 +66,7 @@ typedef NS_ENUM(NSInteger, SKDownloadStatus) {
     BOOL receivedResponse;
 }
 
-@property (nonatomic, readonly) NSDictionary *properties;
+@property (nonatomic, readonly) NSDictionary<NSString *, id> *properties;
 
 @property (nonatomic, readonly) SKDownloadStatus status;
 
@@ -100,7 +100,7 @@ typedef NS_ENUM(NSInteger, SKDownloadStatus) {
 @property (class, nonatomic, readonly) NSImage *resumeImage;
 
 - (instancetype)initWithURL:(nullable NSURL *)aURL;
-- (instancetype)initWithProperties:(NSDictionary *)properties;
+- (instancetype)initWithProperties:(NSDictionary<NSString *, id> *)properties;
 
 - (void)start;
 - (void)cancel;

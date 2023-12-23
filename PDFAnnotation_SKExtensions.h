@@ -59,15 +59,15 @@ extern NSString *SKPasteboardTypeSkimNote;
 
 + (nullable PDFAnnotation *)newSkimNoteWithBounds:(NSRect)bounds forType:(NSString *)type;
 
-+ (nullable PDFAnnotation *)newSkimNoteWithProperties:(NSDictionary *)dict;
++ (nullable PDFAnnotation *)newSkimNoteWithProperties:(NSDictionary<NSString *, id> *)dict;
 
-+ (nullable PDFAnnotation *)newSkimNoteWithPaths:(NSArray *)paths;
++ (nullable PDFAnnotation *)newSkimNoteWithPaths:(NSArray<NSBezierPath *> *)paths;
 
 + (nullable PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forType:(NSString *)type;
 
-+ (nullable NSArray *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection forType:(NSString *)type;
++ (nullable NSArray<NSArray *> *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection forType:(NSString *)type;
 
-+ (NSDictionary *)textToNoteSkimNoteProperties:(NSDictionary *)properties;
++ (NSDictionary<NSString *, id> *)textToNoteSkimNoteProperties:(NSDictionary<NSString *, id> *)properties;
 
 @property (nonatomic, nullable, readonly) NSString *fdfString;
 
@@ -75,16 +75,16 @@ extern NSString *SKPasteboardTypeSkimNote;
 
 @property (nonatomic) PDFBorderStyle borderStyle;
 @property (nonatomic) CGFloat lineWidth;
-@property (nonatomic, nullable, copy) NSArray *dashPattern;
+@property (nonatomic, nullable, copy) NSArray<NSNumber *> *dashPattern;
 
 @property (nonatomic) NSPoint observedStartPoint;
 @property (nonatomic) NSPoint observedEndPoint;
 
 @property (nonatomic, readonly) CGFloat pathInset;
 
-@property (nonatomic, nullable, copy) NSArray *bezierPaths;
+@property (nonatomic, nullable, copy) NSArray<NSBezierPath *> *bezierPaths;
 
-@property (nonatomic, nullable, readonly) NSArray *pagePaths;
+@property (nonatomic, nullable, readonly) NSArray<NSBezierPath *> *pagePaths;
 
 @property (nonatomic, nullable, readonly) NSImage *image;
 @property (nonatomic, nullable, readonly) NSAttributedString *text;
@@ -158,7 +158,7 @@ extern NSString *SKPasteboardTypeSkimNote;
 @property (nonatomic, readonly) PDFLineStyle scriptingStartLineStyle;
 @property (nonatomic, readonly) PDFLineStyle scriptingEndLineStyle;
 @property (nonatomic, nullable, readonly) id selectionSpecifier;
-@property (nonatomic, nullable, readonly) NSArray *scriptingPointLists;
+@property (nonatomic, nullable, readonly) NSArray<NSArray<NSData *> *> *scriptingPointLists;
 
 - (void)handleEditScriptCommand:(NSScriptCommand *)command;
 

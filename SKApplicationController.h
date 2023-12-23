@@ -66,16 +66,16 @@ extern NSString *SKPageLabelsChangedNotification;
 
 @property (nonatomic, nullable, strong) IBOutlet NSMenu *noteColumnsMenu, *noteTypeMenu;
 
-@property (nonatomic, copy) NSArray *favoriteColors;
+@property (nonatomic, copy) NSArray<NSColor *> *favoriteColors;
 @property (nonatomic) PDFLineStyle defaultStartLineStyle, defaultEndLineStyle;
 @property (nonatomic) NSTextAlignment defaultAlignment;
 @property (nonatomic) PDFTextAnnotationIconType defaultIconType;
 
-- (NSArray *)bookmarks;
+- (NSArray<SKBookmark *> *)bookmarks;
 - (void)insertObject:(SKBookmark *)bookmark inBookmarksAtIndex:(NSUInteger)anIndex;
 - (void)removeObjectFromBookmarksAtIndex:(NSUInteger)anIndex;
 
-- (NSArray *)downloads;
+- (NSArray<SKDownload *> *)downloads;
 - (void)insertObject:(SKDownload *)download inDownloadsAtIndex:(NSUInteger)anIndex;
 - (void)removeObjectFromDownloadsAtIndex:(NSUInteger)anIndex;
 

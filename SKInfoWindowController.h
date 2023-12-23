@@ -44,20 +44,20 @@ NS_ASSUME_NONNULL_BEGIN
     NSTableView *summaryTableView;
     NSTableView *attributesTableView;
     NSTabView *tabView;
-    NSDictionary *info;
-    NSArray *summaryKeys;
-    NSArray *attributesKeys;
-    NSDictionary *labels;
+    NSDictionary<NSString *, id> *info;
+    NSArray<NSString *> *summaryKeys;
+    NSArray<NSString *> *attributesKeys;
+    NSDictionary<NSString *, NSString *> *labels;
 }
 
 @property (nonatomic, nullable, strong) IBOutlet NSTableView *summaryTableView, *attributesTableView;
 @property (nonatomic, nullable, strong) IBOutlet NSTabView *tabView;
-@property (nonatomic, nullable, copy) NSDictionary *info;
-@property (weak, nonatomic, readonly) NSArray *keys;
+@property (nonatomic, nullable, copy) NSDictionary<NSString *, id> *info;
+@property (weak, nonatomic, readonly) NSArray<NSString *> *keys;
 
 @property (class, nonatomic, readonly) SKInfoWindowController *sharedInstance;
 
-- (NSDictionary *)infoForDocument:(NSDocument *)doc;
+- (NSDictionary<NSString *, id> *)infoForDocument:(NSDocument *)doc;
 
 @end
 

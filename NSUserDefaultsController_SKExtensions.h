@@ -43,8 +43,8 @@
 
 - (void)addObserver:(NSObject *)anObserver forKey:(NSString *)key context:(void *)context;
 - (void)removeObserver:(NSObject *)anObserver forKey:(NSString *)key context:(void *)context;
-- (void)addObserver:(NSObject *)anObserver forKeys:(NSArray *)keys context:(void *)context;
-- (void)removeObserver:(NSObject *)anObserver forKeys:(NSArray *)keys context:(void *)context;
-- (void)revertToInitialValuesForKeys:(NSArray *)keys;
+- (void)addObserver:(NSObject *)anObserver forKeys:(NSArray<NSString *> *)keys context:(void *)context;
+- (void)removeObserver:(NSObject *)anObserver forKeys:(NSArray<NSString *> *)keys context:(void *)context;
+- (void)revertToInitialValuesForKeys:(NSArray<NSString *> *)keys;
 
 @end

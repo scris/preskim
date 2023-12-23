@@ -52,8 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
     NSSearchField *searchField;
     SKStatusBar *statusBar;
     NSDictionary *toolbarItems;
-    NSArray *notes;
-    NSArray *unsupportedNotes;
+    NSArray<PDFAnnotation *> *notes;
+    NSArray<NSDictionary<NSString *, id> *> *unsupportedNotes;
     PDFDocument *pdfDocument;
     NSURL *sourceFileURL;
     NSMapTable *rowHeights;
@@ -71,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, strong) IBOutlet SKStatusBar *statusBar;
 @property (nonatomic, nullable, strong) IBOutlet NSArrayController *arrayController;
 @property (nonatomic, nullable, strong) IBOutlet NSSearchField *searchField;
-@property (nonatomic, readonly,) NSArray *notes;
+@property (nonatomic, readonly,) NSArray<PDFAnnotation *> *notes;
 @property (nonatomic, nullable, readonly) PDFDocument *pdfDocument;
 @property (nonatomic, nullable, readonly) NSWindow *window;
 @property (nonatomic, nullable, strong) NSURL *sourceFileURL;

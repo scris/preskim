@@ -51,10 +51,10 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL displaysRTL;
     BOOL displaysPageBreaks;
     NSInteger displayBox;
-    NSDictionary *defaultSettings;
+    NSDictionary<NSString *, id> *defaultSettings;
 }
 
-- (instancetype)initWithSettings:(nullable NSDictionary *)settings defaultSettings:(nullable NSDictionary *)aDefaultSettings;
+- (instancetype)initWithSettings:(nullable NSDictionary<NSString *, id> *)settings defaultSettings:(nullable NSDictionary<NSString *, id> *)aDefaultSettings;
 
 @property (nonatomic, getter=isCustom) BOOL custom;
 
@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL displaysAsBook, displaysRTL, displaysPageBreaks;
 @property (nonatomic) NSInteger displayBox;
 
-@property (nonatomic, copy) NSDictionary *settings;
+@property (nonatomic, copy) NSDictionary<NSString *, id> *settings;
 
 @end
 

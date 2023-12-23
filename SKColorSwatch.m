@@ -175,7 +175,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
             if ([view isKindOfClass:[SKColorSwatchBackgroundView class]])
                 backgroundView = (SKColorSwatchBackgroundView *)view;
             else if ([view isKindOfClass:[SKColorSwatchItemView class]])
-                [itemViews addObject:view];
+                [itemViews addObject:(SKColorSwatchItemView *)view];
         }
     }
     return self;

@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSPasteboard (SKExtensions)
 
-- (BOOL)writeURLs:(NSArray *)URLs names:(nullable NSArray *)names;
+- (BOOL)writeURLs:(NSArray<NSURL *> *)URLs names:(nullable NSArray<NSString *> *)names;
 
 @end
 

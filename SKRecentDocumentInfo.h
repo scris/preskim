@@ -45,16 +45,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SKRecentDocumentInfo : NSObject {
     SKAlias *alias;
     NSUInteger pageIndex;
-    NSArray *snapshots;
+    NSArray<NSDictionary<NSString *, id> *> *snapshots;
 }
 
-- (instancetype)initWithProperties:(NSDictionary *)properties;
-- (instancetype)initWithURL:(NSURL *)fileURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray *)aSnapshots;
+- (instancetype)initWithProperties:(NSDictionary<NSString *, id> *)properties;
+- (instancetype)initWithURL:(NSURL *)fileURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray<NSDictionary<NSString *, id> *> *)aSnapshots;
 
 @property (nonatomic, nullable, readonly) NSURL *fileURL;
 @property (nonatomic, readonly) NSUInteger pageIndex;
-@property (nonatomic, nullable, readonly) NSArray *snapshots;
-@property (nonatomic, readonly) NSDictionary *properties;
+@property (nonatomic, nullable, readonly) NSArray<NSDictionary<NSString *, id> *> *snapshots;
+@property (nonatomic, readonly) NSDictionary<NSString *, id> *properties;
 
 @end
 

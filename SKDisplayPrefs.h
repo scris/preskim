@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 @property (nonatomic, readonly) NSString *name;
-@property (nonatomic, strong) NSDictionary *pdfViewSettings;
+@property (nonatomic, strong) NSDictionary<NSString *, id> *pdfViewSettings;
 @property (nonatomic, nullable, strong) NSColor *backgroundColor;
 @property (nonatomic) CGFloat sepiaTone;
 @property (nonatomic, nullable, strong) NSColor *whitePoint;

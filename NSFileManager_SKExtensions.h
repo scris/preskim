@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSFileManager (SKExtensions)
 
-@property (nonatomic, readonly) NSArray *applicationSupportDirectoryURLs;
+@property (nonatomic, readonly) NSArray<NSURL *> *applicationSupportDirectoryURLs;
 
 @property (nonatomic, readonly) NSURL *uniqueChewableItemsDirectoryURL;
 

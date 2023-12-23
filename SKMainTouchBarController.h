@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSSegmentedControl *fullScreenButton;
     NSSegmentedControl *presentationButton;
     SKColorPicker *colorPicker;
-    NSMutableDictionary *touchBarItems;
+    NSMutableDictionary<NSString *, NSTouchBarItem *> *touchBarItems;
 }
 
 @property (nonatomic, nullable, weak) SKMainWindowController *mainController;

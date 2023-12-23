@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSButton *resumeButton;
     NSButton *cancelButton;
     NSButton *removeButton;
-    NSMutableArray *downloads;
+    NSMutableArray<SKDownload *> *downloads;
     NSURLSession *session;
     NSMapTable *downloadsForTasks;
     NSMutableDictionary *touchBarItems;
@@ -71,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (IBAction)moveToTrash:(nullable id)sender;
 
-- (NSArray *)downloads;
+- (NSArray<SKDownload *> *)downloads;
 - (NSUInteger)countOfDownloads;
 - (SKDownload *)objectInDownloadsAtIndex:(NSUInteger)anIndex;
 - (void)insertObject:(SKDownload *)download inDownloadsAtIndex:(NSUInteger)anIndex;

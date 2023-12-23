@@ -59,7 +59,7 @@ typedef NS_ENUM(NSInteger, SKLineWellDisplayStyle) {
 @interface SKLineWell : NSControl <NSDraggingSource, NSAccessibilityButton> {
     CGFloat lineWidth;
     PDFBorderStyle style;
-    NSArray *dashPattern;
+    NSArray<NSNumber *> *dashPattern;
     PDFLineStyle startLineStyle;
     PDFLineStyle endLineStyle;
     
@@ -80,7 +80,7 @@ typedef NS_ENUM(NSInteger, SKLineWellDisplayStyle) {
 @property (nonatomic) SKLineWellDisplayStyle displayStyle;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic) PDFBorderStyle style;
-@property (nonatomic, nullable, copy) NSArray *dashPattern;
+@property (nonatomic, nullable, copy) NSArray<NSNumber *> *dashPattern;
 @property (nonatomic) PDFLineStyle startLineStyle, endLineStyle;
 
 - (void)activate:(BOOL)exclusive;

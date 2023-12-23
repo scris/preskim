@@ -46,7 +46,7 @@ extern NSString *SKGroupedSearchResultCountKey;
 @interface SKGroupedSearchResult : NSObject {
     PDFPage *page;
     NSUInteger maxCount;
-    NSMutableArray *matches;
+    NSMutableArray<PDFSelection *> *matches;
 }
 
 @property (nonatomic, readonly) PDFPage *page;
@@ -54,7 +54,7 @@ extern NSString *SKGroupedSearchResultCountKey;
 @property (nonatomic, readonly) NSUInteger count;
 @property (nonatomic) NSUInteger maxCount;
 @property (weak, nonatomic, readonly) NSString *label;
-@property (nonatomic, readonly) NSArray *matches;
+@property (nonatomic, readonly) NSArray<PDFSelection *> *matches;
 
 + (instancetype)groupedSearchResultWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount;
 - (instancetype)initWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount;

@@ -117,7 +117,7 @@ extern SKFDFString SKFDFLineStyleFromPDFLineStyle(PDFLineStyle lineStyle);
 
 
 @interface SKFDFParser : NSObject
-+ (nullable NSArray *)noteDictionariesFromFDFData:(NSData *)data;
++ (nullable NSArray<NSDictionary<NSString *, id> *> *)noteDictionariesFromFDFData:(NSData *)data;
 @end
 
 

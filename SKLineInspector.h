@@ -60,7 +60,7 @@ typedef NS_ENUM(NSUInteger, SKLineChangeAction) {
     SKLineWell *lineWell;
     CGFloat lineWidth;
     PDFBorderStyle style;
-    NSArray *dashPattern;
+    NSArray<NSNumber *> *dashPattern;
     PDFLineStyle startLineStyle;
     PDFLineStyle endLineStyle;
     SKLineChangeAction currentLineChangeAction;
@@ -70,7 +70,7 @@ typedef NS_ENUM(NSUInteger, SKLineChangeAction) {
 @property (nonatomic, nullable, strong) IBOutlet SKLineWell *lineWell;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic) PDFBorderStyle style;
-@property (nonatomic, nullable, copy) NSArray *dashPattern;
+@property (nonatomic, nullable, copy) NSArray<NSNumber *> *dashPattern;
 @property (nonatomic) PDFLineStyle startLineStyle, endLineStyle;
 @property (nonatomic, readonly) SKLineChangeAction currentLineChangeAction;
 

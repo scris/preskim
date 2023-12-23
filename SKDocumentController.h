@@ -80,7 +80,7 @@ extern NSString *SKDocumentControllerDocumentKey;
 - (void)openDocumentWithURLFromPasteboard:(NSPasteboard *)pboard showNotes:(BOOL)showNotes completionHandler:(void (^)(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error))completionHandler;
 
 - (void)openDocumentWithBookmark:(SKBookmark *)bookmark completionHandler:(void (^)(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error))completionHandler;
-- (void)openDocumentWithBookmarks:(NSArray *)bookmarks completionHandler:(void (^)(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error))completionHandler;
+- (void)openDocumentWithBookmarks:(NSArray<SKBookmark *> *)bookmarks completionHandler:(void (^)(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error))completionHandler;
 
 - (nullable Class)documentClassForContentsOfURL:(NSURL *)inAbsoluteURL;
 

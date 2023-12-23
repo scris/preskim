@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)performSelectorOnce:(SEL)aSelector afterDelay:(NSTimeInterval)delay;
 
 - (NSUInteger)countOfTexLines;
-- (id)objectInTexLinesAtIndex:(NSUInteger)idx;
+- (NSNumber *)objectInTexLinesAtIndex:(NSUInteger)idx;
 
 - (nullable id)handleFormatScriptCommand:(NSScriptCommand *)command;
 

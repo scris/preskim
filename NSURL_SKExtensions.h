@@ -43,9 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSURL (SKExtensions)
 
 + (BOOL)canReadURLFromPasteboard:(NSPasteboard *)pboard;
-+ (nullable NSArray *)readURLsFromPasteboard:(NSPasteboard *)pboard;
++ (nullable NSArray<NSURL *> *)readURLsFromPasteboard:(NSPasteboard *)pboard;
 + (BOOL)canReadFileURLFromPasteboard:(NSPasteboard *)pboard;
-+ (nullable NSArray *)readFileURLsFromPasteboard:(NSPasteboard *)pboard;
++ (nullable NSArray<NSURL *> *)readFileURLsFromPasteboard:(NSPasteboard *)pboard;
 
 - (NSURL *)URLReplacingPathExtension:(NSString *)ext;
 - (NSString *)lastPathComponentReplacingPathExtension:(NSString *)ext;

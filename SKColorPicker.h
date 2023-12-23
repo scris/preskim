@@ -44,11 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SKColorPicker : NSViewController <NSScrubberDataSource, NSScrubberDelegate> {
     NSScrubber *scrubber;
-    NSArray *colors;
+    NSArray<NSColor *> *colors;
     __weak id <SKColorPickerDelegate> delegate;
 }
 
-@property (nonatomic, readonly) NSArray *colors;
+@property (nonatomic, readonly) NSArray<NSColor *> *colors;
 
 @property (nonatomic, nullable, weak) id <SKColorPickerDelegate> delegate;
 

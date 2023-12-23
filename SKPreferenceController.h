@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSButton *resetAllButton;
     NSSegmentedControl *panesButton;
     NSTextView *fieldEditor;
-    NSArray *preferencePanes;
+    NSArray<NSViewController<SKPreferencePane> *> *preferencePanes;
     NSViewController<SKPreferencePane> *currentPane;
     NSMutableArray *history;
     NSUInteger historyIndex;
