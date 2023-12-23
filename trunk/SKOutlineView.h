@@ -76,9 +76,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray *)itemsAtRowIndexes:(NSIndexSet *)indexes;
 
-- (void)delete:(id)sender;
-- (void)copy:(id)sender;
-- (void)paste:(id)sender;
+- (void)delete:(nullable id)sender;
+- (void)copy:(nullable id)sender;
+- (void)paste:(nullable id)sender;
 
 - (void)scrollToBeginningOfDocument:(nullable id)sender;
 - (void)scrollToEndOfDocument:(nullable id)sender;

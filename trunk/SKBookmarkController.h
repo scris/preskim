@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) SKBookmark *bookmarkRoot;
 @property (nonatomic, nullable, readonly) SKBookmark *previousSession;
 
-- (IBAction)openBookmark:(id)sender;
+- (IBAction)openBookmark:(nullable id)sender;
 
 - (IBAction)doubleClickBookmark:(nullable id)sender;
 - (IBAction)insertBookmarkFolder:(nullable id)sender;

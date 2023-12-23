@@ -665,7 +665,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
     return notes;
 }
 
-- (id)valueInNotesWithUniqueID:(NSString *)aUniqueID {
+- (PDFAnnotation *)valueInNotesWithUniqueID:(NSString *)aUniqueID {
     for (PDFAnnotation *annotation in [self notes]) {
         if ([[annotation uniqueID] isEqualToString:aUniqueID])
             return annotation;
@@ -673,7 +673,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
     return nil;
 }
 
-- (void)insertObject:(id)newNote inNotesAtIndex:(NSUInteger)anIndex {
+- (void)insertObject:(PDFAnnotation *)newNote inNotesAtIndex:(NSUInteger)anIndex {
     if ([self isEditable] && [[self document] allowsNotes]) {
         [[self document] addAnnotation:newNote toPage:self];
         [[[self containingDocument] undoManager] setActionName:NSLocalizedString(@"Add Note", @"Undo action name")];
