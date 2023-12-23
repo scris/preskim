@@ -73,9 +73,9 @@ extern NSString *SKSkimFileDidSaveNotification;
     } mdFlags;
 }
 
-- (IBAction)readNotes:(id)sender;
-- (IBAction)convertNotes:(id)sender;
-- (IBAction)moveToTrash:(id)sender;
+- (IBAction)readNotes:(nullable id)sender;
+- (IBAction)convertNotes:(nullable id)sender;
+- (IBAction)moveToTrash:(nullable id)sender;
 
 @property (nonatomic, nullable, readonly) SKMainWindowController *mainWindowController;
 @property (nonatomic, nullable, readonly) PDFDocument *pdfDocument;

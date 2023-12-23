@@ -81,7 +81,7 @@
     return [NSNumber numberWithInteger:order];
 }
 
-- (NSComparisonResult)noteTypeCompare:(id)other {
+- (NSComparisonResult)noteTypeCompare:(NSString *)other {
     return [[self noteTypeOrder] compare:[other noteTypeOrder]];
 }
 

@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString (SKExtensions)
 
-- (NSComparisonResult)noteTypeCompare:(id)other;
+- (NSComparisonResult)noteTypeCompare:(NSString *)other;
 
 @property (nonatomic, readonly) NSString *stringByCollapsingWhitespaceAndNewlinesAndRemovingSurroundingWhitespaceAndNewlines;
 @property (nonatomic, readonly) NSString *stringByRemovingAliens;

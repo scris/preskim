@@ -108,8 +108,8 @@ typedef NS_ENUM(NSInteger, SKDownloadStatus) {
 - (void)cleanup;
 - (void)moveToTrash;
 
-- (void)resume:(id)sender;
-- (void)cancelOrRemove:(id)sender;
+- (void)resume:(nullable id)sender;
+- (void)cancelOrRemove:(nullable id)sender;
 
 - (void)downloadDidWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
 - (void)downloadDidFinishDownloadingToURL:(NSURL *)location;

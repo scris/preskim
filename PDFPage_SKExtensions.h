@@ -109,8 +109,8 @@ extern NSString *SKPDFPageActionRotate;
 - (SKLine *)objectInLinesAtIndex:(NSUInteger)anIndex;
 @property (nonatomic, nullable, readonly) NSTextStorage *richText;
 @property (nonatomic, nullable, readonly) NSArray<PDFAnnotation *> *notes;
-- (nullable id)valueInNotesWithUniqueID:(NSString *)aUniqueID;
-- (void)insertObject:(id)newNote inNotesAtIndex:(NSUInteger)index;
+- (nullable PDFAnnotation *)valueInNotesWithUniqueID:(NSString *)aUniqueID;
+- (void)insertObject:(PDFAnnotation *)newNote inNotesAtIndex:(NSUInteger)index;
 - (void)removeObjectFromNotesAtIndex:(NSUInteger)index;
 
 - (nullable id)handleGrabScriptCommand:(NSScriptCommand *)command;
