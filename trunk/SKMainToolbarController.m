@@ -169,7 +169,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (NSToolbarItem *)toolbarItemForItemIdentifier:(NSString *)identifier {
-    SKToolbarItem *item = [toolbarItems objectForKey:identifier];
+    SKToolbarItem *item = (SKToolbarItem *)[toolbarItems objectForKey:identifier];
     NSMenu *menu;
     NSMenuItem *menuItem;
     

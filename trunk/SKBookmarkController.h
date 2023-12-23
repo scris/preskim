@@ -42,7 +42,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class SKBookmark, SKStatusBar;
+@class SKBookmark, SKRecentDocumentInfo, SKStatusBar;
 
 @interface SKBookmarkController : NSWindowController <NSWindowDelegate, NSToolbarDelegate, NSMenuDelegate, SKOutlineViewDelegate, NSOutlineViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSTouchBarDelegate> {
     SKOutlineView *outlineView;
@@ -56,11 +56,11 @@ NS_ASSUME_NONNULL_BEGIN
     NSButton *previewButton;
     SKBookmark *bookmarkRoot;
     SKBookmark *previousSession;
-    NSMutableArray *recentDocuments;
+    NSMutableArray<SKRecentDocumentInfo *> *recentDocuments;
     NSUndoManager *undoManager;
-    NSArray *draggedBookmarks;
-    NSDictionary *toolbarItems;
-    NSArray *bookmarksCache;
+    NSArray<SKBookmark *> *draggedBookmarks;
+    NSDictionary<NSString *, NSToolbarItem *> *toolbarItems;
+    NSArray<NSDictionary<NSString *, id> *> *bookmarksCache;
     BOOL needsBeginUpdates;
 }
 
@@ -91,9 +91,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeBookmarkAtIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent animate:(BOOL)animate;
 - (void)replaceBookmarkAtIndex:(NSUInteger)anIndex ofBookmark:(SKBookmark *)parent withBookmark:(SKBookmark *)bookmark animate:(BOOL)animate;
 
-- (void)addRecentDocumentForURL:(NSURL *)fileURL pageIndex:(NSUInteger)pageIndex snapshots:(nullable NSArray *)setups;
+- (void)addRecentDocumentForURL:(NSURL *)fileURL pageIndex:(NSUInteger)pageIndex snapshots:(nullable NSArray<NSDictionary<NSString *, id> *> *)setups;
 - (NSUInteger)pageIndexForRecentDocumentAtURL:(NSURL *)fileURL;
-- (NSArray *)snapshotsForRecentDocumentAtURL:(NSURL *)fileURL;
+- (NSArray<NSDictionary<NSString *, id> *> *)snapshotsForRecentDocumentAtURL:(NSURL *)fileURL;
 
 - (BOOL)isBookmarkExpanded:(SKBookmark *)bookmark;
 - (void)setExpanded:(BOOL)flag forBookmark:(SKBookmark *)bookmark;

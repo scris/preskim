@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, nullable, readonly) NSScriptObjectSpecifier *objectSpecifier;
 @property (nonatomic, nullable, readonly) PDFOutline *scriptingParent;
-@property (nonatomic, readonly) NSArray *entireContents;
+@property (nonatomic, readonly) NSArray<PDFOutline *> *entireContents;
 - (NSUInteger)countOfOutlines;
 - (PDFOutline *)objectInOutlinesAtIndex:(NSUInteger)idx;
 @property (nonatomic, nullable, readonly) NSString *scriptingURL;

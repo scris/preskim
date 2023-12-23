@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initIncludingWidgets:(BOOL)includeWidgets;
 
 @property (nonatomic, nullable, weak) id <SKNoteTypeSheetControllerDelegate> delegate;
-@property (nonatomic, readonly) NSArray *noteTypes;
+@property (nonatomic, readonly) NSArray<NSString *> *noteTypes;
 @property (nonatomic, readonly) NSMenu *noteTypeMenu;
 
 - (nullable NSPredicate *)filterPredicateForSearchString:(NSString *)searchString caseInsensitive:(BOOL)caseInsensitive;

@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *SKSkimFileDidSaveNotification;
 
-@class PDFDocument, SKMainWindowController, SKPDFView, SKLine, SKProgressController, SKTemporaryData, SKFileUpdateChecker, SKExportAccessoryController;
+@class PDFDocument, SKMainWindowController, SKPDFView, SKLine, SKProgressController, SKTemporaryData, SKFileUpdateChecker, SKExportAccessoryController, PDFAnnotation, SKSnapshotWindowController;
 
 @interface SKMainDocument : NSDocument <SKPDFSynchronizerDelegate>
 {
@@ -86,13 +86,13 @@ extern NSString *SKSkimFileDidSaveNotification;
 
 @property (nonatomic, readonly) SKPDFSynchronizer *synchronizer;
 
-@property (nonatomic, nullable, readonly) NSArray *snapshots;
+@property (nonatomic, nullable, readonly) NSArray<SKSnapshotWindowController *> *snapshots;
 
-@property (nonatomic, nullable, readonly) NSArray *tags;
+@property (nonatomic, nullable, readonly) NSArray<NSString *> *tags;
 @property (nonatomic, readonly) double rating;
 
-- (nullable NSArray *)notes;
-- (id)valueInNotesWithUniqueID:(NSString *)aUniqueID;
+- (nullable NSArray<PDFAnnotation *> *)notes;
+- (PDFAnnotation *)valueInNotesWithUniqueID:(NSString *)aUniqueID;
 - (void)insertObject:(PDFAnnotation *)newNote inNotesAtIndex:(NSUInteger)anIndex;
 - (void)removeObjectFromNotesAtIndex:(NSUInteger)anIndex;
 
@@ -102,7 +102,7 @@ extern NSString *SKSkimFileDidSaveNotification;
 @property (nonatomic, nullable, copy) id selectionSpecifier;
 @property (nonatomic, copy) NSData *selectionQDRect;
 @property (nonatomic, nullable, strong) PDFPage *selectionPage;
-@property (nonatomic, nullable, copy) NSDictionary *pdfViewSettings;
+@property (nonatomic, nullable, copy) NSDictionary<NSString *, id> *pdfViewSettings;
 
 - (void)handleRevertScriptCommand:(NSScriptCommand *)command;
 - (void)handleGoToScriptCommand:(NSScriptCommand *)command;

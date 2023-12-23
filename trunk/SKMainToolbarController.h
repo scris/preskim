@@ -92,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSStepper *pacerSpeedStepper;
     NSSegmentedControl *shareButton;
     SKShareMenuController *shareMenuController;
-    NSMutableDictionary *toolbarItems;
+    NSMutableDictionary<NSString *, NSToolbarItem *> *toolbarItems;
 }
 
 @property (nonatomic, nullable, weak) IBOutlet SKMainWindowController *mainController;

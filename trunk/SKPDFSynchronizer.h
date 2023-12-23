@@ -50,6 +50,7 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
 };
 
 @protocol SKPDFSynchronizerDelegate;
+@class SKPDFSyncRecord;
 
 @interface SKPDFSynchronizer : NSObject {
     __weak id <SKPDFSynchronizerDelegate> delegate;
@@ -65,7 +66,7 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
     
     NSFileManager *fileManager;
     
-    NSMutableArray *pages;
+    NSMutableArray<NSMutableArray<SKPDFSyncRecord *> *> *pages;
     NSMapTable *lines;
     
     NSMapTable *filenames;

@@ -100,27 +100,27 @@ enum {
     
     SKFieldEditor                       *fieldEditor;
     
-    NSMutableArray                      *thumbnails;
+    NSMutableArray<SKThumbnail *>       *thumbnails;
     CGFloat                             roundedThumbnailSize;
     
-    NSMutableArray                      *searchResults;
+    NSMutableArray<PDFSelection *>      *searchResults;
     NSInteger                           searchResultIndex;
     
-    NSMutableArray                      *groupedSearchResults;
+    NSMutableArray<SKGroupedSearchResult *> *groupedSearchResults;
     
     SKNoteTypeSheetController           *noteTypeSheetController;
-    NSMutableArray                      *notes;
+    NSMutableArray<PDFAnnotation *>     *notes;
     NSMapTable                          *rowHeights;
     
-    NSMutableArray                      *widgets;
+    NSMutableArray<PDFAnnotation *>     *widgets;
     NSMapTable                          *widgetValues;
     
-    NSMutableArray                      *snapshots;
-    NSMutableArray                      *dirtySnapshots;
+    NSMutableArray<SKSnapshotWindowController *> *snapshots;
+    NSMutableArray<SKSnapshotWindowController *> *dirtySnapshots;
     NSTimer                             *snapshotTimer;
     CGFloat                             roundedSnapshotThumbnailSize;
     
-    NSArray                             *tags;
+    NSArray<NSString *>                 *tags;
     double                              rating;
     
     NSWindow                            *mainWindow;
@@ -137,13 +137,13 @@ enum {
     NSButton                            *presentationNotesButton;
     NSTrackingArea                      *presentationNotesTrackingArea;
     
-    NSMutableArray                      *presentationNotes;
+    NSMutableArray<PDFAnnotation *>     *presentationNotes;
     NSUndoManager                       *presentationUndoManager;
     
     NSButton                            *colorAccessoryView;
     NSButton                            *textColorAccessoryView;
     
-    NSMutableArray                      *pageLabels;
+    NSMutableArray<NSString *>          *pageLabels;
     
     NSString                            *pageLabel;
     
@@ -156,7 +156,7 @@ enum {
     
     id                                  activity;
     
-    NSMutableDictionary                 *savedNormalSetup;
+    NSMutableDictionary<NSString *, id> *savedNormalSetup;
     
     CGFloat                             lastLeftSidePaneWidth;
     CGFloat                             lastRightSidePaneWidth;
@@ -170,7 +170,7 @@ enum {
     NSMapTable                          *undoGroupOldPropertiesPerNote;
     
     PDFDocument                         *placeholderPdfDocument;
-    NSArray                             *placeholderWidgetProperties;
+    NSArray<NSDictionary<NSString *, id> *> *placeholderWidgetProperties;
 
     struct _mwcFlags {
         unsigned int leftSidePaneState:1;
@@ -233,11 +233,11 @@ enum {
 
 @property (nonatomic, nullable, readonly) PDFDocument *placeholderPdfDocument;
 
-@property (nonatomic, nullable, readonly) NSArray *widgetProperties;
+@property (nonatomic, nullable, readonly) NSArray<NSDictionary<NSString *, id> *> *widgetProperties;
 
 @property (nonatomic, readonly) BOOL hasNotes;
 
-- (NSArray *)notes;
+- (NSArray<PDFAnnotation *> *)notes;
 - (NSUInteger)countOfNotes;
 - (PDFAnnotation *)objectInNotesAtIndex:(NSUInteger)theIndex;
 - (void)insertObject:(PDFAnnotation *)note inNotesAtIndex:(NSUInteger)theIndex;
@@ -245,41 +245,41 @@ enum {
 - (void)removeObjectFromNotesAtIndex:(NSUInteger)theIndex;
 - (void)removeAllObjectsFromNotes;
 
-- (NSArray *)thumbnails;
-- (void)setThumbnails:(nullable NSArray *)newThumbnails;
+- (NSArray<SKThumbnail *> *)thumbnails;
+- (void)setThumbnails:(nullable NSArray<SKThumbnail *> *)newThumbnails;
 
-- (NSArray *)snapshots;
+- (NSArray<SKSnapshotWindowController *> *)snapshots;
 - (NSUInteger)countOfSnapshots;
 - (SKSnapshotWindowController *)objectInSnapshotsAtIndex:(NSUInteger)theIndex;
 - (void)insertObject:(SKSnapshotWindowController *)snapshot inSnapshotsAtIndex:(NSUInteger)theIndex;
 - (void)removeObjectFromSnapshotsAtIndex:(NSUInteger)theIndex;
 - (void)removeAllObjectsFromSnapshots;
 
-- (NSArray *)searchResults;
+- (NSArray<PDFSelection *> *)searchResults;
 - (void)setSearchResults:(nullable NSArray *)newSearchResults;
 - (NSUInteger)countOfSearchResults;
 - (PDFSelection *)objectInSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)insertObject:(PDFSelection *)searchResult inSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)removeObjectFromSearchResultsAtIndex:(NSUInteger)theIndex;
 
-- (NSArray *)groupedSearchResults;
+- (NSArray<SKGroupedSearchResult *> *)groupedSearchResults;
 - (void)setGroupedSearchResults:(nullable NSArray *)newGroupedSearchResults;
 - (NSUInteger)countOfGroupedSearchResults;
 - (SKGroupedSearchResult *)objectInGroupedSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)insertObject:(SKGroupedSearchResult *)groupedSearchResult inGroupedSearchResultsAtIndex:(NSUInteger)theIndex;
 - (void)removeObjectFromGroupedSearchResultsAtIndex:(NSUInteger)theIndex;
 
-@property (nonatomic, nullable, copy) NSDictionary *presentationOptions;
+@property (nonatomic, nullable, copy) NSDictionary<NSString *, id> *presentationOptions;
 
 @property (nonatomic, nullable, strong) NSDocument *presentationNotesDocument;
 @property (nonatomic) NSInteger presentationNotesOffset;
 
 @property (nonatomic, nullable, readonly) NSUndoManager *presentationUndoManager;
 
-@property (nonatomic, copy) NSArray *tags;
+@property (nonatomic, copy) NSArray<NSString *> *tags;
 @property (nonatomic) double rating;
 
-@property (nonatomic, nullable, copy) NSArray *selectedNotes;
+@property (nonatomic, nullable, copy) NSArray<PDFAnnotation *> *selectedNotes;
 
 @property (nonatomic, nullable, copy) NSString *pageLabel;
 
@@ -335,14 +335,14 @@ enum {
 - (void)updateSnapshotsIfNeeded;
 - (void)updateSnapshot:(NSTimer *)timer;
 
-- (void)setPdfDocument:(nullable PDFDocument *)pdfDocument addAnnotationsFromDictionaries:(nullable NSArray *)noteDicts;
-- (void)addAnnotationsFromDictionaries:(NSArray *)noteDicts removeAnnotations:(nullable NSArray *)notesToRemove;
+- (void)setPdfDocument:(nullable PDFDocument *)pdfDocument addAnnotationsFromDictionaries:(nullable NSArray<NSDictionary<NSString *, id> *> *)noteDicts;
+- (void)addAnnotationsFromDictionaries:(NSArray<NSDictionary<NSString *, id> *> *)noteDicts removeAnnotations:(nullable NSArray<PDFAnnotation *> *)notesToRemove;
 
-- (void)applySetup:(NSDictionary *)setup;
-- (NSDictionary *)currentSetup;
-- (void)applyPDFSettings:(NSDictionary *)setup rewind:(BOOL)rewind;
-- (NSDictionary *)currentPDFSettings;
-- (void)applyOptions:(NSDictionary *)options;
+- (void)applySetup:(NSDictionary<NSString *, id> *)setup;
+- (NSDictionary<NSString *, id> *)currentSetup;
+- (void)applyPDFSettings:(NSDictionary<NSString *, id> *)setup rewind:(BOOL)rewind;
+- (NSDictionary<NSString *, id> *)currentPDFSettings;
+- (void)applyOptions:(NSDictionary<NSString *, id> *)options;
 
 - (void)updateLeftStatus;
 - (void)updateRightStatus;

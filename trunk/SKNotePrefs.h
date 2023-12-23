@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSInteger scriptingAlignment;
 @property (nonatomic) PDFTextAnnotationIconType scriptingIconType;
 @property (nonatomic, nullable, strong) NSString *scriptingUserName;
-@property (nonatomic, strong) NSDictionary *scriptingProperties;
+@property (nonatomic, strong) NSDictionary<NSString *, id> *scriptingProperties;
 
 - (nullable instancetype)initWithType:(NSString *)aType;
 

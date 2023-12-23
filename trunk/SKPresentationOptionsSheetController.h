@@ -55,10 +55,10 @@ NS_ASSUME_NONNULL_BEGIN
     NSArrayController *arrayController;
     BOOL separate;
     SKTransitionInfo *transition;
-    NSArray *transitions;
+    NSArray<SKTransitionInfo *> *transitions;
     __weak SKMainWindowController *controller;
     NSUndoManager *undoManager;
-    NSMutableSet *changedTransitions;
+    NSMutableSet<SKTransitionInfo *> *changedTransitions;
 }
 
 @property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *notesDocumentPopUpButton;
@@ -69,17 +69,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, strong) IBOutlet NSArrayController *arrayController;
 @property (nonatomic) BOOL separate;
 @property (nonatomic, readonly) SKTransitionInfo *transition;
-@property (nonatomic, nullable, copy) NSArray *transitions;
-@property (nonatomic, nullable, readonly) NSArray *currentTransitions;
-@property (nonatomic, nullable, readonly) NSArray *pageTransitions;
+@property (nonatomic, nullable, copy) NSArray<SKTransitionInfo *> *transitions;
+@property (nonatomic, nullable, readonly) NSArray<SKTransitionInfo *> *currentTransitions;
+@property (nonatomic, nullable, readonly) NSArray<NSDictionary<NSString *, id> *> *pageTransitions;
 @property (nonatomic, nullable, readonly) NSDocument *notesDocument;
 @property (nonatomic, readonly) NSInteger notesDocumentOffset;
 @property (nonatomic, readonly) NSUndoManager *undoManager;
 
 - (instancetype)initForController:(SKMainWindowController *)aController;
 
-- (void)startObservingTransitions:(NSArray *)infos;
-- (void)stopObservingTransitions:(NSArray *)infos;
+- (void)startObservingTransitions:(NSArray<SKTransitionInfo *> *)infos;
+- (void)stopObservingTransitions:(NSArray<SKTransitionInfo *> *)infos;
 
 @end
 

@@ -42,11 +42,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *SKColorSwatchColorsChangedNotification;
 
-@class SKColorSwatchBackgroundView;
+@class SKColorSwatchBackgroundView, SKColorSwatchItemView;
 
 @interface SKColorSwatch : NSControl <NSDraggingSource, NSAccessibilityGroup> {
-    NSMutableArray *colors;
-    NSMutableArray *itemViews;
+    NSMutableArray<NSColor *> *colors;
+    NSMutableArray<SKColorSwatchItemView *> *itemViews;
     SKColorSwatchBackgroundView *backgroundView;
     CGFloat bezelHeight;
     
@@ -63,7 +63,7 @@ extern NSString *SKColorSwatchColorsChangedNotification;
     BOOL alternate;
 }
 
-@property (nonatomic, copy) NSArray *colors;
+@property (nonatomic, copy) NSArray<NSColor *> *colors;
 @property (nonatomic, readonly) NSInteger clickedColorIndex;
 @property (nonatomic, readonly) NSInteger selectedColorIndex;
 @property (nonatomic, nullable, readonly) NSColor *color;

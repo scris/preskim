@@ -42,16 +42,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SKTemporaryData : NSObject {
     PDFDocument *pdfDocument;
-    NSArray *noteDicts;
-    NSDictionary *presentationOptions;
-    NSArray *openMetaTags;
+    NSArray<NSDictionary<NSString *, id> *> *noteDicts;
+    NSDictionary<NSString *, id> *presentationOptions;
+    NSArray<NSString *> *openMetaTags;
     double openMetaRating;
 }
 
 @property (nonatomic, nullable, strong) PDFDocument *pdfDocument;
-@property (nonatomic, nullable, copy) NSArray *noteDicts;
-@property (nonatomic, nullable, copy) NSDictionary *presentationOptions;
-@property (nonatomic, nullable, copy) NSArray *openMetaTags;
+@property (nonatomic, nullable, copy) NSArray<NSDictionary<NSString *, id> *> *noteDicts;
+@property (nonatomic, nullable, copy) NSDictionary<NSString *, id> *presentationOptions;
+@property (nonatomic, nullable, copy) NSArray<NSString *> *openMetaTags;
 @property (nonatomic) double openMetaRating;
 
 @end

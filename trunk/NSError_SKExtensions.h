@@ -59,7 +59,7 @@ enum {
 + (instancetype)printDocumentErrorWithLocalizedDescription:(nullable NSString *)description;
 + (instancetype)failedToCommitErrorWithLocalizedDescription:(nullable NSString *)description;
 
-+ (nullable NSError *)combineErrors:(NSArray *)errors maximum:(NSUInteger)max;
++ (nullable NSError *)combineErrors:(NSArray<NSError *> *)errors maximum:(NSUInteger)max;
 
 - (BOOL)isUserCancelledError;
 

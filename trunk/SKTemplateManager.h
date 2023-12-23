@@ -41,13 +41,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SKTemplateManager : NSObject {
-    NSArray *customTemplateTypes;
-    NSMutableDictionary *templateFileNames;
+    NSArray<NSString *> *customTemplateTypes;
+    NSMutableDictionary<NSString *, NSString *> *templateFileNames;
 }
 
 @property (class, nonatomic, readonly) SKTemplateManager *sharedManager;
 
-@property (nonatomic, readonly) NSArray *customTemplateTypes;
+@property (nonatomic, readonly) NSArray<NSString *> *customTemplateTypes;
 
 - (void)resetCustomTemplateTypes;
 

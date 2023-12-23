@@ -69,7 +69,7 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 - (nullable instancetype)initSeparator;
 - (nullable instancetype)initWithProperties:(NSDictionary *)dictionary;
 
-@property (nonatomic, readonly) NSDictionary *properties;
+@property (nonatomic, readonly) NSDictionary<NSString *, id> *properties;
 @property (nonatomic, readonly) SKBookmarkType bookmarkType;
 @property (nonatomic, nullable, strong) NSString *label;
 @property (nonatomic, nullable, readonly) NSImage *icon, *alternateIcon;
@@ -84,17 +84,17 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 @property (nonatomic, nullable, weak) SKBookmark *parent;
 @property (nonatomic, readonly) NSArray *containingBookmarks;
 
-- (NSArray *)children;
+- (NSArray<SKBookmark *> *)children;
 - (NSUInteger)countOfChildren;
 - (SKBookmark *)objectInChildrenAtIndex:(NSUInteger)anIndex;
-- (NSArray *)childrenAtIndexes:(NSIndexSet *)indexes;
+- (NSArray<SKBookmark *> *)childrenAtIndexes:(NSIndexSet *)indexes;
 - (void)insertObject:(SKBookmark *)child inChildrenAtIndex:(NSUInteger)anIndex;
-- (void)insertChildren:(NSArray *)newChildren atIndexes:(NSIndexSet *)indexes;
+- (void)insertChildren:(NSArray<SKBookmark *> *)newChildren atIndexes:(NSIndexSet *)indexes;
 - (void)removeObjectFromChildrenAtIndex:(NSUInteger)anIndex;
 - (void)removeChildrenAtIndexes:(NSIndexSet *)indexes;
 
 @property (nonatomic, nullable, readonly) SKBookmark *scriptingParent;
-@property (nonatomic, nullable, readonly) NSArray *entireContents;
+@property (nonatomic, nullable, readonly) NSArray<SKBookmark *> *entireContents;
 
 - (NSArray *)bookmarks;
 - (void)insertObject:(SKBookmark *)bookmark inBookmarksAtIndex:(NSUInteger)anIndex;
@@ -103,7 +103,7 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 @property (nonatomic, getter=isExpanded) BOOL expanded;
 
 - (BOOL)isDescendantOf:(SKBookmark *)bookmark;
-- (BOOL)isDescendantOfArray:(NSArray *)bookmarks;
+- (BOOL)isDescendantOfArray:(NSArray<SKBookmark *> *)bookmarks;
 
 @property (nonatomic, nullable, readonly) NSURL * skimURL;
 

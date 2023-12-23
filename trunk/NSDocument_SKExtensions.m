@@ -37,6 +37,7 @@
  */
 
 #import "NSDocument_SKExtensions.h"
+#import <Quartz/Quartz.h>
 #import "SKApplicationController.h"
 #import "SKTemplateParser.h"
 #import "NSFileManager_SKExtensions.h"

@@ -44,7 +44,7 @@ extern const NSPoint SKUnspecifiedPoint;
 
 @property (nonatomic) CGFloat physicalScaleFactor;
 @property (nonatomic, readonly) NSScrollView *scrollView;
-@property (nonatomic, readonly) NSArray *displayedPages;
+@property (nonatomic, readonly) NSArray<PDFPage *> *displayedPages;
 @property (nonatomic, readonly) NSRect visibleContentRect;
 
 - (BOOL)isPageAtIndexDisplayed:(NSUInteger)pageIndex;

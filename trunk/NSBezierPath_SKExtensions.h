@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSBezierPath (SKExtensions)
 
-@property (nonatomic, nullable, copy) NSArray *dashPattern;
+@property (nonatomic, nullable, copy) NSArray<NSNumber *> *dashPattern;
 
 @property (nonatomic, readonly) NSRect nonEmptyBounds;
 

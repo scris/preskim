@@ -1644,7 +1644,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     return [[self mainWindowController] notes];
 }
 
-- (id)valueInNotesWithUniqueID:(NSString *)aUniqueID {
+- (PDFAnnotation *)valueInNotesWithUniqueID:(NSString *)aUniqueID {
     for (PDFAnnotation *annotation in [[self mainWindowController] notes]) {
         if ([[annotation uniqueID] isEqualToString:aUniqueID])
             return annotation;

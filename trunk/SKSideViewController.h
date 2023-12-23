@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, strong) IBOutlet NSView *currentView;
 
 @property (nonatomic) CGFloat topInset;
-@property (weak, nonatomic, nullable, readonly) NSArray *tableViews;
+@property (weak, nonatomic, nullable, readonly) NSArray<NSTableView *> *tableViews;
 
 - (BOOL)requiresAlternateButtonForView:(NSView *)aView;
 

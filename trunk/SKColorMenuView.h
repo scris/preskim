@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SKColorMenuView : SKGroupView {
     PDFAnnotation *annotation;
-    NSArray *colors;
+    NSArray<NSColor *> *colors;
     NSUInteger hoveredIndex;
 }
 

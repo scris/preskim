@@ -42,8 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSWindow (SKExtensions)
 
-+ (void)addTabs:(NSArray *)tabInfos forWindows:(NSArray *)windows;
-- (nullable NSString *)tabIndexesInWindows:(NSArray *)windows;
++ (void)addTabs:(NSArray<NSArray *> *)tabInfos forWindows:(NSArray *)windows;
+- (nullable NSString *)tabIndexesInWindows:(NSArray<NSWindow *> *)windows;
 
 - (void)handleRevertScriptCommand:(NSScriptCommand *)command;
 

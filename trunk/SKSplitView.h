@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SKSplitView : NSSplitView {
     BOOL animating;
-    NSMutableArray *queue;
+    NSMutableArray<void (^)(void)> *queue;
 }
 
 @property (nonatomic, readonly, getter=isAnimating) BOOL animating;

@@ -37,7 +37,6 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -48,6 +47,8 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
     SKFullScreenMode,
     SKPresentationMode
 };
+
+@class PDFDocument, PDFPage, PDFAnnotation;
 
 @interface NSDocument (SKExtensions)
 
@@ -64,9 +65,9 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 #pragma mark Document Setup
 
 - (void)saveRecentDocumentInfo;
-- (void)applySetup:(NSDictionary *)setup;
-- (void)applyOptions:(NSDictionary *)options;
-@property (nonatomic, nullable, readonly) NSDictionary *currentDocumentSetup;
+- (void)applySetup:(NSDictionary<NSString *, id> *)setup;
+- (void)applyOptions:(NSDictionary<NSString *, id> *)options;
+@property (nonatomic, nullable, readonly) NSDictionary<NSString *, id> *currentDocumentSetup;
 
 #pragma mark PDF Document
 
@@ -82,9 +83,9 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 
 - (BOOL)hasNotes;
 
-@property (nonatomic, nullable, readonly) NSArray *notes;
+@property (nonatomic, nullable, readonly) NSArray<PDFAnnotation *> *notes;
 
-@property (nonatomic, nullable, readonly) NSArray *SkimNoteProperties;
+@property (nonatomic, nullable, readonly) NSArray<NSDictionary<NSString *, id> *> *SkimNoteProperties;
 
 @property (nonatomic, nullable, readonly) NSData *notesData;
 
@@ -104,7 +105,7 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 
 #pragma mark Scripting
 
-- (nullable NSArray *)pages;
+- (nullable NSArray<PDFPage *> *)pages;
 - (NSUInteger)countOfPages;
 - (PDFPage *)objectInPagesAtIndex:(NSUInteger)theIndex;
 
@@ -118,9 +119,9 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 @property (nonatomic, nullable, readonly) id selectionSpecifier;
 @property (nonatomic, nullable, readonly) NSData *selectionQDRect;
 @property (nonatomic, nullable, readonly) id selectionPage;
-@property (nonatomic, nullable, strong) NSArray *noteSelection;
-@property (nonatomic, nullable, readonly) NSDictionary *pdfViewSettings;
-@property (nonatomic, nullable, readonly) NSDictionary *documentAttributes;
+@property (nonatomic, nullable, strong) NSArray<PDFAnnotation *> *noteSelection;
+@property (nonatomic, nullable, readonly) NSDictionary<NSString *, id> *pdfViewSettings;
+@property (nonatomic, nullable, readonly) NSDictionary<NSString *, id> *documentAttributes;
 @property (nonatomic, readonly, getter=isPDFDocument) BOOL PDFDocument;
 @property (nonatomic, readonly) NSInteger toolMode;
 @property (nonatomic, readonly) NSInteger scriptingInteractionMode;

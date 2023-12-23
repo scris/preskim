@@ -52,7 +52,7 @@ typedef NS_ENUM(NSInteger, SKTypeSelectMatchOption) {
     __weak id <SKTypeSelectDelegate> delegate;
     SKTypeSelectMatchOption matchOption;
     BOOL isProcessing;
-    NSArray *searchCache;
+    NSArray<NSString *> *searchCache;
     NSString *searchString;
     NSTimer *timer;
     NSWindow *observedWindow;
@@ -75,7 +75,7 @@ typedef NS_ENUM(NSInteger, SKTypeSelectMatchOption) {
 
 @protocol SKTypeSelectDelegate <NSObject>
 
-- (NSArray *)typeSelectHelperSelectionStrings; // required
+- (NSArray<NSString *> *)typeSelectHelperSelectionStrings; // required
 - (NSUInteger)typeSelectHelperCurrentlySelectedIndex; // required
 - (void)typeSelectHelperSelectItemAtIndex:(NSUInteger)itemIndex; // required
 

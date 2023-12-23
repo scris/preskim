@@ -50,15 +50,15 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL animating;
     
     SKTransitionInfo *transition;
-    NSArray *pageTransitions;
+    NSArray<NSDictionary<NSString *, id> *> *pageTransitions;
 }
 
 @property (nonatomic, nullable, weak) NSView *view;
 @property (nonatomic, nullable, strong) SKTransitionInfo *transition;
-@property (nonatomic, nullable, copy) NSArray *pageTransitions;
+@property (nonatomic, nullable, copy) NSArray<NSDictionary<NSString *, id> *> *pageTransitions;
 @property (nonatomic) BOOL hasTransition;
 
-@property (class, nonatomic, readonly) NSArray *transitionNames;
+@property (class, nonatomic, readonly) NSArray<NSString *> *transitionNames;
 
 + (NSString *)nameForStyle:(SKTransitionStyle)style;
 + (SKTransitionStyle)styleForName:(NSString *)name;

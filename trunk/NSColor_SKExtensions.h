@@ -81,7 +81,7 @@ enum {
 + (NSColor *)selectionHighlightColor:(BOOL)active;
 + (NSColor *)selectionHighlightInteriorColor:(BOOL)active;
 
-@property (class, nonatomic, readonly) NSArray *favoriteColors;
+@property (class, nonatomic, readonly) NSArray<NSColor *> *favoriteColors;
 
 - (NSComparisonResult)colorCompare:(NSColor *)aColor;
 
