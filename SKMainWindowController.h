@@ -113,7 +113,7 @@ enum {
     NSMapTable                          *rowHeights;
     
     NSMutableArray<PDFAnnotation *>     *widgets;
-    NSMapTable                          *widgetValues;
+    NSMapTable<PDFAnnotation *, id>     *widgetValues;
     
     NSMutableArray<SKSnapshotWindowController *> *snapshots;
     NSMutableArray<SKSnapshotWindowController *> *dirtySnapshots;
@@ -167,7 +167,7 @@ enum {
     CGFloat                             thumbnailCacheSize;
     CGFloat                             snapshotCacheSize;
     
-    NSMapTable                          *undoGroupOldPropertiesPerNote;
+    NSMapTable<PDFAnnotation *, NSMutableDictionary *> *undoGroupOldPropertiesPerNote;
     
     PDFDocument                         *placeholderPdfDocument;
     NSArray<NSDictionary<NSString *, id> *> *placeholderWidgetProperties;
