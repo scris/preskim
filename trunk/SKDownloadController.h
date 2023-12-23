@@ -53,8 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
     NSButton *removeButton;
     NSMutableArray<SKDownload *> *downloads;
     NSURLSession *session;
-    NSMapTable *downloadsForTasks;
-    NSMutableDictionary *touchBarItems;
+    NSMapTable<NSURLSessionTask *, SKDownload *> *downloadsForTasks;
+    NSMutableDictionary<NSString *, NSCustomTouchBarItem *> *touchBarItems;
 }
 
 @property (nonatomic, nullable, strong) IBOutlet SKTableView *tableView;
