@@ -94,17 +94,24 @@
 @synthesize parent;
 @dynamic properties, bookmarkType, label, icon, alternateIcon, fileURL, fileURLToOpen, fileDescription, toolTip, pageIndex, pageNumber, hasSetup, tabs, containingBookmarks, children, countOfChildren, scriptingParent, entireContents, bookmarks, expanded, skimURL;
 
-static SKPlaceholderBookmark *defaultPlaceholderBookmark = nil;
 static Class SKBookmarkClass = Nil;
 
 + (void)initialize {
     SKINITIALIZE;
     SKBookmarkClass = self;
-    defaultPlaceholderBookmark = [SKPlaceholderBookmark alloc];
 }
 
 + (instancetype)allocWithZone:(NSZone *)aZone {
-    return SKBookmarkClass == self ? defaultPlaceholderBookmark : [super allocWithZone:aZone];
+    if (SKBookmarkClass == self) {
+        static SKPlaceholderBookmark *placeholderBookmark = nil;
+        dispatch_once_t onceToken = 0;
+        dispatch_once(onceToken, ^{
+            placeholderBookmark = [SKPlaceholderBookmark alloc];
+        });
+        return placeholderBookmark;
+    } else {
+        return [super allocWithZone:aZone];
+    }
 }
 
 + (instancetype)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
