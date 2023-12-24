@@ -130,8 +130,6 @@ NSString *SKPDFViewNewPageKey = @"newPage";
 
 #define SKMoveReadingBarModifiersKey @"SKMoveReadingBarModifiers"
 #define SKResizeReadingBarModifiersKey @"SKResizeReadingBarModifiers"
-#define SKDefaultFreeTextNoteContentsKey @"SKDefaultFreeTextNoteContents"
-#define SKDefaultAnchoredNoteContentsKey @"SKDefaultAnchoredNoteContents"
 #define SKUseToolModeCursorsKey @"SKUseToolModeCursors"
 #define SKMagnifyWithMousePressedKey @"SKMagnifyWithMousePressed"
 #define SKPacerSpeedKey @"SKPacerSpeed"
@@ -265,9 +263,6 @@ enum {
         moveReadingBarModifiers = [moveReadingBarModifiersNumber integerValue];
     if (resizeReadingBarModifiersNumber)
         resizeReadingBarModifiers = [resizeReadingBarModifiersNumber integerValue];
-    
-    [[NSUserDefaults standardUserDefaults] registerDefaults:@{SKDefaultFreeTextNoteContentsKey:NSLocalizedString(@"Double-click to edit.", @"Default text for new text note"), SKDefaultAnchoredNoteContentsKey:NSLocalizedString(@"New note", @"Default text for new anchored note")}];
-    
     
     useToolModeCursors = [[NSUserDefaults standardUserDefaults] boolForKey:SKUseToolModeCursorsKey];
     
