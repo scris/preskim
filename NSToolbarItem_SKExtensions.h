@@ -43,8 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSToolbarItem (NSToolbarItem_SKExtensions)
 
 - (void)setLabels:(NSString *)label;
-- (void)setViewWithSizes:(NSView *)view;
-- (void)setImageNamed:(NSString *)name;
 
 @end
 
