@@ -216,8 +216,8 @@ static char SKMainWindowContentLayoutObservationContext;
 
 @implementation SKMainWindowController
 
-@synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, statusBar, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
-@dynamic pdfDocument, notes, thumbnails, snapshots, searchResults, groupedSearchResults, presentationOptions, presentationUndoManager, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
+@synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, statusBar, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, notes, thumbnails, snapshots, searchResults, groupedSearchResults, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
+@dynamic pdfDocument, presentationOptions, presentationUndoManager, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -231,14 +231,14 @@ static char SKMainWindowContentLayoutObservationContext;
     if (self) {
         NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
         interactionMode = SKNormalMode;
-        searchResults = [[NSMutableArray alloc] init];
+        searchResults = nil;
         searchResultIndex = 0;
         memset(&mwcFlags, 0, sizeof(mwcFlags));
         mwcFlags.fullSizeContent = NO == [sud boolForKey:SKDisableSearchBarBlurringKey];
         mwcFlags.caseInsensitiveSearch = [sud boolForKey:SKCaseInsensitiveSearchKey];
         mwcFlags.wholeWordSearch = [sud boolForKey:SKWholeWordSearchKey];
         mwcFlags.caseInsensitiveFilter = [sud boolForKey:SKCaseInsensitiveFilterKey];
-        groupedSearchResults = [[NSMutableArray alloc] init];
+        groupedSearchResults = nil;
         thumbnails = [[NSMutableArray alloc] init];
         notes = [[NSMutableArray alloc] init];
         tags = [[NSArray alloc] init];
@@ -1293,10 +1293,6 @@ static char SKMainWindowContentLayoutObservationContext;
     return NO;
 }
 
-- (NSArray *)notes {
-    return notes;
-}
-
 - (void)insertObject:(PDFAnnotation *)note inNotesAtIndex:(NSUInteger)theIndex {
     [notes insertObject:note atIndex:theIndex];
 
@@ -1347,18 +1343,10 @@ static char SKMainWindowContentLayoutObservationContext;
     }
 }
 
-- (NSArray *)thumbnails {
-    return thumbnails;
-}
-
 - (void)setThumbnails:(NSArray *)newThumbnails {
     [thumbnails setValue:nil forKey:@"delegate"];
     [thumbnails setArray:newThumbnails];
     [thumbnails setValue:self forKey:@"delegate"];
-}
-
-- (NSArray *)snapshots {
-    return snapshots;
 }
 
 - (void)insertObject:(SKSnapshotWindowController *)snapshot inSnapshotsAtIndex:(NSUInteger)theIndex {
@@ -1406,20 +1394,12 @@ static char SKMainWindowContentLayoutObservationContext;
     [rightSideController.noteOutlineView selectRowIndexes:rowIndexes byExtendingSelection:NO];
 }
 
-- (NSArray *)searchResults {
-    return searchResults;
-}
-
 - (void)setSearchResults:(NSArray *)newSearchResults {
-    [searchResults setArray:newSearchResults];
-}
-
-- (NSArray *)groupedSearchResults {
-    return groupedSearchResults;
+    searchResults = [newSearchResults mutableCopy];
 }
 
 - (void)setGroupedSearchResults:(NSArray *)newGroupedSearchResults {
-    [groupedSearchResults setArray:newGroupedSearchResults];
+    groupedSearchResults = [newGroupedSearchResults mutableCopy];
 }
 
 - (NSDictionary *)presentationOptions {
@@ -1978,8 +1958,8 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)documentDidBeginDocumentFind:(NSNotification *)note {
     [leftSideController applySearchTableHeader:[NSLocalizedString(@"Searching", @"Message in search table header") stringByAppendingEllipsis]];
-    [self setSearchResults:nil];
-    [self setGroupedSearchResults:nil];
+    [self setSearchResults:@[]];
+    [self setGroupedSearchResults:@[]];
     [statusBar setProgressIndicatorStyle:SKProgressIndicatorStyleDeterminate];
     [[statusBar progressIndicator] setMaxValue:[[note object] pageCount]];
     [[statusBar progressIndicator] setDoubleValue:0.0];
