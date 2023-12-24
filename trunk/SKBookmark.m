@@ -105,7 +105,7 @@ static Class SKBookmarkClass = Nil;
     if (SKBookmarkClass == self) {
         static SKPlaceholderBookmark *placeholderBookmark = nil;
         dispatch_once_t onceToken = 0;
-        dispatch_once(onceToken, ^{
+        dispatch_once(&onceToken, ^{
             placeholderBookmark = [SKPlaceholderBookmark alloc];
         });
         return placeholderBookmark;
