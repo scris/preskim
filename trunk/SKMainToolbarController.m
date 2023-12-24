@@ -761,7 +761,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             
             [item setLabels:NSLocalizedString(@"Fonts", @"Toolbar item label")];
             [item setToolTip:NSLocalizedString(@"Fonts", @"Tool tip message")];
-            [item setImageNamed:@"ToolbarFonts"];
             [item setViewWithSizes:fontsButton];
             [item setMenuFormRepresentation:menuItem];
             
