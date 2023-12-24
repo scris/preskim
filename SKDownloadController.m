@@ -215,7 +215,7 @@ static SKDownloadController *sharedDownloadController = nil;
 #pragma mark Accessors
 
 - (NSArray *)downloads {
-    return [downloads copy];
+    return downloads;
 }
 
 - (NSUInteger)countOfDownloads {
