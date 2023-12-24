@@ -1414,8 +1414,8 @@ static char SKMainWindowContentLayoutObservationContext;
     [searchResults setArray:newSearchResults];
 }
 
-- (void)insertObject:(PDFSelection *)searchResult inSearchResultsAtIndex:(NSUInteger)theIndex {
-    [searchResults insertObject:searchResult atIndex:theIndex];
+- (NSArray *)groupedSearchResults {
+    return groupedSearchResults;
 }
 
 - (void)setGroupedSearchResults:(NSArray *)newGroupedSearchResults {
