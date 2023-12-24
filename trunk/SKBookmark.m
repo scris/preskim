@@ -653,7 +653,7 @@ static Class SKBookmarkClass = Nil;
 }
 
 - (NSArray *)children {
-    return [children copy];
+    return children;
 }
 
 - (NSUInteger)countOfChildren {
