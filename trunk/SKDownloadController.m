@@ -91,8 +91,8 @@ static NSString *SKDownloadsIdentifier = nil;
 
 @implementation SKDownloadController
 
-@synthesize tableView, clearButton;
-@dynamic downloads, countOfDownloads;
+@synthesize tableView, clearButton, downloads;
+@dynamic countOfDownloads;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -213,10 +213,6 @@ static SKDownloadController *sharedDownloadController = nil;
 }
 
 #pragma mark Accessors
-
-- (NSArray *)downloads {
-    return downloads;
-}
 
 - (NSUInteger)countOfDownloads {
     return [downloads count];
