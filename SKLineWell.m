@@ -63,16 +63,6 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
 @synthesize lineWidth, style, dashPattern, startLineStyle, endLineStyle;
 @dynamic active, canActivate, displayStyle;
 
-+ (void)initialize {
-    SKINITIALIZE;
-    
-    [self exposeBinding:SKLineWellLineWidthKey];
-    [self exposeBinding:SKLineWellStyleKey];
-    [self exposeBinding:SKLineWellDashPatternKey];
-    [self exposeBinding:SKLineWellStartLineStyleKey];
-    [self exposeBinding:SKLineWellEndLineStyleKey];
-}
-
 - (Class)valueClassForBinding:(NSString *)binding {
     if ([binding isEqualToString:SKLineWellDashPatternKey])
         return [NSArray class];

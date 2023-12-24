@@ -109,12 +109,6 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 @synthesize colors, autoResizes, selects, alternate, clickedColorIndex=clickedIndex, selectedColorIndex=selectedIndex;
 @dynamic color, fitWidth;
 
-+ (void)initialize {
-    SKINITIALIZE;
-    
-    [self exposeBinding:COLORS_KEY];
-}
-
 - (Class)valueClassForBinding:(NSString *)binding {
     if ([binding isEqualToString:COLORS_KEY])
         return [NSArray class];

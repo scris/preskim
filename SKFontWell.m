@@ -69,14 +69,6 @@ static char SKFontWellFontSizeObservationContext;
 
 @dynamic active, fontName, fontSize, textColor, hasTextColor;
 
-+ (void)initialize {
-    SKINITIALIZE;
-    
-    [self exposeBinding:FONTNAME_KEY];
-    [self exposeBinding:FONTSIZE_KEY];
-    [self exposeBinding:TEXTCOLOR_KEY];
-}
-
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
     NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
     if ([key isEqualToString:FONTNAME_KEY] || [key isEqualToString:FONTSIZE_KEY])
