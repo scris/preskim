@@ -145,19 +145,19 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
                     {
                         PDFPage *page = [self currentPage];
                         NSUInteger pageIndex = page ? [page pageIndex] : NSNotFound;
-                        bookmark = [SKBookmark bookmarkWithURL:[self fileURL] pageIndex:pageIndex label:label];
+                        bookmark = [[SKBookmark alloc] initWithURL:[self fileURL] pageIndex:pageIndex label:label];
                         break;
                     }
                     case SKAddBookmarkTypeSetup:
                     {
                         NSDictionary *setup = [self currentDocumentSetup];
-                        bookmark = [SKBookmark bookmarkWithSetup:setup label:label];
+                        bookmark = [[SKBookmark alloc] initWithSetup:setup label:label];
                         break;
                     }
                     case SKAddBookmarkTypeSession:
                     {
                         NSArray *setups = [[NSApp orderedDocuments] valueForKey:@"currentDocumentSetup"];
-                        bookmark = [SKBookmark bookmarkSessionWithSetups:setups label:label];
+                        bookmark = [[SKBookmark alloc] initSessionWithSetups:setups label:label];
                         break;
                     }
                     default:

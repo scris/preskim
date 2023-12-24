@@ -114,26 +114,6 @@ static Class SKBookmarkClass = Nil;
     }
 }
 
-+ (instancetype)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
-    return [[self alloc] initWithURL:aURL pageIndex:aPageIndex label:aLabel];
-}
-
-+ (instancetype)bookmarkWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel {
-    return [[self alloc] initWithSetup:aSetupDict label:aLabel];
-}
-
-+ (instancetype)bookmarkFolderWithLabel:(NSString *)aLabel {
-    return [[self alloc] initFolderWithLabel:aLabel];
-}
-
-+ (instancetype)bookmarkSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel {
-    return [[self alloc] initSessionWithSetups:aSetupDicts label:aLabel];
-}
-
-+ (instancetype)bookmarkSeparator {
-    return [[self alloc] initSeparator];
-}
-
 + (NSArray *)bookmarksForURLs:(NSArray *)urls {
     NSFileManager *fm = [NSFileManager defaultManager];
     NSDocumentController *dc = [NSDocumentController sharedDocumentController];
@@ -171,11 +151,6 @@ static Class SKBookmarkClass = Nil;
 }
 
 - (instancetype)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-- (instancetype)initFolderWithLabel:(NSString *)aLabel {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
@@ -349,10 +324,6 @@ static Class SKBookmarkClass = Nil;
 
 - (instancetype)initFolderWithChildren:(NSArray *)aChildren label:(NSString *)aLabel {
     return (id)[[SKFolderBookmark alloc] initFolderWithChildren:aChildren label:aLabel];
-}
-
-- (instancetype)initFolderWithLabel:(NSString *)aLabel {
-    return [self initFolderWithChildren:nil label:aLabel];
 }
 
 - (instancetype)initRootWithChildrenProperties:(NSArray *)childrenProperties {

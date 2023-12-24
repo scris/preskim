@@ -52,18 +52,11 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
     __weak SKBookmark *parent;
 }
 
-+ (nullable instancetype)bookmarkWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
-+ (nullable instancetype)bookmarkWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
-+ (nullable instancetype)bookmarkFolderWithLabel:(NSString *)aLabel;
-+ (nullable instancetype)bookmarkSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
-+ (instancetype)bookmarkSeparator;
-
 + (NSArray *)bookmarksForURLs:(NSArray *)urls;
 
 - (nullable instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
 - (nullable instancetype)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
 - (nullable instancetype)initFolderWithChildren:(nullable NSArray *)aChildren label:(NSString *)aLabel;
-- (nullable instancetype)initFolderWithLabel:(NSString *)aLabel;
 - (nullable instancetype)initRootWithChildrenProperties:(nullable NSArray *)childrenProperties;
 - (nullable instancetype)initSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
 - (nullable instancetype)initSeparator;
