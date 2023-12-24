@@ -443,7 +443,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 }
 
 - (IBAction)insertBookmarkFolder:(id)sender {
-    SKBookmark *folder = [SKBookmark bookmarkFolderWithLabel:NSLocalizedString(@"Folder", @"default folder name")];
+    SKBookmark *folder = [[SKBookmark alloc] initFolderWithChildren:nil label:NSLocalizedString(@"Folder", @"default folder name")];
     NSUInteger idx = 0;
     SKBookmark *item = [self insertionFolderAndChildIndex:&idx];
     
@@ -458,7 +458,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 }
 
 - (IBAction)insertBookmarkSeparator:(id)sender {
-    SKBookmark *separator = [SKBookmark bookmarkSeparator];
+    SKBookmark *separator = [[SKBookmark alloc] initSeparator];
     NSUInteger idx = 0;
     SKBookmark *item = [self insertionFolderAndChildIndex:&idx];
     
