@@ -49,20 +49,4 @@
     [super validate];
 }
 
-- (void)setLabels:(NSString *)label {
-    [self setLabel:label];
-    [self setPaletteLabel:label];
-}
-
-- (void)setViewWithSizes:(NSView *)view {
-    if ([view isKindOfClass:[NSSegmentedControl class]] || [view isKindOfClass:[NSStepper class]]) {
-        [(NSSegmentedControl *)view sizeToFit];
-    }
-    [self setView:view];
-}
-
-- (void)setImageNamed:(NSString *)name {
-    [self setImage:[NSImage imageNamed:name]];
-}
-
 @end

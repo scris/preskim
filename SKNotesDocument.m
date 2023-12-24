@@ -58,6 +58,7 @@
 #import "NSView_SKExtensions.h"
 #import "NSFileManager_SKExtensions.h"
 #import "SKToolbarItem.h"
+#import "NSToolbarItem_SKExtensions.h"
 #import "SKPrintableView.h"
 #import "SKPDFView.h"
 #import "NSPointerArray_SKExtensions.h"
@@ -871,7 +872,7 @@
 - (void)setupToolbarForWindow:(NSWindow *)aWindow {
     // Create a new toolbar instance, and attach it to our document window
     NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:SKNotesDocumentToolbarIdentifier];
-    SKToolbarItem *item;
+    NSToolbarItem *item;
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
     
     // Set up toolbar properties: Allow customization, give a default display mode, and remember state in user defaults

@@ -51,7 +51,6 @@
 #import "NSEvent_SKExtensions.h"
 #import "NSFileManager_SKExtensions.h"
 #import "NSView_SKExtensions.h"
-#import "SKToolbarItem.h"
 #import "NSImage_SKExtensions.h"
 
 #define SKDownloadsToolbarIdentifier                @"SKDownloadsToolbarIdentifier"

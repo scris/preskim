@@ -1,10 +1,10 @@
 //
-//  SKToolbarItem.h
+//  NSToolbarItem_SKExtensions.m
 //  Skim
 //
-//  Created by Christiaan Hofman on 4/24/07.
+//  Created by Christiaan Hofman on 24/12/2023.
 /*
- This software is Copyright (c) 2007-2023
+ This software is Copyright (c) 2023
  Christiaan Hofman. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -36,8 +36,24 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Cocoa/Cocoa.h>
+#import "NSToolbarItem_SKExtensions.h"
 
+@implementation NSToolbarItem (NSToolbarItem_SKExtensions)
 
-@interface SKToolbarItem : NSToolbarItem
+- (void)setLabels:(NSString *)label {
+    [self setLabel:label];
+    [self setPaletteLabel:label];
+}
+
+- (void)setViewWithSizes:(NSView *)view {
+    if ([view isKindOfClass:[NSSegmentedControl class]] || [view isKindOfClass:[NSStepper class]]) {
+        [(NSSegmentedControl *)view sizeToFit];
+    }
+    [self setView:view];
+}
+
+- (void)setImageNamed:(NSString *)name {
+    [self setImage:[NSImage imageNamed:name]];
+}
+
 @end

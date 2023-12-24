@@ -1,10 +1,10 @@
 //
-//  SKToolbarItem.h
+//  NSToolbarItem_SKExtensions.h
 //  Skim
 //
-//  Created by Christiaan Hofman on 4/24/07.
+//  Created by Christiaan Hofman on 24/12/2023.
 /*
- This software is Copyright (c) 2007-2023
+ This software is Copyright (c) 2023
  Christiaan Hofman. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -38,6 +38,14 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
-@interface SKToolbarItem : NSToolbarItem
+@interface NSToolbarItem (NSToolbarItem_SKExtensions)
+
+- (void)setLabels:(NSString *)label;
+- (void)setViewWithSizes:(NSView *)view;
+- (void)setImageNamed:(NSString *)name;
+
 @end
+
+NS_ASSUME_NONNULL_END

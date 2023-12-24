@@ -41,6 +41,7 @@
 #import "SKTypeSelectHelper.h"
 #import "SKStatusBar.h"
 #import "SKToolbarItem.h"
+#import "NSToolbarItem_SKExtensions.h"
 #import "SKStringConstants.h"
 #import "NSMenu_SKExtensions.h"
 #import "NSURL_SKExtensions.h"
@@ -1117,7 +1118,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
 - (void)setupToolbar {
     // Create a new toolbar instance, and attach it to our document window
     NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:SKBookmarksToolbarIdentifier];
-    SKToolbarItem *item;
+    NSToolbarItem *item;
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:3];
     
     // Set up toolbar properties: Allow customization, give a default display mode, and remember state in user defaults
