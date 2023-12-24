@@ -217,7 +217,7 @@ static char SKMainWindowContentLayoutObservationContext;
 @implementation SKMainWindowController
 
 @synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, statusBar, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
-@dynamic pdfDocument, notes, thumbnails, snapshots, countOfSnapshots, searchResults, countOfSearchResults, groupedSearchResults, countOfGroupedSearchResults, presentationOptions, presentationUndoManager, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
+@dynamic pdfDocument, notes, thumbnails, snapshots, searchResults, groupedSearchResults, presentationOptions, presentationUndoManager, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -1296,14 +1296,6 @@ static char SKMainWindowContentLayoutObservationContext;
 - (NSArray *)notes {
     return notes;
 }
-	 
-- (NSUInteger)countOfNotes {
-    return [notes count];
-}
-
-- (PDFAnnotation *)objectInNotesAtIndex:(NSUInteger)theIndex {
-    return [notes objectAtIndex:theIndex];
-}
 
 - (void)insertObject:(PDFAnnotation *)note inNotesAtIndex:(NSUInteger)theIndex {
     [notes insertObject:note atIndex:theIndex];
@@ -1369,14 +1361,6 @@ static char SKMainWindowContentLayoutObservationContext;
     return snapshots;
 }
 
-- (NSUInteger)countOfSnapshots {
-    return [snapshots count];
-}
-
-- (SKSnapshotWindowController *)objectInSnapshotsAtIndex:(NSUInteger)theIndex {
-    return [snapshots objectAtIndex:theIndex];
-}
-
 - (void)insertObject:(SKSnapshotWindowController *)snapshot inSnapshotsAtIndex:(NSUInteger)theIndex {
     [snapshots insertObject:snapshot atIndex:theIndex];
 }
@@ -1430,44 +1414,12 @@ static char SKMainWindowContentLayoutObservationContext;
     [searchResults setArray:newSearchResults];
 }
 
-- (NSUInteger)countOfSearchResults {
-    return [searchResults count];
-}
-
-- (PDFSelection *)objectInSearchResultsAtIndex:(NSUInteger)theIndex {
-    return [searchResults objectAtIndex:theIndex];
-}
-
 - (void)insertObject:(PDFSelection *)searchResult inSearchResultsAtIndex:(NSUInteger)theIndex {
     [searchResults insertObject:searchResult atIndex:theIndex];
 }
 
-- (void)removeObjectFromSearchResultsAtIndex:(NSUInteger)theIndex {
-    [searchResults removeObjectAtIndex:theIndex];
-}
-
-- (NSArray *)groupedSearchResults {
-    return groupedSearchResults;
-}
-
 - (void)setGroupedSearchResults:(NSArray *)newGroupedSearchResults {
     [groupedSearchResults setArray:newGroupedSearchResults];
-}
-
-- (NSUInteger)countOfGroupedSearchResults {
-    return [groupedSearchResults count];
-}
-
-- (SKGroupedSearchResult *)objectInGroupedSearchResultsAtIndex:(NSUInteger)theIndex {
-    return [groupedSearchResults objectAtIndex:theIndex];
-}
-
-- (void)insertObject:(SKGroupedSearchResult *)groupedSearchResult inGroupedSearchResultsAtIndex:(NSUInteger)theIndex {
-    [groupedSearchResults insertObject:groupedSearchResult atIndex:theIndex];
-}
-
-- (void)removeObjectFromGroupedSearchResultsAtIndex:(NSUInteger)theIndex {
-    [groupedSearchResults removeObjectAtIndex:theIndex];
 }
 
 - (NSDictionary *)presentationOptions {
@@ -1955,7 +1907,7 @@ static char SKMainWindowContentLayoutObservationContext;
         
         if ([currentSel hasCharacters]) {
             [pdfView setCurrentSelection:currentSel animate:YES];
-            [[statusBar rightField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Match %lu of %lu", @"Status message"), (unsigned long)[searchResults indexOfObject:currentSel] + 1, (unsigned long)[self countOfSearchResults]]];
+            [[statusBar rightField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Match %lu of %lu", @"Status message"), (unsigned long)[searchResults indexOfObject:currentSel] + 1, (unsigned long)[searchResults count]]];
         } else {
             [self updateRightStatus];
         }
@@ -3046,7 +2998,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             snapshotTimer = nil;
         }
         
-        if ([self countOfSnapshots])
+        if ([[self snapshots] count])
             [self allSnapshotsNeedUpdate];
     }
 }
