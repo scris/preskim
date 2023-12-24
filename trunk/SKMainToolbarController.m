@@ -41,6 +41,7 @@
 #import "SKMainWindowController_Actions.h"
 #import "SKMainWindowController_FullScreen.h"
 #import "SKToolbarItem.h"
+#import "NSToolbarItem_SKExtensions.h"
 #import "NSSegmentedControl_SKExtensions.h"
 #import "SKStringConstants.h"
 #import "SKPDFView.h"
@@ -169,7 +170,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (NSToolbarItem *)toolbarItemForItemIdentifier:(NSString *)identifier {
-    SKToolbarItem *item = (SKToolbarItem *)[toolbarItems objectForKey:identifier];
+    NSToolbarItem *item = [toolbarItems objectForKey:identifier];
     NSMenu *menu;
     NSMenuItem *menuItem;
     
@@ -737,11 +738,11 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [pacerSpeedStepper setToolTip:NSLocalizedString(@"Pacer Speed", @"Tool tip message")];
             [item setMenuFormRepresentation:menuItem];
             
-            SKToolbarItem *item1 = [[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerButtonItemIdentifier];
+            NSToolbarItem *item1 = [[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerButtonItemIdentifier];
             [item1 setViewWithSizes:pacerButton];
-            SKToolbarItem *item2 = [[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedFieldItemIdentifier];
+            NSToolbarItem *item2 = [[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedFieldItemIdentifier];
             [item2 setViewWithSizes:pacerSpeedField];
-            SKToolbarItem *item3 = [[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedStepperItemIdentifier];
+            NSToolbarItem *item3 = [[SKToolbarItem alloc] initWithItemIdentifier:SKDocumentToolbarPacerSpeedStepperItemIdentifier];
             [item3 setViewWithSizes:pacerSpeedStepper];
             [group setSubitems:@[item1, item2, item3]];
             

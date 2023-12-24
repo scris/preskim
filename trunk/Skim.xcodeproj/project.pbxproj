@@ -92,6 +92,7 @@
 		CE20B1950C9F23CC007C72F9 /* NSView_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE20B1930C9F23CC007C72F9 /* NSView_SKExtensions.m */; };
 		CE21F736239944990078B257 /* SKColorMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE21F735239944990078B257 /* SKColorMenuView.m */; };
 		CE24875C112C9651006B4FA5 /* NSFont_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE24875B112C9651006B4FA5 /* NSFont_SKExtensions.m */; };
+		CE2526362B3834E40084F43D /* NSToolbarItem_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2526352B3834E40084F43D /* NSToolbarItem_SKExtensions.m */; };
 		CE25BB6B163FFB770046A348 /* Skim.help in Resources */ = {isa = PBXBuildFile; fileRef = CE25BB43163FFB770046A348 /* Skim.help */; };
 		CE26175F16CCFC4900BDCE7C /* SKSyncDot.m in Sources */ = {isa = PBXBuildFile; fileRef = CE26175E16CCFC4900BDCE7C /* SKSyncDot.m */; };
 		CE2DE4920B85D48F00D0DA12 /* SKThumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2DE4910B85D48F00D0DA12 /* SKThumbnail.m */; };
@@ -866,6 +867,8 @@
 		CE21F735239944990078B257 /* SKColorMenuView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKColorMenuView.m; sourceTree = "<group>"; };
 		CE24875A112C9651006B4FA5 /* NSFont_SKExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFont_SKExtensions.h; sourceTree = "<group>"; };
 		CE24875B112C9651006B4FA5 /* NSFont_SKExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFont_SKExtensions.m; sourceTree = "<group>"; };
+		CE2526342B3834E40084F43D /* NSToolbarItem_SKExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSToolbarItem_SKExtensions.h; sourceTree = "<group>"; };
+		CE2526352B3834E40084F43D /* NSToolbarItem_SKExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSToolbarItem_SKExtensions.m; sourceTree = "<group>"; };
 		CE25BB43163FFB770046A348 /* Skim.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Skim.help; sourceTree = "<group>"; };
 		CE26175D16CCFC4900BDCE7C /* SKSyncDot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKSyncDot.h; sourceTree = "<group>"; };
 		CE26175E16CCFC4900BDCE7C /* SKSyncDot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKSyncDot.m; sourceTree = "<group>"; };
@@ -2165,6 +2168,8 @@
 				CEE54F6F0DA3FBE00037169F /* NSSegmentedControl_SKExtensions.m */,
 				CE5234A41A6424F200710CF2 /* NSShadow_SKExtensions.h */,
 				CE5234A51A6424F200710CF2 /* NSShadow_SKExtensions.m */,
+				CE2526342B3834E40084F43D /* NSToolbarItem_SKExtensions.h */,
+				CE2526352B3834E40084F43D /* NSToolbarItem_SKExtensions.m */,
 				CEF7119F0B90B714003A2771 /* NSUserDefaultsController_SKExtensions.h */,
 				CEF711A00B90B714003A2771 /* NSUserDefaultsController_SKExtensions.m */,
 				CE20B1920C9F23CC007C72F9 /* NSView_SKExtensions.h */,
@@ -2803,6 +2808,7 @@
 				CE3A45530B7A04A4006B64D3 /* NSBezierPath_SKExtensions.m in Sources */,
 				CEBCA4C02868A93A00E6376E /* SKLine.m in Sources */,
 				CE4EBDDA0B7BF3B30091F228 /* SKSideWindow.m in Sources */,
+				CE2526362B3834E40084F43D /* NSToolbarItem_SKExtensions.m in Sources */,
 				CE4EC88C0B7E6EDB0091F228 /* SKSplitView.m in Sources */,
 				CE38ECD30B8093B200A1B779 /* NSString_SKExtensions.m in Sources */,
 				F9CDD67B0B837A7F006363C3 /* SKPreferenceController.m in Sources */,

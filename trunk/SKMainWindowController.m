@@ -67,7 +67,6 @@
 #import "NSWindowController_SKExtensions.h"
 #import "SKImageToolTipWindow.h"
 #import "PDFSelection_SKExtensions.h"
-#import "SKToolbarItem.h"
 #import "NSValue_SKExtensions.h"
 #import "NSString_SKExtensions.h"
 #import "SKReadingBar.h"
