@@ -1134,7 +1134,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     item = [[SKToolbarItem alloc] initWithItemIdentifier:SKBookmarksNewFolderToolbarItemIdentifier];
     [item setLabels:NSLocalizedString(@"New Folder", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Add a New Folder", @"Tool tip message")];
-    [item setViewWithSizes:folderSegmentedControl];
+    [item setView:folderSegmentedControl];
     if (@available(macOS 11.0, *)) {} else
         [folderSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksNewFolderToolbarItemIdentifier];
@@ -1143,7 +1143,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     [item setLabels:NSLocalizedString(@"New Separator", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Add a New Separator", @"Tool tip message")];
     [item setImage:[NSImage imageNamed:SKImageNameToolbarNewSeparator]];
-    [item setViewWithSizes:separatorSegmentedControl];
+    [item setView:separatorSegmentedControl];
     if (@available(macOS 11.0, *)) {} else
         [separatorSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];
     [dict setObject:item forKey:SKBookmarksNewSeparatorToolbarItemIdentifier];
@@ -1152,7 +1152,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
     [item setLabels:NSLocalizedString(@"Delete", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Delete Selected Items", @"Tool tip message")];
     [item setImage:[NSImage imageNamed:SKImageNameToolbarDelete]];
-    [item setViewWithSizes:deleteSegmentedControl];
+    [item setView:deleteSegmentedControl];
     [deleteSegmentedControl setEnabled:[outlineView canDelete]];
     if (@available(macOS 11.0, *)) {} else
         [deleteSegmentedControl setImageScaling:NSImageScaleNone forSegment:0];

@@ -49,4 +49,11 @@
     [super validate];
 }
 
+- (void)setView:(NSView *)view {
+    if ([view isKindOfClass:[NSSegmentedControl class]] || [view isKindOfClass:[NSStepper class]]) {
+        [(NSSegmentedControl *)view sizeToFit];
+    }
+    [super setView:view];
+}
+
 @end
