@@ -314,14 +314,6 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
 
 #pragma mark Scripting
 
-- (NSArray *)pages {
-    NSMutableArray *pages = [NSMutableArray array];
-    NSInteger i, count = [[self pdfDocument] pageCount];
-    for (i = 0; i < count; i++)
-        [pages addObject:[[self pdfDocument] pageAtIndex:i]];
-    return pages;
-}
-
 - (NSUInteger)countOfPages {
     return [[self pdfDocument] pageCount];
 }

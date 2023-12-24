@@ -105,7 +105,6 @@ typedef NS_ENUM(NSInteger, SKInteractionMode) {
 
 #pragma mark Scripting
 
-- (nullable NSArray<PDFPage *> *)pages;
 - (NSUInteger)countOfPages;
 - (PDFPage *)objectInPagesAtIndex:(NSUInteger)theIndex;
 
