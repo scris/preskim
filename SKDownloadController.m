@@ -233,11 +233,11 @@ static SKDownloadController *sharedDownloadController = nil;
     [self updateClearButton];
 }
 
-- (void)removeObjectFromDownloadsAtIndex:(NSUInteger)anIndex {
-    SKDownload *download = [downloads objectAtIndex:anIndex];
-    [self endObservingDownloads:@[download]];
-    [download cancel];
-    [downloads removeObjectAtIndex:anIndex];
+- (void)removeDownloadsAtIndexes:(NSIndexSet *)indexes {
+    NSArray *oldDownloads = [downloads objectsAtIndexes:indexes];
+    [self endObservingDownloads:oldDownloads];
+    [downloads makeObjectsPerformSelector:@selector(cancel)];
+    [downloads removeObjectsAtIndexes:indexes];
     [self updateClearButton];
 }
 
@@ -260,7 +260,7 @@ static SKDownloadController *sharedDownloadController = nil;
         options = NSTableViewAnimationEffectNone;
     [tableView beginUpdates];
     [tableView removeRowsAtIndexes:indexes withAnimation:options];
-    [[self mutableArrayValueForKey:DOWNLOADS_KEY] removeObjectsAtIndexes:indexes];
+    [self removeDownloadsAtIndexes:indexes];
     [tableView endUpdates];
 }
 

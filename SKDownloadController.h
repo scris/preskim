@@ -75,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSUInteger countOfDownloads;
 - (SKDownload *)objectInDownloadsAtIndex:(NSUInteger)anIndex;
 - (void)insertObject:(SKDownload *)download inDownloadsAtIndex:(NSUInteger)anIndex;
-- (void)removeObjectFromDownloadsAtIndex:(NSUInteger)anIndex;
+- (void)removeDownloadsAtIndexes:(NSIndexSet *)indexes;
 
 // these notify and animate, so should be used to add/remove downloads
 - (void)addObjectToDownloads:(SKDownload *)download;

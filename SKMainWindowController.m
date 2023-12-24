@@ -2165,7 +2165,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         }
         if ([annotation isSkimNote] && mwcFlags.addOrRemoveNotesInBulk == 0) {
             mwcFlags.updatingNoteSelection = 1;
-            [[self mutableArrayValueForKey:NOTES_KEY] addObject:annotation];
+            [self insertObject:annotation inNotesAtIndex:[notes count]];
             [rightSideController.noteArrayController rearrangeObjects]; // doesn't seem to be done automatically
             mwcFlags.updatingNoteSelection = 0;
             [rightSideController.noteOutlineView reloadData];
@@ -2203,7 +2203,9 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             [[self windowControllerForNote:annotation] close];
             
             mwcFlags.updatingNoteSelection = 1;
-            [[self mutableArrayValueForKey:NOTES_KEY] removeObject:annotation];
+            NSUInteger i = [notes indexOfObject:annotation];
+            if (i != NSNotFound)
+                [self removeObjectFromNotesAtIndex:i];
             [rightSideController.noteArrayController rearrangeObjects]; // doesn't seem to be done automatically
             mwcFlags.updatingNoteSelection = 0;
             [rightSideController.noteOutlineView reloadData];
@@ -2318,12 +2320,12 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     [controller setThumbnail:image];
     
     if (openType == SKSnapshotOpenFromSetup) {
-        [[self mutableArrayValueForKey:SNAPSHOTS_KEY] addObject:controller];
+        [self insertObject:controller inSnapshotsAtIndex:[snapshots count]];
         [rightSideController.snapshotTableView reloadData];
     } else {
         if (openType == SKSnapshotOpenNormal) {
             [rightSideController.snapshotTableView beginUpdates];
-            [[self mutableArrayValueForKey:SNAPSHOTS_KEY] addObject:controller];
+            [self insertObject:controller inSnapshotsAtIndex:[snapshots count]];
             NSUInteger row = [[rightSideController.snapshotArrayController arrangedObjects] indexOfObject:controller];
             if (row != NSNotFound) {
                 NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideDown;
@@ -2349,7 +2351,9 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                 options = NSTableViewAnimationEffectNone;
             [rightSideController.snapshotTableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:options];
         }
-        [[self mutableArrayValueForKey:SNAPSHOTS_KEY] removeObject:controller];
+        NSUInteger i = [snapshots indexOfObject:controller];
+        if (i != NSNotFound)
+            [self removeObjectFromSnapshotsAtIndex:i];
         [rightSideController.snapshotTableView endUpdates];
         [self setRecentInfoNeedsUpdate:YES];
     }
