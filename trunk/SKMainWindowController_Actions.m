@@ -810,6 +810,9 @@ static NSArray *allMainDocumentPDFViews() {
         else
             [self displayTocViewAnimating:YES];
         [self updateRightStatus];
+        
+        [self setSearchResults:nil];
+        [self setGroupedSearchResults:nil];
     } else {
         NSInteger options = mwcFlags.caseInsensitiveSearch ? NSCaseInsensitiveSearch : 0;
         if (mwcFlags.wholeWordSearch) {
