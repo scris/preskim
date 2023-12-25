@@ -52,15 +52,15 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
     __weak SKBookmark *parent;
 }
 
-+ (NSArray *)bookmarksForURLs:(NSArray *)urls;
++ (NSArray *)bookmarksForURLs:(NSArray<NSURL *> *)urls;
 
 - (nullable instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
-- (nullable instancetype)initWithSetup:(NSDictionary *)aSetupDict label:(NSString *)aLabel;
-- (nullable instancetype)initFolderWithChildren:(nullable NSArray *)aChildren label:(NSString *)aLabel;
-- (nullable instancetype)initRootWithChildrenProperties:(nullable NSArray *)childrenProperties;
-- (nullable instancetype)initSessionWithSetups:(NSArray *)aSetupDicts label:(NSString *)aLabel;
+- (nullable instancetype)initWithSetup:(NSDictionary<NSString *, id> *)aSetupDict label:(NSString *)aLabel;
+- (nullable instancetype)initFolderWithChildren:(nullable NSArray<SKBookmark *> *)aChildren label:(NSString *)aLabel;
+- (nullable instancetype)initRootWithChildrenProperties:(nullable NSArray<NSDictionary<NSString *, id> *> *)childrenProperties;
+- (nullable instancetype)initSessionWithSetups:(NSArray<NSDictionary<NSString *, id> *> *)aSetupDicts label:(NSString *)aLabel;
 - (nullable instancetype)initSeparator;
-- (nullable instancetype)initWithProperties:(NSDictionary *)dictionary;
+- (nullable instancetype)initWithProperties:(NSDictionary<NSString *, id> *)dictionary;
 
 @property (nonatomic, readonly) NSDictionary<NSString *, id> *properties;
 @property (nonatomic, readonly) SKBookmarkType bookmarkType;
@@ -75,7 +75,7 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 @property (nonatomic, readonly) BOOL hasSetup;
 @property (nonatomic, nullable, readonly) NSString *tabs;
 @property (nonatomic, nullable, weak) SKBookmark *parent;
-@property (nonatomic, readonly) NSArray *containingBookmarks;
+@property (nonatomic, readonly) NSArray<SKBookmark *> *containingBookmarks;
 
 @property (nonatomic, readonly) NSArray<SKBookmark *> *children;
 @property (nonatomic, readonly) NSUInteger countOfChildren;
@@ -98,7 +98,7 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 - (BOOL)isDescendantOf:(SKBookmark *)bookmark;
 - (BOOL)isDescendantOfArray:(NSArray<SKBookmark *> *)bookmarks;
 
-@property (nonatomic, nullable, readonly) NSURL * skimURL;
+@property (nonatomic, nullable, readonly) NSURL *skimURL;
 
 @end
 
