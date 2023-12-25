@@ -80,13 +80,17 @@ static char SKDownloadPropertiesObservationContext;
 static NSString *SKDownloadsIdentifier = nil;
 
 @interface SKDownloadController () <NSURLSessionDelegate>
-@end
 
-@interface SKDownloadController (SKPrivate)
+@property (nonatomic, readonly) NSUInteger countOfDownloads;
+- (SKDownload *)objectInDownloadsAtIndex:(NSUInteger)anIndex;
+- (void)insertObject:(SKDownload *)download inDownloadsAtIndex:(NSUInteger)anIndex;
+- (void)removeDownloadsAtIndexes:(NSIndexSet *)indexes;
+
 - (void)handleApplicationWillTerminateNotification:(NSNotification *)notification;
 - (void)startObservingDownloads:(NSArray *)newDownloads;
 - (void)endObservingDownloads:(NSArray *)oldDownloads;
 - (void)updateClearButton;
+
 @end
 
 @implementation SKDownloadController
@@ -223,47 +227,42 @@ static SKDownloadController *sharedDownloadController = nil;
 }
 
 - (void)insertObject:(SKDownload *)download inDownloadsAtIndex:(NSUInteger)anIndex {
+    NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideDown;
+    if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowSlideAnimation] == NO)
+        options = NSTableViewAnimationEffectNone;
+    [tableView beginUpdates];
+    [tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:anIndex] withAnimation:options];
     [downloads insertObject:download atIndex:anIndex];
     [self startObservingDownloads:@[download]];
     [download start];
+    [tableView endUpdates];
     [self updateClearButton];
 }
 
 - (void)removeDownloadsAtIndexes:(NSIndexSet *)indexes {
     NSArray *oldDownloads = [downloads objectsAtIndexes:indexes];
     [self endObservingDownloads:oldDownloads];
-    [downloads makeObjectsPerformSelector:@selector(cancel)];
+    [oldDownloads makeObjectsPerformSelector:@selector(cancel)];
+    NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideUp;
+    if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowSlideAnimation] == NO)
+        options = NSTableViewAnimationEffectNone;
+    [tableView beginUpdates];
+    [tableView removeRowsAtIndexes:indexes withAnimation:options];
     [downloads removeObjectsAtIndexes:indexes];
+    [tableView endUpdates];
     [self updateClearButton];
 }
 
 #pragma mark Adding/Removing Downloads
 
 - (void)addObjectToDownloads:(SKDownload *)download {
-    NSInteger row = [self countOfDownloads];
-    NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideDown;
-    if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowSlideAnimation] == NO)
-        options = NSTableViewAnimationEffectNone;
-    [tableView beginUpdates];
-    [tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:options];
-    [self insertObject:download inDownloadsAtIndex:row];
-    [tableView endUpdates];
-}
-
-- (void)removeObjectsFromDownloadsAtIndexes:(NSIndexSet *)indexes {
-    NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideUp;
-    if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowSlideAnimation] == NO)
-        options = NSTableViewAnimationEffectNone;
-    [tableView beginUpdates];
-    [tableView removeRowsAtIndexes:indexes withAnimation:options];
-    [self removeDownloadsAtIndexes:indexes];
-    [tableView endUpdates];
+    [self insertObject:download inDownloadsAtIndex:[self countOfDownloads]];
 }
 
 - (void)removeObjectFromDownloads:(SKDownload *)download {
     NSUInteger idx = [downloads indexOfObject:download];
     if (idx != NSNotFound)
-        [self removeObjectsFromDownloadsAtIndexes:[NSIndexSet indexSetWithIndex:idx]];
+        [self removeDownloadsAtIndexes:[NSIndexSet indexSetWithIndex:idx]];
 }
 
 #pragma mark Actions
@@ -283,7 +282,7 @@ static SKDownloadController *sharedDownloadController = nil;
             [indexes addIndex:i];
     }
     if ([indexes count])
-        [self removeObjectsFromDownloadsAtIndexes:indexes];
+        [self removeDownloadsAtIndexes:indexes];
 }
 
 - (IBAction)moveToTrash:(id)sender {
@@ -464,7 +463,7 @@ static SKDownloadController *sharedDownloadController = nil;
     else if ([download canRemove])
         [removeIndexes addIndex:row];
     if ([removeIndexes count])
-        [self removeObjectsFromDownloadsAtIndexes:removeIndexes];
+        [self removeDownloadsAtIndexes:removeIndexes];
 }
 
 - (BOOL)tableView:(NSTableView *)aTableView canDeleteRowsWithIndexes:(NSIndexSet *)rowIndexes {
