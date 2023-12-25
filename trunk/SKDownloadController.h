@@ -64,8 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable SKDownload *)addDownloadForURL:(nullable NSURL *)aURL;
 
-- (void)removeObjectFromDownloads:(SKDownload *)download;
-
 - (IBAction)showDownloadPreferences:(nullable id)sender;
 - (IBAction)clearDownloads:(nullable id)sender;
 
@@ -76,8 +74,6 @@ NS_ASSUME_NONNULL_BEGIN
 // these notify and animate, so should be used to add/remove downloads
 - (void)addObjectToDownloads:(SKDownload *)download;
 - (void)removeObjectFromDownloads:(SKDownload *)download;
-
-- (void)setupToolbar;
 
 - (nullable NSURLSessionDownloadTask *)newDownloadTaskForDownload:(SKDownload *)download;
 - (void)removeDownloadTask:(NSURLSessionDownloadTask *)task;

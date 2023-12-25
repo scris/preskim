@@ -81,6 +81,8 @@ static NSString *SKDownloadsIdentifier = nil;
 
 @interface SKDownloadController () <NSURLSessionDelegate>
 
+- (void)setupToolbar;
+
 @property (nonatomic, readonly) NSUInteger countOfDownloads;
 - (SKDownload *)objectInDownloadsAtIndex:(NSUInteger)anIndex;
 - (void)insertObject:(SKDownload *)download inDownloadsAtIndex:(NSUInteger)anIndex;
