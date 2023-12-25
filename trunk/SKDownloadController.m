@@ -233,9 +233,11 @@ static SKDownloadController *sharedDownloadController = nil;
     [tableView beginUpdates];
     [tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:anIndex] withAnimation:options];
     [downloads insertObject:download atIndex:anIndex];
+    [tableView endUpdates];
+    
     [self startObservingDownloads:@[download]];
     [download start];
-    [tableView endUpdates];
+    
     [self updateClearButton];
 }
 
@@ -243,6 +245,7 @@ static SKDownloadController *sharedDownloadController = nil;
     NSArray *oldDownloads = [downloads objectsAtIndexes:indexes];
     [self endObservingDownloads:oldDownloads];
     [oldDownloads makeObjectsPerformSelector:@selector(cancel)];
+    
     NSTableViewAnimationOptions options = NSTableViewAnimationEffectGap | NSTableViewAnimationSlideUp;
     if ([self isWindowLoaded] == NO || [[self window] isVisible] == NO || [NSView shouldShowSlideAnimation] == NO)
         options = NSTableViewAnimationEffectNone;
@@ -250,6 +253,7 @@ static SKDownloadController *sharedDownloadController = nil;
     [tableView removeRowsAtIndexes:indexes withAnimation:options];
     [downloads removeObjectsAtIndexes:indexes];
     [tableView endUpdates];
+    
     [self updateClearButton];
 }
 
@@ -535,8 +539,7 @@ static SKDownloadController *sharedDownloadController = nil;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &SKDownloadPropertiesObservationContext) {
-        NSUInteger row = [downloads containsObject:object];
-        if (row != NSNotFound) {
+        if ([downloads containsObject:object]) {
             if ([keyPath isEqualToString:SKDownloadFileURLKey]) {
                 [tableView reloadTypeSelectStrings];
             } else if ([keyPath isEqualToString:SKDownloadStatusKey]) {
@@ -544,7 +547,7 @@ static SKDownloadController *sharedDownloadController = nil;
                 [self setTouchBar:nil];
                 if ([object status] == SKDownloadStatusFinished) {
                     [self openDownload:object];
-                    if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible] && [[QLPreviewPanel sharedPreviewPanel] dataSource] == self && [tableView isRowSelected:row])
+                    if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible] && [[QLPreviewPanel sharedPreviewPanel] dataSource] == self && [tableView isRowSelected:[downloads indexOfObject:object]])
                         [[QLPreviewPanel sharedPreviewPanel] reloadData];
                 }
             }
