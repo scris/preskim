@@ -111,7 +111,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
 
 #pragma mark Accessors
 
-- (id)delegate {
+- (id<SKTypeSelectDelegate>)delegate {
     id del = nil;
     @synchronized(self) {
         del = delegate;
@@ -119,7 +119,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
     return del;
 }
 
-- (void)setDelegate:(id)newDelegate {
+- (void)setDelegate:(id<SKTypeSelectDelegate>)newDelegate {
     @synchronized(self) {
         if (delegate != newDelegate) {
             delegate = newDelegate;
