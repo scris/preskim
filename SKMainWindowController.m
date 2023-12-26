@@ -2866,7 +2866,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
             [[[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kLockedBadgeIcon)] drawInRect:rect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.5];
         [pageImage unlockFocus];
         
-        [pageLabels enumerateObjectsUsingBlock:^(id label, NSUInteger i, BOOL *stop) {
+        [pageLabels enumerateObjectsUsingBlock:^(NSString *label, NSUInteger i, BOOL *stop) {
             SKThumbnail *thumbnail = [[SKThumbnail alloc] initWithImage:pageImage label:label pageIndex:i];
             [thumbnail setDirty:YES];
             [newThumbnails addObject:thumbnail];
@@ -2936,7 +2936,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 		return;
 	
 	// Walk outline view looking for best firstpage number match.
-    [orderedNotes enumerateObjectsWithOptions:options usingBlock:^(id annotation, NSUInteger i, BOOL *stop) {
+    [orderedNotes enumerateObjectsWithOptions:options usingBlock:^(PDFAnnotation *annotation, NSUInteger i, BOOL *stop) {
 		if ([annotation pageIndex] == pageIndex) {
             selAnnotation = annotation;
 			*stop = YES;

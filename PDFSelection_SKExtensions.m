@@ -248,7 +248,7 @@ static NSRange rangeOfSubstringOfStringAtIndex(NSString *string, NSArray *substr
     NSUInteger length = [string length];
     __block NSRange range = NSMakeRange(0, 0);
     
-    [substrings enumerateObjectsUsingBlock:^(id substring, NSUInteger i, BOOL *stop) {
+    [substrings enumerateObjectsUsingBlock:^(NSString *substring, NSUInteger i, BOOL *stop) {
         NSRange searchRange = NSMakeRange(NSMaxRange(range), length - NSMaxRange(range));
         if ([substring length] == 0) {
             if (i == anIndex) {
