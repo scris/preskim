@@ -100,7 +100,7 @@ enum {
     
     SKFieldEditor                       *fieldEditor;
     
-    NSMutableArray<SKThumbnail *>       *thumbnails;
+    NSArray<SKThumbnail *>              *thumbnails;
     CGFloat                             roundedThumbnailSize;
     
     NSMutableArray<PDFSelection *>      *searchResults;
@@ -243,7 +243,7 @@ enum {
 - (void)removeObjectFromNotesAtIndex:(NSUInteger)theIndex;
 - (void)removeAllObjectsFromNotes;
 
-@property (nonatomic, nullable, copy) NSArray<SKThumbnail *> *thumbnails;
+@property (nonatomic, copy) NSArray<SKThumbnail *> *thumbnails;
 
 @property (nonatomic, readonly) NSArray<SKSnapshotWindowController *> *snapshots;
 - (void)insertObject:(SKSnapshotWindowController *)snapshot inSnapshotsAtIndex:(NSUInteger)theIndex;
