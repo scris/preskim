@@ -245,7 +245,7 @@ static char SKMainWindowContentLayoutObservationContext;
         rating = 0.0;
         snapshots = [[NSMutableArray alloc] init];
         dirtySnapshots = [[NSMutableArray alloc] init];
-        pageLabels = [[NSMutableArray alloc] init];
+        pageLabels = [[NSArray alloc] init];
         lastViewedPages = [[NSPointerArray alloc] initWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality];
         rowHeights = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality capacity:0];
 
@@ -784,7 +784,7 @@ static char SKMainWindowContentLayoutObservationContext;
 - (void)updatePageLabelsAndOutlineForExpansionState:(NSDictionary *)info {
     // update page labels, also update the size of the table columns displaying the labels
     [self willChangeValueForKey:PAGELABELS_KEY];
-    [pageLabels setArray:[[pdfView document] pageLabels]];
+    pageLabels = [[[pdfView document] pageLabels] copy];
     [self didChangeValueForKey:PAGELABELS_KEY];
     
     [self updatePageLabel];
@@ -833,7 +833,7 @@ static char SKMainWindowContentLayoutObservationContext;
         return;
     
     [self willChangeValueForKey:PAGELABELS_KEY];
-    [pageLabels setArray:newPageLabels];
+    pageLabels = [newPageLabels copy];
     [self didChangeValueForKey:PAGELABELS_KEY];
     
     [self updatePageLabel];

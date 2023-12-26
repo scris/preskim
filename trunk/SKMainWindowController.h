@@ -143,7 +143,7 @@ enum {
     NSButton                            *colorAccessoryView;
     NSButton                            *textColorAccessoryView;
     
-    NSMutableArray<NSString *>          *pageLabels;
+    NSArray<NSString *>                 *pageLabels;
     
     NSString                            *pageLabel;
     
