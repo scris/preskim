@@ -56,7 +56,6 @@ extern NSString *SKGroupedSearchResultCountKey;
 @property (weak, nonatomic, readonly) NSString *label;
 @property (nonatomic, readonly) NSArray<PDFSelection *> *matches;
 
-+ (instancetype)groupedSearchResultWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount;
 - (instancetype)initWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount;
 
 - (void)addMatch:(PDFSelection *)match;

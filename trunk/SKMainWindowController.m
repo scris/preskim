@@ -1944,7 +1944,7 @@ static char SKMainWindowContentLayoutObservationContext;
         }
     }
     if (result == nil) {
-        result = [SKGroupedSearchResult groupedSearchResultWithPage:page maxCount:maxCount];
+        result = [[SKGroupedSearchResult alloc] initWithPage:page maxCount:maxCount];
         [groupedSearchResults insertObject:result atIndex:i + 1];
     }
     [result addMatch:instance];
