@@ -239,7 +239,7 @@ static char SKMainWindowContentLayoutObservationContext;
         mwcFlags.wholeWordSearch = [sud boolForKey:SKWholeWordSearchKey];
         mwcFlags.caseInsensitiveFilter = [sud boolForKey:SKCaseInsensitiveFilterKey];
         groupedSearchResults = nil;
-        thumbnails = [[NSMutableArray alloc] init];
+        thumbnails = [[NSArray alloc] init];
         notes = [[NSMutableArray alloc] init];
         tags = [[NSArray alloc] init];
         rating = 0.0;
@@ -1072,7 +1072,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [self setSearchResults:nil];
         [self setGroupedSearchResults:nil];
         [self removeAllObjectsFromNotes];
-        [self setThumbnails:nil];
+        [self setThumbnails:@[]];
         [self clearWidgets];
         
         // remember snapshots and close them, without animation
@@ -1345,7 +1345,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)setThumbnails:(NSArray *)newThumbnails {
     [thumbnails setValue:nil forKey:@"delegate"];
-    [thumbnails setArray:newThumbnails];
+    thumbnails = [newThumbnails copy];
     [thumbnails setValue:self forKey:@"delegate"];
 }
 
