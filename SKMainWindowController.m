@@ -119,7 +119,6 @@
 #define MAX_PAGE_COLUMN_WIDTH 100.0
 #define MAX_MIN_COLUMN_WIDTH 100.0
 
-#define PAGELABELS_KEY              @"pageLabels"
 #define SEARCHRESULTS_KEY           @"searchResults"
 #define GROUPEDSEARCHRESULTS_KEY    @"groupedSearchResults"
 #define NOTES_KEY                   @"notes"
@@ -783,9 +782,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)updatePageLabelsAndOutlineForExpansionState:(NSDictionary *)info {
     // update page labels, also update the size of the table columns displaying the labels
-    [self willChangeValueForKey:PAGELABELS_KEY];
     pageLabels = [[[pdfView document] pageLabels] copy];
-    [self didChangeValueForKey:PAGELABELS_KEY];
     
     [self updatePageLabel];
     
@@ -832,9 +829,7 @@ static char SKMainWindowContentLayoutObservationContext;
     if ([newPageLabels isEqualToArray:pageLabels])
         return;
     
-    [self willChangeValueForKey:PAGELABELS_KEY];
     pageLabels = [newPageLabels copy];
-    [self didChangeValueForKey:PAGELABELS_KEY];
     
     [self updatePageLabel];
     
