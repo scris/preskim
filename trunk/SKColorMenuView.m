@@ -165,7 +165,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     NSArray *children = [super accessibilityChildren];
     if ([children count] == 0) {
         NSMutableArray *array = [NSMutableArray array];
-        [colors enumerateObjectsUsingBlock:^(id color, NSUInteger i, BOOL *stop){
+        [colors enumerateObjectsUsingBlock:^(NSColor *color, NSUInteger i, BOOL *stop){
             NSRect rect = [self rectAtIndex:i];
             SKAccessibilityColorElement *element = [SKAccessibilityColorElement accessibilityElementWithRole:NSAccessibilityColorWellRole frame:[self convertRectToScreen:rect] label:[color accessibilityValue] parent:self];
             [element setAccessibilityFrameInParentSpace:rect];
