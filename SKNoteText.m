@@ -53,7 +53,7 @@
     return keyPaths;
 }
 
-- (instancetype)initWithNote:(id)aNote {
+- (instancetype)initWithNote:(PDFAnnotation *)aNote {
     self = [super init];
     if (self) {
         note = aNote;

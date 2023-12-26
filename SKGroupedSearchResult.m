@@ -55,10 +55,6 @@ NSString *SKGroupedSearchResultCountKey = @"count";
     return keyPaths;
 }
 
-+ (instancetype)groupedSearchResultWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount {
-    return [[self alloc] initWithPage:aPage maxCount:aMaxCount];
-}
-
 - (instancetype)initWithPage:(PDFPage *)aPage maxCount:(NSUInteger)aMaxCount {
     self = [super init];
     if (self) {
