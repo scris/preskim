@@ -274,7 +274,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [styleButton setTarget:pdfView];
         [styleButton setAction:@selector(changeCursorStyle:)];
         if (@available(macOS 10.14, *))
-            [[styleButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+            [[styleButton cell] setBackgroundStyle:NSBackgroundStyleEmphasized];
         NSArray *segments = [NSAccessibilityUnignoredDescendant(styleButton) accessibilityChildren];
         [[segments objectAtIndex:0] setAccessibilityLabel:NSLocalizedString(@"arrow", @"Accessibility description")];
         [[segments objectAtIndex:1] setAccessibilityLabel:NSLocalizedString(@"red", @"Accessibility description")];
@@ -296,7 +296,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [removeShadowButton setTarget:pdfView];
         [removeShadowButton setAction:@selector(toggleRemoveCursorShadow:)];
         if (@available(macOS 10.14, *))
-            [[removeShadowButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+            [[removeShadowButton cell] setBackgroundStyle:NSBackgroundStyleEmphasized];
         [removeShadowButton setWidth:ceil([[removeShadowButton labelForSegment:0] sizeWithAttributes:@{NSFontAttributeName:[removeShadowButton font]}].width) + 8.0 forSegment:0];
         [removeShadowButton sizeToFit];
         rect.size.width = NSWidth([removeShadowButton frame]);
@@ -317,7 +317,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [drawButton setTarget:pdfView];
         [drawButton setAction:@selector(toggleDrawInPresentation:)];
         if (@available(macOS 10.14, *))
-            [[drawButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+            [[drawButton cell] setBackgroundStyle:NSBackgroundStyleEmphasized];
         [[[NSAccessibilityUnignoredDescendant(drawButton) accessibilityChildren] firstObject] setAccessibilityLabel:[SKNInkString typeName]];
         [drawButton sizeToFit];
         rect.size.width = NSWidth([drawButton frame]);
@@ -341,7 +341,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [closeButton setTarget:pdfView];
         [closeButton setAction:@selector(closeCursorStyleWindow:)];
         if (@available(macOS 10.14, *))
-            [[closeButton cell] setBackgroundStyle:NSBackgroundStyleDark];
+            [[closeButton cell] setBackgroundStyle:NSBackgroundStyleEmphasized];
         [[[NSAccessibilityUnignoredDescendant(closeButton) accessibilityChildren] firstObject] setAccessibilityLabel:NSLocalizedString(@"close", @"Accessibility description")];
         [closeButton sizeToFit];
         [[self contentView] addSubview:closeButton];

@@ -96,7 +96,7 @@
 - (void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle {
     if (@available(macOS 10.14, *)) {
         if ([self levelIndicatorStyle] == NSLevelIndicatorStyleRelevancy && [[self controlView] isKindOfClass:[NSLevelIndicator class]]) {
-            if (backgroundStyle == NSBackgroundStyleDark)
+            if (backgroundStyle == NSBackgroundStyleEmphasized)
                 [[self controlView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]];
             else
                 [[self controlView] setAppearance:nil];
