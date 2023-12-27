@@ -355,7 +355,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
 + (NSArray *)arrayByParsingTemplateString:(NSString *)template isSubtemplate:(BOOL)isSubtemplate {
     NSScanner *scanner = [[NSScanner alloc] initWithString:template];
     NSMutableArray *result = [[NSMutableArray alloc] init];
-    id currentTag = nil;
+    __kindof SKTemplateTag *currentTag = nil;
 
     [scanner setCharactersToBeSkipped:nil];
     
@@ -365,8 +365,8 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
         NSInteger start;
                 
         if ([scanner scanUpToString:START_TAG_OPEN_DELIM intoString:&beforeText]) {
-            if (currentTag && [(SKTemplateTag *)currentTag type] == SKTemplateTagText) {
-                [(SKTextTemplateTag *)currentTag appendText:beforeText];
+            if (currentTag && [currentTag type] == SKTemplateTagText) {
+                [currentTag appendText:beforeText];
             } else {
                 currentTag = [[SKTextTemplateTag alloc] initWithText:beforeText];
                 [result addObject:currentTag];
@@ -403,7 +403,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                         itemTemplate = [itemTemplate substringToIndex:sepTagRange.location];
                     }
                     
-                    currentTag = [(SKCollectionTemplateTag *)[SKCollectionTemplateTag alloc] initWithKeyPath:keyPath itemTemplateString:itemTemplate separatorTemplateString:separatorTemplate];
+                    currentTag = [[SKCollectionTemplateTag alloc] initWithKeyPath:keyPath itemTemplateString:itemTemplate separatorTemplateString:separatorTemplate];
                     [result addObject:currentTag];
                 }
                 
@@ -452,8 +452,8 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                 } else {
                     
                     // an open delimiter without a close delimiter, so no template tag. Rewind
-                    if (currentTag && [(SKTemplateTag *)currentTag type] == SKTemplateTagText) {
-                        [(SKTextTemplateTag *)currentTag appendText:START_TAG_OPEN_DELIM];
+                    if (currentTag && [currentTag type] == SKTemplateTagText) {
+                        [currentTag appendText:START_TAG_OPEN_DELIM];
                     } else {
                         currentTag = [[SKTextTemplateTag alloc] initWithText:START_TAG_OPEN_DELIM];
                         [result addObject:currentTag];
@@ -469,17 +469,17 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
     NSInteger i, count = [result count];
     
     for (i = count - 1; i >= 0; i--) {
-        SKTemplateTag *tag = [result objectAtIndex:i];
+        __kindof SKTemplateTag *tag = [result objectAtIndex:i];
         
         if ([tag type] != SKTemplateTagText) continue;
         
-        NSString *string = [(SKTextTemplateTag *)tag text];
+        NSString *string = [tag text];
         NSRange range = rangeAfterRemovingEmptyLines(string, i > 0 ? [(SKTemplateTag *)[result objectAtIndex:i - 1] type] : SKNoTemplateTagType, i < count - 1 ? [(SKTemplateTag *)[result objectAtIndex:i + 1] type] : SKNoTemplateTagType, isSubtemplate);
         
         if (range.length == 0)
             [result removeObjectAtIndex:i];
         else if (range.length != [string length])
-            [(SKTextTemplateTag *)tag setText:[string substringWithRange:range]];
+            [tag setText:[string substringWithRange:range]];
     }
     
     return result;    
@@ -488,12 +488,12 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
 + (NSString *)stringFromTemplateArray:(NSArray *)template usingObject:(id)object atIndex:(NSInteger)anIndex {
     NSMutableString *result = [[NSMutableString alloc] init];
     
-    for (id tag in template) {
-        SKTemplateTagType type = [(SKTemplateTag *)tag type];
+    for (__kindof  SKTemplateTag *tag in template) {
+        SKTemplateTagType type = [tag type];
         
         if (type == SKTemplateTagText) {
             
-            [result appendString:[(SKTextTemplateTag *)tag text]];
+            [result appendString:[tag text]];
             
         } else {
             
@@ -578,7 +578,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
     NSString *templateString = [template string];
     NSScanner *scanner = [[NSScanner alloc] initWithString:templateString];
     NSMutableArray *result = [[NSMutableArray alloc] init];
-    id currentTag = nil;
+    __kindof SKTemplateTag *currentTag = nil;
 
     [scanner setCharactersToBeSkipped:nil];
     
@@ -591,8 +591,8 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
         start = [scanner scanLocation];
                 
         if ([scanner scanUpToString:START_TAG_OPEN_DELIM intoString:&beforeText]) {
-            if (currentTag && [(SKTemplateTag *)currentTag type] == SKTemplateTagText) {
-                [(SKRichTextTemplateTag *)currentTag appendAttributedText:[template attributedSubstringFromRange:NSMakeRange(start, [beforeText length])]];
+            if (currentTag && [currentTag type] == SKTemplateTagText) {
+                [currentTag appendAttributedText:[template attributedSubstringFromRange:NSMakeRange(start, [beforeText length])]];
             } else {
                 currentTag = [[SKRichTextTemplateTag alloc] initWithAttributedText:[template attributedSubstringFromRange:NSMakeRange(start, [beforeText length])]];
                 [result addObject:currentTag];
@@ -636,7 +636,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                         itemTemplate = [itemTemplate attributedSubstringFromRange:NSMakeRange(0, sepTagRange.location)];
                     }
                     
-                    currentTag = [(SKRichCollectionTemplateTag *)[SKRichCollectionTemplateTag alloc] initWithKeyPath:keyPath itemTemplateAttributedString:itemTemplate separatorTemplateAttributedString:separatorTemplate];
+                    currentTag = [[SKRichCollectionTemplateTag alloc] initWithKeyPath:keyPath itemTemplateAttributedString:itemTemplate separatorTemplateAttributedString:separatorTemplate];
                     [result addObject:currentTag];
                     
                 }
@@ -689,8 +689,8 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                 } else {
                     
                     // a START_TAG_OPEN_DELIM without COLLECTION_TAG_CLOSE_DELIM, so no template tag. Rewind
-                    if (currentTag && [(SKTemplateTag *)currentTag type] == SKTemplateTagText) {
-                        [(SKRichTextTemplateTag *)currentTag appendAttributedText:[template attributedSubstringFromRange:NSMakeRange(start - [START_TAG_OPEN_DELIM length], [START_TAG_OPEN_DELIM length])]];
+                    if (currentTag && [currentTag type] == SKTemplateTagText) {
+                        [currentTag appendAttributedText:[template attributedSubstringFromRange:NSMakeRange(start - [START_TAG_OPEN_DELIM length], [START_TAG_OPEN_DELIM length])]];
                     } else {
                         currentTag = [[SKRichTextTemplateTag alloc] initWithAttributedText:[template attributedSubstringFromRange:NSMakeRange(start - [START_TAG_OPEN_DELIM length], [START_TAG_OPEN_DELIM length])]];
                         [result addObject:currentTag];
@@ -707,18 +707,18 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
     NSInteger i, count = [result count];
     
     for (i = count - 1; i >= 0; i--) {
-        SKTemplateTag *tag = [result objectAtIndex:i];
+        __kindof SKTemplateTag *tag = [result objectAtIndex:i];
         
         if ([tag type] != SKTemplateTagText) continue;
         
-        NSAttributedString *attrString = [(SKRichTextTemplateTag *)tag attributedText];
+        NSAttributedString *attrString = [tag attributedText];
         NSString *string = [attrString string];
         NSRange range = rangeAfterRemovingEmptyLines(string, i > 0 ? [(SKTemplateTag *)[result objectAtIndex:i - 1] type] : SKNoTemplateTagType, i < count - 1 ? [(SKTemplateTag *)[result objectAtIndex:i + 1] type] : SKNoTemplateTagType, isSubtemplate);
         
         if (range.length == 0)
             [result removeObjectAtIndex:i];
         else if (range.length != [string length])
-            [(SKRichTextTemplateTag *)tag setAttributedText:[attrString attributedSubstringFromRange:range]];
+            [tag setAttributedText:[attrString attributedSubstringFromRange:range]];
     }
     
     return result;    
@@ -736,13 +736,13 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
 + (NSAttributedString *)attributedStringFromTemplateArray:(NSArray *)template usingObject:(id)object atIndex:(NSInteger)anIndex {
     NSMutableAttributedString *result = [[NSMutableAttributedString alloc] init];
     
-    for (id tag in template) {
-        SKTemplateTagType type = [(SKTemplateTag *)tag type];
+    for (__kindof SKTemplateTag *tag in template) {
+        SKTemplateTagType type = [tag type];
         
         if (type == SKTemplateTagText) {
             
-            NSAttributedString *tmpAttrStr = [(SKRichTextTemplateTag *)tag attributedText];
-            NSArray *linkTemplates = [(SKRichTextTemplateTag *)tag linkTemplates];
+            NSAttributedString *tmpAttrStr = [tag attributedText];
+            NSArray *linkTemplates = [tag linkTemplates];
             
             if ([linkTemplates count]) {
                 NSMutableAttributedString *tmpMutAttrStr = [tmpAttrStr mutableCopy];
@@ -768,8 +768,8 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                 
                 if (keyValue) {
                     NSAttributedString *tmpAttrStr;
-                    NSDictionary *attrs = [(SKRichValueTemplateTag *)tag attributes];
-                    SKAttributeTemplate *linkTemplate = [(SKRichValueTemplateTag *)tag linkTemplate];
+                    NSDictionary *attrs = [tag attributes];
+                    SKAttributeTemplate *linkTemplate = [tag linkTemplate];
                     if (linkTemplate) {
                         NSMutableDictionary *tmpAttrs = [attrs mutableCopy];
                         id aLink = [self attributeFromTemplate:linkTemplate usingObject:object atIndex:anIndex];
