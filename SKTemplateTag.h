@@ -98,13 +98,13 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
 @interface SKCollectionTemplateTag : SKValueTemplateTag {
     NSString *itemTemplateString;
     NSString *separatorTemplateString;
-    NSArray<SKTemplateTag *> *itemTemplate;
-    NSArray<SKTemplateTag *> *separatorTemplate;
+    NSArray<__kindof SKTemplateTag *> *itemTemplate;
+    NSArray<__kindof SKTemplateTag *> *separatorTemplate;
 }
 
 - (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateString:(NSString *)anItemTemplateString separatorTemplateString:(nullable NSString *)aSeparatorTemplateString;
 
-@property (nonatomic, nullable, readonly) NSArray<SKTemplateTag *> *itemTemplate, *separatorTemplate;
+@property (nonatomic, nullable, readonly) NSArray<__kindof SKTemplateTag *> *itemTemplate, *separatorTemplate;
 
 @end
 
@@ -113,13 +113,13 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
 @interface SKRichCollectionTemplateTag : SKValueTemplateTag {
     NSAttributedString *itemTemplateAttributedString;
     NSAttributedString *separatorTemplateAttributedString;
-    NSArray<SKTemplateTag *> *itemTemplate;
-    NSArray<SKTemplateTag *> *separatorTemplate;
+    NSArray<__kindof SKTemplateTag *> *itemTemplate;
+    NSArray<__kindof SKTemplateTag *> *separatorTemplate;
 }
 
 - (instancetype)initWithKeyPath:(NSString *)aKeyPath itemTemplateAttributedString:(NSAttributedString *)anItemTemplateAttributedString separatorTemplateAttributedString:(nullable NSAttributedString *)aSeparatorTemplateAttributedString;
 
-@property (nonatomic, nullable, readonly) NSArray<SKTemplateTag *> *itemTemplate, *separatorTemplate;
+@property (nonatomic, nullable, readonly) NSArray<__kindof SKTemplateTag *> *itemTemplate, *separatorTemplate;
 
 @end
 
@@ -137,7 +137,7 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
 @property (nonatomic, readonly) NSArray<NSString *> *matchStrings;
 
 - (NSUInteger)countOfSubtemplates;
-- (NSArray<SKTemplateTag *> *)objectInSubtemplatesAtIndex:(NSUInteger)anIndex;
+- (NSArray<__kindof SKTemplateTag *> *)objectInSubtemplatesAtIndex:(NSUInteger)anIndex;
 
 @end
 
@@ -164,7 +164,7 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
 
 @interface SKRichTextTemplateTag : SKTemplateTag {
     NSAttributedString *attributedText;
-    NSArray<NSArray<SKTemplateTag *> *> *linkTemplates;
+    NSArray<NSArray<__kindof SKTemplateTag *> *> *linkTemplates;
 }
 
 - (instancetype)initWithAttributedText:(NSAttributedString *)anAttributedText;
@@ -173,21 +173,21 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
 
 - (void)appendAttributedText:(NSAttributedString *)newAttributedText;
 
-@property (nonatomic, nullable, readonly) NSArray<NSArray<SKTemplateTag *> *> *linkTemplates;
+@property (nonatomic, nullable, readonly) NSArray<NSArray<__kindof SKTemplateTag *> *> *linkTemplates;
 
 @end
 
 #pragma mark -
 
 @interface SKAttributeTemplate : NSObject {
-    NSArray<SKTemplateTag *> *template;
+    NSArray<__kindof SKTemplateTag *> *template;
     NSRange range;
     Class attributeClass;
 }
 
-- (instancetype)initWithTemplate:(nullable NSArray<SKTemplateTag *> *)aTemplate range:(NSRange)aRange attributeClass:(Class)aClass;
+- (instancetype)initWithTemplate:(nullable NSArray<__kindof SKTemplateTag *> *)aTemplate range:(NSRange)aRange attributeClass:(Class)aClass;
 
-@property (nonatomic, nullable, readonly) NSArray<SKTemplateTag *> *template;
+@property (nonatomic, nullable, readonly) NSArray<__kindof SKTemplateTag *> *template;
 @property (nonatomic, readonly) NSRange range;
 @property (nonatomic, readonly) Class attributeClass;
 
