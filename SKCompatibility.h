@@ -65,6 +65,9 @@ enum {
 
 #define NSAppearanceNameDarkAqua @"NSAppearanceNameDarkAqua"
 
+#define NSBackgroundStyleNormal NSBackgroundStyleLight
+#define NSBackgroundStyleEmphasized NSBackgroundStyleDark
+
 #endif
 
 #if SDK_BEFORE_11_0

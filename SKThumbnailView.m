@@ -136,7 +136,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)updateBackgroundStyle {
     NSBackgroundStyle style = [self backgroundStyle];
     if ([self isSelected] && [[self window] isKeyWindow])
-        style = NSBackgroundStyleDark;
+        style = NSBackgroundStyleEmphasized;
     if ([[labelView cell] backgroundStyle] != style) {
         [[labelView cell] setBackgroundStyle:style];
         [labelView setNeedsDisplay:YES];
@@ -322,7 +322,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             [NSGraphicsContext saveGraphicsState];
             if ([self isMenuHighlighted])
                 [[NSColor alternateSelectedControlColor] setFill];
-            else if ([self backgroundStyle] == NSBackgroundStyleDark)
+            else if ([self backgroundStyle] == NSBackgroundStyleEmphasized)
                 [[NSColor darkGrayColor] setFill];
             else
                 [[NSColor secondarySelectedControlColor] setFill];
@@ -339,7 +339,7 @@ static char SKThumbnailViewThumbnailObservationContext;
             NSColor *color;
             if ([[self window] isKeyWindow])
                 color = [NSColor alternateSelectedControlColor];
-            else if ([self backgroundStyle] == NSBackgroundStyleDark)
+            else if ([self backgroundStyle] == NSBackgroundStyleEmphasized)
                 color = [NSColor darkGrayColor];
             else
                 color = [NSColor secondarySelectedControlColor];
