@@ -1567,7 +1567,7 @@ static char SKMainWindowContentLayoutObservationContext;
         }
     } else {
         [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:isPresentation ? NSVisualEffectMaterialDark : NSVisualEffectMaterialSidebar];
-        [[overviewView visibleItems] setValue:[NSNumber numberWithInteger:isPresentation ? NSBackgroundStyleEmphasized : NSBackgroundStyleLight] forKey:@"backgroundStyle"];
+        [[overviewView visibleItems] setValue:[NSNumber numberWithInteger:isPresentation ? NSBackgroundStyleEmphasized : NSBackgroundStyleNormal] forKey:@"backgroundStyle"];
     }
     [overviewView setSingleClickAction:isPresentation ? @selector(hideOverview:) : NULL];
     
@@ -1667,7 +1667,7 @@ static char SKMainWindowContentLayoutObservationContext;
     if (markedPageIndex == i)
         [item setMarked:YES];
     if (@available(macOS 10.14, *)) {} else
-        [item setBackgroundStyle:[self interactionMode] == SKPresentationMode ? NSBackgroundStyleEmphasized : NSBackgroundStyleLight];
+        [item setBackgroundStyle:[self interactionMode] == SKPresentationMode ? NSBackgroundStyleEmphasized : NSBackgroundStyleNormal];
     return item;
 }
 
