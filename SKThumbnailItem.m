@@ -106,7 +106,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (void)prepareForReuse {
     [super prepareForReuse];
     [self setSelected:NO];
-    [self setBackgroundStyle:NSBackgroundStyleLight];
+    [self setBackgroundStyle:NSBackgroundStyleNormal];
     [self setHighlightLevel:0];
     [self setMarked:NO];
 }
