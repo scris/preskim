@@ -345,11 +345,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
 #pragma mark Parsing string templates
 
 + (NSString *)stringByParsingTemplateString:(NSString *)template usingObject:(id)object {
-    return [self stringFromTemplateArray:[self arrayByParsingTemplateString:template] usingObject:object atIndex:0];
-}
-
-+ (NSArray *)arrayByParsingTemplateString:(NSString *)template {
-    return [self arrayByParsingTemplateString:template isSubtemplate:NO];
+    return [self stringFromTemplateArray:[self arrayByParsingTemplateString:template isSubtemplate:NO] usingObject:object atIndex:0];
 }
 
 + (NSArray *)arrayByParsingTemplateString:(NSString *)template isSubtemplate:(BOOL)isSubtemplate {
@@ -567,11 +563,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
 #pragma mark Parsing attributed string templates
 
 + (NSAttributedString *)attributedStringByParsingTemplateAttributedString:(NSAttributedString *)template usingObject:(id)object {
-    return [self attributedStringFromTemplateArray:[self arrayByParsingTemplateAttributedString:template] usingObject:object atIndex:0];
-}
-
-+ (NSArray *)arrayByParsingTemplateAttributedString:(NSAttributedString *)template {
-    return [self arrayByParsingTemplateAttributedString:template isSubtemplate:NO];
+    return [self attributedStringFromTemplateArray:[self arrayByParsingTemplateAttributedString:template isSubtemplate:NO] usingObject:object atIndex:0];
 }
 
 + (NSArray *)arrayByParsingTemplateAttributedString:(NSAttributedString *)template isSubtemplate:(BOOL)isSubtemplate {

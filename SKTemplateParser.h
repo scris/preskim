@@ -45,12 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SKTemplateParser : NSObject
 
 + (NSString *)stringByParsingTemplateString:(NSString *)templateString usingObject:(id)object;
-+ (NSArray<__kindof SKTemplateTag *> *)arrayByParsingTemplateString:(NSString *)templateString;
 + (NSArray<__kindof SKTemplateTag *> *)arrayByParsingTemplateString:(NSString *)templateString isSubtemplate:(BOOL)isSubtemplate;
 + (NSString *)stringFromTemplateArray:(NSArray<__kindof SKTemplateTag *> *)templateArray usingObject:(id)object atIndex:(NSInteger)anIndex;
 
 + (NSAttributedString *)attributedStringByParsingTemplateAttributedString:(NSAttributedString *)templateAttrString usingObject:(id)object;
-+ (NSArray<__kindof SKTemplateTag *> *)arrayByParsingTemplateAttributedString:(NSAttributedString *)templateAttrString;
 + (NSArray<__kindof SKTemplateTag *> *)arrayByParsingTemplateAttributedString:(NSAttributedString *)templateAttrString isSubtemplate:(BOOL)isSubtemplate;
 + (NSAttributedString *)attributedStringFromTemplateArray:(NSArray<__kindof SKTemplateTag *> *)templateArray usingObject:(id)object atIndex:(NSInteger)anIndex;
 
