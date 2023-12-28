@@ -472,10 +472,12 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
         NSString *string = [tag text];
         NSRange range = rangeAfterRemovingEmptyLines(string, i > 0 ? [(SKTemplateTag *)[result objectAtIndex:i - 1] type] : SKNoTemplateTagType, i < count - 1 ? [(SKTemplateTag *)[result objectAtIndex:i + 1] type] : SKNoTemplateTagType, isSubtemplate);
         
-        if (range.length == 0)
+        if (range.length == 0) {
             [result removeObjectAtIndex:i];
-        else if (range.length != [string length])
+            --count;
+        } else if (range.length != [string length]) {
             [tag setText:[string substringWithRange:range]];
+        }
     }
     
     return result;    
@@ -707,10 +709,12 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
         NSString *string = [attrString string];
         NSRange range = rangeAfterRemovingEmptyLines(string, i > 0 ? [(SKTemplateTag *)[result objectAtIndex:i - 1] type] : SKNoTemplateTagType, i < count - 1 ? [(SKTemplateTag *)[result objectAtIndex:i + 1] type] : SKNoTemplateTagType, isSubtemplate);
         
-        if (range.length == 0)
+        if (range.length == 0) {
             [result removeObjectAtIndex:i];
-        else if (range.length != [string length])
+            --count;
+        } else if (range.length != [string length]) {
             [tag setAttributedText:[attrString attributedSubstringFromRange:range]];
+        }
     }
     
     return result;    
