@@ -40,4 +40,4 @@
 
 #import <SkimNotesBase/NSFileManager_SKNExtensions.h>
 
-#import <SkimNotes/SKNUtilities.h>
+#import <SkimNotesBase/SKNUtilities.h>
