@@ -47,6 +47,7 @@
 		CE4F80EA0CFB06EE00DBEA14 /* SKQLConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKQLConverter.m; sourceTree = "<group>"; };
 		CE82D0AA0ED347B100020950 /* Ink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ink.png; sourceTree = "<group>"; };
 		CE861AAD2A0AABE6002FFA1D /* Widget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Widget.png; sourceTree = "<group>"; };
+		CE90B6602B4028DA00187C8F /* Skim-QuickLook.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Skim-QuickLook.xcconfig"; sourceTree = "<group>"; };
 		CEB5409B0F261EEF00723C1F /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CEC7BCDA0CF7639E008CCD63 /* StrikeOut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StrikeOut.png; sourceTree = "<group>"; };
 		CEC7BCDB0CF7639E008CCD63 /* Note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Note.png; sourceTree = "<group>"; };
@@ -161,6 +162,7 @@
 				CED8D45A0D744F910028E3E2 /* Skim-Common.xcconfig */,
 				CED8D45B0D744F910028E3E2 /* Skim-Debug.xcconfig */,
 				CED8D45C0D744F910028E3E2 /* Skim-Release.xcconfig */,
+				CE90B6602B4028DA00187C8F /* Skim-QuickLook.xcconfig */,
 			);
 			name = Configurations;
 			path = ../Configurations;
@@ -305,29 +307,15 @@
 /* Begin XCBuildConfiguration section */
 		2CA3261F0896AD4900168862 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE90B6602B4028DA00187C8F /* Skim-QuickLook.xcconfig */;
 			buildSettings = {
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = /Library/QuickLook;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.skim-app.quicklookgenerator";
-				PRODUCT_NAME = Skim;
-				WRAPPER_EXTENSION = qlgenerator;
 			};
 			name = Debug;
 		};
 		2CA326200896AD4900168862 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE90B6602B4028DA00187C8F /* Skim-QuickLook.xcconfig */;
 			buildSettings = {
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = /Library/QuickLook;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.skim-app.quicklookgenerator";
-				PRODUCT_NAME = Skim;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-parentheses",
-					"-Wfloat-equal",
-					"-Winline",
-				);
-				WRAPPER_EXTENSION = qlgenerator;
 			};
 			name = Release;
 		};
