@@ -1109,9 +1109,6 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     }
 }
 
-static NSUInteger pointSizeFunction(const void *item) { return sizeof(NSPoint); }
-static NSString *pointDescriptionFunction(const void *item) { return NSStringFromPoint(*(NSPointPointer)item); }
-
 - (void)convertNotesUsingPDFDocument:(PDFDocument *)pdfDocWithoutNotes {
     [[self mainWindowController] beginProgressSheetWithMessage:[NSLocalizedString(@"Converting notes", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:0];
     
