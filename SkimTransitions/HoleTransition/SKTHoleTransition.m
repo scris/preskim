@@ -3,7 +3,7 @@
 //  SkimTransitions
 //
 //  Created by Christiaan Hofman on 22/5/2019.
-//  Copyright Christiaan Hofman 2019-2023. All rights reserved.
+//  Copyright Christiaan Hofman 2019. All rights reserved.
 //
 
 #import "SKTHoleTransition.h"
