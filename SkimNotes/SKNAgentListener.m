@@ -69,7 +69,7 @@
         // user can pass nil, in which case we generate a server name to be read from standard output
         if (nil == serverName) {
             if (isXPC)
-                serverName = [NSString stringWithFormat:@"net.sourceforge.skim-app.skimnotes-%@", [[NSProcessInfo processInfo] globallyUniqueString]];
+                serverName = [NSString stringWithFormat:@"scris.ds.preskim.notes-%@", [[NSProcessInfo processInfo] globallyUniqueString]];
             else
                 serverName = [[NSProcessInfo processInfo] globallyUniqueString];
         }
@@ -158,13 +158,13 @@
     NSError *error = nil;
     NSData *data = [[NSFileManager defaultManager] SkimNotesAtPath:aFile error:&error];
     if (nil == data)
-        fprintf(stderr, "skimnotes agent pid %d: error getting Skim notes (%s)\n", getpid(), [[error description] UTF8String]);
+        fprintf(stderr, "skimnotes agent pid %d: error getting Preskim notes (%s)\n", getpid(), [[error description] UTF8String]);
     return data;
 }
 
 - (bycopy NSData *)RTFNotesAtPath:(in bycopy NSString *)aFile {
     NSError *error = nil;
-    NSData *data = [[NSFileManager defaultManager] SkimRTFNotesAtPath:aFile error:&error];
+    NSData *data = [[NSFileManager defaultManager] PreskimRTFNotesAtPath:aFile error:&error];
     if (nil == data)
         fprintf(stderr, "skimnotes agent pid %d: error getting RTF notes (%s)\n", getpid(), [[error description] UTF8String]);
     return data;
@@ -172,7 +172,7 @@
 
 - (bycopy NSData *)textNotesAtPath:(in bycopy NSString *)aFile encoding:(NSStringEncoding)encoding {
     NSError *error = nil;
-    NSString *string = [[NSFileManager defaultManager] SkimTextNotesAtPath:aFile error:&error];
+    NSString *string = [[NSFileManager defaultManager] PreskimTextNotesAtPath:aFile error:&error];
     if (nil == string)
         fprintf(stderr, "skimnotes agent pid %d: error getting text notes (%s)\n", getpid(), [[error description] UTF8String]);
     // Returning the string directly can fail under some conditions.  For some strings with corrupt copy-paste characters (typical for notes), -[NSString canBeConvertedToEncoding:NSUTF8StringEncoding] returns YES but the actual conversion fails.  A result seems to be that encoding the string also fails, which causes the DO client to get a timeout.  Returning NSUnicodeStringEncoding data seems to work in those cases (and is safe since we're not going over the wire between big/little-endian systems).
@@ -230,13 +230,13 @@
     NSError *error = nil;
     NSData *data = [[NSFileManager defaultManager] SkimNotesAtPath:[aURL path] error:&error];
     if (nil == data)
-        fprintf(stderr, "skimnotes agent pid %d: error getting Skim notes (%s)\n", getpid(), [[error description] UTF8String]);
+        fprintf(stderr, "skimnotes agent pid %d: error getting Preskim notes (%s)\n", getpid(), [[error description] UTF8String]);
     reply(data);
 }
 
 - (void)readRTFNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData *))reply {
     NSError *error = nil;
-    NSData *data = [[NSFileManager defaultManager] SkimRTFNotesAtPath:[aURL path] error:&error];
+    NSData *data = [[NSFileManager defaultManager] PreskimRTFNotesAtPath:[aURL path] error:&error];
     if (nil == data)
         fprintf(stderr, "skimnotes agent pid %d: error getting RTF notes (%s)\n", getpid(), [[error description] UTF8String]);
     reply(data);
@@ -244,7 +244,7 @@
 
 - (void)readTextNotesAtURL:(NSURL *)aURL reply:(void (^)(NSString *))reply {
     NSError *error = nil;
-    NSString *string = [[NSFileManager defaultManager] SkimTextNotesAtPath:[aURL path] error:&error];
+    NSString *string = [[NSFileManager defaultManager] PreskimTextNotesAtPath:[aURL path] error:&error];
     if (nil == string)
         fprintf(stderr, "skimnotes agent pid %d: error getting text notes (%s)\n", getpid(), [[error description] UTF8String]);
     reply(string);

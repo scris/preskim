@@ -44,7 +44,7 @@
 #define SKDurationKey       @"duration"
 #define SKShouldRestrictKey @"shouldRestrict"
 
-NSString *SKPasteboardTypeTransition = @"net.sourceforge.skim-app.pasteboard.transition";
+NSString *SKPasteboardTypeTransition = @"scris.ds.preskim.pasteboard.transition";
 
 @implementation SKTransitionInfo
 

@@ -40,14 +40,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SKNXPCSkimReader : NSObject {
+@interface SKNXPCPreskimReader : NSObject {
     NSString *_agentIdentifier;
     NSXPCConnection *_connection;
     id _agent;
     BOOL _synchronous;
 }
 
-@property (class, nonatomic, readonly) SKNXPCSkimReader *sharedReader;
+@property (class, nonatomic, readonly) SKNXPCPreskimReader *sharedReader;
 
 // this should only be set before any of the following calls is made
 @property (nonatomic, strong, nullable) NSString *agentIdentifier;

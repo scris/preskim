@@ -145,7 +145,7 @@ MetadataImporterPluginType *AllocMetadataImporterPluginType(CFUUIDRef inFactoryI
 }
 
 // -----------------------------------------------------------------------------
-//	DeallocSkimImporterMDImporterPluginType
+//	DeallocPreskimImporterMDImporterPluginType
 // -----------------------------------------------------------------------------
 //	Utility function that deallocates the instance when
 //	the refCount goes to zero.
@@ -231,7 +231,7 @@ ULONG MetadataImporterPluginRelease(void *thisInstance)
 }
 
 // -----------------------------------------------------------------------------
-//	SkimImporterMDImporterPluginFactory
+//	PreskimImporterMDImporterPluginFactory
 // -----------------------------------------------------------------------------
 //	Implementation of the factory function for this type.
 //

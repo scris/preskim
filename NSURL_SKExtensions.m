@@ -140,20 +140,20 @@ static id (*original_initWithString)(id, SEL, id) = NULL;
     return NO;
 }
 
-- (BOOL)isSkimURL {
+- (BOOL)isPreskimURL {
     NSString *scheme = [self scheme];
     return scheme && [scheme caseInsensitiveCompare:@"skim"] == NSOrderedSame;
 }
 
-- (BOOL)isSkimBookmarkURL {
-    if ([self isSkimURL] == NO)
+- (BOOL)isPreskimBookmarkURL {
+    if ([self isPreskimURL] == NO)
         return NO;
     NSString *host = [self host];
     return host && [host caseInsensitiveCompare:@"bookmarks"] == NSOrderedSame;
 }
 
-- (BOOL)isSkimFileURL {
-    if ([self isSkimURL] == NO)
+- (BOOL)isPreskimFileURL {
+    if ([self isPreskimURL] == NO)
         return NO;
     NSString *host = [self host];
     return host == nil || [host caseInsensitiveCompare:@"bookmarks"] != NSOrderedSame;
@@ -162,7 +162,7 @@ static id (*original_initWithString)(id, SEL, id) = NULL;
 - (NSURL *)associatedFileURL {
     if ([self isFileURL])
         return self;
-    if ([self isSkimFileURL] == NO)
+    if ([self isPreskimFileURL] == NO)
         return nil;
     NSString *fileURLString = [@"file" stringByAppendingString:[[self absoluteString] substringFromIndex:4]];
     return [NSURL URLWithString:fileURLString];
@@ -285,9 +285,9 @@ static NSFileWrapper *smallFileWrapperForFileType(NSString *type) {
     NSString *fileName = [self absoluteString];
     if ([self isFileURL]) {
         fileName = [[NSFileManager defaultManager] displayNameAtPath:[self path]];
-    } else if ([self isSkimURL]) {
+    } else if ([self isPreskimURL]) {
         fileName = [self path];
-        if ([self isSkimBookmarkURL])
+        if ([self isPreskimBookmarkURL])
             fileName = [fileName lastPathComponent];
         else
             fileName = [[NSFileManager defaultManager] displayNameAtPath:fileName];

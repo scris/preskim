@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'Skim' target in the 'Skim' project
+// Prefix header for all source files of the 'Preskim' target in the 'Preskim' project
 //
 
 #ifdef __OBJC__

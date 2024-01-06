@@ -100,7 +100,7 @@
 		08FB77B6FE84183AC02AAC07 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		0AA1909FFE8422F4C02AAC07 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		2C05A19B06CAA52B00D84F6F /* GetMetadataForFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetMetadataForFile.m; sourceTree = "<group>"; };
-		8D576316048677EA00EA77CD /* SkimImporter.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SkimImporter.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D576316048677EA00EA77CD /* PreskimImporter.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PreskimImporter.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D576317048677EA00EA77CD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C86B05260671AA6E00DD9006 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		C88FB7D7067446EC006EBB30 /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = schema.xml; sourceTree = "<group>"; };
@@ -205,7 +205,7 @@
 		19C28FB6FE9D52B211CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D576316048677EA00EA77CD /* SkimImporter.mdimporter */,
+				8D576316048677EA00EA77CD /* PreskimImporter.mdimporter */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -266,7 +266,7 @@
 			name = SkimImporter;
 			productInstallPath = /Library/Spotlight;
 			productName = SkimImporter;
-			productReference = 8D576316048677EA00EA77CD /* SkimImporter.mdimporter */;
+			productReference = 8D576316048677EA00EA77CD /* PreskimImporter.mdimporter */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -321,21 +321,21 @@
 		CE8B0E652B2384C60034908B /* SkimNotes.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = SkimNotes.framework;
+			path = .framework;
 			remoteRef = CE8B0E642B2384C60034908B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		CE8B0E672B2384C60034908B /* SkimNotesBase.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = SkimNotesBase.framework;
+			path = .framework;
 			remoteRef = CE8B0E662B2384C60034908B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		CEE23E520ECFA8D20013CDF7 /* SkimNotes.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = SkimNotes.framework;
+			path = PreskimNotes.framework;
 			remoteRef = CEE23E510ECFA8D20013CDF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -356,7 +356,7 @@
 		CEE23E580ECFA8D20013CDF7 /* SkimNotesTest.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
-			path = SkimNotesTest.app;
+			path = PreskimNotesTest.app;
 			remoteRef = CEE23E570ECFA8D20013CDF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

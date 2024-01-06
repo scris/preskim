@@ -1442,7 +1442,7 @@
             if (document == nil && error && [error isUserCancelledError] == NO)
                 [self presentError:error];
         }];
-    } else if ([url isSkimFileURL]) {
+    } else if ([url isPreskimFileURL]) {
         [sdc openDocumentWithContentsOfURL:[url associatedFileURL] display:YES completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error){
             if (document == nil && error && [error isUserCancelledError] == NO)
                 [self presentError:error];

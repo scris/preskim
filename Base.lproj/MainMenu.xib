@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22505"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SKApplication">
@@ -15,10 +14,10 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="MainMenu" systemMenu="main" id="29" userLabel="MainMenu">
             <items>
-                <menuItem title="Skim" id="56">
-                    <menu key="submenu" title="Skim" systemMenu="apple" id="57">
+                <menuItem title="Preskim" id="56">
+                    <menu key="submenu" title="Preskim" systemMenu="apple" id="57">
                         <items>
-                            <menuItem title="About Skim" id="58">
+                            <menuItem title="About Preskim" id="58">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
@@ -46,7 +45,7 @@
                             <menuItem isSeparatorItem="YES" id="144">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Hide Skim" keyEquivalent="h" id="134">
+                            <menuItem title="Hide Preskim" keyEquivalent="h" id="134">
                                 <connections>
                                     <action selector="hide:" target="-2" id="152"/>
                                 </connections>
@@ -65,7 +64,7 @@
                             <menuItem isSeparatorItem="YES" id="149">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Quit Skim" keyEquivalent="q" id="136">
+                            <menuItem title="Quit Preskim" keyEquivalent="q" id="136">
                                 <connections>
                                     <action selector="terminate:" target="-2" id="139"/>
                                 </connections>
@@ -1259,7 +1258,7 @@
                 <menuItem title="Help" id="103">
                     <menu key="submenu" title="Help" id="106">
                         <items>
-                            <menuItem title="Skim Help" keyEquivalent="?" id="111">
+                            <menuItem title="Preskim Help" keyEquivalent="?" id="111">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="122"/>
                                 </connections>
@@ -1275,12 +1274,12 @@
                             <menuItem isSeparatorItem="YES" id="760">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Skim Web Site…" id="759">
+                            <menuItem title="Preskim Web Site…" id="759">
                                 <connections>
                                     <action selector="visitWebSite:" target="210" id="761"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Skim Wiki…" id="866">
+                            <menuItem title="Preskim Wiki…" id="866">
                                 <connections>
                                     <action selector="visitWiki:" target="210" id="867"/>
                                 </connections>

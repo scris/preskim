@@ -1,5 +1,5 @@
 INSTALL_PATH = /Library/QuickLook
 INFOPLIST_FILE = Info.plist
-PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.skim-app.quicklookgenerator
-PRODUCT_NAME = Skim
+PRODUCT_BUNDLE_IDENTIFIER = scris.ds.preskim.quicklookgenerator
+PRODUCT_NAME = Preskim
 WRAPPER_EXTENSION = qlgenerator

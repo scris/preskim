@@ -157,7 +157,7 @@ extern OSStatus AEDeterminePermissionToAutomateTarget( const AEAddressDesc* targ
     NSAppleScript *script = [[NSAppleScript alloc] initWithSource:scriptString];
     static dispatch_queue_t queue = NULL;
     if (queue == NULL)
-        queue = dispatch_queue_create("net.sourceforge.skim-app.queue.NSAppleScript", NULL);
+        queue = dispatch_queue_create("scris.ds.preskim.queue.NSAppleScript", NULL);
     dispatch_async(queue, ^{
         NSDictionary *errorDict = nil;
         BOOL success = [script compileAndReturnError:&errorDict];

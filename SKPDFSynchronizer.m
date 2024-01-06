@@ -542,7 +542,7 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
 
 - (dispatch_queue_t)queue {
     if (queue == NULL)
-        queue = dispatch_queue_create("net.sourceforge.skim-app.queue.SKPDFSynchronizer", NULL);
+        queue = dispatch_queue_create("scris.ds.preskim.queue.SKPDFSynchronizer", NULL);
     return queue;
 }
 

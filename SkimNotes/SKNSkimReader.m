@@ -1,5 +1,5 @@
 //
-//  SKNSkimReader.m
+//  SKNPreskimReader.m
 //  SkimNotes
 //
 //  Created by Adam Maxwell on 04/09/07.
@@ -41,11 +41,11 @@
 
 #define AGENT_TIMEOUT 1.0f
 
-@implementation SKNSkimReader
+@implementation SKNPreskimReader
 
 @synthesize agentIdentifier;
 
-+ (SKNSkimReader *)sharedReader {
++ (SKNPreskimReader *)sharedReader {
     static id sharedReader = nil;
     static dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
@@ -87,9 +87,9 @@
         path = [[NSBundle bundleForClass:[self class]] pathForResource:@"skimnotes" ofType:nil];
     }
     if (path == nil) {
-        // look for it in the Skim bundle
-        NSString *SkimPath = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"Skim"];
-        path = SkimPath ? [[[NSBundle bundleWithPath:SkimPath] sharedSupportPath] stringByAppendingPathComponent:@"skimnotes"] : nil;
+        // look for it in the Preskim bundle
+        NSString *PreskimPath = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"Preskim"];
+        path = PreskimPath ? [[[NSBundle bundleWithPath:PreskimPath] sharedSupportPath] stringByAppendingPathComponent:@"skimnotes"] : nil;
     }
     return path;
 }
@@ -139,7 +139,7 @@
     if (numberOfConnectionAttempts++ > 100) {
         static BOOL didWarn = NO;
         if (NO == didWarn) {
-            NSLog(@"*** Insane number of Skim agent connection failures; disabling further attempts ***");
+            NSLog(@"*** Insane number of Preskim agent connection failures; disabling further attempts ***");
             didWarn = YES;
         }
         return;
@@ -196,8 +196,8 @@
     
     if (fileType != nil &&
         ([ws type:fileType conformsToType:(__bridge NSString *)kUTTypePDF] ||
-         [ws type:fileType conformsToType:@"net.sourceforge.skim-app.pdfd"] ||
-         [ws type:fileType conformsToType:@"net.sourceforge.skim-app.skimnotes"])) {
+         [ws type:fileType conformsToType:@"scris.ds.preskim.pdfd"] ||
+         [ws type:fileType conformsToType:@"scris.ds.preskim.notes"])) {
         if (nil == _connection)
             [self establishConnection];
         return YES;
@@ -213,7 +213,7 @@
         }
         @catch(id exception){
             data = nil;
-            NSLog(@"-[SKNSkimReader SkimNotesAtURL:] caught %@ while contacting skim agent", exception);
+            NSLog(@"-[SKNPreskimReader SkimNotesAtURL:] caught %@ while contacting skim agent", exception);
             [self destroyConnection];
         }
     }
@@ -228,7 +228,7 @@
         }
         @catch(id exception){
             data = nil;
-            NSLog(@"-[SKNSkimReader RTFNotesAtURL:] caught %@ while contacting skim agent", exception);
+            NSLog(@"-[SKNPreskimReader RTFNotesAtURL:] caught %@ while contacting skim agent", exception);
             [self destroyConnection];
         }
     }
@@ -243,7 +243,7 @@
         }
         @catch(id exception){
             textData = nil;
-            NSLog(@"-[SKNSkimReader textNotesAtURL:] caught %@ while contacting skim agent", exception);
+            NSLog(@"-[SKNPreskimReader textNotesAtURL:] caught %@ while contacting skim agent", exception);
             [self destroyConnection];
         }
     }

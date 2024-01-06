@@ -12,7 +12,7 @@
 				<string>skim</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Skim Notes</string>
+			<string>Preskim Notes</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>SKNT</string>
@@ -21,7 +21,7 @@
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.notes</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<false/>
@@ -71,7 +71,7 @@
 			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>net.sourceforge.skim-app.pdfd</string>
+				<string>scris.ds.preskim.pdfd</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
@@ -111,7 +111,7 @@
 			<key>UTTypeDescription</key>
 			<string>Skim Notes</string>
 			<key>UTTypeIdentifier</key>
-			<string>net.sourceforge.skim-app.skimnotes</string>
+			<string>scris.ds.preskim.notes</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>com.apple.ostype</key>
@@ -131,7 +131,7 @@
 			<key>UTTypeDescription</key>
 			<string>PDF Bundle</string>
 			<key>UTTypeIdentifier</key>
-			<string>net.sourceforge.skim-app.pdfd</string>
+			<string>scris.ds.preskim.pdfd</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>com.apple.ostype</key>

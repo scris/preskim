@@ -50,8 +50,8 @@ typedef NSInteger SKNSyncability;
 @interface NSFileManager (SKNToolExtensions)
 
 - (nullable NSData *)SkimNotesAtPath:(NSString *)path error:(NSError **)outError;
-- (nullable NSString *)SkimTextNotesAtPath:(NSString *)path error:(NSError **)outError;
-- (nullable NSData *)SkimRTFNotesAtPath:(NSString *)path error:(NSError **)outError;
+- (nullable NSString *)PreskimTextNotesAtPath:(NSString *)path error:(NSError **)outError;
+- (nullable NSData *)PreskimRTFNotesAtPath:(NSString *)path error:(NSError **)outError;
 
 - (BOOL)writeSkimNotes:(nullable NSData *)notesData textNotes:(nullable NSString *)textNotes RTFNotes:(nullable NSData *)rtfNotesData atPath:(NSString *)path syncable:(BOOL)syncable error:(NSError **)outError;
 

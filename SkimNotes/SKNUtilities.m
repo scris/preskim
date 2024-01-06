@@ -75,7 +75,7 @@
 
 #define NOTE_WIDGET_TYPE @"Widget"
 
-NSString *SKNSkimTextNotes(NSArray *noteDicts) {
+NSString *SKNPreskimTextNotes(NSArray *noteDicts) {
     NSMutableString *textString = [NSMutableString string];
     
     for (NSDictionary *dict in noteDicts) {
@@ -107,7 +107,7 @@ NSString *SKNSkimTextNotes(NSArray *noteDicts) {
     return textString;
 }
 
-NSData *SKNSkimRTFNotes(NSArray *noteDicts) {
+NSData *SKNPreskimRTFNotes(NSArray *noteDicts) {
     NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] init];
     
     for (NSDictionary *dict in noteDicts) {

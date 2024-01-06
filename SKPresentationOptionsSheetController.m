@@ -73,8 +73,8 @@
 
 static char *SKTransitionPropertiesObservationContext;
 
-#define SKTouchBarItemIdentifierOK     @"net.sourceforge.skim-app.touchbar-item.OK"
-#define SKTouchBarItemIdentifierCancel @"net.sourceforge.skim-app.touchbar-item.cancel"
+#define SKTouchBarItemIdentifierOK     @"scris.ds.preskim.touchbar-item.OK"
+#define SKTouchBarItemIdentifierCancel @"scris.ds.preskim.touchbar-item.cancel"
 
 #pragma mark -
 

@@ -79,9 +79,9 @@
                 //NSLog(@"%@: %@", self, error);
             } else {
                 if (notesString == nil)
-                    notesString = SKNSkimTextNotes(notes);
+                    notesString = SKNPreskimTextNotes(notes);
                 if (notesRTFData == nil)
-                    notesRTFData = SKNSkimRTFNotes(notes);
+                    notesRTFData = SKNPreskimRTFNotes(notes);
                 [eam setExtendedAttributeNamed:SKIM_TEXT_NOTES_KEY toPropertyListValue:notesString atPath:path options:xattrOptions error:NULL];
                 [eam setExtendedAttributeNamed:SKIM_RTF_NOTES_KEY toValue:notesRTFData atPath:path options:xattrOptions error:NULL];
             }
@@ -90,11 +90,11 @@
     return success;
 }
 
-- (BOOL)writeSkimNotes:(NSArray *)notes toSkimFileAtURL:(NSURL *)aURL error:(NSError **)outError {
-    return [self writeSkimNotes:notes toSkimFileAtURL:aURL options:SKNSkimNotesWritingPlist error:outError];
+- (BOOL)writeSkimNotes:(NSArray *)notes toPreskimFileAtURL:(NSURL *)aURL error:(NSError **)outError {
+    return [self writeSkimNotes:notes toPreskimFileAtURL:aURL options:SKNSkimNotesWritingPlist error:outError];
 }
 
-- (BOOL)writeSkimNotes:(NSArray *)notes toSkimFileAtURL:(NSURL *)aURL options:(SKNSkimNotesWritingOptions)options error:(NSError **)outError {
+- (BOOL)writeSkimNotes:(NSArray *)notes toPreskimFileAtURL:(NSURL *)aURL options:(SKNSkimNotesWritingOptions)options error:(NSError **)outError {
     BOOL success = YES;
     
     if ([aURL isFileURL]) {
@@ -122,7 +122,7 @@
     return notes;
 }
 
-- (NSString *)readSkimTextNotesFromExtendedAttributesAtURL:(NSURL *)aURL error:(NSError **)outError {
+- (NSString *)readPreskimTextNotesFromExtendedAttributesAtURL:(NSURL *)aURL error:(NSError **)outError {
     NSString *string = nil;
     NSError *error = nil;
     
@@ -140,7 +140,7 @@
     return string;
 }
 
-- (NSData *)readSkimRTFNotesFromExtendedAttributesAtURL:(NSURL *)aURL error:(NSError **)outError {
+- (NSData *)readPreskimRTFNotesFromExtendedAttributesAtURL:(NSURL *)aURL error:(NSError **)outError {
     NSData *data = nil;
     NSError *error = nil;
     
@@ -175,7 +175,7 @@
     return notes;
 }
 
-- (NSString *)readSkimTextNotesFromPDFBundleAtURL:(NSURL *)aURL error:(NSError **)outError {
+- (NSString *)readPreskimTextNotesFromPDFBundleAtURL:(NSURL *)aURL error:(NSError **)outError {
     NSString *string = nil;
     NSError *error = nil;
     BOOL isDir;
@@ -194,7 +194,7 @@
     return string;
 }
 
-- (NSData *)readSkimRTFNotesFromPDFBundleAtURL:(NSURL *)aURL error:(NSError **)outError {
+- (NSData *)readPreskimRTFNotesFromPDFBundleAtURL:(NSURL *)aURL error:(NSError **)outError {
     NSData *data = nil;
     NSError *error = nil;
     BOOL isDir;
@@ -213,7 +213,7 @@
     return data;
 }
 
-- (NSArray *)readSkimNotesFromSkimFileAtURL:(NSURL *)aURL error:(NSError **)outError {
+- (NSArray *)readSkimNotesFromPreskimFileAtURL:(NSURL *)aURL error:(NSError **)outError {
     NSArray *notes = nil;
     NSError *error = nil;
     

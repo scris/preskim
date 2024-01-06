@@ -56,30 +56,30 @@ static char *usageStr = "Usage:\n"
                         " skimnotes version";
 static char *versionStr = "SkimNotes command-line client, version 2.10";
 
-static char *getHelpStr = "skimnotes get: read Skim notes from a PDF\n"
+static char *getHelpStr = "skimnotes get: read Preskim notes from a PDF\n"
                           "Usage: skimnotes get [-format skim|archive|plist|text|rtf] PDF_FILE [NOTES_FILE|-]\n\n"
-                          "Reads Skim, Text, or RTF notes from extended attributes of PDF_FILE or the contents of PDF bundle PDF_FILE and writes to NOTES_FILE or standard output.\n"
+                          "Reads Preskim, Text, or RTF notes from extended attributes of PDF_FILE or the contents of PDF bundle PDF_FILE and writes to NOTES_FILE or standard output.\n"
                           "Uses notes file with same base name as PDF_FILE if SKIM_FILE is not provided.\n"
-                          "Reads Skim notes when no format is provided.";
-static char *setHelpStr = "skimnotes set: write Skim notes to a PDF\n"
+                          "Reads Preskim notes when no format is provided.";
+static char *setHelpStr = "skimnotes set: write Preskim notes to a PDF\n"
                           "Usage: skimnotes set [-s|-n] PDF_FILE [SKIM_FILE|-] [TEXT_FILE] [RTF_FILE]\n\n"
                           "Writes notes to extended attributes of PDF_FILE or the contents of PDF bundle PDF_FILE from SKIM_FILE or standard input.\n"
                           "Uses notes file with same base name as PDF_FILE if SKIM_FILE is not provided.\n"
                           "Writes a default form for the text formats based on the contents of SKIM_FILE if TEXT_FILE and/or RTF_FILE are not provided.\n"
                           "Writes (non) syncable notes when the -s (-n) option is provided, defaults to syncable.";
-static char *removeHelpStr = "skimnotes remove: delete Skim notes from a PDF\n"
+static char *removeHelpStr = "skimnotes remove: delete Preskim notes from a PDF\n"
                              "Usage: skimnotes remove PDF_FILE\n\n"
-                             "Removes the Skim notes from the extended attributes of PDF_FILE or from the contents of PDF bundle PDF_FILE.";
-static char *testHelpStr = "skimnotes test: Tests whether a PDF file has Skim notes\n"
+                             "Removes the Preskim notes from the extended attributes of PDF_FILE or from the contents of PDF bundle PDF_FILE.";
+static char *testHelpStr = "skimnotes test: Tests whether a PDF file has Preskim notes\n"
                            "Usage: skimnotes test [-s|-n] PDF_FILE\n\n"
-                           "Returns a zero (true) exit status when the extended attributes of PDF_FILE or the contents of PDF bundle PDF_FILE contain Skim notes, otherwise return 1 (false).\n"
+                           "Returns a zero (true) exit status when the extended attributes of PDF_FILE or the contents of PDF bundle PDF_FILE contain Preskim notes, otherwise return 1 (false).\n"
                            "Tests only (non) syncable notes when the -s (-n) option is provided.";
 static char *convertHelpStr = "skimnotes convert: convert between a PDF file and a PDF bundle\n"
                               "Usage: skimnotes convert [-s|-n] IN_PDF_FILE [OUT_PDF_FILE]\n\n"
                               "Converts a PDF file IN_PDF_FILE to a PDF bundle OUT_PDF_FILE or a PDF bundle IN_PDF_FILE to a PDF file OUT_PDF_FILE, or changes the syncability of the notes.\n"
                               "Uses a file with same base name but different extension as IN_PDF_FILE if OUT_PDF_FILE is not provided.\n"
                               "Writes (non) syncable notes when the -s (-n) option is provided, defaults to syncable.";
-static char *formatHelpStr = "skimnotes format: formats Skim notes data as archive, plist, text, or RTF data"
+static char *formatHelpStr = "skimnotes format: formats Preskim notes data as archive, plist, text, or RTF data"
                              "Usage: skimnotes format archive|plist|text|rtf IN_SKIM_FILE|- [OUT_FILE|-]\n\n"
                              "Format the notes data IN_SKIM_FILE or standard input to archive, plist, text, or RTF format and writes the result to OUT_FILE or standard output.\n"
                              "Writes back to a file with the same base name as IN_SKIM_FILE (or standard output) if OUT_FILE is not provided."
@@ -88,9 +88,9 @@ static char *offsetHelpStr = "skimnotes offsets: offsets all notes in a SKIM fil
                              "Usage: skimnotes offset DX DY IN_SKIM_FILE|- [OUT_SKIM_FILE|-]\n\n"
                              "Offsets all notes in IN_SKIM_FILE or standard input by an amount (DX, DY) and writes the result to OUT_SKIM_FILE or standard output.\n"
                              "Writes back to IN_SKIM_FILE (or standard output) if OUT_SKIM_FILE is not provided.";
-static char *agentHelpStr = "skimnotes agent: run the Skim Notes agent\n"
+static char *agentHelpStr = "skimnotes agent: run the Preskim Notes agent\n"
                             "Usage: skimnotes agent [-xpc] [SERVER_NAME]\n\n"
-                            "Runs a Skim Notes agent server with server name SERVER_NAME, to which a Cocoa application can connect using DO.\n"
+                            "Runs a Preskim Notes agent server with server name SERVER_NAME, to which a Cocoa application can connect using DO.\n"
                             "Runs a XPC based agent when the -xpc option is provided.\n"
                             "When SERVER_NAME is not provided, a unique name is generated and returned on standard output.\n"
                             "The DO server conforms to the formal protocol returned by the protocol action.";
@@ -170,7 +170,7 @@ enum {
 
 enum {
     SKNFormatAuto,
-    SKNFormatSkim,
+    SKNFormatPreskim,
     SKNFormatText,
     SKNFormatRTF,
     SKNFormatArchive,
@@ -210,7 +210,7 @@ static NSInteger SKNFormatForString(NSString *formatString) {
     else if ([formatString caseInsensitiveCompare:FORMAT_PLIST_STRING] == NSOrderedSame || [formatString caseInsensitiveCompare:FORMAT_P_STRING] == NSOrderedSame)
         return SKNFormatPlist;
     else if ([formatString caseInsensitiveCompare:FORMAT_SKIM_STRING] == NSOrderedSame || [formatString caseInsensitiveCompare:FORMAT_S_STRING] == NSOrderedSame)
-        return SKNFormatSkim;
+        return SKNFormatPreskim;
     else if ([formatString caseInsensitiveCompare:FORMAT_TEXT_STRING] == NSOrderedSame || [formatString caseInsensitiveCompare:FORMAT_TXT_STRING] == NSOrderedSame || [formatString caseInsensitiveCompare:FORMAT_T_STRING] == NSOrderedSame)
         return SKNFormatText;
     else if ([formatString caseInsensitiveCompare:FORMAT_RTF_STRING] == NSOrderedSame || [formatString caseInsensitiveCompare:FORMAT_R_STRING] == NSOrderedSame)
@@ -399,7 +399,7 @@ int main (int argc, const char * argv[]) {
             
             if (((action != SKNActionOffset && action != SKNActionFormat) || isStdIn == NO) && ([fm fileExistsAtPath:inPath isDirectory:&isDir] == NO || isBundle != isDir)) {
                 
-                error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:(action == SKNActionOffset || action == SKNActionFormat) ? @"Skim file does not exist" : isBundle ? @"PDF bundle does not exist" : @"PDF file does not exist", NSLocalizedDescriptionKey, nil]];
+                error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:(action == SKNActionOffset || action == SKNActionFormat) ? @"Preskim file does not exist" : isBundle ? @"PDF bundle does not exist" : @"PDF file does not exist", NSLocalizedDescriptionKey, nil]];
                 
             } else if (action == SKNActionGet) {
                 
@@ -411,14 +411,14 @@ int main (int argc, const char * argv[]) {
                     else if ([extension caseInsensitiveCompare:TXT_EXTENSION] == NSOrderedSame || [extension caseInsensitiveCompare:TEXT_EXTENSION] == NSOrderedSame)
                         format = SKNFormatText;
                     else
-                        format = SKNFormatSkim;
+                        format = SKNFormatPreskim;
                 }
-                if (format == SKNFormatSkim) {
+                if (format == SKNFormatPreskim) {
                     data = [fm SkimNotesAtPath:inPath error:&error];
                 } else if (format == SKNFormatText) {
-                    data = [[fm SkimTextNotesAtPath:inPath error:&error] dataUsingEncoding:NSUTF8StringEncoding];
+                    data = [[fm PreskimTextNotesAtPath:inPath error:&error] dataUsingEncoding:NSUTF8StringEncoding];
                 } else if (format == SKNFormatRTF) {
-                    data = [fm SkimRTFNotesAtPath:inPath error:&error];
+                    data = [fm PreskimRTFNotesAtPath:inPath error:&error];
                 } else if (format == SKNFormatArchive || format == SKNFormatPlist) {
                     data = [fm SkimNotesAtPath:inPath error:&error];
                     BOOL hasEncoding = NO;
@@ -515,8 +515,8 @@ int main (int argc, const char * argv[]) {
                 }
                 if (success) {
                     NSData *notesData = [fm SkimNotesAtPath:inPath error:&error];
-                    NSString *textNotes = [fm SkimTextNotesAtPath:inPath error:&error];
-                    NSData *rtfNotesData = [fm SkimRTFNotesAtPath:inPath error:&error];
+                    NSString *textNotes = [fm PreskimTextNotesAtPath:inPath error:&error];
+                    NSData *rtfNotesData = [fm PreskimRTFNotesAtPath:inPath error:&error];
                     if (notesData)
                         success = [fm writeSkimNotes:notesData textNotes:textNotes RTFNotes:rtfNotesData atPath:outPath syncable:syncable != SKNNonSyncable error:&error];
                 }
@@ -529,9 +529,9 @@ int main (int argc, const char * argv[]) {
                 else
                     data = [NSData dataWithContentsOfFile:inPath];
                 if (format == SKNFormatText) {
-                    data = [SKNSkimTextNotes(SKNSkimNotesFromData(data)) dataUsingEncoding:NSUTF8StringEncoding];
+                    data = [SKNPreskimTextNotes(SKNSkimNotesFromData(data)) dataUsingEncoding:NSUTF8StringEncoding];
                 } else if (format == SKNFormatRTF) {
-                    data = SKNSkimRTFNotes(SKNSkimNotesFromData(data));
+                    data = SKNPreskimRTFNotes(SKNSkimNotesFromData(data));
                 } else if (format == SKNFormatArchive || format == SKNFormatPlist) {
                     BOOL hasEncoding = NO;
                     if ([data length] > 8) {

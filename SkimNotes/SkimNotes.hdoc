@@ -1,5 +1,5 @@
 /*!
     @framework  SkimNotes Framework      
-    @abstract   Framework to read and write Skim notes.
-    @discussion The SkimNotes framework defines an Objective-C API to read and write Skim notes.
+    @abstract   Framework to read and write Preskim notes.
+    @discussion The SkimNotes framework defines an Objective-C API to read and write Preskim notes.
 */

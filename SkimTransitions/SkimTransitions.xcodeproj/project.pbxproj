@@ -715,7 +715,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Graphics/Image Units";
 				LIBRARY_STYLE = BUNDLE;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.skim-app.SkimTransitions";
+				PRODUCT_BUNDLE_IDENTIFIER = scris.ds.preskim.SkimTransitions;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = plugin;
 			};
@@ -728,7 +728,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Graphics/Image Units";
 				LIBRARY_STYLE = BUNDLE;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.skim-app.SkimTransitions";
+				PRODUCT_BUNDLE_IDENTIFIER = scris.ds.preskim.SkimTransitions;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = plugin;
 			};

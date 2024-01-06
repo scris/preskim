@@ -311,7 +311,7 @@ static BOOL canUpdateFromURL(NSURL *fileURL) {
     if (extension) {
         NSWorkspace *ws = [NSWorkspace sharedWorkspace];
         NSString *theUTI = [ws typeOfFile:[[fileURL URLByStandardizingPath] path] error:NULL];
-        if ([extension isCaseInsensitiveEqual:@"pdfd"] || [ws type:theUTI conformsToType:@"net.sourceforge.skim-app.pdfd"]) {
+        if ([extension isCaseInsensitiveEqual:@"pdfd"] || [ws type:theUTI conformsToType:@"scris.ds.preskim.pdfd"]) {
             fileURL = [[NSFileManager defaultManager] bundledFileURLWithExtension:@"pdf" inPDFBundleAtURL:fileURL error:NULL];
             if (fileURL == nil)
                 return NO;

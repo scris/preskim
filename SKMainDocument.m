@@ -101,7 +101,7 @@
 
 #define SKIM_NOTES_PREFIX @"net_sourceforge_skim-app"
 
-NSString *SKSkimFileDidSaveNotification = @"SKSkimFileDidSaveNotification";
+NSString *SKPreskimFileDidSaveNotification = @"SKPreskimFileDidSaveNotification";
 
 #define SKLastExportedTypeKey @"SKLastExportedType"
 #define SKLastExportedOptionKey @"SKLastExportedOption"
@@ -118,7 +118,7 @@ NSString *SKSkimFileDidSaveNotification = @"SKSkimFileDidSaveNotification";
 #define SKTagsKey                   @"Tags"
 #define SKRatingKey                 @"Rating"
 
-static NSString *SKPDFPasswordServiceName = @"Skim PDF password";
+static NSString *SKPDFPasswordServiceName = @"Preskim PDF password";
 
 enum {
     SKExportOptionDefault,
@@ -534,7 +534,7 @@ enum {
             completionHandler(errorOrNil);
         
         if (errorOrNil == nil && notifyPath)
-            [[NSDistributedNotificationCenter defaultCenter] postNotificationName:SKSkimFileDidSaveNotification object:notifyPath];
+            [[NSDistributedNotificationCenter defaultCenter] postNotificationName:SKPreskimFileDidSaveNotification object:notifyPath];
     }];
 }
 
@@ -703,7 +703,7 @@ enum {
         didWrite = [self writeArchiveToURL:absoluteURL error:&error];
     } else if ([ws type:SKNotesDocumentType conformsToType:typeName]) {
         SKNSkimNotesWritingOptions options = [[NSUserDefaults standardUserDefaults] boolForKey:SKWriteLegacySkimNotesKey] || [[NSUserDefaults standardUserDefaults] boolForKey:SKWriteSkimNotesAsArchiveKey] ? 0 : SKNSkimNotesWritingPlist;
-        didWrite = [[NSFileManager defaultManager] writeSkimNotes:[self SkimNoteProperties] toSkimFileAtURL:absoluteURL options:options error:&error];
+        didWrite = [[NSFileManager defaultManager] writeSkimNotes:[self SkimNoteProperties] toPreskimFileAtURL:absoluteURL options:options error:&error];
     } else if ([ws type:SKNotesRTFDocumentType conformsToType:typeName]) {
         NSData *data = [self notesRTFData];
         if (data)
@@ -752,7 +752,7 @@ enum {
     // only set the creator code for our native types
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShouldSetCreatorCodeKey] && 
         ([[self class] isNativeType:typeName] || [typeName isEqualToString:SKNotesDocumentType]))
-        [dict setObject:[NSNumber numberWithUnsignedInt:'SKim'] forKey:NSFileHFSCreatorCode];
+        [dict setObject:[NSNumber numberWithUnsignedInt:'PRes'] forKey:NSFileHFSCreatorCode];
     
     if ([ws type:typeName conformsToType:SKPDFDocumentType])
         [dict setObject:[NSNumber numberWithUnsignedInt:'PDF '] forKey:NSFileHFSTypeCode];
@@ -858,7 +858,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                 if (array == nil) {
                     NSAlert *alert = [[NSAlert alloc] init];
                     [alert setMessageText:NSLocalizedString(@"Unable to Read Notes", @"Message in alert dialog")];
-                    [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Skim was not able to read the notes at %@. %@ Do you want to continue to open the PDF document anyway?", @"Informative text in alert dialog"), [[pdfURL path] stringByAbbreviatingWithTildeInPath], [error localizedDescription]]];
+                    [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Preskim was not able to read the notes at %@. %@ Do you want to continue to open the PDF document anyway?", @"Informative text in alert dialog"), [[pdfURL path] stringByAbbreviatingWithTildeInPath], [error localizedDescription]]];
                     [alert addButtonWithTitle:NSLocalizedString(@"No", @"Button title")];
                     [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"Button title")];
                     if ([alert runModal] == NSAlertFirstButtonReturn) {
@@ -889,7 +889,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                 if (array == nil && isIgnorablePOSIXError(error) == NO) {
                     NSAlert *alert = [[NSAlert alloc] init];
                     [alert setMessageText:NSLocalizedString(@"Unable to Read Notes", @"Message in alert dialog")];
-                    [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Skim was not able to read the notes at %@. %@ Do you want to continue to open the PDF document anyway?", @"Informative text in alert dialog"), [[absoluteURL path] stringByAbbreviatingWithTildeInPath], [error localizedDescription]]];
+                    [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Preskim was not able to read the notes at %@. %@ Do you want to continue to open the PDF document anyway?", @"Informative text in alert dialog"), [[absoluteURL path] stringByAbbreviatingWithTildeInPath], [error localizedDescription]]];
                     [alert addButtonWithTitle:NSLocalizedString(@"No", @"Button title")];
                     [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"Button title")];
                     if ([alert runModal] == NSAlertFirstButtonReturn) {
@@ -900,7 +900,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                     }
                 }
             }
-            NSInteger readOption = [[NSUserDefaults standardUserDefaults] integerForKey:foundEANotes ? SKReadNonMissingNotesFromSkimFileOptionKey : SKReadMissingNotesFromSkimFileOptionKey];
+            NSInteger readOption = [[NSUserDefaults standardUserDefaults] integerForKey:foundEANotes ? SKReadNonMissingNotesFromPreskimFileOptionKey : SKReadMissingNotesFromPreskimFileOptionKey];
             if (pdfDoc && readOption != SKOptionNever) {
                 NSURL *notesURL = [absoluteURL URLReplacingPathExtension:@"skim"];
                 if ([notesURL checkResourceIsReachableAndReturnError:NULL]) {
@@ -908,15 +908,15 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
                         NSAlert *alert = [[NSAlert alloc] init];
                         [alert setMessageText:NSLocalizedString(@"Found Separate Notes", @"Message in alert dialog") ];
                         if (foundEANotes)
-                            [alert setInformativeText:NSLocalizedString(@"A Skim notes file with the same name was found.  Do you want Skim to read the notes from this file?", @"Informative text in alert dialog")];
+                            [alert setInformativeText:NSLocalizedString(@"A Preskim notes file with the same name was found.  Do you want Preskim to read the notes from this file?", @"Informative text in alert dialog")];
                         else
-                            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Unable to read notes for %@, but a Skim notes file with the same name was found.  Do you want Skim to read the notes from this file?", @"Informative text in alert dialog"), [[absoluteURL path] stringByAbbreviatingWithTildeInPath]]];
+                            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Unable to read notes for %@, but a Preskim notes file with the same name was found.  Do you want Preskim to read the notes from this file?", @"Informative text in alert dialog"), [[absoluteURL path] stringByAbbreviatingWithTildeInPath]]];
                         [[alert addButtonWithTitle:NSLocalizedString(@"Yes", @"Button title")] setTag:SKOptionAlways];
                         [[alert addButtonWithTitle:NSLocalizedString(@"No", @"Button title")] setTag:SKOptionNever];
                         readOption = [alert runModal];
                     }
                     if (readOption == SKOptionAlways) {
-                        array = [[NSFileManager defaultManager] readSkimNotesFromSkimFileAtURL:notesURL error:NULL];
+                        array = [[NSFileManager defaultManager] readSkimNotesFromPreskimFileAtURL:notesURL error:NULL];
                         if ([array count] && [array isEqualToArray:[tmpData noteDicts]] == NO) {
                             [tmpData setNoteDicts:array];
                             [self updateChangeCount:NSChangeReadOtherContents];
@@ -1054,7 +1054,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     NSArray *array = nil;
     
     if ([ws type:type conformsToType:SKNotesDocumentType]) {
-        array = [[NSFileManager defaultManager] readSkimNotesFromSkimFileAtURL:notesURL error:NULL];
+        array = [[NSFileManager defaultManager] readSkimNotesFromPreskimFileAtURL:notesURL error:NULL];
     } else if ([ws type:type conformsToType:SKNotesFDFDocumentType]) {
         NSData *fdfData = [NSData dataWithContentsOfURL:notesURL];
         if (fdfData)
@@ -1236,7 +1236,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     }
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:NSLocalizedString(@"Convert Notes", @"Alert text when trying to convert notes")];
-    [alert setInformativeText:NSLocalizedString(@"This will convert PDF annotations to Skim notes. Do you want to proceed?", @"Informative text in alert dialog")];
+    [alert setInformativeText:NSLocalizedString(@"This will convert PDF annotations to Preskim notes. Do you want to proceed?", @"Informative text in alert dialog")];
     [alert addButtonWithTitle:NSLocalizedString(@"OK", @"Button title")];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title")];
     [alert beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSModalResponse returnCode){
@@ -1590,13 +1590,13 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 - (void)savePasswordInKeychain:(NSString *)password {
     NSString *fileID = [self fileIDStringForDocument:[self pdfDocument]];
     if (fileID) {
-        NSString *label = [@"Skim: " stringByAppendingString:[self displayName]];
+        NSString *label = [@"Preskim: " stringByAppendingString:[self displayName]];
         NSString *comment = [[self fileURL] path];
         // try to update the password in an existing item
         SKPasswordStatus status = [SKKeychain updatePassword:password service:nil account:nil label:label comment:comment forService:SKPDFPasswordServiceName account:fileID];
         if (status == SKPasswordStatusNotFound) {
             // try to update an item in the old format
-            status = [SKKeychain updatePassword:password service:SKPDFPasswordServiceName account:fileID label:label comment:comment forService:[@"Skim - " stringByAppendingString:fileID] account:nil];
+            status = [SKKeychain updatePassword:password service:SKPDFPasswordServiceName account:fileID label:label comment:comment forService:[@"Preskim - " stringByAppendingString:fileID] account:nil];
             if (status == SKPasswordStatusNotFound) {
                 // add a new password item if no existing item was found
                 [SKKeychain setPassword:password forService:SKPDFPasswordServiceName account:fileID label:label comment:comment];
@@ -1615,11 +1615,11 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
                 password = [SKKeychain passwordForService:SKPDFPasswordServiceName account:fileID status:&status];
                 if (status == SKPasswordStatusNotFound) {
                     // try to find an item in the old format
-                    NSString *oldService = [@"Skim - " stringByAppendingString:fileID];
+                    NSString *oldService = [@"Preskim - " stringByAppendingString:fileID];
                     password = [SKKeychain passwordForService:oldService account:nil status:&status];
                     if (status == SKPasswordStatusFound) {
                         // update to new format
-                        [SKKeychain updatePassword:nil service:SKPDFPasswordServiceName account:fileID label:[@"Skim: " stringByAppendingString:[self displayName]] comment:[[self fileURL] path] forService:oldService account:nil];
+                        [SKKeychain updatePassword:nil service:SKPDFPasswordServiceName account:fileID label:[@"Preskim: " stringByAppendingString:[self displayName]] comment:[[self fileURL] path] forService:oldService account:nil];
                     }
                 }
             }
@@ -1929,7 +1929,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
             option = SKExportOptionWithoutNotes;
         } else if ([fileType isEqualToString:@"PDF Bundle"]) {
             normalizedType = SKPDFBundleDocumentType;
-        } else if ([fileType isEqualToString:@"Skim Notes"]) {
+        } else if ([fileType isEqualToString:@"Preskim Notes"]) {
             normalizedType = SKNotesDocumentType;
         } else if ([fileType isEqualToString:@"Notes as Text"]) {
             normalizedType = SKNotesTextDocumentType;

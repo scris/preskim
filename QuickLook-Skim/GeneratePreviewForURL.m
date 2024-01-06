@@ -71,7 +71,7 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
     
     @autoreleasepool{
         
-        if (UTTypeEqual(CFSTR("net.sourceforge.skim-app.pdfd"), contentTypeUTI)) {
+        if (UTTypeEqual(CFSTR("scris.ds.preskim.pdfd"), contentTypeUTI)) {
             
             NSString *pdfFile = SKQLPDFPathForPDFBundleURL((__bridge NSURL *)url);
             if (pdfFile) {
@@ -103,7 +103,7 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
                 if (data) CFRelease(data);
             }
             
-        } else if (UTTypeEqual(CFSTR("net.sourceforge.skim-app.skimnotes"), contentTypeUTI)) {
+        } else if (UTTypeEqual(CFSTR("scris.ds.preskim.notes"), contentTypeUTI)) {
             
             NSData *data = [[NSData alloc] initWithContentsOfURL:(__bridge NSURL *)url options:NSUncachedRead error:NULL];
             if (data) {

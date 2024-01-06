@@ -125,7 +125,7 @@ static NSURL *temporaryDirectoryURL = nil;
 
 + (NSURL *)temporaryDirectoryURL {
     if (temporaryDirectoryURL == nil) {
-        char *template = strdup([[NSTemporaryDirectory() stringByAppendingPathComponent:@"Skim.XXXXXX"] fileSystemRepresentation]);
+        char *template = strdup([[NSTemporaryDirectory() stringByAppendingPathComponent:@"Preskim.XXXXXX"] fileSystemRepresentation]);
         const char *tempPath = mkdtemp(template);
         NSString *tmpPath = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempPath length:strlen(tempPath)];
         temporaryDirectoryURL = [[NSURL alloc] initFileURLWithPath:tmpPath];
@@ -460,7 +460,7 @@ static NSURL *temporaryDirectoryURL = nil;
 - (NSString *)previewItemTitle {
     NSString *title = [note string];
     if ([title length] == 0)
-        title = @"Skim Note";
+        title = @"Preskim Note";
     return title;
 }
 

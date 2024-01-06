@@ -75,8 +75,8 @@ Boolean GetMetadataForFile(void* thisInterface,
     
     @autoreleasepool{
         
-        BOOL isSkimNotes = UTTypeConformsTo(contentTypeUTI, CFSTR("net.sourceforge.skim-app.skimnotes"));
-        BOOL isPDFBundle = isSkimNotes == NO && UTTypeConformsTo(contentTypeUTI, CFSTR("net.sourceforge.skim-app.pdfd"));
+        BOOL isSkimNotes = UTTypeConformsTo(contentTypeUTI, CFSTR("scris.ds.preskim.notes"));
+        BOOL isPDFBundle = isSkimNotes == NO && UTTypeConformsTo(contentTypeUTI, CFSTR("scris.ds.preskim.pdfd"));
         NSFileManager *fm = [NSFileManager defaultManager];
         
         success = [fm fileExistsAtPath:(__bridge NSString *)pathToFile] && (isSkimNotes || isPDFBundle);
@@ -89,7 +89,7 @@ Boolean GetMetadataForFile(void* thisInterface,
             NSString *sourcePath = nil;
             
             if (isSkimNotes) {
-                notes = [fm readSkimNotesFromSkimFileAtURL:fileURL error:NULL];
+                notes = [fm readSkimNotesFromPreskimFileAtURL:fileURL error:NULL];
                 sourcePath = [[(__bridge NSString *)pathToFile stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
             } else if (isPDFBundle) {
                 notes = [fm readSkimNotesFromPDFBundleAtURL:fileURL error:NULL];
@@ -160,7 +160,7 @@ Boolean GetMetadataForFile(void* thisInterface,
             
             CFDictionarySetValue(attributes, kMDItemTextContent, (__bridge CFTypeRef)textContent);
             
-            CFDictionarySetValue(attributes, kMDItemCreator, @"Skim");
+            CFDictionarySetValue(attributes, kMDItemCreator, @"Preskim");
             
             if (sourcePath && [[NSFileManager defaultManager] fileExistsAtPath:sourcePath])
                 CFDictionarySetValue(attributes, kMDItemWhereFroms, (__bridge CFTypeRef)[NSArray arrayWithObjects:sourcePath, nil]);

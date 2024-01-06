@@ -42,8 +42,8 @@
 #import "SKNXPCSkimReader.h"
 
 #define SKNPDFDocumentType @"com.adobe.pdf"
-#define SKNPDFBundleDocumentType @"net.sourceforge.skim-app.pdfd"
-#define SKNSkimNotesDocumentType @"net.sourceforge.skim-app.skimnotes"
+#define SKNPDFBundleDocumentType @"scris.ds.preskim.pdfd"
+#define SKNSkimNotesDocumentType @"scris.ds.preskim.notes"
 
 #define SKNDocumentErrorDomain @"SKNDocumentErrorDomain"
 
@@ -76,7 +76,7 @@
 #if defined(FrameworkSample)
     
     if ([[NSWorkspace sharedWorkspace] type:SKNSkimNotesDocumentType conformsToType:docType]) {
-        return [[NSFileManager defaultManager] writeSkimNotes:_notes toSkimFileAtURL:absoluteURL error:outError];
+        return [[NSFileManager defaultManager] writeSkimNotes:_notes toPreskimFileAtURL:absoluteURL error:outError];
     } else {
         if (outError)
             *outError = [NSError errorWithDomain:SKNDocumentErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Unable to save notes", @""), NSLocalizedDescriptionKey, nil]];
@@ -115,7 +115,7 @@
     } else if ([ws type:docType conformsToType:SKNPDFBundleDocumentType]) {
         array = [fm readSkimNotesFromPDFBundleAtURL:absoluteURL error:&error];
     } else if ([ws type:docType conformsToType:SKNSkimNotesDocumentType]) {
-        array = [fm readSkimNotesFromSkimFileAtURL:absoluteURL error:&error];
+        array = [fm readSkimNotesFromPreskimFileAtURL:absoluteURL error:&error];
     }
     
 #elif defined(AgentSample)
@@ -125,7 +125,7 @@
     if ([ws type:docType conformsToType:SKNPDFDocumentType] ||
         [ws type:docType conformsToType:SKNPDFBundleDocumentType] ||
         [ws type:docType conformsToType:SKNSkimNotesDocumentType]) {
-        data = [[SKNSkimReader sharedReader] SkimNotesAtURL:absoluteURL];
+        data = [[SKNPreskimReader sharedReader] SkimNotesAtURL:absoluteURL];
         if (data) {
             @try { array = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
             @catch (id e) {}
@@ -141,7 +141,7 @@
     if ([ws type:docType conformsToType:SKNPDFDocumentType] ||
         [ws type:docType conformsToType:SKNPDFBundleDocumentType] ||
         [ws type:docType conformsToType:SKNSkimNotesDocumentType]) {
-        data = [[SKNXPCSkimReader sharedReader] SkimNotesAtURL:absoluteURL];
+        data = [[SKNXPCPreskimReader sharedReader] SkimNotesAtURL:absoluteURL];
         if (data) {
             @try { array = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }
             @catch (id e) {}
@@ -155,7 +155,7 @@
     if ([ws type:docType conformsToType:SKNPDFDocumentType] ||
         [ws type:docType conformsToType:SKNPDFBundleDocumentType] ||
         [ws type:docType conformsToType:SKNSkimNotesDocumentType]) {
-        [[SKNXPCSkimReader sharedReader] readSkimNotesAtURL:absoluteURL reply:(NSData *data){
+        [[SKNXPCPreskimReader sharedReader] readSkimNotesAtURL:absoluteURL reply:(NSData *data){
             if (data) {
                 NSArray *arr = nil;
                 @try { arr = [NSKeyedUnarchiver unarchiveObjectWithData:data]; }

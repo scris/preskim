@@ -54,9 +54,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, getter=isTrashedFileURL) BOOL trashedFileURL;
 
-@property (nonatomic, readonly, getter=isSkimURL) BOOL skimURL;
-@property (nonatomic, readonly, getter=isSkimFileURL) BOOL skimFileURL;
-@property (nonatomic, readonly, getter=isSkimBookmarkURL) BOOL skimBookmarkURL;
+@property (nonatomic, readonly, getter=isPreskimURL) BOOL skimURL;
+@property (nonatomic, readonly, getter=isPreskimFileURL) BOOL skimFileURL;
+@property (nonatomic, readonly, getter=isPreskimBookmarkURL) BOOL skimBookmarkURL;
 @property (nonatomic, nullable, readonly) NSURL *associatedFileURL;
 
 @property (nonatomic, nullable, readonly) NSAttributedString *icon;

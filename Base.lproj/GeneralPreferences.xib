@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,10 +15,10 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="1">
-            <rect key="frame" x="0.0" y="0.0" width="303" height="415"/>
+            <rect key="frame" x="0.0" y="0.0" width="322" height="415"/>
             <subviews>
-                <button toolTip="Remember and reopen files from a previous run" horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2">
-                    <rect key="frame" x="18" y="378" width="223" height="18"/>
+                <button toolTip="Remember and reopen files from a previous run" imageHugsTitle="YES" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2">
+                    <rect key="frame" x="18" y="378" width="222" height="18"/>
                     <buttonCell key="cell" type="check" title="Reopen last open files at startup" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="50">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -27,7 +27,7 @@
                         <binding destination="58" name="value" keyPath="values.SKReopenLastOpenFiles" id="60"/>
                     </connections>
                 </button>
-                <button toolTip="Open the contents pane only when the file has a table of contents" horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3">
+                <button toolTip="Open the contents pane only when the file has a table of contents" imageHugsTitle="YES" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3">
                     <rect key="frame" x="18" y="309" width="252" height="18"/>
                     <buttonCell key="cell" type="check" title="Open pane only for Table of Contents" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="49">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -37,7 +37,7 @@
                         <binding destination="58" name="value" keyPath="values.SKOpenContentsPaneOnlyForTOC" id="63"/>
                     </connections>
                 </button>
-                <button toolTip="Always keep snapshot windows on top of other windows" horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4">
+                <button toolTip="Always keep snapshot windows on top of other windows" imageHugsTitle="YES" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4">
                     <rect key="frame" x="18" y="64" width="215" height="18"/>
                     <buttonCell key="cell" type="check" title="Keep snapshot windows on top" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="48">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -48,24 +48,24 @@
                     </connections>
                 </button>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="5">
-                    <rect key="frame" x="12" y="364" width="279" height="5"/>
+                    <rect key="frame" x="12" y="364" width="298" height="5"/>
                 </box>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="6">
-                    <rect key="frame" x="12" y="91" width="279" height="5"/>
+                    <rect key="frame" x="12" y="91" width="298" height="5"/>
                 </box>
-                <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7" userLabel="Check for Skim updates:">
-                    <rect key="frame" x="18" y="109" width="153" height="16"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Check for Skim updates:" id="47">
+                <textField focusRingType="none" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7" userLabel="Check for Preskim updates:">
+                    <rect key="frame" x="18" y="109" width="171" height="16"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Check for Preskim updates:" id="47">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="8">
-                    <rect key="frame" x="12" y="136" width="279" height="5"/>
+                    <rect key="frame" x="12" y="136" width="298" height="5"/>
                 </box>
-                <popUpButton horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9">
-                    <rect key="frame" x="174" y="102" width="88" height="25"/>
+                <popUpButton imageHugsTitle="YES" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9">
+                    <rect key="frame" x="192" y="102" width="88" height="25"/>
                     <popUpButtonCell key="cell" type="push" title="Never" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="42" id="40">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -84,7 +84,7 @@
                         <binding destination="-2" name="selectedTag" keyPath="updateInterval" id="67"/>
                     </connections>
                 </popUpButton>
-                <button toolTip="Go back to the last page viewed when opening a file" horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="10">
+                <button toolTip="Go back to the last page viewed when opening a file" imageHugsTitle="YES" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="10">
                     <rect key="frame" x="18" y="287" width="197" height="18"/>
                     <buttonCell key="cell" type="check" title="Remember last page viewed" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="39">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -95,11 +95,11 @@
                     </connections>
                 </button>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="11">
-                    <rect key="frame" x="12" y="199" width="279" height="5"/>
+                    <rect key="frame" x="12" y="199" width="298" height="5"/>
                 </box>
-                <button toolTip="Automatically save a Skim notes file with the same file name whenever you save a PDF file" horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="12">
-                    <rect key="frame" x="18" y="150" width="265" height="18"/>
-                    <buttonCell key="cell" type="check" title="Automatically save Skim notes backups" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="38">
+                <button toolTip="Automatically save a Preskim notes file with the same file name whenever you save a PDF file" imageHugsTitle="YES" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="12">
+                    <rect key="frame" x="18" y="150" width="284" height="18"/>
+                    <buttonCell key="cell" type="check" title="Automatically save Preskim notes backups" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="38">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -107,7 +107,7 @@
                         <binding destination="58" name="value" keyPath="values.SKAutoSaveSkimNotes" id="66"/>
                     </connections>
                 </button>
-                <button toolTip="Choose this to use different PDF view settings in full screen mode and normal mode" verticalHuggingPriority="750" tag="1" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="13" userLabel="Full Screen Button">
+                <button toolTip="Choose this to use different PDF view settings in full screen mode and normal mode" tag="1" imageHugsTitle="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="13" userLabel="Full Screen Button">
                     <rect key="frame" x="125" y="207" width="102" height="32"/>
                     <buttonCell key="cell" type="push" title="Full Screen" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="37">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -117,7 +117,7 @@
                         <action selector="changePDFViewSettings:" target="-2" id="BV0-gY-J7J"/>
                     </connections>
                 </button>
-                <button toolTip="Set the initial PDF view settings for newly opened documents" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="14" userLabel="Normal Button">
+                <button toolTip="Set the initial PDF view settings for newly opened documents" imageHugsTitle="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="14" userLabel="Normal Button">
                     <rect key="frame" x="25" y="207" width="102" height="32"/>
                     <buttonCell key="cell" type="push" title="Normal" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="36">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -128,7 +128,7 @@
                         <action selector="changePDFViewSettings:" target="-2" id="uMp-K8-J4A"/>
                     </connections>
                 </button>
-                <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="15">
+                <textField focusRingType="none" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="15">
                     <rect key="frame" x="18" y="242" width="173" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Initial PDF view settings for:" id="35">
                         <font key="font" metaFont="system"/>
@@ -136,7 +136,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="16" userLabel="Open files:">
+                <textField focusRingType="none" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="16" userLabel="Open files:">
                     <rect key="frame" x="18" y="337" width="70" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Open files:" id="34">
                         <font key="font" metaFont="system"/>
@@ -144,7 +144,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button toolTip="Reopen the last viewed snapshots when opening a file" horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="18">
+                <button toolTip="Reopen the last viewed snapshots when opening a file" imageHugsTitle="YES" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="18">
                     <rect key="frame" x="18" y="265" width="158" height="18"/>
                     <buttonCell key="cell" type="check" title="Remember snapshots" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="29">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -155,9 +155,9 @@
                     </connections>
                 </button>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="19">
-                    <rect key="frame" x="12" y="50" width="279" height="5"/>
+                    <rect key="frame" x="12" y="50" width="298" height="5"/>
                 </box>
-                <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="20" userLabel="Save passwords in Keychain:">
+                <textField focusRingType="none" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="20" userLabel="Save passwords in Keychain:">
                     <rect key="frame" x="18" y="23" width="178" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Save passwords in Keychain:" id="28">
                         <font key="font" metaFont="system"/>
@@ -165,7 +165,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button toolTip="Attach Skim notes that can be read by older versions of Skim, but are not preserved by iCloud" horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YMN-MA-BZc">
+                <button toolTip="Attach Preskim notes that can be read by older versions Preskim, but are not preserved by iCloud" imageHugsTitle="YES" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YMN-MA-BZc">
                     <rect key="frame" x="18" y="172" width="172" height="18"/>
                     <buttonCell key="cell" type="check" title="Write legacy Skim notes" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="s4m-Yj-mU0">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -175,7 +175,7 @@
                         <binding destination="58" name="value" keyPath="values.SKWriteLegacySkimNotes" id="vAa-lk-FKh"/>
                     </connections>
                 </button>
-                <popUpButton horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="duc-5M-yv6">
+                <popUpButton imageHugsTitle="YES" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="duc-5M-yv6">
                     <rect key="frame" x="199" y="16" width="82" height="25"/>
                     <popUpButtonCell key="cell" type="push" title="Ask" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="-1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="swn-Y1-ySx" id="yvF-2H-pdd">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -193,7 +193,7 @@
                         <binding destination="58" name="selectedTag" keyPath="values.SKSavePasswordOption" id="ScP-Ic-6Ro"/>
                     </connections>
                 </popUpButton>
-                <popUpButton toolTip="Window size for newly opened files" horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ClK-rQ-vsN">
+                <popUpButton toolTip="Window size for newly opened files" imageHugsTitle="YES" horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ClK-rQ-vsN">
                     <rect key="frame" x="91" y="330" width="104" height="25"/>
                     <popUpButtonCell key="cell" type="push" title="Default" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="rQq-RM-Yog" id="WWI-W3-GZi">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>

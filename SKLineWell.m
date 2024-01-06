@@ -42,7 +42,7 @@
 #import "NSBezierPath_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 
-NSString *SKPasteboardTypeLineStyle = @"net.sourceforge.skim-app.pasteboard.line-style";
+NSString *SKPasteboardTypeLineStyle = @"scris.ds.preskim.pasteboard.line-style";
 
 NSString *SKLineWellLineWidthKey = @"lineWidth";
 NSString *SKLineWellStyleKey = @"style";

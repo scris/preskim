@@ -4318,7 +4318,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             }
         }
         
-        // if we did not find a Skim note, get the first link covered by another annotation to click
+        // if we did not find a Preskim note, get the first link covered by another annotation to click
         if (newCurrentAnnotation == nil && linkAnnotation && foundCoveringAnnotation)
             newCurrentAnnotation = linkAnnotation;
     }

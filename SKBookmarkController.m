@@ -55,18 +55,18 @@
 #import "SKRecentDocumentInfo.h"
 #import "NSPasteboard_SKExtensions.h"
 
-#define SKPasteboardTypeBookmarkRow @"net.sourceforge.skim-app.pasteboard.bookmarkrow"
+#define SKPasteboardTypeBookmarkRow @"scris.ds.preskim.pasteboard.bookmarkrow"
 
 #define SKBookmarksToolbarIdentifier                 @"SKBookmarksToolbarIdentifier"
 #define SKBookmarksNewFolderToolbarItemIdentifier    @"SKBookmarksNewFolderToolbarItemIdentifier"
 #define SKBookmarksNewSeparatorToolbarItemIdentifier @"SKBookmarksNewSeparatorToolbarItemIdentifier"
 #define SKBookmarksDeleteToolbarItemIdentifier       @"SKBookmarksDeleteToolbarItemIdentifier"
 
-#define SKBookmarksTouchBarIdentifier        @"net.sourceforge.skim-app.touchbar.bookmarks"
-#define SKTouchBarItemIdentifierNewFolder    @"net.sourceforge.skim-app.touchbar-item.newFolder"
-#define SKTouchBarItemIdentifierNewSeparator @"net.sourceforge.skim-app.touchbar-item.newSeparator"
-#define SKTouchBarItemIdentifierDelete       @"net.sourceforge.skim-app.touchbar-item.delete"
-#define SKTouchBarItemIdentifierPreview      @"net.sourceforge.skim-app.touchbar-item.preview"
+#define SKBookmarksTouchBarIdentifier        @"scris.ds.preskim.touchbar.bookmarks"
+#define SKTouchBarItemIdentifierNewFolder    @"scris.ds.preskim.touchbar-item.newFolder"
+#define SKTouchBarItemIdentifierNewSeparator @"scris.ds.preskim.touchbar-item.newSeparator"
+#define SKTouchBarItemIdentifierDelete       @"scris.ds.preskim.touchbar-item.delete"
+#define SKTouchBarItemIdentifierPreview      @"scris.ds.preskim.touchbar-item.preview"
 
 #define SKBookmarksWindowFrameAutosaveName @"SKBookmarksWindow"
 
@@ -275,7 +275,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (SKBookmark *)bookmarkForURL:(NSURL *)bookmarkURL {
     SKBookmark *bookmark = nil;
-    if ([bookmarkURL isSkimBookmarkURL]) {
+    if ([bookmarkURL isPreskimBookmarkURL]) {
         bookmark = [self bookmarkRoot];
         NSArray *components = [[[bookmarkURL absoluteString] substringFromIndex:17] componentsSeparatedByString:@"/"];
         for (NSString *component in components) {

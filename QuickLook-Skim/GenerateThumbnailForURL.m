@@ -53,7 +53,7 @@ static void drawBackgroundAndApplicationIconInCurrentContext(QLThumbnailRequestR
     NSRect pageRect = { NSZeroPoint, _paperSize };
     NSRectFillUsingOperation(pageRect, NSCompositingOperationSourceOver);
     
-    NSURL *iconURL = (NSURL *)CFBridgingRelease(CFBundleCopyResourceURL(QLThumbnailRequestGetGeneratorBundle(thumbnail), CFSTR("Skim"), CFSTR("icns"), NULL));
+    NSURL *iconURL = (NSURL *)CFBridgingRelease(CFBundleCopyResourceURL(QLThumbnailRequestGetGeneratorBundle(thumbnail), CFSTR("Preskim"), CFSTR("icns"), NULL));
     NSImage *appIcon = [[NSImage alloc] initWithContentsOfFile:[iconURL path]];
     
     [appIcon drawInRect:_iconRect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.3];
@@ -125,7 +125,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
     @autoreleasepool{
         bool didGenerate = false;
         
-        if (UTTypeEqual(CFSTR("net.sourceforge.skim-app.pdfd"), contentTypeUTI)) {
+        if (UTTypeEqual(CFSTR("scris.ds.preskim.pdfd"), contentTypeUTI)) {
             
             NSString *pdfFile = SKQLPDFPathForPDFBundleURL((__bridge NSURL *)url);
             
@@ -197,7 +197,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
                 if (pdfData) CFRelease(pdfData);
             }
             
-        } else if (UTTypeEqual(CFSTR("net.sourceforge.skim-app.skimnotes"), contentTypeUTI)) {
+        } else if (UTTypeEqual(CFSTR("scris.ds.preskim.notes"), contentTypeUTI)) {
             
             NSData *data = [[NSData alloc] initWithContentsOfURL:(__bridge NSURL *)url options:NSUncachedRead error:NULL];
             

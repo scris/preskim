@@ -38,8 +38,8 @@
 
 /*!
     @header      
-    @abstract    A concrete <code>PDFAnnotation</code> subclass representing a Skim anchored note.
-    @discussion  This header file declares API for a concrete <code>PDFAnnotation</code> class representing a Skim anchored note.
+    @abstract    A concrete <code>PDFAnnotation</code> subclass representing a Preskim anchored note.
+    @discussion  This header file declares API for a concrete <code>PDFAnnotation</code> class representing a Preskim anchored note.
 */
 #import <Foundation/Foundation.h>
 #import <PDFKit/PDFKit.h>
@@ -71,7 +71,7 @@ extern PDFSize SKNPDFAnnotationNoteSize;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 /*!
-    @abstract    A concrete <code>PDFAnnotation</code> subclass, a subclass of <code>PDFAnnotationText</code>, representing a Skim anchored note.
+    @abstract    A concrete <code>PDFAnnotation</code> subclass, a subclass of <code>PDFAnnotationText</code>, representing a Preskim anchored note.
     @discussion  This is a <code>PDFAnnotationText</code> subclass containing a separate short string value, a longer rich text property, and an image property.
 */
 @interface SKNPDFAnnotationNote : PDFAnnotationText

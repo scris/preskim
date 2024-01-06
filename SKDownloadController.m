@@ -57,10 +57,10 @@
 #define SKDownloadsToolbarPreferencesItemIdentifier @"SKDownloadsToolbarPreferencesItemIdentifier"
 #define SKDownloadsToolbarClearItemIdentifier       @"SKDownloadsToolbarClearItemIdentifier"
 
-#define SKTouchBarItemIdentifierClear      @"net.sourceforge.skim-app.touchbar-item.clear"
-#define SKTouchBarItemIdentifierResume     @"net.sourceforge.skim-app.touchbar-item.resume"
-#define SKTouchBarItemIdentifierCancel     @"net.sourceforge.skim-app.touchbar-item.cancel"
-#define SKTouchBarItemIdentifierRemove     @"net.sourceforge.skim-app.touchbar-item.remove"
+#define SKTouchBarItemIdentifierClear      @"scris.ds.preskim.touchbar-item.clear"
+#define SKTouchBarItemIdentifierResume     @"scris.ds.preskim.touchbar-item.resume"
+#define SKTouchBarItemIdentifierCancel     @"scris.ds.preskim.touchbar-item.cancel"
+#define SKTouchBarItemIdentifierRemove     @"scris.ds.preskim.touchbar-item.remove"
 
 #define PROGRESS_COLUMN 1
 #define RESUME_COLUMN   2

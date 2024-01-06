@@ -377,7 +377,7 @@
     
     // only set the creator code for our native types
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShouldSetCreatorCodeKey] && [ws type:typeName conformsToType:SKNotesDocumentType])
-        [dict setObject:[NSNumber numberWithUnsignedInt:'SKim'] forKey:NSFileHFSCreatorCode];
+        [dict setObject:[NSNumber numberWithUnsignedInt:'PRes'] forKey:NSFileHFSCreatorCode];
     
     if ([ws type:typeName conformsToType:SKNotesDocumentType])
         [dict setObject:[NSNumber numberWithUnsignedInt:'SKNT'] forKey:NSFileHFSTypeCode];
@@ -951,7 +951,7 @@
         NSString *normalizedType = nil;
         NSArray *writableTypes = [self writableTypesForSaveOperation:NSSaveToOperation];
         SKTemplateManager *tm = [SKTemplateManager sharedManager];
-        if ([fileType isEqualToString:@"Skim Notes"])
+        if ([fileType isEqualToString:@"Preskim Notes"])
             normalizedType = SKNotesDocumentType;
         else if ([fileType isEqualToString:@"Notes as Text"])
             normalizedType = SKNotesTextDocumentType;

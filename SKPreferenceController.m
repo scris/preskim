@@ -52,9 +52,9 @@
 
 #define SKPreferencesToolbarIdentifier @"SKPreferencesToolbarIdentifier"
 
-#define SKTouchBarItemIdentifierPanes    @"net.sourceforge.skim-app.touchbar-item.panes"
-#define SKTouchBarItemIdentifierReset    @"net.sourceforge.skim-app.touchbar-item.reset"
-#define SKTouchBarItemIdentifierResetAll @"net.sourceforge.skim-app.touchbar-item.resetAll"
+#define SKTouchBarItemIdentifierPanes    @"scris.ds.preskim.touchbar-item.panes"
+#define SKTouchBarItemIdentifierReset    @"scris.ds.preskim.touchbar-item.reset"
+#define SKTouchBarItemIdentifierResetAll @"scris.ds.preskim.touchbar-item.resetAll"
 
 #define SKPreferenceWindowFrameAutosaveName @"SKPreferenceWindow"
 
@@ -239,7 +239,7 @@
 - (IBAction)resetAll:(id)sender {
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:NSLocalizedString(@"Reset all preferences to their original values?", @"Message in alert dialog when pressing Reset All button")];
-    [alert setInformativeText:NSLocalizedString(@"Choosing Reset will restore all settings to the state they were in when Skim was first installed.", @"Informative text in alert dialog when pressing Reset All button")];
+    [alert setInformativeText:NSLocalizedString(@"Choosing Reset will restore all settings to the state they were in when Preskim was first installed.", @"Informative text in alert dialog when pressing Reset All button")];
     [alert addButtonWithTitle:NSLocalizedString(@"Reset", @"Button title")];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title")];
     [alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode){
@@ -261,7 +261,7 @@
     NSString *label = [currentPane title];
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Reset %@ preferences to their original values?", @"Message in alert dialog when pressing Reset All button"), label]];
-    [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Choosing Reset will restore all settings in this pane to the state they were in when Skim was first installed.", @"Informative text in alert dialog when pressing Reset All button"), label]];
+    [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Choosing Reset will restore all settings in this pane to the state they were in when Preskim was first installed.", @"Informative text in alert dialog when pressing Reset All button"), label]];
     [alert addButtonWithTitle:NSLocalizedString(@"Reset", @"Button title")];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title")];
     [alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode){

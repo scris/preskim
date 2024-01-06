@@ -40,7 +40,7 @@
 #import "NSMenu_SKExtensions.h"
 #import "SKStringConstants.h"
 
-#define SKTouchBarItemIdentifierDone @"net.sourceforge.skim-app.touchbar-item.done"
+#define SKTouchBarItemIdentifierDone @"scris.ds.preskim.touchbar-item.done"
 
 @implementation SKDownloadPreferenceController
 

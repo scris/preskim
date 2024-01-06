@@ -55,8 +55,8 @@
 #define SKIM_NOTES_KEY @"net_sourceforge_skim-app_notes"
 
 NSString *SKPDFDocumentType = @"com.adobe.pdf";
-NSString *SKPDFBundleDocumentType = @"net.sourceforge.skim-app.pdfd";
-NSString *SKNotesDocumentType = @"net.sourceforge.skim-app.skimnotes";
+NSString *SKPDFBundleDocumentType = @"scris.ds.preskim.pdfd";
+NSString *SKNotesDocumentType = @"scris.ds.preskim.notes";
 NSString *SKNotesTextDocumentType = @"public.plain-text";
 NSString *SKNotesRTFDocumentType = @"public.rtf";
 NSString *SKNotesRTFDDocumentType = @"com.apple.rtfd";
@@ -295,10 +295,10 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
     NSArray *theURLs = [NSURL readURLsFromPasteboard:pboard];
     NSURL *theURL = [theURLs count] > 0 ? [theURLs objectAtIndex:0] : nil;
     
-    if ([theURL isSkimFileURL])
+    if ([theURL isPreskimFileURL])
         theURL = [theURL associatedFileURL];
     
-    if ([theURL isSkimBookmarkURL]) {
+    if ([theURL isPreskimBookmarkURL]) {
         SKBookmark *bookmark = showNotes ? nil : [[SKBookmarkController sharedBookmarkController] bookmarkForURL:theURL];
         if (bookmark) {
             [self openDocumentWithBookmark:bookmark completionHandler:completionHandler];

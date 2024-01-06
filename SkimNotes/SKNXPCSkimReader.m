@@ -1,5 +1,5 @@
 //
-//  SKNXPCSkimReader.m
+//  SKNXPCPreskimReader.m
 //  SkimNotesTest
 //
 //  Created by Christiaan Hofman on 24/11/2023.
@@ -40,11 +40,11 @@
 #import "SKNXPCAgentListenerProtocol.h"
 #import <ServiceManagement/ServiceManagement.h>
 
-@implementation SKNXPCSkimReader
+@implementation SKNXPCPreskimReader
 
 @synthesize agentIdentifier=_agentIdentifier;
 
-+ (SKNXPCSkimReader *)sharedReader {
++ (SKNXPCPreskimReader *)sharedReader {
     static id sharedReader = nil;
     static dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
@@ -80,9 +80,9 @@
         path = [[NSBundle bundleForClass:[self class]] pathForResource:@"skimnotes" ofType:nil];
     }
     if (path == nil) {
-        // look for it in the Skim bundle
-        NSString *SkimPath = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"Skim"];
-        path = SkimPath ? [[[NSBundle bundleWithPath:SkimPath] sharedSupportPath] stringByAppendingPathComponent:@"skimnotes"] : nil;
+        // look for it in the Preskim bundle
+        NSString *PreskimPath = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"Preskim"];
+        path = PreskimPath ? [[[NSBundle bundleWithPath:PreskimPath] sharedSupportPath] stringByAppendingPathComponent:@"skimnotes"] : nil;
     }
     return path;
 }
@@ -158,7 +158,7 @@
     if ([self launchedTask]) {
         _connection = [[NSXPCConnection alloc] initWithMachServiceName:[self agentIdentifier] options:0];
         [_connection setRemoteObjectInterface:[NSXPCInterface interfaceWithProtocol:@protocol(SKNXPCAgentListenerProtocol)]];
-        __weak SKNXPCSkimReader *weakSelf = self;
+        __weak SKNXPCPreskimReader *weakSelf = self;
         [_connection setInvalidationHandler:^{
             [weakSelf destroyConnection];
         }];
@@ -183,8 +183,8 @@
     
     if (fileType != nil &&
         ([ws type:fileType conformsToType:(__bridge NSString *)kUTTypePDF] ||
-         [ws type:fileType conformsToType:@"net.sourceforge.skim-app.pdfd"] ||
-         [ws type:fileType conformsToType:@"net.sourceforge.skim-app.skimnotes"])) {
+         [ws type:fileType conformsToType:@"scris.ds.preskim.pdfd"] ||
+         [ws type:fileType conformsToType:@"scris.ds.preskim.notes"])) {
         if (nil == _connection)
             [self establishSynchronousConnection:sync];
         return YES;

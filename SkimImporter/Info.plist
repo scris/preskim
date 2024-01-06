@@ -11,8 +11,8 @@
 			<string>MDImporter</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>net.sourceforge.skim-app.pdfd</string>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.pdfd</string>
+				<string>scris.ds.preskim.notes</string>
 			</array>
 		</dict>
 	</array>
@@ -57,7 +57,7 @@
 			<key>UTTypeDescription</key>
 			<string>PDF Bundle</string>
 			<key>UTTypeIdentifier</key>
-			<string>net.sourceforge.skim-app.pdfd</string>
+			<string>scris.ds.preskim.pdfd</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>com.apple.ostype</key>
@@ -74,9 +74,9 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Skim Notes</string>
+			<string>Preskim Notes</string>
 			<key>UTTypeIdentifier</key>
-			<string>net.sourceforge.skim-app.skimnotes</string>
+			<string>scris.ds.preskim.notes</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>com.apple.ostype</key>

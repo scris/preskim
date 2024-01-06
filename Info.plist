@@ -26,13 +26,13 @@
 			<key>NSExportableTypes</key>
 			<array>
 				<string>com.adobe.pdf</string>
-				<string>net.sourceforge.skim-app.pdfd</string>
+				<string>scris.ds.preskim.pdfd</string>
 				<string>com.adobe.postscript</string>
 				<string>com.adobe.encapsulated-postscript</string>
 				<string>org.tug.tex.dvi</string>
 				<string>org.tug.tex.xdv</string>
 				<string>org.gnu.gnu-zip-tar-archive</string>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.skimnotes</string>
 				<string>public.plain-text</string>
 				<string>public.rtf</string>
 				<string>com.apple.rtfd</string>
@@ -52,20 +52,20 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>net.sourceforge.skim-app.pdfd</string>
+				<string>scris.ds.preskim.pdfd</string>
 			</array>
 			<key>NSDocumentClass</key>
 			<string>SKMainDocument</string>
 			<key>NSExportableTypes</key>
 			<array>
 				<string>com.adobe.pdf</string>
-				<string>net.sourceforge.skim-app.pdfd</string>
+				<string>scris.ds.preskim.pdfd</string>
 				<string>com.adobe.postscript</string>
 				<string>com.adobe.encapsulated-postscript</string>
 				<string>org.tug.tex.dvi</string>
 				<string>org.tug.tex.xdv</string>
 				<string>org.gnu.gnu-zip-tar-archive</string>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.notes</string>
 				<string>public.plain-text</string>
 				<string>public.rtf</string>
 				<string>com.apple.rtfd</string>
@@ -92,12 +92,12 @@
 			<key>NSExportableTypes</key>
 			<array>
 				<string>com.adobe.pdf</string>
-				<string>net.sourceforge.skim-app.pdfd</string>
+				<string>scris.ds.preskim.pdfd</string>
 				<string>com.adobe.postscript</string>
 				<string>com.adobe.encapsulated-postscript</string>
 				<string>org.tug.tex.dvi</string>
 				<string>org.tug.tex.xdv</string>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.notes</string>
 				<string>public.plain-text</string>
 				<string>public.rtf</string>
 				<string>com.apple.rtfd</string>
@@ -125,13 +125,13 @@
 			<key>NSExportableTypes</key>
 			<array>
 				<string>com.adobe.pdf</string>
-				<string>net.sourceforge.skim-app.pdfd</string>
+				<string>scris.ds.preskim.pdfd</string>
 				<string>com.adobe.postscript</string>
 				<string>com.adobe.encapsulated-postscript</string>
 				<string>org.tug.tex.dvi</string>
 				<string>org.tug.tex.xdv</string>
 				<string>org.gnu.gnu-zip-tar-archive</string>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.notes</string>
 				<string>public.plain-text</string>
 				<string>public.rtf</string>
 				<string>com.apple.rtfd</string>
@@ -158,13 +158,13 @@
 			<key>NSExportableTypes</key>
 			<array>
 				<string>com.adobe.pdf</string>
-				<string>net.sourceforge.skim-app.pdfd</string>
+				<string>scris.ds.preskim.pdfd</string>
 				<string>com.adobe.postscript</string>
 				<string>com.adobe.encapsulated-postscript</string>
 				<string>org.tug.tex.dvi</string>
 				<string>org.tug.tex.xdv</string>
 				<string>org.gnu.gnu-zip-tar-archive</string>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.notes</string>
 				<string>public.plain-text</string>
 				<string>public.rtf</string>
 				<string>com.apple.rtfd</string>
@@ -191,13 +191,13 @@
 			<key>NSExportableTypes</key>
 			<array>
 				<string>com.adobe.pdf</string>
-				<string>net.sourceforge.skim-app.pdfd</string>
+				<string>scris.ds.preskim.pdfd</string>
 				<string>com.adobe.postscript</string>
 				<string>com.adobe.encapsulated-postscript</string>
 				<string>org.tug.tex.dvi</string>
 				<string>org.tug.tex.xdv</string>
 				<string>org.gnu.gnu-zip-tar-archive</string>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.notes</string>
 				<string>public.plain-text</string>
 				<string>public.rtf</string>
 				<string>com.apple.rtfd</string>
@@ -217,13 +217,13 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.notes</string>
 			</array>
 			<key>NSDocumentClass</key>
 			<string>SKNotesDocument</string>
 			<key>NSExportableTypes</key>
 			<array>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.notes</string>
 				<string>public.plain-text</string>
 				<string>public.rtf</string>
 				<string>com.apple.rtfd</string>
@@ -298,11 +298,11 @@
 	<key>CFBundleHelpBookFolder</key>
 	<string>Skim.help</string>
 	<key>CFBundleHelpBookName</key>
-	<string>net.sourceforge.skim-app.skim.help</string>
+	<string>scris.ds.preskim.skim.help</string>
 	<key>CFBundleIconFile</key>
 	<string>Skim</string>
 	<key>CFBundleIdentifier</key>
-	<string>${PRODUCT_BUNDLE_IDENTIFIER}</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -310,16 +310,16 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6.21</string>
+	<string>1.7.0</string>
 	<key>CFBundleSignature</key>
-	<string>SKim</string>
+	<string>PRes</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>net.sourceforge.skim-app.skimURL</string>
+			<string>scris.ds.preskim.skimURL</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>skim</string>
@@ -333,11 +333,11 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Skim uses AppleScript to compse e-mail messages, open text editors, and run user AppleScripts from the menu.</string>
+	<string>Preskim uses AppleScript to compse e-mail messages, open text editors, and run user AppleScripts from the menu.</string>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
 	<key>NSDownloadsFolderUsageDescription</key>
-	<string>Skim places downloaded files in your Downloads folder.</string>
+	<string>Preskim places downloaded files in your Downloads folder.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
@@ -368,8 +368,8 @@
 				<string>com.adobe.encapsulated-postscript</string>
 				<string>org.tug.tex.dvi</string>
 				<string>org.tug.tex.xdv</string>
-				<string>net.sourceforge.skim-app.pdfd</string>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.pdfd</string>
+				<string>scris.ds.preskim.notes</string>
 			</array>
 			<key>NSSendTypes</key>
 			<array>
@@ -387,7 +387,7 @@
 			<key>NSMessage</key>
 			<string>openDocumentFromURLOnPboard</string>
 			<key>NSPortName</key>
-			<string>Skim</string>
+			<string>Preskim</string>
 			<key>NSRequiredContext</key>
 			<dict>
 				<key>NSTextContent</key>
@@ -400,8 +400,8 @@
 				<string>com.adobe.encapsulated-postscript</string>
 				<string>org.tug.tex.dvi</string>
 				<string>org.tug.tex.xdv</string>
-				<string>net.sourceforge.skim-app.pdfd</string>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.pdfd</string>
+				<string>scris.ds.preskim.notes</string>
 			</array>
 			<key>NSSendTypes</key>
 			<array>
@@ -448,8 +448,8 @@
 				<string>com.adobe.encapsulated-postscript</string>
 				<string>org.tug.tex.dvi</string>
 				<string>org.tug.tex.xdv</string>
-				<string>net.sourceforge.skim-app.pdfd</string>
-				<string>net.sourceforge.skim-app.skimnotes</string>
+				<string>scris.ds.preskim.pdfd</string>
+				<string>scris.ds.preskim.notes</string>
 			</array>
 			<key>NSSendTypes</key>
 			<array>
@@ -489,7 +489,7 @@
 				<string>PDFD</string>
 			</dict>
 			<key>UTTypeIdentifier</key>
-			<string>net.sourceforge.skim-app.pdfd</string>
+			<string>scris.ds.preskim.pdfd</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -515,7 +515,7 @@
 				<string>SKIM</string>
 			</dict>
 			<key>UTTypeIdentifier</key>
-			<string>net.sourceforge.skim-app.skimnotes</string>
+			<string>scris.ds.preskim.notes</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

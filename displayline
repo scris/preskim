@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# displayline (Skim)
+# displayline (Preskim)
 #
 # Usage: displayline [-r] [-b] [-g] [-z] LINE PDFFILE [TEXSOURCEFILE]
 
@@ -10,7 +10,7 @@ Options:
 -r, -revert      Revert the file from disk if it was open
 -b, -readingbar  Indicate the line using the reading bar
 -n, -noselect    Do not select the line
--g, -background  Do not bring Skim to the foreground
+-g, -background  Do not bring Preskim to the foreground
 -z, -zerobased   LINE is zero-based rather than one-based"
   exit 0
 fi
@@ -56,7 +56,7 @@ shopt -s extglob
 /usr/bin/osascript << EOF
   set theFile to POSIX file "${file}"
   set thePath to POSIX path of (theFile as alias)
-  tell application "Skim"
+  tell application "Preskim"
     ${revert}
     open theFile
     set theDocs to get documents whose path is thePath

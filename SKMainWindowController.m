@@ -974,7 +974,7 @@ static char SKMainWindowContentLayoutObservationContext;
     NSMutableIndexSet *pageIndexes = [NSMutableIndexSet indexSet];
     
     if ([notesToRemove count]) {
-        // notesToRemove is either all notes, no notes, or non Skim notes
+        // notesToRemove is either all notes, no notes, or non Preskim notes
         if (isConvert == NO) {
             [pdfView removePDFToolTipRects];
             // remove the current annotations

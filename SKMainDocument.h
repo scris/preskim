@@ -41,7 +41,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *SKSkimFileDidSaveNotification;
+extern NSString *SKPreskimFileDidSaveNotification;
 
 @class PDFDocument, SKMainWindowController, SKPDFView, SKLine, SKProgressController, SKTemporaryData, SKFileUpdateChecker, SKExportAccessoryController, PDFAnnotation, SKSnapshotWindowController;
 

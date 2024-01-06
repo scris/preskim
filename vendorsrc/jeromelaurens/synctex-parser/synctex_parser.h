@@ -190,7 +190,7 @@ extern "C" {
      *  Both methods are conservative, in the sense that matching is weak.
      *  If the exact column number is not found, there will be an answer with the whole line.
      *
-     *  Sumatra-PDF, Skim, iTeXMac2, TeXShop and Texworks are examples of open source software that use this library.
+     *  Sumatra-PDF, Preskim, iTeXMac2, TeXShop and Texworks are examples of open source software that use this library.
      *  You can browse their code for a concrete implementation.
      */
     typedef long synctex_status_t;

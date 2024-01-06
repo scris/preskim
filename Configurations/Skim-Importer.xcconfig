@@ -1,7 +1,7 @@
 INSTALL_PATH = /Library/Spotlight
 INFOPLIST_FILE = Info.plist
-PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.skim-app.importer
-PRODUCT_NAME = SkimImporter
+PRODUCT_BUNDLE_IDENTIFIER = scris.ds.preskim.importer
+PRODUCT_NAME = PreskimImporter
 WRAPPER_EXTENSION = mdimporter
 FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "$(SRCROOT)/../../../BuildProducts/Debug"
 LIBRARY_STYLE = Bundle

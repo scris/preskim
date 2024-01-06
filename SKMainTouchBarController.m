@@ -49,19 +49,19 @@
 #import "NSUserDefaults_SKExtensions.h"
 #import "SKColorList.h"
 
-#define SKDocumentTouchBarIdentifier @"net.sourceforge.skim-app.touchbar.document"
+#define SKDocumentTouchBarIdentifier @"scris.ds.preskim.touchbar.document"
 
-#define SKTouchBarItemIdentifierNavigation     @"net.sourceforge.skim-app.touchbar-item.navigation"
-#define SKTouchBarItemIdentifierNavigationFull @"net.sourceforge.skim-app.touchbar-item.navigationFull"
-#define SKTouchBarItemIdentifierZoom           @"net.sourceforge.skim-app.touchbar-item.zoom"
-#define SKTouchBarItemIdentifierToolMode       @"net.sourceforge.skim-app.touchbar-item.toolMode"
-#define SKTouchBarItemIdentifierAnnotationMode @"net.sourceforge.skim-app.touchbar-item.annotationMode"
-#define SKTouchBarItemIdentifierAddNote        @"net.sourceforge.skim-app.touchbar-item.addNote"
-#define SKTouchBarItemIdentifierAddNoteTypes   @"net.sourceforge.skim-app.touchbar-item.addNote-types"
-#define SKTouchBarItemIdentifierFullScreen     @"net.sourceforge.skim-app.touchbar-item.fullScreen"
-#define SKTouchBarItemIdentifierPresentation   @"net.sourceforge.skim-app.touchbar-item.presentation"
-#define SKTouchBarItemIdentifierFavoriteColors @"net.sourceforge.skim-app.touchbar-item.favoriteColors"
-#define SKTouchBarItemIdentifierColors         @"net.sourceforge.skim-app.touchbar-item.clors"
+#define SKTouchBarItemIdentifierNavigation     @"scris.ds.preskim.touchbar-item.navigation"
+#define SKTouchBarItemIdentifierNavigationFull @"scris.ds.preskim.touchbar-item.navigationFull"
+#define SKTouchBarItemIdentifierZoom           @"scris.ds.preskim.touchbar-item.zoom"
+#define SKTouchBarItemIdentifierToolMode       @"scris.ds.preskim.touchbar-item.toolMode"
+#define SKTouchBarItemIdentifierAnnotationMode @"scris.ds.preskim.touchbar-item.annotationMode"
+#define SKTouchBarItemIdentifierAddNote        @"scris.ds.preskim.touchbar-item.addNote"
+#define SKTouchBarItemIdentifierAddNoteTypes   @"scris.ds.preskim.touchbar-item.addNote-types"
+#define SKTouchBarItemIdentifierFullScreen     @"scris.ds.preskim.touchbar-item.fullScreen"
+#define SKTouchBarItemIdentifierPresentation   @"scris.ds.preskim.touchbar-item.presentation"
+#define SKTouchBarItemIdentifierFavoriteColors @"scris.ds.preskim.touchbar-item.favoriteColors"
+#define SKTouchBarItemIdentifierColors         @"scris.ds.preskim.touchbar-item.clors"
 
 static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarAnchoredNotePopover", @"TouchBarCircleNotePopover", @"TouchBarSquareNotePopover", @"TouchBarHighlightNotePopover", @"TouchBarUnderlineNotePopover", @"TouchBarStrikeOutNotePopover", @"TouchBarLineNotePopover", @"TouchBarInkNotePopover"};
 

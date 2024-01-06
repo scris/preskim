@@ -66,7 +66,7 @@
             NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleNameKey];
             chewableItemsDirectoryURL = [[chewableURL URLByAppendingPathComponent:appName isDirectory:YES] copy];
         } else {
-            char *template = strdup([[NSTemporaryDirectory() stringByAppendingPathComponent:@"Skim.XXXXXX"] fileSystemRepresentation]);
+            char *template = strdup([[NSTemporaryDirectory() stringByAppendingPathComponent:@"Preskim.XXXXXX"] fileSystemRepresentation]);
             const char *tempPath = mkdtemp(template);
             NSString *tmpPath = [self stringWithFileSystemRepresentation:tempPath length:strlen(tempPath)];
             chewableItemsDirectoryURL = [[NSURL alloc] initFileURLWithPath:tmpPath];

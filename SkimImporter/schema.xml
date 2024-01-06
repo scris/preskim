@@ -13,7 +13,7 @@
     </attributes>
 
     <types>
-        <type name="net.sourceforge.skim-app.pdfd">
+        <type name="scris.ds.preskim.pdfd">
             <note>
 		The keys that this metadata importer handles.
             </note>
@@ -33,7 +33,7 @@
                 kMDItemKeywords
             </displayattrs>
         </type>
-        <type name="net.sourceforge.skim-app.skimnotes">
+        <type name="scris.ds.preskim.notes">
             <note>
 		The keys that this metadata importer handles.
             </note>

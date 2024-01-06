@@ -101,7 +101,7 @@
     return data;
 }
 
-- (NSString *)SkimTextNotesAtPath:(NSString *)path error:(NSError **)outError {
+- (NSString *)PreskimTextNotesAtPath:(NSString *)path error:(NSError **)outError {
     NSError *error;
     NSString *string = nil;
     NSString *extension = [path pathExtension];
@@ -125,7 +125,7 @@
     return string;
 }
 
-- (NSData *)SkimRTFNotesAtPath:(NSString *)path error:(NSError **)outError {
+- (NSData *)PreskimRTFNotesAtPath:(NSString *)path error:(NSError **)outError {
     NSError *error;
     NSData *data = nil;
     NSString *extension = [path pathExtension];
@@ -160,9 +160,9 @@
             NSArray *notes = SKNSkimNotesFromData(notesData);
             if ([notes count]) {
                 if (textNotes == nil)
-                    textNotes = SKNSkimTextNotes(notes);
+                    textNotes = SKNPreskimTextNotes(notes);
                 if (rtfNotesData == nil)
-                    rtfNotesData = SKNSkimRTFNotes(notes);
+                    rtfNotesData = SKNPreskimRTFNotes(notes);
             }
         }
         if ([extension caseInsensitiveCompare:PDFD_EXTENSION] == NSOrderedSame) {

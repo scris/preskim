@@ -75,7 +75,7 @@ NSString *SKPDFAnnotationScriptingInteriorColorKey = @"interiorColor";
 
 NSString *SKPDFAnnotationBoundsOrderKey = @"boundsOrder";
 
-NSString *SKPasteboardTypeSkimNote = @"net.sourceforge.skim-app.pasteboard.skimnote";
+NSString *SKPasteboardTypeSkimNote = @"scris.ds.preskim.pasteboard.skimnote";
 
 
 @implementation PDFAnnotation (SKExtensions)

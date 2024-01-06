@@ -55,7 +55,7 @@
 #define SKXdvConversionCommandKey @"SKXdvConversionCommand"
 #define SKPSConversionCommandKey @"SKPSConversionCommand"
 
-#define SKTouchBarItemIdentifierCancel @"net.sourceforge.skim-app.touchbar-item.cancel"
+#define SKTouchBarItemIdentifierCancel @"scris.ds.preskim.touchbar-item.cancel"
 
 #define PS_SEARCH_PATHS @[@"/usr/local/bin", @"/opt/sw/bin", @"/opt/local/bin", @"/opt/homebrew/bin"]
 #define DVI_SEARCH_PATHS @[@"/Library/TeX/texbin", @"/opt/sw/bin", @"/opt/local/bin", @"/usr/local/bin"]

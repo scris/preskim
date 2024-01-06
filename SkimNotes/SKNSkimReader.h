@@ -40,7 +40,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SKNSkimReader : NSObject {
+@interface SKNPreskimReader : NSObject {
     NSString *_agentIdentifier;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
     id _agent;
 }
 
-@property (class, nonatomic, readonly) SKNSkimReader *sharedReader;
+@property (class, nonatomic, readonly) SKNPreskimReader *sharedReader;
 
 // this should only be set before any of the following calls is made
 @property (nonatomic, strong, nullable) NSString *agentIdentifier;

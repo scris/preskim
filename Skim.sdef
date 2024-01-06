@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
 
-<dictionary title="Skim Terminology">
+<dictionary title="Preskim Terminology">
 
     <suite name="Standard Suite" code="core"
         description="Common classes and commands for all applications.">
@@ -41,7 +41,7 @@
 			<parameter name="in" code="kfil" type="file" optional="yes" description="The file in which to save the document.">
 				<cocoa key="File"/>
 			</parameter>
-			<parameter name="as" code="fltp" type="text" optional="yes" description="The file format to use. Should be one of &quot;PDF&quot;, &quot;PDF Bundle&quot;, &quot;PDF Without Notes&quot;, &quot;PDF With Embedded Notes&quot;, &quot;PostScript&quot;, &quot;PostScript Without Notes&quot;, &quot;Encapsulated PostScript&quot;, &quot;Encapsulated PostScript Without Notes&quot;, &quot;DVI&quot;, &quot;DVI Without Notes&quot;, &quot;XDV&quot;, &quot;XDV Without Notes&quot;, &quot;Skim Notes&quot;, &quot;Notes as Text&quot;, &quot;Notes as RTF&quot;, &quot;Notes as RTFD&quot;, and &quot;Notes as FDF&quot;, or the name of a custom export template.">
+			<parameter name="as" code="fltp" type="text" optional="yes" description="The file format to use. Should be one of &quot;PDF&quot;, &quot;PDF Bundle&quot;, &quot;PDF Without Notes&quot;, &quot;PDF With Embedded Notes&quot;, &quot;PostScript&quot;, &quot;PostScript Without Notes&quot;, &quot;Encapsulated PostScript&quot;, &quot;Encapsulated PostScript Without Notes&quot;, &quot;DVI&quot;, &quot;DVI Without Notes&quot;, &quot;XDV&quot;, &quot;XDV Without Notes&quot;, &quot;Preskim Notes&quot;, &quot;Notes as Text&quot;, &quot;Notes as RTF&quot;, &quot;Notes as RTFD&quot;, and &quot;Notes as FDF&quot;, or the name of a custom export template.">
 				<cocoa key="FileType"/>
 			</parameter>
 		</command>
@@ -350,10 +350,10 @@
     </suite>
 
 
-    <suite name="Skim Suite" code="SKIM"
-            description="Skim specific commands and classes for dealing with PDF.">
+    <suite name="Preskim Suite" code="SKIM"
+            description="Preskim specific commands and classes for dealing with PDF.">
 
-        <cocoa name="SkimSuite"/>
+        <cocoa name="PreskimSuite"/>
 
         <command name="revert" code="SKIMRvrt"
             description="Revert a document. Don't use this when you have turned on the auto-relead functionality.">
@@ -410,7 +410,7 @@
         </command>
 
         <command name="convert notes" code="SKIMConv"
-            description="Convert PDF annotations in a document to Skim notes.">
+            description="Convert PDF annotations in a document to Preskim notes.">
             <direct-parameter type="document"
                 description="The document(s) for which to convert notes."/>
             <parameter name="waiting" code="Wait" type="boolean" optional="yes"
@@ -420,7 +420,7 @@
         </command>
 
         <command name="read notes" code="SKIMRNot"
-            description="Read notes from a Skim document and add them to the PDF document.">
+            description="Read notes from a Preskim document and add them to the PDF document.">
             <direct-parameter type="document"
                 description="The document(s) for which to read notes."/>
 			<parameter name="from" code="from" type="file" 
@@ -625,7 +625,7 @@
         </class-extension>
 
         <class-extension extends="application"
-            description="Skim's top level scripting object.">
+            description="Preskim's top level scripting object.">
             <cocoa class="SKApplication"/>
             <element type="bookmark"
                 description="The top level bookmarks.">
@@ -659,7 +659,7 @@
         </class-extension>
 
         <class-extension extends="document"
-            description="A Skim document.">
+            description="A Preskim document.">
             <cocoa class="NSDocument"/>
             <element type="page" access="r"
                 description="Pages of the PDF file">

@@ -38,8 +38,8 @@
 
 /*!
     @header      
-    @abstract    An <code>PDFAnnotation</code> category to manage Skim notes.
-    @discussion  This header file provides API for an <code>PDFAnnotation</code> categories to convert Skim note dictionaries to <code>PDFAnnotations</code> and back.
+    @abstract    An <code>PDFAnnotation</code> category to manage Preskim notes.
+    @discussion  This header file provides API for an <code>PDFAnnotation</code> categories to convert Preskim note dictionaries to <code>PDFAnnotations</code> and back.
 */
 #import <Foundation/Foundation.h>
 #import <PDFKit/PDFKit.h>
@@ -255,49 +255,49 @@ enum {
 typedef NSInteger SKNPDFWidgetType;
 
 /*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects on macOS.
-    @discussion  Methods from this category are used by the <code>PDFDocument (SKNExtensions)</code> category to add new annotations from Skim notes.
+    @abstract    Provides methods to translate between dictionary representations of Preskim notes and <code>PDFAnnotation</code> objects on macOS.
+    @discussion  Methods from this category are used by the <code>PDFDocument (SKNExtensions)</code> category to add new annotations from Preskim notes.
 */
 @interface PDFAnnotation (SKNExtensions)
 
 #if !defined(PDFKIT_PLATFORM_IOS)
 /*!
-    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim note on macOS.
-    @discussion This method can be implemented in subclasses to provide default properties for Skim notes.
+    @abstract   Initializes a new Preskim note annotation.  This is the designated initializer for a Preskim note on macOS.
+    @discussion This method can be implemented in subclasses to provide default properties for Preskim notes.
     @param      bounds The bounding box of the annotation, in page space.
-    @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
+    @result     An initialized Preskim note annotation instance, or <code>nil</code> if the object could not be initialized.
 */
 - (nullable id)initSkimNoteWithBounds:(NSRect)bounds;
 #endif
 
 /*!
-    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim noteon iOS.
+    @abstract   Initializes a new Preskim note annotation.  This is the designated initializer for a Preskim noteon iOS.
     @discussion On macOS this returns a subclasses initialized with <code>initSkimNoteWithBounds:</code>.
     @param      bounds The bounding box of the annotation, in page space.
     @param      type The type of the note .
-    @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
+    @result     An initialized Preskim note annotation instance, or <code>nil</code> if the object could not be initialized.
 */
 - (nullable id)initSkimNoteWithBounds:(PDFRect)bounds forType:(NSString *)type;
 
 /*!
-    @abstract   Initializes a new Skim note annotation with the given properties.
+    @abstract   Initializes a new Preskim note annotation with the given properties.
     @discussion This method determines the proper subclass from the value for the <code>"type"</code> key in dict, initializes an instance using <code>initSkimNoteWithBounds:</code>, and sets the known properties from dict. Implementations in subclasses should call it on super and set their properties from dict if available.
-    @param      dict A dictionary with Skim notes properties, as returned from properties.  This is required to contain values for <code>"type"</code> and <code>"bounds"</code>.
-    @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
+    @param      dict A dictionary with Preskim notes properties, as returned from properties.  This is required to contain values for <code>"type"</code> and <code>"bounds"</code>.
+    @result     An initialized Preskim note annotation instance, or <code>nil</code> if the object could not be initialized.
 */
 - (nullable id)initSkimNoteWithProperties:(NSDictionary<NSString *, id> *)dict;
 
 /*!
-    @abstract   The Skim notes properties.
+    @abstract   The Preskim notes properties.
     @discussion These properties can be used to initialize a new copy, and to save to extended attributes or file.
-    @result     A dictionary with properties of the Skim note.  All values are standard Cocoa objects conforming to <code>NSCoding</code> and <code>NSCopying</code>.
+    @result     A dictionary with properties of the Preskim note.  All values are standard Cocoa objects conforming to <code>NSCoding</code> and <code>NSCopying</code>.
 */
 @property (nonatomic, readonly) NSDictionary<NSString *, id> *SkimNoteProperties;
 
 /*!
-    @abstract   Returns whether the annotation is a Skim note.  
+    @abstract   Returns whether the annotation is a Preskim note.  
     @discussion An annotation initalized with initializers starting with initSkimNote will return <code>YES</code> by default.  You normally would not set this yourself, but rely on the initializer to set the <code>isSkimNote</code> flag.
-    @result     YES if the annotation is a Skim note; otherwise NO.
+    @result     YES if the annotation is a Preskim note; otherwise NO.
 */
 @property (nonatomic, getter=isSkimNote) BOOL SkimNote;
 
@@ -309,7 +309,7 @@ typedef NSInteger SKNPDFWidgetType;
 @property (nonatomic, strong, nullable) NSString *string;
 
 /*!
-    @abstract   Method to get the points from a path of an Ink Skim note.
+    @abstract   Method to get the points from a path of an Ink Preskim note.
     @param      path The bezier path for which to get the points.
     @discussion This method gets the points between which the path interpolates.
     @result     An array of point strings.
@@ -317,19 +317,19 @@ typedef NSInteger SKNPDFWidgetType;
 + (NSArray<NSString *> *)pointsFromSkimNotePath:(PDFKitPlatformBezierPath *)path;
 
 /*!
-    @abstract   Method to set the points from a path of an Ink Skim note.
+    @abstract   Method to set the points from a path of an Ink Preskim note.
     @param      path The bezier path for which to set the points.
     @param      points The points wrapped in strings or values.
-    @discussion This method sets the elements to cubic curves interpolating between the points.  It rebuilds a path appropriate for a Skim note.
+    @discussion This method sets the elements to cubic curves interpolating between the points.  It rebuilds a path appropriate for a Preskim note.
 */
 + (void)setPoints:(NSArray *)points ofSkimNotePath:(PDFKitPlatformBezierPath *)path;
 
 #if !defined(PDFKIT_PLATFORM_IOS)
 /*!
-    @abstract   Method to add a point to a path, to be used to build the path for a Skim note.
+    @abstract   Method to add a point to a path, to be used to build the path for a Preskim note.
     @param      point The point to add to the path.
     @param      path The bezier path to add the point to.
-    @discussion This method adds a cubic curve element to path to point.  It is used to build up paths for the Skim note from the points.  This method is only available on macOS.
+    @discussion This method adds a cubic curve element to path to point.  It is used to build up paths for the Preskim note from the points.  This method is only available on macOS.
 */
 + (void)addPoint:(NSPoint)point toSkimNotesPath:(NSBezierPath *)path;
 #endif
@@ -340,8 +340,8 @@ typedef NSInteger SKNPDFWidgetType;
 
 @interface PDFAnnotation (SKNOptional)
 /*!
-    @abstract   Optional method to set default values for a new Skim note created using <code>initSkimNoteWithBounds:forType:</code> or <code>initSkimNoteWithProperties:</code>.
-    @discussion This optional method can be implemented in another category to provide a default values for Skim notes.  On macOS you can also override <code>initSkimNoteWithBounds:</code> in the subclasses to provide default values, or implement this method in the subclasses.  This method is not implemented by default.
+    @abstract   Optional method to set default values for a new Preskim note created using <code>initSkimNoteWithBounds:forType:</code> or <code>initSkimNoteWithProperties:</code>.
+    @discussion This optional method can be implemented in another category to provide a default values for Preskim notes.  On macOS you can also override <code>initSkimNoteWithBounds:</code> in the subclasses to provide default values, or implement this method in the subclasses.  This method is not implemented by default.
 */
 - (void)setDefaultSkimNoteProperties;
 @end
@@ -351,7 +351,7 @@ typedef NSInteger SKNPDFWidgetType;
 #if !defined(PDFKIT_PLATFORM_IOS)
 
 /*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
+    @abstract    Provides methods to translate between dictionary representations of Preskim notes and <code>PDFAnnotation</code> objects.
     @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a circle annotation.
 */
 @interface PDFAnnotationCircle (SKNExtensions)
@@ -360,7 +360,7 @@ typedef NSInteger SKNPDFWidgetType;
 #pragma mark -
 
 /*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
+    @abstract    Provides methods to translate between dictionary representations of Preskim notes and <code>PDFAnnotation</code> objects.
     @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a square annotation.
 */
 @interface PDFAnnotationSquare (SKNExtensions)
@@ -369,7 +369,7 @@ typedef NSInteger SKNPDFWidgetType;
 #pragma mark -
 
 /*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
+    @abstract    Provides methods to translate between dictionary representations of Preskim notes and <code>PDFAnnotation</code> objects.
     @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a line annotation.
 */
 @interface PDFAnnotationLine (SKNExtensions)
@@ -378,7 +378,7 @@ typedef NSInteger SKNPDFWidgetType;
 #pragma mark -
 
 /*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
+    @abstract    Provides methods to translate between dictionary representations of Preskim notes and <code>PDFAnnotation</code> objects.
     @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a free text annotation.
 */
 @interface PDFAnnotationFreeText (SKNExtensions)
@@ -387,7 +387,7 @@ typedef NSInteger SKNPDFWidgetType;
 #pragma mark -
 
 /*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
+    @abstract    Provides methods to translate between dictionary representations of Preskim notes and <code>PDFAnnotation</code> objects.
     @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a markup annotation.
 */
 @interface PDFAnnotationMarkup (SKNExtensions)
@@ -401,7 +401,7 @@ typedef NSInteger SKNPDFWidgetType;
 /*!
     @abstract   Optional method to implement to return the default color to use for markup initialized with properties that do not contain a color.
     @param      markupType The markup style for which to return the default color.
-    @discussion This optional method can be implemented in another category to provide a default color for Skim notes that have no color set in the properties dictionary.  This method is not implemented by default.
+    @discussion This optional method can be implemented in another category to provide a default color for Preskim notes that have no color set in the properties dictionary.  This method is not implemented by default.
     @result     The default color for an annotation with the passed in markup style.
 */
 + (NSColor *)defaultSkimNoteColorForMarkupType:(NSInteger)markupType;
@@ -410,7 +410,7 @@ typedef NSInteger SKNPDFWidgetType;
 #pragma mark -
 
 /*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
+    @abstract    Provides methods to translate between dictionary representations of Preskim notes and <code>PDFAnnotation</code> objects.
     @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a text annotation.
 */
 @interface PDFAnnotationText (SKNExtensions)
@@ -419,7 +419,7 @@ typedef NSInteger SKNPDFWidgetType;
 #pragma mark -
 
 /*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
+    @abstract    Provides methods to translate between dictionary representations of Preskim notes and <code>PDFAnnotation</code> objects.
     @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a text annotation.
 */
 @interface PDFAnnotationInk (SKNExtensions)

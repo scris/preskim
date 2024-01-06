@@ -38,8 +38,8 @@
 
 /*!
     @header      
-    @abstract    An <code>PDFDocument</code> category to add Skim note annotations to a <code>PDFDocument</code>.
-    @discussion  This header file provides API for an <code>PDFDocument</code> category to add Skim note annotations to a <code>PDFDocument</code>.
+    @abstract    An <code>PDFDocument</code> category to add Preskim note annotations to a <code>PDFDocument</code>.
+    @discussion  This header file provides API for an <code>PDFDocument</code> category to add Preskim note annotations to a <code>PDFDocument</code>.
 */
 #import <Foundation/Foundation.h>
 #import <PDFKit/PDFKit.h>
@@ -48,27 +48,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
     @category    
-    @abstract    Provides methods to add Skim notes to a <code>PDFDocument</code>.
-    @discussion  This category can be used to add Skim notes from their properties to a <code>PDFDocument</code> or easily load a <code>PDFDocument</code> including attached Skim notes.
+    @abstract    Provides methods to add Preskim notes to a <code>PDFDocument</code>.
+    @discussion  This category can be used to add Preskim notes from their properties to a <code>PDFDocument</code> or easily load a <code>PDFDocument</code> including attached Preskim notes.
 */
 @interface PDFDocument (SKNExtensions)
 
 /*!
     @method     
-    @abstract   Initializes a new <code>PDFDocument</code> from a file or PDF bundle, adding Skim notes from the extended attributes of the file or the contents of the PDF bundle.  The added Skim notes are returned by reference as an array of <code>PDFAnnotation</code>s.
-    @discussion Initializes a new <code>PDFDocument</code> using <code>initWithURL:</code>, reads Skim notes from theextended attributes or the bundle, and adds new <code>PDFAnnotation</code> objects to the document initialized by the found Skim note properties.
+    @abstract   Initializes a new <code>PDFDocument</code> from a file or PDF bundle, adding Preskim notes from the extended attributes of the file or the contents of the PDF bundle.  The added Preskim notes are returned by reference as an array of <code>PDFAnnotation</code>s.
+    @discussion Initializes a new <code>PDFDocument</code> using <code>initWithURL:</code>, reads Preskim notes from theextended attributes or the bundle, and adds new <code>PDFAnnotation</code> objects to the document initialized by the found Preskim note properties.
     @param      url The URL of the PDF file or PDF bundle.
-    @param      notes An array of <code>PDFAnnotation</code> objects initialized using the Skim note properties read from the extended attributes or bundled Skim file.
+    @param      notes An array of <code>PDFAnnotation</code> objects initialized using the Preskim note properties read from the extended attributes or bundled Preskim file.
     @result     The initialized <code>PDFDocument</code>.
 */
 - (nullable id)initWithURL:(NSURL *)url readSkimNotes:(NSArray<PDFAnnotation *> * _Nullable * _Nullable)notes;
 
 /*!
     @method     
-    @abstract   Adds new Skim notes from an array of property dictionaries to the receiver, and returns the added Skim notes as an array of <code>PDFAnnotations</code>.
+    @abstract   Adds new Preskim notes from an array of property dictionaries to the receiver, and returns the added Preskim notes as an array of <code>PDFAnnotations</code>.
     @discussion This method initializes new <code>PDFAnnotation</code> objects from the passed in properties and adds them to the appropriate pages of the <code>PDFDocument</code>.
-    @param      noteDicts An array of dictionaries containing Skim note properties as returned by the properties of <code>PDFAnnotation</code> objects.
-    @result     An array of <code>PDFAnnotation</code> objects initialized using the Skim note properties read from the extended attributes or bundled Skim file.
+    @param      noteDicts An array of dictionaries containing Preskim note properties as returned by the properties of <code>PDFAnnotation</code> objects.
+    @result     An array of <code>PDFAnnotation</code> objects initialized using the Preskim note properties read from the extended attributes or bundled Preskim file.
 */
 - (nullable NSArray<PDFAnnotation *> *)addSkimNotesWithProperties:(NSArray<NSDictionary<NSString *, id> *> *)noteDicts;
 

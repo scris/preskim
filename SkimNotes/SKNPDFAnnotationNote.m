@@ -168,7 +168,7 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
     }
 }
 
-// changes to text are made through textStorage, this allows Skim to provide edits through AppleScript, which works directly on the textStorage
+// changes to text are made through textStorage, this allows Preskim to provide edits through AppleScript, which works directly on the textStorage
 // KVO is triggered manually when the textStorage is edited, either through setText: or through some other means, e.g. through AppleScript
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
     if ([key isEqualToString:SKNPDFAnnotationTextKey])
@@ -181,7 +181,7 @@ static inline void drawIconInsert(CGContextRef context, NSRect bounds);
 }
 
 - (void)textDidChange:(NSNotification *)notification {
-    // texts should be an array of objects wrapping the text of the note, used by Skim to provide a data source for the children in the outlineView
+    // texts should be an array of objects wrapping the text of the note, used by Preskim to provide a data source for the children in the outlineView
     [_texts makeObjectsPerformSelector:@selector(willChangeValueForKey:) withObject:SKNPDFAnnotationTextKey];
     // trigger KVO manually
     [self willChangeValueForKey:SKNPDFAnnotationTextKey];

@@ -199,7 +199,7 @@
 		CE7C20500C259A5D0059E08C /* NSColor_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7C204E0C259A5D0059E08C /* NSColor_SKExtensions.m */; };
 		CE7DC8F60E09551800D6D76D /* skimnotes in Copy Files: Shared Support */ = {isa = PBXBuildFile; fileRef = CE7DC7340E09286500D6D76D /* skimnotes */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CE7F43910DE1F1980061A839 /* NSUserDefaults_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7F43900DE1F1980061A839 /* NSUserDefaults_SKExtensions.m */; };
-		CE816A060D70F9A7008D807D /* Skim.qlgenerator in Copy Files: QuickLook */ = {isa = PBXBuildFile; fileRef = CEC7B4EE0CF607CA008CCD63 /* Skim.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		CE816A060D70F9A7008D807D /* Preskim.qlgenerator in Copy Files: QuickLook */ = {isa = PBXBuildFile; fileRef = CEC7B4EE0CF607CA008CCD63 /* Preskim.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CE820AEF21A04EB100AD34BE /* NSWindow_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE820AEE21A04EB100AD34BE /* NSWindow_SKExtensions.m */; };
 		CE8388BC115BC61F00DB1AD7 /* SKNoteTypeSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8388BB115BC61F00DB1AD7 /* SKNoteTypeSheetController.m */; };
 		CE85D73F2280814B0022C560 /* SKMainTouchBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE85D73E2280814B0022C560 /* SKMainTouchBarController.m */; };
@@ -303,7 +303,7 @@
 		CEF7175F0B90DF10003A2771 /* SKReleaseNotesController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF7175E0B90DF10003A2771 /* SKReleaseNotesController.m */; };
 		CEF8B1AE22B3DE80001062A1 /* SKMainWindowController_FullScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF8B1AD22B3DE80001062A1 /* SKMainWindowController_FullScreen.m */; };
 		CEFBB33913AA737B00162F75 /* FindBar.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEFBB33713AA737B00162F75 /* FindBar.strings */; };
-		CEFD68740C01D4080027B933 /* SkimImporter.mdimporter in Copy Files: Spotlight */ = {isa = PBXBuildFile; fileRef = CEFD68690C01D3BB0027B933 /* SkimImporter.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		CEFD68740C01D4080027B933 /* PreskimImporter.mdimporter in Copy Files: Spotlight */ = {isa = PBXBuildFile; fileRef = CEFD68690C01D3BB0027B933 /* PreskimImporter.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CEFDEA9111F6FF8300D6FEBA /* NSScreen_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEFDEA9011F6FF8300D6FEBA /* NSScreen_SKExtensions.m */; };
 		CEFDF8BE0B3848C40091C61A /* SKNavigationWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = CEFDF8BD0B3848C40091C61A /* SKNavigationWindow.m */; };
 		CEFE71951129AAA30018CD74 /* ServicesMenu.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEFE71941129AAA30018CD74 /* ServicesMenu.strings */; };
@@ -576,7 +576,7 @@
 			dstPath = Contents/Library/QuickLook;
 			dstSubfolderSpec = 1;
 			files = (
-				CE816A060D70F9A7008D807D /* Skim.qlgenerator in Copy Files: QuickLook */,
+				CE816A060D70F9A7008D807D /* Preskim.qlgenerator in Copy Files: QuickLook */,
 			);
 			name = "Copy Files: QuickLook";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -623,7 +623,7 @@
 			dstPath = Contents/Library/Spotlight;
 			dstSubfolderSpec = 1;
 			files = (
-				CEFD68740C01D4080027B933 /* SkimImporter.mdimporter in Copy Files: Spotlight */,
+				CEFD68740C01D4080027B933 /* PreskimImporter.mdimporter in Copy Files: Spotlight */,
 			);
 			name = "Copy Files: Spotlight";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -654,7 +654,7 @@
 		45A3BD380B4F097D002B297F /* InitialUserDefaults.plist */ = {isa = PBXFileReference; explicitFileType = text.plist; fileEncoding = 4; path = InitialUserDefaults.plist; sourceTree = "<group>"; };
 		45B113BF0B329A7E00DE0660 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8D15AC370486D014006FF6A4 /* Skim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Skim.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D15AC370486D014006FF6A4 /* Preskim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Preskim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE017E7F2B2623A800F5FC1E /* NSPointerFunctions_SKExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSPointerFunctions_SKExtensions.h; sourceTree = "<group>"; };
 		CE017E802B2623A800F5FC1E /* NSPointerFunctions_SKExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPointerFunctions_SKExtensions.m; sourceTree = "<group>"; };
 		CE030C5F13C07A57007A47E9 /* PDFView_SKExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFView_SKExtensions.h; sourceTree = "<group>"; };
@@ -1479,7 +1479,7 @@
 		19C28FB0FE9D524F11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D15AC370486D014006FF6A4 /* Skim.app */,
+				8D15AC370486D014006FF6A4 /* Preskim.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2111,7 +2111,7 @@
 		CEC7B4E70CF607CA008CCD63 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CEC7B4EE0CF607CA008CCD63 /* Skim.qlgenerator */,
+				CEC7B4EE0CF607CA008CCD63 /* Preskim.qlgenerator */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2272,7 +2272,7 @@
 		CEFD68620C01D3BB0027B933 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CEFD68690C01D3BB0027B933 /* SkimImporter.mdimporter */,
+				CEFD68690C01D3BB0027B933 /* PreskimImporter.mdimporter */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2313,7 +2313,7 @@
 			name = Skim;
 			productInstallPath = "$(HOME)/Applications";
 			productName = Skim;
-			productReference = 8D15AC370486D014006FF6A4 /* Skim.app */;
+			productReference = 8D15AC370486D014006FF6A4 /* Preskim.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2546,10 +2546,10 @@
 			remoteRef = CEB34A920F5C20E60037E086 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		CEC7B4EE0CF607CA008CCD63 /* Skim.qlgenerator */ = {
+		CEC7B4EE0CF607CA008CCD63 /* Preskim.qlgenerator */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = Skim.qlgenerator;
+			path = Preskim.qlgenerator;
 			remoteRef = CEC7B4ED0CF607CA008CCD63 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -2567,10 +2567,10 @@
 			remoteRef = CEDB9AE30E2E9EA50057FD09 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		CEFD68690C01D3BB0027B933 /* SkimImporter.mdimporter */ = {
+		CEFD68690C01D3BB0027B933 /* PreskimImporter.mdimporter */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = SkimImporter.mdimporter;
+			path = PreskimImporter.mdimporter;
 			remoteRef = CEFD68680C01D3BB0027B933 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -3783,7 +3783,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE17EE460E24ED7C00DE06EA /* Skim-App.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 151;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Preskim;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CURRENT_PROJECT_VERSION = 152;
+				INFOPLIST_KEY_CFBundleDisplayName = Preskim;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				PRODUCT_BUNDLE_IDENTIFIER = scris.ds.preskim;
 			};
 			name = Debug;
 		};
@@ -3791,7 +3796,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE17EE460E24ED7C00DE06EA /* Skim-App.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 151;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Preskim;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CURRENT_PROJECT_VERSION = 152;
+				INFOPLIST_KEY_CFBundleDisplayName = Preskim;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				PRODUCT_BUNDLE_IDENTIFIER = scris.ds.preskim;
 			};
 			name = Release;
 		};

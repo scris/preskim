@@ -90,7 +90,7 @@ static NSMenu *replacement_menuForEvent(id self, SEL _cmd, NSEvent *event) {
     return [view menuForEvent:event];
 }
 
-#pragma mark Skim support
+#pragma mark Preskim support
 
 static void replacement_updateTrackingAreas(id self, SEL _cmd) {
 	original_updateTrackingAreas(self, _cmd);

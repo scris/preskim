@@ -65,7 +65,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define HIGHLIGHT_ID @"highlight"
 #define MARK_ID @"mark"
 
-#define SKPasteboardTypeDummy @"net.sourceforge.skim-app.pasteboard.dummy"
+#define SKPasteboardTypeDummy @"scris.ds.preskim.pasteboard.dummy"
 
 static char SKThumbnailViewThumbnailObservationContext;
 

@@ -63,22 +63,22 @@ static char *usageStr = "Usage:\n"
                         " skimpdf merge [-s|-n] [-p|-a] IN_PDF_FILE_1 IN_PDF_FILE_2 [OUT_PDF_FILE]\n"
                         " skimpdf extract [-s|-n] [-p|-a] IN_PDF_FILE [OUT_PDF_FILE] [-range START [LENGTH] | -page PAGE1... | -odd | -even]\n"
                         " skimpdf help [VERB]\n skimpdf version";
-static char *versionStr = "SkimPDF command-line client, version 1.4";
+static char *versionStr = "PreskimPDF command-line client, version 1.4";
 
-static char *embedHelpStr = "skimpdf embed: embed Skim notes in a PDF\n"
+static char *embedHelpStr = "skimpdf embed: embed Preskim notes in a PDF\n"
                             "Usage: skimpdf embed IN_PDF_FILE [OUT_PDF_FILE]\n\n"
-                            "Writes PDF with Skim notes from IN_PDF_FILE to PDF with annotations embedded in the PDF to OUT_PDF_FILE.";
-static char *unembedHelpStr = "skimpdf unembed: converts annotations embedded in a PDF to Skim notes\n"
+                            "Writes PDF with Preskim notes from IN_PDF_FILE to PDF with annotations embedded in the PDF to OUT_PDF_FILE.";
+static char *unembedHelpStr = "skimpdf unembed: converts annotations embedded in a PDF to Preskim notes\n"
                              "Usage: skimpdf unembed [-s|-n] [-p|-a] IN_PDF_FILE [OUT_PDF_FILE]\n\n"
-                             "Converts annotations embedded in IN_PDF_FILE to Skim notes and writes the PDF data with notes removed to OUT_PDF_FILE with the Skim notes written to the extended attributes.\n"
+                             "Converts annotations embedded in IN_PDF_FILE to Preskim notes and writes the PDF data with notes removed to OUT_PDF_FILE with the Preskim notes written to the extended attributes.\n"
                              "Writes to IN_PDF_FILE when OUT_PDF_FILE is not provided. Writes (non) syncable notes when the -s (-n) option is provided, defaults to syncable. Writes plist (archive) data when te -p (-a) option is provided, defaults to plist.";
-static char *mergeHelpStr = "skimpdf merge: Merges two PDF files with attached Skim notes\n"
+static char *mergeHelpStr = "skimpdf merge: Merges two PDF files with attached Preskim notes\n"
                             "Usage: skimpdf merge [-s|-n] [-p|-a] IN_PDF_FILE_1 IN_PDF_FILE_2 [OUT_PDF_FILE]\n\n"
-                            "Merges IN_PDF_FILE_1 and IN_PDF_FILE_2 and Skim notes from their extended attributes and writes to OUT_PDF_FILE.\n"
+                            "Merges IN_PDF_FILE_1 and IN_PDF_FILE_2 and Preskim notes from their extended attributes and writes to OUT_PDF_FILE.\n"
                             "Writes to IN_PDF_FILE_1 when OUT_PDF_FILE is not provided. Writes (non) syncable notes when the -s (-n) option is provided, defaults to syncable. Writes plist (archive) data when te -p (-a) option is provided, defaults to plist.";
-static char *extractHelpStr = "skimpdf extract: Extracts part of a PDF with attached Skim notes\n"
+static char *extractHelpStr = "skimpdf extract: Extracts part of a PDF with attached Preskim notes\n"
                               "Usage: skimpdf extract [-s|-n] [-p|-a] IN_PDF_FILE [OUT_PDF_FILE] [-range START [LENGTH] | -page PAGE1... | -odd | -even]\n\n"
-                              "Extracts pages from IN_PDF_FILE and attached Skim notes in the pages, given either as a page range or a series of pages, and writes them to OUT_PDF_FILE.\n"
+                              "Extracts pages from IN_PDF_FILE and attached Preskim notes in the pages, given either as a page range or a series of pages, and writes them to OUT_PDF_FILE.\n"
                               "Writes to IN_PDF_FILE when OUT_PDF_FILE is not provided. Writes  (non) syncable notes when the -s (-n) option is provided, defaults to syncable. Writes plist (archive) data when te -p (-a) option is provided, defaults to plist.";
 static char *helpHelpStr = "skimpdf help: get help on the skimpdf tool\n"
                            "Usage: skimpdf help [VERB]\n\n"
@@ -158,8 +158,8 @@ static inline BOOL SKNCopyFileAndNotes(NSString *inPath, NSString *outPath, NSAr
         if (success) {
             NSURL *inURL = [NSURL fileURLWithPath:inPath];
             NSURL *outURL = [NSURL fileURLWithPath:outPath];
-            NSString *textNotes = [fm readSkimTextNotesFromExtendedAttributesAtURL:inURL error:NULL];
-            NSData *rtfNotesData = [fm readSkimRTFNotesFromExtendedAttributesAtURL:inURL error:NULL];
+            NSString *textNotes = [fm readPreskimTextNotesFromExtendedAttributesAtURL:inURL error:NULL];
+            NSData *rtfNotesData = [fm readPreskimRTFNotesFromExtendedAttributesAtURL:inURL error:NULL];
             SKNSkimNotesWritingOptions options = syncable ? SKNSkimNotesWritingSyncable : 0;
             if (asPlist)
                 options |= SKNSkimNotesWritingPlist;

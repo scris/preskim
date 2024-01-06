@@ -436,8 +436,8 @@ NSString *SKPageLabelsChangedNotification = @"SKPageLabelsChangedNotification";
                 if (document == nil && errorReporting && error && [error isUserCancelledError] == NO)
                     [NSApp presentError:error];
             }];
-        } else if ([theURL isSkimURL]) {
-            if ([theURL isSkimBookmarkURL]) {
+        } else if ([theURL isPreskimURL]) {
+            if ([theURL isPreskimBookmarkURL]) {
                 SKBookmark *bookmark = [[SKBookmarkController sharedBookmarkController] bookmarkForURL:theURL];
                 if (bookmark) {
                     [[NSDocumentController sharedDocumentController] openDocumentWithBookmark:bookmark completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {

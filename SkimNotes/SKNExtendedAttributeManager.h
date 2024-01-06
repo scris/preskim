@@ -39,7 +39,7 @@
 /*!
     @header      
     @abstract    An singleton class to read and write extended attributes.
-    @discussion  This header file declares API for a singleton class to read and write extended attributes in the format expected for Skim notes.
+    @discussion  This header file declares API for a singleton class to read and write extended attributes in the format expected for Preskim notes.
 */
 #import <Foundation/Foundation.h>
 
@@ -91,7 +91,7 @@ enum {
 
 /*!
     @abstract    Provides an Objective-C wrapper for the low-level BSD functions dealing with file attributes.
-    @discussion  This class is the core object to read and write extended attributes, which are used to store Skim notes with PDF files.
+    @discussion  This class is the core object to read and write extended attributes, which are used to store Preskim notes with PDF files.
 */
 @interface SKNExtendedAttributeManager : NSObject {
     NSString *_namePrefix;
@@ -101,9 +101,9 @@ enum {
 }
 
 /*!
-    @abstract   Returns the shared instance.  You should use always this instance for Skim notes.
-    @discussion This shared manager uses the default prefix and is used for reading and writing Skim notes to PDF files.  It may split attributes into fragments if the data is too long.
-    @result     The default shared EA manager used for Skim notes.
+    @abstract   Returns the shared instance.  You should use always this instance for Preskim notes.
+    @discussion This shared manager uses the default prefix and is used for reading and writing Preskim notes to PDF files.  It may split attributes into fragments if the data is too long.
+    @result     The default shared EA manager used for Preskim notes.
 */
 + (SKNExtendedAttributeManager *)sharedManager;
 
