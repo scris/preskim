@@ -30,6 +30,7 @@
 		45A3BD080B4F0770002B297F /* SKStringConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A3BD070B4F0770002B297F /* SKStringConstants.m */; };
 		45A3BD390B4F097D002B297F /* InitialUserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45A3BD380B4F097D002B297F /* InitialUserDefaults.plist */; };
 		45B113C00B329A7E00DE0660 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 45B113BF0B329A7E00DE0660 /* LICENSE */; };
+		5D483C772B49A9100007AF7E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 5D483C762B49A9100007AF7E /* README.md */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC310486D014006FF6A4 /* SKMainDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* SKMainDocument.m */; settings = {ATTRIBUTES = (); }; };
@@ -653,6 +654,7 @@
 		45A3BD070B4F0770002B297F /* SKStringConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKStringConstants.m; sourceTree = "<group>"; };
 		45A3BD380B4F097D002B297F /* InitialUserDefaults.plist */ = {isa = PBXFileReference; explicitFileType = text.plist; fileEncoding = 4; path = InitialUserDefaults.plist; sourceTree = "<group>"; };
 		45B113BF0B329A7E00DE0660 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		5D483C762B49A9100007AF7E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* Preskim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Preskim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE017E7F2B2623A800F5FC1E /* NSPointerFunctions_SKExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSPointerFunctions_SKExtensions.h; sourceTree = "<group>"; };
@@ -1487,6 +1489,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* Skim */ = {
 			isa = PBXGroup;
 			children = (
+				5D483C762B49A9100007AF7E /* README.md */,
 				45B113BF0B329A7E00DE0660 /* LICENSE */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				453DC2740B4F23E500A72509 /* Third Party Sources */,
@@ -2603,6 +2606,7 @@
 				CE67C4CE2624C735007D4437 /* ViewSettings.xib in Resources */,
 				CE19446410627483007E8770 /* ConversionProgressWindow.xib in Resources */,
 				CE19446510627483007E8770 /* MainWindow.xib in Resources */,
+				5D483C772B49A9100007AF7E /* README.md in Resources */,
 				CE19446710627483007E8770 /* ProgressSheet.xib in Resources */,
 				CE67C4BE2624C716007D4437 /* ReleaseNotes.xib in Resources */,
 				CE19446910627483007E8770 /* SnapshotWindow.xib in Resources */,

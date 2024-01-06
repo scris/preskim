@@ -80,8 +80,8 @@
 #import "NSData_SKExtensions.h"
 #import "PDFPage_SKExtensions.h"
 
-#define WEBSITE_URL @"https://skim-app.sourceforge.io/"
-#define WIKI_URL    @"https://sourceforge.net/p/skim-app/wiki/"
+#define WEBSITE_URL @"https://github.com/scris/preskim/"
+#define WIKI_URL    @"https://github.com/scris/preskim/wiki/"
 
 #define INITIAL_USER_DEFAULTS_FILENAME  @"InitialUserDefaults"
 #define REGISTERED_DEFAULTS_KEY         @"RegisteredDefaults"

@@ -181,7 +181,7 @@ extern NSArray *SKColorEffectFilters(void) {
         CGFloat f = [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9337 : 1.8972;
         // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
         // Inverts a linear luminocity with weights from the CIE standards
-        // see https://wiki.preterhuman.net/Matrix_Operations_for_Image_Processingand https://beesbuzz.biz/code/16-hsv-color-transforms
+        // see https://wiki.preterhuman.net/Matrix_Operations_for_Image_Processing and https://beesbuzz.biz/code/16-hsv-color-transforms
         if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", [NSNumber numberWithDouble:0.625], nil]))
             [filters addObject:filter];
         if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-LR*f Y:-LG*f Z:-LB*f W:0.0], @"inputGVector", [CIVector vectorWithX:-LR*f Y:1.0-LG*f Z:-LB*f W:0.0], @"inputBVector", [CIVector vectorWithX:-LR*f Y:-LG*f Z:1.0-LB*f W:0.0], @"inputAVector", [CIVector vectorWithX:0.0 Y:0.0 Z:0.0 W:1.0], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0 W:0.0], nil]))
