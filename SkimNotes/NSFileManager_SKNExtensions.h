@@ -93,7 +93,7 @@ typedef NSInteger SKNSkimNotesWritingOptions;
 
 /*!
     @abstract   Reads Preskim notes as an array of property dictionaries from the contents of a PDF bundle.
-    @discussion Reads the data from a bundled file in the PDF bundle with the proper .skim extension.
+    @discussion Reads the data from a bundled file in the PDF bundle with the proper .pskn extension.
     @param      aURL The URL for the PDF bundle to read the Preskim notes from.
     @param      outError If there is an error reading the Preskim notes, upon return contains an NSError object that describes the problem.
     @result     An array of dictionaries with Preskim note properties, an empty array if no Preskim notes were found, or <code>nil</code> if there was an error reading the Preskim notes.
@@ -119,9 +119,9 @@ typedef NSInteger SKNSkimNotesWritingOptions;
 - (nullable NSData *)readPreskimRTFNotesFromPDFBundleAtURL:(NSURL *)aURL error:(NSError **)outError;
 
 /*!
-    @abstract   Reads Preskim notes as an array of property dictionaries from the contents of a .skim file.
+    @abstract   Reads Preskim notes as an array of property dictionaries from the contents of a .pskn file.
     @discussion Reads data from the file and unarchives it using NSKeyedUnarchiver.
-    @param      aURL The URL for the .skim file to read the Preskim notes from.
+    @param      aURL The URL for the .pskn file to read the Preskim notes from.
     @param      outError If there is an error reading the Preskim notes, upon return contains an <code>NSError</code> object that describes the problem.
     @result     An array of dictionaries with Preskim note properties, an empty array if no Preskim notes were found, or <code>nil</code> if there was an error reading the Preskim notes.
 */
@@ -163,20 +163,20 @@ typedef NSInteger SKNSkimNotesWritingOptions;
 - (BOOL)writeSkimNotes:(nullable NSArray<NSDictionary<NSString *, id> *> *)notes textNotes:(nullable NSString *)notesString richTextNotes:(nullable NSData *)notesRTFData toExtendedAttributesAtURL:(NSURL *)aURL options:(SKNSkimNotesWritingOptions)options error:(NSError **)outError;
 
 /*!
-    @abstract   Writes Preskim notes passed as an array of property dictionaries to a .skim file.
+    @abstract   Writes Preskim notes passed as an array of property dictionaries to a .pskn file.
     @discussion Calls <code>writeSkimNotes:toPreskimFileAtURL:options:error:</code> with the <code>SKNSkimNotesWritingPlist<code> options.
     @param      notes An array of dictionaries containing Preskim note properties, as returned by the properties of a <code>PDFAnnotation</code>.
-    @param      aURL The URL for the .skim file to write the Preskim notes to.
+    @param      aURL The URL for the .pskn file to write the Preskim notes to.
     @param      outError If there is an error writing the Preskim notes, upon return contains an <code>NSError</code> object that describes the problem.
     @result     Returns <code>YES</code> if writing out the Preskim notes was successful; otherwise returns <code>NO</code>.
 */
 - (BOOL)writeSkimNotes:(nullable NSArray<NSDictionary<NSString *, id> *> *)notes toPreskimFileAtURL:(NSURL *)aURL error:(NSError **)outError;
 
 /*!
-    @abstract   Writes Preskim notes passed as an array of property dictionaries to a .skim file.  The array is converted to <code>NSData</code> using <code>NSKeyedArchiver</code> or as plist data, depending on the options.
+    @abstract   Writes Preskim notes passed as an array of property dictionaries to a .pskn file.  The array is converted to <code>NSData</code> using <code>NSKeyedArchiver</code> or as plist data, depending on the options.
     @discussion Writes the data to the file located by <code>aURL</code>.
     @param      notes An array of dictionaries containing Preskim note properties, as returned by the properties of a <code>PDFAnnotation</code>.
-    @param      aURL The URL for the .skim file to write the Preskim notes to.
+    @param      aURL The URL for the .pskn file to write the Preskim notes to.
     @param      options The write options to use.
     @param      outError If there is an error writing the Preskim notes, upon return contains an <code>NSError</code> object that describes the problem.
     @result     Returns <code>YES</code> if writing out the Preskim notes was successful; otherwise returns <code>NO</code>.

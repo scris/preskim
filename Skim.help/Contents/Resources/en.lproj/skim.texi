@@ -976,7 +976,7 @@ Notes and highlights you add to a PDF document are not saved in the PDF data, bu
 
 There are several ways to preserve the notes. Some compression methods preserve extended attributes. Apple's Create Archive unfortunately does not preserve them. You should compress and expand to test whether they are saved. You can also create a disk image to wrap the PDF file. Compression using tar and gzip also preserves the notes.
 
-You can also save the notes to a separate .skim file. The receiver of the email can later add the notes to the PDF.
+You can also save the notes to a separate .pskn file. The receiver of the email can later add the notes to the PDF.
 
 And lastly, you can save the PDF and notes in a PDF bundle, that wraps the PDF and the notes together.
 
@@ -986,10 +986,10 @@ And lastly, you can save the PDF and notes in a PDF bundle, that wraps the PDF a
 @item Choose File > Export@dots{}. 
 @item Select "Skim Notes" from the File Format popup, choose a location to save the notes to, and press OK. 
 @end enumerate
-@heading To add notes from a separate .skim notes file to a PDF file:
+@heading To add notes from a separate .pskn notes file to a PDF file:
 @enumerate
 @item Open the PDF file.
-@item Choose File > Read Notes@dots{}, and choose the .skim file that holds the notes. 
+@item Choose File > Read Notes@dots{}, and choose the .pskn file that holds the notes. 
 @end enumerate
 @heading To create an archive of the PDF document:
 @enumerate
@@ -1008,7 +1008,7 @@ And lastly, you can save the PDF and notes in a PDF bundle, that wraps the PDF a
 @end enumerate
 @endtask
 
-It is important that the notes file is associated to the PDF file. Therefore it is best to choose the same file name for the .pdf file and the .skim file. In that case, Skim will automatically offer to add the notes from the notes file when you open the PDF file. 
+It is important that the notes file is associated to the PDF file. Therefore it is best to choose the same file name for the .pdf file and the .pskn file. In that case, Skim will automatically offer to add the notes from the notes file when you open the PDF file. 
 
 @heading See also
 @menu
@@ -1056,7 +1056,7 @@ A PDF bundle contains the unmodified PDF file and files containing the notes. Yo
 
 Notes and highlights you add to a PDF document are not saved in the PDF data, but are added to the file as extended attributes. Those can sometimes be lost when archiving the PDF file or sending it over email.
 
-You can save the notes to a separate .skim file, for backup or to send them by email. 
+You can save the notes to a separate .pskn file, for backup or to send them by email. 
 
 @task
 @heading To save the notes to a separate file:
@@ -1066,7 +1066,7 @@ You can save the notes to a separate .skim file, for backup or to send them by e
 @end enumerate
 @endtask
 
-It is important that the notes file is associated to the PDF file. Therefore it is best to choose the same file name for the .pdf file and the .skim file. In that case, Skim will automatically offer to add the notes from the notes file when you open the PDF file. 
+It is important that the notes file is associated to the PDF file. Therefore it is best to choose the same file name for the .pdf file and the .pskn file. In that case, Skim will automatically offer to add the notes from the notes file when you open the PDF file. 
 
 @heading See also
 @menu
@@ -1081,19 +1081,19 @@ It is important that the notes file is associated to the PDF file. Therefore it 
 
 @topic Adding notes and highlights from a separate Skim notes file
 
-You can have notes contained in a separate file with extension "skim", for backup or when the notes were send by email with the PDF file. 
+You can have notes contained in a separate file with extension "pskn", for backup or when the notes were send by email with the PDF file. 
 
 You can add the notes to the companion PDF file. 
 
 @task
-@heading To add notes from a separate .skim notes file to a PDF file:
+@heading To add notes from a separate .pskn notes file to a PDF file:
 @enumerate
 @item Open the PDF file.
-@item Choose File > Read Notes@dots{}, and choose the .skim file that holds the notes. 
+@item Choose File > Read Notes@dots{}, and choose the .pskn file that holds the notes. 
 @end enumerate
 @endtask
 
-It is important that the notes file is associated to the PDF file. If the file name for the .pdf file and the .skim file are the same apart from the extension, Skim will automatically offer to add the notes from the notes file when you open the PDF file. 
+It is important that the notes file is associated to the PDF file. If the file name for the .pdf file and the .pskn file are the same apart from the extension, Skim will automatically offer to add the notes from the notes file when you open the PDF file. 
 
 @heading See also
 @menu

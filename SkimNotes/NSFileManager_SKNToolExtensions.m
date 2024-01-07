@@ -51,17 +51,17 @@
     NSString *filePath = nil;
     
     path = [path stringByStandardizingPath];
-    if ([extension caseInsensitiveCompare:SKIM_EXTENSION] == NSOrderedSame) {
+    if ([extension caseInsensitiveCompare:PSKN_EXTENSION] == NSOrderedSame) {
         NSArray *files = [self subpathsAtPath:path];
-        NSString *filename = [[[path lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:SKIM_EXTENSION];
+        NSString *filename = [[[path lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:PSKN_EXTENSION];
         if ([files containsObject:filename] == NO) {
-            NSUInteger idx = [[files valueForKeyPath:@"pathExtension.lowercaseString"] indexOfObject:SKIM_EXTENSION];
+            NSUInteger idx = [[files valueForKeyPath:@"pathExtension.lowercaseString"] indexOfObject:PSKN_EXTENSION];
             filename = idx == NSNotFound ? nil : [files objectAtIndex:idx];
         }
         if (filename)
             filePath = [path stringByAppendingPathComponent:filename];
     } else {
-        NSString *skimFile = [self notesFileWithExtension:SKIM_EXTENSION atPath:path error:error];
+        NSString *skimFile = [self notesFileWithExtension:PSKN_EXTENSION atPath:path error:error];
         if (skimFile) {
             filePath = [[skimFile stringByDeletingPathExtension] stringByAppendingPathExtension:extension];
             if ([self fileExistsAtPath:filePath] == NO)
@@ -80,12 +80,12 @@
     
     path = [path stringByStandardizingPath];
     if ([extension caseInsensitiveCompare:PDFD_EXTENSION] == NSOrderedSame) {
-        NSString *notePath = [self notesFileWithExtension:SKIM_EXTENSION atPath:path error:&error];
+        NSString *notePath = [self notesFileWithExtension:PSKN_EXTENSION atPath:path error:&error];
         if (notePath)
             data = [NSData dataWithContentsOfFile:notePath options:0 error:&error];
         if (nil == data && outError)
             *outError = error;
-    } else if ([extension caseInsensitiveCompare:SKIM_EXTENSION] == NSOrderedSame) {
+    } else if ([extension caseInsensitiveCompare:PSKN_EXTENSION] == NSOrderedSame) {
         data = [NSData dataWithContentsOfFile:path options:0 error:&error];
         if (nil == data && outError)
             *outError = error;
@@ -169,7 +169,7 @@
             NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
             if ([name caseInsensitiveCompare:BUNDLE_DATA_FILENAME] == NSOrderedSame)
                 name = [name stringByAppendingString:@"1"];
-            NSString *notePath = [[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:SKIM_EXTENSION];
+            NSString *notePath = [[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:PSKN_EXTENSION];
             success = [notesData writeToFile:notePath options:0 error:&error];
             if (textNotes) {
                 notePath = [[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:TXT_EXTENSION];
@@ -199,7 +199,7 @@
     
     if ([extension caseInsensitiveCompare:PDFD_EXTENSION] == NSOrderedSame) {
         NSString *notePath;
-        if ((notePath = [self notesFileWithExtension:SKIM_EXTENSION atPath:path error:NULL]))
+        if ((notePath = [self notesFileWithExtension:PSKN_EXTENSION atPath:path error:NULL]))
             success1 = [self removeItemAtPath:notePath error:NULL];
         if ((notePath = [self notesFileWithExtension:TXT_EXTENSION atPath:path error:NULL]))
             success2 = [self removeItemAtPath:notePath error:NULL];
@@ -233,7 +233,7 @@
 - (BOOL)hasSkimNotesAtPath:(NSString *)path syncable:(SKNSyncability)syncable {
     path = [path stringByStandardizingPath];
     if ([[path pathExtension] caseInsensitiveCompare:PDFD_EXTENSION] == NSOrderedSame) {
-        return nil != [self notesFileWithExtension:SKIM_EXTENSION atPath:path error:NULL];
+        return nil != [self notesFileWithExtension:PSKN_EXTENSION atPath:path error:NULL];
     } else {
         NSArray *attrNames = [[SKNExtendedAttributeManager sharedManager] extendedAttributeNamesAtPath:path traverseLink:YES error:NULL];
         if (syncable == SKNSyncable)

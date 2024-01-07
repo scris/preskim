@@ -32,7 +32,7 @@
 				<string>org.tug.tex.dvi</string>
 				<string>org.tug.tex.xdv</string>
 				<string>org.gnu.gnu-zip-tar-archive</string>
-				<string>scris.ds.preskim.skimnotes</string>
+				<string>scris.ds.preskim.notes</string>
 				<string>public.plain-text</string>
 				<string>public.rtf</string>
 				<string>com.apple.rtfd</string>
@@ -210,7 +210,7 @@
 			<key>CFBundleTypeIconSystemGenerated</key>
 			<true/>
 			<key>CFBundleTypeName</key>
-			<string>Skim Notes</string>
+			<string>Preskim Notes</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
@@ -430,7 +430,7 @@
 			<key>NSMenuItem</key>
 			<dict>
 				<key>default</key>
-				<string>Show Skim Notes</string>
+				<string>Show Preskim Notes</string>
 			</dict>
 			<key>NSMessage</key>
 			<string>openNotesDocumentFromURLOnPboard</string>
@@ -504,7 +504,7 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Skim Notes</string>
+			<string>Preskim Notes</string>
 			<key>UTTypeIconFile</key>
 			<string>NoteDocument.icns</string>
 			<key>UTTypeIcons</key>
@@ -520,7 +520,7 @@
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>skim</string>
+					<string>pskn</string>
 				</array>
 			</dict>
 		</dict>

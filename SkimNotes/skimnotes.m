@@ -83,7 +83,7 @@ static char *formatHelpStr = "skimnotes format: formats Preskim notes data as ar
                              "Usage: skimnotes format archive|plist|text|rtf IN_SKIM_FILE|- [OUT_FILE|-]\n\n"
                              "Format the notes data IN_SKIM_FILE or standard input to archive, plist, text, or RTF format and writes the result to OUT_FILE or standard output.\n"
                              "Writes back to a file with the same base name as IN_SKIM_FILE (or standard output) if OUT_FILE is not provided."
-                             "Archive and plist data can be used as the format for .skim files or attached to PDFs";
+                             "Archive and plist data can be used as the format for .pskn files or attached to PDFs";
 static char *offsetHelpStr = "skimnotes offsets: offsets all notes in a SKIM file by a fixed amount\n"
                              "Usage: skimnotes offset DX DY IN_SKIM_FILE|- [OUT_SKIM_FILE|-]\n\n"
                              "Offsets all notes in IN_SKIM_FILE or standard input by an amount (DX, DY) and writes the result to OUT_SKIM_FILE or standard output.\n"
@@ -135,7 +135,7 @@ static char *xpcProtocolStr = "@protocol SKNXCPAgentListenerProtocol\n"
 #define SYNCABLE_OPTION_STRING      @"-s"
 #define NONSYNCABLE_OPTION_STRING   @"-n"
 
-#define FORMAT_SKIM_STRING      @"skim"
+#define FORMAT_PSKN_STRING      @"pskn"
 #define FORMAT_TEXT_STRING      @"text"
 #define FORMAT_TXT_STRING       @"txt"
 #define FORMAT_RTF_STRING       @"rtf"
@@ -209,7 +209,7 @@ static NSInteger SKNFormatForString(NSString *formatString) {
         return SKNFormatArchive;
     else if ([formatString caseInsensitiveCompare:FORMAT_PLIST_STRING] == NSOrderedSame || [formatString caseInsensitiveCompare:FORMAT_P_STRING] == NSOrderedSame)
         return SKNFormatPlist;
-    else if ([formatString caseInsensitiveCompare:FORMAT_SKIM_STRING] == NSOrderedSame || [formatString caseInsensitiveCompare:FORMAT_S_STRING] == NSOrderedSame)
+    else if ([formatString caseInsensitiveCompare:FORMAT_PSKN_STRING] == NSOrderedSame || [formatString caseInsensitiveCompare:FORMAT_S_STRING] == NSOrderedSame)
         return SKNFormatPreskim;
     else if ([formatString caseInsensitiveCompare:FORMAT_TEXT_STRING] == NSOrderedSame || [formatString caseInsensitiveCompare:FORMAT_TXT_STRING] == NSOrderedSame || [formatString caseInsensitiveCompare:FORMAT_T_STRING] == NSOrderedSame)
         return SKNFormatText;
@@ -379,8 +379,8 @@ int main (int argc, const char * argv[]) {
             if (action == SKNActionOffset || action == SKNActionFormat) {
                 if ([inPath isEqualToString:STD_IN_OUT_FILE])
                     isStdIn = YES;
-                else if ([[inPath pathExtension] caseInsensitiveCompare:SKIM_EXTENSION] != NSOrderedSame)
-                    inPath = [[inPath stringByDeletingPathExtension] stringByAppendingPathExtension:SKIM_EXTENSION];
+                else if ([[inPath pathExtension] caseInsensitiveCompare:PSKN_EXTENSION] != NSOrderedSame)
+                    inPath = [[inPath stringByDeletingPathExtension] stringByAppendingPathExtension:PSKN_EXTENSION];
             } else if ([[inPath pathExtension] caseInsensitiveCompare:PDFD_EXTENSION] == NSOrderedSame) {
                 isBundle = YES;
             } else if ([[inPath pathExtension] caseInsensitiveCompare:PDF_EXTENSION] != NSOrderedSame) {
@@ -394,7 +394,7 @@ int main (int argc, const char * argv[]) {
                 else if (action == SKNActionOffset)
                     outPath = inPath;
                 else if ([outPath isEqualToString:STD_IN_OUT_FILE] == NO)
-                    outPath = [outPath stringByAppendingPathExtension:format == SKNFormatText ? TXT_EXTENSION : format == SKNFormatRTF ? RTF_EXTENSION : SKIM_EXTENSION];
+                    outPath = [outPath stringByAppendingPathExtension:format == SKNFormatText ? TXT_EXTENSION : format == SKNFormatRTF ? RTF_EXTENSION : PSKN_EXTENSION];
             }
             
             if (((action != SKNActionOffset && action != SKNActionFormat) || isStdIn == NO) && ([fm fileExistsAtPath:inPath isDirectory:&isDir] == NO || isBundle != isDir)) {

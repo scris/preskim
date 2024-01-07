@@ -42,7 +42,7 @@
 
 #define PDF_EXTENSION   @"pdf"
 #define PDFD_EXTENSION  @"pdfd"
-#define SKIM_EXTENSION  @"skim"
+#define PSKN_EXTENSION  @"pskn"
 #define TXT_EXTENSION   @"txt"
 #define TEXT_EXTENSION  @"text"
 #define RTF_EXTENSION   @"rtf"

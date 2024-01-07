@@ -297,7 +297,7 @@ static Class SKBookmarkClass = Nil;
         bookmark = [bookmark parent];
     }
     NSURLComponents *components = [[NSURLComponents alloc] init];
-    [components setScheme:@"skim"];
+    [components setScheme:@"pskn"];
     [components setHost:@"bookmarks"];
     [components setPath:path];
     NSURL *url = [components URL];

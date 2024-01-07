@@ -177,7 +177,7 @@
     if ([ws type:docType conformsToType:SKNPDFDocumentType]) {
         NSString *path = [absoluteURL path];
         NSString *tmpDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
-        NSString *tmpPath = [tmpDir stringByAppendingPathComponent:[[[path lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"skim"]];
+        NSString *tmpPath = [tmpDir stringByAppendingPathComponent:[[[path lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pskn"]];
         NSString *binPath = [[NSBundle mainBundle] pathForResource:@"skimnotes" ofType:nil];
         NSArray *arguments = [NSArray arrayWithObjects:@"get", path, tmpPath, nil];
         
@@ -211,11 +211,11 @@
         [fm removeItemAtPath:tmpDir error:NULL];
     } else if ([ws type:docType conformsToType:SKNPDFBundleDocumentType]) {
         NSString *bundlePath = [absoluteURL path];
-        NSString *filename = [[[bundlePath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathComponent:@"skim"];
+        NSString *filename = [[[bundlePath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathComponent:@"pskn"];
         NSString *skimPath = [bundlePath stringByAppendingPathComponent:filename];
         if ([fm fileExistsAtPath:skimPath] == NO && [fm fileExistsAtPath:bundlePath]) {
             NSArray *filenames = [fm subpathsAtPath:bundlePath];
-            NSUInteger idx = [[filenames valueForKey:@"pathExtension"] indexOfObject:@"skim"];
+            NSUInteger idx = [[filenames valueForKey:@"pathExtension"] indexOfObject:@"pskn"];
             if (idx != NSNotFound) {
                 filename = [filenames objectAtIndex:idx];
                 skimPath = [bundlePath stringByAppendingPathComponent:filename];

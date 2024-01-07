@@ -986,7 +986,7 @@ Als laatste kunt u ook de PDF en notities bewaren in een PDF bundel, dat de PDF 
 @item Kies File > Exporteer@dots{}. 
 @item Selecteer "Skim Notities" van de Structuur popup, kies een locatie om de notities te bewaren, en druk op de OK-knop.
 @end enumerate
-@heading Om notities uit een aparte .skim notitie-bestand aan een PDF toe te voegen:
+@heading Om notities uit een aparte .pskn notitie-bestand aan een PDF toe te voegen:
 @enumerate
 @item Open het PDF-bestand.
 @item Kies Archief > Lees notities@dots{}, en kies het .skim-bestand dat de notities bevat. 
@@ -1081,12 +1081,12 @@ Het is belangrijk dat het notitie-bestand geassocieerd is met het PDF-bestand. D
 
 @topic Notities en markeringen uit een apart Skim notities-bestand toevoegen
 
-Notities kunnen bevat ziech bevinden in een apart bestand met bestandsextensie "skim", voor backup of wanneer de notities met een meil zijn meegestuurd.
+Notities kunnen bevat ziech bevinden in een apart bestand met bestandsextensie "pskn", voor backup of wanneer de notities met een meil zijn meegestuurd.
 
 U kunt deze notities aan een bijbehoren PDF-bestand toevoegen.
 
 @task
-@heading Om notities uit een aparte .skim notitie-bestand aan een PDF toe te voegen:
+@heading Om notities uit een aparte .pskn notitie-bestand aan een PDF toe te voegen:
 @enumerate
 @item Open het PDF-bestand.
 @item Kies Archief > Lees notities@dots{}, en kies het .skim-bestand dat de notities bevat. 

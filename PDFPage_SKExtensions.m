@@ -366,7 +366,7 @@ static BOOL usesSequentialPageNumbering = NO;
     if (fileURL == nil)
         return nil;
     NSURLComponents *components = [[NSURLComponents alloc] initWithURL:fileURL resolvingAgainstBaseURL:NO];
-    [components setScheme:@"skim"];
+    [components setScheme:@"pskn"];
     [components setFragment:[NSString stringWithFormat:@"page=%lu", (unsigned long)([self pageIndex] + 1)]];
     NSURL *skimURL = [components URL];
     return skimURL;

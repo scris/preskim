@@ -77,7 +77,7 @@ NSString *SKDocumentFileURLDidChangeNotification = @"SKDocumentFileURLDidChangeN
     NSURL *fileURL = [self fileURL];
     if (fileURL) {
         NSURLComponents *components = [[NSURLComponents alloc] initWithURL:fileURL resolvingAgainstBaseURL:NO];
-        [components setScheme:@"skim"];
+        [components setScheme:@"pskn"];
         NSURL *skimURL = [components URL];
         if (skimURL) {
             NSPasteboard *pboard = [NSPasteboard generalPasteboard];

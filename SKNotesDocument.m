@@ -380,7 +380,7 @@
         [dict setObject:[NSNumber numberWithUnsignedInt:'PRes'] forKey:NSFileHFSCreatorCode];
     
     if ([ws type:typeName conformsToType:SKNotesDocumentType])
-        [dict setObject:[NSNumber numberWithUnsignedInt:'SKNT'] forKey:NSFileHFSTypeCode];
+        [dict setObject:[NSNumber numberWithUnsignedInt:'PSKN'] forKey:NSFileHFSTypeCode];
     else if ([[absoluteURL pathExtension] isEqualToString:@"rtf"] || [ws type:typeName conformsToType:SKNotesRTFDocumentType])
         [dict setObject:[NSNumber numberWithUnsignedInt:'RTF '] forKey:NSFileHFSTypeCode];
     else if ([[absoluteURL pathExtension] isEqualToString:@"txt"] || [ws type:typeName conformsToType:SKNotesTextDocumentType])

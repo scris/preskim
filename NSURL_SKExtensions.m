@@ -142,7 +142,7 @@ static id (*original_initWithString)(id, SEL, id) = NULL;
 
 - (BOOL)isPreskimURL {
     NSString *scheme = [self scheme];
-    return scheme && [scheme caseInsensitiveCompare:@"skim"] == NSOrderedSame;
+    return scheme && [scheme caseInsensitiveCompare:@"pskn"] == NSOrderedSame;
 }
 
 - (BOOL)isPreskimBookmarkURL {

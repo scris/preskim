@@ -553,7 +553,7 @@ enum {
         NSFileManager *fm = [NSFileManager defaultManager];
         NSURL *fileURL = [self fileURL];
         // we move everything that's not ours out of the way, so we can preserve version control info
-        NSSet *ourExtensions = [NSSet setWithObjects:@"pdf", @"skim", @"fdf", @"txt", @"text", @"rtf", @"plist", nil];
+        NSSet *ourExtensions = [NSSet setWithObjects:@"pdf", @"pskn", @"fdf", @"txt", @"text", @"rtf", @"plist", nil];
         for (NSURL *url in [fm contentsOfDirectoryAtURL:fileURL includingPropertiesForKeys:@[] options:0 error:NULL]) {
             if ([ourExtensions containsObject:[[url pathExtension] lowercaseString]] == NO) {
                 if (tmpURL == nil)
@@ -581,12 +581,12 @@ enum {
     if (didSave) {
         if (attachNotes) {
             BOOL didWriteBackupNotes = NO;
-            // we check for notes and may save a .skim as well:
+            // we check for notes and may save a .pskn as well:
             if ([[NSUserDefaults standardUserDefaults] boolForKey:SKAutoSaveSkimNotesKey] &&
                 (saveOperation != NSAutosaveElsewhereOperation && saveOperation != NSAutosaveAsOperation))
-                didWriteBackupNotes = [self writeBackupNotesToURL:[absoluteURL URLReplacingPathExtension:@"skim"] forSaveOperation:saveOperation];
+                didWriteBackupNotes = [self writeBackupNotesToURL:[absoluteURL URLReplacingPathExtension:@"pskn"] forSaveOperation:saveOperation];
             if (NO == [self attachNotesAtURL:absoluteURL]) {
-                NSString *message = didWriteBackupNotes ? NSLocalizedString(@"The notes could not be saved with the PDF at \"%@\". However a companion .skim file was successfully updated.", @"Informative text in alert dialog") :
+                NSString *message = didWriteBackupNotes ? NSLocalizedString(@"The notes could not be saved with the PDF at \"%@\". However a companion .pskn file was successfully updated.", @"Informative text in alert dialog") :
                 NSLocalizedString(@"The notes could not be saved with the PDF at \"%@\"", @"Informative text in alert dialog");
                 NSAlert *alert = [[NSAlert alloc] init];
                 [alert setMessageText:NSLocalizedString(@"Unable to save notes", @"Message in alert dialog")];
@@ -759,7 +759,7 @@ enum {
     else if ([ws type:typeName conformsToType:SKPDFBundleDocumentType])
         [dict setObject:[NSNumber numberWithUnsignedInt:'PDFD'] forKey:NSFileHFSTypeCode];
     else if ([ws type:typeName conformsToType:SKNotesDocumentType])
-        [dict setObject:[NSNumber numberWithUnsignedInt:'SKNT'] forKey:NSFileHFSTypeCode];
+        [dict setObject:[NSNumber numberWithUnsignedInt:'PSKN'] forKey:NSFileHFSTypeCode];
     else if ([ws type:typeName conformsToType:SKNotesFDFDocumentType])
         [dict setObject:[NSNumber numberWithUnsignedInt:'FDF '] forKey:NSFileHFSTypeCode];
     else if ([[absoluteURL pathExtension] isEqualToString:@"rtf"] || [ws type:typeName conformsToType:SKNotesRTFDocumentType])
@@ -902,7 +902,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
             }
             NSInteger readOption = [[NSUserDefaults standardUserDefaults] integerForKey:foundEANotes ? SKReadNonMissingNotesFromPreskimFileOptionKey : SKReadMissingNotesFromPreskimFileOptionKey];
             if (pdfDoc && readOption != SKOptionNever) {
-                NSURL *notesURL = [absoluteURL URLReplacingPathExtension:@"skim"];
+                NSURL *notesURL = [absoluteURL URLReplacingPathExtension:@"pskn"];
                 if ([notesURL checkResourceIsReachableAndReturnError:NULL]) {
                     if (readOption == SKOptionAsk) {
                         NSAlert *alert = [[NSAlert alloc] init];

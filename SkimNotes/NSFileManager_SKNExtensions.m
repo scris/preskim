@@ -162,7 +162,7 @@
     BOOL isDir;
     
     if ([aURL isFileURL] && [self fileExistsAtPath:path isDirectory:&isDir] && isDir) {
-        NSURL *skimFileURL = [self bundledFileURLWithExtension:SKIM_EXTENSION inPDFBundleAtURL:aURL error:&error];
+        NSURL *skimFileURL = [self bundledFileURLWithExtension:PSKN_EXTENSION inPDFBundleAtURL:aURL error:&error];
         NSData *data = skimFileURL ? [NSData dataWithContentsOfURL:skimFileURL options:0 error:&error] : nil;
         if (data) {
             notes = SKNSkimNotesFromData(data);
@@ -235,7 +235,7 @@
     NSURL *fileURL= nil;
     
     extension = [extension lowercaseString];
-    if ([extension isEqualToString:SKIM_EXTENSION] || [extension isEqualToString:PDF_EXTENSION]) {
+    if ([extension isEqualToString:PSKN_EXTENSION] || [extension isEqualToString:PDF_EXTENSION]) {
         NSString *path = [aURL path];
         NSArray *files = [self subpathsAtPath:path];
         NSString *filename = [[[path lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:extension];
@@ -246,7 +246,7 @@
         if (filename)
             fileURL = [NSURL fileURLWithPath:[path stringByAppendingPathComponent:filename] isDirectory:NO];
     } else {
-        NSURL *skimFileURL = [self bundledFileURLWithExtension:SKIM_EXTENSION inPDFBundleAtURL:aURL error:outError];
+        NSURL *skimFileURL = [self bundledFileURLWithExtension:PSKN_EXTENSION inPDFBundleAtURL:aURL error:outError];
         if (skimFileURL) {
             fileURL = [NSURL fileURLWithPath:[[[skimFileURL path] stringByDeletingPathExtension] stringByAppendingPathExtension:extension] isDirectory:NO];
             if ([self fileExistsAtPath:[fileURL path]] == NO)

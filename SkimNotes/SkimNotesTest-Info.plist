@@ -15,7 +15,7 @@
 			<string>Preskim Notes</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>SKNT</string>
+				<string>PSKN</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -109,16 +109,16 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Skim Notes</string>
+			<string>Preskim Notes</string>
 			<key>UTTypeIdentifier</key>
 			<string>scris.ds.preskim.notes</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>com.apple.ostype</key>
-				<string>SKNT</string>
+				<string>PSKN</string>
 				<key>public.filename-extension</key>
 				<array>
-					<string>skim</string>
+					<string>pskn</string>
 				</array>
 			</dict>
 		</dict>

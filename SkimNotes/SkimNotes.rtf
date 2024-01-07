@@ -13,14 +13,14 @@
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 
-\f1\b0 \cf0 The SkimNotes framework defines an interface to easily work with Preskim notes.  You can read and write Preskim notes in various formats from and to extended attributes, read and write them from and to a .skim file, or read them from a PDF bundle.  Below is a short description of the various classes and categories defined in this framework.  Your main interface with the framework will probably be either the NSFileManager category or the PDFDocument category.\
+\f1\b0 \cf0 The SkimNotes framework defines an interface to easily work with Preskim notes.  You can read and write Preskim notes in various formats from and to extended attributes, read and write them from and to a .pskn file, or read them from a PDF bundle.  Below is a short description of the various classes and categories defined in this framework.  Your main interface with the framework will probably be either the NSFileManager category or the PDFDocument category.\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 
 \f0\b \cf0 \
 NSFileManager (SKNExtensions)
 \f1\b0 \
 \
-A category on NSFileManager.  This category adds methods to read and write Preskim notes.  Preskim notes can be set in the extended attributes of a (PDF) file, contained in a .skim file, or contained inside a PDF bundle.  There are three types of Preskim notes data: archived property lists, text notes, or RTF notes.  This class will probably be your main interface with the framework.\
+A category on NSFileManager.  This category adds methods to read and write Preskim notes.  Preskim notes can be set in the extended attributes of a (PDF) file, contained in a .pskn file, or contained inside a PDF bundle.  There are three types of Preskim notes data: archived property lists, text notes, or RTF notes.  This class will probably be your main interface with the framework.\
 \
 
 \f0\b PDFDocument (SKNExtensions)
