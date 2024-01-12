@@ -620,10 +620,10 @@
             [menuItem setTitle:NSLocalizedString(@"Show Status Bar", @"Menu item title")];
         return YES;
     } else if (action == @selector(toggleCaseInsensitiveSearch:)) {
-        [menuItem setState:ndFlags.caseInsensitiveSearch ? NSOnState : NSOffState];
+        [menuItem setState:ndFlags.caseInsensitiveSearch ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(toggleAutoResizeNoteRows:)) {
-        [menuItem setState:ndFlags.autoResizeRows ? NSOnState : NSOffState];
+        [menuItem setState:ndFlags.autoResizeRows ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(toggleFullscreen:)) {
         if ([self interactionMode] == SKFullScreenMode)

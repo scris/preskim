@@ -101,8 +101,8 @@
 - (IBAction)changeColor:(id)sender{
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     if (mwcFlags.updatingColor == 0 && [self hasOverview] == NO && [annotation isSkimNote]) {
-        BOOL isFill = [colorAccessoryView state] == NSOnState && [annotation hasInteriorColor];
-        BOOL isText = [textColorAccessoryView state] == NSOnState && [annotation isText];
+        BOOL isFill = [colorAccessoryView state] == NSControlStateValueOn && [annotation hasInteriorColor];
+        BOOL isText = [textColorAccessoryView state] == NSControlStateValueOn && [annotation isText];
         BOOL isShift = ([NSEvent standardModifierFlags] & NSEventModifierFlagShift) != 0;
         mwcFlags.updatingColor = 1;
         [annotation setColor:[sender color] alternate:isFill || isText updateDefaults:isShift];

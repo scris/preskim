@@ -125,7 +125,7 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
                 prevPoint = nextPoint;
                 elt = [path elementAtIndex:i associatedPoints:points];
                 
-                if (elt == NSCurveToBezierPathElement) {
+                if (elt == NSBezierPathElementCurveTo) {
                     NSPoint min = prevPoint, max = prevPoint;
                     NSBezierPath *flattenedPath;
                     NSUInteger j, jMax;

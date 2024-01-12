@@ -469,7 +469,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         selectsText = newSelectsText;
         if (selectsText == NO)
             [self setCurrentSelection:nil];
-        [toolModeButton setState:selectsText ? NSOnState : NSOffState];
+        [toolModeButton setState:selectsText ? NSControlStateValueOn : NSOffState];
         [[NSUserDefaults standardUserDefaults] setBool:selectsText forKey:SKLastSecondarySelectsTextKey];
     }
 }
@@ -606,19 +606,19 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     } else if ([menuItem action] == @selector(selectAll:)) {
         return [self selectsText];
     } else if ([menuItem action] == @selector(toggleDisplaysAsBookFromMenu:)) {
-        [menuItem setState:[self displaysAsBook] ? NSOnState : NSOffState];
+        [menuItem setState:[self displaysAsBook] ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if ([menuItem action] == @selector(toggleDisplayPageBreaksFromMenu:)) {
-        [menuItem setState:[self displaysPageBreaks] ? NSOnState : NSOffState];
+        [menuItem setState:[self displaysPageBreaks] ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if ([menuItem action] == @selector(doActualSize:)) {
-        [menuItem setState:fabs([self scaleFactor] - 1.0) > 0.0 ? NSOffState : NSOnState];
+        [menuItem setState:fabs([self scaleFactor] - 1.0) > 0.0 ? NSOffState : NSControlStateValueOn];
         return YES;
     } else if ([menuItem action] == @selector(doPhysicalSize:)) {
-        [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0) > 0.001) ? NSOffState : NSOnState];
+        [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0) > 0.001) ? NSOffState : NSControlStateValueOn];
         return YES;
     } else if ([menuItem action] == @selector(changeToolMode:)) {
-        [menuItem setState:[self selectsText] == (BOOL)[menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState:[self selectsText] == (BOOL)[menuItem tag] ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if ([[SKSecondaryPDFView superclass] instancesRespondToSelector:_cmd]) {
         return [super validateMenuItem:menuItem];
@@ -747,11 +747,11 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 
 - (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard types:(NSArray *)types {
     if ([[self currentSelection] hasCharacters]) {
-        if ([types containsObject:NSPasteboardTypeRTF] || [types containsObject:NSRTFPboardType]) {
+        if ([types containsObject:NSPasteboardTypeRTF] || [types containsObject:NSPasteboardTypeRTF]) {
             [pboard clearContents];
             [pboard writeObjects:@[[[self currentSelection] attributedString]]];
             return YES;
-        } else if ([types containsObject:NSPasteboardTypeString] || [types containsObject:NSStringPboardType]) {
+        } else if ([types containsObject:NSPasteboardTypeString] || [types containsObject:NSPasteboardTypeString]) {
             [pboard clearContents];
             [pboard writeObjects:@[[[self currentSelection] string]]];
             return YES;

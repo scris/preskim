@@ -234,7 +234,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 }
 
 - (void)handleScaleChangedNotification:(NSNotification *)notification {
-    [zoomButton setState:[[notification object] autoScales] ? NSOnState : NSOffState];
+    [zoomButton setState:[[notification object] autoScales] ? NSControlStateValueOn : NSOffState];
 }
 
 - (void)handlePageChangedNotification:(NSNotification *)notification {
@@ -398,7 +398,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [item setRepresentedObject:color];
         [item setImage:image];
         if ([color isEqual:tmpColor ?: inkColor])
-            [item setState:NSOnState];
+            [item setState:NSControlStateValueOn];
     }
 }
 
@@ -598,11 +598,11 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
     [[NSColor colorWithDeviceWhite:1.0 alpha:[self isEnabled] == NO ? 0.3 : [self isHighlighted] ? 0.9 : 0.6] setFill];
-    [([self state] == NSOnState && [self alternatePath] ? [self alternatePath] : [self path]) fill];
+    [([self state] == NSControlStateValueOn && [self alternatePath] ? [self alternatePath] : [self path]) fill];
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {
-    NSString *currentToolTip = [self state] == NSOnState && alternateToolTip ? alternateToolTip : toolTip;
+    NSString *currentToolTip = [self state] == NSControlStateValueOn && alternateToolTip ? alternateToolTip : toolTip;
     [[SKNavigationToolTipWindow sharedToolTipWindow] showToolTip:currentToolTip forView:[self controlView]];
     [super mouseEntered:theEvent];
 }
@@ -621,11 +621,11 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         if (alternatePath)
             [button setNeedsDisplay:YES];
         if (alternateToolTip && [[[SKNavigationToolTipWindow sharedToolTipWindow] view] isEqual:button]) {
-            NSString *currentToolTip = [self state] == NSOnState && alternateToolTip ? alternateToolTip : toolTip;
+            NSString *currentToolTip = [self state] == NSControlStateValueOn && alternateToolTip ? alternateToolTip : toolTip;
             [[SKNavigationToolTipWindow sharedToolTipWindow] showToolTip:currentToolTip forView:button];
         }
     }
-    [self setAccessibilityLabel:state == NSOnState && alternateToolTip ? alternateToolTip : toolTip];
+    [self setAccessibilityLabel:state == NSControlStateValueOn && alternateToolTip ? alternateToolTip : toolTip];
 }
 
 - (void)setToolTip:(NSString *)aToolTip {
@@ -639,13 +639,13 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (void)setAlternateToolTip:(NSString *)aToolTip {
     if (aToolTip != alternateToolTip) {
         alternateToolTip = aToolTip;
-        if ([self state] == NSOnState)
+        if ([self state] == NSControlStateValueOn)
             [self setAccessibilityLabel:alternateToolTip];
     }
 }
 
 - (NSString *)accessibilityLabel {
-    return [self state] == NSOnState && alternateToolTip ? alternateToolTip : toolTip;
+    return [self state] == NSControlStateValueOn && alternateToolTip ? alternateToolTip : toolTip;
 }
 
 @end

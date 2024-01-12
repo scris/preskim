@@ -2438,15 +2438,15 @@ enum {
         if ([[self document] allowsPrinting] && [[self document] isLocked] == NO) {
             if ([types containsObject:NSPasteboardTypePDF])
                 pdfType = NSPasteboardTypePDF;
-            else if ([types containsObject:NSPDFPboardType])
-                pdfType = NSPDFPboardType;
+            else if ([types containsObject:NSPasteboardTypePDF])
+                pdfType = NSPasteboardTypePDF;
             if (pdfType && (pdfData = [[self currentSelectionPage] PDFDataForRect:selRect]))
                 [writeTypes addObject:pdfType];
         }
         if ([types containsObject:NSPasteboardTypeTIFF])
             tiffType = NSPasteboardTypeTIFF;
-        else if ([types containsObject:NSTIFFPboardType])
-            tiffType = NSTIFFPboardType;
+        else if ([types containsObject:NSPasteboardTypeTIFF])
+            tiffType = NSPasteboardTypeTIFF;
         if (tiffType && (tiffData = [[self currentSelectionPage] TIFFDataForRect:selRect]))
             [writeTypes addObject:tiffType];
         if ([writeTypes count] > 0) {
@@ -2459,11 +2459,11 @@ enum {
         }
     }
     if ([[self currentSelection] hasCharacters]) {
-        if ([types containsObject:NSPasteboardTypeRTF] || [types containsObject:NSRTFPboardType]) {
+        if ([types containsObject:NSPasteboardTypeRTF] || [types containsObject:NSPasteboardTypeRTF]) {
             [pboard clearContents];
             [pboard writeObjects:@[[[self currentSelection] attributedString]]];
             return YES;
-        } else if ([types containsObject:NSPasteboardTypeString] || [types containsObject:NSStringPboardType]) {
+        } else if ([types containsObject:NSPasteboardTypeString] || [types containsObject:NSPasteboardTypeString]) {
             [pboard clearContents];
             [pboard writeObjects:@[[[self currentSelection] string]]];
             return YES;
@@ -3333,13 +3333,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     SEL action = [menuItem action];
     if (action == @selector(changeToolMode:)) {
-        [menuItem setState:[self toolMode] == (SKToolMode)[menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState:[self toolMode] == (SKToolMode)[menuItem tag] ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(changeAnnotationMode:)) {
         if ([[menuItem menu] numberOfItems] > ANNOTATION_MODE_COUNT)
-            [menuItem setState:[self toolMode] == SKNoteToolMode && [self annotationMode] == (SKNoteType)[menuItem tag] ? NSOnState : NSOffState];
+            [menuItem setState:[self toolMode] == SKNoteToolMode && [self annotationMode] == (SKNoteType)[menuItem tag] ? NSControlStateValueOn : NSOffState];
         else
-            [menuItem setState:[self annotationMode] == (SKNoteType)[menuItem tag] ? NSOnState : NSOffState];
+            [menuItem setState:[self annotationMode] == (SKNoteType)[menuItem tag] ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(copy:)) {
         return ([[self currentSelection] hasCharacters] || [currentAnnotation isSkimNote] ||
@@ -3365,19 +3365,19 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     } else if (action == @selector(takeSnapshot:)) {
         return [[self document] isLocked] == NO;
     } else if (action == @selector(_setSinglePageScrolling:)) {
-        [menuItem setState:[self extendedDisplayMode] == kPDFDisplaySinglePageContinuous ? NSOnState : NSOffState];
+        [menuItem setState:[self extendedDisplayMode] == kPDFDisplaySinglePageContinuous ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(_setDoublePageScrolling:)) {
-        [menuItem setState:[self extendedDisplayMode] == kPDFDisplayTwoUpContinuous ? NSOnState : NSOffState];
+        [menuItem setState:[self extendedDisplayMode] == kPDFDisplayTwoUpContinuous ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(_setDoublePage:)) {
-        [menuItem setState:[self extendedDisplayMode] == kPDFDisplayTwoUp ? NSOnState : NSOffState];
+        [menuItem setState:[self extendedDisplayMode] == kPDFDisplayTwoUp ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(setHorizontalScrolling:)) {
-        [menuItem setState:[self extendedDisplayMode] == kPDFDisplayHorizontalContinuous ? NSOnState : NSOffState];
+        [menuItem setState:[self extendedDisplayMode] == kPDFDisplayHorizontalContinuous ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(zoomToPhysicalSize:)) {
-        [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0) > 0.001) ? NSOffState : NSOnState];
+        [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0) > 0.001) ? NSOffState : NSControlStateValueOn];
         return YES;
     } else if (action == @selector(editCurrentAnnotation:)) {
         return [[self currentAnnotation] isEditable];
@@ -4452,7 +4452,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             if (isOption && wantsBreak == NO) {
                 NSInteger eltCount = [bezierPath elementCount];
                 NSPoint points[3] = {point, point, point};
-                if (NSCurveToBezierPathElement == [bezierPath elementAtIndex:eltCount - 1]) {
+                if (NSBezierPathElementCurveTo == [bezierPath elementAtIndex:eltCount - 1]) {
                     points[0] = [bezierPath associatedPointForElementAtIndex:eltCount - 2];
                     points[0].x += ( point.x - points[0].x ) / 3.0;
                     points[0].y += ( point.y - points[0].y ) / 3.0;
@@ -4465,7 +4465,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             wasOption = isOption;
             wantsBreak = NO;
             
-            [layer setPath:[bezierPath CGPath]];
+            if (@available(macOS 14.0, *)) {
+                [layer setPath:[bezierPath CGPath]];
+            }
             
         } else if ((([theEvent modifierFlags] & NSEventModifierFlagOption) != 0) != isOption) {
             

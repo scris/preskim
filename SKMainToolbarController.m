@@ -158,7 +158,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     // Set up toolbar properties: Allow customization, give a default display mode, and remember state in user defaults
     [toolbar setAllowsUserCustomization:YES];
     [toolbar setAutosavesConfiguration:YES];
-    [toolbar setDisplayMode:NSToolbarDisplayModeDefault];
+    [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
         
     // We are the delegate
     [toolbar setDelegate:self];
@@ -789,6 +789,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [item setLabels:NSLocalizedString(@"Contents Pane", @"Toolbar item label")];
             [item setToolTip:NSLocalizedString(@"Toggle Contents Pane", @"Tool tip message")];
             [item setView:leftPaneButton];
+            [item setNavigational:TRUE];
             [item setMenuFormRepresentation:menuItem];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarNotesPaneItemIdentifier]) {
@@ -852,12 +853,15 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
-    return @[SKDocumentToolbarPreviousNextItemIdentifier,
-        SKDocumentToolbarPageNumberItemIdentifier, 
+    return @[SKDocumentToolbarContentsPaneItemIdentifier,
+        SKDocumentToolbarPreviousNextItemIdentifier,
+        SKDocumentToolbarPageNumberItemIdentifier,
         SKDocumentToolbarBackForwardItemIdentifier, 
         SKDocumentToolbarZoomInActualOutItemIdentifier, 
         SKDocumentToolbarToolModeItemIdentifier, 
-        SKDocumentToolbarNewNoteItemIdentifier];
+        SKDocumentToolbarNewNoteItemIdentifier,
+        SKDocumentToolbarInfoItemIdentifier,
+        SKDocumentToolbarNotesPaneItemIdentifier];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
@@ -907,7 +911,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarPrintItemIdentifier,
         NSToolbarFlexibleSpaceItemIdentifier,
         NSToolbarSpaceItemIdentifier,
-        NSToolbarSeparatorItemIdentifier,
         SKDocumentToolbarCustomizeItemIdentifier];
 }
 
@@ -966,13 +969,13 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     } else if (action == @selector(zoomActualPhysical:)) {
         return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO;
     } else if (action == @selector(createNewTextNote:)) {
-        [menuItem setState:[[textNoteButton cell] tagForSegment:0] == [menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState:[[textNoteButton cell] tagForSegment:0] == [menuItem tag] ? NSControlStateValueOn : NSOffState];
         return [mainController interactionMode] != SKPresentationMode && [mainController hasOverview] == NO && [mainController.pdfView.document allowsNotes] && ([mainController.pdfView toolMode] == SKTextToolMode || [mainController.pdfView toolMode] == SKNoteToolMode) && [mainController.pdfView hideNotes] == NO;
     } else if (action == @selector(createNewCircleNote:)) {
-        [menuItem setState:[[circleNoteButton cell] tagForSegment:0] == [menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState:[[circleNoteButton cell] tagForSegment:0] == [menuItem tag] ? NSControlStateValueOn : NSOffState];
         return [mainController hasOverview] == NO && [mainController.pdfView canSelectNote];
     } else if (action == @selector(createNewMarkupNote:)) {
-        [menuItem setState:[[markupNoteButton cell] tagForSegment:0] == [menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState:[[markupNoteButton cell] tagForSegment:0] == [menuItem tag] ? NSControlStateValueOn : NSOffState];
         return [mainController hasOverview] == NO && [mainController.pdfView canSelectNote];
     } else if (action == @selector(toggleFullScreen:)) {
         return [mainController canEnterFullscreen] || [mainController canExitFullscreen];

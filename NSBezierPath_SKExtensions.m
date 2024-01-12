@@ -65,7 +65,7 @@
 
 - (NSPoint)associatedPointForElementAtIndex:(NSUInteger)anIndex {
     NSPoint points[3];
-    if (NSCurveToBezierPathElement == [self elementAtIndex:anIndex associatedPoints:points])
+    if (NSBezierPathElementCurveTo == [self elementAtIndex:anIndex associatedPoints:points])
         return points[2];
     else
         return points[0];
@@ -100,16 +100,16 @@
     
     for (i = 0; i < numElements; i++) {
         switch ([self elementAtIndex:i associatedPoints:points]) {
-            case NSMoveToBezierPathElement:
+            case NSBezierPathElementMoveTo:
                 CGPathMoveToPoint(mutablePath, NULL, points[0].x, points[0].y);
                 break;
-            case NSLineToBezierPathElement:
+            case NSBezierPathElementLineTo:
                 CGPathAddLineToPoint(mutablePath, NULL, points[0].x, points[0].y);
                 break;
-            case NSCurveToBezierPathElement:
+            case NSBezierPathElementCurveTo:
                 CGPathAddCurveToPoint(mutablePath, NULL, points[0].x, points[0].y,points[1].x, points[1].y, points[2].x, points[2].y);
                 break;
-            case NSClosePathBezierPathElement:
+            case NSBezierPathElementClosePath:
                 CGPathCloseSubpath(mutablePath);
                 break;
         }

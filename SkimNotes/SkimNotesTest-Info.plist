@@ -40,7 +40,7 @@
 				<string>application/pdf</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>NSPDFPboardType</string>
+			<string>NSPasteboardTypePDF</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>PDF </string>

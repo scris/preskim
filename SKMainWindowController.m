@@ -670,7 +670,7 @@ static char SKMainWindowContentLayoutObservationContext;
         rect = [[pdfView currentPage] boundsForBox:[pdfView displayBox]];
 
     if (NSEqualRects(rect, NSZeroRect) == NO) {
-        if ([[[statusBar rightField] cell] state] == NSOnState) {
+        if ([[[statusBar rightField] cell] state] == NSControlStateValueOn) {
             BOOL useMetric = [[[NSLocale currentLocale] objectForKey:NSLocaleUsesMetricSystem] boolValue];
             NSString *units = useMetric ? NSLocalizedString(@"cm", @"size unit") : NSLocalizedString(@"in", @"size unit");
             CGFloat factor = useMetric ? CM_PER_POINT : INCH_PER_POINT;

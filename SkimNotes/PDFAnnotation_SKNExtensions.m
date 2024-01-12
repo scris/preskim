@@ -872,7 +872,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     for (i = 0; i < iMax; i++) {
         NSPoint p[3];
         NSUInteger j = 0;
-        if (NSCurveToBezierPathElement == [path elementAtIndex:i associatedPoints:p])
+        if (NSBezierPathElementCurveTo == [path elementAtIndex:i associatedPoints:p])
             j = 2;
         [points addObject:NSStringFromPoint(p[j])];
     }
@@ -970,10 +970,10 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         CGFloat d0, d1, d2;
         
         elt = [path elementAtIndex:count - 2 associatedPoints:points];
-        point0 = elt == NSCurveToBezierPathElement ? points[2] : points[0];
+        point0 = elt == NSBezierPathElementCurveTo ? points[2] : points[0];
         
         elt = [path elementAtIndex:count - 1 associatedPoints:points];
-        point1 = elt == NSCurveToBezierPathElement ? points[2] : points[0];
+        point1 = elt == NSBezierPathElementCurveTo ? points[2] : points[0];
         
         diff1.x = point1.x - point0.x;
         diff1.y = point1.y - point0.y;
@@ -993,7 +993,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             controlPoint.y -= diff1.y / (3.0 * (d0 + d2));
         }
          
-        if (elt == NSCurveToBezierPathElement) {
+        if (elt == NSBezierPathElementCurveTo) {
             points[1] = controlPoint;
             [path setAssociatedPoints:points atIndex:count - 1];
         } else if (count == 2) {

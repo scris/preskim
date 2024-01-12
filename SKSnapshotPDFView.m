@@ -574,13 +574,13 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
     } else if ([menuItem action] == @selector(selectAll:)) {
         return NO;
     } else if ([menuItem action] == @selector(doAutoFit:)) {
-        [menuItem setState:[self autoFits] ? NSOnState : NSOffState];
+        [menuItem setState:[self autoFits] ? NSControlStateValueOn : NSOffState];
         return [self shouldAutoFit];
     } else if ([menuItem action] == @selector(doActualSize:)) {
-        [menuItem setState:fabs([self scaleFactor] - 1.0) > 0.0 ? NSOffState : NSOnState];
+        [menuItem setState:fabs([self scaleFactor] - 1.0) > 0.0 ? NSOffState : NSControlStateValueOn];
         return YES;
     } else if ([menuItem action] == @selector(doPhysicalSize:)) {
-        [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0) > 0.001) ? NSOffState : NSOnState];
+        [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0) > 0.001) ? NSOffState : NSControlStateValueOn];
         return YES;
     } else if ([[SKSnapshotPDFView superclass] instancesRespondToSelector:_cmd]) {
         return [super validateMenuItem:menuItem];

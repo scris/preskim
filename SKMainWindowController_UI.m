@@ -172,9 +172,9 @@
                     textColorAccessoryView = [self newColorAccessoryButtonWithTitle:NSLocalizedString(@"Text color", @"Check button title")];
                 accessoryView = textColorAccessoryView;
             }
-            if ([annotation hasInteriorColor] && [colorAccessoryView state] == NSOnState) {
+            if ([annotation hasInteriorColor] && [colorAccessoryView state] == NSControlStateValueOn) {
                 color = [(id)annotation interiorColor] ?: [NSColor clearColor];
-            } else if ([annotation isText] && [textColorAccessoryView state] == NSOnState) {
+            } else if ([annotation isText] && [textColorAccessoryView state] == NSControlStateValueOn) {
                 color = [(id)annotation fontColor] ?: [NSColor blackColor];
             } else {
                 color = [annotation color];
@@ -1690,28 +1690,28 @@ static NSArray *allMainDocumentPDFViews() {
             [menuItem setTitle:NSLocalizedString(@"Hide Notes", @"Menu item title")];
         return YES;
     } else if (action == @selector(changeDisplaySinglePages:)) {
-        [menuItem setState:([pdfView displayMode] & kPDFDisplayTwoUp) == (PDFDisplayMode)[menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState:([pdfView displayMode] & kPDFDisplayTwoUp) == (PDFDisplayMode)[menuItem tag] ? NSControlStateValueOn : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(changeDisplayContinuous:)) {
-        [menuItem setState:([pdfView displayMode] & kPDFDisplaySinglePageContinuous) == (PDFDisplayMode)[menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState:([pdfView displayMode] & kPDFDisplaySinglePageContinuous) == (PDFDisplayMode)[menuItem tag] ? NSControlStateValueOn : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(changeDisplayMode:)) {
-        [menuItem setState: [pdfView extendedDisplayMode] == [menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState: [pdfView extendedDisplayMode] == [menuItem tag] ? NSControlStateValueOn : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(changeDisplayDirection:)) {
-        [menuItem setState:[pdfView displaysHorizontally] == (BOOL)[menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState:[pdfView displaysHorizontally] == (BOOL)[menuItem tag] ? NSControlStateValueOn : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && [pdfView displayMode] == kPDFDisplaySinglePageContinuous;
     } else if (action == @selector(toggleDisplaysRTL:)) {
-        [menuItem setState:[pdfView displaysRTL] ? NSOnState : NSOffState];
+        [menuItem setState:[pdfView displaysRTL] ? NSControlStateValueOn : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(toggleDisplaysAsBook:)) {
-        [menuItem setState:[pdfView displaysAsBook] ? NSOnState : NSOffState];
+        [menuItem setState:[pdfView displaysAsBook] ? NSControlStateValueOn : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(toggleDisplayPageBreaks:)) {
-        [menuItem setState:[pdfView displaysPageBreaks] ? NSOnState : NSOffState];
+        [menuItem setState:[pdfView displaysPageBreaks] ? NSControlStateValueOn : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(changeDisplayBox:)) {
-        [menuItem setState:[pdfView displayBox] == (PDFDisplayBox)[menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState:[pdfView displayBox] == (PDFDisplayBox)[menuItem tag] ? NSControlStateValueOn : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(delete:) || action == @selector(copy:) || action == @selector(cut:) || action == @selector(paste:) || action == @selector(alternatePaste:) || action == @selector(pasteAsPlainText:) || action == @selector(deselectAll:) || action == @selector(changeAnnotationMode:) || action == @selector(changeToolMode:)) {
         return [self hasOverview] == NO && [pdfView validateMenuItem:menuItem];
@@ -1771,7 +1771,7 @@ static NSArray *allMainDocumentPDFViews() {
     } else if (action == @selector(doAutoScale:)) {
         return [[self pdfDocument] isLocked] == NO && [pdfView autoScales] == NO && [self hasOverview] == NO;
     } else if (action == @selector(toggleAutoScale:)) {
-        [menuItem setState:[pdfView autoScales] ? NSOnState : NSOffState];
+        [menuItem setState:[pdfView autoScales] ? NSControlStateValueOn : NSOffState];
         return [[self pdfDocument] isLocked] == NO && [self hasOverview] == NO;
     } else if (action == @selector(rotateRight:) || action == @selector(rotateLeft:) || action == @selector(rotateAllRight:) || action == @selector(rotateAllLeft:)) {
         return [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO;
@@ -1796,10 +1796,10 @@ static NSArray *allMainDocumentPDFViews() {
             [menuItem setTitle:NSLocalizedString(@"Show Notes Pane", @"Menu item title")];
         return [self interactionMode] != SKPresentationMode;
     } else if (action == @selector(changeLeftSidePaneState:)) {
-        [menuItem setState:mwcFlags.leftSidePaneState == (SKLeftSidePaneState)[menuItem tag] ? (([leftSideController.findTableView window] || [leftSideController.groupedFindTableView window]) ? NSMixedState : NSOnState) : NSOffState];
+        [menuItem setState:mwcFlags.leftSidePaneState == (SKLeftSidePaneState)[menuItem tag] ? (([leftSideController.findTableView window] || [leftSideController.groupedFindTableView window]) ? NSMixedState : NSControlStateValueOn) : NSOffState];
         return (SKLeftSidePaneState)[menuItem tag] == SKSidePaneStateThumbnail || [[pdfView document] outlineRoot];
     } else if (action == @selector(changeRightSidePaneState:)) {
-        [menuItem setState:mwcFlags.rightSidePaneState == (SKRightSidePaneState)[menuItem tag] ? NSOnState : NSOffState];
+        [menuItem setState:mwcFlags.rightSidePaneState == (SKRightSidePaneState)[menuItem tag] ? NSControlStateValueOn : NSOffState];
         return [self interactionMode] != SKPresentationMode;
     } else if (action == @selector(toggleOverview:)) {
         if ([self hasOverview])
@@ -1856,7 +1856,7 @@ static NSArray *allMainDocumentPDFViews() {
             CGFloat speed = [pdfView pacerSpeed];
             NSInteger s = 5 * MAX(0, (NSInteger)round(0.2 * speed) - 1) + [menuItem tag];
             [menuItem setTitle:[NSString stringWithFormat:@"%ld",(long)s]];
-            [menuItem setState:(NSInteger)round(speed) == s ? NSOnState : NSOffState];
+            [menuItem setState:(NSInteger)round(speed) == s ? NSControlStateValueOn : NSOffState];
         }
         return YES;
     } else if (action == @selector(savePDFSettingToDefaults:)) {
@@ -1868,16 +1868,16 @@ static NSArray *allMainDocumentPDFViews() {
     } else if (action == @selector(chooseTransition:)) {
         return [[self pdfDocument] pageCount] > 1;
     } else if (action == @selector(toggleCaseInsensitiveSearch:)) {
-        [menuItem setState:mwcFlags.caseInsensitiveSearch ? NSOnState : NSOffState];
+        [menuItem setState:mwcFlags.caseInsensitiveSearch ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(toggleWholeWordSearch:)) {
-        [menuItem setState:mwcFlags.wholeWordSearch ? NSOnState : NSOffState];
+        [menuItem setState:mwcFlags.wholeWordSearch ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(toggleCaseInsensitiveFilter:)) {
-        [menuItem setState:mwcFlags.caseInsensitiveFilter ? NSOnState : NSOffState];
+        [menuItem setState:mwcFlags.caseInsensitiveFilter ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(toggleAutoResizeNoteRows:)) {
-        [menuItem setState:mwcFlags.autoResizeNoteRows ? NSOnState : NSOffState];
+        [menuItem setState:mwcFlags.autoResizeNoteRows ? NSControlStateValueOn : NSOffState];
         return YES;
     } else if (action == @selector(performFindPanelAction:)) {
         if ([self interactionMode] == SKPresentationMode)

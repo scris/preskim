@@ -454,7 +454,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
     } else if (action == @selector(doZoomToPhysicalSize:)) {
         return fabs([pdfView physicalScaleFactor] - 1.0) > 0.001;
     } else if (action == @selector(toggleAutoScale:)) {
-        [menuItem setState:[pdfView autoFits] ? NSOnState : NSOffState];
+        [menuItem setState:[pdfView autoFits] ? NSControlStateValueOn : NSOffState];
         return YES;
     }
     return YES;

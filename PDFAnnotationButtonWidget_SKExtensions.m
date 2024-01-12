@@ -51,7 +51,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     [fdfString appendFDFName:SKFDFAnnotationFieldNameKey];
     [fdfString appendFormat:@"(%@)", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
     [fdfString appendFDFName:SKFDFAnnotationFieldValueKey];
-    [fdfString appendFormat:@"/%@", [self state] == NSOnState ? [self onStateValue] : @"Off"];
+    [fdfString appendFormat:@"/%@", [self state] == NSControlStateValueOn ? [self onStateValue] : @"Off"];
     return fdfString;
 }
 

@@ -257,11 +257,11 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 }
 
 - (id)transformedValue:(id)value {
-    return [NSNumber numberWithInteger:[value integerValue] == targetValue ? NSOnState : NSOffState];
+    return [NSNumber numberWithInteger:[value integerValue] == targetValue ? NSControlStateValueOn : NSOffState];
 }
 
 - (id)reverseTransformedValue:(id)value {
-    return [NSNumber numberWithInteger:[value integerValue] == NSOnState ? targetValue : 0];
+    return [NSNumber numberWithInteger:[value integerValue] == NSControlStateValueOn ? targetValue : 0];
 }
 
 @end

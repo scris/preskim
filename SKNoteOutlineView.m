@@ -140,7 +140,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     if ([menuItem action] == @selector(toggleTableColumn:)) {
-        [menuItem setState:[[self tableColumnWithIdentifier:[menuItem representedObject]] isHidden] ? NSOffState : NSOnState];
+        [menuItem setState:[[self tableColumnWithIdentifier:[menuItem representedObject]] isHidden] ? NSOffState : NSControlStateValueOn];
         return YES;
     } else if ([[SKNoteOutlineView superclass] instancesRespondToSelector:_cmd]) {
         return [super validateMenuItem:menuItem];

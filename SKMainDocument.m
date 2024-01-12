@@ -1076,14 +1076,14 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     
     if ([self hasNotes]) {
         replaceNotesCheckButton = [[NSButton alloc] init];
-        [replaceNotesCheckButton setButtonType:NSSwitchButton];
+        [replaceNotesCheckButton setButtonType:NSButtonTypeSwitch];
         [replaceNotesCheckButton setTitle:NSLocalizedString(@"Replace existing notes", @"Check button title")];
         [replaceNotesCheckButton sizeToFit];
         [replaceNotesCheckButton setFrameOrigin:NSMakePoint(CHECK_BUTTON_OFFSET_X, CHECK_BUTTON_OFFSET_Y)];
         readNotesAccessoryView = [[NSView alloc] initWithFrame:NSInsetRect([replaceNotesCheckButton frame], -CHECK_BUTTON_OFFSET_X, -CHECK_BUTTON_OFFSET_Y)];
         [readNotesAccessoryView addSubview:replaceNotesCheckButton];
         [oPanel setAccessoryView:readNotesAccessoryView];
-        [replaceNotesCheckButton setState:NSOnState];
+        [replaceNotesCheckButton setState:NSControlStateValueOn];
         [oPanel setAccessoryViewDisclosed:YES];
     }
     
@@ -1092,7 +1092,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
     [oPanel beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSModalResponse result){
             if (result == NSModalResponseOK) {
                 NSURL *notesURL = [[oPanel URLs] objectAtIndex:0];
-                BOOL replace = (replaceNotesCheckButton && [replaceNotesCheckButton state] == NSOnState);
+                BOOL replace = (replaceNotesCheckButton && [replaceNotesCheckButton state] == NSControlStateValueOn);
                 [self readNotesFromURL:notesURL replace:replace];
             }
         }];

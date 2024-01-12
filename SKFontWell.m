@@ -221,7 +221,7 @@ static char SKFontWellFontSizeObservationContext;
     [nc addObserver:self selector:@selector(fontPanelWillClose:)
                name:NSWindowWillCloseNotification object:[fm fontPanel:YES]];
     
-    [self setState:NSOnState];
+    [self setState:NSControlStateValueOn];
     [self dirty];
     [self setNeedsDisplay:YES];
 }
@@ -252,7 +252,7 @@ static char SKFontWellFontSizeObservationContext;
 - (void)setTarget:(id)newTarget { target = newTarget; }
 
 - (BOOL)isActive {
-    return [self state] == NSOnState;
+    return [self state] == NSControlStateValueOn;
 }
 
 - (void)setFont:(NSFont *)newFont {
@@ -478,7 +478,7 @@ static char SKFontWellFontSizeObservationContext;
 - (void)drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView {
     SKDrawTextFieldBezel(frame, controlView);
     
-    if ([self state] == NSOnState) {
+    if ([self state] == NSControlStateValueOn) {
         [NSGraphicsContext saveGraphicsState];
         [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationMultiply];
         [[NSColor selectedControlColor] setFill];
@@ -506,7 +506,7 @@ static char SKFontWellFontSizeObservationContext;
         NSMutableAttributedString *attrString = [[super attributedTitle] mutableCopy];
         [attrString addAttribute:NSForegroundColorAttributeName value:[self textColor] range:NSMakeRange(0, [attrString length])];
         CGFloat textLuminance = [[self textColor] luminance];
-        CGFloat backgroundLuminance = [([self state] == NSOnState ? [NSColor selectedControlColor] : [self backgroundColor]) luminance];
+        CGFloat backgroundLuminance = [([self state] == NSControlStateValueOn ? [NSColor selectedControlColor] : [self backgroundColor]) luminance];
         if ((fmax(textLuminance, backgroundLuminance) + 0.05) / (fmin(textLuminance, backgroundLuminance) + 0.05) < 4.5) {
             NSShadow *shade = [[NSShadow alloc] init];
             [shade setShadowColor:backgroundLuminance < 0.5 ? [NSColor whiteColor] : [NSColor blackColor]];

@@ -66,7 +66,7 @@
             menuItem = [noteTypeMenu addItemWithTitle:[type typeName] action:@selector(toggleDisplayNoteType:) target:self];
             [menuItem setTag:tag++];
             [menuItem setRepresentedObject:type];
-            [menuItem setState:NSOnState];
+            [menuItem setState:NSControlStateValueOn];
         }
         [noteTypeMenu addItem:[NSMenuItem separatorItem]];
         [noteTypeMenu addItemWithTitle:NSLocalizedString(@"Show All", @"Menu item title") action:@selector(displayAllNoteTypes:) target:self];
@@ -100,7 +100,7 @@
     NSInteger i;
     for (i = 0; i < NOTETYPES_COUNT; i++) {
         NSMenuItem *item = [noteTypeMenu itemAtIndex:i];
-        if ([item state] == NSOnState)
+        if ([item state] == NSControlStateValueOn)
             [types addObject:[item representedObject]];
     }
     return types;
@@ -147,7 +147,7 @@
 - (void)displayAllNoteTypes:(id)sender {
     NSInteger i;
     for (i = 0; i < NOTETYPES_COUNT; i++)
-        [[noteTypeMenu itemAtIndex:i] setState:NSOnState];
+        [[noteTypeMenu itemAtIndex:i] setState:NSControlStateValueOn];
     [delegate noteTypeSheetControllerNoteTypesDidChange];
 }
 
