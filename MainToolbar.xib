@@ -542,7 +542,7 @@
                         <action selector="selectColor:" target="-2" id="183"/>
                     </connections>
                 </customView>
-                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="36">
+                <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="36">
                     <rect key="frame" x="143" y="275" width="60" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="60" id="4RV-ZC-n5Z"/>
@@ -578,7 +578,7 @@
                         <action selector="changeToolMode:" target="-2" id="181"/>
                     </connections>
                 </segmentedControl>
-                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="38">
+                <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="38">
                     <rect key="frame" x="85" y="275" width="50" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="50" id="dgE-6k-Kfl"/>
@@ -669,7 +669,7 @@
                         <action selector="togglePacer:" target="-2" id="tWH-SL-o8t"/>
                     </connections>
                 </segmentedControl>
-                <textField verticalHuggingPriority="750" preferredMaxLayoutWidth="36" translatesAutoresizingMaskIntoConstraints="NO" id="jHc-Bm-dWJ">
+                <textField focusRingType="none" verticalHuggingPriority="750" preferredMaxLayoutWidth="36" translatesAutoresizingMaskIntoConstraints="NO" id="jHc-Bm-dWJ">
                     <rect key="frame" x="190" y="19" width="30" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="30" id="vHA-D8-mGk"/>

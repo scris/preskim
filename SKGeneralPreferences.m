@@ -67,6 +67,10 @@
     return @"GeneralPreferences";
 }
 
+- (NSString *)systemSymbol {
+    return @"slider.horizontal.3";
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     

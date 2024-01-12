@@ -3792,6 +3792,7 @@
 				CURRENT_PROJECT_VERSION = 152;
 				INFOPLIST_KEY_CFBundleDisplayName = Preskim;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = scris.ds.preskim;
 			};
 			name = Debug;
@@ -3805,6 +3806,7 @@
 				CURRENT_PROJECT_VERSION = 152;
 				INFOPLIST_KEY_CFBundleDisplayName = Preskim;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = scris.ds.preskim;
 			};
 			name = Release;

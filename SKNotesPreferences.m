@@ -56,6 +56,10 @@
     return @"NotesPreferences";
 }
 
+- (NSString *)systemSymbol {
+    return @"highlighter";
+}
+
 #define BIND_LINE_WELL(lineWell, noteType, displayStyle) \
 [lineWell bind:SKLineWellLineWidthKey toObject:sudc withKeyPath:VALUES_KEY_PATH(SK##noteType##NoteLineWidthKey) options:nil];\
 [lineWell bind:SKLineWellStyleKey toObject:sudc withKeyPath:VALUES_KEY_PATH(SK##noteType##NoteLineStyleKey) options:nil];\

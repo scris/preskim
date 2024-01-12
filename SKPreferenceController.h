@@ -74,6 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @protocol SKPreferencePane
+@property NSString* systemSymbol;
 @optional
 - (void)defaultsDidRevert;
 @end

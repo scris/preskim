@@ -166,6 +166,7 @@
     [toolbar setVisible:YES];
     [toolbar setDelegate:self];
     [window setToolbar:toolbar];
+    [window setToolbarStyle:NSWindowToolbarStylePreference];
     [window setShowsToolbarButton:NO];
     
     [contentView setWantsLayer:YES];
@@ -335,7 +336,7 @@
     NSViewController<SKPreferencePane> *pane = [self preferencePaneForItemIdentifier:itemIdent];
     NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
     [item setLabel:[pane title]];
-    [item setImage:[NSImage imageNamed:[pane nibName]]];
+    [item setImage:[NSImage imageWithSystemSymbolName: [pane systemSymbol] accessibilityDescription: [pane nibName]]];
     [item setTarget:self];
     [item setAction:@selector(toolbarSelectPane:)];
     return item;

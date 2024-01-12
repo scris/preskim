@@ -582,6 +582,8 @@ static inline NSDictionary *optionsFromFragmentAndEvent(NSString *fragment) {
 - (void)openDocumentWithContentsOfURL:(NSURL *)absoluteURL display:(BOOL)displayDocument completionHandler:(void (^)(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error))completionHandler {
     openedFile = YES;
     
+    NSLog(@"%@", absoluteURL);
+    
     NSString *fragment = [absoluteURL fragment];
     NSDictionary *options = optionsFromFragmentAndEvent(fragment);
     NSString *type = [self typeForContentsOfURL:absoluteURL error:NULL];

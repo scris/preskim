@@ -81,6 +81,10 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
     return @"DisplayPreferences";
 }
 
+- (NSString *)systemSymbol {
+    return @"eye";
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     

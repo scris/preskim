@@ -78,6 +78,10 @@ static NSArray *TeXEditors = nil;
     return @"SyncPreferences";
 }
 
+- (NSString *)systemSymbol {
+    return @"arrow.triangle.2.circlepath";
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
