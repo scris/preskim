@@ -60,7 +60,7 @@
 
 @implementation SKGeneralPreferences
 
-@synthesize updateIntervalPopUpButton, updateInterval;
+@synthesize updateIntervalPopUpButton, updateInterval, systemSymbol;
 @dynamic updater;
 
 - (NSString *)nibName {

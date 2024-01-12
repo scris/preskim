@@ -588,10 +588,8 @@ static SKDownloadController *sharedDownloadController = nil;
     } else if ([itemIdent isEqualToString:SKDownloadsToolbarClearItemIdentifier]) {
         item = [[NSToolbarItem alloc] initWithItemIdentifier:SKDownloadsToolbarClearItemIdentifier];
         [item setView:clearButton];
-        if (@available(macOS 11.0, *)) {} else {
-            [item setMinSize:[clearButton bounds].size];
-            [item setMaxSize:[clearButton bounds].size];
-        }
+        [item setMinSize:[clearButton bounds].size];
+        [item setMaxSize:[clearButton bounds].size];
     }
     return item;
 }

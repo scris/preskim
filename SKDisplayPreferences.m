@@ -59,7 +59,7 @@ static char SKDisplayPreferencesColorSwatchObservationContext;
     
 @implementation SKDisplayPreferences
 
-@synthesize normalColorWell, fullScreenColorWell, colorSwatch, addRemoveColorButton;
+@synthesize normalColorWell, fullScreenColorWell, colorSwatch, addRemoveColorButton, systemSymbol;
 @dynamic allowsDarkMode, countOfSizes;
 
 - (void)dealloc {

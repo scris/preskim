@@ -373,11 +373,9 @@
 }
 
 - (void)updateTocHighlights {
-    if (@available(macOS 11.0, *)) {
-        [leftSideController.tocOutlineView enumerateAvailableRowViewsUsingBlock:^(SKHighlightingTableRowView *rowView, NSInteger row){
-            [rowView setHighlightLevel:[self tocHighlightLevelForRow:row]];
-        }];
-    }
+    [leftSideController.tocOutlineView enumerateAvailableRowViewsUsingBlock:^(SKHighlightingTableRowView *rowView, NSInteger row){
+        [rowView setHighlightLevel:[self tocHighlightLevelForRow:row]];
+    }];
 }
 
 #pragma mark NSTableView datasource protocol

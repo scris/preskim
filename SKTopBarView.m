@@ -117,12 +117,7 @@
     NSColor *sepColor = nil;
     switch (style) {
         case SKTopBarStyleDefault:
-            if (@available(macOS 11.0, *))
-                [blurView setMaterial:NSVisualEffectMaterialTitlebar];
-            else if (@available(macOS 10.14, *))
-                [blurView setMaterial:NSVisualEffectMaterialHeaderView];
-            else
-                [blurView setMaterial:NSVisualEffectMaterialTitlebar];
+            [blurView setMaterial:NSVisualEffectMaterialTitlebar];
             [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
             if (@available(macOS 10.14, *)) {
                 sepColor = [NSColor separatorColor];
@@ -132,12 +127,7 @@
             }
             break;
         case SKTopBarStylePDFControlBackground:
-            if (@available(macOS 11.0, *))
-                [blurView setMaterial:NSVisualEffectMaterialTitlebar];
-            else if (@available(macOS 10.14, *))
-                [blurView setMaterial:NSVisualEffectMaterialHeaderView];
-            else
-                [blurView setMaterial:NSVisualEffectMaterialLight];
+            [blurView setMaterial:NSVisualEffectMaterialTitlebar];
             [blurView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
             if (@available(macOS 10.14, *)) {} else {
                 [backgroundView setBackgroundColor:[NSColor colorWithGenericGamma22White:0.98 alpha:0.5]];

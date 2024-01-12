@@ -335,9 +335,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [toolbarController setupToolbar];
     
     // Set up the window
-    
-    if (@available(macOS 11.0, *))
-        [window setToolbarStyle:NSWindowToolbarStyleExpanded];
+    [window setToolbarStyle:NSWindowToolbarStyleUnified];
     
     if (mwcFlags.fullSizeContent) {
         titleBarHeight = NSHeight([window frame]) - NSHeight([window contentLayoutRect]);

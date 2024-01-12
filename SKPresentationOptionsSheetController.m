@@ -228,8 +228,7 @@ static char *SKTransitionPropertiesObservationContext;
     [tableColumn setMaxWidth:labelWidth];
     [tableColumn setWidth:labelWidth];
     
-    if (@available(macOS 11.0, *))
-        [tableView setStyle:NSTableViewStylePlain];
+    [tableView setStyle:NSTableViewStylePlain];
     
     NSScrollView *scrollView = [tableView enclosingScrollView];
     CGFloat width = [[[tableView tableColumns] valueForKeyPath:@"@sum.width"] doubleValue] + NSWidth([scrollView frame]) - [scrollView contentSize].width + 3.0 * [tableView intercellSpacing].width;

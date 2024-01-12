@@ -81,16 +81,9 @@
                         [templates addObject:file];
                         NSString *type = [[templateFileNames allKeysForObject:file] firstObject];
                         if (type == nil) {
-                            if (@available(macOS 11.0, *)) {
-                                // create a unique but deterministic dynamic UTI that knows the extension
-                                CFStringRef baseType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassNSPboardType, (__bridge CFStringRef)file, NULL);
-                                type = CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[file pathExtension], baseType));
-                                CFRelease(baseType);
-                            } else {
-                                // NSSavePanel on 10.15- cannot handle dynamic UTIs
-                                // make sure the type cannot be confused with a UTI
-                                type = [NSString stringWithFormat:@"%@_%@", [file stringByDeletingPathExtension], [file pathExtension]];
-                            }
+                            CFStringRef baseType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassNSPboardType, (__bridge CFStringRef)file, NULL);
+                            type = CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[file pathExtension], baseType));
+                            CFRelease(baseType);
                             [templateFileNames setObject:file forKey:type];
                         }
                         [types setObject:type forKey:file];

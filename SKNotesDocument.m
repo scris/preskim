@@ -889,12 +889,10 @@
     [item setLabels:NSLocalizedString(@"Search", @"Toolbar item label")];
     [item setToolTip:NSLocalizedString(@"Search Notes", @"Tool tip message")];
     [item setView:searchField];
-    if (@available(macOS 11.0, *)) {} else {
-        NSSize size = [searchField frame].size;
-        [item setMinSize:size];
-        size.width = 240.0;
-        [item setMaxSize:size];
-    }
+    NSSize size = [searchField frame].size;
+    [item setMinSize:size];
+    size.width = 240.0;
+    [item setMaxSize:size];
     [dict setObject:item forKey:SKNotesDocumentSearchToolbarItemIdentifier];
     
     item = [[SKToolbarItem alloc] initWithItemIdentifier:SKNotesDocumentOpenPDFToolbarItemIdentifier];

@@ -54,7 +54,7 @@ NSString *SKSyncTeXEditorArgumentsKey = @"arguments";
 
 @implementation SKSyncPreferences
 
-@synthesize texEditorPopUpButton, customTeXEditor;
+@synthesize texEditorPopUpButton, customTeXEditor, systemSymbol;
 
 static NSArray *TeXEditors = nil;
 

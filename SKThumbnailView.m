@@ -185,24 +185,20 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (void)updateImageHighlight {
-    if (@available(macOS 11.0, *)) {
-        if ([self isSelected] || [self isMenuHighlighted]) {
-            if (imageHighlightView == nil) {
-                imageHighlightView = [self newHighlightView];
-                [imageHighlightView setFrame:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
-                [imageHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-                [self addSubview:imageHighlightView positioned:NSWindowBelow relativeTo:nil];
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateImageHighlightMask:) name:NSViewFrameDidChangeNotification object:imageHighlightView];
-            }
-            [imageHighlightView setEmphasized:[self isMenuHighlighted]];
-            [self updateImageHighlightMask:nil];
-        } else if (imageHighlightView) {
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:imageHighlightView];
-            [self removeView:imageHighlightView];
-            imageHighlightView = nil;
+    if ([self isSelected] || [self isMenuHighlighted]) {
+        if (imageHighlightView == nil) {
+            imageHighlightView = [self newHighlightView];
+            [imageHighlightView setFrame:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
+            [imageHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+            [self addSubview:imageHighlightView positioned:NSWindowBelow relativeTo:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateImageHighlightMask:) name:NSViewFrameDidChangeNotification object:imageHighlightView];
         }
-    } else {
-        [self setNeedsDisplayInRect:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
+        [imageHighlightView setEmphasized:[self isMenuHighlighted]];
+        [self updateImageHighlightMask:nil];
+    } else if (imageHighlightView) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:imageHighlightView];
+        [self removeView:imageHighlightView];
+        imageHighlightView = nil;
     }
 }
 
@@ -221,25 +217,22 @@ static char SKThumbnailViewThumbnailObservationContext;
 }
 
 - (void)updateLabelHighlight {
-    if (@available(macOS 11.0, *)) {
-        if ([self isSelected] || [self highlightLevel] > 0) {
-            if (labelHighlightView == nil) {
-                labelHighlightView = [self newHighlightView];
-                [labelHighlightView setEmphasized:[[self window] isKeyWindow]];
-                [labelHighlightView setFrame:[labelView frame]];
-                [labelHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
-                [self addSubview:labelHighlightView positioned:NSWindowBelow relativeTo:nil];
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelHighlightMask:) name:NSViewFrameDidChangeNotification object:labelHighlightView];
-            }
-            [self updateLabelHighlightMask:nil];
-        } else if (labelHighlightView) {
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:labelHighlightView];
-            [self removeView:labelHighlightView];
-            labelHighlightView = nil;
+    if ([self isSelected] || [self highlightLevel] > 0) {
+        if (labelHighlightView == nil) {
+            labelHighlightView = [self newHighlightView];
+            [labelHighlightView setEmphasized:[[self window] isKeyWindow]];
+            [labelHighlightView setFrame:[labelView frame]];
+            [labelHighlightView setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
+            [self addSubview:labelHighlightView positioned:NSWindowBelow relativeTo:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelHighlightMask:) name:NSViewFrameDidChangeNotification object:labelHighlightView];
         }
-    } else {
-        [self setNeedsDisplayInRect:[labelView frame]];
+        [self updateLabelHighlightMask:nil];
+    } else if (labelHighlightView) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:labelHighlightView];
+        [self removeView:labelHighlightView];
+        labelHighlightView = nil;
     }
+
 }
 
 #pragma mark Accessors
@@ -313,44 +306,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 #pragma mark Drawing
 
 - (void)drawRect:(NSRect)dirtyRect {
-    if (@available(macOS 11.0, *))
-        return;
-    
-    if ([self isSelected] || [self isMenuHighlighted]) {
-        NSRect rect = NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN);
-        if (NSIntersectsRect(dirtyRect, rect)) {
-            [NSGraphicsContext saveGraphicsState];
-            if ([self isMenuHighlighted])
-                [[NSColor alternateSelectedControlColor] setFill];
-            else if ([self backgroundStyle] == NSBackgroundStyleEmphasized)
-                [[NSColor darkGrayColor] setFill];
-            else
-                [[NSColor secondarySelectedControlColor] setFill];
-            [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:IMAGE_SEL_RADIUS yRadius:IMAGE_SEL_RADIUS] fill];
-            [NSGraphicsContext restoreGraphicsState];
-        }
-    }
-    
-    if ([self isSelected] || [self highlightLevel] > 0) {
-        NSRect rect = [labelView frame];
-        CGFloat inset = floor(0.5 * (NSWidth(rect) - [[labelView cell] cellSize].width));
-        rect = NSInsetRect(rect, inset, 0.0);
-        if (NSIntersectsRect(dirtyRect, rect)) {
-            NSColor *color;
-            if ([[self window] isKeyWindow])
-                color = [NSColor alternateSelectedControlColor];
-            else if ([self backgroundStyle] == NSBackgroundStyleEmphasized)
-                color = [NSColor darkGrayColor];
-            else
-                color = [NSColor secondarySelectedControlColor];
-            if ([self isSelected] == NO)
-                color = [color colorWithAlphaComponent:fmin(1.0, 0.05 * [self highlightLevel])];
-            [NSGraphicsContext saveGraphicsState];
-            [color setFill];
-            [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:TEXT_SEL_RADIUS yRadius:TEXT_SEL_RADIUS] fill];
-            [NSGraphicsContext restoreGraphicsState];
-        }
-    }
+    return;
 }
 
 #pragma mark State change observation
@@ -365,10 +321,7 @@ static char SKThumbnailViewThumbnailObservationContext;
         } else if ([keyPath isEqualToString:LABEL_KEY]) {
             [labelView setObjectValue:[thumbnail label]];
             if ([self isSelected] || [self highlightLevel] > 0) {
-                if (@available(macOS 11.0, *))
-                    [self updateLabelHighlightMask:nil];
-                else
-                    [self setNeedsDisplayInRect:NSInsetRect([imageView frame], -SELECTION_MARGIN, -SELECTION_MARGIN)];
+                [self updateLabelHighlightMask:nil];
             }
         }
     } else {
@@ -379,10 +332,7 @@ static char SKThumbnailViewThumbnailObservationContext;
 - (void)handleKeyStateChangedNotification:(NSNotification *)note {
     if ([self isSelected] || [self highlightLevel] > 0) {
         [self updateBackgroundStyle];
-        if (@available(macOS 11.0, *))
-            [labelHighlightView setEmphasized:[[self window] isKeyWindow]];
-        else
-            [self setNeedsDisplayInRect:[labelView frame]];
+        [labelHighlightView setEmphasized:[[self window] isKeyWindow]];
     }
 }
 

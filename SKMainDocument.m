@@ -316,10 +316,7 @@ enum {
 
 - (void)changeExportType:(id)sender {
     NSString *type = [exportAccessoryController selectedFileType];
-    if (@available(macOS 11.0, *))
-        [[exportAccessoryController savePanel] setAllowedFileTypes:[NSArray arrayWithObjects:type, nil]];
-    else
-        [[exportAccessoryController savePanel] setAllowedFileTypes:[NSArray arrayWithObjects:[self fileNameExtensionForType:type saveOperation:NSSaveToOperation], nil]];
+    [[exportAccessoryController savePanel] setAllowedFileTypes:[NSArray arrayWithObjects:type, nil]];
     if ([self canAttachNotesForType:type] == NO) {
         [exportAccessoryController setHasExportOptions:NO];
     } else {

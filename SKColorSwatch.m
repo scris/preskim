@@ -289,9 +289,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
 - (void)drawFocusRingMask {
     NSRect rect = [self focusRingMaskBounds];
     if (NSIsEmptyRect(rect) == NO) {
-        CGFloat r = 2.0;
-        if (@available(macOS 11.0, *))
-            r = 3.0;
+        CGFloat r = 3.0;
         [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:r yRadius:r] fill];
     }
 }
@@ -365,9 +363,7 @@ typedef NS_ENUM(NSUInteger, SKColorSwatchDropLocation) {
                     draggedIndex = i;
                     
                     NSColor *color = [colors objectAtIndex:i];
-                    CGFloat r = 1.5;
-                    if (@available(macOS 11.0, *))
-                        r = 2.5;
+                    CGFloat r = 2.5;
                     
                     NSImage *image = [NSImage bitmapImageWithSize:NSMakeSize(12.0, 12.0) scale:[[self window] backingScaleFactor] drawingHandler:^(NSRect rect){
                         [color drawSwatchInRect:NSInsetRect(rect, 1.0, 1.0)];
@@ -959,9 +955,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     if (NSWidth(rect) < 5.0)
         return;
     rect = NSInsetRect(rect, 2.0, 2.0);
-    CGFloat r = 2.0;
-    if (@available(macOS 11.0, *))
-        r = 3.0;
+    CGFloat r = 3.0;
     BOOL disabled = NO;
     if (@available(macOS 10.14, *))
         disabled = [[self window] isMainWindow] == NO && [[self window] isKeyWindow] == NO && ([self isDescendantOf:[[self window] contentView]] == NO || [[self window] isKindOfClass:NSClassFromString(@"NSToolbarSnapshotWindow")]);
@@ -1004,7 +998,7 @@ static void (*original_activate)(id, SEL, BOOL) = NULL;
     }
     
     if (dropLocation != SKColorSwatchNoDrop) {
-        NSColor *dropColor = disabled ? [NSColor secondarySelectedControlColor] : [NSColor alternateSelectedControlColor];
+        NSColor *dropColor = disabled ? [NSColor unemphasizedSelectedContentBackgroundColor] : [NSColor selectedContentBackgroundColor];
         [dropColor setStroke];
         if (dropLocation == SKColorSwatchDropOn) {
             path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:r yRadius:r];

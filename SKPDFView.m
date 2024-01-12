@@ -612,8 +612,6 @@ enum {
 }
 
 - (NSColor *)backgroundColor {
-    if (@available(macOS 11.0, *)) {} else if (@available(macOS 10.15, *))
-        return [super backgroundColor] ?: [[self scrollView] backgroundColor];
     return [super backgroundColor];
 }
 

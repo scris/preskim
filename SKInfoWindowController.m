@@ -142,10 +142,8 @@ static SKInfoWindowController *sharedInstance = nil;
 - (void)windowDidLoad {
     [self setWindowFrameAutosaveName:SKInfoWindowFrameAutosaveName];
     
-    if (@available(macOS 11.0, *)) {
-        [summaryTableView setStyle:NSTableViewStylePlain];
-        [attributesTableView setStyle:NSTableViewStylePlain];
-    }
+    [summaryTableView setStyle:NSTableViewStylePlain];
+    [attributesTableView setStyle:NSTableViewStylePlain];
     
     NSArray *tables = [NSArray arrayWithObjects:summaryTableView, attributesTableView, nil];
     NSTableView *tv;

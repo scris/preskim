@@ -50,7 +50,7 @@
 
 @implementation SKNotesPreferences
 
-@synthesize textFontWell, anchoredFontWell, textLineWell, circleLineWell, squareLineWell, lineLineWell, inkLineWell;
+@synthesize textFontWell, anchoredFontWell, textLineWell, circleLineWell, squareLineWell, lineLineWell, inkLineWell, systemSymbol;
 
 - (NSString *)nibName {
     return @"NotesPreferences";
