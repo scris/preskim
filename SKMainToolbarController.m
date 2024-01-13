@@ -113,6 +113,7 @@
 #define SKDocumentToolbarSplitPDFItemIdentifier @"SKDocumentToolbarSplitPDFItemIdentifier"
 #define SKDocumentToolbarPrintItemIdentifier @"SKDocumentToolbarPrintItemIdentifier"
 #define SKDocumentToolbarCustomizeItemIdentifier @"SKDocumentToolbarCustomizeItemIdentifier"
+#define SKDocumentToolbarSearchItemIdentifier @"SKDocumentToolbarSearchItemIdentifier"
 
 static NSString *noteToolImageNames[] = {@"ToolbarTextNoteMenu", @"ToolbarAnchoredNoteMenu", @"ToolbarCircleNoteMenu", @"ToolbarSquareNoteMenu", @"ToolbarHighlightNoteMenu", @"ToolbarUnderlineNoteMenu", @"ToolbarStrikeOutNoteMenu", @"ToolbarLineNoteMenu", @"ToolbarInkNoteMenu"};
 
@@ -135,7 +136,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 @implementation SKMainToolbarController
 
-@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, autoScalesButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, splitPDFButton, toolModeButton, toolModesButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton;
+@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, autoScalesButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, splitPDFButton, toolModeButton, toolModesButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton, searchField;
 
 - (NSString *)nibName {
     return @"MainToolbar";
@@ -838,6 +839,15 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [item setView:customizeButton];
             [item setMenuFormRepresentation:menuItem];
             
+        } else if ([identifier isEqualToString:searchField.itemIdentifier]) {
+            
+            menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Search", @"Menu item title") action:@selector(runToolbarCustomizationPalette:) target:nil];
+            
+            item = searchField;
+            [item setLabels:NSLocalizedString(@"Search", @"Toolbar item label")];
+            [item setToolTip:NSLocalizedString(@"Search", @"Tool tip message")];
+            [item setMenuFormRepresentation:menuItem];
+            
         }
     }
     
@@ -866,7 +876,8 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     return @[SKDocumentToolbarContentsPaneItemIdentifier,
         SKDocumentToolbarZoomInOutItemIdentifier,
         SKDocumentToolbarToolModesIdentifier,
-        SKDocumentToolbarInfoItemIdentifier];
+        SKDocumentToolbarInfoItemIdentifier,
+        searchField.itemIdentifier];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
@@ -875,6 +886,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarPreviousItemIdentifier,
         SKDocumentToolbarPageNumberItemIdentifier,
         SKDocumentToolbarNextItemIdentifier,
+        searchField.itemIdentifier,
         SKDocumentToolbarBackForwardItemIdentifier,
         SKDocumentToolbarZoomInActualOutItemIdentifier,
         SKDocumentToolbarZoomInOutItemIdentifier,

@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22505"/>
+        <capability name="Search Toolbar Item" minToolsVersion="12.0" minSystemVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -45,6 +46,7 @@
                 <outlet property="rotateLeftRightButton" destination="6" id="106"/>
                 <outlet property="rotateRightButton" destination="27" id="104"/>
                 <outlet property="scaleField" destination="36" id="89"/>
+                <outlet property="searchField" destination="yVt-wi-rTK" id="3ZV-Kp-0m3"/>
                 <outlet property="shareButton" destination="M3M-Fg-kEy" id="7xt-AV-JTR"/>
                 <outlet property="singleTwoUpButton" destination="5" id="114"/>
                 <outlet property="splitPDFButton" destination="xRt-F1-0hX" id="1rD-gU-FEJ"/>
@@ -740,6 +742,18 @@
                 <binding destination="-2" name="contentObject" keyPath="mainController" id="191"/>
             </connections>
         </objectController>
+        <searchToolbarItem implicitItemIdentifier="CC6818A9-A31F-4B47-AF29-671AC1B005E7" label="Search" paletteLabel="Search" visibilityPriority="1001" id="yVt-wi-rTK" userLabel="ToolbarSearch">
+            <nil key="toolTip"/>
+            <searchField key="view" focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" id="yJC-Q2-BlF">
+                <rect key="frame" x="0.0" y="0.0" width="100" height="21"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" id="rpc-M4-4YQ">
+                    <font key="font" usesAppearanceFont="YES"/>
+                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                </searchFieldCell>
+            </searchField>
+        </searchToolbarItem>
     </objects>
     <resources>
         <image name="1.magnifyingglass" catalog="system" width="16" height="15"/>

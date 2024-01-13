@@ -93,6 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSStepper *pacerSpeedStepper;
     NSSegmentedControl *shareButton;
     SKShareMenuController *shareMenuController;
+    NSSearchToolbarItem *searchField;
     NSMutableDictionary<NSString *, NSToolbarItem *> *toolbarItems;
 }
 
@@ -101,6 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, strong) IBOutlet NSTextField *pageNumberField, *scaleField, *pacerSpeedField;
 @property (nonatomic, nullable, strong) IBOutlet SKColorSwatch *colorSwatch;
 @property (nonatomic, nullable, strong) IBOutlet NSStepper *pacerSpeedStepper;
+@property (nonatomic, nullable, strong) IBOutlet NSSearchToolbarItem *searchField;
 
 - (void)setupToolbar;
 
