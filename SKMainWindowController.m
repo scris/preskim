@@ -643,8 +643,8 @@ static char SKMainWindowContentLayoutObservationContext;
     if ([searchString length] > 0) {
         if ([self leftSidePaneIsOpen] == NO)
             [self toggleLeftSidePane:nil];
-        [leftSideController.searchField setStringValue:searchString];
-        [self performSelector:@selector(search:) withObject:leftSideController.searchField afterDelay:0.0];
+        [[toolbarController.searchField searchField] setStringValue:searchString];
+        [self performSelector:@selector(search:) withObject:[toolbarController.searchField searchField] afterDelay:0.0];
     }
 }
 
@@ -1201,8 +1201,8 @@ static char SKMainWindowContentLayoutObservationContext;
     if (mwcFlags.leftSidePaneState != newLeftSidePaneState) {
         mwcFlags.leftSidePaneState = newLeftSidePaneState;
         
-        if ([leftSideController.searchField stringValue] && [[leftSideController.searchField stringValue] isEqualToString:@""] == NO) {
-            [leftSideController.searchField setStringValue:@""];
+        if ([[toolbarController.searchField searchField] stringValue] && [[[toolbarController.searchField searchField] stringValue] isEqualToString:@""] == NO) {
+            [[toolbarController.searchField searchField] setStringValue:@""];
         }
         
         if (mwcFlags.leftSidePaneState == SKSidePaneStateThumbnail)
@@ -1667,7 +1667,7 @@ static char SKMainWindowContentLayoutObservationContext;
 #pragma mark Searching
 
 - (NSString *)searchString {
-    return [leftSideController.searchField stringValue];
+    return [[toolbarController.searchField searchField] stringValue];
 }
 
 - (BOOL)findString:(NSString *)string forward:(BOOL)forward {

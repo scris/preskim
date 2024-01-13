@@ -98,12 +98,6 @@
     [item setTag:NSSearchFieldRecentsTitleMenuItemTag];
     [menu addItem:item];
     [menu addItemWithTitle:NSLocalizedString(@"Clear Recent Searches", @"Menu item title") action:NULL target:nil tag:NSSearchFieldClearRecentsMenuItemTag];
-    [searchField setRecentsAutosaveName:SKRecentsAutosaveName];
-    [[searchField cell] setSearchMenuTemplate:menu];
-    [[searchField cell] setPlaceholderString:NSLocalizedString(@"Search", @"placeholder")];
-    
-    [searchField setAction:@selector(search:)];
-    [searchField setTarget:mainController];
     
     [tocOutlineView setStronglyReferencesItems:YES];
     

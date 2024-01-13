@@ -61,6 +61,9 @@
 #import "PDFAnnotation_SKExtensions.h"
 #import "PDFDocument_SKExtensions.h"
 #import "SKShareMenuController.h"
+#import "SKLeftSideViewController.h"
+
+#define SKRecentsAutosaveName @"SKRecentPDFSearches"
 
 #define SKDocumentToolbarIdentifier @"SKDocumentToolbar"
 
@@ -842,6 +845,12 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         } else if ([identifier isEqualToString:searchField.itemIdentifier]) {
             
             menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Search", @"Menu item title") action:@selector(runToolbarCustomizationPalette:) target:nil];
+            [[searchField searchField] setRecentsAutosaveName:SKRecentsAutosaveName];
+            [[searchField searchField] setSearchMenuTemplate:menu];
+            [[searchField searchField] setPlaceholderString:NSLocalizedString(@"Search", @"placeholder")];
+            
+            [searchField setAction:@selector(search:)];
+            [searchField setTarget:mainController];
             
             item = searchField;
             [item setLabels:NSLocalizedString(@"Search", @"Toolbar item label")];

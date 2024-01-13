@@ -774,13 +774,11 @@ static NSArray *allMainDocumentPDFViews() {
         [self hideOverviewAnimating:YES completionHandler:^{ [self searchPDF:sender]; }];
         return;
     }
-    if ([self leftSidePaneIsOpen] == NO)
-        [self toggleLeftSidePane:sender];
     // workaround for an AppKit bug: when selecting immediately before the animation, the search fields does not display its text
     if ([splitView isAnimating])
-        [splitView enqueueOperation:^{ [leftSideController.searchField selectText:self]; }];
+        [splitView enqueueOperation:^{ [[toolbarController.searchField searchField] selectText:self]; }];
     else
-        [leftSideController.searchField selectText:self];
+        [[toolbarController.searchField searchField] selectText:self];
 }
 
 - (IBAction)filterNotes:(id)sender {
@@ -801,6 +799,9 @@ static NSArray *allMainDocumentPDFViews() {
     
     PDFDocument *pdfDoc = [pdfView document];
     NSString *searchString = [sender stringValue];
+    
+    if ([self leftSidePaneIsOpen] == NO)
+        [self toggleLeftSidePane:sender];
     
     // cancel any previous find to remove those results, or else they stay around
     if ([pdfDoc isFinding])
@@ -967,15 +968,15 @@ static NSArray *allMainDocumentPDFViews() {
 
 - (IBAction)toggleCaseInsensitiveSearch:(id)sender {
     mwcFlags.caseInsensitiveSearch = (0 == mwcFlags.caseInsensitiveSearch);
-    if ([[leftSideController.searchField stringValue] length])
-        [self search:leftSideController.searchField];
+    if ([[[toolbarController.searchField searchField] stringValue] length])
+        [self search:[toolbarController.searchField searchField]];
     [[NSUserDefaults standardUserDefaults] setBool:mwcFlags.caseInsensitiveSearch forKey:SKCaseInsensitiveSearchKey];
 }
 
 - (IBAction)toggleWholeWordSearch:(id)sender {
     mwcFlags.wholeWordSearch = (0 == mwcFlags.wholeWordSearch);
-    if ([[leftSideController.searchField stringValue] length])
-        [self search:leftSideController.searchField];
+    if ([[[toolbarController.searchField searchField] stringValue] length])
+        [self search:[toolbarController.searchField searchField]];
     [[NSUserDefaults standardUserDefaults] setBool:mwcFlags.wholeWordSearch forKey:SKWholeWordSearchKey];
 }
 
