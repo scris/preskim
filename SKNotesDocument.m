@@ -925,9 +925,7 @@
         SKNotesDocumentOpenPDFToolbarItemIdentifier, 
         NSToolbarPrintItemIdentifier, 
         NSToolbarFlexibleSpaceItemIdentifier, 
-		NSToolbarSpaceItemIdentifier, 
-		NSToolbarSeparatorItemIdentifier, 
-		NSToolbarCustomizeToolbarItemIdentifier];
+		NSToolbarSpaceItemIdentifier];
 }
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)toolbarItem {

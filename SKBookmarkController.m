@@ -1172,9 +1172,7 @@ static void addBookmarkURLsToArray(NSArray *items, NSMutableArray *array) {
         SKBookmarksNewSeparatorToolbarItemIdentifier, 
 		SKBookmarksDeleteToolbarItemIdentifier, 
         NSToolbarFlexibleSpaceItemIdentifier, 
-		NSToolbarSpaceItemIdentifier, 
-		NSToolbarSeparatorItemIdentifier, 
-		NSToolbarCustomizeToolbarItemIdentifier];
+		NSToolbarSpaceItemIdentifier];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {

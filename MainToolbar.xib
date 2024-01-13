@@ -258,12 +258,12 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="17">
-                    <rect key="frame" x="20" y="129" width="29" height="25"/>
+                    <rect key="frame" x="18" y="129" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="62">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarInfo" imageScaling="none" width="27"/>
+                            <segment image="info.circle" catalog="system" imageScaling="none" width="27"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -271,12 +271,12 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="18">
-                    <rect key="frame" x="131" y="185" width="29" height="25"/>
+                    <rect key="frame" x="129" y="185" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="61">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarRightPane" imageScaling="none" width="27"/>
+                            <segment image="sidebar.right" catalog="system" imageScaling="none" width="27"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -284,12 +284,12 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="19">
-                    <rect key="frame" x="94" y="185" width="29" height="25"/>
+                    <rect key="frame" x="92" y="185" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="60">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarLeftPane" imageScaling="none" width="27"/>
+                            <segment image="sidebar.left" catalog="system" imageScaling="none" width="27"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -444,12 +444,12 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="29">
-                    <rect key="frame" x="178" y="241" width="29" height="25"/>
+                    <rect key="frame" x="176" y="241" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="50">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarZoomActual" imageScaling="none" width="27"/>
+                            <segment image="1.magnifyingglass" catalog="system" imageScaling="none" width="27"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -471,14 +471,14 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="31">
-                    <rect key="frame" x="85" y="241" width="85" height="25"/>
+                    <rect key="frame" x="79" y="241" width="97" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="48">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarZoomOut" imageScaling="none" width="27" tag="-1"/>
-                            <segment image="ToolbarZoomActual" imageScaling="none" width="27"/>
-                            <segment image="ToolbarZoomIn" imageScaling="none" width="27" tag="1"/>
+                            <segment image="minus.magnifyingglass" catalog="system" imageScaling="none" width="27" tag="-1"/>
+                            <segment image="1.magnifyingglass" catalog="system" imageScaling="none" width="27"/>
+                            <segment image="plus.magnifyingglass" catalog="system" imageScaling="none" width="27" tag="1"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -486,13 +486,13 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="32">
-                    <rect key="frame" x="20" y="241" width="57" height="25"/>
+                    <rect key="frame" x="16" y="241" width="65" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="47">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarZoomOut" imageScaling="none" width="27" tag="-1"/>
-                            <segment image="ToolbarZoomIn" imageScaling="none" width="27" tag="1"/>
+                            <segment image="minus.magnifyingglass" catalog="system" imageScaling="none" width="27" tag="-1"/>
+                            <segment image="plus.magnifyingglass" catalog="system" imageScaling="none" width="27" tag="1"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -650,7 +650,7 @@
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="selectAny" id="oOo-SM-RAR">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarToolModes" imageScaling="none" width="27"/>
+                            <segment image="slider.vertical.3" catalog="system" imageScaling="none" width="27"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -742,6 +742,7 @@
         </objectController>
     </objects>
     <resources>
+        <image name="1.magnifyingglass" catalog="system" width="16" height="15"/>
         <image name="ToolbarAddAnchoredNote" width="128" height="128"/>
         <image name="ToolbarAddCircleNote" width="128" height="128"/>
         <image name="ToolbarAddCircleNoteMenu" width="128" height="128"/>
@@ -767,9 +768,7 @@
         <image name="ToolbarForward" width="128" height="128"/>
         <image name="ToolbarFullScreen" width="128" height="128"/>
         <image name="ToolbarHorizontal" width="128" height="128"/>
-        <image name="ToolbarInfo" width="27" height="17"/>
         <image name="ToolbarLastPage" width="128" height="128"/>
-        <image name="ToolbarLeftPane" width="128" height="128"/>
         <image name="ToolbarLines" width="27" height="20"/>
         <image name="ToolbarMagnifyTool" width="128" height="128"/>
         <image name="ToolbarMediaBox" width="128" height="128"/>
@@ -781,7 +780,6 @@
         <image name="ToolbarPresentation" width="128" height="128"/>
         <image name="ToolbarPrint" width="27" height="20"/>
         <image name="ToolbarRTL" width="128" height="128"/>
-        <image name="ToolbarRightPane" width="128" height="128"/>
         <image name="ToolbarRotateLeft" width="128" height="128"/>
         <image name="ToolbarRotateRight" width="128" height="128"/>
         <image name="ToolbarSelectTool" width="128" height="128"/>
@@ -790,13 +788,15 @@
         <image name="ToolbarSinglePageContinuous" width="128" height="128"/>
         <image name="ToolbarSplitPDF" width="128" height="128"/>
         <image name="ToolbarTextTool" width="128" height="128"/>
-        <image name="ToolbarToolModes" width="128" height="128"/>
         <image name="ToolbarTwoUp" width="128" height="128"/>
         <image name="ToolbarTwoUpContinuous" width="128" height="128"/>
-        <image name="ToolbarZoomActual" width="128" height="128"/>
-        <image name="ToolbarZoomIn" width="128" height="128"/>
-        <image name="ToolbarZoomOut" width="128" height="128"/>
         <image name="ToolbarZoomToFit" width="128" height="128"/>
         <image name="ToolbarZoomToSelection" width="128" height="128"/>
+        <image name="info.circle" catalog="system" width="15" height="15"/>
+        <image name="minus.magnifyingglass" catalog="system" width="16" height="15"/>
+        <image name="plus.magnifyingglass" catalog="system" width="16" height="15"/>
+        <image name="sidebar.left" catalog="system" width="18" height="14"/>
+        <image name="sidebar.right" catalog="system" width="18" height="14"/>
+        <image name="slider.vertical.3" catalog="system" width="15" height="14"/>
     </resources>
 </document>
