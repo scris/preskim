@@ -60,17 +60,17 @@ static NSColor *inactiveSelectionHighlightInteriorColor = nil;
         NSColorSpace *colorSpace = [NSColorSpace sRGBColorSpace];
         NSAppearance *appearance = [NSAppearance currentAppearance];
         [NSAppearance setCurrentAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
-        activeOut = [[NSColor alternateSelectedControlColor] colorUsingColorSpace:colorSpace];
+        activeOut = [[NSColor selectedContentBackgroundColor] colorUsingColorSpace:colorSpace];
         inactiveOut = [[NSColor grayColor] colorUsingColorSpace:colorSpace];
-        activeIn = [[[[NSColor alternateSelectedControlColor] colorUsingColorSpace:colorSpace] highlightWithLevel:0.66667] colorWithAlphaComponent:0.8];
-        inactiveIn = [[[NSColor secondarySelectedControlColor] colorUsingColorSpace:colorSpace] colorWithAlphaComponent:0.8];
+        activeIn = [[[[NSColor selectedContentBackgroundColor] colorUsingColorSpace:colorSpace] highlightWithLevel:0.66667] colorWithAlphaComponent:0.8];
+        inactiveIn = [[[NSColor unemphasizedSelectedContentBackgroundColor] colorUsingColorSpace:colorSpace] colorWithAlphaComponent:0.8];
         [NSAppearance setCurrentAppearance:appearance];
     } else {
         NSColorSpace *colorSpace = [NSColorSpace genericRGBColorSpace];
-        activeOut = [[NSColor alternateSelectedControlColor] colorUsingColorSpace:colorSpace];
+        activeOut = [[NSColor selectedContentBackgroundColor] colorUsingColorSpace:colorSpace];
         inactiveOut = [[NSColor grayColor] colorUsingColorSpace:colorSpace];
-        activeIn = [[[[NSColor alternateSelectedControlColor] colorUsingColorSpace:colorSpace] highlightWithLevel:0.66667] colorWithAlphaComponent:0.8];
-        inactiveIn = [[[NSColor secondarySelectedControlColor] colorUsingColorSpace:colorSpace] colorWithAlphaComponent:0.8];
+        activeIn = [[[[NSColor selectedContentBackgroundColor] colorUsingColorSpace:colorSpace] highlightWithLevel:0.66667] colorWithAlphaComponent:0.8];
+        inactiveIn = [[[NSColor unemphasizedSelectedContentBackgroundColor] colorUsingColorSpace:colorSpace] colorWithAlphaComponent:0.8];
     }
     @synchronized (self) {
         activeSelectionHighlightColor = activeOut;

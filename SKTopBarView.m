@@ -134,12 +134,8 @@
             }
             break;
         case SKTopBarStylePresentation:
-            if (@available(macOS 10.14, *)) {
-                [blurView setMaterial:NSVisualEffectMaterialSidebar];
-                [blurView setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
-            } else {
-                [backgroundView setBackgroundColor:[NSColor windowBackgroundColor]];
-            }
+            [blurView setMaterial:NSVisualEffectMaterialSidebar];
+            [blurView setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
             break;
     }
     [backgroundView setSeparatorColor:sepColor];

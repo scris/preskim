@@ -207,7 +207,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
                 
                 if (attrString) {
                     CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, *(CGSize *)&_paperSize, FALSE, NULL);
-                    NSGraphicsContext *nsContext = [NSGraphicsContext graphicsContextWithGraphicsPort:ctxt flipped:YES];
+                    NSGraphicsContext *nsContext = [NSGraphicsContext graphicsContextWithCGContext:ctxt flipped:YES];
                     [NSGraphicsContext saveGraphicsState];
                     [NSGraphicsContext setCurrentContext:nsContext];
                     
@@ -234,7 +234,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
                 CGFloat side = MIN(maximumSize.width, maximumSize.height);
                 NSRect rect = NSMakeRect(0.0, 0.0, side, side);
                 CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, rect.size, FALSE, NULL);
-                NSGraphicsContext *nsContext = [NSGraphicsContext graphicsContextWithGraphicsPort:ctxt flipped:NO];
+                NSGraphicsContext *nsContext = [NSGraphicsContext graphicsContextWithCGContext:ctxt flipped:NO];
                 [NSGraphicsContext saveGraphicsState];
                 [NSGraphicsContext setCurrentContext:nsContext];
                 

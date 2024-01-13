@@ -77,27 +77,20 @@ static CGFloat WINDOW_OFFSET = 8.0;
 		[self setHasShadow:YES];
         [self setDisplaysWhenScreenProfileChanges:YES];
         [self setReleasedWhenClosed:NO];
-        if (@available(macOS 10.14, *))
-            [self setAlphaValue:1.0];
-        else
-            [self setAlphaValue:0.95];
+        [self setAlphaValue:1.0];
         [self setAnimationBehavior:NSWindowAnimationBehaviorNone];
         
         NSView *backgroundView = [[SKSideWindowContentView alloc] init];
         
-        if (@available(macOS 10.14, *)) {
-            NSVisualEffectView *contentView = [[NSVisualEffectView alloc] init];
-            [contentView setMaterial:NSVisualEffectMaterialSidebar];
-            [self setContentView:contentView];
-            [backgroundView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-            [backgroundView setFrame:[contentView bounds]];
-            [contentView addSubview:backgroundView];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentViewFrameChanged:) name:NSViewFrameDidChangeNotification object:contentView];
-            [self contentViewFrameChanged:nil];
-            [self setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
-        } else {
-            [self setContentView:backgroundView];
-        }
+        NSVisualEffectView *contentView = [[NSVisualEffectView alloc] init];
+        [contentView setMaterial:NSVisualEffectMaterialSidebar];
+        [self setContentView:contentView];
+        [backgroundView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+        [backgroundView setFrame:[contentView bounds]];
+        [contentView addSubview:backgroundView];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentViewFrameChanged:) name:NSViewFrameDidChangeNotification object:contentView];
+        [self contentViewFrameChanged:nil];
+        [self setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         
         NSRect contentRect = SKShrinkRect(NSInsetRect([backgroundView bounds], 0.0, CONTENT_INSET), CONTENT_INSET, NSMaxXEdge);
         mainContentView = [[NSView alloc] initWithFrame:contentRect];
@@ -230,7 +223,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
     NSPoint startPoint, endPoint;
     NSBezierPath *path = [NSBezierPath bezierPathWithRect:rect];
     NSColor *backgroundColor = [NSColor windowBackgroundColor];
-    CGFloat gray = [[[NSColor secondarySelectedControlColor] colorUsingColorSpaceName:NSDeviceWhiteColorSpace] whiteComponent];
+    CGFloat gray = [[[NSColor unemphasizedSelectedContentBackgroundColor] colorUsingColorSpaceName:NSDeviceWhiteColorSpace] whiteComponent];
     NSColor *topShadeColor = [NSColor colorWithDeviceWhite:1.0 alpha:0.5];
     NSColor *bottomShadeColor = [NSColor colorWithDeviceWhite:0.0 alpha:0.5];
     NSColor *handleColor = [NSColor colorWithDeviceWhite:fmax(0.0, gray - 0.3) alpha:1.0];
@@ -250,7 +243,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
     rect.origin.x -= offset.width;
     path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rect, -2.0, 0.0) xRadius:CORNER_RADIUS + 2.0 yRadius:CORNER_RADIUS];
     [path appendBezierPathWithRect:NSInsetRect(rect, -4.0 , -2.0)];
-    [path setWindingRule:NSEvenOddWindingRule];
+    [path setWindingRule:NSWindingRuleEvenOdd];
     
     [NSGraphicsContext saveGraphicsState];
     [[NSBezierPath bezierPathWithRect:topRect] addClip];

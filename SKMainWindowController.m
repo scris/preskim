@@ -1555,17 +1555,12 @@ static char SKMainWindowContentLayoutObservationContext;
     [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
     [overviewView setAllowsMultipleSelection:isPresentation == NO && [[self pdfDocument] allowsPrinting]];
     
-    if (@available(macOS 10.14, *)) {
-        if (isPresentation) {
-            [overviewContentView setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]];
-            [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialUnderPageBackground];
-        } else {
-            [overviewContentView setAppearance:nil];
-            [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialSidebar];
-        }
+    if (isPresentation) {
+        [overviewContentView setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]];
+        [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialUnderPageBackground];
     } else {
-        [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:isPresentation ? NSVisualEffectMaterialDark : NSVisualEffectMaterialSidebar];
-        [[overviewView visibleItems] setValue:[NSNumber numberWithInteger:isPresentation ? NSBackgroundStyleEmphasized : NSBackgroundStyleNormal] forKey:@"backgroundStyle"];
+        [overviewContentView setAppearance:nil];
+        [(NSVisualEffectView *)[overviewView backgroundView] setMaterial:NSVisualEffectMaterialSidebar];
     }
     [overviewView setSingleClickAction:isPresentation ? @selector(hideOverview:) : NULL];
     

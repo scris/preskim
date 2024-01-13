@@ -50,6 +50,7 @@
                 <outlet property="splitPDFButton" destination="xRt-F1-0hX" id="1rD-gU-FEJ"/>
                 <outlet property="textNoteButton" destination="10" id="117"/>
                 <outlet property="toolModeButton" destination="37" id="97"/>
+                <outlet property="toolModesButton" destination="UhG-mv-wPq" id="5CQ-hm-pKt"/>
                 <outlet property="view" destination="2" id="81"/>
                 <outlet property="zoomActualButton" destination="29" id="102"/>
                 <outlet property="zoomFitButton" destination="26" id="103"/>
@@ -378,7 +379,7 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="24">
-                    <rect key="frame" x="20" y="185" width="29" height="25"/>
+                    <rect key="frame" x="18" y="185" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="55">
                         <font key="font" metaFont="system"/>
@@ -643,6 +644,19 @@
                         <action selector="changeDisplaysRTL:" target="-2" id="FvW-TY-1f5"/>
                     </connections>
                 </segmentedControl>
+                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UhG-mv-wPq" userLabel="ToolbarToolModes">
+                    <rect key="frame" x="176" y="161" width="33" height="23"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="selectAny" id="oOo-SM-RAR">
+                        <font key="font" metaFont="system"/>
+                        <segments>
+                            <segment image="ToolbarToolModes" imageScaling="none" width="27"/>
+                        </segments>
+                    </segmentedCell>
+                    <connections>
+                        <action selector="toggleToolModesPane:" target="-2" id="JE4-94-erd"/>
+                    </connections>
+                </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RKf-GA-hdu">
                     <rect key="frame" x="289" y="242" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
@@ -776,6 +790,7 @@
         <image name="ToolbarSinglePageContinuous" width="128" height="128"/>
         <image name="ToolbarSplitPDF" width="128" height="128"/>
         <image name="ToolbarTextTool" width="128" height="128"/>
+        <image name="ToolbarToolModes" width="128" height="128"/>
         <image name="ToolbarTwoUp" width="128" height="128"/>
         <image name="ToolbarTwoUpContinuous" width="128" height="128"/>
         <image name="ToolbarZoomActual" width="128" height="128"/>

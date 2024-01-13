@@ -117,6 +117,7 @@ NSString *SKImageNameToolbarMoveTool = @"ToolbarMoveTool";
 NSString *SKImageNameToolbarMagnifyTool = @"ToolbarMagnifyTool";
 NSString *SKImageNameToolbarSelectTool = @"ToolbarSelectTool";
 NSString *SKImageNameToolbarSnapshotTool = @"ToolbarSnapshotTool";
+NSString *SKImageNameToolbarToolModes = @"ToolbarToolModes";
 NSString *SKImageNameToolbarShare = @"ToolbarShare";
 NSString *SKImageNameToolbarPlay = @"ToolbarPlay";
 NSString *SKImageNameToolbarPause = @"ToolbarPause";
@@ -340,7 +341,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
 
             NSBezierPath *mask = [NSBezierPath bezierPathWithRect:rect];
             [mask appendBezierPath:path];
-            [mask setWindingRule:NSEvenOddWindingRule];
+            [mask setWindingRule:NSWindingRuleEvenOdd];
             
             [path addClip];
             [NSShadow setShadowWithWhite:0 alpha:0.4 blurRadius:10.0 yOffset:0.0];
@@ -777,6 +778,18 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path stroke];
     );
     
+    MAKE_IMAGE(SKImageNameToolbarToolModes, YES, 27.0, 19.0,
+        NSFont *font = [NSFont fontWithName:@"Helvetica" size:12.0] ?: [NSFont systemFontOfSize:12.0];
+        NSGlyph glyph = [font glyphWithName:@"T"];
+        [[NSColor blackColor] set];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(7.5, 3.5, 12.0, 12.0)];
+        [path stroke];
+        path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(13.5 - NSMidX([font boundingRectForGlyph:glyph]), 5.0)];
+        [path appendBezierPathWithCGGlyph:glyph inFont:font];
+        [path fill];
+    );
+    
     MAKE_IMAGE(SKImageNameToolbarTextTool, YES, 27.0, 19.0,
         NSFont *font = [NSFont fontWithName:@"Helvetica" size:12.0] ?: [NSFont systemFontOfSize:12.0];
         NSGlyph glyph = [font glyphWithName:@"A"];
@@ -785,7 +798,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path stroke];
         path = [NSBezierPath bezierPath];
         [path moveToPoint:NSMakePoint(13.5 - NSMidX([font boundingRectForGlyph:glyph]), 5.0)];
-        [path appendBezierPathWithGlyph:glyph inFont:font];
+        [path appendBezierPathWithCGGlyph:glyph inFont:font];
         [path fill];
     );
     

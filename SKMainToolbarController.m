@@ -90,6 +90,7 @@
 #define SKDocumentToolbarNewNoteItemIdentifier @"SKDocumentToolbarNewNoteItemIdentifier"
 #define SKDocumentToolbarInfoItemIdentifier @"SKDocumentToolbarInfoItemIdentifier"
 #define SKDocumentToolbarToolModeItemIdentifier @"SKDocumentToolbarToolModeItemIdentifier"
+#define SKDocumentToolbarToolModesIdentifier @"SKDocumentToolbarToolModesIdentifier"
 #define SKDocumentToolbarSingleTwoUpItemIdentifier @"SKDocumentToolbarSingleTwoUpItemIdentifier"
 #define SKDocumentToolbarContinuousItemIdentifier @"SKDocumentToolbarContinuousItemIdentifier"
 #define SKDocumentToolbarDisplayModeItemIdentifier @"SKDocumentToolbarDisplayModeItemIdentifier"
@@ -134,7 +135,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 @implementation SKMainToolbarController
 
-@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, autoScalesButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, splitPDFButton, toolModeButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton;
+@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, autoScalesButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, splitPDFButton, toolModeButton, toolModesButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton;
 
 - (NSString *)nibName {
     return @"MainToolbar";
@@ -551,6 +552,15 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [item setView:toolModeButton];
             [item setMenuFormRepresentation:menuItem];
             
+        } else if ([identifier isEqualToString:SKDocumentToolbarToolModesIdentifier]) {
+            
+            menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Tool Mode", @"Menu item title") action:@selector(toggleToolModesPane:) target:mainController];
+            
+            [item setLabels:NSLocalizedString(@"Tool Mode", @"Toolbar item label")];
+            [item setToolTip:NSLocalizedString(@"Tool Mode", @"Tool tip message")];
+            [item setView:toolModesButton];
+            [item setMenuFormRepresentation:menuItem];
+            
         } else if ([identifier isEqualToString:SKDocumentToolbarSingleTwoUpItemIdentifier]) {
             
             menuItem = [NSMenuItem menuItemWithSubmenuAndTitle:NSLocalizedString(@"Single/Two Pages", @"Toolbar item label")];
@@ -854,12 +864,8 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
     return @[SKDocumentToolbarContentsPaneItemIdentifier,
-        SKDocumentToolbarPreviousNextItemIdentifier,
-        SKDocumentToolbarPageNumberItemIdentifier,
-        SKDocumentToolbarBackForwardItemIdentifier, 
-        SKDocumentToolbarZoomInActualOutItemIdentifier, 
-        SKDocumentToolbarToolModeItemIdentifier, 
-        SKDocumentToolbarNewNoteItemIdentifier,
+        SKDocumentToolbarZoomInOutItemIdentifier,
+        SKDocumentToolbarToolModesIdentifier,
         SKDocumentToolbarInfoItemIdentifier,
         SKDocumentToolbarNotesPaneItemIdentifier];
 }
@@ -901,6 +907,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarNewMarkupItemIdentifier,
         SKDocumentToolbarNewLineItemIdentifier,
         SKDocumentToolbarToolModeItemIdentifier,
+        SKDocumentToolbarToolModesIdentifier,
         SKDocumentToolbarColorSwatchItemIdentifier,
         SKDocumentToolbarShareItemIdentifier,
         SKDocumentToolbarPacerItemIdentifier,

@@ -234,7 +234,7 @@ static BOOL isSignificantPixelFromBitMapData(SKBitmapData *bitmap, NSInteger x, 
     NSBitmapImageRep *bmpImageRep = [[self alloc] initWithBitmapDataPlanes:NULL
         pixelsWide:(NSInteger)(size.width * scale) pixelsHigh:(NSInteger)(size.height * scale)
         bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO
-        colorSpaceName:NSCalibratedRGBColorSpace bitmapFormat:NSAlphaFirstBitmapFormat
+                                                            colorSpaceName:NSCalibratedRGBColorSpace bitmapFormat:NSBitmapFormatAlphaFirst
         bytesPerRow:0 bitsPerPixel:0];
     bmpImageRep = [bmpImageRep bitmapImageRepByRetaggingWithColorSpace:[NSColorSpace sRGBColorSpace]];
     [bmpImageRep setSize:size];

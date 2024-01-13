@@ -169,7 +169,7 @@ static NSArray *SKNArrayFromColor(SKNColor *color, NSMapTable *colors) {
             array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:r], [NSNumber numberWithDouble:g], [NSNumber numberWithDouble:b], [NSNumber numberWithDouble:a], nil];
         }
 #else
-        if ([[color colorSpace] colorSpaceModel] == NSGrayColorSpaceModel) {
+        if ([[color colorSpace] colorSpaceModel] == NSColorSpaceModelGray) {
             CGFloat w = 0.0, a = 1.0;
             [[color colorUsingColorSpace:[NSColorSpace genericGamma22GrayColorSpace]] getWhite:&w alpha:&a];
             array = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:w], [NSNumber numberWithDouble:a], nil];
