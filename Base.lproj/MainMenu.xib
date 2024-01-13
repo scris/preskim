@@ -1012,6 +1012,14 @@
                 <menuItem title="Tools" id="239">
                     <menu key="submenu" title="Tools" id="240">
                         <items>
+                            <menuItem title="Tool Modes" keyEquivalent="ˇ" id="iIK-ao-Yu3">
+                                <connections>
+                                    <action selector="toggleToolModesPane:" target="-1" id="qm0-mO-pOg"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="DbG-Zn-ec8">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
                             <menuItem title="Get Info" keyEquivalent="i" id="296">
                                 <connections>
                                     <action selector="getInfo:" target="-1" id="298"/>

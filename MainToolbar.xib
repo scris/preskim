@@ -219,12 +219,12 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="14">
-                    <rect key="frame" x="57" y="129" width="29" height="25"/>
+                    <rect key="frame" x="55" y="129" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="65">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarColors" imageScaling="none" width="27"/>
+                            <segment image="eyedropper" catalog="system" imageScaling="none" width="27"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -245,12 +245,12 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="16">
-                    <rect key="frame" x="206" y="129" width="29" height="25"/>
+                    <rect key="frame" x="204" y="129" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="63">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarCustomize" imageScaling="none" width="27"/>
+                            <segment image="wrench.and.screwdriver" catalog="system" imageScaling="none" width="27"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -544,11 +544,11 @@
                     </connections>
                 </customView>
                 <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="36">
-                    <rect key="frame" x="143" y="275" width="60" height="21"/>
+                    <rect key="frame" x="143" y="275" width="60" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="60" id="4RV-ZC-n5Z"/>
                     </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" drawsBackground="YES" id="43">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" bezelStyle="round" id="43">
                         <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="percent" usesGroupingSeparator="NO" lenient="YES" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" decimalSeparator="." groupingSeparator="," id="44">
                             <integer key="multiplier" value="100"/>
                             <real key="minimum" value="0.10000000000000001"/>
@@ -580,11 +580,11 @@
                     </connections>
                 </segmentedControl>
                 <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="38">
-                    <rect key="frame" x="85" y="275" width="50" height="21"/>
+                    <rect key="frame" x="85" y="275" width="50" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="50" id="dgE-6k-Kfl"/>
                     </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" drawsBackground="YES" id="41">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" bezelStyle="round" id="41">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -613,7 +613,7 @@
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="vfR-5v-ow7">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarShare" imageScaling="none" width="27"/>
+                            <segment image="square.and.arrow.up" catalog="system" imageScaling="none" width="27"/>
                         </segments>
                     </segmentedCell>
                 </segmentedControl>
@@ -684,11 +684,11 @@
                     </connections>
                 </segmentedControl>
                 <textField focusRingType="none" verticalHuggingPriority="750" preferredMaxLayoutWidth="36" translatesAutoresizingMaskIntoConstraints="NO" id="jHc-Bm-dWJ">
-                    <rect key="frame" x="190" y="19" width="30" height="21"/>
+                    <rect key="frame" x="190" y="19" width="30" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="30" id="vHA-D8-mGk"/>
                     </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" drawsBackground="YES" id="9cD-jS-bcm">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" bezelStyle="round" id="9cD-jS-bcm">
                         <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="cUi-co-kf3">
                             <real key="minimum" value="1"/>
                         </numberFormatter>
@@ -759,10 +759,8 @@
         <image name="ToolbarAutoScales" width="128" height="128"/>
         <image name="ToolbarBack" width="128" height="128"/>
         <image name="ToolbarBookMode" width="128" height="128"/>
-        <image name="ToolbarColors" width="27" height="20"/>
         <image name="ToolbarCrop" width="128" height="128"/>
         <image name="ToolbarCropBox" width="128" height="128"/>
-        <image name="ToolbarCustomize" width="27" height="19"/>
         <image name="ToolbarFirstPage" width="128" height="128"/>
         <image name="ToolbarFonts" width="27" height="20"/>
         <image name="ToolbarForward" width="128" height="128"/>
@@ -783,7 +781,6 @@
         <image name="ToolbarRotateLeft" width="128" height="128"/>
         <image name="ToolbarRotateRight" width="128" height="128"/>
         <image name="ToolbarSelectTool" width="128" height="128"/>
-        <image name="ToolbarShare" width="128" height="128"/>
         <image name="ToolbarSinglePage" width="128" height="128"/>
         <image name="ToolbarSinglePageContinuous" width="128" height="128"/>
         <image name="ToolbarSplitPDF" width="128" height="128"/>
@@ -792,11 +789,14 @@
         <image name="ToolbarTwoUpContinuous" width="128" height="128"/>
         <image name="ToolbarZoomToFit" width="128" height="128"/>
         <image name="ToolbarZoomToSelection" width="128" height="128"/>
+        <image name="eyedropper" catalog="system" width="17" height="16"/>
         <image name="info.circle" catalog="system" width="15" height="15"/>
         <image name="minus.magnifyingglass" catalog="system" width="16" height="15"/>
         <image name="plus.magnifyingglass" catalog="system" width="16" height="15"/>
         <image name="sidebar.left" catalog="system" width="18" height="14"/>
         <image name="sidebar.right" catalog="system" width="18" height="14"/>
         <image name="slider.vertical.3" catalog="system" width="15" height="14"/>
+        <image name="square.and.arrow.up" catalog="system" width="15" height="18"/>
+        <image name="wrench.and.screwdriver" catalog="system" width="19" height="18"/>
     </resources>
 </document>

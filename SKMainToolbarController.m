@@ -1195,6 +1195,10 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     [mainController.pdfView setToolMode:newToolMode];
 }
 
+- (IBAction)toggleToolModesPane:(id)sender {
+    [mainController toggleToolModesPane:sender];
+}
+
 - (IBAction)selectColor:(id)sender {
     PDFAnnotation *annotation = [mainController.pdfView currentAnnotation];
     NSColor *newColor = [sender respondsToSelector:@selector(color)] ? [sender color] : [sender respondsToSelector:@selector(representedObject)] ? [sender representedObject] : nil;

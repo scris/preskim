@@ -750,7 +750,7 @@ static NSArray *allMainDocumentPDFViews() {
     [pdfView setToolMode:[sender tag]];
 }
 
-- (IBAction)toggleToolModesPane:(nullable id)sender {
+- (IBAction)toggleToolModesPane:(id)sender {
     NSLog(@"Toggle Tool Modes Pane");
 }
 
