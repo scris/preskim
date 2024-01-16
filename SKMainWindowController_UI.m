@@ -632,14 +632,7 @@
     }
 }
 
-- (void)tableView:(NSTableView *)tv typeSelectHelperUpdateSearchString:(NSString *)searchString {
-    if ([tv isEqual:leftSideController.thumbnailTableView]) {
-        if (searchString)
-            [[statusBar leftField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Go to page: %@", @"Status message"), searchString]];
-        else
-            [self updateLeftStatus];
-    }
-}
+- (void)tableView:(NSTableView *)tv typeSelectHelperUpdateSearchString:(NSString *)searchString {}
 
 #pragma mark NSOutlineView datasource protocol
 
@@ -963,19 +956,7 @@
     }
 }
 
-- (void)outlineView:(NSOutlineView *)ov typeSelectHelperUpdateSearchString:(NSString *)searchString {
-    if ([ov isEqual:rightSideController.noteOutlineView]) {
-        if (searchString)
-            [[statusBar rightField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Finding note: \"%@\"", @"Status message"), searchString]];
-        else
-            [self updateRightStatus];
-    } else if ([ov isEqual:leftSideController.tocOutlineView]) {
-        if (searchString)
-            [[statusBar leftField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Finding: \"%@\"", @"Status message"), searchString]];
-        else
-            [self updateLeftStatus];
-    }
-}
+- (void)outlineView:(NSOutlineView *)ov typeSelectHelperUpdateSearchString:(NSString *)searchString {}
 
 #pragma mark Contextual menus
 
@@ -1938,10 +1919,7 @@ static NSArray *allMainDocumentPDFViews() {
         beforeMarkedPageIndex = NSNotFound;
     
     [self synchronizeWindowTitleWithDocumentName];
-    [self updateLeftStatus];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayPageBoundsKey])
-        [self updateRightStatus];
-
+    
     if ([self interactionMode] == SKPresentationMode && [self presentationNotesDocument]) {
         PDFDocument *pdfDoc = [[self presentationNotesDocument] pdfDocument];
         NSInteger offset = [self presentationNotesOffset];
@@ -1957,13 +1935,9 @@ static NSArray *allMainDocumentPDFViews() {
 
 - (void)handleDisplayBoxChangedNotification:(NSNotification *)notification {
     [self allThumbnailsNeedUpdate];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayPageBoundsKey])
-        [self updateRightStatus];
 }
 
-- (void)handleSelectionOrMagnificationChangedNotification:(NSNotification *)notification {
-    [self updateRightStatus];
-}
+- (void)handleSelectionOrMagnificationChangedNotification:(NSNotification *)notification {}
 
 - (void)handleApplicationWillTerminateNotification:(NSNotification *)notification {
     if ([self interactionMode] == SKPresentationMode)
@@ -2010,8 +1984,6 @@ static NSArray *allMainDocumentPDFViews() {
         [ov deselectAll:self];
     }
     [ov reloadData];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayNoteBoundsKey])
-        [self updateRightStatus];
 }
 
 - (void)handleReadingBarDidChangeNotification:(NSNotification *)notification {

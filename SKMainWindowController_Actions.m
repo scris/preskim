@@ -759,16 +759,6 @@ static NSArray *allMainDocumentPDFViews() {
     [pdfView setAnnotationMode:[sender tag]];
 }
 
-- (IBAction)statusBarClicked:(id)sender {
-    [self updateRightStatus];
-}
-
-- (IBAction)toggleStatusBar:(id)sender {
-    [[NSUserDefaults standardUserDefaults] setBool:(NO == [statusBar isVisible]) forKey:SKShowStatusBarKey];
-    NSView *view = [self hasOverview] ? overviewContentView : splitView;
-    [statusBar toggleBelowView:view animate:sender != nil];
-}
-
 - (IBAction)searchPDF:(id)sender {
     if ([self hasOverview]) {
         [self hideOverviewAnimating:YES completionHandler:^{ [self searchPDF:sender]; }];
@@ -814,7 +804,6 @@ static NSArray *allMainDocumentPDFViews() {
             [self displayThumbnailViewAnimating:YES];
         else
             [self displayTocViewAnimating:YES];
-        [self updateRightStatus];
         
         [self setSearchResults:nil];
         [self setGroupedSearchResults:nil];

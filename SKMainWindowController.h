@@ -205,13 +205,13 @@ enum {
 @property (nonatomic, nullable, strong) IBOutlet NSWindow *mainWindow;
 
 @property (nonatomic, nullable, strong) IBOutlet SKSplitView *splitView;
+@property (nonatomic, nullable, strong) NSSplitViewController *splitViewController;
     
 @property (nonatomic, nullable, strong) IBOutlet NSView *centerContentView;
 @property (nonatomic, nullable, strong) IBOutlet SKSplitView *pdfSplitView;
 @property (nonatomic, nullable, strong) IBOutlet NSView *pdfContentView;
 
-@property (nonatomic, nullable, strong) IBOutlet SKStatusBar *statusBar;
-
+@property (nonatomic, nullable, strong) IBOutlet NSViewController *pdfViewController;
 @property (nonatomic, nullable, strong) IBOutlet SKLeftSideViewController *leftSideController;
 @property (nonatomic, nullable, strong) IBOutlet SKRightSideViewController *rightSideController;
     
@@ -328,9 +328,6 @@ enum {
 - (void)applyPDFSettings:(NSDictionary<NSString *, id> *)setup rewind:(BOOL)rewind;
 - (NSDictionary<NSString *, id> *)currentPDFSettings;
 - (void)applyOptions:(NSDictionary<NSString *, id> *)options;
-
-- (void)updateLeftStatus;
-- (void)updateRightStatus;
 
 - (void)beginProgressSheetWithMessage:(NSString *)message maxValue:(NSUInteger)maxValue;
 - (void)incrementProgressSheet;

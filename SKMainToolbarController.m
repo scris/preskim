@@ -882,9 +882,10 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
-    return @[SKDocumentToolbarContentsPaneItemIdentifier,
+    return @[NSToolbarToggleSidebarItemIdentifier,
+        NSToolbarSidebarTrackingSeparatorItemIdentifier,
         SKDocumentToolbarZoomInOutItemIdentifier,
-        SKDocumentToolbarToolModesIdentifier,
+        SKDocumentToolbarNewNoteItemIdentifier,
         SKDocumentToolbarInfoItemIdentifier,
         searchField.itemIdentifier];
 }
@@ -914,7 +915,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarDisplayBoxItemIdentifier,
         SKDocumentToolbarFullScreenItemIdentifier,
         SKDocumentToolbarPresentationItemIdentifier,
-        SKDocumentToolbarContentsPaneItemIdentifier,
+        NSToolbarToggleSidebarItemIdentifier,
         SKDocumentToolbarNotesPaneItemIdentifier,
         SKDocumentToolbarSplitPDFItemIdentifier,
         SKDocumentToolbarRotateRightItemIdentifier,

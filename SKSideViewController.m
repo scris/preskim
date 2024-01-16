@@ -124,7 +124,7 @@
             [oldButton setHidden:YES];
         }
         [[firstResponder window] makeFirstResponder:firstResponder];
-        [[contentView window] recalculateKeyViewLoop];
+        // [[contentView window] recalculateKeyViewLoop];
     } else {
         isAnimating = YES;
         

@@ -215,7 +215,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 @implementation SKMainWindowController
 
-@synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, statusBar, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, notes, thumbnails, snapshots, searchResults, groupedSearchResults, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
+@synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, notes, thumbnails, snapshots, searchResults, groupedSearchResults, tags, rating, pageLabel, interactionMode, placeholderPdfDocument, splitViewController, pdfViewController;
 @dynamic pdfDocument, presentationOptions, presentationUndoManager, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
 
 + (void)initialize {
@@ -351,9 +351,6 @@ static char SKMainWindowContentLayoutObservationContext;
     
     [self setWindowFrameAutosaveNameOrCascade:SKMainWindowFrameAutosaveName];
     
-    [[statusBar rightField] setAction:@selector(statusBarClicked:)];
-    [[statusBar rightField] setTarget:self];
-
     if ([sud boolForKey:SKShowStatusBarKey] == NO)
         [self toggleStatusBar:nil];
     
@@ -450,6 +447,28 @@ static char SKMainWindowContentLayoutObservationContext;
         else
             [self showSnapshotsWithSetups:snapshotSetups];
     }
+    
+    
+    // Split view controller
+    splitViewController=[[NSSplitViewController alloc] init];
+    splitViewController.splitView.vertical=YES;
+    splitViewController.view.translatesAutoresizingMaskIntoConstraints=NO;
+
+    NSSplitViewItem*a=[NSSplitViewItem sidebarWithViewController: leftSideController];
+    [splitViewController addSplitViewItem:a];
+
+    [[pdfViewController view] setFrameSize: NSMakeSize(130, [[self window] frame].size.height)];
+    NSSplitViewItem*b=[NSSplitViewItem splitViewItemWithViewController: pdfViewController];
+    [splitViewController addSplitViewItem:b];
+
+    // swap the old NSSplitView with the new one
+    [window.contentView replaceSubview:splitView with:splitViewController.view ];
+    
+    [splitViewController.view.topAnchor constraintEqualToAnchor:window.contentView.topAnchor
+                                               constant:0].active=YES;
+    [splitViewController.view.bottomAnchor constraintEqualToAnchor:((NSLayoutGuide*)window.contentLayoutGuide).bottomAnchor].active=YES;
+    [splitViewController.view.leftAnchor constraintEqualToAnchor:((NSLayoutGuide*)window.contentLayoutGuide).leftAnchor].active=YES;
+    [splitViewController.view.rightAnchor constraintEqualToAnchor:((NSLayoutGuide*)window.contentLayoutGuide).rightAnchor].active=YES;
     
     noteTypeSheetController = [[SKNoteTypeSheetController alloc] init];
     [noteTypeSheetController setDelegate:self];
@@ -650,41 +669,8 @@ static char SKMainWindowContentLayoutObservationContext;
 
 #pragma mark UI updating
 
-- (void)updateLeftStatus {
-    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Page %ld of %ld", @"Status message"), (long)([[[self pdfView] currentPage] pageIndex] + 1), (long)[[pdfView document] pageCount]];
-    [[statusBar leftField] setStringValue:message];
-}
-
 #define CM_PER_POINT 0.035277778
 #define INCH_PER_POINT 0.013888889
-
-- (void)updateRightStatus {
-    NSRect rect = [pdfView currentSelectionRect];
-    CGFloat magnification = [pdfView currentMagnification];
-    NSString *message;
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayNoteBoundsKey] && NSEqualRects(rect, NSZeroRect) && [pdfView currentAnnotation])
-        rect = [[pdfView currentAnnotation] bounds];
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayPageBoundsKey] && NSEqualRects(rect, NSZeroRect))
-        rect = [[pdfView currentPage] boundsForBox:[pdfView displayBox]];
-
-    if (NSEqualRects(rect, NSZeroRect) == NO) {
-        if ([[[statusBar rightField] cell] state] == NSControlStateValueOn) {
-            BOOL useMetric = [[[NSLocale currentLocale] objectForKey:NSLocaleUsesMetricSystem] boolValue];
-            NSString *units = useMetric ? NSLocalizedString(@"cm", @"size unit") : NSLocalizedString(@"in", @"size unit");
-            CGFloat factor = useMetric ? CM_PER_POINT : INCH_PER_POINT;
-            message = [NSString stringWithFormat:@"%.2f %C %.2f @ (%.2f, %.2f) %@", NSWidth(rect) * factor, MULTIPLICATION_SIGN_CHARACTER, NSHeight(rect) * factor, NSMinX(rect) * factor, NSMinY(rect) * factor, units];
-        } else {
-            message = [NSString stringWithFormat:@"%ld %C %ld @ (%ld, %ld) %@", (long)NSWidth(rect), MULTIPLICATION_SIGN_CHARACTER, (long)NSHeight(rect), (long)NSMinX(rect), (long)NSMinY(rect), NSLocalizedString(@"pt", @"size unit")];
-        }
-    } else if (magnification > 0.0001) {
-        message = [NSString stringWithFormat:@"%.2f %C", magnification, MULTIPLICATION_SIGN_CHARACTER];
-    } else {
-        message = @"";
-    }
-    [[statusBar rightField] setStringValue:message];
-}
 
 - (void)updatePageColumnWidthForTableViews:(NSArray *)tvs {
     // this may happen for locked PDFs, nothing to do in this case
@@ -1150,8 +1136,6 @@ static char SKMainWindowContentLayoutObservationContext;
     [toolbarController handleChangedHistoryNotification:nil];
     [toolbarController handlePageChangedNotification:nil];
     [self handlePageChangedNotification:nil];
-    [self updateLeftStatus];
-    [self updateRightStatus];
     
     // make sure we clear the undo handling
     undoGroupOldPropertiesPerNote = nil;
@@ -1609,7 +1593,7 @@ static char SKMainWindowContentLayoutObservationContext;
         [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
         [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:mwcFlags.fullSizeContent || isMainWindow == NO ? contentView : [mainWindow contentLayoutGuide] attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
-        [NSLayoutConstraint constraintWithItem:hasStatus ? statusBar : contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
+        [NSLayoutConstraint constraintWithItem:contentView attribute:hasStatus ? NSLayoutAttributeTop : NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:newView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
     
     if (animate) {
         BOOL hasLayer = [contentView wantsLayer] || [contentView layer] != nil;
@@ -1840,7 +1824,6 @@ static char SKMainWindowContentLayoutObservationContext;
     if ([findResults count] == 0) {
         
         [pdfView setHighlightedSelections:nil];
-        [self updateRightStatus];
         
     } else {
         
@@ -1873,12 +1856,8 @@ static char SKMainWindowContentLayoutObservationContext;
         [highlights setValue:[NSColor findHighlightColor] forKey:@"color"];
         [pdfView setHighlightedSelections:highlights];
         
-        if ([currentSel hasCharacters]) {
+        if ([currentSel hasCharacters])
             [pdfView setCurrentSelection:currentSel animate:YES];
-            [[statusBar rightField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Match %lu of %lu", @"Status message"), (unsigned long)[searchResults indexOfObject:currentSel] + 1, (unsigned long)[searchResults count]]];
-        } else {
-            [self updateRightStatus];
-        }
         if ([pdfView toolMode] == SKMoveToolMode || [pdfView toolMode] == SKMagnifyToolMode || [pdfView toolMode] == SKSelectToolMode)
             [pdfView setCurrentSelection:nil];
     }
@@ -1948,10 +1927,6 @@ static char SKMainWindowContentLayoutObservationContext;
     [leftSideController applySearchTableHeader:[NSLocalizedString(@"Searching", @"Message in search table header") stringByAppendingEllipsis]];
     [self setSearchResults:@[]];
     [self setGroupedSearchResults:@[]];
-    [statusBar setProgressIndicatorStyle:SKProgressIndicatorStyleDeterminate];
-    [[statusBar progressIndicator] setMaxValue:[[note object] pageCount]];
-    [[statusBar progressIndicator] setDoubleValue:0.0];
-    [[statusBar progressIndicator] startAnimation:self];
     [self willChangeValueForKey:SEARCHRESULTS_KEY];
     [self willChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
 }
@@ -1967,13 +1942,10 @@ static char SKMainWindowContentLayoutObservationContext;
     [self didChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
     [self didChangeValueForKey:SEARCHRESULTS_KEY];
     mwcFlags.updatingFindResults = 0;
-    [[statusBar progressIndicator] stopAnimation:self];
-    [statusBar setProgressIndicatorStyle:SKProgressIndicatorStyleNone];
 }
 
 - (void)documentDidEndPageFind:(NSNotification *)note {
     NSNumber *pageIndex = [[note userInfo] objectForKey:@"PDFDocumentPageIndex"];
-    [[statusBar progressIndicator] setDoubleValue:[pageIndex doubleValue] + 1.0];
     if ([pageIndex unsignedIntegerValue] % 50 == 0) {
         mwcFlags.updatingFindResults = 1;
         [self didChangeValueForKey:GROUPEDSEARCHRESULTS_KEY];
@@ -2108,9 +2080,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     }
     
     [secondaryPdfView requiresDisplay];
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayPageBoundsKey])
-        [self updateRightStatus];
     
     if (isCrop)
         mwcFlags.hasCropped = 1;
@@ -2670,10 +2639,6 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                     if ([note isNote]) {
                         [pdfView annotationsChangedOnPage:[note page]];
                         [pdfView resetPDFToolTipRects];
-                    }
-                    
-                    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayNoteBoundsKey]) {
-                        [self updateRightStatus];
                     }
                 }
             }
