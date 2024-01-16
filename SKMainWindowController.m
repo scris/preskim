@@ -216,7 +216,7 @@ static char SKMainWindowContentLayoutObservationContext;
 @implementation SKMainWindowController
 
 @synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, notes, thumbnails, snapshots, searchResults, groupedSearchResults, tags, rating, pageLabel, interactionMode, placeholderPdfDocument, splitViewController, pdfViewController;
-@dynamic pdfDocument, presentationOptions, presentationUndoManager, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
+@dynamic pdfDocument, presentationOptions, presentationUndoManager, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, leftSidebarIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -388,8 +388,8 @@ static char SKMainWindowContentLayoutObservationContext;
     
     // Show/hide left side pane if necessary
     BOOL hasOutline = ([[pdfView document] outlineRoot] != nil);
-    if ([sud boolForKey:SKOpenContentsPaneOnlyForTOCKey] && [self leftSidePaneIsOpen] != hasOutline)
-        [self toggleLeftSidePane:nil];
+    if ([sud boolForKey:SKOpenContentsPaneOnlyForTOCKey] && [self leftSidebarIsOpen] != hasOutline)
+        [self toggleLeftSidebar:nil];
     if (hasOutline)
         [self setLeftSidePaneState:SKSidePaneStateOutline];
     else
@@ -455,6 +455,7 @@ static char SKMainWindowContentLayoutObservationContext;
     splitViewController.view.translatesAutoresizingMaskIntoConstraints=NO;
 
     NSSplitViewItem*a=[NSSplitViewItem sidebarWithViewController: leftSideController];
+    [a setCollapsed:true];
     [splitViewController addSplitViewItem:a];
 
     [[pdfViewController view] setFrameSize: NSMakeSize(130, [[self window] frame].size.height)];
@@ -660,8 +661,8 @@ static char SKMainWindowContentLayoutObservationContext;
         }
     }
     if ([searchString length] > 0) {
-        if ([self leftSidePaneIsOpen] == NO)
-            [self toggleLeftSidePane:nil];
+        if ([self leftSidebarIsOpen] == NO)
+            [self toggleLeftSidebar:nil];
         [[toolbarController.searchField searchField] setStringValue:searchString];
         [self performSelector:@selector(search:) withObject:[toolbarController.searchField searchField] afterDelay:0.0];
     }
@@ -1236,6 +1237,10 @@ static char SKMainWindowContentLayoutObservationContext;
     }
 }
 
+- (BOOL)leftSidebarIsOpen {
+    return ![[self splitViewController] splitViewItems][0].collapsed;
+}
+
 - (BOOL)leftSidePaneIsOpen {
     if ([self interactionMode] == SKPresentationMode)
         return [sideWindow isVisible];
@@ -1251,7 +1256,7 @@ static char SKMainWindowContentLayoutObservationContext;
 }
 
 - (CGFloat)leftSideWidth {
-    return [self leftSidePaneIsOpen] ? NSWidth([leftSideContentView frame]) : 0.0;
+    return [self leftSidebarIsOpen] ? NSWidth([leftSideContentView frame]) : 0.0;
 }
 
 - (CGFloat)rightSideWidth {
@@ -2531,7 +2536,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         if (fabs(titleHeight - titleBarHeight) > 0.0) {
             titleBarHeight = titleHeight;
             [rightSideController setTopInset:titleBarHeight];
-            if ([self interactionMode] != SKPresentationMode || [self leftSidePaneIsOpen] == NO)
+            if ([self interactionMode] != SKPresentationMode || [self leftSidebarIsOpen] == NO)
                 [leftSideController setTopInset:titleBarHeight];
             if ([[findController view] window]) {
                 [[[[findController view] superview] constraintWithFirstItem:[findController view] firstAttribute:NSLayoutAttributeTop] setConstant:titleBarHeight];

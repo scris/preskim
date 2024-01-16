@@ -5097,7 +5097,7 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
         [item setKeyEquivalentModifierMask:0];
         item = [menu addItemWithTitle:NSLocalizedString(@"Show Overview", @"Menu item title") action:@selector(toggleOverview:) keyEquivalent:@"p"];
         [item setKeyEquivalentModifierMask:0];
-        item = [menu addItemWithTitle:NSLocalizedString(@"Show Contents Pane", @"Menu item title") action:@selector(toggleLeftSidePane:) keyEquivalent:@"t"];
+        item = [menu addItemWithTitle:NSLocalizedString(@"Show Contents Pane", @"Menu item title") action:@selector(toggleLeftSidebar:) keyEquivalent:@"t"];
         [item setKeyEquivalentModifierMask:0];
         item = [menu addItemWithTitle:[NSString stringWithFormat:@"%@ / %@", NSLocalizedString(@"Actual Size", @"Menu item title"), NSLocalizedString(@"Fit to Screen", @"Menu item title")] action:@selector(toggleAutoActualSize:) keyEquivalent:@"a"];
         [item setKeyEquivalentModifierMask:0];

@@ -798,12 +798,11 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             
         } else if ([identifier isEqualToString:SKDocumentToolbarContentsPaneItemIdentifier]) {
             
-            menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Contents Pane", @"Menu item title") action:@selector(toggleLeftSidePane:) target:mainController];
+            menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Contents Pane", @"Menu item title") action:@selector(toggleLeftSidebar:) target:mainController];
             
             [item setLabels:NSLocalizedString(@"Contents Pane", @"Toolbar item label")];
             [item setToolTip:NSLocalizedString(@"Toggle Contents Pane", @"Tool tip message")];
             [item setView:leftPaneButton];
-            [item setNavigational:TRUE];
             [item setMenuFormRepresentation:menuItem];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarNotesPaneItemIdentifier]) {
@@ -882,7 +881,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
-    return @[NSToolbarToggleSidebarItemIdentifier,
+    return @[SKDocumentToolbarContentsPaneItemIdentifier,
         NSToolbarSidebarTrackingSeparatorItemIdentifier,
         SKDocumentToolbarZoomInOutItemIdentifier,
         SKDocumentToolbarNewNoteItemIdentifier,
@@ -915,7 +914,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarDisplayBoxItemIdentifier,
         SKDocumentToolbarFullScreenItemIdentifier,
         SKDocumentToolbarPresentationItemIdentifier,
-        NSToolbarToggleSidebarItemIdentifier,
+        SKDocumentToolbarContentsPaneItemIdentifier,
         SKDocumentToolbarNotesPaneItemIdentifier,
         SKDocumentToolbarSplitPDFItemIdentifier,
         SKDocumentToolbarRotateRightItemIdentifier,
@@ -1123,6 +1122,10 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 - (IBAction)togglePresentation:(id)sender {
     [mainController togglePresentation:sender];
+}
+
+- (IBAction)toggleLeftSidebar:(id)sender {
+    [mainController toggleLeftSidebar:sender];
 }
 
 - (IBAction)toggleLeftSidePane:(id)sender {

@@ -125,6 +125,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)cropAll:(nullable id)sender;
 - (IBAction)toggleFullscreen:(nullable id)sender;
 - (IBAction)togglePresentation:(nullable id)sender;
+- (IBAction)toggleLeftSidebar:(nullable id)sender;
 - (IBAction)toggleLeftSidePane:(nullable id)sender;
 - (IBAction)toggleRightSidePane:(nullable id)sender;
 - (IBAction)toggleSplitPDF:(nullable id)sender;

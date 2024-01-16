@@ -276,7 +276,7 @@ enum {
 @property (nonatomic) SKRightSidePaneState rightSidePaneState;
 @property (nonatomic) SKFindPaneState findPaneState;
 
-@property (nonatomic, readonly) BOOL leftSidePaneIsOpen, rightSidePaneIsOpen;
+@property (nonatomic, readonly) BOOL leftSidePaneIsOpen, leftSidebarIsOpen, rightSidePaneIsOpen;
 @property (nonatomic, readonly) CGFloat leftSideWidth, rightSideWidth;
 
 @property (nonatomic) BOOL recentInfoNeedsUpdate;

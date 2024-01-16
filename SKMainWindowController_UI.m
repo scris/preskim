@@ -1488,7 +1488,7 @@
 }
 
 - (void)PDFViewToggleContents:(PDFView *)sender {
-    [self toggleLeftSidePane:sender];
+    [self toggleLeftSidebar:sender];
 }
 
 - (void)PDFView:(PDFView *)sender rotatePageAtIndex:(NSUInteger)idx by:(NSInteger)rotation {
@@ -1513,7 +1513,7 @@
 - (BOOL)splitView:(NSSplitView *)sender shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex {
     if ([sender isEqual:splitView]) {
         if ([subview isEqual:leftSideContentView])
-            [self toggleLeftSidePane:sender];
+            [self toggleLeftSidebar:sender];
         else if ([subview isEqual:rightSideContentView])
             [self toggleRightSidePane:sender];
     } else if ([sender isEqual:pdfSplitView]) {
@@ -1764,8 +1764,8 @@ static NSArray *allMainDocumentPDFViews() {
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && [pdfView toolMode] == SKSelectToolMode;
     } else if (action == @selector(takeSnapshot:)) {
         return [[self pdfDocument] isLocked] == NO && [self hasOverview] == NO;
-    } else if (action == @selector(toggleLeftSidePane:)) {
-        if ([self leftSidePaneIsOpen])
+    } else if (action == @selector(toggleLeftSidebar:)) {
+        if ([self leftSidebarIsOpen])
             [menuItem setTitle:NSLocalizedString(@"Hide Contents Pane", @"Menu item title")];
         else
             [menuItem setTitle:NSLocalizedString(@"Show Contents Pane", @"Menu item title")];

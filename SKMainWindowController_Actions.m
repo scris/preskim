@@ -790,8 +790,8 @@ static NSArray *allMainDocumentPDFViews() {
     PDFDocument *pdfDoc = [pdfView document];
     NSString *searchString = [sender stringValue];
     
-    if ([self leftSidePaneIsOpen] == NO)
-        [self toggleLeftSidePane:sender];
+    if ([self leftSidebarIsOpen] == NO)
+        [self toggleLeftSidebar:sender];
     
     // cancel any previous find to remove those results, or else they stay around
     if ([pdfDoc isFinding])
@@ -976,6 +976,10 @@ static NSArray *allMainDocumentPDFViews() {
     [[NSUserDefaults standardUserDefaults] setBool:mwcFlags.caseInsensitiveFilter forKey:SKCaseInsensitiveFilterKey];
 }
 
+- (IBAction)toggleLeftSidebar:(id)sender {
+    [[[self splitViewController] splitViewItems][0].animator setCollapsed: ![[self splitViewController] splitViewItems][0].collapsed];
+}
+
 - (IBAction)toggleLeftSidePane:(id)sender {
     if ([self interactionMode] == SKPresentationMode) {
         if ([sideWindow isVisible])
@@ -986,7 +990,7 @@ static NSArray *allMainDocumentPDFViews() {
         [self hideOverviewAnimating:sender != nil completionHandler:^{ [self toggleLeftSidePane:sender]; }];
     } else {
         CGFloat position = [splitView minPossiblePositionOfDividerAtIndex:0];
-        if ([self leftSidePaneIsOpen]) {
+        if ([self leftSidebarIsOpen]) {
             if ([[[self window] firstResponder] isDescendantOf:leftSideContentView])
                 [[self window] makeFirstResponder:pdfView];
             lastLeftSidePaneWidth = fmaxf(MIN_SIDE_PANE_WIDTH, NSWidth([leftSideContentView frame]));
@@ -1217,14 +1221,14 @@ static NSArray *allMainDocumentPDFViews() {
         [self hideOverviewAnimating:YES];
     } else if ([self interactionMode] != SKNormalMode) {
         if (sender == [self window]) {
-            if ([self interactionMode] == SKPresentationMode && [self leftSidePaneIsOpen])
-                [self toggleLeftSidePane:sender];
+            if ([self interactionMode] == SKPresentationMode && [self leftSidebarIsOpen])
+                [self toggleLeftSidebar:sender];
             else if ([self canExitFullscreen])
                 [self exitFullscreen];
             else if ([self canExitPresentation])
                 [self exitPresentation];
         } else if (sender == sideWindow) {
-            [self toggleLeftSidePane:sender];
+            [self toggleLeftSidebar:sender];
         }
     }
 }

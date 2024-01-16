@@ -464,7 +464,7 @@ static inline BOOL insufficientScreenSize(NSValue *value) {
     
     mwcFlags.isSwitchingFullScreen = 1;
     
-    if ([self leftSidePaneIsOpen])
+    if ([self leftSidebarIsOpen])
         [self hideSideWindow];
     
     if ([presentationNotes count]) {
