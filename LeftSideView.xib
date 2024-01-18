@@ -320,7 +320,7 @@
             <rect key="frame" x="0.0" y="0.0" width="200" height="403"/>
             <clipView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="VaG-cU-bQa">
                 <rect key="frame" x="1" y="1" width="198" height="401"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" autosaveColumns="NO" typeSelect="NO" headerView="108" viewBased="YES" id="111" customClass="SKTableView">
                         <rect key="frame" x="0.0" y="0.0" width="198" height="376"/>
@@ -345,7 +345,7 @@
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                 <prototypeCellViews>
                                     <tableCellView id="rTN-Wm-aea">
-                                        <rect key="frame" x="1" y="1" width="47" height="17"/>
+                                        <rect key="frame" x="11" y="1" width="47" height="17"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5CV-AT-Wi3">
@@ -384,7 +384,7 @@
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                 <prototypeCellViews>
                                     <tableCellView id="yHY-cQ-hrW">
-                                        <rect key="frame" x="51" y="1" width="116" height="17"/>
+                                        <rect key="frame" x="61" y="1" width="116" height="17"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EK0-Iy-KhJ">
@@ -437,7 +437,7 @@
             <rect key="frame" x="0.0" y="0.0" width="200" height="403"/>
             <clipView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="CUc-Bz-YWJ">
                 <rect key="frame" x="1" y="1" width="198" height="401"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" autosaveColumns="NO" typeSelect="NO" headerView="125" viewBased="YES" id="128" customClass="SKTableView">
                         <rect key="frame" x="0.0" y="0.0" width="198" height="376"/>
@@ -459,7 +459,7 @@
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                 <prototypeCellViews>
                                     <tableCellView id="9a8-cx-9oD" customClass="SKControlTableCellView">
-                                        <rect key="frame" x="1" y="1" width="117" height="18"/>
+                                        <rect key="frame" x="11" y="1" width="117" height="18"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <levelIndicator horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="zvD-nR-1Ml" customClass="SKLevelIndicator">
@@ -498,7 +498,7 @@
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                 <prototypeCellViews>
                                     <tableCellView id="hdZ-O4-HlW">
-                                        <rect key="frame" x="121" y="1" width="46" height="17"/>
+                                        <rect key="frame" x="131" y="1" width="46" height="17"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="6S7-C8-37w">
@@ -550,8 +550,12 @@
         <menu id="89">
             <point key="canvasLocation" x="213" y="-39"/>
         </menu>
-        <menu id="198"/>
-        <menu id="197"/>
+        <menu id="198">
+            <point key="canvasLocation" x="50" y="249"/>
+        </menu>
+        <menu id="197">
+            <point key="canvasLocation" x="50" y="151"/>
+        </menu>
         <objectController id="90" userLabel="OwnerController">
             <declaredKeys>
                 <string>leftSidePaneState</string>

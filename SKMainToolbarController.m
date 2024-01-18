@@ -798,10 +798,21 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             
         } else if ([identifier isEqualToString:SKDocumentToolbarContentsPaneItemIdentifier]) {
             
-            menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Contents Pane", @"Menu item title") action:@selector(toggleLeftSidebar:) target:mainController];
+            menuItem = [NSMenuItem menuItemWithSubmenuAndTitle:NSLocalizedString(@"Contents Pane", @"Toolbar item label")];
+            
+            NSMenu *menu = [[NSMenu alloc] init];
+            [menu setAutoenablesItems:FALSE];
+            [menu addItemWithTitle:NSLocalizedString(@"Hide Sidebar", @"Menu item title") action:@selector(closeLeftSidebar:) target:mainController];
+            [menu addItemWithTitle:NSLocalizedString(@"Thumbnails", @"Menu item title") action:@selector(toggleLeftThumbnails:) target:mainController];
+            [menu addItemWithTitle:NSLocalizedString(@"Table of Contents", @"Menu item title") action:@selector(toggleLeftTableOfContents:) target:mainController];
+            [menu addItemWithTitle:NSLocalizedString(@"Notes", @"Menu item title") action:@selector(toggleLeftNotes:) target:mainController];
+            [menu addItemWithTitle:NSLocalizedString(@"Snapshots", @"Menu item title") action:@selector(toggleLeftSnapshots:) target:mainController];
+            [menu.itemArray[0] setEnabled:FALSE];
             
             [item setLabels:NSLocalizedString(@"Contents Pane", @"Toolbar item label")];
             [item setToolTip:NSLocalizedString(@"Toggle Contents Pane", @"Tool tip message")];
+            [leftPaneButton setMenu:menu forSegment:0];
+            [leftPaneButton setShowsMenuIndicator:true forSegment:0];
             [item setView:leftPaneButton];
             [item setMenuFormRepresentation:menuItem];
             
@@ -895,7 +906,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarPreviousItemIdentifier,
         SKDocumentToolbarPageNumberItemIdentifier,
         SKDocumentToolbarNextItemIdentifier,
-        searchField.itemIdentifier,
         SKDocumentToolbarBackForwardItemIdentifier,
         SKDocumentToolbarZoomInActualOutItemIdentifier,
         SKDocumentToolbarZoomInOutItemIdentifier,
@@ -915,7 +925,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarFullScreenItemIdentifier,
         SKDocumentToolbarPresentationItemIdentifier,
         SKDocumentToolbarContentsPaneItemIdentifier,
-        SKDocumentToolbarNotesPaneItemIdentifier,
         SKDocumentToolbarSplitPDFItemIdentifier,
         SKDocumentToolbarRotateRightItemIdentifier,
         SKDocumentToolbarRotateLeftItemIdentifier,
@@ -927,7 +936,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarNewMarkupItemIdentifier,
         SKDocumentToolbarNewLineItemIdentifier,
         SKDocumentToolbarToolModeItemIdentifier,
-        SKDocumentToolbarToolModesIdentifier,
         SKDocumentToolbarColorSwatchItemIdentifier,
         SKDocumentToolbarShareItemIdentifier,
         SKDocumentToolbarPacerItemIdentifier,

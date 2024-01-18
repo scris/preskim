@@ -104,7 +104,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)deselectAll:(nullable id)sender;
 - (IBAction)changeToolMode:(nullable id)sender;
 - (IBAction)changeAnnotationMode:(nullable id)sender;
+- (IBAction)openLeftSidebar:(nullable id)sender;
+- (IBAction)closeLeftSidebar:(nullable id)sender;
 - (IBAction)toggleLeftSidebar:(nullable id)sender;
+- (IBAction)toggleLeftThumbnails:(nullable id)sender;
+- (IBAction)toggleLeftTableOfContents:(nullable id)sender;
+- (IBAction)toggleLeftNotes:(nullable id)sender;
+- (IBAction)toggleLeftSnapshots:(nullable id)sender;
 - (IBAction)toggleLeftSidePane:(nullable id)sender;
 - (IBAction)toggleRightSidePane:(nullable id)sender;
 - (IBAction)changeLeftSidePaneState:(nullable id)sender;

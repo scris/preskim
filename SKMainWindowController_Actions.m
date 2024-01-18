@@ -976,8 +976,38 @@ static NSArray *allMainDocumentPDFViews() {
     [[NSUserDefaults standardUserDefaults] setBool:mwcFlags.caseInsensitiveFilter forKey:SKCaseInsensitiveFilterKey];
 }
 
+- (IBAction)openLeftSidebar:(id)sender {
+    [[[self splitViewController] splitViewItems][0].animator setCollapsed:FALSE];
+    [[[[self toolbarController].leftPaneButton menuForSegment:0] itemArray][0] setEnabled:TRUE];
+}
+
+- (IBAction)closeLeftSidebar:(id)sender {
+    [[[self splitViewController] splitViewItems][0].animator setCollapsed:TRUE];
+    [[[[self toolbarController].leftPaneButton menuForSegment:0] itemArray][0] setEnabled:FALSE];
+}
+
 - (IBAction)toggleLeftSidebar:(id)sender {
-    [[[self splitViewController] splitViewItems][0].animator setCollapsed: ![[self splitViewController] splitViewItems][0].collapsed];
+    if ([[self splitViewController] splitViewItems][0].collapsed) {
+        [self openLeftSidebar:sender];
+    } else {
+        [self closeLeftSidebar:sender];
+    }
+}
+
+- (IBAction)toggleLeftThumbnails:(id)sender {
+    [self openLeftSidebar:sender];
+}
+
+- (IBAction)toggleLeftTableOfContents:(id)sender {
+    [self openLeftSidebar:sender];
+}
+
+- (IBAction)toggleLeftNotes:(id)sender {
+    [self openLeftSidebar:sender];
+}
+
+- (IBAction)toggleLeftSnapshots:(id)sender {
+    [self openLeftSidebar:sender];
 }
 
 - (IBAction)toggleLeftSidePane:(id)sender {

@@ -454,11 +454,11 @@ static char SKMainWindowContentLayoutObservationContext;
     splitViewController.splitView.vertical=YES;
     splitViewController.view.translatesAutoresizingMaskIntoConstraints=NO;
 
+    [[leftSideController view] setFrameSize: NSMakeSize(220, [[self window] frame].size.height)];
     NSSplitViewItem*a=[NSSplitViewItem sidebarWithViewController: leftSideController];
     [a setCollapsed:true];
     [splitViewController addSplitViewItem:a];
 
-    [[pdfViewController view] setFrameSize: NSMakeSize(130, [[self window] frame].size.height)];
     NSSplitViewItem*b=[NSSplitViewItem splitViewItemWithViewController: pdfViewController];
     [splitViewController addSplitViewItem:b];
 

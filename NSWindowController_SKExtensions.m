@@ -52,7 +52,7 @@
     NSPointPointer pointPtr = (NSPointPointer)NSMapGet(nextWindowLocations, (__bridge void *)name);
     NSPoint point;
     
-    [[self window] setFrameUsingName:name];
+    // [[self window] setFrameUsingName:name];
     [self setShouldCascadeWindows:NO];
     if ([[self window] setFrameAutosaveName:name] || pointPtr == NULL) {
         NSRect windowFrame = [[self window] frame];
