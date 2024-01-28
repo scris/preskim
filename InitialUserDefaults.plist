@@ -54,9 +54,9 @@
 		<key>SKSnapshotsOnTop</key>
 		<false/>
 		<key>SKSnapshotThumbnailSize</key>
-		<real>128</real>
+		<integer>160</integer>
 		<key>SKThumbnailSize</key>
-		<real>128</real>
+		<integer>160</integer>
 		<key>SKLastToolMode</key>
 		<integer>0</integer>
 		<key>SKLastAnnotationMode</key>
