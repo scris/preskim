@@ -8,7 +8,6 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SKRightSideViewController">
             <connections>
-                <outlet property="button" destination="23" id="49"/>
                 <outlet property="currentView" destination="26" id="51"/>
                 <outlet property="noteArrayController" destination="7" id="57"/>
                 <outlet property="noteOutlineView" destination="31" id="56"/>
@@ -36,21 +35,8 @@
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="19" customClass="SKTopBarView">
                     <rect key="frame" x="0.0" y="364" width="200" height="36"/>
                     <subviews>
-                        <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="23">
-                            <rect key="frame" x="8" y="6" width="59" height="24"/>
-                            <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedRounded" trackingMode="selectOne" id="24">
-                                <font key="font" metaFont="system"/>
-                                <segments>
-                                    <segment image="NoteViewAdorn" imageScaling="none" width="25"/>
-                                    <segment image="SnapshotViewAdorn" imageScaling="none" width="25" tag="1"/>
-                                </segments>
-                            </segmentedCell>
-                            <connections>
-                                <binding destination="3" name="selectedTag" keyPath="selection.rightSidePaneState" id="43"/>
-                            </connections>
-                        </segmentedControl>
                         <searchField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="22">
-                            <rect key="frame" x="73" y="7" width="119" height="22"/>
+                            <rect key="frame" x="8" y="7" width="184" height="22"/>
                             <constraints>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="20" id="m7g-Zf-h34"/>
                             </constraints>
@@ -64,9 +50,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="36" id="7oM-Yp-cMo"/>
                         <constraint firstAttribute="trailing" secondItem="22" secondAttribute="trailing" priority="251" constant="8" id="G1M-Dp-Tzm"/>
-                        <constraint firstItem="23" firstAttribute="centerY" secondItem="19" secondAttribute="centerY" id="JmX-pZ-kiW"/>
-                        <constraint firstItem="22" firstAttribute="leading" secondItem="23" secondAttribute="trailing" constant="8" symbolic="YES" id="KYn-6w-OT6"/>
-                        <constraint firstItem="23" firstAttribute="leading" secondItem="19" secondAttribute="leading" constant="10" id="cTM-Ig-G77"/>
+                        <constraint firstItem="22" firstAttribute="leading" secondItem="19" secondAttribute="leading" constant="8" id="LFS-tl-ZjQ"/>
                         <constraint firstItem="22" firstAttribute="centerY" secondItem="19" secondAttribute="centerY" id="huz-5M-yGg"/>
                     </constraints>
                 </customView>
@@ -80,7 +64,7 @@
                 <constraint firstItem="18" firstAttribute="top" secondItem="19" secondAttribute="bottom" id="uTJ-hV-Es6"/>
                 <constraint firstItem="18" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="x49-Py-hHS"/>
             </constraints>
-            <point key="canvasLocation" x="267" y="154"/>
+            <point key="canvasLocation" x="263" y="157"/>
         </customView>
         <scrollView focusRingType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="27" customClass="SKScrollView">
             <rect key="frame" x="0.0" y="0.0" width="200" height="403"/>
@@ -359,7 +343,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="198" height="25"/>
                 <autoresizingMask key="autoresizingMask"/>
             </tableHeaderView>
-            <point key="canvasLocation" x="139" y="154"/>
+            <point key="canvasLocation" x="15" y="156"/>
         </scrollView>
         <scrollView focusRingType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="10">
             <rect key="frame" x="0.0" y="0.0" width="200" height="400"/>
@@ -476,10 +460,12 @@
                 <rect key="frame" x="184" y="1" width="15" height="398"/>
                 <autoresizingMask key="autoresizingMask"/>
             </scroller>
-            <point key="canvasLocation" x="267" y="154"/>
+            <point key="canvasLocation" x="505" y="152"/>
         </scrollView>
         <menu id="9"/>
-        <menu id="5"/>
+        <menu id="5">
+            <point key="canvasLocation" x="139" y="-127"/>
+        </menu>
         <objectController id="3" userLabel="OwnerController">
             <declaredKeys>
                 <string>leftSidePaneState</string>
@@ -525,7 +511,5 @@
     </objects>
     <resources>
         <image name="NSActionTemplate" width="20" height="20"/>
-        <image name="NoteViewAdorn" width="128" height="128"/>
-        <image name="SnapshotViewAdorn" width="128" height="128"/>
     </resources>
 </document>

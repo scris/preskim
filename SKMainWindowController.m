@@ -455,6 +455,7 @@ static char SKMainWindowContentLayoutObservationContext;
     splitViewController.view.translatesAutoresizingMaskIntoConstraints=NO;
 
     [[leftSideController view] setFrameSize: NSMakeSize(220, [[self window] frame].size.height)];
+    [[rightSideController view] setFrameSize: NSMakeSize(220, [[self window] frame].size.height)];
     NSSplitViewItem*a=[NSSplitViewItem sidebarWithViewController: leftSideController];
     [a setCollapsed:true];
     [splitViewController addSplitViewItem:a];
@@ -463,7 +464,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [splitViewController addSplitViewItem:b];
 
     // swap the old NSSplitView with the new one
-    [window.contentView replaceSubview:splitView with:splitViewController.view ];
+    [window.contentView replaceSubview:splitView with:splitViewController.view];
     
     [splitViewController.view.topAnchor constraintEqualToAnchor:window.contentView.topAnchor
                                                constant:0].active=YES;

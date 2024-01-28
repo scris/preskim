@@ -8,8 +8,6 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SKLeftSideViewController">
             <connections>
-                <outlet property="alternateButton" destination="93" id="178"/>
-                <outlet property="button" destination="140" id="166"/>
                 <outlet property="currentView" destination="142" id="168"/>
                 <outlet property="findArrayController" destination="91" id="183"/>
                 <outlet property="findTableView" destination="111" id="184"/>
@@ -18,7 +16,6 @@
                 <outlet property="thumbnailArrayController" destination="yPq-rX-KPQ" id="zwc-qS-kJH"/>
                 <outlet property="thumbnailTableView" destination="101" id="180"/>
                 <outlet property="tocOutlineView" destination="119" id="189"/>
-                <outlet property="topBar" destination="134" id="194"/>
                 <outlet property="view" destination="85" id="172"/>
             </connections>
         </customObject>
@@ -28,64 +25,20 @@
             <rect key="frame" x="0.0" y="0.0" width="200" height="400"/>
             <subviews>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="133">
-                    <rect key="frame" x="0.0" y="0.0" width="200" height="364"/>
+                    <rect key="frame" x="0.0" y="0.0" width="200" height="400"/>
                     <subviews>
                         <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="142">
-                            <rect key="frame" x="-1" y="-1" width="202" height="366"/>
+                            <rect key="frame" x="-1" y="-1" width="202" height="402"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         </customView>
                     </subviews>
-                </customView>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="134" customClass="SKTopBarView">
-                    <rect key="frame" x="0.0" y="364" width="200" height="36"/>
-                    <subviews>
-                        <segmentedControl hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="93">
-                            <rect key="frame" x="8" y="6" width="59" height="24"/>
-                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectOne" id="106">
-                                <font key="font" metaFont="system"/>
-                                <segments>
-                                    <segment image="FindViewAdorn" imageScaling="none" width="25"/>
-                                    <segment image="GroupedFindViewAdorn" imageScaling="none" width="25" tag="1"/>
-                                </segments>
-                                <connections>
-                                    <binding destination="90" name="selectedTag" keyPath="selection.findPaneState" id="187"/>
-                                </connections>
-                            </segmentedCell>
-                            <connections>
-                                <binding destination="90" name="selectedTag" keyPath="selection.findPaneState" id="144"/>
-                            </connections>
-                        </segmentedControl>
-                        <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="140">
-                            <rect key="frame" x="8" y="6" width="59" height="24"/>
-                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectOne" id="141">
-                                <font key="font" metaFont="system"/>
-                                <segments>
-                                    <segment image="ThumbnailViewAdorn" imageScaling="none" width="25"/>
-                                    <segment image="OutlineViewAdorn" imageScaling="none" width="25" tag="1"/>
-                                </segments>
-                            </segmentedCell>
-                            <connections>
-                                <binding destination="90" name="selectedTag" keyPath="selection.leftSidePaneState" id="155"/>
-                            </connections>
-                        </segmentedControl>
-                    </subviews>
-                    <constraints>
-                        <constraint firstItem="140" firstAttribute="leading" secondItem="134" secondAttribute="leading" constant="10" id="UXL-kL-U6I"/>
-                        <constraint firstItem="140" firstAttribute="centerY" secondItem="134" secondAttribute="centerY" id="h7J-Na-3Nd"/>
-                        <constraint firstItem="93" firstAttribute="leading" secondItem="134" secondAttribute="leading" constant="10" id="iGp-4q-uif"/>
-                        <constraint firstAttribute="height" constant="36" id="w8i-xX-Pnp"/>
-                        <constraint firstItem="93" firstAttribute="centerY" secondItem="134" secondAttribute="centerY" id="yZS-bf-pOA"/>
-                    </constraints>
                 </customView>
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="133" secondAttribute="bottom" id="T6W-X1-XBt"/>
                 <constraint firstAttribute="trailing" secondItem="133" secondAttribute="trailing" id="TOn-mO-lFR"/>
                 <constraint firstItem="133" firstAttribute="leading" secondItem="85" secondAttribute="leading" id="b3U-uC-wKa"/>
-                <constraint firstItem="134" firstAttribute="leading" secondItem="85" secondAttribute="leading" id="bJW-UQ-x3H"/>
-                <constraint firstItem="133" firstAttribute="top" secondItem="134" secondAttribute="bottom" id="bWR-sc-XNl"/>
-                <constraint firstAttribute="trailing" secondItem="134" secondAttribute="trailing" id="sVN-Yz-bpb"/>
-                <constraint firstItem="134" firstAttribute="top" secondItem="85" secondAttribute="top" id="whT-Z9-oOB"/>
+                <constraint firstItem="133" firstAttribute="top" secondItem="85" secondAttribute="top" id="bWR-sc-XNl"/>
             </constraints>
             <point key="canvasLocation" x="267" y="154"/>
         </customView>
@@ -157,7 +110,7 @@
                                         <rect key="frame" x="146" y="1" width="40" height="32"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="uth-up-lE7">
+                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="uth-up-lE7">
                                                 <rect key="frame" x="0.0" y="9" width="40" height="15"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" id="avZ-Yh-zVv">
                                                     <font key="font" metaFont="cellTitle"/>
@@ -235,7 +188,7 @@
                                         <rect key="frame" x="11" y="0.0" width="132" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Hp-6e-4aM">
+                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Hp-6e-4aM">
                                                 <rect key="frame" x="0.0" y="2" width="132" height="16"/>
                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" id="dcT-gP-VNy">
                                                     <font key="font" metaFont="system"/>
@@ -278,7 +231,7 @@
                                         <rect key="frame" x="146" y="0.0" width="40" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Rac-nE-BbY">
+                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Rac-nE-BbY">
                                                 <rect key="frame" x="0.0" y="2" width="40" height="16"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" id="Z6W-JS-ODs">
                                                     <font key="font" metaFont="system"/>
@@ -320,7 +273,7 @@
             <rect key="frame" x="0.0" y="0.0" width="200" height="403"/>
             <clipView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="VaG-cU-bQa">
                 <rect key="frame" x="1" y="1" width="198" height="401"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" autosaveColumns="NO" typeSelect="NO" headerView="108" viewBased="YES" id="111" customClass="SKTableView">
                         <rect key="frame" x="0.0" y="0.0" width="198" height="376"/>
@@ -345,10 +298,10 @@
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                 <prototypeCellViews>
                                     <tableCellView id="rTN-Wm-aea">
-                                        <rect key="frame" x="11" y="1" width="47" height="17"/>
+                                        <rect key="frame" x="1" y="1" width="47" height="17"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5CV-AT-Wi3">
+                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5CV-AT-Wi3">
                                                 <rect key="frame" x="0.0" y="1" width="47" height="16"/>
                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" id="xYT-z2-Ika">
                                                     <font key="font" metaFont="system"/>
@@ -384,10 +337,10 @@
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                 <prototypeCellViews>
                                     <tableCellView id="yHY-cQ-hrW">
-                                        <rect key="frame" x="61" y="1" width="116" height="17"/>
+                                        <rect key="frame" x="51" y="1" width="116" height="17"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EK0-Iy-KhJ">
+                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EK0-Iy-KhJ">
                                                 <rect key="frame" x="0.0" y="1" width="116" height="16"/>
                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" id="t89-Nc-Fkj">
                                                     <font key="font" metaFont="system"/>
@@ -437,7 +390,7 @@
             <rect key="frame" x="0.0" y="0.0" width="200" height="403"/>
             <clipView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="CUc-Bz-YWJ">
                 <rect key="frame" x="1" y="1" width="198" height="401"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" autosaveColumns="NO" typeSelect="NO" headerView="125" viewBased="YES" id="128" customClass="SKTableView">
                         <rect key="frame" x="0.0" y="0.0" width="198" height="376"/>
@@ -459,7 +412,7 @@
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                 <prototypeCellViews>
                                     <tableCellView id="9a8-cx-9oD" customClass="SKControlTableCellView">
-                                        <rect key="frame" x="11" y="1" width="117" height="18"/>
+                                        <rect key="frame" x="1" y="1" width="117" height="18"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <levelIndicator horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="zvD-nR-1Ml" customClass="SKLevelIndicator">
@@ -498,10 +451,10 @@
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                 <prototypeCellViews>
                                     <tableCellView id="hdZ-O4-HlW">
-                                        <rect key="frame" x="131" y="1" width="46" height="17"/>
+                                        <rect key="frame" x="121" y="1" width="46" height="17"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="6S7-C8-37w">
+                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="6S7-C8-37w">
                                                 <rect key="frame" x="0.0" y="1" width="46" height="16"/>
                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" id="MLb-Qs-lO5">
                                                     <font key="font" metaFont="system"/>
@@ -610,10 +563,6 @@
         </arrayController>
     </objects>
     <resources>
-        <image name="FindViewAdorn" width="128" height="128"/>
-        <image name="GroupedFindViewAdorn" width="128" height="128"/>
         <image name="NSActionTemplate" width="20" height="20"/>
-        <image name="OutlineViewAdorn" width="128" height="128"/>
-        <image name="ThumbnailViewAdorn" width="128" height="128"/>
     </resources>
 </document>

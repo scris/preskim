@@ -977,6 +977,9 @@ static NSArray *allMainDocumentPDFViews() {
 }
 
 - (IBAction)openLeftSidebar:(id)sender {
+    NSSplitViewItem*a=[NSSplitViewItem sidebarWithViewController: leftSideController];
+    [[self splitViewController] removeSplitViewItem:[[self splitViewController] splitViewItems][0]];
+    [[self splitViewController] insertSplitViewItem:a atIndex:0];
     [[[self splitViewController] splitViewItems][0].animator setCollapsed:FALSE];
     [[[[self toolbarController].leftPaneButton menuForSegment:0] itemArray][0] setEnabled:TRUE];
 }
@@ -994,20 +997,45 @@ static NSArray *allMainDocumentPDFViews() {
     }
 }
 
+- (IBAction)openRightSidebar:(id)sender {
+    NSSplitViewItem*a=[NSSplitViewItem sidebarWithViewController: rightSideController];
+    [[self splitViewController] removeSplitViewItem:[[self splitViewController] splitViewItems][0]];
+    [[self splitViewController] insertSplitViewItem:a atIndex:0];
+    [[[self splitViewController] splitViewItems][0].animator setCollapsed:FALSE];
+    [[[[self toolbarController].leftPaneButton menuForSegment:0] itemArray][0] setEnabled:TRUE];
+}
+
+- (IBAction)closeRightSidebar:(id)sender {
+    [[[self splitViewController] splitViewItems][0].animator setCollapsed:TRUE];
+    [[[[self toolbarController].leftPaneButton menuForSegment:0] itemArray][0] setEnabled:FALSE];
+}
+
+- (IBAction)toggleRightSidebar:(id)sender {
+    if ([[self splitViewController] splitViewItems][0].collapsed) {
+        [self openRightSidebar:sender];
+    } else {
+        [self closeRightSidebar:sender];
+    }
+}
+
 - (IBAction)toggleLeftThumbnails:(id)sender {
     [self openLeftSidebar:sender];
+    [self setLeftSidePaneState:SKSidePaneStateThumbnail];
 }
 
 - (IBAction)toggleLeftTableOfContents:(id)sender {
     [self openLeftSidebar:sender];
+    [self setLeftSidePaneState:SKSidePaneStateOutline];
 }
 
 - (IBAction)toggleLeftNotes:(id)sender {
-    [self openLeftSidebar:sender];
+    [self openRightSidebar:sender];
+    [self setRightSidePaneState:SKSidePaneStateNote];
 }
 
 - (IBAction)toggleLeftSnapshots:(id)sender {
-    [self openLeftSidebar:sender];
+    [self openRightSidebar:sender];
+    [self setRightSidePaneState:SKSidePaneStateSnapshot];
 }
 
 - (IBAction)toggleLeftSidePane:(id)sender {
