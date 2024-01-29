@@ -1,4 +1,0 @@
-#include "ConfigFramework.xcconfig"
-
-// Strip all non-global symbols (including debug symbols)
-STRIP_STYLE = non-global
