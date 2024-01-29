@@ -32,6 +32,7 @@
 		45B113C00B329A7E00DE0660 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 45B113BF0B329A7E00DE0660 /* LICENSE */; };
 		5D483C772B49A9100007AF7E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 5D483C762B49A9100007AF7E /* README.md */; };
 		5D82C3942B6796B700EBAF5E /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 5D82C3932B6796B700EBAF5E /* Sparkle */; };
+		5D82C39D2B6798B200EBAF5E /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 5D82C39C2B6798B200EBAF5E /* ArgumentParser */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC310486D014006FF6A4 /* SKMainDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* SKMainDocument.m */; settings = {ATTRIBUTES = (); }; };
@@ -1313,6 +1314,7 @@
 				CE5F43730BF8A3410069D89C /* IOKit.framework in Frameworks */,
 				CE8DC47124620A7E00BD5D50 /* Metal.framework in Frameworks */,
 				CE8DC47024620A7E00BD5D50 /* MetalKit.framework in Frameworks */,
+				5D82C39D2B6798B200EBAF5E /* ArgumentParser in Frameworks */,
 				CE3364320E2761EF005F99E6 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2153,6 +2155,7 @@
 			name = Skim;
 			packageProductDependencies = (
 				5D82C3932B6796B700EBAF5E /* Sparkle */,
+				5D82C39C2B6798B200EBAF5E /* ArgumentParser */,
 			);
 			productInstallPath = "$(HOME)/Applications";
 			productName = Skim;
@@ -2191,6 +2194,7 @@
 			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* Skim */;
 			packageReferences = (
 				5D82C3922B6796B700EBAF5E /* XCRemoteSwiftPackageReference "Sparkle" */,
+				5D82C39B2B6798B200EBAF5E /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 			);
 			projectDirPath = "";
 			projectReferences = (
@@ -3588,6 +3592,14 @@
 				minimumVersion = 2.5.2;
 			};
 		};
+		5D82C39B2B6798B200EBAF5E /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -3595,6 +3607,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5D82C3922B6796B700EBAF5E /* XCRemoteSwiftPackageReference "Sparkle" */;
 			productName = Sparkle;
+		};
+		5D82C39C2B6798B200EBAF5E /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D82C39B2B6798B200EBAF5E /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
