@@ -237,7 +237,7 @@
         
         CGFloat rowHeight = [font defaultViewLineHeight];
         if ([self selectionHighlightStyle] == NSTableViewSelectionHighlightStyleSourceList)
-            rowHeight += 2.0;
+            rowHeight += 6.0;
         [self setRowHeight:rowHeight];
         [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
         [self reloadData];

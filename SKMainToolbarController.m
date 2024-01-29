@@ -859,6 +859,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [[searchField searchField] setSearchMenuTemplate:menu];
             [[searchField searchField] setPlaceholderString:NSLocalizedString(@"Search", @"placeholder")];
             
+            [searchField setPreferredWidthForSearchField:300.0];
             [searchField setAction:@selector(search:)];
             [searchField setTarget:mainController];
             

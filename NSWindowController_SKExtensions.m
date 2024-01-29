@@ -67,7 +67,7 @@
 - (BOOL)isNoteWindowController { return NO; }
 
 - (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse result))handler {
-    __block id strongSelf = self;
+    NS_VALID_UNTIL_END_OF_SCOPE __block id strongSelf = self;
     [window beginSheet:[self window] completionHandler:^(NSModalResponse result){
         if (handler)
             handler(result);

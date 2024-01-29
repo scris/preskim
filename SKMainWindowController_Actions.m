@@ -790,8 +790,7 @@ static NSArray *allMainDocumentPDFViews() {
     PDFDocument *pdfDoc = [pdfView document];
     NSString *searchString = [sender stringValue];
     
-    if ([self leftSidebarIsOpen] == NO)
-        [self toggleLeftSidebar:sender];
+    [self openLeftSidebar:sender];
     
     // cancel any previous find to remove those results, or else they stay around
     if ([pdfDoc isFinding])

@@ -228,7 +228,9 @@
                 [cell setFont:font];
         }
         
-        [self setRowHeight:[font defaultViewLineHeight]];
+        CGFloat rowHeight = [font defaultViewLineHeight];
+        rowHeight += 4.0;
+        [self setRowHeight:rowHeight];
         [self reloadData];
     }
 }
