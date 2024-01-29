@@ -109,6 +109,8 @@
 #define SKLeftSidePaneWidthKey  @"SKLeftSidePaneWidth"
 #define SKRightSidePaneWidthKey @"SKRightSidePaneWidth"
 
+#define SKTocOutlineEmptyIndicator @"SKTocOutlineEmptyIndicator"
+
 #define MIN_SIDE_PANE_WIDTH 100.0
 #define DEFAULT_SPLIT_PANE_HEIGHT 200.0
 #define MIN_SPLIT_PANE_HEIGHT 50.0
@@ -640,6 +642,11 @@
     if ([ov isEqual:leftSideController.tocOutlineView]) {
         if (item == nil && [[pdfView document] isLocked] == NO)
             item = [[pdfView document] outlineRoot];
+        if ([(PDFOutline *)item numberOfChildren] == 0) {
+            [[[[self toolbarController].leftPaneButton menuForSegment:0] itemArray][2] setEnabled:FALSE];
+        } else {
+            [[[[self toolbarController].leftPaneButton menuForSegment:0] itemArray][2] setEnabled:TRUE];
+        }
         return [(PDFOutline *)item numberOfChildren];
     } else if ([ov isEqual:rightSideController.noteOutlineView]) {
         if (item == nil)

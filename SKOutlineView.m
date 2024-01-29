@@ -80,7 +80,7 @@
     [self reloadTypeSelectStrings];
 }
 
-- (void)reloadData{
+- (void)reloadData {
     [super reloadData];
     [self reloadTypeSelectStrings];
 }
