@@ -310,7 +310,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.7.1</string>
+	<string>1.7.2</string>
 	<key>CFBundleSignature</key>
 	<string>PRes</string>
 	<key>CFBundleURLTypes</key>
@@ -466,7 +466,7 @@
 	<key>SUFeedURL</key>
 	<string>https://skim-app.sourceforge.io/skim.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>OJbci+AJM5DdGKcbQUBWDXiktAQJvyD81XgPJQWRHC0=</string>
+	<string>PvJzoEasKa5lH5yKMkxOLv5JPU2AykrLdbHtztOWWog=</string>
 	<key>SUScheduledCheckInterval</key>
 	<integer>86400</integer>
 	<key>UTExportedTypeDeclarations</key>
