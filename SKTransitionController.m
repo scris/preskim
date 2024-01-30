@@ -572,10 +572,10 @@ static inline CGRect scaleRect(NSRect rect, CGFloat scale) {
     CGSTransitionSpec spec;
     // specify our specifications
     spec.unknown1 = 0;
-    spec.type = [currentTransition transitionStyle];
+    spec.type = (CGSTransitionType) [currentTransition transitionStyle];
     spec.option = toIndex >= fromIndex ? CGSLeft : CGSRight;
     spec.backColour = NULL;
-    spec.wid = [([currentTransition shouldRestrict] ? window
+    spec.wid = (CGSWindow) [([currentTransition shouldRestrict] ? window
                                                     : viewWindow) windowNumber];
 
     // Let's get a connection

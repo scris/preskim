@@ -147,7 +147,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)selectColor:(nullable id)sender;
 - (IBAction)togglePacer:(nullable id)sender;
 - (IBAction)choosePacerSpeed:(nullable id)sender;
-- (void)handleLeftPaneButton:(NSSegmentedControl*)sender;
 
 @end
 

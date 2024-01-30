@@ -312,7 +312,7 @@
             [progressIndicator setControlSize:NSControlSizeSmall];
             [progressIndicator setDisplayedWhenStopped:YES];
             [progressIndicator setUsesThreadedAnimation:YES];
-            [progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
+            [progressIndicator setStyle:NSProgressIndicatorStyleSpinning];
             [progressIndicator setTranslatesAutoresizingMaskIntoConstraints:NO];
             [self addSubview:progressIndicator];
             [[self constraintWithSecondItem:rightField secondAttribute:NSLayoutAttributeTrailing] setActive:NO];

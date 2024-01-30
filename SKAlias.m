@@ -139,7 +139,7 @@ static inline void disposeAliasHandle(AliasHandle aliasHandle) {
     NSURL *fileURL = nil;
     BOOL shouldUpdate = NO;
     if (aliasHandle) {
-        fileURL = fileURLFromAliasHandle(aliasHandle, allowUI ? 0 : kResolveAliasFileNoUI);
+        fileURL = fileURLFromAliasHandle(aliasHandle, allowUI ? 0 : 1);
         shouldUpdate = YES;
     } else if (data) {
         NSURLBookmarkResolutionOptions options = allowUI ? 0 : NSURLBookmarkResolutionWithoutUI | NSURLBookmarkResolutionWithoutMounting;

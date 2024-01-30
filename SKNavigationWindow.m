@@ -183,7 +183,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
         [zoomButton setPath:zoomButtonPath(rect.size)];
         [zoomButton setAlternatePath:alternateZoomButtonPath(rect.size)];
         [zoomButton setState:[pdfView autoScales]];
-        [zoomButton setButtonType:NSPushOnPushOffButton];
+        [zoomButton setButtonType:NSButtonTypePushOnPushOff];
         [[self contentView] addSubview:zoomButton];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScaleChangedNotification:) 
                                                      name:PDFViewScaleChangedNotification object:pdfView];
@@ -234,7 +234,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 }
 
 - (void)handleScaleChangedNotification:(NSNotification *)notification {
-    [zoomButton setState:[[notification object] autoScales] ? NSControlStateValueOn : NSOffState];
+    [zoomButton setState:[[notification object] autoScales] ? NSControlStateValueOn : NSControlStateValueOff];
 }
 
 - (void)handlePageChangedNotification:(NSNotification *)notification {
@@ -570,9 +570,9 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (instancetype)initTextCell:(NSString *)aString {
     self = [super initTextCell:@""];
     if (self) {
-		[self setBezelStyle:NSShadowlessSquareBezelStyle]; // this is mainly to make it selectable
+        [self setBezelStyle:NSBezelStyleShadowlessSquare]; // this is mainly to make it selectable
         [self setBordered:NO];
-        [self setButtonType:NSMomentaryPushInButton];
+        [self setButtonType:NSButtonTypeMomentaryPushIn];
     }
     return self;
 }
@@ -631,7 +631,7 @@ static inline NSBezierPath *closeButtonPath(NSSize size);
 - (void)setToolTip:(NSString *)aToolTip {
     if (aToolTip != toolTip) {
         toolTip = aToolTip;
-        if ([self state] == NSOffState || alternateToolTip == nil)
+        if ([self state] == NSControlStateValueOff || alternateToolTip == nil)
             [self setAccessibilityLabel:toolTip];
     }
 }
@@ -809,7 +809,7 @@ static inline NSBezierPath *zoomButtonPath(NSSize size) {
         [arrow transformUsingAffineTransform:transform];
     }
     
-    [path setWindingRule:NSEvenOddWindingRule];
+    [path setWindingRule:NSWindingRuleEvenOdd];
     
     return path;
 }
@@ -846,7 +846,7 @@ static inline NSBezierPath *alternateZoomButtonPath(NSSize size) {
         [arrow transformUsingAffineTransform:transform];
     }
     
-    [path setWindingRule:NSEvenOddWindingRule];
+    [path setWindingRule:NSWindingRuleEvenOdd];
     
     return path;
 }

@@ -263,7 +263,7 @@ static inline CGRect SKPixelAlignedRect(CGRect rect, CGFloat scale) {
     }
     
     CGAffineTransform t = CGAffineTransformTranslate(CGAffineTransformScale(CGAffineTransformMakeTranslation(mouseLoc.x - NSMinX(magRect), mouseLoc.y - NSMinY(magRect)), magnification, magnification), -mouseLoc.x, -mouseLoc.y);
-    CGInterpolationQuality interpolation = [pdfView interpolationQuality] + 1;
+    CGInterpolationQuality interpolation = (CGInterpolationQuality)[pdfView interpolationQuality] + 1;
     PDFDisplayBox box = [pdfView displayBox];
     NSRect scaledRect = NSMakeRect(mouseLoc.x + (NSMinX(magRect) - mouseLoc.x) / magnification, mouseLoc.y + (NSMinY(magRect) - mouseLoc.y) / magnification, NSWidth(magRect) / magnification, NSHeight(magRect) / magnification);
     CGFloat backingScale = [window backingScaleFactor];

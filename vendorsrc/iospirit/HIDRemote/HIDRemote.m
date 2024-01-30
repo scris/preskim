@@ -442,7 +442,7 @@ static HIDRemote *sHIDRemote = nil;
 
 - (unsigned)activeRemoteControlCount
 {
-	return ([_serviceAttribMap count]);
+	return ((int) [_serviceAttribMap count]);
 }
 
 - (SInt32)lastSeenRemoteControlID
@@ -1125,7 +1125,7 @@ static HIDRemote *sHIDRemote = nil;
 				 nil];
 
 		{
-			UInt32 i, hidElementCnt = CFArrayGetCount(hidElements);
+			UInt32 i, hidElementCnt = (int) CFArrayGetCount(hidElements);
 			NSMutableDictionary *cookieButtonCodeLUT = [[NSMutableDictionary alloc] init];
 			NSMutableDictionary *cookieCount	= [[NSMutableDictionary alloc] init];
 			

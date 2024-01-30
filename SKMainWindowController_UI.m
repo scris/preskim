@@ -149,7 +149,7 @@
 
 - (NSButton *)newColorAccessoryButtonWithTitle:(NSString *)title {
     NSButton *button = [[NSButton alloc] init];
-    [button setButtonType:NSSwitchButton];
+    [button setButtonType:NSButtonTypeSwitch];
     [button setTitle:title];
     [[button cell] setControlSize:NSControlSizeSmall];
     [button setTarget:self];

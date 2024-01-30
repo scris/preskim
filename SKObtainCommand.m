@@ -99,8 +99,8 @@
         if ((page = [selection safeLastPage]))
             last = [selection safeIndexOfLastCharacterOnPage:page];
         desc = [NSAppleEventDescriptor listDescriptor];
-        [desc insertDescriptor:[NSAppleEventDescriptor descriptorWithInt32:first == NSNotFound ? 0 : first + 1] atIndex:1];
-        [desc insertDescriptor:[NSAppleEventDescriptor descriptorWithInt32:last == NSNotFound ? 0 : last + 1] atIndex:2];
+        [desc insertDescriptor:[NSAppleEventDescriptor descriptorWithInt32:first == NSNotFound ? 0 : (int)first + 1] atIndex:1];
+        [desc insertDescriptor:[NSAppleEventDescriptor descriptorWithInt32:last == NSNotFound ? 0 : (int)last + 1] atIndex:2];
     } else if (type == typePage) {
         NSArray *pages = [selection pages];
         if ([pages count] == 1) {

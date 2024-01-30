@@ -154,7 +154,7 @@ static inline bool __SKIsSurrogateCharacter(const UniChar character) {
 }
 
 static inline UTF32Char __SKGetLongCharacterForSurrogatePair(const UniChar surrogateHigh, const UniChar surrogateLow) {
-    return ((surrogateHigh - 0xD800UL) << 10) + (surrogateLow - 0xDC00UL) + 0x0010000UL;
+    return (int) ((surrogateHigh - 0xD800UL) << 10) + (surrogateLow - 0xDC00UL) + 0x0010000UL;
 }
 
 static inline bool __SKIsPrivateUseCharacter(const UTF32Char ch)

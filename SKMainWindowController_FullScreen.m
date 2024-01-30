@@ -125,7 +125,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         [leftSideController.topBar setDrawsBackground:NO];
     }
 
-    mwcFlags.savedLeftSidePaneState = [self leftSidePaneState];
+    mwcFlags.savedLeftSidePaneState = (int) [self leftSidePaneState];
     [self setLeftSidePaneState:SKSidePaneStateThumbnail];
     [sideWindow makeFirstResponder:leftSideController.thumbnailTableView];
     [sideWindow attachToWindow:[self window]];
@@ -839,14 +839,14 @@ static inline void setAlphaValueOfTitleBarControls(NSWindow *window, CGFloat alp
         NSView *notesView = [self presentationNotesView];
         if (presentationNotesButton == nil) {
             presentationNotesButton = [[NSButton alloc] initWithFrame:NSMakeRect(0.0, 0.0, 30.0, 50.0)];
-            [presentationNotesButton setButtonType:NSMomentaryChangeButton];
+            [presentationNotesButton setButtonType:NSButtonTypeMomentaryChange];
             [presentationNotesButton setBordered:NO];
             [presentationNotesButton setImage:[NSImage imageWithSize:NSMakeSize(30.0, 50.0) flipped:NO drawingHandler:^(NSRect rect){
                 NSBezierPath *path = [NSBezierPath bezierPath];
                 [path moveToPoint:NSMakePoint(5.0, 45.0)];
                 [path lineToPoint:NSMakePoint(25.0, 25.0)];
                 [path lineToPoint:NSMakePoint(5.0, 5.0)];
-                [path setLineCapStyle:NSRoundLineCapStyle];
+                [path setLineCapStyle:NSLineCapStyleRound];
                 [path setLineWidth:10.0];
                 [[NSColor whiteColor] setStroke];
                 [path stroke];

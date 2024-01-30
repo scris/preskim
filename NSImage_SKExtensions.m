@@ -459,7 +459,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path moveToPoint:NSMakePoint(14.0, 3.0)];
         [path lineToPoint:NSMakePoint(8.5, 8.5)];
         [path lineToPoint:NSMakePoint(14.0, 14.0)];
-        [path setLineCapStyle:NSRoundLineCapStyle];
+        [path setLineCapStyle:NSLineCapStyleRound];
         [path stroke];
     );
     
@@ -469,7 +469,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path moveToPoint:NSMakePoint(13.0, 3.0)];
         [path lineToPoint:NSMakePoint(18.5, 8.5)];
         [path lineToPoint:NSMakePoint(13.0, 14.0)];
-        [path setLineCapStyle:NSRoundLineCapStyle];
+        [path setLineCapStyle:NSLineCapStyleRound];
         [path stroke];
     );
     
@@ -693,7 +693,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path moveToPoint:NSMakePoint(11.0, 13.0)];
         [path lineToPoint:NSMakePoint(8.0, 10.0)];
         [path lineToPoint:NSMakePoint(11.0, 7.0)];
-        [path setLineCapStyle:NSRoundLineCapStyle];
+        [path setLineCapStyle:NSLineCapStyleRound];
         [path stroke];
     );
     
@@ -818,7 +818,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path moveToPoint:NSMakePoint(17.5, 10.5)];
         [path appendBezierPathWithArcWithCenter:NSMakePoint(19.0, 12.5) radius:1.5 startAngle:180.0 endAngle:0.0 clockwise:YES];
         [path curveToPoint:NSMakePoint(17.5, 3.0) controlPoint1:NSMakePoint(20.5, 8.5) controlPoint2:NSMakePoint(17.5, 7.0)];
-        [path setLineJoinStyle:NSRoundLineJoinStyle];
+        [path setLineJoinStyle:NSLineJoinStyleRound];
         [path stroke];
     );
     
@@ -896,7 +896,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path moveToPoint:NSMakePoint(11.0, 13.5)];
         [path lineToPoint:NSMakePoint(13.5, 16.5)];
         [path lineToPoint:NSMakePoint(16.0, 13.5)];
-        [path setLineCapStyle:NSRoundLineCapStyle];
+        [path setLineCapStyle:NSLineCapStyleRound];
         [path stroke];
     );
     
@@ -973,7 +973,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path appendBezierPathWithArcFromPoint:NSMakePoint(3.0, 14.0) toPoint:NSMakePoint(5.0, 14.0) radius:2.0];
         [path closePath];
         [path appendBezierPathWithRect:NSMakeRect(8.0, 2.0, 11.0, 8.0)];
-        [path setWindingRule:NSEvenOddWindingRule];
+        [path setWindingRule:NSWindingRuleEvenOdd];
         [path fill];
     );
     
@@ -1031,7 +1031,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path appendBezierPathWithArcFromPoint:NSMakePoint(12.5, 16.75) toPoint:NSMakePoint(7.75, 16.75) radius:1.0];
         [path appendBezierPathWithArcFromPoint:NSMakePoint(7.75, 16.75) toPoint:NSMakePoint(8.0, 14.25) radius:1];
         [path lineToPoint:NSMakePoint(8.0, 14.25)];
-        [path setLineCapStyle:NSRoundLineCapStyle];
+        [path setLineCapStyle:NSLineCapStyleRound];
         [path stroke];
         path = [NSBezierPath bezierPath];
         [path moveToPoint:NSMakePoint(10.125, 5.5)];
@@ -1041,7 +1041,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path moveToPoint:NSMakePoint(12.0, 5.5)];
         [path lineToPoint:NSMakePoint(12.25, 12.0)];
         [path setLineWidth:0.8];
-        [path setLineCapStyle:NSRoundLineCapStyle];
+        [path setLineCapStyle:NSLineCapStyleRound];
         [path stroke];
     );
     
@@ -1239,7 +1239,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path moveToPoint:NSMakePoint(17.5, 10.5)];
         [path appendBezierPathWithArcWithCenter:NSMakePoint(19.0, 12.5) radius:1.5 startAngle:180.0 endAngle:0.0 clockwise:YES];
         [path curveToPoint:NSMakePoint(17.5, 3.0) controlPoint1:NSMakePoint(20.5, 8.5) controlPoint2:NSMakePoint(17.5, 7.0)];
-        [path setLineJoinStyle:NSRoundLineJoinStyle];
+        [path setLineJoinStyle:NSLineJoinStyleRound];
         [path stroke];
     );
     
@@ -1893,7 +1893,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [arrow transformUsingAffineTransform:transform];
         [path appendBezierPath:arrow];
         
-        [path setWindingRule:NSEvenOddWindingRule];
+        [path setWindingRule:NSWindingRuleEvenOdd];
         
         [[NSColor colorWithGenericGamma22White:1.0 alpha:1.0] setFill];
         [path fill];
@@ -2206,7 +2206,7 @@ static void drawPopoverBadge() {
     [arrowPath relativeLineToPoint:NSMakePoint(3.0, -5.5)];
     [arrowPath relativeLineToPoint:NSMakePoint(-3.0, -5.5)];
     [arrowPath setLineWidth:1.5];
-    [arrowPath setLineCapStyle:NSRoundLineCapStyle];
+    [arrowPath setLineCapStyle:NSLineCapStyleRound];
     [[NSColor colorWithGenericGamma22White:0.0 alpha:0.5] setStroke];
     [arrowPath stroke];
 }

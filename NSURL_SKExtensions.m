@@ -70,14 +70,14 @@ static id (*original_initWithString)(id, SEL, id) = NULL;
 
 + (BOOL)canReadURLFromPasteboard:(NSPasteboard *)pboard {
     return [pboard canReadObjectForClasses:@[[SKURL class]] options:@{}] ||
-           [pboard canReadItemWithDataConformingToTypes:@[NSURLPboardType, NSFilenamesPboardType]];
+    [pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeURL, NSFilenamesPboardType]];
 }
 
 + (NSArray *)readURLsFromPasteboard:(NSPasteboard *)pboard {
     NSArray *URLs = [pboard readObjectsForClasses:@[[SKURL class]] options:@{}];
     if ([URLs count] == 0) {
-        NSString *type = [pboard availableTypeFromArray:@[NSURLPboardType, NSFilenamesPboardType]];
-        if ([type isEqualToString:NSURLPboardType]) {
+        NSString *type = [pboard availableTypeFromArray:@[NSPasteboardTypeURL, NSFilenamesPboardType]];
+        if ([type isEqualToString:NSPasteboardTypeURL]) {
             URLs = [NSArray arrayWithObjects:[NSURL URLFromPasteboard:pboard], nil];
         } else if ([type isEqualToString:NSFilenamesPboardType]) {
             NSArray *filenames = [pboard propertyListForType:NSFilenamesPboardType];

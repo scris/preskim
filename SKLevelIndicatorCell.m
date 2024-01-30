@@ -44,9 +44,9 @@
 @implementation SKLevelIndicatorCell
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
-    BOOL drawDiscreteContinuous = ([self levelIndicatorStyle] == NSDiscreteCapacityLevelIndicatorStyle) && (NSWidth(cellFrame) + 1.0 < 3.0 * [self maxValue]);
+    BOOL drawDiscreteContinuous = ([self levelIndicatorStyle] == NSLevelIndicatorStyleDiscreteCapacity) && (NSWidth(cellFrame) + 1.0 < 3.0 * [self maxValue]);
     if (drawDiscreteContinuous)
-        [self setLevelIndicatorStyle:NSContinuousCapacityLevelIndicatorStyle];
+        [self setLevelIndicatorStyle:NSLevelIndicatorStyleContinuousCapacity];
     CGFloat cellHeight = [self cellSize].height;
     if (fabs(NSHeight(cellFrame) - cellHeight) <= 0.0) {
         [NSGraphicsContext saveGraphicsState];
@@ -90,7 +90,7 @@
         [NSGraphicsContext restoreGraphicsState];
     }
     if (drawDiscreteContinuous)
-        [self setLevelIndicatorStyle:NSDiscreteCapacityLevelIndicatorStyle];
+        [self setLevelIndicatorStyle:NSLevelIndicatorStyleDiscreteCapacity];
 }
 
 - (void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle {

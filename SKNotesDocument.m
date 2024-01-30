@@ -457,7 +457,7 @@
 - (NSPrintOperation *)printOperationWithSettings:(NSDictionary *)printSettings error:(NSError **)outError {
     NSPrintInfo *printInfo = [[self printInfo] copy];
     [[printInfo dictionary] addEntriesFromDictionary:printSettings];
-    [printInfo setHorizontalPagination:NSFitPagination];
+    [printInfo setHorizontalPagination:NSPrintingPaginationModeFit];
     [printInfo setHorizontallyCentered:NO];
     [printInfo setVerticallyCentered:NO];
     

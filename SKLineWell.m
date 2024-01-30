@@ -106,7 +106,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
         dashPattern = [decoder decodeObjectForKey:SKLineWellDashPatternKey];
         startLineStyle = [decoder decodeIntegerForKey:SKLineWellStartLineStyleKey];
         endLineStyle = [decoder decodeIntegerForKey:SKLineWellEndLineStyleKey];
-        lwFlags.displayStyle = [decoder decodeIntegerForKey:DISPLAYSTYLE_KEY];
+        lwFlags.displayStyle = (int) [decoder decodeIntegerForKey:DISPLAYSTYLE_KEY];
         lwFlags.active = [decoder decodeBoolForKey:ACTIVE_KEY];
         action = NSSelectorFromString([decoder decodeObjectForKey:ACTION_KEY]);
         target = [decoder decodeObjectForKey:TARGET_KEY];
@@ -465,7 +465,7 @@ NSString *SKLineWellEndLineStyleKey = @"endLineStyle";
 
 - (void)setDisplayStyle:(SKLineWellDisplayStyle)newStyle {
     if (lwFlags.displayStyle != newStyle) {
-        lwFlags.displayStyle = newStyle;
+        lwFlags.displayStyle = (int) newStyle;
         [self setNeedsDisplay:YES];
     }
 }

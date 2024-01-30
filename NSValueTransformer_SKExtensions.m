@@ -221,7 +221,7 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
                 [path lineToPoint:NSMakePoint(11.0, 2.0)];
                 [path closePath];
                 [path appendBezierPath:[NSBezierPath bezierPathWithRect:NSMakeRect(2.0, 3.0, 8.0, 7.0)]];
-                [path setWindingRule:NSEvenOddWindingRule];
+                [path setWindingRule:NSWindingRuleEvenOdd];
                 [[NSColor blackColor] setFill];
                 [path fill];
                 return YES;
@@ -257,7 +257,7 @@ NSString *SKIsTwoTransformerName = @"SKIsTwo";
 }
 
 - (id)transformedValue:(id)value {
-    return [NSNumber numberWithInteger:[value integerValue] == targetValue ? NSControlStateValueOn : NSOffState];
+    return [NSNumber numberWithInteger:[value integerValue] == targetValue ? NSControlStateValueOn : NSControlStateValueOff];
 }
 
 - (id)reverseTransformedValue:(id)value {

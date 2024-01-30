@@ -307,7 +307,7 @@ enum {
 }
 
 - (void)setExportOption:(NSInteger)option {
-    mdFlags.exportOption = option;
+    mdFlags.exportOption = (int) option;
 }
 
 - (NSString *)fileTypeFromLastRunSavePanel {
@@ -341,7 +341,7 @@ enum {
         NSString *lastExportedType = [[NSUserDefaults standardUserDefaults] stringForKey:SKLastExportedTypeKey];
         NSInteger lastExportedOption = [[NSUserDefaults standardUserDefaults] integerForKey:SKLastExportedOptionKey];
         
-        mdFlags.exportOption = lastExportedOption;
+        mdFlags.exportOption = (int) lastExportedOption;
         
         exportAccessoryController = [[SKExportAccessoryController alloc] init];
         [exportAccessoryController setRepresentedObject:self];
@@ -1893,7 +1893,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     // we don't want to expose the UTI types to the user, and we allow template file names without extension
     if (fileType && file) {
         NSString *normalizedType = nil;
-        NSInteger option = SKExportOptionDefault;
+        int option = SKExportOptionDefault;
         NSArray *writableTypes = [self writableTypesForSaveOperation:NSSaveToOperation];
         SKTemplateManager *tm = [SKTemplateManager sharedManager];
         if ([fileType isEqualToString:@"PDF"]) {

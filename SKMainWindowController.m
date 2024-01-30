@@ -1185,7 +1185,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)setLeftSidePaneState:(SKLeftSidePaneState)newLeftSidePaneState {
     if (mwcFlags.leftSidePaneState != newLeftSidePaneState) {
-        mwcFlags.leftSidePaneState = newLeftSidePaneState;
+        mwcFlags.leftSidePaneState = (int) newLeftSidePaneState;
         
         if ([[toolbarController.searchField searchField] stringValue] && [[[toolbarController.searchField searchField] stringValue] isEqualToString:@""] == NO) {
             [[toolbarController.searchField searchField] setStringValue:@""];
@@ -1210,7 +1210,7 @@ static char SKMainWindowContentLayoutObservationContext;
             [self searchNotes:rightSideController.searchField];
         }
         
-        mwcFlags.rightSidePaneState = newRightSidePaneState;
+        mwcFlags.rightSidePaneState = (int) newRightSidePaneState;
         
         if (mwcFlags.rightSidePaneState == SKSidePaneStateNote)
             [self displayNoteViewAnimating:NO];
@@ -1225,7 +1225,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 - (void)setFindPaneState:(SKFindPaneState)newFindPaneState {
     if (mwcFlags.findPaneState != newFindPaneState) {
-        mwcFlags.findPaneState = newFindPaneState;
+        mwcFlags.findPaneState = (int) newFindPaneState;
         
         if (mwcFlags.findPaneState == SKFindPaneStateSingular) {
             if ([leftSideController.groupedFindTableView window])

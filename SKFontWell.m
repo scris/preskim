@@ -228,7 +228,7 @@ static char SKFontWellFontSizeObservationContext;
 
 - (void)deactivate {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self setState:NSOffState];
+    [self setState:NSControlStateValueOff];
     [self dirty];
     [self setNeedsDisplay:YES];
 }
@@ -446,9 +446,9 @@ static char SKFontWellFontSizeObservationContext;
 - (void)commonInit {
     if (textColor == nil)
         [self setTextColor:[NSColor controlTextColor]];
-    [self setBezelStyle:NSShadowlessSquareBezelStyle]; // this is mainly to make it selectable
-    [self setButtonType:NSPushOnPushOffButton];
-    [self setState:NSOffState];
+    [self setBezelStyle:NSBezelStyleShadowlessSquare]; // this is mainly to make it selectable
+    [self setButtonType:NSButtonTypePushOnPushOff];
+    [self setState:NSControlStateValueOff];
 }
  
 - (instancetype)initTextCell:(NSString *)aString {

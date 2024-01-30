@@ -227,7 +227,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         // create it
         toolModeButton = [[NSButton alloc] initWithFrame:NSMakeRect(0.0, 0.0, CONTROL_HEIGHT, CONTROL_HEIGHT)];
         
-        [toolModeButton setButtonType:NSToggleButton];
+        [toolModeButton setButtonType:NSButtonTypeToggle];
         [toolModeButton setBordered:NO];
         [toolModeButton setImage:[NSImage imageNamed:SKImageNameTextToolAdorn]];
         
@@ -469,7 +469,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         selectsText = newSelectsText;
         if (selectsText == NO)
             [self setCurrentSelection:nil];
-        [toolModeButton setState:selectsText ? NSControlStateValueOn : NSOffState];
+        [toolModeButton setState:selectsText ? NSControlStateValueOn : NSControlStateValueOff];
         [[NSUserDefaults standardUserDefaults] setBool:selectsText forKey:SKLastSecondarySelectsTextKey];
     }
 }
