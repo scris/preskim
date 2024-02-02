@@ -750,8 +750,15 @@ static NSArray *allMainDocumentPDFViews() {
     [pdfView setToolMode:[sender tag]];
 }
 
-- (IBAction)toggleToolModesPane:(id)sender {
-    NSLog(@"Toggle Tool Modes Pane");
+- (IBAction)toggleHighlightersPane:(id)sender {
+    NSLog(@"Toggle Highlighters Pane");
+    NSView *newView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, pdfSplitView.frame.size.width, 200)];
+    NSLog(@"%lu", (unsigned long)[pdfSplitView.subviews count]);
+    /*if ([pdfSplitView.subviews count] == 1) {
+        [pdfSplitView setSubviews:@[newView, [pdfSplitView subviews][[pdfSplitView subviews].count - 1]]];
+    } else {
+        [pdfSplitView setSubviews:@[[pdfSplitView subviews][[pdfSplitView subviews].count - 1]]];
+    }*/
 }
 
 - (IBAction)changeAnnotationMode:(id)sender {

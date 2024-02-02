@@ -93,7 +93,7 @@
 #define SKDocumentToolbarNewNoteItemIdentifier @"SKDocumentToolbarNewNoteItemIdentifier"
 #define SKDocumentToolbarInfoItemIdentifier @"SKDocumentToolbarInfoItemIdentifier"
 #define SKDocumentToolbarToolModeItemIdentifier @"SKDocumentToolbarToolModeItemIdentifier"
-#define SKDocumentToolbarToolModesIdentifier @"SKDocumentToolbarToolModesIdentifier"
+#define SKDocumentToolbarHighlightersIdentifier @"SKDocumentToolbarHighlightersIdentifier"
 #define SKDocumentToolbarSingleTwoUpItemIdentifier @"SKDocumentToolbarSingleTwoUpItemIdentifier"
 #define SKDocumentToolbarContinuousItemIdentifier @"SKDocumentToolbarContinuousItemIdentifier"
 #define SKDocumentToolbarDisplayModeItemIdentifier @"SKDocumentToolbarDisplayModeItemIdentifier"
@@ -139,7 +139,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 @implementation SKMainToolbarController
 
-@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, autoScalesButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, splitPDFButton, toolModeButton, toolModesButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton, searchField;
+@synthesize mainController, backForwardButton, pageNumberField, previousNextPageButton, previousPageButton, nextPageButton, previousNextFirstLastPageButton, zoomInOutButton, zoomInActualOutButton, zoomActualButton, zoomFitButton, zoomSelectionButton, autoScalesButton, rotateLeftButton, rotateRightButton, rotateLeftRightButton, cropButton, fullScreenButton, presentationButton, leftPaneButton, rightPaneButton, splitPDFButton, toolModeButton, highlightersButton, textNoteButton, circleNoteButton, markupNoteButton, lineNoteButton, singleTwoUpButton, continuousButton, displayModeButton, displayDirectionButton, displaysRTLButton, bookModeButton, pageBreaksButton, displayBoxButton, infoButton, colorsButton, fontsButton, linesButton, printButton, customizeButton, scaleField, noteButton, colorSwatch, pacerButton, pacerSpeedField, pacerSpeedStepper, shareButton, searchField;
 
 - (NSString *)nibName {
     return @"MainToolbar";
@@ -556,13 +556,13 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
             [item setView:toolModeButton];
             [item setMenuFormRepresentation:menuItem];
             
-        } else if ([identifier isEqualToString:SKDocumentToolbarToolModesIdentifier]) {
+        } else if ([identifier isEqualToString:SKDocumentToolbarHighlightersIdentifier]) {
             
-            menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Tool Mode", @"Menu item title") action:@selector(toggleToolModesPane:) target:mainController];
+            menuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Highlight Tool", @"Menu item title") action:@selector(toggleHighlightersPane:) target:mainController];
             
-            [item setLabels:NSLocalizedString(@"Tool Mode", @"Toolbar item label")];
-            [item setToolTip:NSLocalizedString(@"Tool Mode", @"Tool tip message")];
-            [item setView:toolModesButton];
+            [item setLabels:NSLocalizedString(@"Highlight Tool", @"Toolbar item label")];
+            [item setToolTip:NSLocalizedString(@"Highlight Tool", @"Tool tip message")];
+            [item setView:highlightersButton];
             [item setMenuFormRepresentation:menuItem];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarSingleTwoUpItemIdentifier]) {
@@ -897,6 +897,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         NSToolbarSidebarTrackingSeparatorItemIdentifier,
         SKDocumentToolbarZoomInOutItemIdentifier,
         SKDocumentToolbarNewNoteItemIdentifier,
+        SKDocumentToolbarHighlightersIdentifier,
         SKDocumentToolbarInfoItemIdentifier,
         searchField.itemIdentifier];
 }
@@ -915,6 +916,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarZoomToSelectionItemIdentifier,
         SKDocumentToolbarAutoScalesItemIdentifier,
         SKDocumentToolbarScaleItemIdentifier,
+        SKDocumentToolbarHighlightersIdentifier,
         SKDocumentToolbarDisplayModeItemIdentifier,
         SKDocumentToolbarSingleTwoUpItemIdentifier,
         SKDocumentToolbarContinuousItemIdentifier,
@@ -1229,8 +1231,8 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     [mainController.pdfView setToolMode:newToolMode];
 }
 
-- (IBAction)toggleToolModesPane:(id)sender {
-    [mainController toggleToolModesPane:sender];
+- (IBAction)toggleHighlightersPane:(id)sender {
+    [mainController toggleHighlightersPane:sender];
 }
 
 - (IBAction)selectColor:(id)sender {

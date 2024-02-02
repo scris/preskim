@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSSegmentedControl *rightPaneButton;
     NSSegmentedControl *splitPDFButton;
     NSSegmentedControl *toolModeButton;
-    NSSegmentedControl *toolModesButton;
+    NSSegmentedControl *highlightersButton;
     NSSegmentedControl *textNoteButton;
     NSSegmentedControl *circleNoteButton;
     NSSegmentedControl *markupNoteButton;
@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 @property (nonatomic, nullable, weak) IBOutlet SKMainWindowController *mainController;
-@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *backForwardButton, *previousNextPageButton, *previousPageButton, *nextPageButton, *previousNextFirstLastPageButton, *zoomInOutButton, *zoomInActualOutButton, *zoomActualButton, *zoomFitButton, *zoomSelectionButton, *autoScalesButton, *rotateLeftButton, *rotateRightButton, *rotateLeftRightButton, *cropButton, *fullScreenButton, *presentationButton, *leftPaneButton, *rightPaneButton, *splitPDFButton, *toolModeButton, *toolModesButton, *textNoteButton, *circleNoteButton, *markupNoteButton, *lineNoteButton, *singleTwoUpButton, *continuousButton, *displayModeButton, *displayDirectionButton, *displaysRTLButton, *bookModeButton, *pageBreaksButton, *displayBoxButton, *infoButton, *colorsButton, *fontsButton, *linesButton, *printButton, *customizeButton, *noteButton, *pacerButton, *shareButton;
+@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *backForwardButton, *previousNextPageButton, *previousPageButton, *nextPageButton, *previousNextFirstLastPageButton, *zoomInOutButton, *zoomInActualOutButton, *zoomActualButton, *zoomFitButton, *zoomSelectionButton, *autoScalesButton, *rotateLeftButton, *rotateRightButton, *rotateLeftRightButton, *cropButton, *fullScreenButton, *presentationButton, *leftPaneButton, *rightPaneButton, *splitPDFButton, *toolModeButton, *highlightersButton, *textNoteButton, *circleNoteButton, *markupNoteButton, *lineNoteButton, *singleTwoUpButton, *continuousButton, *displayModeButton, *displayDirectionButton, *displaysRTLButton, *bookModeButton, *pageBreaksButton, *displayBoxButton, *infoButton, *colorsButton, *fontsButton, *linesButton, *printButton, *customizeButton, *noteButton, *pacerButton, *shareButton;
 @property (nonatomic, nullable, strong) IBOutlet NSTextField *pageNumberField, *scaleField, *pacerSpeedField;
 @property (nonatomic, nullable, strong) IBOutlet SKColorSwatch *colorSwatch;
 @property (nonatomic, nullable, strong) IBOutlet NSStepper *pacerSpeedStepper;
@@ -143,7 +143,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)createNewLineNote:(nullable id)sender;
 - (IBAction)createNewNote:(nullable id)sender;
 - (IBAction)changeToolMode:(nullable id)sender;
-- (IBAction)toggleToolModesPane:(nullable id)sender;
+- (IBAction)toggleHighlightersPane:(nullable id)sender;
 - (IBAction)selectColor:(nullable id)sender;
 - (IBAction)togglePacer:(nullable id)sender;
 - (IBAction)choosePacerSpeed:(nullable id)sender;

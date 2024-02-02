@@ -1701,7 +1701,7 @@ static NSArray *allMainDocumentPDFViews() {
     } else if (action == @selector(changeDisplayBox:)) {
         [menuItem setState:[pdfView displayBox] == (PDFDisplayBox)[menuItem tag] ? NSControlStateValueOn : NSOffState];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO;
-    } else if (action == @selector(delete:) || action == @selector(copy:) || action == @selector(cut:) || action == @selector(paste:) || action == @selector(alternatePaste:) || action == @selector(pasteAsPlainText:) || action == @selector(deselectAll:) || action == @selector(changeAnnotationMode:) || action == @selector(changeToolMode:) || action == @selector(toggleToolModesPane:)) {
+    } else if (action == @selector(delete:) || action == @selector(copy:) || action == @selector(cut:) || action == @selector(paste:) || action == @selector(alternatePaste:) || action == @selector(pasteAsPlainText:) || action == @selector(deselectAll:) || action == @selector(changeAnnotationMode:) || action == @selector(changeToolMode:)) {
         return [self hasOverview] == NO && [pdfView validateMenuItem:menuItem];
     } else if (action == @selector(doGoToNextPage:)) {
         return [pdfView canGoToNextPage];

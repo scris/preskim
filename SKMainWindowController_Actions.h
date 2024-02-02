@@ -124,7 +124,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)toggleOverview:(nullable id)sender;
 - (IBAction)toggleReadingBar:(nullable id)sender;
 - (IBAction)togglePacer:(nullable id)sender;
-- (IBAction)toggleToolModesPane:(nullable id)sender;
+- (IBAction)toggleHighlightersPane:(nullable id)sender;
 - (IBAction)changePacerSpeed:(nullable id)sender;
 - (IBAction)searchPDF:(nullable id)sender;
 - (IBAction)filterNotes:(nullable id)sender;
