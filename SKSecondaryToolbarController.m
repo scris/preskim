@@ -59,6 +59,8 @@
 
     [navigationButton setHelp:NSLocalizedString(@"Find previous", @"Tool tip message") forSegment:0];
     [navigationButton setHelp:NSLocalizedString(@"Find next", @"Tool tip message") forSegment:1];
+    
+    // Crack Items From: New Note Item Identifier
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification {}

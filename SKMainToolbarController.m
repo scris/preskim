@@ -896,7 +896,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
     return @[SKDocumentToolbarContentsPaneItemIdentifier,
         NSToolbarSidebarTrackingSeparatorItemIdentifier,
         SKDocumentToolbarZoomInOutItemIdentifier,
-        SKDocumentToolbarNewNoteItemIdentifier,
         SKDocumentToolbarHighlightersIdentifier,
         SKDocumentToolbarInfoItemIdentifier,
         searchField.itemIdentifier];
@@ -904,12 +903,7 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
     return @[SKDocumentToolbarPreviousNextItemIdentifier,
-        SKDocumentToolbarPreviousNextFirstLastItemIdentifier,
-        SKDocumentToolbarPreviousItemIdentifier,
         SKDocumentToolbarPageNumberItemIdentifier,
-        SKDocumentToolbarNextItemIdentifier,
-        SKDocumentToolbarBackForwardItemIdentifier,
-        SKDocumentToolbarZoomInActualOutItemIdentifier,
         SKDocumentToolbarZoomInOutItemIdentifier,
         SKDocumentToolbarZoomActualItemIdentifier,
         SKDocumentToolbarZoomToFitItemIdentifier,
@@ -934,22 +928,17 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarRotateLeftRightItemIdentifier,
         SKDocumentToolbarCropItemIdentifier,
         SKDocumentToolbarNewNoteItemIdentifier,
-        SKDocumentToolbarNewTextNoteItemIdentifier,
-        SKDocumentToolbarNewCircleNoteItemIdentifier,
-        SKDocumentToolbarNewMarkupItemIdentifier,
-        SKDocumentToolbarNewLineItemIdentifier,
         SKDocumentToolbarToolModeItemIdentifier,
         SKDocumentToolbarColorSwatchItemIdentifier,
         SKDocumentToolbarShareItemIdentifier,
         SKDocumentToolbarPacerItemIdentifier,
         SKDocumentToolbarInfoItemIdentifier,
-        SKDocumentToolbarColorsItemIdentifier,
-        SKDocumentToolbarFontsItemIdentifier,
-        SKDocumentToolbarLinesItemIdentifier,
         SKDocumentToolbarPrintItemIdentifier,
         NSToolbarFlexibleSpaceItemIdentifier,
         NSToolbarSpaceItemIdentifier,
-        SKDocumentToolbarCustomizeItemIdentifier];
+        NSToolbarSidebarTrackingSeparatorItemIdentifier,
+        SKDocumentToolbarCustomizeItemIdentifier
+    ];
 }
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)toolbarItem {

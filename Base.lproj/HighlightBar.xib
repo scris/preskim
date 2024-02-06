@@ -19,9 +19,9 @@
             <rect key="frame" x="0.0" y="0.0" width="220" height="36"/>
             <subviews>
                 <segmentedControl horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5">
-                    <rect key="frame" x="7" y="8" width="45" height="20"/>
-                    <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="roundRect" trackingMode="momentary" id="6">
-                        <font key="font" metaFont="cellTitle"/>
+                    <rect key="frame" x="86" y="6" width="49" height="23"/>
+                    <segmentedCell key="cell" alignment="left" segmentDistribution="fill" style="capsule" trackingMode="selectOne" id="6">
+                        <font key="font" metaFont="system"/>
                         <segments>
                             <segment image="NSGoLeftTemplate" width="19"/>
                             <segment image="NSGoRightTemplate" width="19" tag="1"/>
@@ -31,7 +31,7 @@
             </subviews>
             <constraints>
                 <constraint firstAttribute="height" constant="36" id="1Jb-lY-NZY"/>
-                <constraint firstItem="5" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="8" id="2lS-gb-fB8"/>
+                <constraint firstItem="5" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="2lS-gb-fB8"/>
                 <constraint firstItem="5" firstAttribute="centerY" secondItem="1" secondAttribute="centerY" id="snO-ne-pmX"/>
             </constraints>
             <point key="canvasLocation" x="139" y="154"/>
