@@ -67,6 +67,7 @@
 #import "NSDocument_SKExtensions.h"
 #import "NSResponder_SKExtensions.h"
 #import "SKFindController.h"
+#import "SKSecondaryToolbarController.h"
 #import "PDFView_SKExtensions.h"
 #import "SKSnapshotWindowController.h"
 #import "PDFDocument_SKExtensions.h"
@@ -751,14 +752,13 @@ static NSArray *allMainDocumentPDFViews() {
 }
 
 - (IBAction)toggleHighlightersPane:(id)sender {
-    NSLog(@"Toggle Highlighters Pane");
-    NSView *newView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, pdfSplitView.frame.size.width, 200)];
-    NSLog(@"%lu", (unsigned long)[pdfSplitView.subviews count]);
-    /*if ([pdfSplitView.subviews count] == 1) {
-        [pdfSplitView setSubviews:@[newView, [pdfSplitView subviews][[pdfSplitView subviews].count - 1]]];
+    if (!mwcFlags.secondaryToolbarShowing) {
+        [self showSecondaryToolbar];
+        mwcFlags.secondaryToolbarShowing = YES;
     } else {
-        [pdfSplitView setSubviews:@[[pdfSplitView subviews][[pdfSplitView subviews].count - 1]]];
-    }*/
+        [secondaryToolbarController remove:nil];
+        mwcFlags.secondaryToolbarShowing = NO;
+    }
 }
 
 - (IBAction)changeAnnotationMode:(id)sender {

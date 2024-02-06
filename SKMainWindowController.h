@@ -40,6 +40,7 @@
 #import "SKSnapshotWindowController.h"
 #import "SKThumbnail.h"
 #import "SKFindController.h"
+#import "SKSecondaryToolbarController.h"
 #import "NSDocument_SKExtensions.h"
 #import "SKPDFView.h"
 #import "SKPDFDocument.h"
@@ -71,15 +72,17 @@ enum {
 @class SKPDFView, SKSecondaryPDFView, SKStatusBar, SKFindController, SKSplitView, SKFieldEditor, SKOverviewView, SKSideWindow;
 @class SKLeftSideViewController, SKRightSideViewController, SKMainToolbarController, SKMainTouchBarController, SKProgressController, SKPresentationOptionsSheetController, SKNoteTypeSheetController, SKSnapshotWindowController;
 
-@interface SKMainWindowController : NSWindowController <SKSnapshotWindowControllerDelegate, SKThumbnailDelegate, SKFindControllerDelegate, SKPDFViewDelegate, SKPDFDocumentDelegate, NSTouchBarDelegate> {
+@interface SKMainWindowController : NSWindowController <SKSnapshotWindowControllerDelegate, SKThumbnailDelegate, SKFindControllerDelegate, SKPDFViewDelegate, SKPDFDocumentDelegate, NSTouchBarDelegate, SKSecondaryToolbarControllerDelegate> {
     SKSplitView                         *splitView;
     
-    NSView                              *centerContentView;
+    SKSplitView                         *centerContentView;
     SKSplitView                         *pdfSplitView;
     NSView                              *pdfContentView;
     SKPDFView                           *pdfView;
     
     SKSecondaryPDFView                  *secondaryPdfView;
+    
+    SKSecondaryToolbarController        *secondaryToolbarController;
     
     SKLeftSideViewController            *leftSideController;
     SKRightSideViewController           *rightSideController;
@@ -195,6 +198,8 @@ enum {
         unsigned int isEditingTable:1;
         unsigned int isSwitchingFullScreen:1;
         unsigned int isAnimatingFindBar:1;
+        unsigned int isAnimatingSecondaryToolbar:1;
+        unsigned int secondaryToolbarShowing:1;
         unsigned int wantsPresentation:1;
         unsigned int recentInfoNeedsUpdate:1;
         unsigned int hasCropped:1;
@@ -211,7 +216,7 @@ enum {
 @property (nonatomic, nullable, strong) IBOutlet SKSplitView *pdfSplitView;
 @property (nonatomic, nullable, strong) IBOutlet NSView *pdfContentView;
 
-@property (nonatomic, nullable, strong) IBOutlet NSViewController *pdfViewController;
+@property (nonatomic, nullable, strong) IBOutlet NSSplitViewController *pdfViewController;
 @property (nonatomic, nullable, strong) IBOutlet SKLeftSideViewController *leftSideController;
 @property (nonatomic, nullable, strong) IBOutlet SKRightSideViewController *rightSideController;
     
@@ -297,6 +302,7 @@ enum {
 - (void)displaySnapshotViewAnimating:(BOOL)animate;
 
 - (void)showFindBar;
+- (void)showSecondaryToolbar;
 
 - (void)selectFindResultHighlight:(NSSelectionDirection)direction;
 

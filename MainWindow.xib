@@ -8,7 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SKMainWindowController">
             <connections>
-                <outlet property="centerContentView" destination="1321" id="1526"/>
+                <outlet property="centerContentView" destination="GZh-60-Un6" id="2BO-yw-UDb"/>
                 <outlet property="leftSideContentView" destination="769" id="774"/>
                 <outlet property="leftSideController" destination="1543" id="1545"/>
                 <outlet property="mainWindow" destination="5" id="1554"/>
@@ -36,22 +36,23 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <splitView fixedFrame="YES" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1385" customClass="SKSplitView">
-                        <rect key="frame" x="0.0" y="600" width="1000" height="0.0"/>
+                        <rect key="frame" x="0.0" y="0.0" width="163" height="0.0"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <customView fixedFrame="YES" id="769" customClass="SKGroupView">
-                                <rect key="frame" x="0.0" y="0.0" width="310" height="0.0"/>
+                            <customView fixedFrame="YES" id="769" userLabel="Left View" customClass="SKGroupView">
+                                <rect key="frame" x="0.0" y="0.0" width="70" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </customView>
-                            <customView id="1321">
-                                <rect key="frame" x="311" y="0.0" width="443" height="0.0"/>
+                            <splitView fixedFrame="YES" arrangesAllSubviews="NO" dividerStyle="paneSplitter" id="GZh-60-Un6" userLabel="Central View" customClass="SKSplitView">
+                                <rect key="frame" x="71" y="0.0" width="36" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <splitView dividerStyle="paneSplitter" translatesAutoresizingMaskIntoConstraints="NO" id="1314" customClass="SKSplitView">
-                                        <rect key="frame" x="0.0" y="0.0" width="443" height="0.0"/>
+                                    <splitView fixedFrame="YES" dividerStyle="paneSplitter" id="1314" userLabel="Splitable PDF View" customClass="SKSplitView">
+                                        <rect key="frame" x="0.0" y="0.0" width="36" height="0.0"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
-                                            <customView fixedFrame="YES" id="1315">
-                                                <rect key="frame" x="0.0" y="0.0" width="443" height="0.0"/>
+                                            <customView fixedFrame="YES" id="1315" userLabel="PDF Contents">
+                                                <rect key="frame" x="0.0" y="0.0" width="36" height="0.0"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             </customView>
                                         </subviews>
@@ -63,15 +64,12 @@
                                         </connections>
                                     </splitView>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="1314" secondAttribute="bottom" id="BwS-so-46O"/>
-                                    <constraint firstAttribute="trailing" secondItem="1314" secondAttribute="trailing" id="OE4-7n-0dl"/>
-                                    <constraint firstItem="1314" firstAttribute="top" secondItem="1321" secondAttribute="top" id="Twe-rt-5Qm"/>
-                                    <constraint firstItem="1314" firstAttribute="leading" secondItem="1321" secondAttribute="leading" id="xoo-8V-ElE"/>
-                                </constraints>
-                            </customView>
-                            <customView fixedFrame="YES" id="770" customClass="SKGroupView">
-                                <rect key="frame" x="755" y="0.0" width="245" height="0.0"/>
+                                <holdingPriorities>
+                                    <real value="490"/>
+                                </holdingPriorities>
+                            </splitView>
+                            <customView fixedFrame="YES" id="770" userLabel="Right View" customClass="SKGroupView">
+                                <rect key="frame" x="108" y="0.0" width="55" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </customView>
                         </subviews>
@@ -107,9 +105,9 @@
                 <outlet property="mainController" destination="-2" id="1552"/>
             </connections>
         </customObject>
-        <viewController title="PDF View Controller" id="Onb-IE-IQq">
+        <viewController title="PDF View Controller" id="Onb-IE-IQq" customClass="NSSplitViewController">
             <connections>
-                <outlet property="view" destination="1321" id="OVa-Wb-QYn"/>
+                <outlet property="view" destination="GZh-60-Un6" id="Ox8-B5-7Ng"/>
             </connections>
         </viewController>
     </objects>

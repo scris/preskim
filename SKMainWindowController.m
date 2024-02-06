@@ -288,6 +288,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [toolbarController setMainController:nil];
     [touchBarController setMainController:nil];
     [findController setDelegate:nil]; // this breaks the retain loop from binding
+    [secondaryToolbarController setDelegate:nil];
     [pdfView setDelegate:nil]; // this cleans up the pdfview
     [[pdfView document] setDelegate:nil];
     [noteTypeSheetController setDelegate:nil];
@@ -1703,6 +1704,53 @@ static char SKMainWindowContentLayoutObservationContext;
 	}
 }
 
+- (void)removeSecondaryToolbarController { 
+    if (mwcFlags.isAnimatingSecondaryToolbar)
+        return;
+    
+    BOOL animate = [NSView shouldShowSlideAnimation];
+    NSView *secondaryToolbar = [secondaryToolbarController view];
+    NSView *contentView = [secondaryToolbar superview];
+    NSLayoutConstraint *newTopConstraint = nil;
+    CGFloat barHeight = NSHeight([secondaryToolbar frame]);
+    
+    if (mwcFlags.fullSizeContent == NO)
+        newTopConstraint = [NSLayoutConstraint constraintWithItem:mwcFlags.fullSizeContent ? pdfView : pdfSplitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+    
+    if ([[mainWindow firstResponder] isDescendantOf:secondaryToolbar])
+        [mainWindow makeFirstResponder:pdfView];
+    
+    if (mwcFlags.fullSizeContent) {
+        [[pdfView scrollView] setAutomaticallyAdjustsContentInsets:YES];
+        if ([pdfView autoScales] && ([pdfView extendedDisplayMode] & kPDFDisplaySinglePageContinuous) == 0) {
+            [pdfView setAutoScales:NO];
+            [pdfView setAutoScales:YES];
+        }
+    }
+    
+    if (animate) {
+        NSLayoutConstraint *topConstraint = [contentView constraintWithFirstItem:secondaryToolbar firstAttribute:NSLayoutAttributeTop];
+        mwcFlags.isAnimatingFindBar = YES;
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                [context setDuration:0.5 * [context duration]];
+                [[topConstraint animator] setConstant:titleBarHeight - barHeight];
+            }
+            completionHandler:^{
+                [secondaryToolbar removeFromSuperview];
+                [newTopConstraint setActive:YES];
+                [mainWindow recalculateKeyViewLoop];
+                
+                mwcFlags.isAnimatingFindBar = NO;
+            }];
+    } else {
+        [secondaryToolbar removeFromSuperview];
+        [newTopConstraint setActive:YES];
+        [contentView layoutSubtreeIfNeeded];
+        [mainWindow recalculateKeyViewLoop];
+    }
+}
+
+
 - (void)removeFindController {
     if (mwcFlags.isAnimatingFindBar)
         return;
@@ -1746,6 +1794,64 @@ static char SKMainWindowContentLayoutObservationContext;
         [newTopConstraint setActive:YES];
         [contentView layoutSubtreeIfNeeded];
         [mainWindow recalculateKeyViewLoop];
+    }
+}
+
+- (void)showSecondaryToolbar {
+    if (secondaryToolbarController == nil) {
+        secondaryToolbarController = [[SKSecondaryToolbarController alloc] init];
+        [secondaryToolbarController setDelegate:self];
+    }
+    
+    NSView *secondaryToolbar = [secondaryToolbarController view];
+    
+    if ([secondaryToolbar window]) {
+    } else if (mwcFlags.isAnimatingFindBar == 0) {
+        
+        BOOL animate = [NSView shouldShowSlideAnimation];
+        NSView *contentView = mwcFlags.fullSizeContent ? pdfContentView : centerContentView;
+        CGFloat barHeight = NSHeight([secondaryToolbar frame]);
+        NSArray *constraints = nil;
+        
+        [contentView addSubview:secondaryToolbar];
+        constraints = @[
+            [NSLayoutConstraint constraintWithItem:secondaryToolbar attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:secondaryToolbar attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:secondaryToolbar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:animate ? titleBarHeight - barHeight : titleBarHeight]];
+        [NSLayoutConstraint activateConstraints:constraints];
+        if (mwcFlags.fullSizeContent == NO) {
+            [[contentView constraintWithFirstItem:pdfSplitView firstAttribute:NSLayoutAttributeTop] setActive:NO];
+            [[NSLayoutConstraint constraintWithItem:pdfSplitView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:secondaryToolbar attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0] setActive:YES];
+        }
+        [contentView layoutSubtreeIfNeeded];
+        
+        [secondaryToolbarController didAddBar];
+        
+        if (mwcFlags.fullSizeContent) {
+            NSScrollView *scrollView = [pdfView scrollView];
+            [scrollView setAutomaticallyAdjustsContentInsets:NO];
+            [scrollView setContentInsets:NSEdgeInsetsMake(barHeight + titleBarHeight, 0.0, 0.0, 0.0)];
+            if ([pdfView autoScales] && ([pdfView extendedDisplayMode] & kPDFDisplaySinglePageContinuous) == 0) {
+                [pdfView setAutoScales:NO];
+                [pdfView setAutoScales:YES];
+            }
+        }
+        
+        if (animate) {
+            mwcFlags.isAnimatingSecondaryToolbar = YES;
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                    [context setDuration:0.5 * [context duration]];
+                    [[[constraints lastObject] animator] setConstant:titleBarHeight];
+                }
+                completionHandler:^{
+                    [mainWindow recalculateKeyViewLoop];
+                    
+                    mwcFlags.isAnimatingSecondaryToolbar = NO;
+                }];
+        } else {
+            [contentView layoutSubtreeIfNeeded];
+            [mainWindow recalculateKeyViewLoop];
+        }
     }
 }
 
@@ -2065,7 +2171,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     PDFPage *page = [info objectForKey:SKPDFPagePageKey];
     BOOL isCrop = [[info objectForKey:SKPDFPageActionKey] isEqualToString:SKPDFPageActionCrop];
     BOOL displayChanged = isCrop == NO || [pdfView displayBox] == kPDFDisplayBoxCropBox;
-        
+    
     if (displayChanged)
         [pdfView layoutDocumentView];
     if (page) {
@@ -2213,19 +2319,19 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     PDFDocument *pdfDoc = [pdfView document];
     [nc addObserver:self selector:@selector(handleDocumentBeginWrite:) 
-                             name:PDFDocumentDidBeginWriteNotification object:pdfDoc];
+               name:PDFDocumentDidBeginWriteNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleDocumentEndWrite:) 
-                             name:PDFDocumentDidEndWriteNotification object:pdfDoc];
+               name:PDFDocumentDidEndWriteNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleDocumentEndPageWrite:) 
-                             name:PDFDocumentDidEndPageWriteNotification object:pdfDoc];
+               name:PDFDocumentDidEndPageWriteNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handlePageBoundsDidChangeNotification:) 
-                             name:SKPDFPageBoundsDidChangeNotification object:pdfDoc];
+               name:SKPDFPageBoundsDidChangeNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleDidAddAnnotationNotification:)
-                             name:SKPDFDocumentDidAddAnnotationNotification object:pdfDoc];
+               name:SKPDFDocumentDidAddAnnotationNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleDidRemoveAnnotationNotification:)
-                             name:SKPDFDocumentDidRemoveAnnotationNotification object:pdfDoc];
+               name:SKPDFDocumentDidRemoveAnnotationNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleDidMoveAnnotationNotification:)
-                             name:SKPDFDocumentDidMoveAnnotationNotification object:pdfDoc];
+               name:SKPDFDocumentDidMoveAnnotationNotification object:pdfDoc];
 }
 
 - (void)unregisterForDocumentNotifications {
@@ -2544,6 +2650,11 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                 if ([self interactionMode] != SKPresentationMode)
                     [[pdfView scrollView] setContentInsets:NSEdgeInsetsMake(NSHeight([[findController view] frame]) + titleBarHeight, 0.0, 0.0, 0.0)];
             }
+            if ([[secondaryToolbarController view] window]) {
+                [[[[secondaryToolbarController view] superview] constraintWithFirstItem:[secondaryToolbarController view] firstAttribute:NSLayoutAttributeTop] setConstant:titleBarHeight];
+                if ([self interactionMode] != SKPresentationMode)
+                    [[pdfView scrollView] setContentInsets:NSEdgeInsetsMake(NSHeight([[secondaryToolbarController view] frame]) + titleBarHeight, 0.0, 0.0, 0.0)];
+            }
         }
         
     } else if (context == &SKMainWindowThumbnailSelectionObservationContext) {
@@ -2691,7 +2802,7 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
                 }
             }
         }
-
+        
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -2700,16 +2811,16 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
 #pragma mark Outline
 
 - (void)updateOutlineSelection{
-
-	// Skip out if this PDF has no outline.
-	if ([[pdfView document] outlineRoot] == nil || mwcFlags.updatingOutlineSelection)
-		return;
-	
-	// Get index of current page.
-	NSUInteger pageIndex = [[pdfView currentPage] pageIndex];
     
-	// Test that the current selection is still valid.
-	NSInteger row = [leftSideController.tocOutlineView selectedRow];
+    // Skip out if this PDF has no outline.
+    if ([[pdfView document] outlineRoot] == nil || mwcFlags.updatingOutlineSelection)
+        return;
+    
+    // Get index of current page.
+    NSUInteger pageIndex = [[pdfView currentPage] pageIndex];
+    
+    // Test that the current selection is still valid.
+    NSInteger row = [leftSideController.tocOutlineView selectedRow];
     if (row == -1 || [[[leftSideController.tocOutlineView itemAtRow:row] page] pageIndex] != pageIndex) {
         // Get the outline row that contains the current page
         NSInteger numRows = [leftSideController.tocOutlineView numberOfRows];

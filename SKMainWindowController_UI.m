@@ -68,6 +68,7 @@
 #import "PDFOutline_SKExtensions.h"
 #import "SKDocumentController.h"
 #import "SKFindController.h"
+#import "SKSecondaryToolbarController.h"
 #import "NSColor_SKExtensions.h"
 #import "SKSplitView.h"
 #import "SKScrollView.h"

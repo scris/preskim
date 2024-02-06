@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22505"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="SKSecondaryToolbarController">
+            <connections>
+                <outlet property="navigationButton" destination="5" id="93g-mu-RvU"/>
+                <outlet property="ownerController" destination="18" id="xWk-eN-FWo"/>
+                <outlet property="view" destination="1" id="VDW-MM-JR9"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="1" customClass="SKTopBarView">
+            <rect key="frame" x="0.0" y="0.0" width="220" height="36"/>
+            <subviews>
+                <segmentedControl horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5">
+                    <rect key="frame" x="7" y="8" width="45" height="20"/>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="roundRect" trackingMode="momentary" id="6">
+                        <font key="font" metaFont="cellTitle"/>
+                        <segments>
+                            <segment image="NSGoLeftTemplate" width="19"/>
+                            <segment image="NSGoRightTemplate" width="19" tag="1"/>
+                        </segments>
+                    </segmentedCell>
+                </segmentedControl>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="height" constant="36" id="1Jb-lY-NZY"/>
+                <constraint firstItem="5" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="8" id="2lS-gb-fB8"/>
+                <constraint firstItem="5" firstAttribute="centerY" secondItem="1" secondAttribute="centerY" id="snO-ne-pmX"/>
+            </constraints>
+            <point key="canvasLocation" x="139" y="154"/>
+        </customView>
+        <objectController id="18">
+            <declaredKeys>
+                <string>findString</string>
+            </declaredKeys>
+            <connections>
+                <outlet property="content" destination="-2" id="19"/>
+            </connections>
+        </objectController>
+    </objects>
+    <resources>
+        <image name="NSGoLeftTemplate" width="12" height="17"/>
+        <image name="NSGoRightTemplate" width="12" height="17"/>
+    </resources>
+</document>
