@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL didChange;
 }
 
-@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *navigationButton;
+@property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *noteButton;
 @property (nonatomic, nullable, strong) IBOutlet NSObjectController *ownerController;
 @property (nonatomic, nullable, weak) id <SKSecondaryToolbarControllerDelegate> delegate;
 @property (nonatomic, nullable, strong) NSString *findString;
