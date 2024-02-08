@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)drawPagesInRect:(NSRect)rect toContext:(CGContextRef)context;
 
+- (void)scrollToPageAtIndex:(NSUInteger)pageIndex point:(NSPoint)point;
+
 @end
 
 NS_ASSUME_NONNULL_END

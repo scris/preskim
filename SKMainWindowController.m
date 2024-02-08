@@ -423,10 +423,18 @@ static char SKMainWindowContentLayoutObservationContext;
         if ([[pdfView document] isLocked]) {
             [savedNormalSetup setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
         } else if ([[pdfView currentPage] pageIndex] != pageIndex || pointString) {
-            [pdfView goToPageAtIndex:pageIndex point:pointString ? NSPointFromString(pointString) : SKUnspecifiedPoint];
+            NSPoint point = pointString ? NSPointFromString(pointString) : SKUnspecifiedPoint;
+            [pdfView goToPageAtIndex:pageIndex point:point];
             [lastViewedPages setCount:0];
             [lastViewedPages addPointer:(void *)pageIndex];
             [pdfView resetHistory];
+            if (@available(macOS 12.0, *)) {
+               if (([pdfView displayMode] & kPDFDisplaySinglePageContinuous)) {
+                   dispatch_async(dispatch_get_main_queue(), ^{
+                       [pdfView scrollToPageAtIndex:pageIndex point:point];
+                   });
+               }
+           }
         }
     }
     

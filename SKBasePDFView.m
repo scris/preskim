@@ -286,6 +286,20 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
    }
 }
 
+- (void)scrollToPageAtIndex:(NSUInteger)pageIndex point:(NSPoint)point {
+    PDFPage *page = [[self document] pageAtIndex:pageIndex];
+    if (NSEqualPoints(point, SKUnspecifiedPoint) == NO) {
+        NSScrollView *scrollView = [self scrollView];
+        NSClipView *clipView = [scrollView contentView];
+        point = [self convertPoint:[self convertPoint:point fromPage:page] toView:clipView];
+        if ([clipView isFlipped] == NO)
+            point.y -= NSHeight([clipView visibleRect]) - [self convertSize:NSMakeSize(0.0, [scrollView contentInsets].top) toView:clipView].height;
+        [clipView scrollToPoint:point];
+    } else if (hasVerticalLayout(self)) {
+        [self verticallyScrollToPage:page];
+    }
+}
+
 - (void)goToDestination:(PDFDestination *)destination {
     destination = [destination effectiveDestinationForView:self];
     if ([destination zoom] < kPDFDestinationUnspecifiedValue && [destination zoom] > 0.0)
