@@ -254,7 +254,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
         if (oldInfo)
             [recentDocuments removeObjectIdenticalTo:oldInfo];
         [recentDocuments insertObject:info atIndex:0];
-        if ([recentDocuments count] > maxRecentDocumentsCount)
+        if ([recentDocuments count] > MAX(maxRecentDocumentsCount, [[[NSDocumentController sharedDocumentController] documents] count]))
             [recentDocuments removeLastObject];
     }
     
