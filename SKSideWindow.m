@@ -82,6 +82,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
         
         NSView *backgroundView = [[SKSideWindowContentView alloc] init];
         
+        [backgroundView setWantsLayer:YES];
         NSVisualEffectView *contentView = [[NSVisualEffectView alloc] init];
         [contentView setMaterial:NSVisualEffectMaterialSidebar];
         [self setContentView:contentView];
