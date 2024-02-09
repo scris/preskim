@@ -4,6 +4,6 @@ Preskim is a macOS PDF viewer with a modernized user interface. The development 
 
 ## Development Plan
 
-- [ ] A modernized and delicate user interface
+- [X] A modernized and delicate user interface.
 
-- [ ] A dark mode with the experience like the Dark Reader browser plugin
+- [ ] A dark mode with the experience like the Dark Reader browser plugin.
