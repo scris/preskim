@@ -927,7 +927,6 @@ static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"Toolbar
         SKDocumentToolbarRotateLeftItemIdentifier,
         SKDocumentToolbarRotateLeftRightItemIdentifier,
         SKDocumentToolbarCropItemIdentifier,
-        SKDocumentToolbarNewNoteItemIdentifier,
         SKDocumentToolbarToolModeItemIdentifier,
         SKDocumentToolbarColorSwatchItemIdentifier,
         SKDocumentToolbarShareItemIdentifier,

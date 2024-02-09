@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -21,7 +21,7 @@
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="1" customClass="SKTopBarView">
             <rect key="frame" x="0.0" y="0.0" width="220" height="36"/>
             <subviews>
-                <searchField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" tag="1" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
+                <searchField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" tag="1" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
                     <rect key="frame" x="77" y="7" width="32" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="500" id="WyN-YQ-969"/>
@@ -55,7 +55,7 @@
                         <action selector="find:" target="-2" id="29"/>
                     </connections>
                 </segmentedControl>
-                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7">
+                <button imageHugsTitle="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7">
                     <rect key="frame" x="168" y="8" width="44" height="19"/>
                     <buttonCell key="cell" type="roundRect" title="Done" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -68,7 +68,7 @@ Gw
                         <action selector="remove:" target="-2" id="10"/>
                     </connections>
                 </button>
-                <textField hidden="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="31">
+                <textField hidden="YES" focusRingType="none" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="31">
                     <rect key="frame" x="6" y="10" width="65" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Not found" id="32">
                         <font key="font" metaFont="message"/>
@@ -101,7 +101,7 @@ Gw
         </objectController>
     </objects>
     <resources>
-        <image name="NSGoLeftTemplate" width="10" height="14"/>
-        <image name="NSGoRightTemplate" width="10" height="14"/>
+        <image name="NSGoLeftTemplate" width="12" height="17"/>
+        <image name="NSGoRightTemplate" width="12" height="17"/>
     </resources>
 </document>

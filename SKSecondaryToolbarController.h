@@ -42,18 +42,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol SKSecondaryToolbarControllerDelegate;
 
+@class SKMainWindowController;
+
 @interface SKSecondaryToolbarController : NSViewController {
     __weak id <SKSecondaryToolbarControllerDelegate> delegate;
-    NSSegmentedControl *navigationButton;
+    NSSegmentedControl *noteButton;
     NSObjectController *ownerController;
-    NSString *findString;
+    __weak SKMainWindowController *mainController;
     BOOL didChange;
 }
 
+@property (nonatomic, nullable, weak) IBOutlet SKMainWindowController *mainController;
 @property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *noteButton;
 @property (nonatomic, nullable, strong) IBOutlet NSObjectController *ownerController;
 @property (nonatomic, nullable, weak) id <SKSecondaryToolbarControllerDelegate> delegate;
-@property (nonatomic, nullable, strong) NSString *findString;
 
 - (void)didAddBar;
 - (IBAction)remove:(nullable id)sender;
@@ -62,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @protocol SKSecondaryToolbarControllerDelegate <NSObject>
-- (BOOL)findString:(NSString *)string forward:(BOOL)forward;
+- (void)createNewNoteWithTag:(NSInteger)tag;
 - (void)removeSecondaryToolbarController;
 @end
 

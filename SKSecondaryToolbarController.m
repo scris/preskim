@@ -37,6 +37,9 @@
  */
 
 #import "SKSecondaryToolbarController.h"
+#import "SKMainWindowController.h"
+#import "SKMainWindowController_Actions.h"
+#import "SKMainWindowController_UI.h"
 #import "SKStringConstants.h"
 #import "SKTopBarView.h"
 #import "SKPDFView.h"
@@ -49,7 +52,7 @@
 
 @implementation SKSecondaryToolbarController
 
-@synthesize delegate, noteButton, ownerController, findString;
+@synthesize delegate, noteButton, ownerController, mainController;
 
 - (NSString *)nibName {
     return @"HighlightBar";
@@ -57,18 +60,37 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [noteButton setHelp:NSLocalizedString(@"Add New Highlight", @"Tool tip message") forSegment:SKFreeTextNote];
-    [noteButton setHelp:NSLocalizedString(@"Add New Anchored Note", @"Tool tip message") forSegment:SKAnchoredNote];
-    [noteButton setHelp:NSLocalizedString(@"Add New Circle", @"Tool tip message") forSegment:SKCircleNote];
-    [noteButton setHelp:NSLocalizedString(@"Add New Box", @"Tool tip message") forSegment:SKSquareNote];
-    [noteButton setHelp:NSLocalizedString(@"Add New Text Note", @"Tool tip message") forSegment:SKHighlightNote];
-    [noteButton setHelp:NSLocalizedString(@"Add New Underline", @"Tool tip message") forSegment:SKUnderlineNote];
-    [noteButton setHelp:NSLocalizedString(@"Add New Strike Out", @"Tool tip message") forSegment:SKStrikeOutNote];
-    [noteButton setHelp:NSLocalizedString(@"Add New Line", @"Tool tip message") forSegment:SKLineNote];
-    [noteButton setHelp:NSLocalizedString(@"Add New Freehand", @"Tool tip message") forSegment:SKInkNote];
+    [noteButton setHelp:NSLocalizedString(@"Add New Highlight", @"Tool tip message") forSegment:0];
+    [noteButton setHelp:NSLocalizedString(@"Add New Underline", @"Tool tip message") forSegment:1];
+    [noteButton setHelp:NSLocalizedString(@"Add New Strike Out", @"Tool tip message") forSegment:2];
+    [noteButton setHelp:NSLocalizedString(@"Add New Line", @"Tool tip message") forSegment:3];
+    [noteButton setHelp:NSLocalizedString(@"Add New Freehand", @"Tool tip message") forSegment:4];
+    [noteButton setHelp:NSLocalizedString(@"Add New Text Note", @"Tool tip message") forSegment:5];
+    [noteButton setHelp:NSLocalizedString(@"Add New Anchored Note", @"Tool tip message") forSegment:6];
+    [noteButton setHelp:NSLocalizedString(@"Add New Circle", @"Tool tip message") forSegment:7];
+    [noteButton setHelp:NSLocalizedString(@"Add New Box", @"Tool tip message") forSegment:8];
     [noteButton setSegmentStyle:NSSegmentStyleSeparated];
-    
-    // Crack Items From: New Note Item Identifier
+    [noteButton setTarget:self];
+    [noteButton setAction:@selector(noteButtonClicked:)];
+}
+
+- (void)noteButtonClicked:(NSSegmentedControl *)sender {
+    switch (sender.selectedSegment) {
+        case 0:[delegate createNewNoteWithTag:4];break;
+        case 1:[delegate createNewNoteWithTag:5];break;
+        case 2:[delegate createNewNoteWithTag:6];break;
+        case 3:[delegate createNewNoteWithTag:7];break;
+        case 4:[delegate createNewNoteWithTag:8];break;
+        case 5:[delegate createNewNoteWithTag:0];break;
+        case 6:[delegate createNewNoteWithTag:1];break;
+        case 7:[delegate createNewNoteWithTag:2];break;
+        case 8:[delegate createNewNoteWithTag:3];break;
+        default:break;
+    }
+}
+
+- (void)setMainController:(SKMainWindowController *)newMainController {
+    mainController = newMainController;
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification {}
@@ -98,11 +120,6 @@
     [self windowDidResignKey:nil];
     
     [delegate removeSecondaryToolbarController];
-}
-
-- (IBAction)toggleCaseInsensitiveFind:(id)sender {
-    BOOL caseInsensitive = [[NSUserDefaults standardUserDefaults] boolForKey:SKCaseInsensitiveFindKey];
-    [[NSUserDefaults standardUserDefaults] setBool:NO == caseInsensitive forKey:SKCaseInsensitiveFindKey];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {

@@ -91,6 +91,7 @@
 #import "NSObject_SKExtensions.h"
 #import "NSPasteboard_SKExtensions.h"
 #import "SKApplicationController.h"
+#import "SKSecondaryToolbarController.h"
 
 #define NOTES_KEY       @"notes"
 #define SNAPSHOTS_KEY   @"snapshots"

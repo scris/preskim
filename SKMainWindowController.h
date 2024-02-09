@@ -70,7 +70,7 @@ enum {
 
 @class PDFAnnotation, PDFSelection, SKGroupedSearchResult;
 @class SKPDFView, SKSecondaryPDFView, SKStatusBar, SKFindController, SKSplitView, SKFieldEditor, SKOverviewView, SKSideWindow;
-@class SKLeftSideViewController, SKRightSideViewController, SKMainToolbarController, SKMainTouchBarController, SKProgressController, SKPresentationOptionsSheetController, SKNoteTypeSheetController, SKSnapshotWindowController;
+@class SKLeftSideViewController, SKRightSideViewController, SKMainToolbarController, SKMainTouchBarController, SKProgressController, SKPresentationOptionsSheetController, SKNoteTypeSheetController, SKSnapshotWindowController, SKSecondaryToolbarController;
 
 @interface SKMainWindowController : NSWindowController <SKSnapshotWindowControllerDelegate, SKThumbnailDelegate, SKFindControllerDelegate, SKPDFViewDelegate, SKPDFDocumentDelegate, NSTouchBarDelegate, SKSecondaryToolbarControllerDelegate> {
     SKSplitView                         *splitView;
@@ -221,6 +221,7 @@ enum {
 @property (nonatomic, nullable, strong) IBOutlet SKRightSideViewController *rightSideController;
     
 @property (nonatomic, nullable, strong) IBOutlet SKMainToolbarController *toolbarController;
+@property (nonatomic, nullable, strong) IBOutlet SKSecondaryToolbarController *secondaryToolbarController;
     
 @property (nonatomic, nullable, strong) IBOutlet NSView *leftSideContentView, *rightSideContentView;
 

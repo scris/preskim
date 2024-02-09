@@ -81,6 +81,7 @@
 #import "PDFSelection_SKExtensions.h"
 #import "SKOutlineView.h"
 #import "SKOverviewView.h"
+#import "SKSecondaryToolbarController.h"
 
 #define STATUSBAR_HEIGHT 22.0
 

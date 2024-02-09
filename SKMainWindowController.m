@@ -107,6 +107,7 @@
 #import "NSColor_SKExtensions.h"
 #import "NSObject_SKExtensions.h"
 #import "SKChainedUndoManager.h"
+#import "SKSecondaryToolbarController.h"
 
 #define MULTIPLICATION_SIGN_CHARACTER (unichar)0x00d7
 
@@ -215,7 +216,7 @@ static char SKMainWindowContentLayoutObservationContext;
 
 @implementation SKMainWindowController
 
-@synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, notes, thumbnails, snapshots, searchResults, groupedSearchResults, tags, rating, pageLabel, interactionMode, placeholderPdfDocument, splitViewController, pdfViewController;
+@synthesize mainWindow, splitView, centerContentView, pdfSplitView, pdfContentView, pdfView, secondaryPdfView, leftSideController, rightSideController, toolbarController, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, notes, thumbnails, snapshots, searchResults, groupedSearchResults, tags, rating, pageLabel, interactionMode, placeholderPdfDocument, splitViewController, pdfViewController, secondaryToolbarController;
 @dynamic pdfDocument, presentationOptions, presentationUndoManager, selectedNotes, hasNotes, widgetProperties, autoScales, leftSidePaneState, rightSidePaneState, findPaneState, leftSidePaneIsOpen, leftSidebarIsOpen, rightSidePaneIsOpen, recentInfoNeedsUpdate, searchString, hasOverview, notesMenu;
 
 + (void)initialize {
@@ -287,6 +288,7 @@ static char SKMainWindowContentLayoutObservationContext;
     [rightSideController setMainController:nil];
     [toolbarController setMainController:nil];
     [touchBarController setMainController:nil];
+    [secondaryToolbarController setMainController:nil];
     [findController setDelegate:nil]; // this breaks the retain loop from binding
     [secondaryToolbarController setDelegate:nil];
     [pdfView setDelegate:nil]; // this cleans up the pdfview
@@ -3199,6 +3201,14 @@ enum { SKOptionAsk = -1, SKOptionNever = 0, SKOptionAlways = 1 };
         [touchBarController setMainController:self];
     }
     return [touchBarController makeTouchBar];
+}
+
+#pragma mark Secondary Toolbar
+
+- (void)createNewNoteWithTag:(NSInteger)tag {
+    if ([pdfView canSelectNote])
+        [pdfView addAnnotationWithType:tag];
+    else NSBeep();
 }
 
 @end
