@@ -14,7 +14,7 @@
 				CE592C630B9239E300C113DF /* ShellScript */,
 			);
 			dependencies = (
-				CE592C620B9239CD00C113DF /* PBXTargetDependency */,
+				5DEAA61A2B76119C00BF8E3A /* PBXTargetDependency */,
 			);
 			name = DiskImage;
 			productName = DiskImage;
@@ -238,7 +238,6 @@
 		CEAE1C480CA1877F00849B0F /* SKSecondaryPDFView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE1C460CA1877F00849B0F /* SKSecondaryPDFView.m */; };
 		CEAE1CA0287C7C39003A77DB /* SKGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE1C9F287C7C39003A77DB /* SKGroupView.m */; };
 		CEAF079D0C4139EB00C3ECBB /* SKStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAF079B0C4139EB00C3ECBB /* SKStatusBar.m */; };
-		CEB34A530F5C1B7E0037E086 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = CEB34A520F5C1B7E0037E086 /* dsa_pub.pem */; };
 		CEB402C313EDAD6100851D1B /* SKTemporaryData.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB402C213EDAD6100851D1B /* SKTemporaryData.m */; };
 		CEB735A20C4A8CD6000350F9 /* TransitionShading.tiff in Resources */ = {isa = PBXBuildFile; fileRef = CEB735A10C4A8CD6000350F9 /* TransitionShading.tiff */; };
 		CEBC0DDD2791C607008686E8 /* NSObject_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBC0DDC2791C607008686E8 /* NSObject_SKExtensions.m */; };
@@ -319,6 +318,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		5DEAA6192B76119C00BF8E3A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D15AC270486D014006FF6A4;
+			remoteInfo = Skim;
+		};
 		CE11CFF329D86E5A00C6C217 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CE7DC7280E09286500D6D76D /* SkimNotes.xcodeproj */;
@@ -339,13 +345,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = CE14113F1229B64D00C9EBA0;
 			remoteInfo = "SkimConvert Tool";
-		};
-		CE592C610B9239CD00C113DF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D15AC270486D014006FF6A4;
-			remoteInfo = Skim;
 		};
 		CE7DC7310E09286500D6D76D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1022,7 +1021,6 @@
 		CEAE1C9F287C7C39003A77DB /* SKGroupView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKGroupView.m; sourceTree = "<group>"; };
 		CEAF079A0C4139EB00C3ECBB /* SKStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKStatusBar.h; sourceTree = "<group>"; };
 		CEAF079B0C4139EB00C3ECBB /* SKStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKStatusBar.m; sourceTree = "<group>"; };
-		CEB34A520F5C1B7E0037E086 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		CEB402C113EDAD6100851D1B /* SKTemporaryData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTemporaryData.h; sourceTree = "<group>"; };
 		CEB402C213EDAD6100851D1B /* SKTemporaryData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTemporaryData.m; sourceTree = "<group>"; };
 		CEB53FF20F261D1400723C1F /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = zh_TW; path = zh_TW.lproj/Credits.rtf; sourceTree = "<group>"; };
@@ -1435,7 +1433,6 @@
 				CE67BB240BC44AC9007B6929 /* ZoomValues.strings */,
 				45A3BD380B4F097D002B297F /* InitialUserDefaults.plist */,
 				CE41A6CB0B975E5000ECF819 /* Skim.sdef */,
-				CEB34A520F5C1B7E0037E086 /* dsa_pub.pem */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2340,7 +2337,6 @@
 				CE898F060C843A8B008A0856 /* PDFDDocument.icns in Resources */,
 				CE6DC9940D699F21003A072F /* TransitionMask.jpg in Resources */,
 				5D8382A72B71CF4A00624BDC /* HighlightBar.strings in Resources */,
-				CEB34A530F5C1B7E0037E086 /* dsa_pub.pem in Resources */,
 				CE67C4812624C691007D4437 /* BookmarksWindow.xib in Resources */,
 				CE67C4CE2624C735007D4437 /* ViewSettings.xib in Resources */,
 				CE19446410627483007E8770 /* ConversionProgressWindow.xib in Resources */,
@@ -2435,7 +2431,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "# app name, also image name\nNAME=Skim\n\n# app bundle to copy\nSRC_BUNDLE=\"${BUILT_PRODUCTS_DIR}/${NAME}.app\"\n\n# template image in source folder\nSRC_IMAGE=\"${SOURCE_ROOT}/${NAME}.dmg\"\n\n# temporary image\nDST_IMAGE=\"/tmp/${NAME}.dmg\"\n\n# temporary volume\nDST_VOLUME=\"/Volumes/${NAME}\"\n\n# version\nVERSION=$(/usr/bin/defaults read \"${SRC_BUNDLE}/Contents/Info\" CFBundleShortVersionString)\n\n# distribution name\nDIST_NAME=\"${NAME}-${VERSION}\"\n\n# final distribution image\nFINAL_IMAGE=\"${HOME}/Desktop/${DIST_NAME}.dmg\"\n\n# see if this file already exists and bail\nif [ -f \"${FINAL_IMAGE}\" ]; then\n\techo \"error: ${FINAL_IMAGE} exists\"\n\texit 1\nfi\n\n# see if a volume is already mounted or a\n# previous cp operation was botched\nif [ -e \"${DST_VOLUME}\" ]; then\n\techo \"error: ${DST_VOLUME} exists\"\n\techo \"warning: opening ${DST_VOLUME} in Finder\"\n\t/usr/bin/open ${DST_VOLUME}\n\texit 1\nfi\n\n# remove temp image from a previous run\nif [ -f \"${DST_IMAGE}\" ]; then\n\techo \"warning: removing ${DST_IMAGE}\"\n\t/bin/rm \"${DST_IMAGE}\"\n\tif [ $? != 0 ]; then\n\t\techo \"error: failed to remove ${DST_IMAGE}\"\n\t\texit 1\n\tfi\nfi\n\n# stored zipped in svn, so unzip if needed\n# pass o to overwrite, or unzip waits for stdin\n# when trying to unpack the resource fork/EA\n\nif [ ! -f \"${SRC_IMAGE}\" ]; then\n\techo \"Unzipping disk image ${SRC_IMAGE}.zip\"\n\t/usr/bin/unzip -uo \"${SRC_IMAGE}.zip\"\n\tif [ $? != 0 ]; then\n\t\techo \"error: failed to unzip ${SRC_IMAGE}.zip\"\n\t\texit 1\n\tfi\nfi\n\n# copy empty image to /tmp\necho \"Copying disk image ${SRC_IMAGE} to ${DST_IMAGE}\"\n/bin/cp \"${SRC_IMAGE}\" \"${DST_IMAGE}\"\nif [ $? != 0 ]; then\n\techo \"error: failed to copy ${SRC_IMAGE} to ${DST_IMAGE}\"\n\texit 1\nfi\n\n# mount image\necho \"Mounting disk image ${DST_IMAGE}\"\n/usr/bin/hdiutil attach -nobrowse -noautoopen \"${DST_IMAGE}\"\nif [ $? != 0 ]; then\n\techo \"error: failed to mount ${DST_IMAGE}\"\n\texit 1\nfi\n\n# use cp to copy all files\necho \"Copying build product from ${SRC_BUNDLE} to ${DST_VOLUME}\"\n/bin/cp -R \"${SRC_BUNDLE}\" \"${DST_VOLUME}\"\nif [ $? != 0 ]; then\n\techo \"error: failed to copy ${SRC_BUNDLE}\"\n\texit 1\nfi\n\n# codesign the copy\necho \"Codesigning build product in ${DST_VOLUME}\"\n\"${SOURCE_ROOT}/codesign_skim.sh\" \"${DST_VOLUME}/${NAME}.app\"\n\n# tell finder to set the icon position\necho \"Moving build product in disk image\"\n/usr/bin/osascript -e \"tell application \\\"Finder\\\" to set the position of application file \\\"${NAME}.app\\\" of disk named \\\"${NAME}\\\" to {90, 206}\"\nif [ $? != 0 ]; then\n\techo \"error: Finder failed to set position\"\n\texit 1\nfi\n\n# data is copied, so unmount the volume, we may need to wait when the volume is in use\necho \"Ejecting disk image ${DST_VOLUME}\"\nN_TRIES=0\n/usr/sbin/diskutil eject \"${DST_VOLUME}\"\nwhile [ $? != 0 ]; do\n\tif [ $((++N_TRIES)) -gt 12 ]; then\n\t\techo \"error: failed to eject ${DST_VOLUME}\"\n\t\texit 1\n\telse\n\t\tsleep 5\n\t\t/usr/sbin/diskutil eject \"${DST_VOLUME}\"\n\tfi\ndone\n\n# resize image to fit\necho \"Resizing disk image ${DST_IMAGE}\"\n/usr/bin/hdiutil resize -size $(/usr/bin/hdiutil resize \"${DST_IMAGE}\" | cut -f -1 -)b \"${DST_IMAGE}\"\nif [ $? != 0 ]; then\n\techo \"error: failed to resize ${DST_IMAGE}\"\n\texit 1\nfi\n\n# convert image to read only and compress\necho \"Converting disk image ${DST_IMAGE} to read only disk image at ${FINAL_IMAGE}\"\n/usr/bin/hdiutil convert \"${DST_IMAGE}\" -format UDZO -imagekey zlib-level=9 -o \"${FINAL_IMAGE}\"\nif [ $? != 0 ]; then\n\techo \"error: failed to convert ${DST_IMAGE}\"\n\texit 1\nfi\n\n# set internet-enable bit for Safari, even\n# though I dislike internet-enabled images...\n#echo \"Internet-enable disk image ${FINAL_IMAGE}\"\n#/usr/bin/hdiutil internet-enable -YES \"${FINAL_IMAGE}\"\n#if [ $? != 0 ]; then\n#\techo \"error: failed to internet-enable ${DST_IMAGE}\"\n#\texit 1\n#fi\n\n# remove temp image and source image\necho \"Removing temporary disk images ${DST_IMAGE} and ${SRC_IMAGE}\"\n/bin/rm -f \"${DST_IMAGE}\" \"${SRC_IMAGE}\"\nif [ $? != 0 ]; then\n\techo \"warning: failed to remove ${DST_IMAGE} or ${SRC_IMAGE}\"\nfi\n\n# create the Sparkle appcast\n# see http://www.entropy.ch/blog/Developer/2008/09/22/Sparkle-Appcast-Automation-in-Xcode.html\n\necho \"Creating appcast for Sparkle...\"\n\nDATE=$(/bin/date +\"%a, %d %b %Y %T %z\")\nSIZE=$(/usr/bin/stat -f %z \"${FINAL_IMAGE}\")\nVERSION_NUMBER=$(/usr/bin/defaults read \"${SRC_BUNDLE}/Contents/Info\" CFBundleVersion)\nURL=\"https://sourceforge.net/projects/skim-app/files/${NAME}/${DIST_NAME}/${DIST_NAME}.dmg/download\"\nAPPCAST=\"${HOME}/Desktop/${DIST_NAME}.xml\"\nKEY_NAME=\"${NAME} Sparkle Key\"\nSIGNATURE=$(/usr/bin/openssl dgst -sha1 -binary < \"${FINAL_IMAGE}\" | /usr/bin/openssl dgst -dss1 -sign <(security find-generic-password -g -s \"${KEY_NAME}\" 2>&1 1>/dev/null | perl -pe '($_) = /\"(.+)\"/; s/\\\\012/\\n/g') | /usr/bin/openssl enc -base64)\nif [ $? != 0 ]; then\n\techo \"warning: failed to generate signature.  You need the private key in a secure note named \\\"${KEY_NAME}\\\"\" >&2\nfi\n\n/bin/cat > \"${APPCAST}\" << EOF\n<?xml version=\"1.0\" encoding=\"utf-8\"?> \n<rss version=\"2.0\" xmlns:sparkle=\"http://www.andymatuschak.org/xml-namespaces/sparkle\"  xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n    <channel> \n        <title>${NAME} Changelog</title>\n        <link>https://skim-app.sourceforge.io</link>\n        <description>PDF reader and note-taker</description>\n        <item>\n            <title>Version ${VERSION}</title>\n            <description><![CDATA[\n<h1>Version ${VERSION}</h1>\n\n<h2>New Features</h2>\n<ul>\n<li></li>\n</ul>\n\n<h2>Bugs Fixed</h2>\n<ul>\n<li></li>\n</ul>\n\t\t\t]]></description>\n            <pubDate>${DATE}</pubDate>\n            <sparkle:minimumSystemVersion>10.10.0</sparkle:minimumSystemVersion>\n            <enclosure sparkle:version=\"${VERSION_NUMBER}\" sparkle:shortVersionString=\"${VERSION}\" url=\"${URL}\" sparkle:dsaSignature=\"${SIGNATURE}\" length=\"${SIZE}\" type=\"application/x-apple-diskimage\"/>\n        </item>\n\n    </channel>\n</rss>\nEOF\n\n# reveal the disk image\necho \"Revealing disk image\"\n/usr/bin/open -R \"${FINAL_IMAGE}\"\n\nexit 0\n";
+			shellScript = "# app name, also image name\nNAME=Preskim\n\n# app bundle to copy\nSRC_BUNDLE=\"${BUILT_PRODUCTS_DIR}/${NAME}.app\"\n\n# template image in source folder\nSRC_IMAGE=\"${SOURCE_ROOT}/${NAME}.dmg\"\n\n# temporary image\nDST_IMAGE=\"/tmp/${NAME}.dmg\"\n\n# temporary volume\nDST_VOLUME=\"/Volumes/${NAME}\"\n\n# version\nVERSION=$(/usr/bin/defaults read \"${SRC_BUNDLE}/Contents/Info\" CFBundleShortVersionString)\n\n# distribution name\nDIST_NAME=\"${NAME}-${VERSION}-macOS\"\n\n# final distribution image\nFINAL_IMAGE=\"${HOME}/Documents/Kits/build/preskim/${DIST_NAME}.dmg\"\n\n# see if this file already exists and bail\nif [ -f \"${FINAL_IMAGE}\" ]; then\n\techo \"error: ${FINAL_IMAGE} exists\"\n\texit 1\nfi\n\n# see if a volume is already mounted or a\n# previous cp operation was botched\nif [ -e \"${DST_VOLUME}\" ]; then\n\techo \"error: ${DST_VOLUME} exists\"\n\techo \"warning: opening ${DST_VOLUME} in Finder\"\n\t/usr/bin/open ${DST_VOLUME}\n\texit 1\nfi\n\n# remove temp image from a previous run\nif [ -f \"${DST_IMAGE}\" ]; then\n\techo \"warning: removing ${DST_IMAGE}\"\n\t/bin/rm \"${DST_IMAGE}\"\n\tif [ $? != 0 ]; then\n\t\techo \"error: failed to remove ${DST_IMAGE}\"\n\t\texit 1\n\tfi\nfi\n\n# stored zipped in svn, so unzip if needed\n# pass o to overwrite, or unzip waits for stdin\n# when trying to unpack the resource fork/EA\n\nif [ ! -f \"${SRC_IMAGE}\" ]; then\n\techo \"Unzipping disk image ${SRC_IMAGE}.zip\"\n\t/usr/bin/unzip -uo \"${SRC_IMAGE}.zip\"\n\tif [ $? != 0 ]; then\n\t\techo \"error: failed to unzip ${SRC_IMAGE}.zip\"\n\t\texit 1\n\tfi\nfi\n\n# copy empty image to /tmp\necho \"Copying disk image ${SRC_IMAGE} to ${DST_IMAGE}\"\n/bin/cp \"${SRC_IMAGE}\" \"${DST_IMAGE}\"\nif [ $? != 0 ]; then\n\techo \"error: failed to copy ${SRC_IMAGE} to ${DST_IMAGE}\"\n\texit 1\nfi\n\n# mount image\necho \"Mounting disk image ${DST_IMAGE}\"\n/usr/bin/hdiutil attach -nobrowse -noautoopen \"${DST_IMAGE}\"\nif [ $? != 0 ]; then\n\techo \"error: failed to mount ${DST_IMAGE}\"\n\texit 1\nfi\n\n# use cp to copy all files\necho \"Copying build product from ${SRC_BUNDLE} to ${DST_VOLUME}\"\n/bin/cp -R \"${SRC_BUNDLE}\" \"${DST_VOLUME}\"\nif [ $? != 0 ]; then\n\techo \"error: failed to copy ${SRC_BUNDLE}\"\n\texit 1\nfi\n\n# codesign the copy\necho \"Codesigning build product in ${DST_VOLUME}\"\n\"${SOURCE_ROOT}/codesign_skim.sh\" \"${DST_VOLUME}/${NAME}.app\"\n\n# tell finder to set the icon position\necho \"Moving build product in disk image\"\n/usr/bin/osascript -e \"tell application \\\"Finder\\\" to set the position of application file \\\"${NAME}.app\\\" of disk named \\\"${NAME}\\\" to {90, 206}\"\nif [ $? != 0 ]; then\n\techo \"error: Finder failed to set position\"\n\texit 1\nfi\n\n# data is copied, so unmount the volume, we may need to wait when the volume is in use\necho \"Ejecting disk image ${DST_VOLUME}\"\nN_TRIES=0\n/usr/sbin/diskutil eject \"${DST_VOLUME}\"\nwhile [ $? != 0 ]; do\n\tif [ $((++N_TRIES)) -gt 12 ]; then\n\t\techo \"error: failed to eject ${DST_VOLUME}\"\n\t\texit 1\n\telse\n\t\tsleep 5\n\t\t/usr/sbin/diskutil eject \"${DST_VOLUME}\"\n\tfi\ndone\n\n# resize image to fit\necho \"Resizing disk image ${DST_IMAGE}\"\n/usr/bin/hdiutil resize -size $(/usr/bin/hdiutil resize \"${DST_IMAGE}\" | cut -f -1 -)b \"${DST_IMAGE}\"\nif [ $? != 0 ]; then\n\techo \"error: failed to resize ${DST_IMAGE}\"\n\texit 1\nfi\n\n# convert image to read only and compress\necho \"Converting disk image ${DST_IMAGE} to read only disk image at ${FINAL_IMAGE}\"\n/usr/bin/hdiutil convert \"${DST_IMAGE}\" -format UDZO -imagekey zlib-level=9 -o \"${FINAL_IMAGE}\"\nif [ $? != 0 ]; then\n\techo \"error: failed to convert ${DST_IMAGE}\"\n\texit 1\nfi\n\n# set internet-enable bit for Safari, even\n# though I dislike internet-enabled images...\n#echo \"Internet-enable disk image ${FINAL_IMAGE}\"\n#/usr/bin/hdiutil internet-enable -YES \"${FINAL_IMAGE}\"\n#if [ $? != 0 ]; then\n#\techo \"error: failed to internet-enable ${DST_IMAGE}\"\n#\texit 1\n#fi\n\n# remove temp image and source image\necho \"Removing temporary disk images ${DST_IMAGE} and ${SRC_IMAGE}\"\n/bin/rm -f \"${DST_IMAGE}\" \"${SRC_IMAGE}\"\nif [ $? != 0 ]; then\n\techo \"warning: failed to remove ${DST_IMAGE} or ${SRC_IMAGE}\"\nfi\n\n# create the Sparkle appcast\n# see http://www.entropy.ch/blog/Developer/2008/09/22/Sparkle-Appcast-Automation-in-Xcode.html\n\necho \"Creating appcast for Sparkle...\"\n\nDATE=$(/bin/date +\"%a, %d %b %Y %T %z\")\nSIZE=$(/usr/bin/stat -f %z \"${FINAL_IMAGE}\")\nVERSION_NUMBER=$(/usr/bin/defaults read \"${SRC_BUNDLE}/Contents/Info\" CFBundleVersion)\nURL=\"https://github.com/scris/preskim/releases/download/${VERSION}/${DIST_NAME}.dmg\"\nAPPCAST=\"${HOME}/Documents/Kits/build/preskim/${DIST_NAME}.xml\"\nKEY_NAME=\"${NAME} Sparkle Key\"\nSIGNATURE=$(/usr/bin/openssl dgst -sha1 -binary < \"${FINAL_IMAGE}\" | /usr/bin/openssl dgst -dss1 -sign <(security find-generic-password -g -s \"${KEY_NAME}\" 2>&1 1>/dev/null | perl -pe '($_) = /\"(.+)\"/; s/\\\\012/\\n/g') | /usr/bin/openssl enc -base64)\nif [ $? != 0 ]; then\n\techo \"warning: failed to generate signature.  You need the private key in a secure note named \\\"${KEY_NAME}\\\"\" >&2\nfi\n\n/bin/cat > \"${APPCAST}\" << EOF\n<?xml version=\"1.0\" encoding=\"utf-8\"?> \n<rss version=\"2.0\" xmlns:sparkle=\"http://www.andymatuschak.org/xml-namespaces/sparkle\"  xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n    <channel> \n        <title>${NAME} Changelog</title>\n        <link>https://github.com/scris/preskim</link>\n        <description>Preskim is a macOS PDF viewer with a modernized user interface</description>\n        <item>\n            <title>Version ${VERSION}</title>\n            <description><![CDATA[\n<h1>Version ${VERSION}</h1>\n\n<h2>New Features</h2>\n<ul>\n<li></li>\n</ul>\n\n<h2>Bugs Fixed</h2>\n<ul>\n<li></li>\n</ul>\n\t\t\t]]></description>\n            <pubDate>${DATE}</pubDate>\n            <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>\n            <enclosure sparkle:version=\"${VERSION_NUMBER}\" sparkle:shortVersionString=\"${VERSION}\" url=\"${URL}\" sparkle:dsaSignature=\"${SIGNATURE}\" length=\"${SIZE}\" type=\"application/x-apple-diskimage\"/>\n        </item>\n\n    </channel>\n</rss>\nEOF\n\n# reveal the disk image\necho \"Revealing disk image\"\n/usr/bin/open -R \"${FINAL_IMAGE}\"\n\nexit 0\n";
 		};
 		CE89AF5225F91D98004352D1 /* Run Script: Strip document background icons */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2730,10 +2726,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CE592C620B9239CD00C113DF /* PBXTargetDependency */ = {
+		5DEAA61A2B76119C00BF8E3A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8D15AC270486D014006FF6A4 /* Skim */;
-			targetProxy = CE592C610B9239CD00C113DF /* PBXContainerItemProxy */;
+			targetProxy = 5DEAA6192B76119C00BF8E3A /* PBXContainerItemProxy */;
 		};
 		CE7DC75B0E0928D700D6D76D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

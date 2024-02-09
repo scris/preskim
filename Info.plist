@@ -464,7 +464,7 @@
 	<key>OSAScriptingDefinition</key>
 	<string>Skim.sdef</string>
 	<key>SUFeedURL</key>
-	<string>https://skim-app.sourceforge.io/skim.xml</string>
+	<string>https://preskim.tianzeds.com/update.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>PvJzoEasKa5lH5yKMkxOLv5JPU2AykrLdbHtztOWWog=</string>
 	<key>SUScheduledCheckInterval</key>
