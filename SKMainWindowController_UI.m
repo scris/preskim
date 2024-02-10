@@ -234,10 +234,12 @@
 #pragma mark NSWindow delegate protocol
 
 - (NSString *)windowTitleForDocumentDisplayName:(NSString *)displayName {
-    if ([pdfView document])
-        return [NSString stringWithFormat:NSLocalizedString(@"%@ (page %ld of %ld)", @"Window title format"), displayName, (long)([[[self pdfView] currentPage] pageIndex] + 1), (long)[[pdfView document] pageCount]];
-    else
+    if ([pdfView document]) {
+        [[self window] setSubtitle:[NSString stringWithFormat:NSLocalizedString(@"page %ld of %ld", @"Window title format subtitle"), (long)([[[self pdfView] currentPage] pageIndex] + 1), (long)[[pdfView document] pageCount]]];
         return displayName;
+    } else {
+        return displayName;
+    }
 }
 
 - (void)windowDidBecomeMain:(NSNotification *)notification {
