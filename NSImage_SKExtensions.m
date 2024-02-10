@@ -512,7 +512,7 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     
     MAKE_IMAGE(SKImageNameToolbarZoomToFit, YES, 27.0, 19.0, 
         [[NSColor blackColor] setStroke];
-        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(5.5, 3.5, 16.0 , 12.0) xRadius:1.0 yRadius:1.0];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(5.5, 3.5, 16.0, 12.0) xRadius:1.0 yRadius:1.0];
         [path appendBezierPathWithOvalInRect:NSMakeRect(8.5, 5.5, 8.0, 8.0)];
         [path moveToPoint:NSMakePoint(15.5, 6.5)];
         [path lineToPoint:NSMakePoint(20.0, 2.0)];
@@ -621,14 +621,15 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         [path fill];
     );
     
-    MAKE_IMAGE(SKImageNameToolbarPresentation, YES, 27.0, 19.0, 
+    MAKE_IMAGE(SKImageNameToolbarPresentation, YES, 27.0, 21.0,
         [[NSColor blackColor] set];
-        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(5.5, 3.5, 16.0, 12.0) xRadius:3.0 yRadius:3.0];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(5.5, 3.5, 16.0, 14.0) xRadius:3.0 yRadius:3.0];
+        [path setLineWidth:1.5];
         [path stroke];
         path = [NSBezierPath bezierPath];
-        [path moveToPoint:NSMakePoint(11.0, 6.0)];
-        [path lineToPoint:NSMakePoint(18.0, 9.5)];
-        [path lineToPoint:NSMakePoint(11.0, 13.0)];
+        [path moveToPoint:NSMakePoint(11.0, 7.0)];
+        [path lineToPoint:NSMakePoint(18.0, 10.5)];
+        [path lineToPoint:NSMakePoint(11.0, 14.0)];
         [path closePath];
         [path fill];
     );
@@ -723,16 +724,20 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     MAKE_IMAGE(SKImageNameToolbarMediaBox, YES, 27.0, 21.0, 
         [[NSColor blackColor] set];
         NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(5.5, 4.5, 16.0 , 12.0) xRadius:1.0 yRadius:1.0];
+        [path setLineWidth:1.5];
         [path stroke];
     );
     
     MAKE_IMAGE(SKImageNameToolbarCropBox, YES, 27.0, 21.0, 
         [[NSColor blackColor] set];
         NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(5.5, 4.5, 16.0 , 12.0) xRadius:1.0 yRadius:1.0];
-        [path moveToPoint:NSMakePoint(3.0, 7.5)];
-        [path lineToPoint:NSMakePoint(24.0, 7.5)];
-        [path moveToPoint:NSMakePoint(18.5, 2.0)];
-        [path lineToPoint:NSMakePoint(18.5, 19.0)];
+        [path setLineWidth:1.5];
+        [path stroke];
+        [path moveToPoint:NSMakePoint(5.0, 8.5)];
+        [path lineToPoint:NSMakePoint(22.0, 8.5)];
+        [path moveToPoint:NSMakePoint(17.5, 4.0)];
+        [path lineToPoint:NSMakePoint(17.5, 17.0)];
+        [path setLineWidth:1.0];
         [path stroke];
     );
     

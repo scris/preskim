@@ -393,7 +393,7 @@
                     </connections>
                 </segmentedControl>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="23">
-                    <rect key="frame" x="57" y="185" width="29" height="25"/>
+                    <rect key="frame" x="55" y="185" width="33" height="23"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="56">
                         <font key="font" metaFont="system"/>
@@ -675,7 +675,7 @@
                     <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="texturedSquare" trackingMode="momentary" id="BxE-Xo-uNS">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="ToolbarPlay" imageScaling="none" width="27"/>
+                            <segment image="play" catalog="system" imageScaling="none" width="27"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -779,7 +779,6 @@
         <image name="ToolbarMediaBox" width="128" height="128"/>
         <image name="ToolbarMoveTool" width="27" height="19"/>
         <image name="ToolbarPageBreaks" width="128" height="128"/>
-        <image name="ToolbarPlay" width="128" height="128"/>
         <image name="ToolbarPresentation" width="128" height="128"/>
         <image name="ToolbarRTL" width="128" height="128"/>
         <image name="ToolbarSelectTool" width="128" height="128"/>
@@ -800,6 +799,7 @@
         <image name="highlighter" catalog="system" width="17" height="16"/>
         <image name="info.circle" catalog="system" width="15" height="15"/>
         <image name="minus.magnifyingglass" catalog="system" width="16" height="15"/>
+        <image name="play" catalog="system" width="12" height="13"/>
         <image name="plus.magnifyingglass" catalog="system" width="16" height="15"/>
         <image name="printer" catalog="system" width="18" height="16"/>
         <image name="rectangle.split.1x2" catalog="system" width="18" height="14"/>
