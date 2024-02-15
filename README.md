@@ -25,7 +25,7 @@ Preskim is a macOS PDF viewer with a modernized user interface and lots of usefu
 
 **Why another PDF reader?**
 
-- The commercial products, like PDF Expert, add too many irrelevant things into their app.
+- The commercial products, like PDF Expert, have too many irrelevant things combined.
 - The first-party original Preview app lacks fundamental functions.
 - The original Skim app is good, but it hasn't yet adopted the new design language of macOS 11.0+.
 
@@ -37,8 +37,8 @@ I don't quite get used to the SourceForge platform and SVN way, so I choose to f
 
 Copyright (c) 2024 [Tianze Ds Qiu](https://tianzeds.com/) and other contributors. All rights reserved. This app is built with ❤️ in Hangzhou and Beijing.
 
-Preskim is developed based upon Skim, which is created mainly by [Michael O. McCracken](https://sourceforge.net/u/mmcc/profile/) and now maintained by [Christiaan Hofman](https://sourceforge.net/u/hofman/profile/). 
+Preskim is developed based upon Skim, which is created by [Michael O. McCracken](https://sourceforge.net/u/mmcc/profile/) and now maintained by [Christiaan Hofman](https://sourceforge.net/u/hofman/profile/).
 
-Thanks to the original authors for their contributions to the open source community. At the same time, I would like to pay my highest respect to Christiaan Hofman, as the Skim project has been going on for 16 years, but is still under continuous development.
+Thanks to the original authors for their contributions to the open source community. At the same time, I would like to pay my highest respect to Christiaan Hofman, as the Skim project has been going on for 16 years, but is still developed continuously.
 
 This project uses the 3-Clause BSD license inherited from the original project. For more information, see the LICENSE file.
