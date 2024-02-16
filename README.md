@@ -7,13 +7,14 @@ Preskim is a macOS PDF viewer with a modernized user interface and lots of usefu
 <table>
   <tr>
     <td>
-      <img width="600" alt="Screenshot-1" src="https://github.com/scris/preskim/assets/23412857/a543b51d-eca8-4979-a594-747abe24d6b4">
+      <img width="600" alt="Screenshot-1" src="https://github.com/scris/preskim/assets/23412857/a891b728-d4ca-4ab1-a900-15d31edc2627">
     </td>
     <td>
-      <img width="600" alt="Screenshot-2" src="https://github.com/scris/preskim/assets/23412857/faaf289e-49da-4945-9fb4-fb9aab4a5081">
+      <img width="600" alt="Screenshot-2" src="https://github.com/scris/preskim/assets/23412857/79113c24-654d-493a-a080-1e9966399b65">
     </td>
   </tr>
 </table>
+
 
 ## Development Roadmap
 
@@ -31,11 +32,13 @@ Preskim is a macOS PDF viewer with a modernized user interface and lots of usefu
 
 **Why don't I contribute directly to the Skim app?**
 
-I don't quite get used to the SourceForge platform and SVN way, so I choose to fork it from SourceForge and do on my own.
+I don't quite get used to the SourceForge platform and SVN way, so I choose to fork it and do on my own.
 
 ## Copyright and License
 
-Copyright (c) 2024 [Tianze Ds Qiu](https://tianzeds.com/) and other contributors. All rights reserved. This app is built with ❤️ in Hangzhou and Beijing.
+Copyright (c) 2024 [Tianze Ds Qiu](https://tianzeds.com/) and other contributors. All rights reserved. 
+
+This app is built with ❤️ in Hangzhou and Beijing.
 
 Preskim is developed based upon Skim, which is created by [Michael O. McCracken](https://sourceforge.net/u/mmcc/profile/) and now maintained by [Christiaan Hofman](https://sourceforge.net/u/hofman/profile/).
 
